@@ -14,7 +14,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 07-prefix-sums-and-difference-arrays | done |
 | 08-two-pointers | done |
 | 09-sliding-window | done |
-| 10-intervals | claimed 10 2026-10-03T15:33Z |
+| 10-intervals | claimed 10 2026-10-03T21:34Z |
 | 11-stacks-and-queues | claimed 11 2026-10-03T15:39Z |
 | 12-monotonic-stacks | done |
 | 13-deques-and-monotonic-queues | done |
