@@ -1,0 +1,42 @@
+{
+ "lessons": [
+  "endpoint-ordering-contracts",
+  "event-sweep-ties",
+  "merge-and-insert",
+  "overlap-and-coverage",
+  "sorting-and-intervals",
+  "touching-boundary-semantics",
+  "two-list-intersection"
+ ],
+ "exercises": [
+  "iv-closed-overlap",
+  "iv-extreme-endpoints",
+  "iv-first-coordinate-capacity",
+  "iv-half-open-reservations",
+  "iv-insert-interval",
+  "iv-intersect-one-pair",
+  "iv-interval-list-intersections",
+  "iv-keep-earlier-finish",
+  "iv-many-events-one-coordinate",
+  "iv-max-concurrent-closed",
+  "iv-max-concurrent-half-open",
+  "iv-merge-already-sorted",
+  "iv-merge-count",
+  "iv-merge-intervals",
+  "iv-merge-under-contract",
+  "iv-minimum-arrows",
+  "iv-non-overlapping-intervals",
+  "iv-one-against-list",
+  "iv-one-covers-many",
+  "iv-order-end-start",
+  "iv-order-start-end",
+  "iv-remove-covered-intervals",
+  "iv-sorting-arrow-positions",
+  "iv-sorting-insert-position",
+  "iv-sorting-kept-indices",
+  "iv-sorting-merge-counts",
+  "iv-touching-intersections",
+  "iv-zero-length-range"
+ ],
+ "retired": []
+}
