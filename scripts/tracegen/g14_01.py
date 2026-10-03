@@ -4,11 +4,11 @@ F='01-node-invariants.md'
 vals=[4,7,1,9]
 steps=[];cnt=0;tot=0
 for i,v in enumerate(vals):
-    steps.append({"at":{"cur":i},"vars":{"count":cnt,"sum":tot},"note":f"The reference cur names the node holding {v}, which has not been counted yet. It is counted, then cur follows its next reference."})
+    steps.append({"at":{"head":0,"cur":i},"vars":{"count":cnt,"sum":tot},"note":f"The reference cur names the node holding {v}, which has not been counted yet. It is counted, then cur follows its next reference."})
     cnt+=1;tot+=v
-steps.append({"at":{"cur":4},"vars":{"count":cnt,"sum":tot},"note":"The reference cur is null, so the loop ends. The list was only read, and the head still names the first node."})
+steps.append({"at":{"head":0,"cur":4},"vars":{"count":cnt,"sum":tot},"note":"The reference cur is null, so the loop ends. The list was only read, and the head still names the first node."})
 assert cnt==4 and tot==21
-fill(CH,F,block(vals,["cur"],steps),"@@TRACE1@@")
+fill(CH,F,block(vals,["head","cur"],steps),"@@TRACE1@@")
 vals2=[4,7,1,9,5]
 nxt=[1,2,3,None,None]
 s=[]
