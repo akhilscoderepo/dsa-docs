@@ -1,0 +1,3 @@
+# Python dependencies for the DSA textbook toolchain (pinned).
+# The audit scripts use only the standard library plus PyYAML-free parsing; only the HTML builder needs this.
+markdown-it-py==4.0.0

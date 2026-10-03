@@ -1,0 +1,4 @@
+interface:
+  display_name: "DSA Curriculum Auditor"
+  short_description: "Verify DSA manuscripts and HTML chapters with scripts before declaring them complete"
+  default_prompt: "Use $dsa-curriculum-auditor to audit this chapter's manuscripts and built HTML and report verified facts."

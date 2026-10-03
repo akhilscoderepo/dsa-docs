@@ -1,0 +1,39 @@
+# Runbook for scheduled generation sessions
+
+Goal: build chapters 05 to 41 of the Java DSA curriculum, one chapter at a time, with every gate passing, pushing each chapter to this repo the moment it is done. Chapters 00 to 04 are finished and are the quality exemplars (read ONE lesson from `dsa-skills/manuscripts/03-strings/` and its solutions file as the style model; do not read whole chapters).
+
+Pipeline law: `skill/dsa-chapter-pipeline/SKILL.md`. Status vocabulary is exactly "content complete, human review pending". Never write `review-log.md`. Never claim verification that was not run (JDK 25, Windows, phones, printing, teaching quality are unverified).
+
+## Quality and token policy (set by the user)
+- Do NOT shorten the teaching stages (context, naive, bottleneck, insight, trace, applicability). Writing quality is the product.
+- Allowed savings only: no restating code in prose, no repeated boilerplate, targeted fixes instead of rewrites, audit only the lesson in hand until the chapter is complete.
+- Quick turnaround: finish and push each chapter as soon as it passes; do not batch.
+
+## Session start
+1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 6 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
+2. Tooling: `cd dsa-skills && [ -d node_modules ] || npm ci`. JDK 21 and Python 3 must exist (`java -version`). Chromium is at `/opt/pw-browsers` (do not run playwright install).
+3. Spec slices: `python3 dsa-skills/experience-first-dsa-teaching/scripts/split_spec.py inputs/chapter-specs/NN-slug.md dsa-skills/chapter-specs/NN-slug` and `cp inputs/chapter-specs/NN-slug.md dsa-skills/chapter-specs/`. Read `chapter-map.md` and ONE lesson slice at a time. If the spec lists a released combination (Teach now row), write a combination lesson for it.
+
+## Per-lesson loop (one lesson at a time)
+1. Write `dsa-skills/manuscripts/NN-slug/0K-lesson.md` and `solutions/0K-lesson.md` in one go. Put `@@TRACE1@@` and `@@TRACE2@@` placeholders in the trace stage.
+2. Fill traces with a script modelled on `scripts/tracegen/*.py` (simulate the algorithm, assert the final answer, replace the placeholders). Never hand-write trace JSON.
+3. `scripts/aud.sh NN` and read only lines with ERROR or "run failed". Fix by targeted edit.
+4. When all lessons exist, also write `00-orientation.md`, `90-unlocked-combinations.md`, `95-review.md`, then `scripts/build.sh NN "Chapter Title"`. The only acceptable remaining error is `no-human-review`.
+5. Commit and push the chapter (manuscripts, `output/NN-*.html`, ids.lock), update PROGRESS.md to `done`, and print the output path. Then start the next chapter.
+
+## Format rules learned the hard way (these cause most rework)
+- Every `##` and `###` heading: at most 7 words, no colon, no period. The `## Title` must equal the spec lesson heading.
+- File markers: `<!-- lesson-kind: standard|combination -->`, `<!-- lesson-id: slug -->`; stages in order `context, [contributions for combination], naive, bottleneck, insight, variables, trace, code, applicability, exercises`, each as `<!-- stage: x -->`.
+- Minimum prose words: context 60, naive 30, bottleneck 60 (must contain `O(`), insight 120 (must have `<!-- names: a, b, c -->`; each name appears in the insight prose and NOT in context or naive), variables 40, trace 100, code 30, applicability 80 (must contain the word "invariant" and "false friend"), contributions 60. Naive and code stages need a ```java block. Narrative stages at most 30% bullet lines.
+- Trace block: ```trace JSON `{"cells":[...],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{},"note":""}]}`; at least 3 steps; pointer values are ints from -1 to len(cells).
+- Exercise: `#### [Role] Title (LeetCode N | Author exercise)`, then `<!-- id: hm-slug -->`, then bold fields Prerequisites, Problem, Constraints, Example 1, Example 2, Hint, Changed decision. Roles: Build, Vary, Boundary, Recognize. Use a chapter-specific id prefix.
+- Solutions file: `<!-- solutions-for: NN-slug -->`, then `#### Solution: [Role] Title (...)` with the same id, **Approach.**, **Complexity.**, and a ```java run block with a main class that throws AssertionError, checked against a brute-force oracle on random inputs. Every prose claim about Java behaviour needs an assertion.
+- Code-stage ```java blocks without a class must be methods only; if they contain `record` or other types, wrap everything in `final class X { ... }`.
+- Cross-file checks: the same sentence or 8-word sequence in 4 or more files is an error. Vary the wording of complexity sentences, Constraints lines, applicability openers, and orientation, review and unlocked-combination text per chapter. Never repeat identical Java blocks.
+- LeetCode problems reused from earlier chapters must change the contract or the invariant, with different examples and different code.
+- Review quizzes: ```quiz JSON with permanent `id`, `q`, `options`, `answer` (zero-based index), `explain`. About one per lesson.
+- Examples are recomputed by code, never copied from LeetCode statements.
+
+## Finishing
+When PROGRESS.md shows chapters 05 to 41 all `done`: run the full-corpus audit (`python3 dsa-skills/dsa-curriculum-auditor/scripts/audit_manuscripts.py dsa-skills/manuscripts --spec dsa-skills/chapter-specs`), fix everything except `no-human-review`, rebuild the index with `python3 dsa-skills/markdown-textbook-html/scripts/build_index.py dsa-skills/manuscripts output --title "Java DSA Curriculum"`, push, and disable the scheduled task (update_trigger with enabled=false).
+Final report: what passed, remaining warnings, what is unverified, human review pending.

@@ -1,0 +1,3651 @@
+{
+  "total": 134,
+  "questions": [
+    {
+      "questionFrontendId": "146",
+      "title": "LRU Cache",
+      "titleSlug": "lru-cache",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "155",
+      "title": "Min Stack",
+      "titleSlug": "min-stack",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "170",
+      "title": "Two Sum III - Data structure design",
+      "titleSlug": "two-sum-iii-data-structure-design",
+      "difficulty": "Easy",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Two Pointers",
+          "slug": "two-pointers"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "173",
+      "title": "Binary Search Tree Iterator",
+      "titleSlug": "binary-search-tree-iterator",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Search Tree",
+          "slug": "binary-search-tree"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "208",
+      "title": "Implement Trie (Prefix Tree)",
+      "titleSlug": "implement-trie-prefix-tree",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "211",
+      "title": "Design Add and Search Words Data Structure",
+      "titleSlug": "design-add-and-search-words-data-structure",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "225",
+      "title": "Implement Stack using Queues",
+      "titleSlug": "implement-stack-using-queues",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "232",
+      "title": "Implement Queue using Stacks",
+      "titleSlug": "implement-queue-using-stacks",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "244",
+      "title": "Shortest Word Distance II",
+      "titleSlug": "shortest-word-distance-ii",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Two Pointers",
+          "slug": "two-pointers"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "251",
+      "title": "Flatten 2D Vector",
+      "titleSlug": "flatten-2d-vector",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Two Pointers",
+          "slug": "two-pointers"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "271",
+      "title": "Encode and Decode Strings",
+      "titleSlug": "encode-and-decode-strings",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "281",
+      "title": "Zigzag Iterator",
+      "titleSlug": "zigzag-iterator",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "284",
+      "title": "Peeking Iterator",
+      "titleSlug": "peeking-iterator",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "288",
+      "title": "Unique Word Abbreviation",
+      "titleSlug": "unique-word-abbreviation",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "295",
+      "title": "Find Median from Data Stream",
+      "titleSlug": "find-median-from-data-stream",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Two Pointers",
+          "slug": "two-pointers"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "297",
+      "title": "Serialize and Deserialize Binary Tree",
+      "titleSlug": "serialize-and-deserialize-binary-tree",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Breadth-First Search",
+          "slug": "breadth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "303",
+      "title": "Range Sum Query - Immutable",
+      "titleSlug": "range-sum-query-immutable",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Prefix Sum",
+          "slug": "prefix-sum"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "304",
+      "title": "Range Sum Query 2D - Immutable",
+      "titleSlug": "range-sum-query-2d-immutable",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        },
+        {
+          "name": "Prefix Sum",
+          "slug": "prefix-sum"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "307",
+      "title": "Range Sum Query - Mutable",
+      "titleSlug": "range-sum-query-mutable",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Divide and Conquer",
+          "slug": "divide-and-conquer"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Indexed Tree",
+          "slug": "binary-indexed-tree"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Sqrt Decomposition",
+          "slug": "sqrt-decomposition"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "308",
+      "title": "Range Sum Query 2D - Mutable",
+      "titleSlug": "range-sum-query-2d-mutable",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Indexed Tree",
+          "slug": "binary-indexed-tree"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        },
+        {
+          "name": "Sqrt Decomposition",
+          "slug": "sqrt-decomposition"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "341",
+      "title": "Flatten Nested List Iterator",
+      "titleSlug": "flatten-nested-list-iterator",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "346",
+      "title": "Moving Average from Data Stream",
+      "titleSlug": "moving-average-from-data-stream",
+      "difficulty": "Easy",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "348",
+      "title": "Design Tic-Tac-Toe",
+      "titleSlug": "design-tic-tac-toe",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "352",
+      "title": "Data Stream as Disjoint Intervals",
+      "titleSlug": "data-stream-as-disjoint-intervals",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Union-Find",
+          "slug": "union-find"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "353",
+      "title": "Design Snake Game",
+      "titleSlug": "design-snake-game",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "355",
+      "title": "Design Twitter",
+      "titleSlug": "design-twitter",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "359",
+      "title": "Logger Rate Limiter",
+      "titleSlug": "logger-rate-limiter",
+      "difficulty": "Easy",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "362",
+      "title": "Design Hit Counter",
+      "titleSlug": "design-hit-counter",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "379",
+      "title": "Design Phone Directory",
+      "titleSlug": "design-phone-directory",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "380",
+      "title": "Insert Delete GetRandom O(1)",
+      "titleSlug": "insert-delete-getrandom-o1",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Math",
+          "slug": "math"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Randomized",
+          "slug": "randomized"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "381",
+      "title": "Insert Delete GetRandom O(1) - Duplicates allowed",
+      "titleSlug": "insert-delete-getrandom-o1-duplicates-allowed",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Math",
+          "slug": "math"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Randomized",
+          "slug": "randomized"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "384",
+      "title": "Shuffle an Array",
+      "titleSlug": "shuffle-an-array",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Math",
+          "slug": "math"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Randomized",
+          "slug": "randomized"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "431",
+      "title": "Encode N-ary Tree to Binary Tree",
+      "titleSlug": "encode-n-ary-tree-to-binary-tree",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Breadth-First Search",
+          "slug": "breadth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "432",
+      "title": "All O`one Data Structure",
+      "titleSlug": "all-oone-data-structure",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "449",
+      "title": "Serialize and Deserialize BST",
+      "titleSlug": "serialize-and-deserialize-bst",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Breadth-First Search",
+          "slug": "breadth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Search Tree",
+          "slug": "binary-search-tree"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "460",
+      "title": "LFU Cache",
+      "titleSlug": "lfu-cache",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "535",
+      "title": "Encode and Decode TinyURL",
+      "titleSlug": "encode-and-decode-tinyurl",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Hash Function",
+          "slug": "hash-function"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "588",
+      "title": "Design In-Memory File System",
+      "titleSlug": "design-in-memory-file-system",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "604",
+      "title": "Design Compressed String Iterator",
+      "titleSlug": "design-compressed-string-iterator",
+      "difficulty": "Easy",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "622",
+      "title": "Design Circular Queue",
+      "titleSlug": "design-circular-queue",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "631",
+      "title": "Design Excel Sum Formula",
+      "titleSlug": "design-excel-sum-formula",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Graph Theory",
+          "slug": "graph"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Topological Sort",
+          "slug": "topological-sort"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "635",
+      "title": "Design Log Storage System",
+      "titleSlug": "design-log-storage-system",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "641",
+      "title": "Design Circular Deque",
+      "titleSlug": "design-circular-deque",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "642",
+      "title": "Design Search Autocomplete System",
+      "titleSlug": "design-search-autocomplete-system",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "676",
+      "title": "Implement Magic Dictionary",
+      "titleSlug": "implement-magic-dictionary",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "677",
+      "title": "Map Sum Pairs",
+      "titleSlug": "map-sum-pairs",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "703",
+      "title": "Kth Largest Element in a Stream",
+      "titleSlug": "kth-largest-element-in-a-stream",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Search Tree",
+          "slug": "binary-search-tree"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "705",
+      "title": "Design HashSet",
+      "titleSlug": "design-hashset",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Hash Function",
+          "slug": "hash-function"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "706",
+      "title": "Design HashMap",
+      "titleSlug": "design-hashmap",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Hash Function",
+          "slug": "hash-function"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "707",
+      "title": "Design Linked List",
+      "titleSlug": "design-linked-list",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "715",
+      "title": "Range Module",
+      "titleSlug": "range-module",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "716",
+      "title": "Max Stack",
+      "titleSlug": "max-stack",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "729",
+      "title": "My Calendar I",
+      "titleSlug": "my-calendar-i",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "731",
+      "title": "My Calendar II",
+      "titleSlug": "my-calendar-ii",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Prefix Sum",
+          "slug": "prefix-sum"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "732",
+      "title": "My Calendar III",
+      "titleSlug": "my-calendar-iii",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Prefix Sum",
+          "slug": "prefix-sum"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "745",
+      "title": "Prefix and Suffix Search",
+      "titleSlug": "prefix-and-suffix-search",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "855",
+      "title": "Exam Room",
+      "titleSlug": "exam-room",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "895",
+      "title": "Maximum Frequency Stack",
+      "titleSlug": "maximum-frequency-stack",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "900",
+      "title": "RLE Iterator",
+      "titleSlug": "rle-iterator",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Counting",
+          "slug": "counting"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "901",
+      "title": "Online Stock Span",
+      "titleSlug": "online-stock-span",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Monotonic Stack",
+          "slug": "monotonic-stack"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "911",
+      "title": "Online Election",
+      "titleSlug": "online-election",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "919",
+      "title": "Complete Binary Tree Inserter",
+      "titleSlug": "complete-binary-tree-inserter",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Breadth-First Search",
+          "slug": "breadth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "933",
+      "title": "Number of Recent Calls",
+      "titleSlug": "number-of-recent-calls",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "981",
+      "title": "Time Based Key-Value Store",
+      "titleSlug": "time-based-key-value-store",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1032",
+      "title": "Stream of Characters",
+      "titleSlug": "stream-of-characters",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        },
+        {
+          "name": "Aho\u2013Corasick Algorithm",
+          "slug": "aho-corasick-algorithm"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1146",
+      "title": "Snapshot Array",
+      "titleSlug": "snapshot-array",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Persistent Data Structure",
+          "slug": "persistent-data-structure"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1157",
+      "title": "Online Majority Element In Subarray",
+      "titleSlug": "online-majority-element-in-subarray",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Indexed Tree",
+          "slug": "binary-indexed-tree"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Sqrt Decomposition",
+          "slug": "sqrt-decomposition"
+        },
+        {
+          "name": "Boyer\u2013Moore Majority Vote Algorithm",
+          "slug": "boyer-moore-majority-vote-algorithm"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1166",
+      "title": "Design File System",
+      "titleSlug": "design-file-system",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1172",
+      "title": "Dinner Plate Stacks",
+      "titleSlug": "dinner-plate-stacks",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1206",
+      "title": "Design Skiplist",
+      "titleSlug": "design-skiplist",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1244",
+      "title": "Design A Leaderboard",
+      "titleSlug": "design-a-leaderboard",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1261",
+      "title": "Find Elements in a Contaminated Binary Tree",
+      "titleSlug": "find-elements-in-a-contaminated-binary-tree",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Breadth-First Search",
+          "slug": "breadth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1286",
+      "title": "Iterator for Combination",
+      "titleSlug": "iterator-for-combination",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Backtracking",
+          "slug": "backtracking"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1348",
+      "title": "Tweet Counts Per Frequency",
+      "titleSlug": "tweet-counts-per-frequency",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1352",
+      "title": "Product of the Last K Numbers",
+      "titleSlug": "product-of-the-last-k-numbers",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Math",
+          "slug": "math"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        },
+        {
+          "name": "Prefix Sum",
+          "slug": "prefix-sum"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1357",
+      "title": "Apply Discount Every n Orders",
+      "titleSlug": "apply-discount-every-n-orders",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1381",
+      "title": "Design a Stack With Increment Operation",
+      "titleSlug": "design-a-stack-with-increment-operation",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1396",
+      "title": "Design Underground System",
+      "titleSlug": "design-underground-system",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1429",
+      "title": "First Unique Number",
+      "titleSlug": "first-unique-number",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1472",
+      "title": "Design Browser History",
+      "titleSlug": "design-browser-history",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1476",
+      "title": "Subrectangle Queries",
+      "titleSlug": "subrectangle-queries",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1483",
+      "title": "Kth Ancestor of a Tree Node",
+      "titleSlug": "kth-ancestor-of-a-tree-node",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Dynamic Programming",
+          "slug": "dynamic-programming"
+        },
+        {
+          "name": "Bit Manipulation",
+          "slug": "bit-manipulation"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Breadth-First Search",
+          "slug": "breadth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Lifting",
+          "slug": "binary-lifting"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1500",
+      "title": "Design a File Sharing System",
+      "titleSlug": "design-a-file-sharing-system",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1570",
+      "title": "Dot Product of Two Sparse Vectors",
+      "titleSlug": "dot-product-of-two-sparse-vectors",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Two Pointers",
+          "slug": "two-pointers"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Linear Algebra",
+          "slug": "linear-algebra"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1586",
+      "title": "Binary Search Tree Iterator II",
+      "titleSlug": "binary-search-tree-iterator-ii",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Search Tree",
+          "slug": "binary-search-tree"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        },
+        {
+          "name": "Iterator",
+          "slug": "iterator"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1600",
+      "title": "Throne Inheritance",
+      "titleSlug": "throne-inheritance",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1603",
+      "title": "Design Parking System",
+      "titleSlug": "design-parking-system",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        },
+        {
+          "name": "Counting",
+          "slug": "counting"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1622",
+      "title": "Fancy Sequence",
+      "titleSlug": "fancy-sequence",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Math",
+          "slug": "math"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Number Theory",
+          "slug": "number-theory"
+        },
+        {
+          "name": "Fermat's Little Theorem",
+          "slug": "fermats-little-theorem"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1628",
+      "title": "Design an Expression Tree With Evaluate Function",
+      "titleSlug": "design-an-expression-tree-with-evaluate-function",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Math",
+          "slug": "math"
+        },
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Tree",
+          "slug": "binary-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1656",
+      "title": "Design an Ordered Stream",
+      "titleSlug": "design-an-ordered-stream",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1670",
+      "title": "Design Front Middle Back Queue",
+      "titleSlug": "design-front-middle-back-queue",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1724",
+      "title": "Checking Existence of Edge Length Limited Paths II",
+      "titleSlug": "checking-existence-of-edge-length-limited-paths-ii",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Union-Find",
+          "slug": "union-find"
+        },
+        {
+          "name": "Graph Theory",
+          "slug": "graph"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Minimum Spanning Tree",
+          "slug": "minimum-spanning-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1756",
+      "title": "Design Most Recently Used Queue",
+      "titleSlug": "design-most-recently-used-queue",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Divide and Conquer",
+          "slug": "divide-and-conquer"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        },
+        {
+          "name": "Sqrt Decomposition",
+          "slug": "sqrt-decomposition"
+        },
+        {
+          "name": "Treap",
+          "slug": "treap"
+        },
+        {
+          "name": "Splay Tree",
+          "slug": "splay-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1797",
+      "title": "Design Authentication Manager",
+      "titleSlug": "design-authentication-manager",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1804",
+      "title": "Implement Trie II (Prefix Tree)",
+      "titleSlug": "implement-trie-ii-prefix-tree",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1825",
+      "title": "Finding MK Average",
+      "titleSlug": "finding-mk-average",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        },
+        {
+          "name": "Treap",
+          "slug": "treap"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1845",
+      "title": "Seat Reservation Manager",
+      "titleSlug": "seat-reservation-manager",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1865",
+      "title": "Finding Pairs With a Certain Sum",
+      "titleSlug": "finding-pairs-with-a-certain-sum",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1912",
+      "title": "Design Movie Rental System",
+      "titleSlug": "design-movie-rental-system",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "1993",
+      "title": "Operations on Tree",
+      "titleSlug": "operations-on-tree",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Tree",
+          "slug": "tree"
+        },
+        {
+          "name": "Depth-First Search",
+          "slug": "depth-first-search"
+        },
+        {
+          "name": "Breadth-First Search",
+          "slug": "breadth-first-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2013",
+      "title": "Detect Squares",
+      "titleSlug": "detect-squares",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Counting",
+          "slug": "counting"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2034",
+      "title": "Stock Price Fluctuation ",
+      "titleSlug": "stock-price-fluctuation",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2043",
+      "title": "Simple Bank System",
+      "titleSlug": "simple-bank-system",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2069",
+      "title": "Walking Robot Simulation II",
+      "titleSlug": "walking-robot-simulation-ii",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2080",
+      "title": "Range Frequency Queries",
+      "titleSlug": "range-frequency-queries",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2102",
+      "title": "Sequentially Ordinal Rank Tracker",
+      "titleSlug": "sequentially-ordinal-rank-tracker",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2166",
+      "title": "Design Bitset",
+      "titleSlug": "design-bitset",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2227",
+      "title": "Encrypt and Decrypt Strings",
+      "titleSlug": "encrypt-and-decrypt-strings",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Trie",
+          "slug": "trie"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2241",
+      "title": "Design an ATM Machine",
+      "titleSlug": "design-an-atm-machine",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Greedy",
+          "slug": "greedy"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2254",
+      "title": "Design Video Sharing Platform",
+      "titleSlug": "design-video-sharing-platform",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2276",
+      "title": "Count Integers in Intervals",
+      "titleSlug": "count-integers-in-intervals",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2286",
+      "title": "Booking Concert Tickets in Groups",
+      "titleSlug": "booking-concert-tickets-in-groups",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Indexed Tree",
+          "slug": "binary-indexed-tree"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2296",
+      "title": "Design a Text Editor",
+      "titleSlug": "design-a-text-editor",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Linked List",
+          "slug": "linked-list"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Stack",
+          "slug": "stack"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        },
+        {
+          "name": "Doubly-Linked List",
+          "slug": "doubly-linked-list"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2336",
+      "title": "Smallest Number in Infinite Set",
+      "titleSlug": "smallest-number-in-infinite-set",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2349",
+      "title": "Design a Number Container System",
+      "titleSlug": "design-a-number-container-system",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2353",
+      "title": "Design a Food Rating System",
+      "titleSlug": "design-a-food-rating-system",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2408",
+      "title": "Design SQL",
+      "titleSlug": "design-sql",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2424",
+      "title": "Longest Uploaded Prefix",
+      "titleSlug": "longest-uploaded-prefix",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Union-Find",
+          "slug": "union-find"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Binary Indexed Tree",
+          "slug": "binary-indexed-tree"
+        },
+        {
+          "name": "Segment Tree",
+          "slug": "segment-tree"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2502",
+      "title": "Design Memory Allocator",
+      "titleSlug": "design-memory-allocator",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2526",
+      "title": "Find Consecutive Integers from a Data Stream",
+      "titleSlug": "find-consecutive-integers-from-a-data-stream",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Counting",
+          "slug": "counting"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2590",
+      "title": "Design a Todo List",
+      "titleSlug": "design-a-todo-list",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Sorting",
+          "slug": "sorting"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2642",
+      "title": "Design Graph With Shortest Path Calculator",
+      "titleSlug": "design-graph-with-shortest-path-calculator",
+      "difficulty": "Hard",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Graph Theory",
+          "slug": "graph"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Shortest Path",
+          "slug": "shortest-path"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "2671",
+      "title": "Frequency Tracker",
+      "titleSlug": "frequency-tracker",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3242",
+      "title": "Design Neighbor Sum Service",
+      "titleSlug": "design-neighbor-sum-service",
+      "difficulty": "Easy",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        },
+        {
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3369",
+      "title": "Design an Array Statistics Tracker ",
+      "titleSlug": "design-an-array-statistics-tracker",
+      "difficulty": "Hard",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3391",
+      "title": "Design a 3D Binary Matrix with Efficient Layer Tracking",
+      "titleSlug": "design-a-3d-binary-matrix-with-efficient-layer-tracking",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3408",
+      "title": "Design Task Manager",
+      "titleSlug": "design-task-manager",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3484",
+      "title": "Design Spreadsheet",
+      "titleSlug": "design-spreadsheet",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "String",
+          "slug": "string"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Matrix",
+          "slug": "matrix"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3508",
+      "title": "Implement Router",
+      "titleSlug": "implement-router",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3709",
+      "title": "Design Exam Scores Tracker",
+      "titleSlug": "design-exam-scores-tracker",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Binary Search",
+          "slug": "binary-search"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Prefix Sum",
+          "slug": "prefix-sum"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3815",
+      "title": "Design Auction System",
+      "titleSlug": "design-auction-system",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3822",
+      "title": "Design Order Management System",
+      "titleSlug": "design-order-management-system",
+      "difficulty": "Medium",
+      "isPaidOnly": true,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3829",
+      "title": "Design Ride Sharing System",
+      "titleSlug": "design-ride-sharing-system",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Queue",
+          "slug": "queue"
+        },
+        {
+          "name": "Data Stream",
+          "slug": "data-stream"
+        }
+      ]
+    },
+    {
+      "questionFrontendId": "3885",
+      "title": "Design Event Manager",
+      "titleSlug": "design-event-manager",
+      "difficulty": "Medium",
+      "isPaidOnly": false,
+      "topicTags": [
+        {
+          "name": "Array",
+          "slug": "array"
+        },
+        {
+          "name": "Hash Table",
+          "slug": "hash-table"
+        },
+        {
+          "name": "Design",
+          "slug": "design"
+        },
+        {
+          "name": "Heap (Priority Queue)",
+          "slug": "heap-priority-queue"
+        },
+        {
+          "name": "Ordered Set",
+          "slug": "ordered-set"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "dsa-textbook-toolchain",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Test dependencies for the interactive HTML textbook (headless interaction and browser rendering checks).",
+  "scripts": {
+    "smoke": "node dsa-curriculum-auditor/scripts/smoke_html.mjs",
+    "render": "node dsa-curriculum-auditor/scripts/render_check.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0",
+    "playwright-core": "1.56.1"
+  },
+  "engines": { "node": ">=20" }
+}

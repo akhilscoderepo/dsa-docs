@@ -1,0 +1,4 @@
+interface:
+  display_name: "Experience-First DSA Teaching"
+  short_description: "Write spec-driven Java DSA lessons as audited Markdown manuscripts"
+  default_prompt: "Use $experience-first-dsa-teaching to write the next lesson of the chapter from its chapter spec."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Markdown Textbook to HTML"
+  short_description: "Build offline interactive HTML chapters with notes, hints, traces and quizzes from Markdown"
+  default_prompt: "Use $markdown-textbook-html to build the interactive HTML for this chapter's manuscripts."
