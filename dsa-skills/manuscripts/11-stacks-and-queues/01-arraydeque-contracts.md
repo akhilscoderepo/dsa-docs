@@ -133,7 +133,7 @@ In Java, remember that `push` and `pop` work on the front while `add` and `offer
 #### [Vary] Deque As Queue (Author exercise)
 <!-- id: sq-deque-as-queue -->
 
-**Prerequisites.** Deque As Stack.
+**Prerequisites.** The Deque As Stack rung.
 
 **Problem.** A script is an array of integers. A nonnegative value enqueues that value, and the value -1 dequeues one value. Return the dequeued values in the order they leave. Every -1 in the script is guaranteed to find a nonempty queue.
 
@@ -150,7 +150,7 @@ In Java, remember that `push` and `pop` work on the front while `add` and `offer
 #### [Boundary] Empty Access Contract (Author exercise)
 <!-- id: sq-empty-access-contract -->
 
-**Prerequisites.** Deque As Queue.
+**Prerequisites.** The Deque As Queue rung.
 
 **Problem.** Run a script of commands on an `ArrayDeque<Integer>`. The commands are `add x` for `addLast`, `poll` for `pollFirst`, `remove` for `removeFirst`, `peek` for `peekFirst`, `element` for `getFirst`, and `addnull` for `addLast(null)`. For each command return the printed result: the value, the word `null`, or the name of the exception class that Java throws, such as `NoSuchElementException`. A command that throws changes nothing.
 
@@ -167,7 +167,7 @@ In Java, remember that `push` and `pop` work on the front while `add` and `offer
 #### [Recognize] Choose The Ends (Author exercise)
 <!-- id: sq-choose-the-ends -->
 
-**Prerequisites.** Empty Access Contract.
+**Prerequisites.** The Empty Access Contract rung.
 
 **Problem.** A hidden container receives a script: a positive number inserts that number, and 0 removes one value. The array `seen` lists the removed values in order. Return `"STACK"` if only last-in-first-out explains `seen`, `"QUEUE"` if only first-in-first-out explains it, `"BOTH"` if either does, and `"NEITHER"` otherwise.
 
