@@ -17,7 +17,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 10-intervals | claimed 10 2026-10-03T15:33Z |
 | 11-stacks-and-queues | claimed 11 2026-10-03T15:39Z |
 | 12-monotonic-stacks | done |
-| 13-deques-and-monotonic-queues | todo |
+| 13-deques-and-monotonic-queues | claimed 13 2026-10-03T20:39Z |
 | 14-linked-lists | todo |
 | 15-trees-dfs | todo |
 | 16-trees-bfs-and-bsts | todo |
