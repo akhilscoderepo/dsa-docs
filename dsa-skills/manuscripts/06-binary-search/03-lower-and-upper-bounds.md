@@ -99,7 +99,7 @@ static char nextGreatestLetter(char[] letters, char target) {
 }
 ```
 
-Each loop halves the interval, so the cost is O(log n) time and O(1) space. The number of copies of a value is `upperBound - lowerBound`, found in O(log n) without any walking. In the letter version the position `letters.length` stands for "no letter is greater", and the final line turns that into the first letter, as the contract requires.
+Each loop halves the interval, so the work is O(log n) readings and the memory is O(1). The number of copies of a value is `upperBound - lowerBound`, found in O(log n) without any walking. In the letter version the position `letters.length` stands for "no letter is greater", and the final line turns that into the first letter, as the contract requires.
 
 <!-- stage: applicability -->
 ### When The Answer Is An Insertion Point

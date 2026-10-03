@@ -110,7 +110,7 @@ static int firstBadVersion(int n, IntPredicate isBad) {
 }
 ```
 
-Each search halves the interval, so each costs O(log n) time and O(1) space, and a range query that runs both is also O(log n). In `firstBadVersion` the predicate replaces the comparison, and the candidate starts at `n` because the contract promises that some version is bad.
+Each search halves the interval, so each takes logarithmic time with constant memory, O(log n) and O(1), and a range query that runs both is also O(log n). In `firstBadVersion` the predicate replaces the comparison, and the candidate starts at `n` because the contract promises that some version is bad.
 
 <!-- stage: applicability -->
 ### When The Answer Is An Extreme Occurrence
