@@ -12,7 +12,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 05-sorting-and-java-comparators | done |
 | 06-binary-search | done |
 | 07-prefix-sums-and-difference-arrays | claimed 07 2026-10-03T15:10Z |
-| 08-two-pointers | claimed 08 2026-10-03T15:17Z |
+| 08-two-pointers | done |
 | 09-sliding-window | todo |
 | 10-intervals | todo |
 | 11-stacks-and-queues | todo |
@@ -50,3 +50,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 ## Notes
 - 05 (2026-10-03): Spec LC reuse inside the chapter was resolved by changing the contract/invariant, with the LC number kept so spec parity holds. Largest Number (179): lesson 01 builds the glue order; lesson 03 re-asks it as a comparator-law proof. Queue Reconstruction (406): lesson 04 sorts tallest-first and inserts at index; lesson 06 sorts shortest-first and fills the k-th empty slot. Contains Duplicate (217): lesson 02 sorts in place; lesson 07 sorts a copy and measures run length. Intersection (349) is answered by sorting concatenated distinct lists, since two pointers belong to Chapter 08. Missing Number (268) uses sorted index mismatch.
 - 06 (2026-10-03): LC 74 appears in lesson 01 as a virtual-array recognition exercise and in lesson 11 as a row-first Build (first-column bound, then in-row search); the solution also cross-checks the virtual-index form. LC 981 appears twice in lesson 10 (Vary: the store; Boundary: early query and missing key, guarded step back), which leaves one expected spec-role WARN. LC 278 appears in lessons 02 (candidate kept on a hit) and 04 (half-open first-true). LC 911 is added as an Extend exercise because the ladder table lists it. LC 1146 is the Recognize exercise. Lesson 09 uses a fixed 100-round bisection policy and shows the epsilon-loop non-termination under a capped loop. Remaining WARNs: the spec-role WARN above and a 3-file template-phrase WARN on the "linear scan" oracle sentence in the solutions.
+- 08 (2026-10-03): content complete, human review pending. Repeated problems changed contract: LC 167 classic in 01, unsorted original indices in 08. LC 15 lists triplets in 05, existence with a long target in 06, count on a cloned input in 08. LC 18 lists quadruplets in 05, counts near int limits in 06, pruned listing in 08. LC 16 closest value in 06, smaller-sum tie rule in 08. LC 287 standard in 07, [duplicate, tail, cycle] in 10; the 07 proof rung returns [phase-one stop, duplicate]. LC 27 returns [k, moves]; LC 283 uses Token objects; LC 26 keeps the last of each run; LC 80 takes a limit L. Earlier chapters contained none of LC 125, 344, 680, 392, so standard contracts are used. Remaining WARNs: 07 low-diversity (insight vocabulary) and 07 spec-role (proof rung is tagged LC 287 twice).
