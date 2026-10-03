@@ -56,7 +56,7 @@ The stack holds characters, or positions when an error has to be located, and th
 <!-- stage: trace -->
 ### A Clean Nest And A Crossed Pair
 
-The first trace reads `[({})]`. The cells hold the characters and `i` points at the one being read. The first three characters are pushed, the brace and the round bracket close in the order opposite to their opening, and the square bracket closes last. Look at the closing round bracket: the nearest opener is the round one, so the match succeeds and the stack shrinks to the square bracket.
+The first trace reads `[({})]`. The cells list the characters, with `i` marking the one in hand. The first three characters are pushed, the brace and the round bracket close in the order opposite to their opening, and the square bracket closes last. Look at the closing round bracket: the nearest opener is the round one, so the match succeeds and the stack shrinks to the square bracket.
 
 ```trace
 {"cells":["[","(","{","}",")","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[","result":"open"},"note":"The opening [ is pushed, so it becomes the nearest opener."},{"at":{"i":1},"vars":{"stack":"[(","result":"open"},"note":"The opening ( is pushed, so it becomes the nearest opener."},{"at":{"i":2},"vars":{"stack":"[({","result":"open"},"note":"The opening { is pushed, so it becomes the nearest opener."},{"at":{"i":3},"vars":{"stack":"[(","result":"open"},"note":"The closing } matches the nearest opener {, so that opener is removed."},{"at":{"i":4},"vars":{"stack":"[","result":"open"},"note":"The closing ) matches the nearest opener (, so that opener is removed."},{"at":{"i":5},"vars":{"stack":"","result":"empty"},"note":"The closing ] matches the nearest opener [, so that opener is removed."}]}
