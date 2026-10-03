@@ -9,7 +9,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 02-matrices-and-2d-arrays | done |
 | 03-strings | done |
 | 04-hash-maps-and-sets | done |
-| 05-sorting-and-java-comparators | todo |
+| 05-sorting-and-java-comparators | claimed 05 2026-10-03T14:17Z |
 | 06-binary-search | todo |
 | 07-prefix-sums-and-difference-arrays | todo |
 | 08-two-pointers | todo |
