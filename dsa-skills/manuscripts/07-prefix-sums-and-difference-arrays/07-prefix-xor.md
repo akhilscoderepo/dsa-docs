@@ -106,7 +106,7 @@ static long countEqualHalves(int[] a) {
 }
 ```
 
-Each function does one pass with O(1) expected work per element. The table and range functions take O(n) space and the maps take space proportional to the number of distinct prefixes. The last function sums, for every pair of equal prefixes, the number of positions strictly between them, using a count and a running sum of earlier positions.
+Each function scans the cards once, at constant expected cost per card. The table and range functions take O(n) space and the maps take space proportional to the number of distinct prefixes. The last function sums, for every pair of equal prefixes, the number of positions strictly between them, using a count and a running sum of earlier positions.
 
 <!-- stage: applicability -->
 ### When Toggles Combine By Parity

@@ -6,7 +6,7 @@
 
 **Approach.** A stretch ending at the current day has total `k` exactly when the balance before its first day equals the current balance minus `k`. A map from balance to the number of days that ended with it answers how many such starting points exist. The map starts with balance zero seen once, which stands for the moment before the first day. For each value, the balance is updated, the complement is looked up and added to the count, and only then is the current balance recorded, so a day is never paired with itself. The oracle tries every first and last day.
 
-**Complexity.** One pass with O(1) expected work per value, so linear expected time, and space proportional to the number of distinct balances.
+**Complexity.** A single scan with constant expected cost per value, so linear expected time, and space proportional to the number of distinct balances.
 
 ```java run
 import java.util.HashMap;

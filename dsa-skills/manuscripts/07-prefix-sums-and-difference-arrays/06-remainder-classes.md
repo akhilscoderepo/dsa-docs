@@ -115,7 +115,7 @@ static int longestDivisibleSpan(int[] nums, int k) {
 }
 ```
 
-Each function makes one pass with O(1) expected work per number. The counting version uses an array of k counters, and the length versions use a map with at most k entries. Total is a `long` where the sum of many values could pass an `int`.
+Each function scans the tape once at constant expected cost per number. The counting version uses an array of k counters, and the length versions use a map with at most k entries. Total is a `long` where the sum of many values could pass an `int`.
 
 <!-- stage: applicability -->
 ### When Divisibility Joins Two Totals

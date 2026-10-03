@@ -115,7 +115,7 @@ static int longestEvenVowels(String s) {
 }
 ```
 
-Each function makes one pass with O(1) expected work per element, and its space is proportional to the number of distinct balances, at most 32 masks in the vowel version. The table is read with a nullable `Integer`, so a missing balance is distinguished from index zero.
+Each function scans the input once, paying constant expected time per element, and its space is proportional to the number of distinct balances, at most 32 masks in the vowel version. The table is read with a nullable `Integer`, so a missing balance is distinguished from index zero.
 
 <!-- stage: applicability -->
 ### When The Longest Level Stretch Matters
