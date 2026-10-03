@@ -37,7 +37,7 @@ The structure of the data allows far fewer tests. The results along the line are
 
 The key property is a **monotone predicate**: a yes-or-no question about a position whose answers, read left to right, are some number of no answers followed only by yes answers. Once the answer is yes it stays yes. The goal is the **first true** position, the earliest one where the answer is yes. Nothing about the data has to be a sorted array of numbers. It only needs the question to flip at most once.
 
-The loop keeps a half-open interval `[lo, hi)`, with `hi` initially `n`. The invariant is that every position before `lo` is known to be false, and `hi` is either a position known to be true or the **sentinel** `n`, the value that means "no position is true". At each step the loop tests `mid`. A true result means the first true position is at `mid` or earlier, so `hi = mid`. A false result means it is after `mid`, so `lo = mid + 1`. When `lo` meets `hi`, that position is the answer, and if it equals `n`, the answer is that no position is true.
+The loop keeps the stretch `[lo, hi)`, open on the right, and `hi` begins at `n`. The invariant is that every position before `lo` is known to be false, and `hi` is either a position known to be true or the **sentinel** `n`, the value that means "no position is true". At each step the loop tests `mid`. A true result means the first true position is at `mid` or earlier, so `hi = mid`. A false result means it is after `mid`, so `lo = mid + 1`. When `lo` meets `hi`, that position is the answer, and if it equals `n`, the answer is that no position is true.
 
 <!-- names: monotone predicate, first true, sentinel -->
 
