@@ -16,7 +16,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 09-sliding-window | done |
 | 10-intervals | claimed 10 2026-10-03T15:33Z |
 | 11-stacks-and-queues | claimed 11 2026-10-03T15:39Z |
-| 12-monotonic-stacks | todo |
+| 12-monotonic-stacks | claimed 12 2026-10-03T20:18Z |
 | 13-deques-and-monotonic-queues | todo |
 | 14-linked-lists | todo |
 | 15-trees-dfs | todo |
