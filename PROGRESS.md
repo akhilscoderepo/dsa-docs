@@ -13,7 +13,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 06-binary-search | done |
 | 07-prefix-sums-and-difference-arrays | claimed 07 2026-10-03T15:10Z |
 | 08-two-pointers | done |
-| 09-sliding-window | todo |
+| 09-sliding-window | claimed 09 2026-10-03T15:28Z |
 | 10-intervals | todo |
 | 11-stacks-and-queues | todo |
 | 12-monotonic-stacks | todo |
