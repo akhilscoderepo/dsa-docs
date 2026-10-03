@@ -52,7 +52,7 @@ Some code describes a stretch as a **half-open range**, from `left` up to but no
 <!-- stage: trace -->
 ### Two Reads Answer A Question
 
-The first trace answers one question on the daily sales 3, 1, 4, 1, 5, 9, 2, 6, whose table of totals is 0, 3, 4, 8, 9, 14, 23, 25, 31. The cells are the table, and the question asks for days 2 to 5, both included. The step to study is the third: the two stored totals are 23 and 4, and their difference 19 is the sum of days 2, 3, 4 and 5, which are 4, 1, 5 and 9.
+The first trace answers one question on the daily sales 3, 1, 4, 1, 5, 9, 2, 6, whose table of totals is 0, 3, 4, 8, 9, 14, 23, 25, 31. The cells are the table, and the question asks for days 2 to 5, both included. Pay attention to the third step, where the two stored totals are 23 and 4, and their difference 19 is the sum of days 2, 3, 4 and 5, which are 4, 1, 5 and 9.
 
 ```trace
 {"cells":["0","3","4","8","9","14","23","25","31"],"pointers":["lo","hi"],"steps":[{"at":{"lo":2,"hi":6},"vars":{"left":2,"right":5},"note":"The question covers days 2 to 5. The slot after the last day is 6 and the slot before the first day is 2."},{"at":{"lo":2,"hi":6},"vars":{"slotHigh":23,"slotLow":4},"note":"Read slot 6, which holds 23, and slot 2, which holds 4."},{"at":{"lo":2,"hi":6},"vars":{"answer":19},"note":"Subtract: 23 - 4 = 19, the sum of 4, 1, 5 and 9."}]}
