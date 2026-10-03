@@ -12,7 +12,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 05-sorting-and-java-comparators | done |
 | 06-binary-search | done |
 | 07-prefix-sums-and-difference-arrays | claimed 07 2026-10-03T15:10Z |
-| 08-two-pointers | todo |
+| 08-two-pointers | claimed 08 2026-10-03T15:17Z |
 | 09-sliding-window | todo |
 | 10-intervals | todo |
 | 11-stacks-and-queues | todo |
