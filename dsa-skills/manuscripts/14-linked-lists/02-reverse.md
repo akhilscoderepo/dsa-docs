@@ -53,7 +53,7 @@ The train is split into two parts by two references. The reference `prev` heads 
 
 The invariant is that the reversed prefix and the untouched suffix together contain every node exactly once, and that no node is reachable only through a link that was just overwritten. Before the redirect step the only link to the suffix beyond `curr` is `curr.next`, and the saved reference holds a copy of it. After the step, `curr` has become the new head of the reversed prefix and the saved reference is the new head of the suffix. When `curr` is null the suffix is empty, and `prev` is the head of the fully reversed list.
 
-Each link is rewritten once, so the cost is O(n) time and O(1) extra space.
+Each link is rewritten once, so the cost is linear time with a constant number of extra references.
 
 <!-- stage: variables -->
 ### Prev, Curr And The Saved Link
@@ -116,7 +116,7 @@ final class ReverseCode {
 }
 ```
 
-Both methods rewrite each visited link once, so they run in O(n) time and O(1) extra space. The second returns the old head unless the segment starts at position 1, in which case the reversed segment head is the new head.
+Both methods rewrite each visited link once, so they run in linear time with a constant number of extra references. The second returns the old head unless the segment starts at position 1, in which case the reversed segment head is the new head.
 
 <!-- stage: applicability -->
 ### When Every Edge Must Point Backward

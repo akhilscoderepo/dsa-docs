@@ -6,7 +6,7 @@
 
 **Approach.** Start `slow` and `fast` at the head. While `fast` and `fast.next` are both non-null, advance `slow` by one node and `fast` by two, and report a cycle if they become the same node object. If the loop ends because `fast` reached the end, the list is finite. The comparison is on references, so repeated values cannot cause a false report. The assertions build lists from `values` and `pos` and compare with a detector that records visited node objects in an identity set, including lists whose values are all equal.
 
-**Complexity.** O(n) time and O(1) extra space.
+**Complexity.** Linear time with a constant number of extra references.
 
 ```java run
 import java.util.IdentityHashMap;
@@ -68,7 +68,7 @@ public final class DetectCycle {
 
 **Approach.** Run the two-speed chase to find a collision node inside the loop, and return 0 if the chase ends without one. From the collision node, walk forward counting steps until the walk returns to it. Every node of the loop is visited exactly once on the way round, so the count is the loop length. The assertions compare with the length derived from the encoding, which is `n - pos` when `pos >= 0`, and with a notebook that records the visit index of each node object.
 
-**Complexity.** O(n) time and O(1) extra space.
+**Complexity.** Linear time with a constant number of extra references.
 
 ```java run
 import java.util.IdentityHashMap;
@@ -138,7 +138,7 @@ public final class CycleLength {
 
 **Approach.** Guard every double step with `fast != null && fast.next != null`, advance `slow` once and `fast` twice, count the round, and stop if the two references are equal. A single node pointing at itself puts both references on that node in round one, and an acyclic pair sends `fast` to null in round one, so `[1, 1]` and `[0, 1]` come out of the same loop with no special case. The assertions compare the rounds with a simulation over integer positions, where the successor of index `i` is `i + 1`, or `pos` for the last index.
 
-**Complexity.** O(n) time and O(1) extra space.
+**Complexity.** Linear time with a constant number of extra references.
 
 ```java run
 import java.util.Random;
@@ -203,7 +203,7 @@ public final class CycleRounds {
 
 **Approach.** Find the collision node with the two-speed chase and return -1 if there is none. Then place a probe at the head and advance the probe and the collision reference one node at a time until they are the same node. If the head is `a` nodes before the entry and the loop has `c` nodes, the two references have walked a total of a multiple of `c` plus `a` when `slow` met `fast`, so `a` more steps bring the slow reference to the entry, which is where the probe arrives as well. The returned node is mapped back to its index. The assertions compare with the encoding, which says that the entry is index `pos`, and use lists of equal values, where only identity can decide.
 
-**Complexity.** O(n) time and O(1) extra space.
+**Complexity.** Linear time with a constant number of extra references.
 
 ```java run
 import java.util.Random;

@@ -68,7 +68,7 @@ public final class ReverseThreeByHand {
 
 **Approach.** Keep `prev` as the head of the reversed prefix and `curr` as the head of the untouched suffix. While `curr` is not null, save its successor, point it at `prev`, and advance both references. The loop ends when the suffix is empty, and `prev` is returned. The assertions compare with reversing the values of a copy, check that the total number of nodes is unchanged, and check a second reversal restores the original order.
 
-**Complexity.** O(n) time and O(1) extra space.
+**Complexity.** Linear time with a constant number of extra references.
 
 ```java run
 import java.util.Random;
@@ -132,7 +132,7 @@ public final class ReverseList {
 
 **Approach.** The same loop handles every size. For a null head the loop condition fails immediately and `prev` is still null, which is also the head of the empty result. For one node the loop runs once: the node's `next` is set to null, `prev` becomes the node, and `curr` becomes null. The returned head is therefore the original node object. The flag compares the references with `==`. The assertions compare with reversed arrays on random lengths, and check that the flag is `1` exactly when the list has zero or one node, since for longer lists the old last node becomes the head.
 
-**Complexity.** O(n) time and O(1) extra space.
+**Complexity.** Linear time with a constant number of extra references.
 
 ```java run
 import java.util.Random;

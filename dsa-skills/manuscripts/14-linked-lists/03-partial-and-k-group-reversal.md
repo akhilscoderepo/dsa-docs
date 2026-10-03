@@ -65,7 +65,7 @@ Process the belt box by box, carrying three references. The **group predecessor*
 
 The flip itself is the standard reversal over `k` nodes, with one change: the reversed prefix starts as the probe node and not null, so that the box's old first node is already linked to the first node after the box when the flip ends. The **reconnection pair** is then handled in two assignments: the group predecessor is pointed at the new front of the box, or the head is updated when there is no predecessor, and the old first node of the box becomes the new group predecessor. The start moves to the probe.
 
-The invariant is that everything before the start is final and correctly linked, everything from the start onward is untouched, and the look-ahead never modifies anything. Each node is visited a constant number of times, so the cost is O(n) time and O(1) extra space.
+The invariant is that everything before the start is final and correctly linked, everything from the start onward is untouched, and the look-ahead never modifies anything. Each node is visited a constant number of times, so the cost is time linear in the list length, plus constant extra memory.
 
 <!-- stage: variables -->
 ### Predecessor, Start, Probe And Count
