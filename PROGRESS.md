@@ -10,7 +10,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 03-strings | done |
 | 04-hash-maps-and-sets | done |
 | 05-sorting-and-java-comparators | done |
-| 06-binary-search | todo |
+| 06-binary-search | claimed 06 2026-10-03T14:45Z |
 | 07-prefix-sums-and-difference-arrays | todo |
 | 08-two-pointers | todo |
 | 09-sliding-window | todo |
