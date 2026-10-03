@@ -151,7 +151,7 @@ Do not use block reversal when the block boundaries depend on values and not cou
 
 **Prerequisites.** The reverse lesson of this chapter.
 
-**Problem.** A linked list is given by its values, together with a position `p`. Swap the node at position `p` with the node at position `p + 1`, counting from 0, by changing links and not values, and return the values of the resulting list.
+**Problem.** The input is a list described by its values and a position `p`. Swap the node at position `p` with the node at position `p + 1`, counting from 0, by changing links and not values, and return the values of the resulting list.
 
 **Constraints.** 2 <= n <= 10^5 and 0 <= p <= n - 2. Value copying is not allowed.
 

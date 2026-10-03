@@ -151,7 +151,7 @@ Do not rely on a dummy to hide a cycle or a shared tail, since it only manages t
 
 **Prerequisites.** The node invariants and merge lessons of this chapter.
 
-**Problem.** A linked list is given by its values, together with a position `p` and a value `x`, where `0 <= p <= n`. Insert a new node holding `x` so that it becomes the node at position `p`, counting from 0, and return the values of the result. Position 0 is the front and position `n` is the end. Use a dummy head so that no branch tests whether `p` is zero.
+**Problem.** The input is a list described by its values, a position `p` and a value `x`, where `0 <= p <= n`. Insert a new node holding `x` so that it becomes the node at position `p`, counting from 0, and return the values of the result. Position 0 is the front and position `n` is the end. Use a dummy head so that no branch tests whether `p` is zero.
 
 **Constraints.** 0 <= n <= 10^5, 0 <= p <= n and -10^9 <= x <= 10^9.
 
