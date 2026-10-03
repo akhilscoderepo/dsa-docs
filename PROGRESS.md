@@ -9,7 +9,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 02-matrices-and-2d-arrays | done |
 | 03-strings | done |
 | 04-hash-maps-and-sets | done |
-| 05-sorting-and-java-comparators | claimed 05 2026-10-03T14:17Z |
+| 05-sorting-and-java-comparators | done |
 | 06-binary-search | todo |
 | 07-prefix-sums-and-difference-arrays | todo |
 | 08-two-pointers | todo |
@@ -46,3 +46,6 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 39-dynamic-query-structures | todo |
 | 40-composite-indexes-and-allocation | todo |
 | 41-algorithmic-services-and-simulations | todo |
+
+## Notes
+- 05 (2026-10-03): Spec LC reuse inside the chapter was resolved by changing the contract/invariant, with the LC number kept so spec parity holds. Largest Number (179): lesson 01 builds the glue order; lesson 03 re-asks it as a comparator-law proof. Queue Reconstruction (406): lesson 04 sorts tallest-first and inserts at index; lesson 06 sorts shortest-first and fills the k-th empty slot. Contains Duplicate (217): lesson 02 sorts in place; lesson 07 sorts a copy and measures run length. Intersection (349) is answered by sorting concatenated distinct lists, since two pointers belong to Chapter 08. Missing Number (268) uses sorted index mismatch.
