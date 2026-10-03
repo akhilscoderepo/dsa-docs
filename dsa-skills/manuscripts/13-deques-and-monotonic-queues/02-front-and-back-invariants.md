@@ -46,7 +46,7 @@ The **back admitter** is the end where a new value enters. Before the newcomer i
 
 Equal values need a decision. Keeping equal entries preserves older copies, which will expire sooner than the newer copy, and replacing them keeps the deque shorter, because the newer copy is as strong and will outlast the older one. Both policies give the right current maximum. The choice matters only for how long the deque is and for which index a later expiry will remove, so it must be stated and kept.
 
-The total cost is O(n) for `n` values: each value is appended once and removed at most once, although a single arrival may remove many entries.
+The total cost is O(n) for `n` values: every value enters the deque a single time and leaves it no more than a single time, although a single arrival may remove many entries.
 
 <!-- stage: variables -->
 ### The Deque, The Comparison And The Policy
@@ -85,7 +85,7 @@ static java.util.ArrayDeque<Integer> shortlist(int[] values, boolean forMaximum)
 }
 ```
 
-Each value is appended once and removed at most once, so the time is O(n) and the memory is O(n) in the worst case, for example for scores that never beat one another. The comparison uses the unboxed values, since `d.peekLast() < v` unboxes automatically. A test for equality between two `Integer` objects with `==` compares references and not numbers, and it is only accidentally right for small values, so equality of boxed values should be written with `equals` or after unboxing.
+Every value enters the deque a single time and leaves it no more than a single time, so the time is O(n) and the memory is O(n) in the worst case, for example for scores that never beat one another. The comparison uses the unboxed values, since `d.peekLast() < v` unboxes automatically. A test for equality between two `Integer` objects with `==` compares references and not numbers, and it is only accidentally right for small values, so equality of boxed values should be written with `equals` or after unboxing.
 
 <!-- stage: applicability -->
 ### When The Ends Have Different Jobs

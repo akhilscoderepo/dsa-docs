@@ -46,7 +46,7 @@ It is enough to test the front because indices increase from front to back. If t
 
 <!-- names: age test, legal left bound, front expiry -->
 
-The invariant, before the answer for the window ending at `right` is read, is that every stored index is greater than `right - k`. Value order cannot establish it. A value can be the largest in the deque and also be expired, and only the index can tell. Each index is appended once and removed at most once from the front, so the total cost of all expiry work is O(n).
+The invariant, before the answer for the window ending at `right` is read, is that every stored index is greater than `right - k`. Value order cannot establish it. A value can be the largest in the deque and also be expired, and only the index can tell. Each index goes in a single time and comes out no more than a single time from the front, so the total cost of all expiry work is O(n).
 
 <!-- stage: variables -->
 ### The Edge, The Bound, The Front
