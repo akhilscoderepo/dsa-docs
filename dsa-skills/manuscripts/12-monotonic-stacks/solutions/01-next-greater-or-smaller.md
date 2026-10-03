@@ -4,7 +4,7 @@
 #### Solution: [Build] Next Greater Value (Author exercise)
 <!-- id: ms-next-greater-value -->
 
-**Approach.** Scan left to right with a stack of positions whose values never increase from bottom to top. For each new value, pop every top that it strictly exceeds and write the new value as that top's answer, then push the new position. Positions left on the stack at the end keep -1. The assertions compare the stack scan with the forward-walking method on random arrays, check the stated invariant that stack values never increase after every step, and count pushes and pops to confirm that each position is pushed once and popped at most once.
+**Approach.** Scan left to right with a stack of positions whose values never increase from bottom to top. For each new value, pop every top that it strictly exceeds and write the new value as that top's answer, then push the new position. Positions left on the stack at the end keep -1. The assertions compare the stack scan with the forward-walking method on random arrays, check the stated invariant that stack values never increase after every step, and count pushes and pops to confirm that each position takes one push and at most one pop.
 
 **Complexity.** O(n) time, because pushes and pops are each at most n in total, and O(n) extra space for the stack and the answer.
 
@@ -56,7 +56,7 @@ public final class NextGreaterValue {
             pushes = 0; pops = 0;
             int[] got = nextGreaterValue(a);
             if (!Arrays.equals(got, oracle(a))) throw new AssertionError("disagrees with the forward walk on " + Arrays.toString(a));
-            if (pushes != n || pops > pushes) throw new AssertionError("each position is pushed once and popped at most once");
+            if (pushes != n || pops > pushes) throw new AssertionError("each position takes one push and at most one pop");
         }
     }
 }

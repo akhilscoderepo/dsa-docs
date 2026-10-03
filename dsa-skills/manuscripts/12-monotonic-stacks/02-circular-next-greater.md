@@ -49,7 +49,7 @@ Two laps are enough because the answer for position `i`, if it exists, lies with
 
 <!-- names: virtual lap, modulo index, first-lap push -->
 
-The cost stays O(n) time, because there are `2n` steps and each real position is pushed once and popped at most once. The extra space is the stack plus the answer, and there is no copy of the input.
+The cost stays O(n) time, because there are `2n` steps and each real position gets one push and at most one pop. The extra space is the stack plus the answer, and there is no copy of the input.
 
 <!-- stage: variables -->
 ### The Virtual Index And The Real One
