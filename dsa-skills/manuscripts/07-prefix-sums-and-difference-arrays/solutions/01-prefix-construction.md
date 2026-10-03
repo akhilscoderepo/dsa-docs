@@ -147,7 +147,7 @@ public final class EmptyPrefix {
 #### Solution: [Recognize] Prefix Averages (Author exercise)
 <!-- id: ps-prefix-averages -->
 
-**Approach.** The average of the first `i + 1` values is the running total through position `i` divided by `i + 1`, the number of values in the prefix. The total is held in a `long`, since a hundred thousand values of a billion add to a hundred trillion, and the division is done as `double` division so that the fraction survives. The oracle recomputes each prefix sum from scratch with a `long` accumulator, and the program checks that dividing by `i` instead of `i + 1` would be wrong for the first example.
+**Approach.** The average of the first `i + 1` values is the running total through position `i` divided by `i + 1`, the number of values in the prefix. The total is held in a `long`, since the total of many values near a billion can reach a hundred trillion, and the division is done as `double` division so that the fraction survives. The oracle recomputes each prefix sum from scratch with a `long` accumulator, and the program checks that dividing by `i` instead of `i + 1` would be wrong for the first example.
 
 **Complexity.** One pass, linear time, and the output array as the only extra space.
 

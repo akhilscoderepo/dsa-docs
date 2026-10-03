@@ -55,7 +55,7 @@ public final class SumsDivisibleK {
 #### Solution: [Vary] Continuous Subarray Sum (LeetCode 523)
 <!-- id: ps-continuous-subarray-sum -->
 
-**Approach.** Two running totals in the same class enclose a stretch whose sum is a multiple of `k`, and the stretch has at least two numbers exactly when the indices of the two totals differ by at least two. The table keeps the first index of each class, so a repeated class is compared with the earliest possible partner, which gives the widest gap. Keeping the latest index instead could reject a valid pair. Class zero starts at index minus one, so the stretch beginning at the first number is considered, and a gap of exactly one is skipped without replacing the stored index. The total is a `long`, because a hundred thousand values of a billion add past the range of `int`. The oracle tests every stretch of at least two numbers.
+**Approach.** Two running totals in the same class enclose a stretch whose sum is a multiple of `k`, and the stretch has at least two numbers exactly when the indices of the two totals differ by at least two. The table keeps the first index of each class, so a repeated class is compared with the earliest possible partner, which gives the widest gap. Keeping the latest index instead could reject a valid pair. Class zero starts at index minus one, so the stretch beginning at the first number is considered, and a gap of exactly one is skipped without replacing the stored index. The total is a `long`, because the sum of many large values leaves the range of `int`. The oracle tests every stretch of at least two numbers.
 
 **Complexity.** One pass, linear expected time, and a map with at most `k` entries.
 

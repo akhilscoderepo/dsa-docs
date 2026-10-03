@@ -29,7 +29,7 @@ The XOR operator flips exactly the bits that are set in the card, so the result 
 <!-- stage: bottleneck -->
 ### Questions Share Most Of Their Guards
 
-A question covering m guards costs O(m), and q questions over n guards cost O(q n) in the worst case, which is ten billion operations for a hundred thousand of each. Many questions begin at the first guard or overlap heavily, so the same flips are recomputed.
+A question covering m guards costs O(m), and a batch of q questions over n guards takes O(q n) when the questions are long, which is ten billion operations for a hundred thousand of each. Many questions begin at the first guard or overlap heavily, so the same flips are recomputed.
 
 The structure that saves the work is that flipping is its own undo: a guard whose card is applied twice leaves nothing behind. If we know the combined effect of the first guards up to the end of a question, and the combined effect of the guards before its start, then applying the second effect on top of the first cancels the early guards and leaves exactly the guards of the question. Each question becomes one combination of two stored values, O(1), after one pass of O(n) that stores the combined effect after each guard.
 
