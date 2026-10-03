@@ -19,7 +19,10 @@ Pipeline law: `skill/dsa-chapter-pipeline/SKILL.md`. Status vocabulary is exactl
 2. Fill traces with a script modelled on `scripts/tracegen/*.py` (simulate the algorithm, assert the final answer, replace the placeholders). Never hand-write trace JSON.
 3. `scripts/aud.sh NN` and read only lines with ERROR or "run failed". Fix by targeted edit.
 4. When all lessons exist, also write `00-orientation.md`, `90-unlocked-combinations.md`, `95-review.md`, then `scripts/build.sh NN "Chapter Title"`. The only acceptable remaining error is `no-human-review`.
-5. Commit and push the chapter (manuscripts, `output/NN-*.html`, ids.lock), update PROGRESS.md to `done`, and print the output path. Then start the next chapter.
+5. After EVERY lesson (not only at chapter end), commit and push the work in progress (`git pull --rebase origin main` first; on a PROGRESS.md conflict keep both sides' lines). A session can be cut off by its token budget at any moment, and unpushed work is lost. When you start a claimed or stale chapter that already has lesson files in `dsa-skills/manuscripts/NN-*`, continue from the first missing lesson instead of rewriting.
+6. When the chapter is complete, commit and push the chapter (manuscripts, `output/NN-*.html`, ids.lock), update PROGRESS.md to `done`, and print the output path. Then start the next chapter.
+
+Overlap note: scheduled runs can overlap. Claims in PROGRESS.md keep two sessions on different chapters; never work on a chapter claimed within the last 6 hours by another session.
 
 ## Format rules learned the hard way (these cause most rework)
 - Every `##` and `###` heading: at most 7 words, no colon, no period. The `## Title` must equal the spec lesson heading.
