@@ -187,7 +187,7 @@ Do not merge this way when the chains are not sorted by the same key, or when a 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the head of a linked list, return the list sorted in ascending order using a merge sort that reuses the nodes. Split the list into two halves, sort each half recursively, and merge them.
+**Problem.** Take the head of a linked list and return the list sorted in ascending order using a merge sort that reuses the nodes. Split the list into two halves, sort each half recursively, and merge them.
 
 **Constraints.** 0 <= n <= 5 * 10^4 and -10^5 <= value <= 10^5.
 

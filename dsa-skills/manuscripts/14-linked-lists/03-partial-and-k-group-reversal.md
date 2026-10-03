@@ -202,7 +202,7 @@ Do not use block reversal when the block boundaries depend on values and not cou
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the head of a linked list and an integer `k`, reverse the nodes of the list `k` at a time and return the modified list. Nodes left over at the end, fewer than `k`, stay as they are. Only the links may change, not the values.
+**Problem.** You receive the head of a linked list and an integer `k`; reverse the nodes of the list `k` at a time and return the modified list. Nodes left over at the end, fewer than `k`, stay as they are. Only the links may change, not the values.
 
 **Constraints.** 1 <= k <= n <= 5000 and 0 <= value <= 1000.
 
