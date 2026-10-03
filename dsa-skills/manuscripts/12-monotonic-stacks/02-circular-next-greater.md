@@ -99,7 +99,7 @@ static int[] successors(int n, int start) {
 }
 ```
 
-The loop makes `2n` iterations with constant extra work each, plus pops that total at most `n`, so the time is O(n) and the extra space is O(n). The condition `j < n` is the whole difference from the straight scan, and removing it makes some positions appear twice on the stack. The helper `successors` lists the circular order for one start, which is the order that the naive method walks and that the double lap reproduces in the aggregate.
+The loop makes `2n` iterations with constant extra work each, plus pops that total at most `n`, so the work is linear in `n`, and the memory used besides the answer is the stack. The condition `j < n` is the whole difference from the straight scan, and removing it makes some positions appear twice on the stack. The helper `successors` lists the circular order for one start, which is the order that the naive method walks and that the double lap reproduces in the aggregate.
 
 <!-- stage: applicability -->
 ### When A Ring Needs Two Laps

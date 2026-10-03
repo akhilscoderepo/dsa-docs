@@ -101,7 +101,7 @@ static int[] nextSmallerValue(int[] a) {
 }
 ```
 
-Both methods make one left-to-right pass, and no index is handled more than twice, with one push and at most one pop, so the time is O(n) and the extra space is O(n) for the stack in the worst case of a row that never resolves. The comparison is strict, so a value equal to the top stays unresolved. `answer[stack.removeLast()]` unboxes the `Integer` into an index, and the stack holds positions, which is what lets the same loop return a distance `j - top` in the next lesson's exercise with no change to the structure.
+Both methods make one left-to-right pass, and no index is handled more than twice, with one push and at most one pop, so the running time is linear, and the stack adds O(n) memory in the worst case of a row that never resolves. The comparison is strict, so a value equal to the top stays unresolved. `answer[stack.removeLast()]` unboxes the `Integer` into an index, and the stack holds positions, which is what lets the same loop return a distance `j - top` in the next lesson's exercise with no change to the structure.
 
 <!-- stage: applicability -->
 ### When A Stack Of Waiters Fits

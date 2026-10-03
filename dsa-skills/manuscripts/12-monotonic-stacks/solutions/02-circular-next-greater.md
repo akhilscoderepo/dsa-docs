@@ -150,7 +150,7 @@ public final class AllEqualCircular {
 #### Solution: [Recognize] Next Greater Element II (LeetCode 503)
 <!-- id: ms-next-greater-element-ii -->
 
-**Approach.** This is the virtual double lap with the unresolved stack: iterate `j` from 0 to `2n - 1`, read `nums[j % n]`, pop and answer every top that the value strictly exceeds, and push only during the first lap. The assertions check the examples, compare with the walk-around method on random rings with negative values, show that the doubled-array alternative gives the same answers, and confirm the one-lap claim from the lesson: it is right when the largest value stands last and wrong for `[3, 8, 4, 1, 2]`.
+**Approach.** This is the virtual double lap with the unresolved stack: iterate `j` from 0 to `2n - 1`, read `nums[j % n]`, pop and answer every top that the value strictly exceeds, and push only during the first lap. Checks in the program cover the examples, then random rings with negative values against the walk-around method, show that the doubled-array alternative gives the same answers, and confirm the one-lap claim from the lesson: it is right when the largest value stands last and wrong for `[3, 8, 4, 1, 2]`.
 
 **Complexity.** O(n) time and O(n) extra space.
 

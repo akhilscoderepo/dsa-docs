@@ -92,7 +92,7 @@ static long sumOfMinimums(int[] a, long modulus) {
 }
 ```
 
-The scan makes `n + 1` steps, and each index is pushed once and removed once, so the time is O(n) and the extra space is O(n). `owned % modulus` is below the modulus, so multiplying it by a value of at most about a billion stays inside `long`. The final line turns a possibly negative remainder, which Java's `%` leaves negative for a negative left operand, into a value from 0 up to the modulus minus one.
+The scan makes `n + 1` steps, and each index is pushed once and removed once, so the scan is linear and the stack needs at most `n` slots. `owned % modulus` is below the modulus, so multiplying it by a value of at most about a billion stays inside `long`. The final line turns a possibly negative remainder, which Java's `%` leaves negative for a negative left operand, into a value from 0 up to the modulus minus one.
 
 <!-- stage: applicability -->
 ### When A Sum Splits By Element
