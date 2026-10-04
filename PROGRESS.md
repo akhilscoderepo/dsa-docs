@@ -5,7 +5,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | Chapter | Status |
 |---|---|
 | 00-problem-contracts-complexity-and-sequence-language | done |
-| 01-arrays-core-operations | claimed 01 2026-10-04T15:45Z (interactive session) |
+| 01-arrays-core-operations | done |
 | 02-matrices-and-2d-arrays | todo |
 | 03-strings | todo |
 | 04-hash-maps-and-sets | todo |
@@ -49,3 +49,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 
 ## Notes
 - 2026-10-04: Chapters 01 to 41 were reset to todo so every chapter is regenerated under the current writing rules, reader-flow rules and final reader review. The previous versions are kept in git under the tag the branch `archive-pre-regen`. Chapter 00 is the style exemplar.
+- 01 (2026-10-04): content complete, human review pending. Built interactively under the current writing and reader-flow rules. Lesson 07 has a fifth exercise (LC 229, required by the spec). Remaining WARNs: low-diversity trace wording in 06 and 11, spec-role in 11 and 12 (spec lists LC 152 and LC 918 twice), one template-phrase in 04. The final reader review (RUNBOOK section 10) has not run on this chapter.

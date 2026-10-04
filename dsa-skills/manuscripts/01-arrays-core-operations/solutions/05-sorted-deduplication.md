@@ -6,7 +6,7 @@
 
 **Approach.** The first element of a non-empty array is the representative of the first value run, so the write index starts at 1. The read index then scans from position 1. A value that differs from `nums[write - 1]` begins a new run, so the method copies it to the write index and advances the write index. A value that equals `nums[write - 1]` belongs to a run that already has a representative, so the method skips it.
 
-The invariant is that `nums[0..write-1]` holds one representative of every run started so far, in ascending order. An empty array returns 0 before any index is read. The harness checks the method against a `TreeSet` oracle and also asserts the unsorted false friend.
+Before every read, the prefix `nums[0..write-1]` holds one representative of every run started so far, in ascending order. An empty array returns 0 before any index is read. The harness checks the method against a `TreeSet` oracle and also asserts the unsorted false friend.
 
 **Complexity.**
 
@@ -75,7 +75,7 @@ public final class RemoveSortedDuplicates {
 
 **Approach.** The method generalizes the admission check to a limit of two copies. The first two values are always admitted, because no value can appear three times in a prefix shorter than three. After that, a value is admitted when it differs from `nums[write - 2]`. The array is sorted, so equal values are adjacent, and if the value two positions back in the prefix equals the current value, the prefix already holds two copies of it.
 
-The invariant is that `nums[0..write-1]` holds at most two copies of each value, in ascending order, for every value read so far. The check reads the prefix and not `nums[read - 2]`, because writes may have changed the earlier positions of the array. The harness compares the method with a counting oracle.
+At every step, the prefix `nums[0..write-1]` holds at most two copies of each value, in ascending order, for every value read so far. The check reads the prefix and not `nums[read - 2]`, because writes may have changed the earlier positions of the array. The harness compares the method with a counting oracle.
 
 **Complexity.**
 
@@ -156,7 +156,7 @@ public final class KeepTwoCopies {
 
 **Approach.** The loop is the one-representative loop with attention on its extremes. When all values are equal, every read after the first is skipped, so the write index stays at 1. When all values are distinct, every read is admitted, so the write index reaches `n` and the array is unchanged. The comparison uses `!=` and never subtracts, because the difference of `Integer.MAX_VALUE` and `Integer.MIN_VALUE` overflows `int` and could give a wrong sign.
 
-The invariant is that `nums[0..write-1]` holds one representative per run started so far. The harness asserts the overflow fact that justifies the comparison, then checks both extremes and random arrays that include the two extreme values.
+During the scan, the prefix `nums[0..write-1]` holds one representative per run started so far. The harness asserts the overflow fact that justifies the comparison, then checks both extremes and random arrays that include the two extreme values.
 
 **Complexity.**
 

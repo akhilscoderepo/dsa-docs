@@ -161,7 +161,7 @@ public final class MoveZeroes {
 
 **Approach.** The method is the compaction loop with an evenness test. The test compares the remainder with zero, because Java gives a remainder with the sign of the dividend. The value `-3` has remainder `-1`, so a comparison with `1` would misclassify negative odd values, while a comparison with `0` is correct for every sign.
 
-The invariant is that `nums[0..write-1]` holds the even values read so far, in order. The harness asserts the Java remainder facts that justify the test, and then checks the method against a list filter on random arrays with negative values.
+The loop keeps the prefix `nums[0..write-1]` holds the even values read so far, in order. The harness asserts the Java remainder facts that justify the test, and then checks the method against a list filter on random arrays with negative values.
 
 **Complexity.**
 
