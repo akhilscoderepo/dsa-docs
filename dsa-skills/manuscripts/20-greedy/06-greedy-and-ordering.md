@@ -144,7 +144,7 @@ In Java, sort index arrays when the answer is reported by original position, use
 
 **Prerequisites.** The local-choice lesson of this chapter; sorting index arrays from Chapter 05.
 
-**Problem.** Child `i` is content with any cookie of size at least `greed[i]`, and each cookie goes to at most one child. Return an array with one entry per cookie, holding the index of the child that cookie satisfies or -1 if the cookie is not used. Serve children from the least greedy upwards, breaking ties by the lower child index, and offer cookies from the smallest upwards, breaking ties by the lower cookie index. The number of children served must be as large as possible.
+**Problem.** Child `i` is content with any cookie of size at least `greed[i]`, and a cookie cannot be split or shared. Return an array with one entry per cookie, holding the index of the child that cookie satisfies or -1 if the cookie is not used. Serve children from the least greedy upwards, breaking ties by the lower child index, and offer cookies from the smallest upwards, breaking ties by the lower cookie index. The number of children served must be as large as possible.
 
 **Constraints.** 0 <= greed.length, sizes.length <= 100000 and every value is between 1 and 2147483647.
 
