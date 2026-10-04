@@ -133,9 +133,9 @@ The loop runs `rows * cols` times and does constant work per step, so it costs O
 
 The pattern fits when one cursor moves by a small cyclic rule and changes course only when the next step is illegal. The invariant is that `(r, c, d)` and the filled cells fully determine the next step. A statement that says "wind", "spiral", "snake" or "bounce" often describes this pattern.
 
-#### A False Friend Called Frontier Search
+#### When A Frontier Search Replaces The Cursor
 
-A search over a grid, such as a breadth-first search, also visits cells in some order. It differs in an important way. A search keeps many candidate cells waiting at once and picks among them. The direction model follows exactly one cursor, and the next cell is forced. If a problem lets the walker choose among several moves, a single direction value cannot describe the state, and the problem needs a search.
+A search over a grid, such as a breadth-first search, also visits cells in some order. It is a false friend of the direction model, and it differs in an important way. A search keeps many candidate cells waiting at once and picks among them. The direction model follows exactly one cursor, and the next cell is forced. If a problem lets the walker choose among several moves, a single direction value cannot describe the state, and the problem needs a search.
 
 #### The Case Of A Single Cell
 

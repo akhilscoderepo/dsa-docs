@@ -57,7 +57,7 @@ Row `r` holds the cells `(r, 0)` through `(r, cols - 1)`. Column `c` holds the c
 
 #### The Border And The Predecessor
 
-The **border** is the set of cells with `r == 0`, `r == rows - 1`, `c == 0` or `c == cols - 1`. A cell with two of these properties, such as a corner, is one cell and must be counted once. A diagonal also gives a cheap local test. Every cell not in row 0 or column 0 has a predecessor at `(r - 1, c - 1)` on the same diagonal. If each cell equals its predecessor, every cell on the diagonal equals its first cell, by induction along the diagonal. One comparison per cell replaces the whole walk.
+The **border** is the set of cells with `r == 0`, `r == rows - 1`, `c == 0` or `c == cols - 1`. A cell with two of these properties, such as a corner, is one cell and must be counted once. A diagonal also gives a cheap local test. Every cell not in row 0 or column 0 has a predecessor at `(r - 1, c - 1)` on the same diagonal. If each cell equals its predecessor, every cell on the diagonal equals its first cell, by repeating the check along the diagonal along the diagonal. One comparison per cell replaces the whole walk.
 
 #### What The Loops Keep True
 
@@ -82,7 +82,7 @@ Take the 3 by 3 grid with rows `[3, 5, 1]`, `[2, 3, 5]` and `[9, 2, 3]`. The cel
 
 #### A Grid That Fails
 
-Now take `[1, 2, 4]`, `[5, 1, 2]` and `[9, 5, 7]`. The comparisons at row 1 succeed, because 1 equals 1 and 2 equals 2. At row 2, column 2, the cell holds 7 and its predecessor holds 1. The check stops there, and the rule is broken on the diagonal that holds 1, 2 and 7.
+Now take `[1, 2, 4]`, `[5, 1, 2]` and `[9, 5, 7]`. The comparisons at row 1 succeed, because 1 equals 1 and 2 equals 2. At row 2, column 2, the cell holds 7 and its predecessor holds 1. The check stops there, and the rule is broken on the diagonal that holds 1, 1 and 7.
 
 #### Stepping Through Both Grids
 
@@ -95,9 +95,9 @@ Now take `[1, 2, 4]`, `[5, 1, 2]` and `[9, 5, 7]`. The comparisons at row 1 succ
 ```
 
 <!-- stage: code -->
-### Three Traversals Written From Their Rules
+### Two Traversals Written From Their Rules
 
-#### Column Totals, Border Total And The Predecessor Test
+#### Column Totals And The Predecessor Test
 
 ```java
 static long[] columnSums(int[][] grid) {
@@ -130,9 +130,9 @@ Both methods cost O(R * C) time. The first uses O(C) extra space for the result.
 
 A prompt is a coordinate-region problem when the cells it asks about follow a rule on `r` and `c`, such as a whole row, a column, a diagonal or the border. The invariant is that the indexes describe exactly the unvisited part of that region, so no cell is skipped and none is counted twice. The usual defects come from the border and the corners, where two properties hold for one cell.
 
-#### A False Friend Called Neighbor Search
+#### When A Search Replaces A Region Rule
 
-A problem that says "connected cells" or "reachable cells" looks similar, because it also moves between cells. It is a different pattern. The cells it needs are defined by connections between neighbors and not by a formula on `(r, c)`. That pattern needs a record of visited cells, and a later chapter on graph traversal teaches it. If a formula on `r` and `c` names the whole region, use loops. If the region is found only by following neighbors, use a search.
+A problem that says "connected cells" or "reachable cells" is a false friend of the region rule, because it also moves between cells. It is a different pattern. The cells it needs are defined by connections between neighbors and not by a formula on `(r, c)`. That pattern needs a record of visited cells, and a later chapter on graph traversal teaches it. If a formula on `r` and `c` names the whole region, use loops. If the region is found only by following neighbors, use a search.
 
 #### Where The Predecessor Test Stops Working
 

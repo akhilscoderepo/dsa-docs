@@ -126,9 +126,9 @@ The first method needs no promise about row lengths, because the for-each loop r
 
 Before writing any loop, find the sentence that fixes the shape. Phrases such as "an `m x n` matrix" or "an `n x n` matrix" promise a rectangular or square table. A phrase such as "a list of rows" or "rows may differ in length" promises nothing. When the statement is silent, treat the table as ragged. The invariant of the lesson is that every access uses a row index below `grid.length` and a column index below the length of that same row.
 
-#### A False Friend From Other Languages
+#### Habits From Other Languages That Fail
 
-Many readers carry over a rule from languages with true two-dimensional arrays, where one declaration fixes both sizes. In Java the declaration `new int[3][4]` happens to build a rectangular table, but the type does not remember it. A later assignment such as `grid[1] = new int[2]` makes the table ragged without any error. Code that receives the table cannot tell the two apart without reading the row lengths.
+The habit from languages with true two-dimensional arrays, where one declaration fixes both sizes, is a false friend in Java. In Java the declaration `new int[3][4]` happens to build a rectangular table, but the type does not remember it. A later assignment such as `grid[1] = new int[2]` makes the table ragged without any error. Code that receives the table cannot tell the two apart without reading the row lengths.
 
 #### When A Row Can Be Null
 

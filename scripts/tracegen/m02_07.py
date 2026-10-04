@@ -3,7 +3,7 @@ CH='02-matrices-and-2d-arrays'; F='07-spiral-boundaries.md'
 def run(m, ph):
     R,C=len(m),len(m[0]); out=[]
     top,bottom,left,right=0,R-1,0,C-1
-    def V(): return {"top":top,"bottom":bottom,"left":left,"right":right,"out":len(out)}
+    def V(): return {"top":top,"bottom":bottom,"left":left,"right":right,"emitted":len(out)}
     st=[{"at":{"p":-1},"vars":V(),"note":"Start of the walk. The four edges enclose the whole matrix and nothing is emitted."}]
     cell=lambda r,c:r*C+c
     last=-1

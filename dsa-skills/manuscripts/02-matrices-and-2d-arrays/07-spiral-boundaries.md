@@ -12,7 +12,7 @@ The error appears only when the grid becomes one row or one column wide. This le
 <!-- stage: naive -->
 ### Turning When The Path Is Blocked
 
-The simple method walks one cell at a time. It keeps a direction, and it marks every cell it emits. When the next cell lies outside the matrix or is already marked, it turns clockwise. The matrix has `rows * cols` cells, so the walk stops after that many steps.
+The simple method walks one cell at a time. It keeps a direction, and it marks every cell that it adds to the output. When the next cell lies outside the matrix or is already marked, it turns clockwise. The matrix has `rows * cols` cells, so the walk stops after that many steps.
 
 ```java
 static List<Integer> spiralWithMarks(int[][] m) {
@@ -79,7 +79,7 @@ The method keeps five pieces of state, and each one changes at a known point.
 - **bottom** holds the last unvisited row, and it decreases after the pass along the last row.
 - **left** holds the first unvisited column, and it increases after the pass along the first column.
 - **right** holds the last unvisited column, and it decreases after the pass along the last column.
-- **out** holds the emitted values in order, and every pass appends to it.
+- **out** holds the emitted values in order, and every pass appends to it. The trace below shows its length as `emitted`.
 
 <!-- stage: trace -->
 ### Walking Two Small Matrices
@@ -95,11 +95,11 @@ The second matrix has three rows and one column, with the values 1, 2 and 3. The
 #### Stepping Through Both Walks
 
 ```trace
-{"cells":[0,1,2,3,4,5,6,7,8,9,10,11],"pointers":["p"],"steps":[{"at":{"p":-1},"vars":{"top":0,"bottom":2,"left":0,"right":3,"out":0},"note":"Start of the walk. The four edges enclose the whole matrix and nothing is emitted."},{"at":{"p":0},"vars":{"top":0,"bottom":2,"left":0,"right":3,"out":1},"note":"Top pass emits the value 1 from row 0, column 0."},{"at":{"p":1},"vars":{"top":0,"bottom":2,"left":0,"right":3,"out":2},"note":"Top pass emits the value 2 from row 0, column 1."},{"at":{"p":2},"vars":{"top":0,"bottom":2,"left":0,"right":3,"out":3},"note":"Top pass emits the value 3 from row 0, column 2."},{"at":{"p":3},"vars":{"top":0,"bottom":2,"left":0,"right":3,"out":4},"note":"Top pass emits the value 4 from row 0, column 3."},{"at":{"p":7},"vars":{"top":1,"bottom":2,"left":0,"right":3,"out":5},"note":"Right pass emits the value 8 from row 1, column 3."},{"at":{"p":11},"vars":{"top":1,"bottom":2,"left":0,"right":3,"out":6},"note":"Right pass emits the value 12 from row 2, column 3."},{"at":{"p":10},"vars":{"top":1,"bottom":2,"left":0,"right":2,"out":7},"note":"Bottom pass emits the value 11 from row 2, column 2."},{"at":{"p":9},"vars":{"top":1,"bottom":2,"left":0,"right":2,"out":8},"note":"Bottom pass emits the value 10 from row 2, column 1."},{"at":{"p":8},"vars":{"top":1,"bottom":2,"left":0,"right":2,"out":9},"note":"Bottom pass emits the value 9 from row 2, column 0."},{"at":{"p":4},"vars":{"top":1,"bottom":1,"left":0,"right":2,"out":10},"note":"Left pass emits the value 5 from row 1, column 0."},{"at":{"p":5},"vars":{"top":1,"bottom":1,"left":1,"right":2,"out":11},"note":"Top pass emits the value 6 from row 1, column 1."},{"at":{"p":6},"vars":{"top":1,"bottom":1,"left":1,"right":2,"out":12},"note":"Top pass emits the value 7 from row 1, column 2."},{"at":{"p":6},"vars":{"top":2,"bottom":1,"left":1,"right":1,"out":12},"note":"The bottom edge is now above the top edge, so the guard skips the bottom pass."}]}
+{"cells":[0,1,2,3,4,5,6,7,8,9,10,11],"pointers":["p"],"steps":[{"at":{"p":-1},"vars":{"top":0,"bottom":2,"left":0,"right":3,"emitted":0},"note":"Start of the walk. The four edges enclose the whole matrix and nothing is emitted."},{"at":{"p":0},"vars":{"top":0,"bottom":2,"left":0,"right":3,"emitted":1},"note":"Top pass emits the value 1 from row 0, column 0."},{"at":{"p":1},"vars":{"top":0,"bottom":2,"left":0,"right":3,"emitted":2},"note":"Top pass emits the value 2 from row 0, column 1."},{"at":{"p":2},"vars":{"top":0,"bottom":2,"left":0,"right":3,"emitted":3},"note":"Top pass emits the value 3 from row 0, column 2."},{"at":{"p":3},"vars":{"top":0,"bottom":2,"left":0,"right":3,"emitted":4},"note":"Top pass emits the value 4 from row 0, column 3."},{"at":{"p":7},"vars":{"top":1,"bottom":2,"left":0,"right":3,"emitted":5},"note":"Right pass emits the value 8 from row 1, column 3."},{"at":{"p":11},"vars":{"top":1,"bottom":2,"left":0,"right":3,"emitted":6},"note":"Right pass emits the value 12 from row 2, column 3."},{"at":{"p":10},"vars":{"top":1,"bottom":2,"left":0,"right":2,"emitted":7},"note":"Bottom pass emits the value 11 from row 2, column 2."},{"at":{"p":9},"vars":{"top":1,"bottom":2,"left":0,"right":2,"emitted":8},"note":"Bottom pass emits the value 10 from row 2, column 1."},{"at":{"p":8},"vars":{"top":1,"bottom":2,"left":0,"right":2,"emitted":9},"note":"Bottom pass emits the value 9 from row 2, column 0."},{"at":{"p":4},"vars":{"top":1,"bottom":1,"left":0,"right":2,"emitted":10},"note":"Left pass emits the value 5 from row 1, column 0."},{"at":{"p":5},"vars":{"top":1,"bottom":1,"left":1,"right":2,"emitted":11},"note":"Top pass emits the value 6 from row 1, column 1."},{"at":{"p":6},"vars":{"top":1,"bottom":1,"left":1,"right":2,"emitted":12},"note":"Top pass emits the value 7 from row 1, column 2."},{"at":{"p":6},"vars":{"top":2,"bottom":1,"left":1,"right":1,"emitted":12},"note":"The bottom edge is now above the top edge, so the guard skips the bottom pass."}]}
 ```
 
 ```trace
-{"cells":[0,1,2],"pointers":["p"],"steps":[{"at":{"p":-1},"vars":{"top":0,"bottom":2,"left":0,"right":0,"out":0},"note":"Start of the walk. The four edges enclose the whole matrix and nothing is emitted."},{"at":{"p":0},"vars":{"top":0,"bottom":2,"left":0,"right":0,"out":1},"note":"Top pass emits the value 1 from row 0, column 0."},{"at":{"p":1},"vars":{"top":1,"bottom":2,"left":0,"right":0,"out":2},"note":"Right pass emits the value 2 from row 1, column 0."},{"at":{"p":2},"vars":{"top":1,"bottom":2,"left":0,"right":0,"out":3},"note":"Right pass emits the value 3 from row 2, column 0."},{"at":{"p":2},"vars":{"top":1,"bottom":1,"left":0,"right":-1,"out":3},"note":"The right edge is now before the left edge, so the guard skips the left pass."}]}
+{"cells":[0,1,2],"pointers":["p"],"steps":[{"at":{"p":-1},"vars":{"top":0,"bottom":2,"left":0,"right":0,"emitted":0},"note":"Start of the walk. The four edges enclose the whole matrix and nothing is emitted."},{"at":{"p":0},"vars":{"top":0,"bottom":2,"left":0,"right":0,"emitted":1},"note":"Top pass emits the value 1 from row 0, column 0."},{"at":{"p":1},"vars":{"top":1,"bottom":2,"left":0,"right":0,"emitted":2},"note":"Right pass emits the value 2 from row 1, column 0."},{"at":{"p":2},"vars":{"top":1,"bottom":2,"left":0,"right":0,"emitted":3},"note":"Right pass emits the value 3 from row 2, column 0."},{"at":{"p":2},"vars":{"top":1,"bottom":1,"left":0,"right":-1,"emitted":3},"note":"The right edge is now before the left edge, so the guard skips the left pass."}]}
 ```
 
 <!-- stage: code -->
@@ -141,9 +141,9 @@ Each cell is emitted exactly once, so the time is O(rows * cols). The method sto
 
 Use this pattern when the output consumes a whole rectangle from the outside in, or fills one from the outside in. The invariant is that the four indexes always enclose the cells not yet handled. Statements such as "in spiral order" or "layer by layer" match it directly.
 
-#### A False Friend From The Direction Walk
+#### When The Path Has Blocked Cells
 
-The turn-when-blocked walk from the direction lesson earlier in this chapter produces the same output on a plain rectangle, so the two methods look interchangeable. They differ in their failure modes. The direction walk needs a table of visited cells or a blocking rule, and it fits paths that can bend in any order around obstacles. The four-index method needs no table, but it works only when the emitted cells always form whole outer rows and columns. A path with blocked cells breaks that precondition, and that is a no-go condition for this method.
+The turn-when-blocked walk from the direction lesson earlier in this chapter produces the same output on a plain rectangle, so the two methods look interchangeable, and the direction walk is a false friend of the four-index method. They differ in their failure modes. The direction walk needs a table of visited cells or a blocking rule. It fits paths that bend around obstacles in any order. The four-index method needs no table, but it works only when the emitted cells always form whole outer rows and columns. A path with blocked cells breaks that precondition, so this method does not apply there. The four-loop code in the direction lesson failed on rectangles because it had no guards, and the two guards above are what make four edges safe.
 
 #### Filling Instead Of Reading
 
@@ -211,7 +211,7 @@ The same four indexes can write a matrix as easily as they can read one. A pass 
 
 **Example 2.** Input `rows = 4, cols = 1`, output `[3,0]`.
 
-**Hint.** Remove full layers until the remaining rectangle has one row, one column or two rows. Which cell ends the walk in each shape?
+**Hint.** Remove full layers until the remaining rectangle has one row, one column, or two sides of length at least 2. With one row the walk ends at the right end of that row. With one column it ends at the bottom of that column. Otherwise it ends in the left column, one cell below the top. Why does each shape end there?
 
 **Changed decision.** Only the shape of the last thin remainder matters, so the guards of the third and fourth passes decide the answer and no values are read.
 
@@ -220,7 +220,7 @@ The same four indexes can write a matrix as easily as they can read one. A pass 
 
 **Prerequisites.** The Vary exercise above.
 
-**Problem.** Given a positive integer `n`, return an `n x n` matrix whose cells hold the integers `1` to `n * n` in the order of a spiral walk that starts at the cell `[0][0]` and moves right first.
+**Problem.** Given a positive integer `n`, return an `n x n` matrix whose cells hold the integers `1` to `n * n` in the order of a spiral walk that starts at the cell `[0][0]` and moves right first. This is the task of the earlier exercise with the same name, now solved with four edges and without a direction cursor.
 
 **Constraints.** The limits are:
 - **n** satisfies `1 <= n <= 20`.

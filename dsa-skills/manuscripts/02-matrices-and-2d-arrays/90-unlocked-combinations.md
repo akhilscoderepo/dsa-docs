@@ -5,7 +5,7 @@ No combination lesson belongs to this chapter. A matrix problem becomes a combin
 
 ### Pairings That Wait For A Later Chapter
 
-Matrices with hash sets arrive in Chapter 04. A row, a column and a box each need a membership check, and that check is the set. Valid Sudoku is the first problem that uses it. The boolean marker arrays in this chapter cover only small consecutive indexes.
+Matrices with hash sets arrive in Chapter 04. A Sudoku row, a column and a three-by-three box each need a membership check, and that check is the set. Valid Sudoku is the first problem that uses it. The boolean marker arrays in this chapter cover only small consecutive indexes.
 
 Matrices with binary search arrive in Chapter 06. A matrix whose rows and columns are sorted gives the search an order to exploit. This chapter treats every matrix as unordered.
 
@@ -17,6 +17,6 @@ Matrices with dynamic programming arrive in Chapter 26. A table of answers needs
 
 Three ideas from this chapter carry forward.
 
-- **Offset tables** (lesson 04) return in every grid search in Chapters 21 and 22.
-- **Marking before changing** (lesson 06) returns whenever a pass must read the original state of a structure.
-- **Region rules on indexes** (lesson 02) return in the dynamic programming tables of Chapter 26.
+- **Offset tables** (Checking The Neighbors Of A Cell) return in every grid search in Chapters 21 and 22.
+- **Marking before changing** (Marking Rows Before Clearing Them) returns whenever a pass must read the original state of a structure.
+- **Region rules on indexes** (Walking Rows, Columns And Diagonals) return in the dynamic programming tables of Chapter 26.

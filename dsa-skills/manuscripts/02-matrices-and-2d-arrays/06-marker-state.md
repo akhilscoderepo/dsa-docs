@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Cleanup Job That Wipes Too Much
 
-A data table is stored as an `int[][]`, and a cleanup job must set a whole row and a whole column to `0` whenever one cell holds `0`. A developer writes the obvious loop. The loop scans the cells, and when it finds a `0` at `(r, c)`, it writes zeros across row `r` and column `c` at once. On `{{0, 2, 3}, {4, 5, 6}, {7, 8, 9}}` the scan reaches column 1 of row 0, finds a zero that the job itself just wrote, and clears column 1 as well. The result loses the values 5 and 8, although the input had a single zero.
+A data table is stored as an `int[][]`, and a cleanup job must set a whole row and a whole column to `0` whenever one cell holds `0`. A developer writes the obvious loop. The loop scans the cells, and when it finds a `0` at `(r, c)`, it writes zeros across row `r` and column `c` at once. On `{{0, 2, 3}, {4, 5, 6}, {7, 8, 9}}` the scan reaches column 1 of row 0, finds a zero that the job itself just wrote, and clears column 1 as well. The result turns the whole table to zeros, although the input had a single zero.
 
 The bug comes from reading cells that the loop already changed. This lesson asks how a loop can remember what it must clear without destroying the evidence it still needs.
 
@@ -57,6 +57,8 @@ A **marker** is one stored fact about a row or a column, here "this line must be
 #### Markers Kept In The Matrix Itself
 
 Two arrays, `boolean[rows]` and `boolean[cols]`, hold the markers in O(rows + cols) space. The matrix can also carry them. The cell `(0, c)` can mark column `c`, and the cell `(r, 0)` can mark row `r`. A marker written into a cell of the **first row** or the first column overwrites a value the matrix may need. Two extra booleans solve this, because they record whether the first row and the first column held a zero in the input. The update pass handles those two lines last, so their markers stay readable until every other cell is done. This brings the extra space to O(1).
+
+The cell `(0, 0)` marks both the first row and the first column, so it cannot tell them apart. The two saved booleans separate them. Take `{{3, 4}, {0, 5}}`. The zero at `(1, 0)` marks row 1 by writing into `(1, 0)`, which already holds it. The saved `firstCol` is true, so the last step clears column 0, and the first row stays unchanged because `firstRow` is false.
 
 <!-- names: marker, observation pass, update pass, first row -->
 
@@ -128,13 +130,13 @@ Each pass visits every cell once, so the time is O(rows * cols). The two marker 
 
 Use the pattern when a write to one cell changes what a later read of another cell would see, and the later read must see the input. The invariant is that every read in the observation pass sees the original value. Statements such as "set the row and column to zero" or "update all cells at the same time" signal it.
 
-#### A False Friend From Clearing While Scanning
+#### When Clearing While Scanning Fails
 
-Clearing a line as soon as the scan finds a zero looks like the same job with fewer passes. It breaks the invariant, because the loop then reads zeros that it wrote itself. A hash set of row indexes and column indexes also solves the problem, and Chapter 04 teaches sets. Boolean arrays are enough here because the indexes are small consecutive integers.
+Clearing a line as soon as the scan finds a zero is a false friend of the marker pattern, because it looks like the same job with fewer passes. It breaks the invariant, because the loop then reads zeros that it wrote itself. A hash set of row indexes and column indexes also solves the problem, and Chapter 04 teaches sets. Boolean arrays are enough here because the indexes are small consecutive integers.
 
 #### The Same Idea With Two Bits Per Cell
 
-Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 of each cell holds the old state, and bit 1 holds the new state. Neighbor reads use only bit 0, so they still see the old generation. A final shift moves bit 1 into place. The exercise below uses this idea.
+Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 of each cell holds the old state, and bit 1 holds the new state. The expression `cell & 1` keeps only bit 0, so neighbor reads still see the old generation. A final `cell >> 1` shifts bit 1 into place and drops bit 0. The exercise below uses this idea.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -207,7 +209,7 @@ Conway's Game of Life updates every cell from the old values of its eight neighb
 
 **Prerequisites.** The Boundary exercise above.
 
-**Problem.** A cell is live (`1`) or dead (`0`). A live cell stays live when exactly 2 or 3 of its 8 neighbors are live, and it dies otherwise. A dead cell becomes live when exactly 3 neighbors are live. Neighbors outside the matrix count as dead. Compute the next generation in place, where every cell is updated from the old values of the whole generation.
+**Problem.** A cell is live (`1`) or dead (`0`). A live cell stays live when exactly 2 or 3 of its 8 neighbors are live, and it dies otherwise. A dead cell becomes live when exactly 3 neighbors are live. Neighbors outside the matrix count as dead. Compute the next generation in place. This is the rule of the earlier Game Of Life exercise, now with O(1) extra space, and every cell is updated from the old values of the whole generation.
 
 **Constraints.** The limits are:
 - **Shape** is rectangular with `1 <= rows, cols <= 25`.

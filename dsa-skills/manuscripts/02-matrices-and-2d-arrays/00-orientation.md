@@ -1,11 +1,11 @@
 <!-- section: orientation -->
 ## Orientation
 
-A game board is stored as an `int[][]`. A function that counts the mines next to a cell reports one too many for the top-right corner, because it reads a cell outside the board. A second function that clears every row and column holding a zero wipes half the board, because it reads zeros that it wrote a moment earlier. Both bugs come from treating a grid as a pile of cells and not as rows, columns and a shape with rules. This chapter answers one question: what must a method know about a matrix before it reads or writes a cell?
+A game board is stored as an `int[][]`. A function that counts the mines next to a cell reports one too few for the top-right corner, because one hand-written range test rejects a cell inside the board. A second function that clears every row and column holding a zero wipes half the board, because it reads zeros that it wrote a moment earlier. Both bugs come from treating a grid as a pile of cells and not as rows, columns and a shape with rules. This chapter answers one question: what must a method know about a matrix before it reads or writes a cell?
 
 ### Prerequisites
 
-You should know Java arrays, nested `for` loops and the cost vocabulary of Chapter 00. The array patterns of Chapter 01 help, especially the read index and the write index. The chapter needs no other data structure.
+You should know Java arrays, nested `for` loops and the cost vocabulary of Chapter 00. The array patterns of Chapter 01 help, especially the read index and the write index. Lesson 06 also uses the bit operations `&` and `>>` once, and it explains each where it appears. The chapter needs no other data structure.
 
 ### What The Seven Lessons Cover
 
@@ -21,7 +21,7 @@ Each lesson adds one habit for working with a grid, together with the invariant 
 
 ### How To Work Through Each Lesson
 
-Every part of a lesson carries a label, so you always see where you are. A lesson opens with a failing case, and then a prediction prompt asks you to name the cause before the answer appears. A trace lets you step through the loop and watch the indexes change. Each lesson closes with four exercises, each with a hidden hint and a hidden solution. Write your own attempt before you open either one.
+Every part of a lesson carries a label, so you always see where you are. A lesson opens with a failing case, and then a prediction prompt asks you to name the cause before the answer appears. A trace lets you step through the loop and watch the indexes change. Each lesson closes with four exercises, each with a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, in rising order of change. An exercise marked Author exercise was written for this course. An exercise with a LeetCode number follows that problem. Write your own attempt before you open either hint or solution.
 
 ### What You Can Do After This Chapter
 
