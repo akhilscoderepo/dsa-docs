@@ -5,7 +5,7 @@
 <!-- id: bs-insert-35 -->
 
 **Approach.**
-The answer is the first index whose value is at least the target. The search uses the half-open interval `[lo, hi)` with `hi = nums.length`, so the end of the array is a legal answer. A value smaller than the target moves `lo` to `mid + 1`. Any other value keeps `mid` as a possible answer with `hi = mid`. The invariant is that every index below `lo` holds a smaller value and every index from `hi` on holds a value that is at least the target. The loop ends with `lo == hi`, and that index is both the position of the target when it occurs and its insertion place otherwise.
+The answer is the first index whose value is at least the target. The search uses the half-open interval `[lo, hi)` with `hi = nums.length`, so the end of the array is a legal answer. A value smaller than the target moves `lo` to `mid + 1`. Any other value keeps `mid` as a possible answer with `hi = mid`. The invariant says that each index below `lo` holds a smaller value and each index from `hi` on holds a value that is at least the target. The loop ends with `lo == hi`, and that index is both the position of the target when it occurs and its insertion place otherwise.
 
 **Complexity.**
 - **Time** is O(log n), because each step removes at least half of the interval.
