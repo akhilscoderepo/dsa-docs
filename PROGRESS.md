@@ -48,4 +48,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 41-algorithmic-services-and-simulations | todo |
 
 ## Notes
-- 2026-10-04: Chapters 01 to 41 were reset to todo so every chapter is regenerated under the current writing rules, reader-flow rules and final reader review. The previous versions are kept in git under the tag `pre-regen-2026-10-04`. Chapter 00 is the style exemplar.
+- 2026-10-04: Chapters 01 to 41 were reset to todo so every chapter is regenerated under the current writing rules, reader-flow rules and final reader review. The previous versions are kept in git under the tag the branch `archive-pre-regen`. Chapter 00 is the style exemplar.
