@@ -129,7 +129,7 @@ Use a state variable when the text follows a grammar with a fixed number of situ
 
 #### Nested Scopes Are A False Friend
 
-A false friend is a task that looks like a parsing loop and breaks its rule. Checking that every opening bracket has a matching closing bracket looks like a short loop with a counter or two. Brackets can nest to any depth, and the kinds must match in the right order, so a fixed number of states cannot record the open brackets. Such tasks need a stack, which a later chapter teaches.
+A false friend in this lesson is a check that resembles a parsing loop and breaks its rule. Checking that every opening bracket has a matching closing bracket looks like a short loop with a counter or two. Brackets can nest to any depth, and the kinds must match in the right order, so a fixed number of states cannot record the open brackets. Such tasks need a stack, which a later chapter teaches.
 
 #### Java Details That Cause Failures
 

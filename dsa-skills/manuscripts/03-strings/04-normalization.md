@@ -59,7 +59,7 @@ An input made only of noise, such as `"?!"`, normalizes to the empty string. The
 <!-- stage: variables -->
 ### Builder, Index And Character Class
 
-Three values carry the whole normalization, and the loop updates each at a set moment.
+Normalization needs three values, and each has a clear rule for when it changes.
 
 - **out** holds the canonical form of the characters read so far and only grows at its end.
 - **i** marks the position of the next character to classify and advances by one each round.
