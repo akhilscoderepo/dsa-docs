@@ -178,7 +178,7 @@ In Java, compare nodes with `==` and numbers as `int`. Two `Integer` objects hol
 
 **Prerequisites.** The One Target Is Ancestor rung and the ordering promise of a search tree.
 
-**Problem.** Given a search tree of distinct keys in level order and two keys `p` and `q` that are in it, return their lowest common ancestor, where a key counts as its own ancestor. Use the ordering to decide the direction at each node and avoid visiting both sides.
+**Problem.** The archive is a search tree of distinct keys in level order, and `p` and `q` are two keys in it. Return their lowest common ancestor, where a key counts as its own ancestor. Use the ordering to decide the direction at each node and avoid visiting both sides.
 
 **Constraints.** 2 <= values.length <= 10000, keys are distinct integers between 0 and 100000, and `p` differs from `q`.
 

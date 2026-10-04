@@ -210,7 +210,7 @@ A no-go condition is an unstated duplicate policy: the strict comparisons used h
 
 **Prerequisites.** The First Violation rung and the sorted visit of the previous lessons.
 
-**Problem.** Given a search tree of distinct keys stored by levels, a band `[low, high]`, and a rank k, return the kth smallest key that lies inside the band, or `null` when fewer than k keys do. Branches that cannot overlap the band must not be entered.
+**Problem.** A search tree of distinct keys is stored by levels. Given a band `[low, high]` and a rank k, return the kth smallest key that lies inside the band, or `null` when fewer than k keys do. Branches that cannot overlap the band must not be entered.
 
 **Constraints.** 0 <= values.length <= 10000, keys are distinct integers between 0 and 100000, 0 <= low <= high <= 100000, and 1 <= k <= 10000.
 
