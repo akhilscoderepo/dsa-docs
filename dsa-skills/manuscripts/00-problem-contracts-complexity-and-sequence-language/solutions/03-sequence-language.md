@@ -1,5 +1,5 @@
 <!-- solutions-for: 03-sequence-language -->
-### Solutions For Subarrays, Subsequences And Subsets
+### Solutions For The Three Selection Words
 
 #### Solution: [Build] Classify [2,4] (Author exercise)
 <!-- id: pc-classify-2-4 -->

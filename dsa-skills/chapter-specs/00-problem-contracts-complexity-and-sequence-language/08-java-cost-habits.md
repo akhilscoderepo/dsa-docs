@@ -1,4 +1,4 @@
-# Lesson spec: Java Library Call Time And Space Costs
+# Lesson spec: Time Complexity Of Common Java Methods
 
 **Recognition cue.** A Java library call appears inside a loop or silently changes representation. **State.** Include the API operation’s actual cost and semantics in the algorithm analysis. **Invariant.** Convenience syntax must not invalidate the target complexity or output contract. **False friend.** Familiar-looking APIs are not automatically constant time, primitive-friendly, or value-based.
 

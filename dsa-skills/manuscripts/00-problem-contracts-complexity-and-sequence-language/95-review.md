@@ -30,7 +30,7 @@ Use this section after you finish the lessons, and again a few days later. The q
 ```
 
 ```quiz
-{"id":"pc-rev-dryrun","q":"Your method returns the longest run of equal values. Which single input best tests its initialization?","options":["A random array of 100,000 values.","A single-element array.","An array sorted in descending order.","An array with a negative first value."],"answer":1,"explain":"With one element the loop body never runs, so the result comes entirely from the initial values of the variables. Random data rarely reaches that case."}
+{"id":"pc-rev-dryrun","q":"Your method returns the longest run of equal values. Which single input best tests the initial values of its variables?","options":["A random array of 100,000 values.","A single-element array.","An array sorted in descending order.","An array with a negative first value."],"answer":1,"explain":"With one element the loop body never runs, so the result comes entirely from the starting values of the variables. Random data rarely reaches that case."}
 ```
 
 ```quiz
@@ -39,4 +39,4 @@ Use this section after you finish the lessons, and again a few days later. The q
 
 ### Recall Exercises
 
-Close this page and answer from memory, then check against the lessons. State the preconditions, postconditions and mutation rules for a problem of your choice in five lines. Write the loop that counts the steps of a nested loop whose inner index starts one past the outer index, and give its closed form. Explain in two sentences why a doubling array has amortized constant append cost, using either the aggregate method or the accounting method. Name three Java calls whose time complexity or meaning surprises people in a loop. State the lower-cost alternative for each.
+Close this page and answer from memory, then check against the lessons. State the preconditions, postconditions and mutation rules for a problem of your choice in five lines. Write the loop that counts the steps of a nested loop whose inner index starts one past the outer index, and give its closed form. Explain in two sentences why a doubling array has amortized constant append cost, using either the aggregate method or the accounting method. Name three Java calls whose time complexity or meaning surprises people in a loop. State a cheaper alternative for each.

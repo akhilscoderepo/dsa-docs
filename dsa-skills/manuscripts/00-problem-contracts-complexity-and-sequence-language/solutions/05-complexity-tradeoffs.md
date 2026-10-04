@@ -1,5 +1,5 @@
 <!-- solutions-for: 05-complexity-tradeoffs -->
-### Complexity Trade-Off Solutions
+### Solutions For Complexity Trade-Offs
 
 #### Solution: [Build] Consecutive Loops (Author exercise)
 <!-- id: pc-consecutive-loops -->
@@ -9,7 +9,7 @@
 - **First loop** executes its body `n` times.
 - **Second loop** executes its body `n` times, because its bound is `n` and not a value from the first loop.
 - **Total** is `n + n = 2n`, because sequential loops add.
-- **Constant factor** of two drops from the bound, so the class is O(n).
+- **Constant factor** of two drops from the bound, so the bound is O(n).
 - **Doubling `n`** still doubles the running time, because the factor exists but does not change how cost grows.
 - **Multiplication** applies only when one loop sits inside the other.
 - **Harness** asserts the counts for `n = 10`, `n = 1` and a doubled `n`.
@@ -54,7 +54,7 @@ public final class ConsecutiveLoops {
 
 - **Inner count** is `n - 1` for `i = 0`, `n - 2` for `i = 1`, and 0 for `i = n - 1`.
 - **Sum** `(n - 1) + (n - 2) + ... + 1` equals `n(n - 1) / 2`.
-- **Class** is O(n^2), because the formula is about half of `n^2` and the bound drops the constant factor.
+- **Bound** is O(n^2), because the formula is about half of `n^2` and the bound drops the constant factor.
 - **Exact count** keeps the factor one half.
 - **Inner bound** depends on `i`, so the total is a sum and not the product `n * n`.
 - **Harness** checks the formula for every `n` from 0 to 60 and not only for two sizes.

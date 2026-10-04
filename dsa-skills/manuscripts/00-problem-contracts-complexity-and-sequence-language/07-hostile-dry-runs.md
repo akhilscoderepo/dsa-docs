@@ -1,16 +1,16 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: hostile-dry-runs -->
-## Designing Adversarial Test Inputs
+## Writing Edge-Case Tests
 
 <!-- stage: context -->
-### Why Random Tests Miss Boundary Cases
+### Why Random Tests Miss Some Bugs
 
 A developer writes a method that finds the longest climb in a list of daily step counts. A climb is the longest stretch where each day beats the one before. She tests it with the examples from the ticket. Then she tests it with a thousand random lists of a hundred days each, and everything passes. A week after release, a user with a single logged day sees "longest climb: 0 days" on their dashboard.
 
-The random tests were not careless. They could not reach the failing case, because a random list of a hundred days almost never forms one unbroken climb and almost never has length one. A bug that hides behind a boundary appears only when you choose the boundary on purpose. This lesson shows how to design the smallest input that attacks one specific weakness. It also shows how to trace the variables by hand so the weakness becomes visible. Such a test is called an adversarial test case.
+The random tests were not careless. They could not reach the failing case, because a random list of a hundred days almost never forms one unbroken climb and almost never has length one. A bug that hides behind a boundary appears only when you choose the boundary on purpose. This lesson shows how to design the smallest input that breaks one specific assumption in the code. It also shows how to trace the variables by hand so the broken assumption becomes visible.
 
 <!-- stage: naive -->
-### A Linear Scan That Passes Sample Tests
+### A Loop That Passes The Sample Tests
 
 The method below has a flaw that a reader does not see, because every line looks reasonable.
 
@@ -32,38 +32,38 @@ static int longestClimb(int[] steps) {
 On `[1, 3, 2, 4, 5, 1]` it returns 3, which is correct. It passes the ticket's examples and nearly every random list. Most people stop when the tests turn green.
 
 <!-- stage: bottleneck -->
-### Why Random Tests Cannot Reach Boundaries
+### Why Random Lists Rarely Hit Edge Cases
 
 Count the work that random testing performs. A thousand lists of a hundred values cost about 100,000 element visits, which is O(n) work per list and trivial to run. Now draw values from a small range such as 0 to 9. A list of more than ten days can never be strictly increasing from start to end. The failing case is an unbroken climb that never triggers the `else` branch, so it is unreachable at that size. A million such lists would still test the same behaviors that a thousand did.
 
 The failing inputs are tiny. A list of one day returns 0 instead of 1, because the loop never runs and `best` keeps its initial value. A list that climbs every day also returns 0. The method updates `best` only when a climb ends, and the last climb never ends inside the loop. Both failures sit at the edge of the loop, where the first and last iterations behave differently from the middle. A small deliberate input reaches them in seconds.
 
 <!-- stage: insight -->
-### Choosing Adversarial Inputs By Failure Mode
+### Choosing Test Inputs That Break One Assumption
 
-#### Adversarial Input And Failure Mode
+#### Break One Assumption Per Test
 
-Choose each test input to violate one assumption of the implementation. Each plausible implementation depends on an unstated happy-path assumption. The adversarial input is the smallest one that makes that assumption false.
+Choose each test input to violate one assumption of the implementation. Each plausible implementation depends on an unstated assumption that the input is typical. The best test input is the smallest one that makes that assumption false.
 
-A **dry run** is a hand execution of the code on a chosen input. You write down the value of every variable after every state change. An **adversarial input** is a small input chosen to break one specific assumption. A **failure mode** is the category of assumption under attack. The usual categories are initialization, equality, boundaries, overflow and mutation order.
+A **dry run** is a hand execution of the code on a chosen input. You write down the value of every variable after every change. An **edge case** is a small input at the limit of what the code accepts, chosen to break one specific assumption, such as an empty list, a single element or the largest value. Each edge case targets one kind of bug. The usual kinds are initial values, equal values, boundaries, overflow and the order of writes.
 
-<!-- names: dry run, adversarial input, failure mode -->
+<!-- names: dry run, edge case, invariant -->
 
-#### Smallest Input For Each Failure Mode
+#### Pick The Smallest Input Per Bug Type
 
-Each failure mode has a standard small adversarial input. For initialization, use the smallest legal input, often a single element. For equality, use all-equal values, so strict and non-strict comparisons give different answers. For boundaries, use inputs that fill or empty the structure exactly. For overflow, use extreme values in the type that accumulates. For mutation order, use an input where a write destroys a value that the code has not read yet.
+Each kind of bug has a standard small edge case. For initial values, use the smallest legal input, often a single element. For equality, use all-equal values, so strict and non-strict comparisons give different answers. For boundaries, use inputs that fill or empty the structure exactly. For overflow, use extreme values in the type that accumulates. For the order of writes, use an input where a write destroys a value that the code has not read yet.
 
-#### Variable Meaning As The Dry Run Invariant
+#### State What Every Variable Means
 
-The invariant for a dry run is that after each state change you can say what every variable means. In the climb method, `current` is the length of the climb that ends at the index just examined. The variable `best` is the longest climb that has already ended. Written that way, the bug is obvious. A climb that is still open when the loop ends has not been recorded, so `best` is stale.
+An **invariant** is a statement that stays true after every step. The invariant for a dry run is that after each change you can say what every variable means. In the climb method, `current` is the length of the climb that ends at the index just examined. The variable `best` is the longest climb that has already ended. Written that way, the bug is obvious. A climb that is still open when the loop ends has not been recorded, so `best` is stale.
 
 <!-- stage: variables -->
-### Variable Table For A Dry Run
+### Recording Variables During A Dry Run
 
 A dry run uses a variable table with one row per state change and one column per variable. A sample output reproduces a result but does not show whether a variable lost its meaning. Check the meanings, not only the outputs. Follow this procedure.
 
 - **Input** comes first, and you pick it before you execute anything.
-- **Failure mode** is named next, and the input targets it.
+- **Kind of bug** is named next, and the input targets it.
 - **Variable meaning** goes beside each column in a few words.
 - **Prediction** of the result is written before the code runs.
 - **Disagreement** between prediction and code is the purpose of the exercise.
@@ -90,7 +90,7 @@ The remaining observations explain why the sample inputs miss the defect.
 ```
 
 <!-- stage: code -->
-### Corrected Method And Adversarial Test Results
+### Fixing The Method And Rerunning The Tests
 
 ```java
 static int longestClimb(int[] steps) {
@@ -112,21 +112,21 @@ The repair has two parts.
 - **Time** is O(n), because the loop makes one pass.
 - **Space** is O(1), because two counters hold all the state.
 
-The adversarial inputs `[7]`, `[1, 2, 3]`, `[4, 4, 4]` and `[3, 2, 1]` now pass. Each one hits a different failure mode, from initialization to equality.
+The edge cases `[7]`, `[1, 2, 3]`, `[4, 4, 4]` and `[3, 2, 1]` now pass. Each one hits a different kind of bug, from the initial value to equal neighbors.
 
 <!-- stage: applicability -->
-### Adversarial Inputs Versus Random Testing
+### Edge Cases Versus Random Tests
 
 Before you trust a solution, apply this checklist.
 
-- **Failure modes** that the solution could have are written down.
-- **Adversarial input** is one tiny input chosen for each failure mode.
+- **Kinds of bug** that the solution could have are written down.
+- **Edge case** is one tiny input chosen for each kind of bug.
 - **Prediction** is made first, and then the code runs.
-- **Invariant** is that a dry run records the meaning of every variable after every state change.
+- **Invariant** is that a dry run records the meaning of every variable after every change.
 
-The large random test is a false friend, which means a test that appears to verify the code while it never reaches the failing precondition. The random test looks like thorough verification, but it rarely reaches the boundary inputs. Random data still catches surprises you did not predict, and the next chapters use it as a cross-check. It is a poor substitute for a deliberately chosen tiny case, because edge cases occupy a vanishing share of the random input space.
+The large random test is a false friend, which means a test that appears to verify the code while it never reaches the failing precondition. The random test looks like thorough verification, but it rarely reaches the boundary inputs. Random data still catches surprises you did not predict, and the next chapters use it as a cross-check. It is a poor substitute for a deliberately chosen tiny case, because edge cases make up a tiny share of all random inputs.
 
-Java supplies several ready-made adversarial inputs.
+Java supplies several ready-made edge cases.
 
 - **`Integer.MAX_VALUE` and `Integer.MIN_VALUE`** break accumulators and negation, since `Math.abs(Integer.MIN_VALUE)` is still negative.
 - **A freshly allocated `int[]`** holds zeros, which can look like real data.
@@ -150,7 +150,7 @@ Java supplies several ready-made adversarial inputs.
 
 **Hint.** How many times does a loop that starts at index 1 run when the array has one element? Which line is responsible for the result in that case?
 
-**Changed decision.** The smallest legal input attacks initialization, because no loop iteration exists to repair it.
+**Changed decision.** The smallest legal input tests the initial value, because no loop iteration exists to repair it.
 
 #### [Vary] All Equal (Author exercise)
 <!-- id: pc-all-equal -->
@@ -167,7 +167,7 @@ Java supplies several ready-made adversarial inputs.
 
 **Hint.** What does each comparison say about two equal neighbors? Which kind of input makes the two versions disagree?
 
-**Changed decision.** The attacked failure mode changes from initialization to equality handling.
+**Changed decision.** The bug under test changes from the initial value to equal values.
 
 #### [Boundary] Numeric Extremes (Author exercise)
 <!-- id: pc-numeric-extremes -->
@@ -184,7 +184,7 @@ Java supplies several ready-made adversarial inputs.
 
 **Hint.** Add the two numbers on paper and compare with 2^31 - 1. What does two's-complement wrap-around do to a sum just above the maximum?
 
-**Changed decision.** The attacked failure mode becomes overflow, and the adversarial input comes from the extreme of the type.
+**Changed decision.** The bug under test becomes overflow, and the input comes from the extreme value of the type.
 
 #### [Recognize] Mutation Order (Author exercise)
 <!-- id: pc-mutation-order -->
@@ -201,4 +201,4 @@ Java supplies several ready-made adversarial inputs.
 
 **Hint.** When you copy `a[0]` into `a[1]`, what happens to the old `a[1]`, and have you read it yet? In which direction can a write never land on an unread slot?
 
-**Changed decision.** The attacked failure mode is the order of writes, which decides whether a copy destroys its own input.
+**Changed decision.** The bug under test is the order of writes, which decides whether a copy destroys its own input.

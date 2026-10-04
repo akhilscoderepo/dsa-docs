@@ -1,13 +1,13 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: amortized-cost -->
-## Amortized Analysis Of Operation Sequences
+## Amortized Time Complexity
 
 <!-- stage: context -->
 ### Why Occasional Resizing Distorts Worst-Case Cost
 
 A growable array backs a request log. It starts with capacity 1. When the array is full, an append allocates an array of twice the capacity and copies every stored element. Most appends write one value and take constant time. Occasionally an append copies every stored element.
 
-Ask how long one append takes, and two accurate answers exist. The worst single append copies all stored elements, so it costs O(n). A typical append writes one value, so it costs O(1). A time limit built on the worst single append is far too pessimistic. A time limit that ignores the resizing appends is wrong. Software shows the same pattern whenever a structure repairs or resizes itself now and then, as hash table rehashing does. We need a way to state the cost of a whole sequence of operations without ignoring either kind of append.
+Ask how long one append takes, and two accurate answers exist. The worst single append copies all stored elements, so it costs O(n). A typical append writes one value, so it costs O(1). A time limit built on the worst single append is far too pessimistic. A time limit that ignores the resizing appends is wrong. Software shows the same pattern whenever a structure rebuilds or resizes itself now and then, as hash table rehashing does. We need a way to state the cost of a whole sequence of operations without ignoring either kind of append.
 
 <!-- stage: naive -->
 ### Multiplying The Worst-Case Cost By n
@@ -35,26 +35,26 @@ The worst-case product is O(n^2), and for `n = 1,000,000` it gives 10^12. A doub
 The mistake is treating the expensive operation as if it happened every time. After a doubling copy of `c` elements, the array has `c` empty slots. The next `c` appends cost almost nothing before another copy is needed. The expensive resizes are rare, and each one creates capacity for many later cheap appends. The opposite danger is just as real. An array that grows by one slot each time really does cost O(n^2) in total, because every append copies everything. The worst-case bound is accurate for that policy and wrong for doubling.
 
 <!-- stage: insight -->
-### Defining Amortized Cost Over A Sequence
+### What Amortized Cost Means
 
 #### Define Amortized Cost
 
-The right question is not what the most expensive call costs. Ask instead what a long sequence of calls costs in total, divided evenly by the number of calls. That average over a worst-case sequence is the **amortized cost** per operation. It is a guarantee about whole sequences, with no randomness and no assumption about typical inputs.
+The right question is not what the most expensive call costs. Ask instead what a long sequence of calls costs in total, divided evenly by the number of calls. That average over a worst-case sequence is the **amortized cost** per operation. It is a worst-case statement about whole sequences, with no randomness and no assumption about typical inputs.
 
 #### Apply The Accounting Method
 
-One way to compute it is to let cheap operations store **credit** that a later expensive operation uses. Charge every append three units. One unit pays for writing the new value, and you save the other two. A doubling from capacity `c` to `2c` copies `c` elements. It happens only after `c / 2` appends since the previous doubling, because the array held `c / 2` elements right after that doubling. Those `c / 2` appends each saved two units, so `c` units are waiting. That is exactly the price of the copy.
+One way to compute it is the **accounting method**. It charges each operation a fixed amount. Cheap operations use part of the charge and save the rest as credit, which a later expensive operation spends. Charge every append three units. One unit pays for writing the new value, and you save the other two. A doubling from capacity `c` to `2c` copies `c` elements. It happens only after `c / 2` appends since the previous doubling, because the array held `c / 2` elements right after that doubling. Those `c / 2` appends each saved two units, so `c` units are waiting. That is exactly the price of the copy.
 
-<!-- names: amortized cost, credit, potential -->
+<!-- names: amortized cost, accounting method, potential method -->
 
 #### Apply The Potential Method
 
-Another view uses a **potential**, a function of the structure's state that measures the work stored for later operations. For the doubling array, take the potential as `2 * size - capacity`. It is near 0 right after a resize and rises by 2 with each cheap append. A resize copies `size` elements and returns the potential to a small constant. Both views say the same thing: the total charged cost always covers the total actual cost, so the average is constant.
+The **potential method** is another way to compute it. It uses a potential function, a number computed from the structure's state that measures the work stored for later calls. For the doubling array, take the potential as `2 * size - capacity`. It is near 0 right after a resize and rises by 2 with each cheap append. A resize copies `size` elements and returns the potential to a small constant. Both views say the same thing: the total charged cost always covers the total actual cost, so the average is constant.
 
 The invariant behind every amortized argument is that, over any sequence of operations, the total amount charged is at least the total actual work done. The invariant does not say that any single call is cheap.
 
 <!-- stage: variables -->
-### Size, Capacity And Copy Count
+### Three Quantities To Track
 
 Track these quantities for the growing array.
 
@@ -67,7 +67,7 @@ Track these quantities for the growing array.
 The ratio stays bounded under doubling and grows without limit under grow-by-one.
 
 <!-- stage: trace -->
-### Copy Counts For Eight Appends
+### Count Copies Across Eight Appends
 
 #### Appends One To Four
 
@@ -94,7 +94,7 @@ The hardest step is the fifth, where one append copies four elements and the tot
 ```
 
 <!-- stage: code -->
-### Simulating Doubling And Grow-By-One Policies
+### Simulate Two Ways To Grow The Array
 
 ```java
 static long copiesForAppends(int appends, boolean doubling) {
@@ -121,21 +121,21 @@ The loop mirrors what a growable array does when a value arrives. The condition 
 Reach for amortized reasoning when all three conditions hold.
 
 - **Usual cost** of the operation is small.
-- **Occasional resize or repair** does a large amount of work.
-- **Repair** creates room for many cheap calls afterward.
+- **Occasional resize or rebuild** does a large amount of work.
+- **Rebuild** creates room for many cheap calls afterward.
 
 Typical cases are growable arrays, hash table resizing, and a queue built from two stacks, which a later chapter uses. The invariant is that the total charged cost over any sequence of operations pays for the total actual cost.
 
-#### Check The Amortized Guarantee
+#### Do Not Treat Amortized As Worst Case
 
-A false friend in amortized analysis is a bound that looks like a per-call guarantee but only holds for the whole sequence. Here it is an amortized O(1) bound read as worst-case O(1) for every call.
+A false friend in amortized analysis is a bound that looks like a per-call limit but only holds for the whole sequence. Here it is an amortized O(1) bound read as worst-case O(1) for every call.
 
 - **Amortized O(1)** is not worst-case O(1), and one call can still take O(n).
 - **Latency-sensitive loops** cannot accept that single slow call.
 - **Total-cost problems** are unaffected, because only the sum over many calls counts.
 - **Random-input average** is a different notion, since amortized analysis is a worst-case statement about a sequence.
 
-#### Check Java's ArrayList
+#### Check How Java's ArrayList Grows
 
 Java's `ArrayList` documents that `add` runs in amortized constant time, so an interview answer should say amortized and not constant. The growth policy matters. Growth by a fixed number of slots loses the guarantee, while growth by any constant factor above one keeps it.
 
@@ -145,7 +145,7 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 #### [Build] Doubling Array (Author exercise)
 <!-- id: pc-doubling-array -->
 
-**Prerequisites.** The size, capacity and copy-count bookkeeping in this lesson.
+**Prerequisites.** The size, capacity and copy count from this lesson.
 
 **Problem.** A dynamic array stores `size` values in a block of `capacity` slots. It starts empty with capacity 1. An append writes one value at position `size`. If `size == capacity` before the write, the array first allocates a block of twice the capacity and copies every stored value into it. Given a number of appends `n`, return the list of capacities that occur, in order, and the total number of element copies. Then state how the total compares with `n`. The expected result is that the total stays proportional to `n`.
 
@@ -157,7 +157,7 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Hint.** Which appends find the array full? How many elements are stored at the moment of each resize?
 
-**Changed decision.** Baseline case: turns the idea of occasional repair into a concrete tally of copies.
+**Changed decision.** Baseline case: turns the idea of occasional resizing into a concrete tally of copies.
 
 #### [Vary] Grow By One (Author exercise)
 <!-- id: pc-grow-by-one -->
@@ -187,18 +187,18 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Example 1.** Input 1,025 appends, output that append number 1,025 copies 1,024 elements while the 1,024 appends before it copied 1,023 elements in total.
 
-**Example 2.** Input 1,024 appends, output no spike at the end, since capacity 1,024 is exactly full and no further append has arrived.
+**Example 2.** Input 1,024 appends, output no slow append at the end, since capacity 1,024 is exactly full and no further append has arrived.
 
 **Hint.** When is the array full after exactly a power of two values? How many copies came from all the earlier resizes combined?
 
-**Changed decision.** The question moves from the total to a single spike, and the exercise asks you to explain why one costly call does not break the average.
+**Changed decision.** The question moves from the total to a single slow append, and the exercise asks you to explain why one costly call does not break the average.
 
 #### [Recognize] Potential Intuition (Author exercise)
 <!-- id: pc-potential-intuition -->
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Start from the same doubling array that the first exercise defines. Give each append a charge of 3 units. One unit pays for the write, and the other 2 units go into a credit balance. A resize from capacity `c` to `2c` costs `c` units, taken from the balance. The appends after a resize save credit for the next resize. Show with numbers that the balance never becomes negative, so a charge of 3 units per append is enough. Use plain arithmetic and no formal algebra.
+**Problem.** Start from the same doubling array that the first exercise defines. Give each append a charge of 3 units, as in the accounting method. One unit pays for the write, and the other 2 units go into a credit balance. A resize from capacity `c` to `2c` costs `c` units, taken from the balance. The appends after a resize save credit for the next resize. Show with numbers that the balance never becomes negative, so a charge of 3 units per append is enough. Use plain arithmetic and no formal algebra.
 
 **Constraints.** The charge is exactly 3 units per append: 1 unit to write and 2 units saved. A resize from capacity `c` to `2c` happens when `size == c` and costs `c` units. The balance starts at 0, and all quantities are whole units. Capacity starts at 1 and only appends occur.
 

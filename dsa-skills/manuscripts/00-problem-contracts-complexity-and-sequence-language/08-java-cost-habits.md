@@ -1,16 +1,16 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: java-cost-habits -->
-## Java Library Call Time And Space Costs
+## Time Complexity Of Common Java Methods
 
 <!-- stage: context -->
 ### Why Library Calls Dominate Running Time
 
 An engineer builds an event processor. It takes events off the front of a list and handles them one at a time. For each event it appends a summary line to a growing report string. In testing, with a few hundred events, it finishes in milliseconds. On the first real night, with a hundred thousand events, it is still running hours later.
 
-She re-reads the code and finds no nested loops, so no nested loop explains quadratic time. The slowness comes from two ordinary-looking library calls. Each call performs O(n) work internally every time it runs. A correct algorithm needs correct cost accounting for every library call it uses. In Java, that means knowing what each convenient call does.
+She re-reads the code and finds no nested loops, so no nested loop explains quadratic time. The slowness comes from two ordinary-looking library calls. Each call performs O(n) work internally every time it runs. A correct algorithm also needs the true cost of every library call it uses. In Java, that means knowing what each convenient call does.
 
 <!-- stage: naive -->
-### Event Processor With List And String Calls
+### An Event Processor Built From Simple Calls
 
 The processor below is the direct first implementation.
 
@@ -28,50 +28,50 @@ static String processAll(List<Integer> events) {
 It is short and obviously correct. Each statement states its intent plainly. The call `remove(0)` takes the first event, and `+` builds text. A reviewer has no reason to object. The loop runs once per event, so it looks like O(n).
 
 <!-- stage: bottleneck -->
-### Two Library Calls With Linear Cost
+### Two Library Calls That Take Linear Time
 
-#### Front Removal Shifts Array Elements
+#### Removing From The Front Shifts Elements
 
 Draining an `ArrayList` from the front is the first problem. Removing the element at index 0 shifts every later element one position to the left, as the class documents. So the first removal moves `n - 1` elements, and the next moves `n - 2`. Summed over all `n` removals, the shifts come to `n * (n - 1) / 2`, so the drain costs O(n^2). For 100,000 events that is about five billion element moves.
 
-#### Concatenation Copies Every Character
+#### Concatenating Strings Copies Every Character
 
 Building a string with `+` in a loop is the second problem. Strings are immutable, so each concatenation creates a new string object and copies every character of the old one. After `k` steps the string has about `k` times a constant number of characters. The total number of characters copied therefore also grows as O(n^2), and it reaches billions for a long report. Neither cost shows up as a loop in the source. The loop count said O(n), and each library call multiplied it by another factor of `n`.
 
 <!-- stage: insight -->
-### Including Library Call Costs In Analysis
+### Counting The Cost Of Each Library Call
 
-#### Library Call Cost In Complexity Analysis
+#### Add Each Call's Cost To The Total
 
 Treat every library call in a loop as an operation whose cost you must add to the analysis. The code you write is only part of the work. The call you do not see may be the dominant part.
 
-A **library call cost** is the time and memory that a library operation uses internally, without appearing as a loop in your code. The repair is to replace each costly call with a structure that makes the same step cheap. For front removal, keep a read index and leave the list alone, so taking the next event is O(1). For text building, use `StringBuilder`. Its `append` writes into a buffer that grows geometrically, so the cost per character stays amortized constant, by the same argument as the doubling array in the previous lesson.
+The cost of a library call is the time and memory it uses internally, without appearing as a loop in your code. **Amortized** cost is the total cost of a sequence of calls divided by the number of calls. The repair is to replace each costly call with a structure that makes the same step cheap. For front removal, keep a read index and leave the list alone, so taking the next event is O(1). For text building, use `StringBuilder`. Its `append` writes into a buffer that grows by a constant factor each time it fills, so the cost per character stays amortized constant, by the same argument as the doubling array in lesson 06.
 
-<!-- names: library call cost, reference equality, value equality -->
+<!-- names: amortized, reference equality, value equality -->
 
-#### Reference Equality Versus Value Equality
+#### Comparing Objects By Reference Or Value
 
 Two more Java facts matter for correctness, not speed. **Reference equality**, written `==` on objects, asks whether two names point to the very same object. **Value equality**, written `.equals(...)`, asks whether two objects hold the same contents. Two `String` objects can have identical characters and still fail `==`. A third trap lives in the type system. `Arrays.asList` takes a varargs list of objects. When you pass it an `int[]`, it produces a list with one element, the array itself, instead of a list of the integers inside.
 
-#### Invariant For Library Call Usage
+#### State What You Know About Each Call
 
 The invariant is that you know the cost and meaning of every library call you rely on, and the claimed bound includes them. Convenience syntax never changes the specification you must satisfy.
 
 <!-- stage: variables -->
-### Library Call Properties To Record
+### Three Facts To Write Beside Each Call
 
-Write three properties beside each library call inside a loop.
+Write three facts beside each library call inside a loop.
 
 - **Cost per call** is a function of the sizes involved, and you state whether it is amortized.
 - **Mutation** states whether the call changes its input or returns a new object.
 - **Equality and types** state whether the call compares by reference or by value, and whether it works on primitives or boxed objects.
 
-If you cannot describe a call by these three properties, read its documentation before you rely on it.
+If you cannot describe a call by these three facts, read its documentation before you rely on it.
 
 <!-- stage: trace -->
-### Tracing A Front-Removal Drain
+### Tracing A Drain With remove(0)
 
-#### Element Moves Per remove(0) Call
+#### Counting Moves For Each remove(0) Call
 
 Take a list holding 10, 20, 30 and 40, and drain it with `remove(0)`.
 
@@ -80,7 +80,7 @@ Take a list holding 10, 20, 30 and 40, and drain it with `remove(0)`.
 - **Third call** removes 30 and shifts the last 1.
 - **Fourth call** removes 40 and shifts 0.
 
-#### Element Moves With A Read Index
+#### Comparing The Total With A Read Index
 
 - **Total moves** are 3 + 2 + 1 + 0 = 6.
 - **Formula** `n * (n - 1) / 2` gives 4 * 3 / 2 = 6.
@@ -94,7 +94,7 @@ The cost grows quadratically with size, so it stays invisible on small tests.
 ```
 
 <!-- stage: code -->
-### Linear Time Processor And remove Overloads
+### The Fixed Processor And Two remove Methods
 
 ```java
 import java.util.*;
@@ -127,18 +127,18 @@ public final class JavaCosts {
 - **`remove(int)`** removes by position.
 - **`remove(Object)`** removes by value, so a `List<Integer>` needs `Integer.valueOf(7)` to remove the value 7.
 
-The two `remove` calls at the end of the code show this overload trap.
+The two `remove` calls at the end of the code show this trap.
 
 <!-- stage: applicability -->
-### Auditing Library Calls Inside Loops
+### Checking Library Calls Inside Loops
 
 Apply this checklist to every loop body.
 
-- **Library calls** in the loop body are listed, and each gets the three properties.
+- **Library calls** in the loop body are listed, and each gets the three facts.
 - **Documented cost** is checked for any unfamiliar method name before the analysis.
 - **Invariant** is that you know the cost and meaning of each call you rely on, and the stated bound includes them.
 
-The false friend is familiar syntax. The risk is a library call that matches the single-step pattern in appearance but breaks its precondition: a call that looks like a single step is not automatically constant time, primitive-friendly or value-based. The calls `list.remove(0)` and `string + char` look like `list.get(0)` and `builder.append(char)`, but they cost far more.
+The false friend here is familiar syntax. A false friend is code that looks like a safe pattern but is not. A call that looks like a single step is not automatically constant time, primitive-friendly or value-based. The calls `list.remove(0)` and `string + char` look like `list.get(0)` and `builder.append(char)`, but they cost far more.
 
 Two more Java hazards belong on the same list.
 
@@ -153,7 +153,7 @@ The exercises below take each of these in turn.
 #### [Build] Front Removal (Author exercise)
 <!-- id: pc-front-removal -->
 
-**Prerequisites.** The three library call properties from this lesson.
+**Prerequisites.** The three facts about library calls from this lesson.
 
 **Problem.** An `ArrayList` holds `n` elements. Method A removes every element by calling `remove(0)` until the list is empty. Method B reads the elements in order with an index that runs from 0 to `n - 1`, and it does not change the list. A move is one element copied one position to the left inside the list. Compute the total number of moves for each method when `n = 5`. Then explain why the total for Method A grows with the square of `n`.
 
@@ -182,7 +182,7 @@ The exercises below take each of these in turn.
 
 **Hint.** Each time the string is extended, how many old characters are copied into the new string? What does `StringBuilder` do differently when it runs out of room?
 
-**Changed decision.** The costly call moves from list shifting to string copying, and the cure becomes a buffer that grows geometrically.
+**Changed decision.** The costly call moves from list shifting to string copying, and the cure becomes a buffer that grows by a constant factor.
 
 #### [Boundary] Primitive Arrays (Author exercise)
 <!-- id: pc-primitive-arrays -->
@@ -206,7 +206,7 @@ The exercises below take each of these in turn.
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Two `String` objects hold the same characters, and they are separate objects in memory. Value equality means the two strings contain the same characters in the same order. Reference identity means both names refer to one object. Determine the result of `==` and of `.equals` for the two strings. State which operator tests value equality. Then determine the result of `==` when a string is compared with itself.
+**Problem.** Two `String` objects hold the same characters, and they are separate objects in memory. Value equality means the two strings contain the same characters in the same order. Reference equality means both names refer to one object. Determine the result of `==` and of `.equals` for the two strings. State which operator tests value equality. Then determine the result of `==` when a string is compared with itself.
 
 **Constraints.** Create each string with `new String("abc")`, which always returns a new object. Each string has length 3. `==` on two object references returns true only if they refer to the same object. `.equals` on two `String` values returns true if and only if their characters match. Use `.equals` to compare contents. `==` takes O(1) time. `.equals` takes O(L) time for strings of length L.
 

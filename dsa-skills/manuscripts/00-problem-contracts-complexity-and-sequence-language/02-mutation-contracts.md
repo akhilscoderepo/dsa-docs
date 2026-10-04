@@ -1,9 +1,9 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: mutation-contracts -->
-## Specifying Preconditions, Postconditions And Mutation
+## Whether A Method May Modify Its Input
 
 <!-- stage: context -->
-### Why Shared Array Mutation Corrupts Data
+### Why A Shared Array Gets Corrupted
 
 A reporting tool keeps the day's sensor readings in one array and passes it to two functions. The first function removes the readings flagged as faulty. The second prints the full day's readings for an audit. After the first function runs, the audit page shows duplicates and missing values. Nobody has changed the audit code in months.
 
@@ -30,7 +30,7 @@ static int removeValue(int[] nums, int target) {
 Called on `[3, 2, 2, 3]` with target 3, it returns 2, and the array afterward reads `[2, 2, 2, 3]`. A caller who prints `nums.length` elements sees three twos and a three. A caller who kept a second reference to the same array sees the damage too.
 
 <!-- stage: bottleneck -->
-### Cost Of Silent Input Mutation
+### The Cost Of Changing Input Silently
 
 The method runs in O(n) time with O(1) extra space, so no step is slow. The cost is that the method silently changes the caller's data. The array does not become shorter, because a Java array's length is fixed when it is created. Only the first `write` slots are meaningful now. The slots after that still hold old values that look real.
 
@@ -39,26 +39,26 @@ The safe alternative copies the input first. That copy costs O(n) extra space an
 <!-- stage: insight -->
 ### Separating The Array From The Result
 
-#### Defining The Array And The Result
+#### Defining The Array And Its Meaningful Prefix
 
-Two different things are easy to confuse. The array is a physical block of memory with a fixed length. The **logical result** is the part of that array that holds the answer. After an in-place filter, the logical result is the first `k` slots and nothing else. The return value gives `k`.
+Two different things are easy to confuse. The array is a physical block of memory with a fixed length. The **meaningful prefix** is the part of that array that holds the answer. After an in-place filter, the meaningful prefix is the first `k` slots and nothing else. The return value gives `k`.
 
-#### Defining Preconditions And Postconditions
+#### Stating What The Caller Can Rely On
 
 A precondition states what the input must satisfy and whether the method may modify it. A **postcondition** states what the caller may rely on after the call, including which positions hold the result. Together they also state what extra storage the method may use. Write them in one line. For example: "precondition: input may be overwritten; postcondition: positions `0..k-1` hold the result in original order and the rest is unspecified". The words "in place" abbreviate such a specification. They never mean the array got shorter.
 
-<!-- names: postcondition, logical result, auxiliary space -->
+<!-- names: postcondition, meaningful prefix, auxiliary space -->
 
-#### Defining Auxiliary Space And Safe Writes
+#### Counting Extra Memory And Safe Writes
 
 The cost charged to a solution is its **auxiliary space**. State which convention you use, so the argument stays about the algorithm and not about definitions.
 
-Auxiliary space is the working memory beyond the input and beyond the required output, so a returned array of `n` values uses O(n) space that is not auxiliary. Write safety is the invariant that no write destroys a value that a later read still needs. The filter keeps that invariant because the `write` index never passes the `read` index, and a slot is overwritten only after its original value has been read.
+Auxiliary space is the working memory beyond the input and beyond the required output, so a returned array of `n` values uses O(n) space that is not auxiliary. A write is safe when it destroys no value that a later read still needs. That is the invariant of the filter, and the filter keeps it because the `write` index never passes the `read` index, and a slot is overwritten only after its original value has been read.
 
 <!-- stage: variables -->
-### Parameters Of The Filter State
+### Variables The Filter Uses
 
-Three entities need names. When a method may mutate, the specification must name `k` and state what the suffix holds.
+Three entities need names. When a method may modify its input, the specification must name `k` and state what the suffix holds.
 
 - **Reference** is the variable that points at the array, and two variables can point at the same array.
 - **Container** is the array object with its fixed length.
@@ -81,7 +81,7 @@ Run the filter on `[3, 2, 2, 3]` with target 3.
 
 When the loop ends, the state has four facts.
 
-- **write** is 2, so the logical result is `[2, 2]`, the first two slots.
+- **write** is 2, so the meaningful prefix is `[2, 2]`, the first two slots.
 - **Last two slots** still hold `2` and `3`, and the 3 in slot 3 is a leftover from the input, not part of the answer.
 - **Overwrite at slot 0** destroyed the first 3, which was safe because the loop had already read and rejected it.
 - **Other references** to this array now see `[2, 2, 2, 3]` and have lost the original.
@@ -130,11 +130,11 @@ Neither variant does extra work for the other's specification. Picking the wrong
 Check the precondition and the postcondition on the input array before you write any array or string solution.
 
 - **Invariant** is that every write preserves the data a later read still needs.
-- **Caller** never reads anything outside the stated meaningful range.
-- **Missing mutation rule** means you ask, or you state your assumption.
+- **Caller** never reads anything outside the stated meaningful prefix.
+- **Missing rule about changing the input** means you ask, or you state your assumption.
 - **Default** is to leave the input intact when the copy cost is small.
 
-#### Identifying Cases That Violate The Precondition
+#### Finding Cases That Break The Precondition
 
 A false friend here is an in-place method that appears to follow the specification but breaks its precondition about who may overwrite the input. Two cases qualify.
 
@@ -142,7 +142,7 @@ A false friend here is an in-place method that appears to follow the specificati
 - **Loop to nums.length** after an in-place removal reads stale slots, so the method returns a count.
 - **Returned same reference** does not prove the data is unchanged, because the caller's other references see every write.
 
-#### Applying Java Parameter Rules
+#### Passing Arrays To Java Methods
 
 Java passes an `int[]` parameter as a reference value.
 
@@ -170,7 +170,7 @@ Chapter 01 applies these specifications to every in-place exercise.
 
 **Hint.** The return value is the only thing that says how much of the array counts as the answer. What does the array's own `length` tell you after the call?
 
-**Changed decision.** First exercise in the sequence: separates the physical array from the logical result and names the boundary `k`.
+**Changed decision.** First exercise in the sequence: separates the physical array from the meaningful prefix and names the boundary `k`.
 
 #### [Vary] Preserve Input (Author exercise)
 <!-- id: pc-preserve-input -->

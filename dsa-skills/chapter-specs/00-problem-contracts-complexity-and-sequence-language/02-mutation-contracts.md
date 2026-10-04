@@ -1,4 +1,4 @@
-# Lesson spec: Specifying Preconditions, Postconditions And Mutation
+# Lesson spec: Whether A Method May Modify Its Input
 
 **Recognition cue.** The prompt states whether the input may change and whether extra storage counts against the target. **State.** Separate the physical container from the logical result. **Invariant.** Every write preserves data still needed by a later read. **False friend.** “In place” does not mean “the Java array becomes shorter,” and output storage required by the return value is not always counted as auxiliary space.
 

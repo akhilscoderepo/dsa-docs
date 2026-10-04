@@ -5,12 +5,12 @@
 <!-- id: pc-non-empty-maximum -->
 
 **Approach.**
-- **best** starts at `nums[0]`, a real member of the input, because the specification guarantees at least one element.
+- **best** starts at `nums[0]`, a real member of the input, because the specification promises at least one element.
 - **Loop** visits the remaining elements from index 1.
 - **best** keeps the larger of itself and the current element at each step.
 - **Invariant** is that `best` equals the maximum of the elements read so far, so it is the maximum of the whole array when the loop ends.
 - **Zero start** assumes zero is below every value, and fails on `[-8,-3]` with result 0 instead of -3.
-- **Empty-array guard** is dead code under this specification, and it implies a guarantee the problem never made.
+- **Empty-array guard** is dead code under this specification, and it implies a precondition the problem never stated.
 
 **Complexity.**
 - **Time** is O(n), because the loop reads each of the `n` elements once.
@@ -183,7 +183,7 @@ public final class RectangularOrRagged {
 - **distinct** starts at 1, because the first element begins the first run.
 - **Scan** runs from index 1 and adds one at every position where `nums[i] != nums[i - 1]`.
 - **Invariant** is that `distinct` equals the number of runs in `nums[0..i]`, which equals the number of distinct values because the array is sorted.
-- **Unsorted array** breaks the guarantee, so the same loop counts runs and `[1,2,1]` gives 3 instead of 2.
+- **Unsorted array** breaks the precondition, so the same loop counts runs and `[1,2,1]` gives 3 instead of 2.
 
 **Complexity.**
 - **Time** is O(n), because the loop makes one comparison for each of the `n - 1` later elements.

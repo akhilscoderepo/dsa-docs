@@ -4,14 +4,14 @@ This chapter teaches the language used to reason about every later problem. Its 
 
 ## Lesson order
 
-01. Analyzing Input Limits And Operation Budgets  ->  01-constraint-signals.md
-02. Specifying Preconditions, Postconditions And Mutation  ->  02-mutation-contracts.md
-03. Defining Subarrays, Subsequences And Subsets  ->  03-sequence-language.md
-04. Input Preconditions And Defensive Assumptions  ->  04-input-guarantees.md
+01. Reading Input Limits Before Choosing An Algorithm  ->  01-constraint-signals.md
+02. Whether A Method May Modify Its Input  ->  02-mutation-contracts.md
+03. Subarrays, Subsequences And Subsets Compared  ->  03-sequence-language.md
+04. Input Preconditions And Edge Cases  ->  04-input-guarantees.md
 05. Comparing Time And Space Complexity Trade-Offs  ->  05-complexity-tradeoffs.md
-06. Amortized Analysis Of Operation Sequences  ->  06-amortized-cost.md
-07. Designing Adversarial Test Inputs  ->  07-hostile-dry-runs.md
-08. Java Library Call Time And Space Costs  ->  08-java-cost-habits.md
+06. Amortized Time Complexity  ->  06-amortized-cost.md
+07. Writing Edge-Case Tests  ->  07-hostile-dry-runs.md
+08. Time Complexity Of Common Java Methods  ->  08-java-cost-habits.md
 
 # Chapter 00: Problem contracts, complexity, and sequence language
 

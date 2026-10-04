@@ -1,6 +1,6 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: constraint-signals -->
-## Analyzing Input Limits And Operation Budgets
+## Reading Input Limits Before Choosing An Algorithm
 
 <!-- stage: context -->
 ### Why Correct Code Fails On Large Input
@@ -10,7 +10,7 @@ A developer posts a pair-finding method for code review. The task is to find two
 Those lines are the constraints, and most readers check them last, if at all. This lesson teaches you to read them first. A constraint states how large the input can get. Each constraint rules some approaches in and others out before you write code.
 
 <!-- stage: naive -->
-### Brute-Force Pair Enumeration
+### Checking Every Pair Directly
 
 The common error is to turn the sample straight into code and trust it. For the pair task, the direct translation checks every pair of positions.
 
@@ -28,28 +28,28 @@ static boolean hasPairBrute(int[] nums, int target) {
 On a sample with five readings it makes ten comparisons and returns instantly. The method is correct, and it is a reasonable first draft.
 
 <!-- stage: bottleneck -->
-### Counting Comparisons At Maximum Input Size
+### Counting Comparisons At The Largest Input
 
 Count the comparisons instead of timing the sample. For `n` readings there are `n * (n - 1) / 2` pairs, so the work grows as O(n^2). With `n = 5` that is 10 comparisons. With the stated maximum of `n = 100,000` it is 4,999,950,000, close to five billion, for a single call.
 
 A judge or an interview machine performs very roughly one hundred million simple steps in the time we normally get. The exact figure varies by language and hardware. Five billion is fifty times over that figure. The failure is not bad luck or a slow laptop. The sample cannot reveal it, because the sample is tiny. The cost of the method depends on the largest legal input, not the one on the page. The method needs O(1) extra space, which is fine, so time is the entire problem.
 
 <!-- stage: insight -->
-### Estimating Step Counts From Input Constraints
+### Estimating Steps From The Input Limits
 
-#### Computing Step Counts At The Maximum
+#### Counting Steps At The Largest Input
 
 Before choosing an approach, write down the largest legal input. Then compute how many steps each candidate takes on it. Compare that number with what the time limit allows. This takes ten seconds and eliminates whole families of solutions at once.
 
-#### Defining Time Limit And Complexity Class
+#### What A Time Limit Allows
 
-The **time limit** is the number of basic operations a solution may perform on its worst legal input. A rule of thumb for interview-style problems is about 10^8 basic operations. The rule is coarse. It separates clearly feasible from clearly infeasible and does not predict a stopwatch. The count for a candidate depends on its **time complexity class**. The class describes how the operation count grows with the input size. A single pass is O(n). Sorting is O(n log n). Comparing all pairs is O(n^2).
+The **time limit** is how long a judge lets a solution run on its worst legal input. A rule of thumb for interview-style problems is that about 10^8 simple steps fit in that time. The rule is coarse. It separates clearly feasible from clearly infeasible and does not predict a stopwatch. The step count of a candidate depends on its **time complexity**. The time complexity states how the number of steps grows with the input size. A single pass is O(n). Sorting is O(n log n). Comparing all pairs is O(n^2).
 
-<!-- names: time limit, time complexity class, input constraint -->
+<!-- names: time limit, time complexity, input constraint -->
 
-#### Mapping Input Size To Complexity Class
+#### Choosing Algorithms From Input Size
 
-Each limit in a problem statement is an **input constraint**. It restricts which time complexity classes are feasible. The table lists the usual pairings. They give a first filter and are not laws.
+Each limit in a problem statement is an **input constraint**. It restricts which time complexities are feasible. The table lists the usual pairings. They give a first filter and are not laws.
 
 | Largest input size | Growth classes that usually fit |
 | --- | --- |
@@ -59,18 +59,18 @@ Each limit in a problem statement is an **input constraint**. It restricts which
 | about 100,000 | linear and n log n work |
 | about 1,000,000 | linear work, small constants |
 
-A second input constraint is the value range. If every value is small, a table indexed by value fits in memory. If values are huge, that table is impossible. A third input constraint is the number of operations the problem requests. The size of the data and the number of queries are different quantities. Both belong in the arithmetic.
+A second input constraint is the value range. If every value is small, a table indexed by value fits in memory. If values are huge, that table is impossible. A third input constraint is the number of queries or updates the problem requests. The size of the data and the number of queries are different quantities. Both belong in the arithmetic.
 
 <!-- stage: variables -->
-### Parameters For The Step Count Estimate
+### Numbers To Write Down First
 
 Write down four parameters. Then compute the step count of each candidate approach.
 
 - **n** is the largest legal input size.
 - **Value range** is the minimum and maximum allowed element value.
-- **q** is the number of operations the problem requests.
-- **Time limit** is about 10^8 basic operations.
-- **Step count** is the operation count of one approach at the maximum, compared with the time limit.
+- **q** is the number of queries or updates the problem requests.
+- **Time limit** is about 10^8 simple steps.
+- **Step count** is the number of steps one approach takes at the maximum, compared with the time limit.
 - **long** holds every estimate, because squaring 100,000 overflows a 32-bit `int`.
 
 An overflowed estimate can look comfortably small, so it hides the problem.
@@ -78,7 +78,7 @@ An overflowed estimate can look comfortably small, so it hides the problem.
 <!-- stage: trace -->
 ### Comparing Step Counts As n Grows
 
-#### Observing The Gap In Step Counts
+#### Comparing Both Methods At Three Sizes
 
 Compare the pair method with a sort-based method as the input grows.
 
@@ -87,7 +87,7 @@ Compare the pair method with a sort-based method as the input grows.
 - **n = 100,000** gives 4,999,950,000 all-pairs steps, far past the time limit.
 - **Sorting** needs about 1.7 million steps at `n = 100,000`, a rounding error against that count.
 
-#### Interpreting The Trace Result
+#### Reading The Result
 
 The two methods look the same until the input is large. The middle row is the hardest to see, because both methods still pass.
 
@@ -99,7 +99,7 @@ The two methods look the same until the input is large. The middle row is the ha
 ```
 
 <!-- stage: code -->
-### Compute Step Counts In Code
+### Computing Step Counts In Code
 
 ```java
 static final long BUDGET = 100_000_000L;
@@ -126,24 +126,24 @@ The helpers compute step counts only.
 Write the helpers to compute the step count before you write the algorithm.
 
 <!-- stage: applicability -->
-### Applying Input Constraints Before Coding
+### Checking The Limits Before Coding
 
 #### Applying The Invariant
 
-Use this reading whenever a problem gives limits, which is nearly always. Before you commit to an approach, write one line such as "n up to 100,000, all pairs is 5 billion, too slow". Then continue.
+Use this check whenever a problem gives limits, which is nearly always. Before you commit to an approach, write one line such as "n up to 100,000, all pairs is 5 billion, too slow". Then continue.
 
 - **Invariant** is that the chosen approach stays within the time limit and the memory limit at the maximum legal input.
 - **Sample size** never replaces the maximum legal input in this check.
 
-#### Identifying Cases That Violate The Precondition
+#### Finding Cases That Break The Precondition
 
-The precondition of this reading is that the step count at the maximum input decides feasibility. The reading has false friends, cases that match the pattern on the surface but break the precondition that the step count decides feasibility. Two cases qualify.
+The precondition of this check is that the step count at the maximum input decides feasibility. The check has false friends, cases that match the pattern on the surface but break the precondition that the step count decides feasibility. Two cases qualify.
 
 - **Difficulty label** misleads, because a label such as "easy" or a familiar noun such as "array" does not select a method.
 - **Constant factor** misleads near the limit, because a count within a factor of ten of the limit is not decisive.
 - **Step cost** decides the near-limit case, so compare what each step costs.
 
-#### Handling Java Memory And Overflow
+#### Avoiding Java Memory And Overflow Problems
 
 - **int overflow** wraps silently, as the lesson showed earlier.
 - **Boxed collections** use several times more memory than primitive arrays.

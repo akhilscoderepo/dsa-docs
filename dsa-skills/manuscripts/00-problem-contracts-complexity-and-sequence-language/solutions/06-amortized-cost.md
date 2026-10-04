@@ -1,5 +1,5 @@
 <!-- solutions-for: 06-amortized-cost -->
-### Amortized Cost Solutions
+### Solutions For Amortized Cost
 
 #### Solution: [Build] Doubling Array (Author exercise)
 <!-- id: pc-doubling-array -->
@@ -81,7 +81,7 @@ public final class DoublingArray {
 - **Total** over `n` appends is `1 + 2 + ... + (n - 1) = n(n - 1) / 2`, so eight appends cost 28 copies against 7 for doubling.
 - **Average** per append is about `n / 2`, which is O(n).
 - **Growth policy** gives room for only one more append per resize, so no resize pays for later ones.
-- **Amortized bound** therefore loses its constant value.
+- **Amortized bound** therefore loses its O(1) value.
 
 **Complexity.**
 
@@ -136,7 +136,7 @@ public final class GrowByOne {
 - **Earlier resizes** copied `1 + 2 + 4 + ... + 512`, which is 1,023 elements in total.
 - **Single resize** therefore equals the total of every earlier resize plus one.
 - **Geometric series** keeps the total copies below two per append.
-- **Average** survives one costly call, because the previous 1,024 appends already created the room that this resize uses.
+- **Average** stays constant despite one costly call, because the previous 1,024 appends already created the room that this resize uses.
 - **Return value** of the code holds the total and the copies of the last append.
 
 **Complexity.**
@@ -187,7 +187,7 @@ public final class OneExpensiveAppend {
 #### Solution: [Recognize] Potential Intuition (Author exercise)
 <!-- id: pc-potential-intuition -->
 
-**Approach.** The credit argument counts the appends between two resizes.
+**Approach.** The accounting method counts the appends between two resizes.
 
 - **Array after a resize** to capacity `2c` holds `c` values, so exactly `c` slots are empty.
 - **Appends before the next resize** number `c`.

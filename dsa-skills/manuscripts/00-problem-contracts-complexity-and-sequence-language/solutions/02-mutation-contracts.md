@@ -1,5 +1,5 @@
 <!-- solutions-for: 02-mutation-contracts -->
-### Solutions For Preconditions And Postconditions
+### Solutions For Changing Or Keeping Input
 
 #### Solution: [Build] Meaningful Prefix (Author exercise)
 <!-- id: pc-meaningful-prefix -->
@@ -119,7 +119,7 @@ public final class PreserveInput {
 
 - **Assignment** `b = a` copies the reference and not the array, so one array object has two names.
 - **Write through either name** is visible through the other, because both names point to the same elements.
-- **Independent views** need a copy before the call, for example `int[] b = a.clone()`.
+- **Separate contents** need a copy before the call, for example `int[] b = a.clone()`.
 - **clone()** allocates a second array and copies the elements.
 - **Primitive array** is copied completely by `clone()`.
 - **Array of arrays** needs a deeper copy, because `clone()` copies only the outer references.

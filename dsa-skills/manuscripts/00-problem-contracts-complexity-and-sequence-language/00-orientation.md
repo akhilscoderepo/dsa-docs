@@ -1,26 +1,26 @@
 <!-- section: orientation -->
 ## Orientation
 
-This chapter teaches no algorithm. It teaches the vocabulary for reading a problem before you pick an approach. You learn what the input limits allow and what the input guarantees. You learn whether the code may change the input and which index positions an answer may use. You learn to count cost correctly and to spot Java calls that change the operation count. Every later chapter assumes you do these things without effort. Most wrong answers in interviews come from skipping them.
+This chapter teaches no algorithm. It teaches the vocabulary for reading a problem before you pick an approach. You learn what the input limits allow and what the input guarantees. You learn whether the code may change the input and which index positions an answer may use. You learn to count cost correctly and to spot Java calls that change how much work a loop does. Every later chapter assumes you do these things without effort. Most wrong answers in interviews come from skipping them.
 
 ### Prerequisites
 
 You should be able to write a loop over an array in Java, read a simple Big-O bound, and run a small program to see its output. This chapter uses no data structure beyond arrays and strings. No lesson needs more than a few lines of code. The exercises stay small on purpose. Each one trains a single skill. In one exercise you read a problem statement and write down what the input guarantees and what the output must contain. In another you predict how many times a loop runs. In a third you write a small input that makes the code fail. You practice each skill alone, so no named algorithm distracts you.
 
-### Chapter Scope And Lesson Overview
+### What The Eight Lessons Cover
 
 The chapter has eight lessons. Each lesson trains one analysis skill.
 
-- **Analyzing Input Limits And Operation Budgets** converts the limits in a statement into a first filter on approaches.
-- **Specifying Preconditions, Postconditions And Mutation** separates the physical array from the logical answer and states what the code may change.
-- **Defining Subarrays, Subsequences And Subsets** distinguishes the three terms by the index positions each one allows.
-- **Input Preconditions And Defensive Assumptions** separates what the caller guarantees from what your code assumes.
-- **Comparing Time And Space Complexity Trade-Offs** counts executions of the dominant statement and compares solutions that use different resources.
-- **Amortized Analysis Of Operation Sequences** bounds the total cost of a sequence in which expensive calls are rare.
-- **Designing Adversarial Test Inputs** aims one small input at one failure mode.
-- **Java Library Call Time And Space Costs** states the complexity and meaning of the library calls inside your loops.
+- **Reading Input Limits Before Choosing An Algorithm** turns the limits in a problem statement into a first filter on approaches.
+- **Whether A Method May Modify Its Input** separates the stored array from the returned answer and states what the code may change.
+- **Subarrays, Subsequences And Subsets Compared** tells the three terms apart by the index positions each one allows.
+- **Input Preconditions And Edge Cases** separates what the caller guarantees from what your code assumes.
+- **Comparing Time And Space Complexity Trade-Offs** counts how often the statement that runs most often executes and compares solutions that use different resources.
+- **Amortized Time Complexity** bounds the total cost of a sequence of calls in which expensive calls are rare.
+- **Writing Edge-Case Tests** aims one small input at one kind of bug.
+- **Time Complexity Of Common Java Methods** states the cost and meaning of the library calls inside your loops.
 
-### Procedure For Each Lesson
+### How To Work Through Each Lesson
 
 Work through each lesson in the same order.
 
@@ -32,15 +32,15 @@ Work through each lesson in the same order.
 - **Solution** comes last. Every solution has Java that runs with assertions during the build.
 - **Build checks** execute each numeric claim in the solutions, so no claim is only written down.
 
-### Chapter Completion Criteria
+### What You Can Do After This Chapter
 
-Before Chapter 01 you should be able to read a new prompt and state seven things in a few lines.
+Before Chapter 01 you should be able to read a new prompt and state six things in a few lines.
 
-- **Guarantees** are the meaningful input preconditions, and whether mutation is allowed.
-- **Output validity** is the part of the output that is valid.
-- **Sequence relationship** is the one the problem requests: subarray, subsequence or subset.
-- **Complexity bounds** are the plausible time and space limits for the input size.
-- **Adversarial test** is one input that targets a failure mode.
-- **Library cost** is any Java call that changes the claimed complexity.
+- **Guarantees** are the input preconditions, and whether the code may modify the input.
+- **Output** is what a correct answer must contain.
+- **Sequence term** is the one the problem requests: subarray, subsequence or subset.
+- **Complexity bounds** are the time and space limits that fit the input size.
+- **Edge-case test** is one small input aimed at one kind of bug.
+- **Library call** is any Java call that changes the claimed complexity.
 
 The review section at the end checks these skills with recognition questions. You can retake them after a few days.

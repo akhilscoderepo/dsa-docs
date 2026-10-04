@@ -1,4 +1,4 @@
-# Lesson spec: Analyzing Input Limits And Operation Budgets
+# Lesson spec: Reading Input Limits Before Choosing An Algorithm
 
 **Recognition cue.** The input limits rule out entire classes of solutions before code is written. **State.** Record the largest possible input size, value range, and required operation count. **Invariant.** A proposed approach must remain within its time and memory budget at the maximum legal input. **False friend.** Difficulty labels and familiar nouns such as “array” do not select an algorithm; the contract does.
 

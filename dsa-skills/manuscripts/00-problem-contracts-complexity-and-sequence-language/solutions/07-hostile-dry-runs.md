@@ -1,5 +1,5 @@
 <!-- solutions-for: 07-hostile-dry-runs -->
-### Designing Adversarial Test Inputs
+### Solutions For Edge-Case Tests
 
 #### Solution: [Build] Singleton (Author exercise)
 <!-- id: pc-singleton -->
@@ -132,7 +132,7 @@ public final class AllEqual {
 - **Two's-complement wrap-around** keeps the sum modulo 2^32 in a 32-bit `int`, so the stored value is 4,294,967,294 - 2^32, which is -2.
 - **Prediction** of -2 is made before the code runs, and the run confirms it.
 - **Long accumulator** holds 4,294,967,294 exactly, and each `int` element widens to `long` before the addition.
-- **Adversarial input** sits at the extreme of the type, where the wrap-around is guaranteed.
+- **Test input** sits at the extreme value of the type, where wrap-around is guaranteed.
 
 **Complexity.**
 
@@ -171,7 +171,7 @@ public final class NumericExtremes {
 **Approach.**
 
 - **Left-to-right step** `a[1] = a[0]` overwrites the old `a[1]`, which holds 2, before the loop reads it.
-- **First destructive write** is that step, because it destroys unread data.
+- **First bad write** is that step, because it overwrites unread data.
 - **Next steps** `a[2] = a[1]` and `a[3] = a[2]` copy the value just written, so `a[2]` receives 1 instead of 2, and `a[3]` receives 1 again. Every slot ends up holding the first value.
 - **Right-to-left steps** `a[3] = a[2]`, `a[2] = a[1]` and `a[1] = a[0]` each write a slot whose old value the loop has already moved.
 - **Invariant** is that every slot to the left of the write position is still unread and unchanged.

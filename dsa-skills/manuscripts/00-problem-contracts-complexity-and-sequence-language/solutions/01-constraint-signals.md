@@ -1,5 +1,5 @@
 <!-- solutions-for: 01-constraint-signals -->
-### Solutions For Input Constraint Analysis
+### Solutions For The Input Limit Exercises
 
 #### Solution: [Build] Budget Check (Author exercise)
 <!-- id: pc-budget-check -->

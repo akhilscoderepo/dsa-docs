@@ -1,5 +1,5 @@
 <!-- solutions-for: 08-java-cost-habits -->
-### Java Library Call Time And Space Costs
+### Solutions For Common Java Method Costs
 
 #### Solution: [Build] Front Removal (Author exercise)
 <!-- id: pc-front-removal -->
@@ -65,7 +65,7 @@ public final class FrontRemoval {
 - **`String`** is immutable, so `result + ch` creates a new string and copies every old character into it.
 - **Copies** at step `k` number `k`, so `n` steps copy `1 + 2 + ... + n`, which is `n(n + 1) / 2`.
 - **Totals** are 15 for `n = 5` and about five billion for 100,000.
-- **`StringBuilder`** appends into a buffer and grows its capacity geometrically, so most appends copy nothing.
+- **`StringBuilder`** appends into a buffer and grows its capacity by a constant factor, so most appends copy nothing.
 - **Assertions** in the code check three claims: concatenation yields a new object, the old string stays unchanged, and the builder's capacity changes only a few times over a million appends.
 
 **Complexity.**

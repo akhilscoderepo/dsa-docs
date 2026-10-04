@@ -38,10 +38,10 @@ Both methods have two `for` keywords that touch the array. The shortcut classifi
 
 Count how often the innermost statement runs. In `twoScans`, the first loop runs `n` times and the second loop runs `n` times afterward. The total is `n + n = 2n`, which is O(n). In `pairCount` the outer loop runs `n` times. The inner loop runs a shrinking number of times: `n - 1`, then `n - 2`, down to 0. The total is `n * (n - 1) / 2`, which is O(n^2).
 
-A wrong classification costs real effort in both directions. If someone calls `twoScans` quadratic, a team rewrites correct, fast code and risks introducing a bug. If someone calls `pairCount` linear, a team accepts a method that needs five billion steps at `n = 100,000`. A rule that cannot tell them apart is worse than no rule, because it produces confident wrong answers. The correct tool is to count executions of the dominant statement.
+A wrong classification costs real effort in both directions. If someone calls `twoScans` quadratic, a team rewrites correct, fast code and risks introducing a bug. If someone calls `pairCount` linear, a team accepts a method that needs five billion steps at `n = 100,000`. A rule that cannot tell them apart is worse than no rule, because it produces confident wrong answers. The correct tool is to count executions of the most frequently executed statement.
 
 <!-- stage: insight -->
-### Rules For Counting Dominant Operations
+### Rules For Counting Loop Executions
 
 #### Add And Multiply Loop Costs
 
@@ -55,25 +55,25 @@ That fastest-growing part is the **dominant term**. In `2n + 5` it is `2n`. The 
 
 #### Define The Worst-Case Input
 
-A bound is meaningful only for a named input. The bound describes the dominant work on the **worst-case input**: the input of the largest allowed size and the most unfavorable shape. A method that stops early on some inputs still needs a judgment on the input where it does not stop early.
+A bound is meaningful only for a named input. The bound describes the cost on the **worst-case input**: the input of the largest allowed size and the most unfavorable shape. A method that stops early on some inputs still needs a judgment on the input where it does not stop early.
 
 #### Compare Costs As A Tradeoff
 
 A **tradeoff** exists when two correct solutions spend different resources. The resources include time, extra memory, a preprocessing step, or permission to change the input. To compare the solutions, write each cost in the same units and state what each solution gives up. Sorting first costs O(n log n) and may reorder or copy the data. In return, it can replace an all-pairs search with a single pass. The comparison is that the sorted solution pays a modest cost to avoid a large one and gives up the original order.
 
 <!-- stage: variables -->
-### Quantities Defined Before Counting
+### Define Three Quantities Before Counting
 
 Define three quantities before you compute a bound.
 
 - **Size variable** `n` counts the input elements, and a second dimension such as `rows` and `cols` keeps its own letter.
-- **Counted operation** is one exact operation, such as a comparison, an array read or an element copy.
-- **Loop shape** is sequential, nested with a fixed inner bound, or nested with an inner bound that depends on the outer index.
+- **Counted statement** is the one statement whose executions you count, such as a comparison, an array read or an element copy.
+- **Loop nesting** is sequential, nested with a fixed inner bound, or nested with an inner bound that depends on the outer index.
 
 Never merge two dimensions silently into one letter.
 
 <!-- stage: trace -->
-### Operation Count Of A Triangular Loop
+### Count Executions In A Shrinking Inner Loop
 
 Take `pairCount` with `n = 4`.
 
@@ -89,7 +89,7 @@ The total is 3 + 2 + 1 + 0, which is 6. The formula `n * (n - 1) / 2` gives 4 * 
 ```
 
 <!-- stage: code -->
-### Counter Methods For Each Loop Shape
+### Write Counter Methods To Check A Formula
 
 ```java
 static long countTwoScans(int n) {
@@ -114,23 +114,23 @@ static long countGrid(int rows, int cols) {
 }
 ```
 
-Each counter mirrors the loop structure of the method it models, and `steps++` stands for the dominant statement. The first returns `2n`, the second `n * (n - 1) / 2` and the third `rows * cols`. The counters use `long` because the triangular count for `n = 100,000` already exceeds what an `int` can hold. Their own running time equals the count they return. For that reason, use them only on small inputs to check a formula before you trust it.
+Each counter mirrors the loop structure of the method it models, and `steps++` stands for the most frequently executed statement. The first returns `2n`, the second `n * (n - 1) / 2` and the third `rows * cols`. The counters use `long` because the triangular count for `n = 100,000` already exceeds what an `int` can hold. Their own running time equals the count they return. For that reason, use them only on small inputs to check a formula before you trust it.
 
 <!-- stage: applicability -->
-### Conditions For Stating A Bound
+### Check Before You State A Bound
 
-#### State The Bound And Its Input
+#### Name The Input With Every Bound
 
-Count executions of the dominant statement whenever you claim a time or space bound. Check each item before you state it.
+Count executions of the most frequently executed statement whenever you claim a time or space bound. Check each item before you state it.
 
-- **Counted statement** is the dominant statement, and its executions give the bound.
+- **Counted statement** is the most frequently executed statement, and its executions give the bound.
 - **Input** is the worst-case input, and the claim names it.
-- **Stated bound** holds as an invariant: it describes the dominant work on that input, in units the problem's variables can express.
+- **Stated bound** holds as an invariant: it describes the cost on that input, in units the problem's variables can express.
 - **Size variables** all appear in the bound when the problem has two of them.
 
-#### Check The Loop-Counting Rule
+#### Check The Loop-Counting Shortcut
 
-A false friend in loop counting is a shortcut that looks sound but breaks the assumption that every inner loop has the same bound. The loop-counting shortcut produces one. Two loops side by side add, and two loops nested over the same growing input usually multiply. The word usually matters. A nested loop whose inner index only moves forward across the whole run can still total O(n). Later chapters on two pointers and sliding windows depend on exactly that argument. So count executions, because nesting depth alone does not decide the bound.
+A false friend in loop counting is a shortcut that looks sound but fails in some cases. Counting loops and ignoring their bounds is one. Two loops side by side add, and two loops nested over the same growing input usually multiply. The word usually matters. A nested loop whose inner index only moves forward across the whole run can still total O(n). Later chapters on two pointers and sliding windows depend on exactly that argument. So count executions, because nesting depth alone does not decide the bound.
 
 #### Include Library Call Costs
 
@@ -164,7 +164,7 @@ Java library calls add costs that loop counting misses. Lesson 8 of this chapter
 
 **Prerequisites.** The consecutive-loops exercise above.
 
-**Problem.** Consider the loop pair `for (i = 0; i < n; i++) for (j = i + 1; j < n; j++)`. Return the number of times the inner loop body executes, for a given `n`. Derive a closed formula for that count, and classify the count with big-O notation. The expected formula is `n(n-1)/2`, and the expected class is O(n^2).
+**Problem.** Consider the loop pair `for (i = 0; i < n; i++) for (j = i + 1; j < n; j++)`. Return the number of times the inner loop body executes, for a given `n`. Derive a closed formula for that count, and classify the count with big-O notation. The expected formula is `n(n-1)/2`, and the expected bound is O(n^2).
 
 **Constraints.** `n` is an `int` with `0 <= n <= 10^5`. When `n = 0`, neither loop runs and the count is 0. The inner loop starts at `i + 1`, so it runs `n - 1 - i` times for each `i`, and it shrinks as `i` grows. The return value is a `long`, because the count reaches about `5 * 10^9` and overflows `int`. Only inner-loop-body executions are counted.
 

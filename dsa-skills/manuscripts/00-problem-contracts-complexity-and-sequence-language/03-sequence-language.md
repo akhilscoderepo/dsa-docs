@@ -1,9 +1,9 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: sequence-language -->
-## Defining Subarrays, Subsequences And Subsets
+## Subarrays, Subsequences And Subsets Compared
 
 <!-- stage: context -->
-### Ambiguity In Reading Range Requirements
+### Why One Word Changes The Answer
 
 A product manager asks an analyst for the best run of consecutive days in a week of daily sales changes: `[2, -5, 3, 4]`. The analyst returns 9, because the good days are 2, 3 and 4. The manager checks the data and finds no run of consecutive days that adds up to 9. No unbroken run of days gives more than 7, from the last two days. The day with the loss of 5 sits in the middle of the only run that includes both the 2 and the 3.
 
@@ -27,33 +27,33 @@ static int bestPortionLoose(int[] nums) {
 On `[2, -5, 3, 4]` this returns 9. The method is fast and simple. It matches the sample if the sample is a pick-any-days question. It answers that question correctly and answers the consecutive-run question wrongly.
 
 <!-- stage: bottleneck -->
-### Search Space Sizes Of Subarrays And Subsets
+### Counting Candidates For Each Question
 
 The two questions have search spaces of different sizes. A run of consecutive days is fixed by where it starts and where it ends. A list of `n` values therefore has `n * (n + 1) / 2` non-empty runs, which is O(n^2). For `n = 20` that is 210 candidates. Picking any days while keeping their order, or picking any days at all, gives `2^n - 1` non-empty choices. For `n = 20` that is 1,048,575 candidates. At `n = 60` no machine can enumerate them.
 
 So the two readings give different answers on one sample, and they also call for different algorithms with different costs. The greedy sum solves the larger space quickly, because sums have an easy answer there. It is still wrong for the smaller space, because the smaller space imposes a restriction that the greedy sum ignores. The lesson names that restriction.
 
 <!-- stage: insight -->
-### Index Relationships In Selections
+### Choosing Positions From An Array
 
-Each of the three words defines a rule about the index positions you may choose. Write the rule down before reading the examples.
+Each of the three words defines a position rule: which index positions you may choose. Write the rule down before reading the examples.
 
-#### Definitions Of Subarray, Subsequence And Subset
+#### What Each Word Means
 
 A **subarray** is a block of consecutive positions, so no position inside it is skipped. Its string counterpart is a substring. A **subsequence** is a selection of positions that keeps the original left-to-right order but may skip any position. A **subset**, in the sense these problems use, is any selection of positions, with no promise about adjacency or order.
 
 <!-- names: subarray, subsequence, subset -->
 
-#### Nesting Of The Three Definitions
+#### How The Three Words Nest
 
 Every subarray is also a subsequence, and every subsequence is also a subset. The reverse does not hold in general. That nesting explains why a sample answer can satisfy two or three definitions while the questions differ. `[2, 3]` taken from `[1, 2, 3, 4]` is all three, so it proves nothing about which one the problem means.
 
-#### Classification By Index Positions
+#### Classifying A Candidate By Its Positions
 
 The invariant that decides a classification is positional. Write the positions of the candidate's values in the original array. If those positions are consecutive, the candidate is a subarray. If they strictly increase but have gaps, it is a subsequence and not a subarray. If they appear in any other order, it is only a subset. Two further words need the same care. A prefix is a subarray that starts at the first position. A suffix is a subarray that ends at the last position.
 
 <!-- stage: variables -->
-### Position List And Two Index Tests
+### One List And Two Tests
 
 Classification needs one list and two tests.
 
@@ -85,16 +85,16 @@ Now take the candidate `[4, 2]` on the same array.
 
 Both candidates hold the same two values, so they look like the same answer. Only the positions show that one candidate respects the original order and the other does not. The order test is the step most often missed on this second candidate.
 
-#### Step Trace Of Both Classifications
+#### Stepping Through Both Candidates
 
 ```trace
 {"cells":[1,2,3,4],"pointers":["first","second"],"steps":[{"at":{"first":1,"second":-1},"vars":{"candidate":"[2,4]","gap":"-","order":"-"},"note":"Candidate [2,4]. The value 2 sits at position 1."},{"at":{"first":1,"second":3},"vars":{"candidate":"[2,4]","gap":"2","order":"rises"},"note":"The value 4 sits at position 3. The step is 2, so position 2 was skipped, and the positions rise."},{"at":{"first":1,"second":3},"vars":{"candidate":"[2,4]","gap":"2","order":"rises","verdict":"subsequence and subset, not subarray"},"note":"Verdict: a gap means no subarray, rising positions mean a subsequence, and any selection is a subset."},{"at":{"first":3,"second":-1},"vars":{"candidate":"[4,2]","gap":"-","order":"-"},"note":"Candidate [4,2]. The value 4 sits at position 3."},{"at":{"first":3,"second":1},"vars":{"candidate":"[4,2]","gap":"-2","order":"falls"},"note":"The value 2 sits at position 1. The positions fall, so the original order was reversed."},{"at":{"first":3,"second":1},"vars":{"candidate":"[4,2]","gap":"-2","order":"falls","verdict":"subset only"},"note":"Verdict: falling positions rule out both a subarray and a subsequence. Only the subset rule remains."}]}
 ```
 
 <!-- stage: code -->
-### Position-Based Classifier Implementation
+### Checking Candidates In Code
 
-#### Contiguous And Ordered Match Methods
+#### Two Methods For Matching Candidates
 
 ```java
 // True when cand appears in nums as one unbroken block.
@@ -117,7 +117,7 @@ static boolean isInOrder(int[] nums, int[] cand) {
 }
 ```
 
-#### Time Complexity Of Both Methods
+#### Cost Of Both Methods
 
 - **isContiguousBlock** costs O(n * m) for a candidate of length `m`, because it tries every start position and compares a block.
 - **isInOrder** costs O(n), because it is a single left-to-right scan.
@@ -127,11 +127,11 @@ static boolean isInOrder(int[] nums, int[] cand) {
 The two methods differ by exactly the rule the lesson stated, a block versus an ordered selection.
 
 <!-- stage: applicability -->
-### Applying The Index Rule To Problem Statements
+### Using The Position Rule On Statements
 
-#### Restating The Index Rule
+#### Restating The Position Rule
 
-Whenever a statement says subarray, substring, subsequence, subset, prefix or suffix, restate its index rule in one line before looking at the examples.
+Whenever a statement says subarray, substring, subsequence, subset, prefix or suffix, restate its position rule in one line before looking at the examples.
 
 - **Invariant** is that the answer satisfies the stated position rule exactly, and does not merely resemble a sample.
 - **Typical failure** is a fast greedy that passes the samples but answers a larger search space than the one asked.
@@ -140,7 +140,7 @@ Whenever a statement says subarray, substring, subsequence, subset, prefix or su
 
 The false friend in this lesson is a pair of terms that look interchangeable but have different position rules. Here it is the pair of everyday words "substring" and "subsequence", which many people use interchangeably. The same goes for "subarray" and "subset". They are not interchangeable, even when a sample answer satisfies several definitions. Problem statements often choose samples that do.
 
-#### Java Support For Contiguous Selections
+#### Using Java Methods For Contiguous Blocks
 
 Java supports the contiguous case only.
 
