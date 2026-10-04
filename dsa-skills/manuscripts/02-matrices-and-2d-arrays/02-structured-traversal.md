@@ -64,7 +64,7 @@ The **border** is the set of cells with `r == 0`, `r == rows - 1`, `c == 0` or `
 A traversal is correct when its indexes describe exactly the region that is still unvisited. The loop bounds are the rule, written as inequalities.
 
 <!-- stage: variables -->
-### The Coordinates And The Counts
+### The Coordinates And The Predecessor
 
 The loops use four pieces of state, and each has a fixed meaning.
 

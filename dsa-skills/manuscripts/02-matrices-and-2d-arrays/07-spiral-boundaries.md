@@ -215,7 +215,7 @@ The same four indexes can write a matrix as easily as they can read one. A pass 
 
 **Example 2.** Input `rows = 4, cols = 1`, output `[3,0]`.
 
-**Hint.** Remove full layers until the remaining rectangle has one row, one column, or two sides of length at least 2. Which cell ends the walk in each shape, and why?
+**Hint.** Remove full layers while both sides are at least 3. What remains has one row, one column, two rows or two columns. Which cell ends the walk in each shape, and why?
 
 **Changed decision.** Only the shape of the last thin remainder matters, so the guards of the third and fourth passes decide the answer and no values are read.
 

@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Come back to this page after the lessons and again a few days later. Each question describes a situation and hides the lesson name. Commit to an answer before you read the options.
+Come back to this page after the lessons and again a few days later. Each question describes a situation and hides the lesson name. Commit to an answer before you open the explanation.
 
 ### Recognition Questions
 

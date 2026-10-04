@@ -38,7 +38,7 @@ The method is correct on every rectangular matrix. On `{{0, 2, 3}, {4, 5, 6}, {7
 ### The Copy And The Repeated Clearing
 
 ```predict
-The copy method stores a full second matrix. A matrix has `rows` rows and `cols` columns. How many bits of information does the job really need to remember, and why is that far less than the whole matrix?
+The copy method stores a full second matrix. A matrix has `rows` rows and `cols` columns. How many yes-or-no facts does the job really need to remember, and why is that far less than the whole matrix?
 
 Each row needs one yes-or-no fact, and so does each column. The job has to remember `rows + cols` facts, which is far less than `rows * cols` values, because only the question "is this row or column cleared" matters later.
 ```
@@ -79,7 +79,7 @@ The method keeps a small amount of state, and each piece changes at one point.
 
 #### The Observation Pass
 
-The first example has the rows `[1, 2, 3, 4]`, `[5, 0, 7, 8]` and `[9, 10, 0, 12]`. The cells are numbered by row-major index, so the cell `(1, 1)` is cell 5 and the cell `(2, 2)` is cell 10. The pointer `p` marks the cell being read. The scan changes no value. It finds zeros at cell 5 and cell 10. Those two finds mark rows 1 and 2 and columns 1 and 2.
+The first example has the rows `[1, 2, 3, 4]`, `[5, 0, 7, 8]` and `[9, 10, 0, 12]`. The cells are numbered by row-major index, so the cell `(1, 1)` is cell 5 and the cell `(2, 2)` is cell 10. The pointer `p` marks the cell being read. The scan changes no value. It finds zeros at cell 5 and cell 10. Those two finds mark rows 1 and 2 and columns 1 and 2. The variable `marks` shows one digit per row and then one digit per column, and 1 means marked.
 
 #### The Update Pass
 
@@ -138,7 +138,9 @@ Clearing a line as soon as the scan finds a zero is a false friend of the marker
 
 #### The Same Idea With Two Bits Per Cell
 
-Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 has the value 1, and bit 1 has the value 2. Bit 0 of each cell holds the old state, and bit 1 holds the new state, which `cell |= 2` sets. The first pass sets bit 1 only when the next state is live, and the second pass moves it into place. The expression `cell & 1` keeps only bit 0 and ignores bit 1, so neighbor reads still see the old generation. A final `cell >> 1` shifts bit 1 into place and drops bit 0. The exercise below uses this idea.
+Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 has the value 1, and bit 1 has the value 2. Bit 0 of each cell holds the old state, and bit 1 holds the new state, which `cell |= 2` sets. The first pass sets bit 1 only when the next state is live, and the second pass moves it into place. The expression `cell & 1` keeps only bit 0 and ignores bit 1, so neighbor reads still see the old generation.
+
+A final `cell >> 1` shifts bit 1 into place and drops bit 0. The exercise below uses this idea.
 
 <!-- stage: exercises -->
 ### Exercises

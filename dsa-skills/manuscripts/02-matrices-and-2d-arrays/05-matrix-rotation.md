@@ -38,7 +38,7 @@ The copy takes O(n^2) time, and a pass over every pixel cannot be avoided. Which
 The copy uses O(n^2) extra space, equal to the input. Overwriting in place with the same formula fails because writing to position (c, n - 1 - r) destroys a pixel that has not been moved yet.
 ```
 
-Time is not the problem here, because every pixel must move, so any method costs at least O(n^2). The waste is memory. A copy doubles the footprint, and a direct overwrite loses data, because each destination cell still holds a pixel that belongs somewhere else. A pixel at `(r, c)` goes to `(c, n - 1 - r)`. That pixel in turn must go to a third cell, and the chain closes after four moves. Following such a chain by hand needs a careful order and is easy to get wrong. A shorter route splits the turn into two moves that each swap pairs of cells.
+Time is not the problem here, because every pixel must move, so any method costs at least O(n^2). The waste is memory. A copy doubles the footprint, and a direct overwrite loses data, because each destination cell still holds a pixel that belongs somewhere else. A pixel at `(r, c)` goes to `(c, n - 1 - r)`. That pixel in turn must go to a third cell, and the cycle of four cells closes after four moves: from `(r, c)` to `(c, n - 1 - r)`, then to `(n - 1 - r, n - 1 - c)`, then to `(n - 1 - c, r)`, and back to `(r, c)`. Following such a chain by hand needs a careful order and is easy to get wrong. A shorter route splits the turn into two moves that each swap pairs of cells.
 
 <!-- stage: insight -->
 ### Two Simple Swaps Make A Quarter Turn

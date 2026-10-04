@@ -66,7 +66,7 @@ The set of cells touching a given cell under a chosen table is its **neighborhoo
 
 The loop uses four pieces of state.
 
-- **DIRS4 and DIRS8** are the direction tables, with one row of two integers per offset, and it never changes.
+- **DIRS4 and DIRS8** are the direction tables, with one row of two integers per offset, and neither table changes.
 - **nr and nc** hold the candidate cell for the current offset and are recomputed on each iteration.
 - **count** holds the number of qualifying neighbors found so far.
 - **r and c** hold the center cell and stay fixed during the loop.

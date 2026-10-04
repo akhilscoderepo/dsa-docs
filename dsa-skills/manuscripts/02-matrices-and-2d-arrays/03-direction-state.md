@@ -191,7 +191,7 @@ A `1 x 1` sheet writes once, and the first computed next cell is outside the she
 
 **Prerequisites.** The spiral fill exercise above.
 
-**Problem.** Fill an `R x C` grid with the integers 1 through `R * C` in clockwise spiral order, as in the previous exercise but for any rectangle. A turn is counted each time the facing direction changes while the walker chooses its next cell. The walker stops right after the last write without choosing another cell, so a 1 by 1 grid has 0 turns. Return the number of turns.
+**Problem.** Fill an `R x C` grid with the integers 1 through `R * C` in clockwise spiral order, as in the previous exercise but for any rectangle. A turn is counted each time the facing direction changes while the walker chooses its next cell. The walker stops right after the last write without choosing another cell, so a 1 by 1 grid has 0 turns. The lesson code turns once more after the last write, and this exercise does not count that turn. Return the number of turns.
 
 **Constraints.** The limits are:
 - **Size** satisfies `1 <= R, C <= 100`.
@@ -210,7 +210,7 @@ A `1 x 1` sheet writes once, and the first computed next cell is outside the she
 #### [Recognize] Spiral Matrix III (LeetCode 885)
 <!-- id: mx-spiral-outward -->
 
-**Prerequisites.** All three exercises above. The direction table and the turn rule apply, but no filled-cell test does, because the path starts outside the grid.
+**Prerequisites.** All three exercises above. The direction table and the turn rule apply, but no filled-cell test does, because the path may leave the grid and its next cell is fixed by the segment lengths.
 
 **Problem.** An `R x C` grid has a walker at `(rStart, cStart)` facing right. The walker follows an outward clockwise spiral on the infinite plane: it walks 1 cell right, 1 down, 2 left, 2 up, 3 right, 3 down, and so on, with each length used twice. The walker may leave the grid and return. Return the coordinates of the grid cells in the order the walker first stands on them, until all `R * C` cells are listed.
 

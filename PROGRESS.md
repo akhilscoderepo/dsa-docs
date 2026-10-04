@@ -6,7 +6,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 |---|---|
 | 00-problem-contracts-complexity-and-sequence-language | done |
 | 01-arrays-core-operations | done |
-| 02-matrices-and-2d-arrays | claimed 02 2026-10-04T19:38Z |
+| 02-matrices-and-2d-arrays | done |
 | 03-strings | todo |
 | 04-hash-maps-and-sets | todo |
 | 05-sorting-and-java-comparators | todo |
@@ -50,3 +50,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 ## Notes
 - 2026-10-04: Chapters 01 to 41 were reset to todo so every chapter is regenerated under the current writing rules, reader-flow rules and final reader review. The previous versions are kept in git under the tag the branch `archive-pre-regen`. Chapter 00 is the style exemplar.
 - 01 (2026-10-04): content complete, human review pending. Built interactively under the current writing and reader-flow rules. Lesson 07 has a fifth exercise (LC 229, required by the spec). Remaining WARNs: low-diversity trace wording in 06 and 11, spec-role in 11 and 12 (spec lists LC 152 and LC 918 twice), one template-phrase in 04. The final reader review (RUNBOOK section 10) has not run on this chapter.
+- 02 (2026-10-04): content complete, human review pending. Lessons 06 and 07 were written in this run; 01 to 05 came from the earlier claim. Final reader review (RUNBOOK section 10) ran 4 passes with an independent reader subagent each time; pass 1 found 25 items, pass 2 15, pass 3 12, pass 4 10 (mostly local wording, one wrong fact), all fixed except: quiz answer positions in 95-review, a Java sketch for the Game of Life bit trick, and the dense constant-space paragraph in lesson 06 (accepted, an exercise follows). A fifth pass has not run, so a clean pass is not confirmed. Remaining WARNs: spec-role in 06 and 07 (the spec lists LC 73 and LC 54 twice), low-diversity insight in 07. Lesson 01's first trace lost its final off-grid step so the smoke test passes. JDK 21 only; JDK 25, Windows, phones and printing are unverified.
