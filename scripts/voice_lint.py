@@ -8,11 +8,18 @@ if args: dirs=[d for d in dirs if any(d.split('/')[-2].startswith(a+'-') for a i
 PASS=re.compile(r'\b(is|are|was|were|be|been|being)\s+(\w+ed|shown|given|made|written|kept|known|seen|chosen|taken|built|held|run|done)\b',re.I)
 FILL=re.compile(r'\b(the process|the situation|the aspect|the component)\b',re.I)
 JARGON=re.compile(r'\b(hostile (test|input|dry run)s?)\b',re.I)
+def stage_check(f,raw,n):
+    raw=re.sub(r'```.*?```','',raw,flags=re.S)
+    for h,body in re.findall(r'(?ms)^### (.+?)\n(.*?)(?=^### |\Z)',raw):
+        if h.strip().lower().startswith('exercises'): continue
+        if len(body.split())>200 and not re.search(r'(?m)^#### ',body): n['nosub']=n.get('nosub',0)+1
 tot={}
 for d in dirs:
     n={}
     for f in sorted(glob.glob(d+'*.md')+glob.glob(d+'solutions/*.md')):
-        txt=re.sub(r'```.*?```','',open(f).read(),flags=re.S)
+        raw=open(f).read()
+        if '/solutions/' not in f: stage_check(f,raw,n)
+        txt=re.sub(r'```.*?```','',raw,flags=re.S)
         txt=re.sub(r'<!--.*?-->','',txt,flags=re.S)
         for ln in txt.split('\n'):
             if ln.startswith('#') or ln.lstrip().startswith(('|','-','*','>')) and False: continue
