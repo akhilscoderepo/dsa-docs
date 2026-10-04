@@ -71,11 +71,15 @@ The parameter `cur` is the original card being copied right now, and `nb` is the
 
 The first trace copies a board of four cards. Cards 0, 1 and 2 form a triangle by threads, and card 3 hangs off card 2. Each step is one call of the copy step, shown in the order the calls happen, and the cell names the card the call asks about. The count `copies` is the number of copies made so far, and it ends at 4, the number of cards. Calls that find their card already in the map return at once, and those are exactly the calls that would have looped forever without the early record.
 
-@@TRACE1@@
+```trace
+{"cells":["0","1","2","3"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"from":"start","copies":1,"result":"made"},"note":"Call for card 0 from start. No copy yet, so a blank copy is made and recorded before its threads are followed."},{"at":{"i":1},"vars":{"from":0,"copies":2,"result":"made"},"note":"Call for card 1 from 0. No copy yet, so a blank copy is made and recorded before its threads are followed."},{"at":{"i":0},"vars":{"from":1,"copies":2,"result":"found"},"note":"Call for card 0 from 1. It is already in the map, so the existing copy is returned at once."},{"at":{"i":2},"vars":{"from":1,"copies":3,"result":"made"},"note":"Call for card 2 from 1. No copy yet, so a blank copy is made and recorded before its threads are followed."},{"at":{"i":0},"vars":{"from":2,"copies":3,"result":"found"},"note":"Call for card 0 from 2. It is already in the map, so the existing copy is returned at once."},{"at":{"i":1},"vars":{"from":2,"copies":3,"result":"found"},"note":"Call for card 1 from 2. It is already in the map, so the existing copy is returned at once."},{"at":{"i":3},"vars":{"from":2,"copies":4,"result":"made"},"note":"Call for card 3 from 2. No copy yet, so a blank copy is made and recorded before its threads are followed."},{"at":{"i":2},"vars":{"from":3,"copies":4,"result":"found"},"note":"Call for card 2 from 3. It is already in the map, so the existing copy is returned at once."},{"at":{"i":2},"vars":{"from":0,"copies":4,"result":"found"},"note":"Call for card 2 from 0. It is already in the map, so the existing copy is returned at once."}]}
+```
 
 The second trace is the false friend. It files three cards in discovery order, where cards a and b both carry the label 7 and card c carries 5. The pointer `i` marks the card just discovered. The column `by_label` is how many entries a map keyed by label would hold, and `by_object` is the size of the identity map. They agree until the second card with label 7 arrives, and from then on the label-keyed map has lost a card.
 
-@@TRACE2@@
+```trace
+{"cells":["a","b","c"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"label":7,"by_label":1,"by_object":1},"note":"Card a with label 7 is discovered. The label map holds 1 entries and the identity map holds 1."},{"at":{"i":1},"vars":{"label":7,"by_label":1,"by_object":2},"note":"Card b with label 7 is discovered. The label map holds 1 entries and the identity map holds 2. The label was already a key, so the label map lost this card."},{"at":{"i":2},"vars":{"label":5,"by_label":2,"by_object":3},"note":"Card c with label 5 is discovered. The label map holds 2 entries and the identity map holds 3."}]}
+```
 
 <!-- stage: code -->
 ### Copy Through The Map
@@ -181,7 +185,7 @@ Do not use it when the structure is guaranteed to be a tree or a plain list, whe
 
 **Example 1.** Input `n = 4, edges = [[0,1],[1,2],[2,3],[3,0]]`, output `[[1,3],[0,2],[1,3],[2,0]]`.
 
-**Example 2.** Input `n = 3, edges = [[2,0],[0,1],[1,2]]`, output `[[2,1],[2,0],[0,1]]`.
+**Example 2.** Input `n = 3, edges = [[2,0],[0,1],[1,2]]`, output `[[2,1],[0,2],[0,1]]`.
 
 **Hint.** Every neighbor of a copy must be a copy, and nothing ties a node to its copy except one map entry per original node.
 

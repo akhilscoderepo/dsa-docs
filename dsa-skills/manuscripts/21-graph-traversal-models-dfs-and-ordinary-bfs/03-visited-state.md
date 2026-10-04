@@ -61,17 +61,13 @@ The count `n` fixes the vertices as 0 to n - 1. The array `seen` has one boolean
 Both traces run on one village of six houses. Vertex 0 trusts 1 and 2, both of those trust 3, vertex 3 trusts 0 again and also 4, and vertex 5 trusts 0 but nobody trusts 5. The pointer `v` marks the vertex taken from the front of the queue. The first trace marks at enqueue, so `inserted` ends at 5, equal to the number of vertices that can hear the news, and vertex 5 is never touched.
 
 ```trace
-```trace
 {"cells":["0","1","2","3","4","5"],"pointers":["v"],"steps":[{"at":{"v":0},"vars":{"inserted":3,"marked":3,"queue":"1,2"},"note":"Vertex 0 comes off the queue and adds 1,2 after marking it. Queue entries so far: 3."},{"at":{"v":1},"vars":{"inserted":4,"marked":4,"queue":"2,3"},"note":"Vertex 1 comes off the queue and adds 3 after marking it. Queue entries so far: 4."},{"at":{"v":2},"vars":{"inserted":4,"marked":4,"queue":"3"},"note":"Vertex 2 comes off the queue and finds no unmarked neighbor, so nothing is added. Queue entries so far: 4."},{"at":{"v":3},"vars":{"inserted":5,"marked":5,"queue":"4"},"note":"Vertex 3 comes off the queue and adds 4 after marking it. Queue entries so far: 5."},{"at":{"v":4},"vars":{"inserted":5,"marked":5,"queue":""},"note":"Vertex 4 comes off the queue and finds no unmarked neighbor, so nothing is added. Queue entries so far: 5."}]}
-```
 ```
 
 The second trace marks at dequeue on the same village and skips a vertex that comes off the queue already marked. The answer is the same five vertices, but the queue receives 7 entries, because 3 was added by both 1 and 2 and the edge from 3 back to 0 added 0 a second time. Two of the pops are wasted skips.
 
 ```trace
-```trace
 {"cells":["0","1","2","3","4","5"],"pointers":["v"],"steps":[{"at":{"v":0},"vars":{"inserted":3,"marked":1,"queue":"1,2"},"note":"Vertex 0 is marked now and every neighbor is added, marked or not. Queue entries so far: 3."},{"at":{"v":1},"vars":{"inserted":4,"marked":2,"queue":"2,3"},"note":"Vertex 1 is marked now and every neighbor is added, marked or not. Queue entries so far: 4."},{"at":{"v":2},"vars":{"inserted":5,"marked":3,"queue":"3,3"},"note":"Vertex 2 is marked now and every neighbor is added, marked or not. Queue entries so far: 5."},{"at":{"v":3},"vars":{"inserted":7,"marked":4,"queue":"3,0,4"},"note":"Vertex 3 is marked now and every neighbor is added, marked or not. Queue entries so far: 7."},{"at":{"v":3},"vars":{"inserted":7,"marked":4,"queue":"0,4"},"note":"Vertex 3 comes off the queue already marked, so this entry is a duplicate and is skipped."},{"at":{"v":0},"vars":{"inserted":7,"marked":4,"queue":"4"},"note":"Vertex 0 comes off the queue already marked, so this entry is a duplicate and is skipped."},{"at":{"v":4},"vars":{"inserted":7,"marked":5,"queue":""},"note":"Vertex 4 is marked now and every neighbor is added, marked or not. Queue entries so far: 7."}]}
-```
 ```
 
 <!-- stage: code -->
@@ -145,7 +141,7 @@ There is no need for any flag when the structure is known to be a tree walked aw
 
 **Changed decision.** A vertex is flagged at the moment it enters the queue, so no vertex enters twice and the loop ends on every finite graph.
 
-#### [Vary] Iterative Depth First Search (Author exercise)
+#### [Vary] Iterative DFS (Author exercise)
 <!-- id: gt-iterative-dfs-stack -->
 
 **Prerequisites.** The Reachable Vertices rung.
@@ -165,7 +161,7 @@ There is no need for any flag when the structure is known to be a tree walked aw
 #### [Boundary] Cycle And Disconnected Vertex (Author exercise)
 <!-- id: gt-cycle-and-disconnected -->
 
-**Prerequisites.** The Iterative Depth First Search rung.
+**Prerequisites.** The Iterative DFS rung.
 
 **Problem.** Given a directed graph and a `source`, return the vertices that cannot be reached from `source`, in ascending order. The graph may contain cycles, self loops, vertices with no edges, and vertices that have an edge pointing into the reachable part without being reachable themselves.
 

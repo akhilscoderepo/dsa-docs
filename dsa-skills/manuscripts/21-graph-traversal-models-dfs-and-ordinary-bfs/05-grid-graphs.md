@@ -75,7 +75,9 @@ The first trace uses a floor of three rows and three columns, stored as one flat
 
 The second trace uses a flat grid of three rows and four columns of '1' (land) and '0' (water), and the pointer `scan` is the outer loop walking all twelve cells in reading order. The loop starts a fresh traversal only at land that is not yet seen, and the vars report how many islands have been started and how many tiles the last traversal claimed. Land at index 1 is skipped because the first traversal already claimed it, and land at index 6 is a separate island even though it touches index 1 at a corner.
 
-@@TRACE2@@
+```trace
+{"cells":["1","1","0","0","0","0","1","0","0","0","0","1"],"pointers":["scan"],"steps":[{"at":{"scan":0},"vars":{"islands":1,"last_size":2},"note":"Index 0 is unseen land, so island 1 starts and its traversal claims 2 tiles."},{"at":{"scan":1},"vars":{"islands":1,"last_size":2},"note":"Index 1 is land but already seen, so no new traversal starts."},{"at":{"scan":6},"vars":{"islands":2,"last_size":1},"note":"Index 6 is unseen land, so island 2 starts and its traversal claims 1 tile."},{"at":{"scan":11},"vars":{"islands":3,"last_size":1},"note":"Index 11 is unseen land, so island 3 starts and its traversal claims 1 tile."},{"at":{"scan":12},"vars":{"islands":3,"last_size":1},"note":"The scan has passed all twelve cells and the answer is 3 islands."}]}
+```
 
 <!-- stage: code -->
 ### Spilling With A Queue

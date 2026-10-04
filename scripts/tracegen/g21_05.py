@@ -23,7 +23,7 @@ fill(CH,F,block(floor,["cur"],steps),"@@TRACE1@@")
 # trace 2: islands on flat 3x4
 rows,cols=3,4
 g="110000100011"
-g=[ "1100","0010","0011"]
+g=[ "1100","0010","0001"]
 flat=[ch for row in g for ch in row]
 seen=[False]*12; islands=0; last=0; steps=[]
 def flood(s):
