@@ -45,6 +45,13 @@ Never use the author's invented topic names ("Constraint Signals", "Mutation Con
 - Chapter titles passed to `build.sh` and the orientation/review headings follow the same rule.
 - `voice_lint.py` does not detect metaphors; check headings yourself before you build.
 
+## Structured bullet lists (set by the user, Oct 4)
+Use bullets whenever the content is mathematical steps, multi-item parameters, complexity metrics, trade-off comparisons, step-by-step trace logic or requirement check-lists. Do not leave those inside dense paragraphs, and do not write loose scratchpad bullets.
+- Every bullet starts with a **bolded key technical entity** (a variable, structure, operation or metric), then a short active-voice fragment that states its exact operation or constraint. Example: `- **left** moves to mid + 1 when the value at mid is below the target.` Example: `- **Time** is O(n log n), because the sort dominates the single scan.`
+- One fact per bullet, fragments of about 20 words at most, parallel form within a list.
+- The narrative stages (context, naive, bottleneck, insight) stay prose-led and still obey the audit limit of 30% bullet lines. Put the bullets in variables, trace commentary, complexity summaries, applicability checks, constraints and solution Approach steps.
+- Bullets never replace connected reasoning: keep the explanation of why in sentences and use the list for the parts a reader scans.
+
 ## Session start
 1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 6 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
 2. Tooling: `cd dsa-skills && [ -d node_modules ] || npm ci`. JDK 21 and Python 3 must exist (`java -version`). Chromium is at `/opt/pw-browsers` (do not run playwright install).
