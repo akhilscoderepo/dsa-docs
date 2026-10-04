@@ -35,7 +35,7 @@ The loop adds a one-digit number and a comma to the result n times. After step k
 Each addition creates a new string and copies all earlier characters into it. Step k copies about 2k characters, so the total is about 2 * (1 + 2 + ... + n), which is n squared plus n. The cost grows as O(n^2).
 ```
 
-The loop looks linear, because it runs n times and each pass does one addition. The hidden cost sits inside the addition. A `String` cannot grow, so `result + a[i] + ","` allocates a new array, copies every old character into it and copies the new characters after them. The old string becomes garbage. For n numbers the total copying is O(n^2) characters, and the garbage grows in the same proportion. A long export slows down for exactly this reason. A correct method appends in amortized constant time per character, which gives O(n) in total. It also needs a rule that places the commas between the numbers and not after the last one.
+The loop looks linear, because it runs n times and each pass does one addition. The hidden cost sits inside the addition. A `String` cannot grow, so `result + a[i] + ","` allocates a new array, copies every old character into it and copies the new characters after them. The old string becomes garbage. For n numbers the total copying is O(n^2) characters, and the garbage grows in the same proportion. A long export slows down for exactly this reason. A correct method appends in constant time per character on average, which gives O(n) in total. It also needs a rule that places the commas between the numbers and not after the last one.
 
 <!-- stage: insight -->
 ### Keep One Buffer For The Finished Output

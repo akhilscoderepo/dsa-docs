@@ -40,7 +40,7 @@ The naive method gives every character the same test. For the input "9lives", wh
 It returns true, but the correct answer is false. The first character must be a letter or an underscore, and later characters may also be digits. The loop must remember whether it has consumed the first character yet, which takes one extra variable.
 ```
 
-The naive loop has no memory between iterations. Each character gets its verdict from the character alone, so it cannot treat index 0 differently from index 5. The fix needs only one extra piece of information: whether the first character is already behind the loop. That piece does not change the cost. The loop still reads each character once in O(n) time and keeps a constant amount of data in O(1) space. The remaining work is a clean way to organize that memory, so that more rules can join it later without turning the loop into a pile of special cases.
+The naive loop has no memory between iterations. Each character gets its verdict from the character alone, so it cannot treat index 0 differently from index 5. The fix needs only one extra piece of information: whether the first character is already behind the loop. That piece does not change the cost. The loop still reads each character once in O(n) time and keeps a constant amount of data in O(1) space. The remaining work is to organize that memory so new rules can join it without special cases.
 
 <!-- stage: insight -->
 ### Let A Small Variable Record The Past

@@ -5,7 +5,7 @@ A sign-up form counts the words in a bio and reports three where the user wrote 
 
 ### Prerequisites
 
-You should know Java loops, arrays and the cost vocabulary of Chapter 00. Chapter 01 helps, especially the read index and the write index. The chapter needs no other data structure. It does not use maps, two pointers or windows, because later chapters own them.
+You should know Java loops, arrays and the cost vocabulary of Chapter 00. Chapter 01 helps, especially the read index and the write index. The chapter needs no other data structure, except that one exercise in lesson 02 stores words in an `ArrayList<String>`, Java's growable list. It does not use maps, two pointers or windows, because later chapters own them.
 
 ### What The Seven Lessons Cover
 

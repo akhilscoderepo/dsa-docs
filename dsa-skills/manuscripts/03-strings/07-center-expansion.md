@@ -135,7 +135,7 @@ A false friend is a task that mentions palindromes and has a different structure
 
 #### Java Details That Cause Failures
 
-The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`. The operator `&&` stops at the first false operand, so the call never runs on an index outside the string. A call to `s.substring(a, b)` includes index `a` and excludes index `b`. After `expand` returns length `L` for the middle at `c`, the start of the palindrome lies to the left of `c`, so the start is not `c` itself. The start comes from the middle `c` and the length `L`, as `c - (L - 1) / 2` with integer division, for both odd and even lengths.
+The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`. The operator `&&` stops at the first false operand, so the call never runs on an index outside the string. A call to `s.substring(a, b)` includes index `a` and excludes index `b`. After `expand` returns length `L` for the middle at `c`, the start of the palindrome is at `c` or to its left. The start comes from the middle `c` and the length `L`, as `c - (L - 1) / 2` with integer division, for both odd and even lengths.
 
 <!-- stage: exercises -->
 ### Exercises

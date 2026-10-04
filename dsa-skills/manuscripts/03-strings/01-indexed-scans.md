@@ -31,7 +31,7 @@ The split method cuts the text at every single space. What word count does it re
 It reports 3 pieces, because the two spaces cut out an empty piece. A correct method reports 2 words. The pieces together hold about n characters, so the method uses O(n) extra memory beyond the input.
 ```
 
-The count is wrong because the method counts separators, and the question asks about words. Two separators in a row produce an empty piece that is not a word. The memory cost is a second problem. The method reads the text in O(n) time, which no method can beat, but it also builds O(n) characters of new strings only to count them. A correct method needs to read each character once and keep one integer, so it runs in O(n) time with O(1) extra memory. That method first needs an exact definition of where a word begins.
+The count is wrong because the method counts separators, and the question asks about words. Two separators in a row produce an empty piece that is not a word. The memory cost is a second problem. The method reads the text in O(n) time, which no method can beat. It also builds O(n) characters of new strings only to count them. A correct method needs to read each character once and keep one integer, so it runs in O(n) time with O(1) extra memory. That method first needs an exact definition of where a word begins.
 
 <!-- stage: insight -->
 ### Count Where A Word Begins
