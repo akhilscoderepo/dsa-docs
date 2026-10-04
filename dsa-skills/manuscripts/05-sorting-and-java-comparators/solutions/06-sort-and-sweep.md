@@ -5,7 +5,7 @@
 <!-- id: so-sorted-squares -->
 
 **Approach.**
-The method squares each value into a new array and sorts that array. Squaring reverses the order of the negative values, so the squares are not sorted even when the input is. The sort restores the order. The invariant after the sort is that every adjacent pair of squares is nondecreasing and the multiset of squares is unchanged. A later chapter replaces the sort with a method that merges from both ends.
+The method squares each value into a new array and sorts that array. Squaring reverses the order of the negative values, so the squares are not sorted even when the input is. The sort restores the order. Once the sort returns, each adjacent pair of squares is nondecreasing and the multiset of squares is unchanged. A later chapter replaces the sort with a method that merges from both ends.
 
 **Complexity.**
 - **Time** is O(n log n), because the squaring pass costs O(n) and the sort dominates.

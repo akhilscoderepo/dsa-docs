@@ -5,7 +5,7 @@
 <!-- id: so-sort-scores -->
 
 **Approach.**
-The method builds one `Player` record per name and score, sorts the records with a comparator that reads the score in descending order and then the name in ascending order, and returns the names. The record keeps each name with its score while the sort moves objects. The comparator chains the keys with `reversed()` on the score comparator only, so the name key stays ascending. The invariant after the sort is that every adjacent pair has a higher score on the left, or an equal score and a smaller name. The harness shows that `reversed()` at the end of the chain would flip both keys.
+The method builds one `Player` record per name and score, sorts the records with a comparator that reads the score in descending order and then the name in ascending order, and returns the names. The record keeps each name with its score while the sort moves objects. The comparator chains the keys with `reversed()` on the score comparator only, so the name key stays ascending. Once the sort returns, each adjacent pair has a higher score on the left, or an equal score and a smaller name. The harness shows that `reversed()` at the end of the chain would flip both keys.
 
 **Complexity.**
 - **Time** is O(n log n * m), where m is the longest name, because each comparison reads at most m characters.

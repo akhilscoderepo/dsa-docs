@@ -186,7 +186,7 @@ A running total of moves can exceed `int`, so declare it as `long`. Initialize t
 
 **Prerequisites.** The two exercises above and the frontier from this lesson.
 
-**Problem.** Given the integer array `nums`, Raise values by whole numbers, never lowering any value, until all values are distinct, using the fewest total increments. Return the largest value of the final array as a `long`. Return 0 for the empty array.
+**Problem.** Given the integer array `nums`, raise values by whole numbers, never lowering any value, until all values are distinct, using the fewest total increments. Return the largest value of the final array as a `long`. Return 0 for the empty array.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 10^5`.

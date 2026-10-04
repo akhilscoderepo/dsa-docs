@@ -1,21 +1,17 @@
 from common import *
-CH='05-sorting-and-java-comparators'
-F='07-sort-and-deduplicate.md'
-a=sorted([4,1,4,2,1,4]); st=[]; run=0; emitted=[]
-for i,x in enumerate(a):
-    if i==0 or x!=a[i-1]:
-        note=("The first position begins a run." if i==0 else f"The value changes from {a[i-1]} to {x}, so the run of {a[i-1]} ends with length {run} and a new run begins.")
-        run=1; emitted.append(x)
-    else:
-        run+=1; note=f"{x} equals the previous value, so the current run has length {run}."
-    st.append({"at":{"i":i},"vars":{"value":x,"runLength":run,"representatives":",".join(map(str,emitted))},"note":note+f" Representatives so far: {', '.join(map(str,emitted))}."})
-assert emitted==[1,2,4] and "ends with length 2" in st[2]["note"]
-fill(CH,F,block(a,["i"],st),"@@TRACE1@@")
-both=sorted(sorted(set([4,9,5,9]))+sorted(set([9,4,9,8,4]))); st=[]; out=[]
-for i in range(1,len(both)):
-    if both[i]==both[i-1]:
-        out.append(both[i]); note=f"Position {i} holds {both[i]} and position {i-1} holds {both[i-1]}. The value came from both arrays, so report {both[i]}."
-    else: note=f"Position {i} holds {both[i]} and position {i-1} holds {both[i-1]}. They differ, so nothing is reported."
-    st.append({"at":{"i":i},"vars":{"previous":both[i-1],"current":both[i],"common":",".join(map(str,out))},"note":note})
-assert both==[4,4,5,8,9,9] and out==[4,9]
-fill(CH,F,block(both,["i"],st),"@@TRACE2@@")
+CH='05-sorting-and-java-comparators'; N='07-sort-and-deduplicate.md'
+def run(feed,ph,tail,detail):
+    s=sorted(feed); n=len(s); i=0; rep=[]
+    st=[{"at":{"i":0,"j":0},"vars":{"report":"[]"},"note":"Start: the first run begins at index 0."}]
+    while i<n:
+        j=i
+        while j<n and s[j]==s[i]:
+            j+=1
+            if detail: st.append({"at":{"i":i,"j":min(j,n)},"vars":{"value":s[i],"report":str(rep)},"note":f"Index {j-1} holds {s[i]}, so the run extends. The end index moves to {j}."})
+        rep.append((s[i],j-i))
+        st.append({"at":{"i":i,"j":j},"vars":{"value":s[i],"report":str(rep)},"note":f"The run of {s[i]} spans indexes {i} to {j-1}, so the length is {j-i}. Emit ({s[i]}, {j-i}) and continue at index {j}."})
+        i=j
+    st.append({"at":{"i":n,"j":n},"vars":{"report":str(rep)},"note":tail})
+    fill(CH,N,block(s,["i","j"],st),ph); return rep
+assert run([4,7,4,9,7,4],"@@TRACE1@@","The loop ends because i reaches the array length. The report holds three pairs.",False)==[(4,3),(7,2),(9,1)]
+assert run([4,4,4],"@@TRACE2@@","The loop ends because i reaches the array length. The single run was emitted without a later value.",True)==[(4,3)]

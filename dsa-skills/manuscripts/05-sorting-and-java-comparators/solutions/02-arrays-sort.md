@@ -5,7 +5,7 @@
 <!-- id: so-sorted-copy -->
 
 **Approach.**
-The method builds an independent copy with `Arrays.copyOf` and sorts the copy, so the caller's array is never written. The invariant after the sort is that every adjacent pair of the copy is nondecreasing and the copy holds the same multiset of values as `nums`. The harness asserts that the input keeps its order, that the answer is a different object, and that the sort call returns nothing that code could chain.
+The method builds an independent copy with `Arrays.copyOf` and sorts the copy, so the caller's array is never written. Once the sort returns, each adjacent pair of the copy is nondecreasing and the copy holds the same multiset of values as `nums`. The harness asserts that the input keeps its order, that the answer is a different object, and that the sort call returns nothing that code could chain.
 
 **Complexity.**
 - **Time** is O(n log n), because the copy costs O(n) and the library sort dominates.
