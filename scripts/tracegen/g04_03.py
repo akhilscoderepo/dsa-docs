@@ -6,7 +6,7 @@ for i,x in enumerate(nums):
     c=target-x
     if c in at:
         st.append({"at":{"i":i},"vars":{"value":x,"complement":c,"map":M(at)},"note":f"Value {x}, complement {c}. The map holds {c} at position {at[c]}, so the answer is [{at[c]}, {i}]."}); ans=[at[c],i]; break
-    st.append({"at":{"i":i},"vars":{"value":x,"complement":c,"map":M(at)},"note":f"Value {x}, complement {c}, which is not in the map. Store {x} at position {i}."})
+    st.append({"at":{"i":i},"vars":{"value":x,"complement":c,"map":M(at)},"note":f"Value {x}, complement {c}, which is missing from the map. Store {x} at position {i}."})
     at[x]=i
 assert ans==[2,3]
 fill(CH,'03-key-to-index-maps.md',block(nums,["i"],st),"@@TRACE1@@")
