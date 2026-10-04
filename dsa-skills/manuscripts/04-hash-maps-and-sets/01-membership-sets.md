@@ -61,7 +61,7 @@ After the iteration for index `i`, the seen set holds exactly the distinct value
 
 #### What The Set Costs
 
-Each of the n iterations does one expected O(1) operation, so the time is O(n) on average. The seen set can hold all n values when no duplicate exists, so the space is O(n). The method spends memory to remove the repeated scans.
+Each of the n iterations does one operation of expected O(1) cost, which gives O(n) time on average. The seen set can hold all n values when no duplicate exists, so the space is O(n). The method spends memory to remove the repeated scans.
 
 <!-- stage: variables -->
 ### Set, Index And Value
@@ -113,7 +113,7 @@ static boolean containsDuplicate(int[] nums) {
 
 #### What The Method Costs
 
-The loop runs n times and each `add` takes expected constant time, so the time is O(n) on average. The set holds up to n values, so the space is O(n). The call `seen.add(nums[i])` both tests and stores, so the loop never searches the set twice for one value.
+The loop runs n times and each `add` takes expected constant time. The average time is therefore linear in n. The set holds up to n values, so the space is O(n). The call `seen.add(nums[i])` both tests and stores, so the loop never searches the set twice for one value.
 
 <!-- stage: applicability -->
 ### When A Set Answers The Question

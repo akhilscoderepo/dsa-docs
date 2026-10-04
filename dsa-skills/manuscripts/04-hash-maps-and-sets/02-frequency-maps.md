@@ -119,7 +119,7 @@ static int firstUniqueIndex(int[] codes) {
 
 #### What The Method Costs
 
-Each pass makes n map operations of expected constant time, so the time is O(n) on average. The map holds one entry per distinct code, so the space is O(d), which is at most O(n). The expression `count.get(codes[i]) == 1` is safe here, because every code of the array has an entry after the first pass.
+Each pass makes n map operations of expected constant time, which gives a linear average time. The map holds one entry per distinct code, so the space is O(d), which is at most O(n). The expression `count.get(codes[i]) == 1` is safe here, because every code of the array has an entry after the first pass.
 
 <!-- stage: applicability -->
 ### When A Map Of Counts Fits

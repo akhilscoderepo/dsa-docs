@@ -113,7 +113,7 @@ static int[] twoSum(int[] nums, int target) {
 
 #### What The Method Costs
 
-The loop runs n times, and each iteration does one `get` and at most one `put`, so the time is O(n) on average. The map holds at most n entries, so the space is O(n). The variable `j` has type `Integer` and not `int`, because `get` returns `null` for a missing key, and unboxing `null` into an `int` throws an exception.
+The loop runs n times, and each iteration does one `get` and at most one `put`. The expected total time is O(n). The map holds at most n entries, so the space is O(n). The variable `j` has type `Integer` and not `int`, because `get` returns `null` for a missing key, and unboxing `null` into an `int` throws an exception.
 
 <!-- stage: applicability -->
 ### When A Map Of Positions Fits
