@@ -124,7 +124,7 @@ There is no use for this model when rides have different costs, for instance whe
 
 **Prerequisites.** The queue and the visited check from the earlier lessons of this chapter.
 
-**Problem.** There are `n` vertices numbered 0 to n - 1 and an undirected graph given by `edges`, where each entry `[u, v]` is one edge. Return an `int[]` of length `n` whose entry v is the fewest edges on any path from `source` to v, or -1 when v cannot be reached. Entry `source` is 0.
+**Problem.** An undirected graph has `n` vertices labelled 0 through n - 1 and is given by `edges`, where each entry `[u, v]` is one edge. Return an `int[]` of length `n` whose entry v is the fewest edges on any path from `source` to v, or -1 when v cannot be reached. Entry `source` is 0.
 
 **Constraints.** 1 <= n <= 1000, 0 <= edges.length <= 5000, no self-loops, and repeated edges are possible.
 

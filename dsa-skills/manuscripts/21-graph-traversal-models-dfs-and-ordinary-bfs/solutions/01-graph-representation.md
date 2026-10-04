@@ -74,7 +74,7 @@ public final class UndirectedLists {
 #### Solution: [Vary] Directed Adjacency Lists (Author exercise)
 <!-- id: gt-directed-lists -->
 
-**Approach.** The list for each vertex is created before any edge is read, so a vertex that never appears keeps an empty list. Each pair then appends only its head to the list of its tail. The oracle recomputes every list by filtering the pairs on their first number. The assertions compare the two on random directed inputs, including pairs that point both ways between two vertices, and check that the entries across all lists equal the number of edges rather than twice that number.
+**Approach.** The list for each vertex is created before any edge is read, so a vertex that never appears keeps an empty list. Each pair then appends only its head to the list of its tail. The oracle recomputes every list by filtering the pairs on their first number. Random directed inputs, including pairs that point both ways between two vertices, and check that the entries across all lists equal the number of edges rather than twice that number.
 
 **Complexity.** O(n + E) time and O(n + E) space.
 

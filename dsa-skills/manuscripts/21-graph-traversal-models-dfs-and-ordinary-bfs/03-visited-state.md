@@ -129,7 +129,7 @@ There is no need for any flag when the structure is known to be a tree walked aw
 
 **Prerequisites.** Adjacency lists and the queue from the earlier lesson.
 
-**Problem.** There are `n` vertices numbered `0` to `n - 1`, and `edges` lists directed edges as pairs `[from, to]`. Starting at `source`, return a boolean array of length `n` in which entry `v` is true exactly when a path of zero or more edges leads from `source` to `v`.
+**Problem.** Take `n` vertices labelled `0` through `n - 1`, with `edges` listing directed edges as pairs `[from, to]`. Starting at `source`, return a boolean array of length `n` in which entry `v` is true exactly when a path of zero or more edges leads from `source` to `v`.
 
 **Constraints.** 1 <= n <= 100, 0 <= edges.length <= 300, no pair repeats, and cycles are allowed.
 

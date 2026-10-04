@@ -109,7 +109,7 @@ There is no gain from a list when the question is a heavy stream of edge existen
 
 **Prerequisites.** The idea of a pile of neighbors per vertex.
 
-**Problem.** There are `n` vertices numbered `0` to `n - 1`, and `edges` lists undirected edges as pairs. Return the adjacency lists as a list of `n` lists, where each list holds the neighbors of its vertex in the order that the edges arrived. Every edge appears in the lists of both of its ends.
+**Problem.** The network has `n` landings labelled `0` through `n - 1`, and `edges` lists undirected edges as pairs. Return the adjacency lists as a list of `n` lists, where each list holds the neighbors of its vertex in the order that the edges arrived. Every edge appears in the lists of both of its ends.
 
 **Constraints.** 1 <= n <= 100, 0 <= edges.length <= 300, no edge repeats and no edge joins a vertex to itself.
 
