@@ -9,6 +9,18 @@ Pipeline law: `skill/dsa-chapter-pipeline/SKILL.md`. Status vocabulary is exactl
 - Allowed savings only: no restating code in prose, no repeated boilerplate, targeted fixes instead of rewrites, audit only the lesson in hand until the chapter is complete.
 - Quick turnaround: finish and push each chapter as soon as it passes; do not batch.
 
+## Voice rules (set by the user, Oct 4; apply to all new prose)
+The user finds long sentences that stack several abstract nouns hard to read ("practice reading a contract, predicting a cost and designing a hostile test, one at a time, before any named algorithm competes for your attention"). Short plain sentences like "You should be able to write a loop over an array in Java" read well. Apply to every narrative stage, orientation, hint and solution Approach:
+- One idea per sentence, about 25 words at most. Split a sentence that carries a list of three abstract actions into three short sentences or concrete examples.
+- Active voice with a concrete subject: "the loop moves `right`", "the heap returns the smallest value". Avoid "is used", "will be divided".
+- Present tense only. No "will".
+- No arrows (`->`) in prose. Use "so", "because", "therefore", "as a result".
+- Turn noun phrases into verbs: "when the loop ends", not "upon termination of the loop".
+- Name the real thing: `left`, `map.get(key)`, "the window `[left, right]`", not "the process", "the situation", "the aspect".
+- Use standard industry terms. Say "adversarial test" or "edge case" (not "hostile test"), "precondition and postcondition" or "specification" (not a bare "contract" for a vague idea). Do not invent metaphors or catchphrases. Fixed course terms from the spec (lesson titles, ids) stay as they are.
+- This changes wording only. Keep all stages, all content depth and the format rules below.
+- Run `python3 scripts/voice_lint.py NN` (advisory) and fix flagged sentences with targeted edits.
+
 ## Session start
 1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 6 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
 2. Tooling: `cd dsa-skills && [ -d node_modules ] || npm ci`. JDK 21 and Python 3 must exist (`java -version`). Chromium is at `/opt/pw-browsers` (do not run playwright install).

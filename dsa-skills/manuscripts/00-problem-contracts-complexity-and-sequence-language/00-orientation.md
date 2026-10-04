@@ -5,7 +5,7 @@ This chapter teaches no algorithm. It teaches the language you use to read a pro
 
 ### What You Need Before Starting
 
-You should be able to write a loop over an array in Java, read a simple Big-O bound, and run a small program to see its output. No data structure beyond arrays and strings appears here, and no lesson needs more than a few lines of code. The exercises are deliberately small, because the aim is to practice reading a contract, predicting a cost and designing a hostile test, one at a time, before any named algorithm competes for your attention.
+You should be able to write a loop over an array in Java, read a simple Big-O bound, and run a small program to see its output. No data structure beyond arrays and strings appears here, and no lesson needs more than a few lines of code. The exercises stay small on purpose. Each one trains a single skill. In one exercise you read a problem statement and write down what the input guarantees and what the output must contain. In another you predict how many times a loop runs. In a third you write a tiny input that makes the code fail. You practice these skills one at a time, before any named algorithm competes for your attention.
 
 ### The Eight Habits
 
