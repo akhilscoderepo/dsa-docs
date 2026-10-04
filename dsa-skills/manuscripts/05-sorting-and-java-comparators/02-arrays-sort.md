@@ -181,7 +181,7 @@ The method `Arrays.sort(int[])` returns `void`, so code such as `return Arrays.s
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Let `nums` be an array of integers. Sort a copy of `nums`. Return the largest difference between two adjacent values of the sorted copy as a `long`. Return 0 when the array has fewer than two values.
+**Problem.** Take an integer array `nums`. Sort a copy of `nums`. Return the largest difference between two adjacent values of the sorted copy as a `long`. Return 0 when the array has fewer than two values.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 10^5`.
@@ -202,7 +202,7 @@ The method `Arrays.sort(int[])` returns `void`, so code such as `return Arrays.s
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Let `nums` be an array of integers. Return the smallest value that occurs at least twice in `nums`, or `null` when all values are distinct. This version changes the contract of the original Contains Duplicate problem, which returns only true or false.
+**Problem.** Consider an integer array `nums`. Return the smallest value that occurs at least twice in `nums`, or `null` when all values are distinct. This version changes the contract of the original Contains Duplicate problem, which returns only true or false.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 10^5`.
