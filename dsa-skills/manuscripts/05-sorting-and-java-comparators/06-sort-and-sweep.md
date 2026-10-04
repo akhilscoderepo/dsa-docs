@@ -63,7 +63,7 @@ A **safe move** is a choice that cannot make a later choice worse. Sorted reques
 
 #### The Cost Of The Sweep
 
-The sort costs O(n log n), and the pass costs O(n). The pass keeps the frontier and the move count, which is O(1) extra space beyond the sorted copy.
+Sorting takes O(n log n) time, and the single pass after it adds O(n). The pass keeps the frontier and the move count, which is O(1) extra space beyond the sorted copy.
 
 <!-- stage: variables -->
 ### Frontier, Taken Slot And Moves
