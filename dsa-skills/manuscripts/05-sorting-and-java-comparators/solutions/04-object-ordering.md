@@ -130,7 +130,7 @@ public final class ReorderLogs {
 <!-- id: so-sort-rows -->
 
 **Approach.**
-The method sorts the row array with a comparator that compares column 0 first. When column 0 is equal, it compares column 1 with the arguments swapped, which gives descending order without negation. Both comparisons use `Integer.compare`, so the extreme values cannot overflow. The array holds row objects, so the sort moves references to rows. The invariant after the sort is that adjacent rows have a smaller column 0 on the left, or an equal column 0 and a column 1 that is not smaller.
+The method sorts the row array with a comparator that compares column 0 first. When column 0 is equal, it compares column 1 with the arguments swapped, which gives descending order without negation. Both comparisons use `Integer.compare`, so the extreme values cannot overflow. The array holds row objects, so the sort moves references to rows. After the call, adjacent rows have a smaller column 0 on the left, or an equal column 0 and a column 1 that is not smaller.
 
 **Complexity.**
 - **Time** is O(n log n), because each comparison reads at most two cells of each row.

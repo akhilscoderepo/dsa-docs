@@ -114,7 +114,7 @@ static int thirdHighest(int[] scores) {
 
 #### What The Method Costs
 
-The sort takes O(n log n) time, and the loop makes at most n - 1 steps. The copy takes O(n) space. The method assumes at least one score, because the fallback reads the last index.
+Sorting costs O(n log n) time, and the loop adds at most n - 1 steps. The copy takes O(n) space. The method assumes at least one score, because the fallback reads the last index.
 
 <!-- stage: applicability -->
 ### When A Scan Finishes The Job

@@ -5,7 +5,7 @@
 <!-- id: so-stable-tickets -->
 
 **Approach.**
-The method builds one `Ticket` record per id and sorts the tickets with a comparator that reads only the priority. `Arrays.sort` on an object array is stable, so tickets with equal priority keep the order of the input. The invariant after the sort is that adjacent tickets have a smaller priority on the left, or an equal priority and an earlier input position. The harness compares the answer with a bucket oracle that groups ids by priority in input order. It also asserts the two reversal facts from the lesson.
+The method builds one `Ticket` record per id and sorts the tickets with a comparator that reads only the priority. `Arrays.sort` on an object array is stable, so tickets with equal priority keep the order of the input. When the sort finishes, adjacent tickets have a smaller priority on the left, or an equal priority and an earlier input position. The harness compares the answer with a bucket oracle that groups ids by priority in input order. It also asserts the two reversal facts from the lesson.
 
 **Complexity.**
 - **Time** is O(n log n), because the library sort makes that many comparisons of two integers.
@@ -65,7 +65,7 @@ public final class StableTickets {
 <!-- id: so-index-tie -->
 
 **Approach.**
-The method sorts an `Integer[]` of the indexes `0` to `n - 1`. The comparator looks up the two keys and compares them with `Integer.compare`. When the keys are equal, it compares the indexes themselves. No two positions tie, because indexes are distinct, so the output is the same for every correct sort and the comparator does not depend on stability. The invariant after the sort is that adjacent indexes have smaller keys, or equal keys and a smaller index on the left.
+The method sorts an `Integer[]` of the indexes `0` to `n - 1`. The comparator looks up the two keys and compares them with `Integer.compare`. When the keys are equal, it compares the indexes themselves. No two positions tie, because indexes are distinct, so the output is the same for every correct sort and the comparator does not depend on stability. At the end of the sort, adjacent indexes have smaller keys, or equal keys and a smaller index on the left.
 
 **Complexity.**
 - **Time** is O(n log n), because each comparison reads two keys and two indexes.
@@ -171,7 +171,7 @@ public final class CaseTies {
 <!-- id: so-bit-count -->
 
 **Approach.**
-The method boxes the values and sorts them with a comparator that reads `Integer.bitCount` first and the value second. Both keys use `Integer.compare` through `comparingInt` and `naturalOrder`, so nothing overflows. The second key makes the order independent of the input order, because two equal values are interchangeable and two different values with the same bit count differ in value. The invariant after the sort is that adjacent integers are ordered by the pair (bit count, value).
+The method boxes the values and sorts them with a comparator that reads `Integer.bitCount` first and the value second. Both keys use `Integer.compare` through `comparingInt` and `naturalOrder`, so nothing overflows. The second key makes the order independent of the input order, because two equal values are interchangeable and two different values with the same bit count differ in value. Afterward, adjacent integers are ordered by the pair (bit count, value).
 
 **Complexity.**
 - **Time** is O(n log n), because each comparison counts the bits of two 32-bit values in constant time.

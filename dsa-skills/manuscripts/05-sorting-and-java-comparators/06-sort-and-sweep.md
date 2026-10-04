@@ -119,7 +119,7 @@ static long countMoves(int[] requests) {
 
 #### What The Method Costs
 
-The sort takes O(n log n) time and the loop takes O(n) time. The copy uses O(n) space. Both `frontier` and `moves` are `long`, because a run of 100000 equal values needs about 5 billion moves.
+Time is O(n log n) for the sort plus O(n) for the loop. The copy uses O(n) space. Both `frontier` and `moves` are `long`, because a run of 100000 equal values needs about 5 billion moves.
 
 <!-- stage: applicability -->
 ### When A Frontier Is Enough
