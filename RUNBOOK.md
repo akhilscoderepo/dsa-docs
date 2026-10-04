@@ -46,12 +46,14 @@ Machine keys stay fixed (the audit parses them): `#### [Build|Vary|Boundary|Reco
 - **Approach:** the algorithm, its invariant and why each step exists. **Complexity:** a Time bullet and a Space bullet, each with its reason.
 - **Java in solutions:** Javadoc on each solution method with purpose, Time, Space and the invariant. A comment on every primary statement (loop header, condition, update, return) explaining the execution logic, why it runs and where cost or memory comes from. Comments only describe and never change executable code. The test harness gets one comment per group of assertions.
 
-### Structured bullet lists
-Use bullets for mathematical steps, multi-item parameters, complexity metrics, trade-off comparisons, step-by-step trace logic and requirement check-lists. Do not leave these in dense paragraphs, and do not write loose scratchpad bullets.
-- Every bullet starts with a **bolded key technical entity** (a variable, structure, operation or metric), then a short active-voice fragment that states its exact operation or constraint.
-- One fact per bullet, about 20 words at most, parallel form within a list.
-- Context, naive, bottleneck and insight stay prose-led and obey the audit limit of 30% bullet lines. Trace and applicability may be bullet-led (the audit allows up to 85%), but open or close the list with at least one connecting prose sentence. Variables, complexity summaries, constraints and solution Approach steps use bullets freely.
-- Bullets never replace connected reasoning. Keep the explanation of why in sentences and use the list for the parts a reader scans.
+### Bullets versus paragraphs
+Bullets are reserved for multi-item parameter lists, technical entity definitions and complexity or other metrics. Sequential narrative logic is never bulleted.
+- **Prose for sequences:** every approach overview, strategy breakdown, step-by-step explanation, trace commentary and reasoning chain is written as cohesive, flowing paragraphs. Weave the separate logical steps and programmatic actions into one structural story with clear transition markers that state how each step follows from the last.
+- **No checklist drops:** never collapse an explanation into a vertical list of isolated single-sentence fragments. A list of fragments reads like a design to-do list and destroys narrative continuity.
+- **Where bullets belong:** parameter lists with several items, definitions of technical entities, and metric summaries such as time and space cost.
+- **Bullet shape:** every bullet starts with a **bolded key technical entity**, then a short active-voice fragment that states its exact meaning or constraint. One fact per bullet, parallel form within a list.
+- **Audit limits:** context, naive, bottleneck and insight obey the audit limit of 30% bullet lines. Trace and applicability keep their allowance for entity or metric lists, but their explanatory sequences stay prose.
+- **Solution Approach:** a prose paragraph (or a few) that explains the algorithm, its invariant and why each step exists. Complexity stays a Time bullet and a Space bullet, each with its reason.
 
 ## Session start
 1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 6 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
