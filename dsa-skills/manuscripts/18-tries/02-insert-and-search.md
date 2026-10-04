@@ -41,7 +41,7 @@ Insertion ends by flagging the node under the cursor, and a search ends by testi
 
 The slots must have a known size, which is the **domain size** of the characters that can occur. An array of 26 slots indexed by `letter - 'a'` is valid only when the contract promises lowercase English letters. Any other character needs a larger array with a mapping, or a map from characters to children.
 
-The invariant is that after i letters the cursor stands on the node for the first i letters, so every created node is one that an inserted word needs.
+The invariant is that the node under the cursor, after i letters, spells exactly the first i letters, so every created node is one that an inserted word needs.
 
 <!-- names: walking cursor, edge slot, domain size -->
 
@@ -53,7 +53,7 @@ The `cur` variable is the cursor, set to the root before every operation and adv
 <!-- stage: trace -->
 ### A Word Inside A Longer Word
 
-Both traces use a trie that already holds the word `app`. The first inserts `apple`. The pointer `i` marks the letter being consumed. The first three letters find filled slots, and the pass counts show that the route is shared with `app`. The fourth and fifth letters find empty slots, so two nodes are created, and the last step flags the node for `apple`.
+Both traces use a trie that already holds the word `app`. The first inserts `apple`. The pointer `i` sits on the letter under the cursor. The first three letters find filled slots, and the pass counts show that the route is shared with `app`. The fourth and fifth letters find empty slots, so two nodes are created, and the last step flags the node for `apple`.
 
 ```trace
 {"cells":["a","p","p","l","e"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"nodes":4,"pass":2,"made":"no"},"note":"The letter a already has an edge, so the walk moves onto the existing node for a and its pass count rises to 2."},{"at":{"i":1},"vars":{"nodes":4,"pass":2,"made":"no"},"note":"The letter p already has an edge, so the walk moves onto the existing node for ap and its pass count rises to 2."},{"at":{"i":2},"vars":{"nodes":4,"pass":2,"made":"no"},"note":"The letter p already has an edge, so the walk moves onto the existing node for app and its pass count rises to 2."},{"at":{"i":3},"vars":{"nodes":5,"pass":1,"made":"yes"},"note":"The letter l has no edge yet, so a new node is made for the beginning appl and the walk moves onto it."},{"at":{"i":4},"vars":{"nodes":6,"pass":1,"made":"yes"},"note":"The letter e has no edge yet, so a new node is made for the beginning apple and the walk moves onto it."},{"at":{"i":5},"vars":{"nodes":6,"pass":1,"made":"no"},"note":"The word apple ends here, so the flag of this node is set and the trie holds 6 nodes with the root."}]}

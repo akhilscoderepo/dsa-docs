@@ -36,7 +36,7 @@ Most of that work is hopeless. Once the piece `qx` is not the beginning of any a
 <!-- stage: insight -->
 ### Let One Walk List All The Ends
 
-Put the approved words into a trie. From a **start index** i, set a cursor at the root and feed it the banner letters i, i + 1, i + 2 and so on. After each letter, the cursor stands on the node for the piece read so far. Whenever that node is flagged, the piece is an approved word, and its end is the next position, so this is a **terminal stop**. The walk then continues, because a longer approved word may still follow, and cats continues past cat.
+Put the approved words into a trie. From a **start index** i, set a cursor at the root and feed it the banner letters i, i + 1, i + 2 and so on. After each letter, the cursor rests on the node that spells the piece read so far. Whenever that node is flagged, the piece is an approved word, and its end is the next position, so this is a **terminal stop**. The walk then continues, because a longer approved word may still follow, and cats continues past cat.
 
 The walk ends at a **dead end**: the first letter for which the cursor's node has no edge. At that moment no approved word is a beginning of the remaining text, so nothing further along can be a word either. One walk from one start index therefore reports exactly the approved words that are beginnings of the suffix, and it reads at most as many letters as the longest approved word, since the trie has no deeper node.
 
