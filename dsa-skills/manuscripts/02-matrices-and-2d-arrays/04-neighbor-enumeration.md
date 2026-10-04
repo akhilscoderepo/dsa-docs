@@ -3,9 +3,9 @@
 ## Checking The Neighbors Of A Cell
 
 <!-- stage: context -->
-### A Mine Counter With A Wrong Sign
+### A Mine Counter That Miscounts The Corner
 
-A minesweeper clone shows each safe cell with the number of mines in the cells touching it. The first version spells out the eight touching cells as eight separate `if` statements, each with its own range test. It works for months. Then a player reports that the top-right corner shows a count one too low. One of the eight range tests rejected a cell that lies inside the board, and only the corner cell ever reached that test with an index at the edge.
+A minesweeper clone shows each safe cell with the number of mines in the cells touching it. The first version spells out the eight touching cells as eight separate `if` statements, each with its own range test. It works for months. Then a player reports that the top-right corner shows a count one too low. One of the eight range tests rejected a cell that lies inside the board. Only a corner cell hit that test.
 
 The task is simple, and the code is long because every touching cell is typed by hand. This lesson asks how to describe the cells that touch a given cell once, in data, so that a loop handles all of them and the range test is written in one place.
 
@@ -66,7 +66,7 @@ The set of cells touching a given cell under a chosen table is its **neighborhoo
 
 The loop uses four pieces of state.
 
-- **DIRS** is the direction table, with one row of two integers per offset, and it never changes.
+- **DIRS4 and DIRS8** are the direction tables, with one row of two integers per offset, and it never changes.
 - **nr and nc** hold the candidate cell for the current offset and are recomputed on each iteration.
 - **count** holds the number of qualifying neighbors found so far.
 - **r and c** hold the center cell and stay fixed during the loop.
@@ -121,11 +121,11 @@ Both tables are created once, as `static final` fields. A table written as `new 
 
 #### Recognizing The Pattern
 
-The pattern fits when the operation on a cell depends only on cells at fixed offsets from it, such as counting mines, blurring a pixel or applying a rule to adjacent cells. The invariant is that every offset is tried once, and only cells inside the grid are read. The table is also the place to encode a rule such as "knight moves" or "left and right only".
+The pattern fits when a cell's result depends only on cells at fixed offsets from it. Counting mines and applying a rule to adjacent cells are examples. The invariant is that every offset is tried once, and only cells inside the grid are read. The table is also the place to encode a rule such as "knight moves" or "left and right only".
 
 #### When Flood Fill Replaces The Offsets
 
-A task that asks for a whole connected region, such as all land cells joined to one cell, uses neighbors too and is a false friend of the offset table, because it follows them repeatedly. The cell reached by one offset becomes the start of the next round of offsets. That repetition needs a record of visited cells and is a graph traversal, which a later chapter teaches. A fixed neighborhood stops after one round of offsets.
+A task that asks for a whole connected region, such as all land cells joined to one cell, uses neighbors too. It is a false friend of the offset table, because it follows neighbors repeatedly. The cell reached by one offset becomes the start of the next round of offsets. That repetition needs a record of visited cells and is a graph traversal, which a later chapter teaches. A fixed neighborhood stops after one round of offsets.
 
 #### A Table That Includes The Center
 

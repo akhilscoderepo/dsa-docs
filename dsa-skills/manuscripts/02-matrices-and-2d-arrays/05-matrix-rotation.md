@@ -57,7 +57,7 @@ To **reverse** a row means to swap its first cell with its last, its second with
 
 #### Why The Center Needs No Special Move
 
-When `n` is odd, the cell `(r, c)` with `r = c = (n - 1) / 2` maps to itself under the quarter turn, because `n - 1 - r` equals `r`. The transpose leaves it alone, and the reversal loop stops before the middle cell, so it stays in place. The invariant is that every cell is either swapped with its partner exactly once or fixed, so the final matrix equals the quarter turn of the input.
+When `n` is odd, the cell `(r, c)` with `r = c = (n - 1) / 2` maps to itself under the quarter turn, because `n - 1 - r` equals `r`. The transpose leaves it alone, and the reversal loop stops before the middle cell, so it stays in place. The invariant is that the transpose swaps each pair once and the reversal swaps each row pair once. A fixed cell is not swapped by either step, so the final matrix equals the quarter turn.
 
 <!-- stage: variables -->
 ### The Indexes And The Spare Value

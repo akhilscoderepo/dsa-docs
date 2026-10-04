@@ -39,7 +39,7 @@ The method is correct on every rectangular grid. It also rereads cells. A cell n
 ```predict
 On an R by C grid, how many cell reads does the naive check make in the worst case, and which reads repeat?
 
-A start cell walks up to min(R, C) steps, so the total is about R * C * min(R, C) reads, which is O(R * C * min(R, C)). A cell that sits k steps from the top or left edge is read once for each of the k earlier cells on its line.
+A start cell walks up to min(R, C) steps, so the total is at most R * C * min(R, C) reads, which is O(R * C * min(R, C)). A cell that sits k steps from the top or left edge is read once for each of the k earlier cells on its line.
 ```
 
 On a 2,000 by 2,000 grid, the walk from the top-left cell alone reads 1,999 cells. The total reaches about 2.7 billion reads, because most cells have long lines behind them. The grid holds only 4 million cells. Each cell needs one comparison with one neighbor to settle the rule, so the work should be O(R * C). The gap comes from describing each line as a walk to the edge, when each cell can describe its own line by a coordinate relation.
@@ -57,7 +57,7 @@ Row `r` holds the cells `(r, 0)` through `(r, cols - 1)`. Column `c` holds the c
 
 #### The Border And The Predecessor
 
-The **border** is the set of cells with `r == 0`, `r == rows - 1`, `c == 0` or `c == cols - 1`. A cell with two of these properties, such as a corner, is one cell and must be counted once. A diagonal also gives a cheap local test. Every cell not in row 0 or column 0 has a predecessor at `(r - 1, c - 1)` on the same diagonal. If each cell equals its predecessor, every cell on the diagonal equals its first cell, by repeating the check along the diagonal along the diagonal. One comparison per cell replaces the whole walk.
+The **border** is the set of cells with `r == 0`, `r == rows - 1`, `c == 0` or `c == cols - 1`. A cell with two of these properties, such as a corner, is one cell and must be counted once. A diagonal also gives a cheap local test. Every cell not in row 0 or column 0 has a predecessor at `(r - 1, c - 1)` on the same diagonal. If each cell equals its predecessor, every cell on the diagonal equals its first cell, by repeating the check along the diagonal. One comparison per cell replaces the whole walk.
 
 #### What The Loops Keep True
 
@@ -78,7 +78,7 @@ The loops use four pieces of state, and each has a fixed meaning.
 
 #### A Grid That Passes
 
-Take the 3 by 3 grid with rows `[3, 5, 1]`, `[2, 3, 5]` and `[9, 2, 3]`. The cells are numbered in row-major order, so cell 4 is row 1, column 1. In the trace below, `cell` marks the cell under test and `pred` marks its predecessor. The first row and the first column have no predecessor, so they are skipped. The cell at row 1, column 1 holds 3 and its predecessor holds 3. Every later comparison also matches, so the grid passes.
+Take the 3 by 3 grid with rows `[3, 5, 1]`, `[2, 3, 5]` and `[9, 2, 3]`. The cells are numbered row by row from left to right, starting at 0, so cell 4 is row 1, column 1. In the trace below, `cell` marks the cell under test and `pred` marks its predecessor. The first row and the first column have no predecessor, so they are skipped. The cell at row 1, column 1 holds 3 and its predecessor holds 3. Every later comparison also matches, so the grid passes.
 
 #### A Grid That Fails
 
@@ -128,7 +128,7 @@ Both methods cost O(R * C) time. The first uses O(C) extra space for the result.
 
 #### The Test For A Region Problem
 
-A prompt is a coordinate-region problem when the cells it asks about follow a rule on `r` and `c`, such as a whole row, a column, a diagonal or the border. The invariant is that the indexes describe exactly the unvisited part of that region, so no cell is skipped and none is counted twice. The usual defects come from the border and the corners, where two properties hold for one cell.
+A prompt is a coordinate-region problem when the cells it asks about follow a rule on `r` and `c`. A whole row, a column, a diagonal and the border are examples. The invariant is that the indexes describe exactly the unvisited part of that region, so no cell is skipped and none is counted twice. The usual defects come from the border and the corners, where two properties hold for one cell.
 
 #### When A Search Replaces A Region Rule
 

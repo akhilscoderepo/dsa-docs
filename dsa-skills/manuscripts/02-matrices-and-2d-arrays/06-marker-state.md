@@ -56,9 +56,11 @@ A **marker** is one stored fact about a row or a column, here "this line must be
 
 #### Markers Kept In The Matrix Itself
 
-Two arrays, `boolean[rows]` and `boolean[cols]`, hold the markers in O(rows + cols) space. The matrix can also carry them. The cell `(0, c)` can mark column `c`, and the cell `(r, 0)` can mark row `r`. A marker written into a cell of the **first row** or the first column overwrites a value the matrix may need. Two extra booleans solve this, because they record whether the first row and the first column held a zero in the input. The update pass handles those two lines last, so their markers stay readable until every other cell is done. This brings the extra space to O(1).
+Two arrays, `boolean[rows]` and `boolean[cols]`, hold the markers in O(rows + cols) space. The matrix can also carry them. The cell `(0, c)` marks column `c`, and the cell `(r, 0)` marks row `r`. A marker in the **first row** or the first column overwrites a value that the matrix may still need, so the method saves two booleans first. The boolean `firstRow` records whether row 0 held a zero in the input, and `firstCol` records the same for column 0.
 
-The cell `(0, 0)` marks both the first row and the first column, so it cannot tell them apart. The two saved booleans separate them. Take `{{3, 4}, {0, 5}}`. The zero at `(1, 0)` marks row 1 by writing into `(1, 0)`, which already holds it. The saved `firstCol` is true, so the last step clears column 0, and the first row stays unchanged because `firstRow` is false.
+The method then runs in four steps, and each step follows from the last. It saves `firstRow` and `firstCol`. Next, it scans the cells with `r >= 1` and `c >= 1`, and each zero writes zero into `m[r][0]` and `m[0][c]`. Then it clears each of those inner cells whose first-column cell or first-row cell is zero. Last, it clears row 0 when `firstRow` is true and column 0 when `firstCol` is true. The first row and first column come last, because their cells held the markers until then. This brings the extra space to O(1).
+
+Take `{{3, 4}, {0, 5}}`. The zero at `(1, 0)` lies in column 0, so `firstCol` is true and `firstRow` is false. The inner scan covers only `(1, 1)`, which holds 5, so it writes no marker. The inner clear sees `m[1][0] == 0` and sets `m[1][1]` to 0. The last step clears column 0, and the matrix becomes `{{0, 4}, {0, 0}}`.
 
 <!-- names: marker, observation pass, update pass, first row -->
 
@@ -81,7 +83,7 @@ The first example has the rows `[1, 2, 3, 4]`, `[5, 0, 7, 8]` and `[9, 10, 0, 12
 
 #### The Update Pass
 
-The update pass then clears each marked row and each marked column. The pointers `a` and `b` mark the first and last cell of the line being cleared. A cell that lies in a marked row and a marked column is cleared twice, which is harmless because a second write of zero changes nothing. The final matrix is `[1, 0, 0, 4]`, `[0, 0, 0, 0]`, `[0, 0, 0, 0]`.
+The update pass then clears each marked row and each marked column. The pointers `a` and `b` mark the first and last cell of the line being cleared. A cell that lies in a marked row and a marked column is cleared twice, and that is harmless. A second write of zero changes nothing. The final matrix is `[1, 0, 0, 4]`, `[0, 0, 0, 0]`, `[0, 0, 0, 0]`.
 
 #### Stepping Through Both Passes
 
@@ -136,7 +138,7 @@ Clearing a line as soon as the scan finds a zero is a false friend of the marker
 
 #### The Same Idea With Two Bits Per Cell
 
-Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 of each cell holds the old state, and bit 1 holds the new state. The expression `cell & 1` keeps only bit 0, so neighbor reads still see the old generation. A final `cell >> 1` shifts bit 1 into place and drops bit 0. The exercise below uses this idea.
+Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 has the value 1, and bit 1 has the value 2. Bit 0 of each cell holds the old state, and bit 1 holds the new state, which `cell |= 2` sets. The expression `cell & 1` keeps only bit 0 and ignores bit 1, so neighbor reads still see the old generation. A final `cell >> 1` shifts bit 1 into place and drops bit 0. The exercise below uses this idea.
 
 <!-- stage: exercises -->
 ### Exercises

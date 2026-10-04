@@ -128,7 +128,7 @@ Before writing any loop, find the sentence that fixes the shape. Phrases such as
 
 #### Habits From Other Languages That Fail
 
-The habit from languages with true two-dimensional arrays, where one declaration fixes both sizes, is a false friend in Java. In Java the declaration `new int[3][4]` happens to build a rectangular table, but the type does not remember it. A later assignment such as `grid[1] = new int[2]` makes the table ragged without any error. Code that receives the table cannot tell the two apart without reading the row lengths.
+The habit from languages with true two-dimensional arrays, where one declaration fixes both sizes, is a false friend in Java. A false friend is a habit that looks right and fails on some inputs. In Java the declaration `new int[3][4]` happens to build a rectangular table, but the type does not remember it. A later assignment such as `grid[1] = new int[2]` makes the table ragged without any error. Code that receives the table cannot tell the two apart without reading the row lengths.
 
 #### When A Row Can Be Null
 
@@ -206,7 +206,7 @@ A table declared as `new int[3][]` has three rows that are all `null` until assi
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Let `mat` be a square `n x n` integer matrix. The primary diagonal holds the cells `mat[i][i]`. The secondary diagonal holds the cells `mat[i][n - 1 - i]`. Return the sum of all cells on either diagonal, and count a cell that lies on both diagonals once.
+**Problem.** Let `mat` be a square `n x n` integer matrix. The main diagonal holds the cells `mat[i][i]`. The anti-diagonal holds the cells `mat[i][n - 1 - i]`. Return the sum of all cells on either diagonal, and count a cell that lies on both diagonals once.
 
 **Constraints.** The limits are:
 - **Shape** is square, so both coordinates stay legal for every `i`.

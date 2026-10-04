@@ -143,7 +143,11 @@ Use this pattern when the output consumes a whole rectangle from the outside in,
 
 #### When The Path Has Blocked Cells
 
-The turn-when-blocked walk from the direction lesson earlier in this chapter produces the same output on a plain rectangle, so the two methods look interchangeable, and the direction walk is a false friend of the four-index method. They differ in their failure modes. The direction walk needs a table of visited cells or a blocking rule. It fits paths that bend around obstacles in any order. The four-index method needs no table, but it works only when the emitted cells always form whole outer rows and columns. A path with blocked cells breaks that precondition, so this method does not apply there. The four-loop code in the direction lesson failed on rectangles because it had no guards, and the two guards above are what make four edges safe.
+The turn-when-blocked walk from the direction lesson earlier in this chapter produces the same output on a plain rectangle. The two methods look interchangeable, and the direction walk is a false friend of the four-index method.
+
+The direction walk needs a table of visited cells or a blocking rule, and it fits paths that bend around obstacles. The four-index method needs no table, but it works only when the emitted cells always form whole outer rows and columns. A path with blocked cells breaks that precondition, so this method does not apply there.
+
+The four-loop code in the direction lesson failed on rectangles because it had no guards. The two guards above are what make four edges safe.
 
 #### Filling Instead Of Reading
 
@@ -194,10 +198,10 @@ The same four indexes can write a matrix as easily as they can read one. A pass 
 
 **Changed decision.** The loop repeats the four passes on the shrinking rectangle until it is empty.
 
-#### [Boundary] Thin Remainder (LeetCode 54)
+#### [Boundary] Thin Remainder (Author exercise)
 <!-- id: mx-thin-remainder -->
 
-**Prerequisites.** The Vary exercise above.
+**Prerequisites.** The Vary exercise above. After `k` full layers, the remaining rectangle has `rows - 2k` rows and `cols - 2k` columns.
 
 **Problem.** A spiral walk over a matrix with `rows` rows and `cols` columns visits every cell in the order of Spiral Matrix. Return the zero-based position `[row, col]` of the last cell the walk visits. The method receives only the two dimensions and builds no matrix.
 
@@ -211,7 +215,7 @@ The same four indexes can write a matrix as easily as they can read one. A pass 
 
 **Example 2.** Input `rows = 4, cols = 1`, output `[3,0]`.
 
-**Hint.** Remove full layers until the remaining rectangle has one row, one column, or two sides of length at least 2. With one row the walk ends at the right end of that row. With one column it ends at the bottom of that column. Otherwise it ends in the left column, one cell below the top. Why does each shape end there?
+**Hint.** Remove full layers until the remaining rectangle has one row, one column, or two sides of length at least 2. Which cell ends the walk in each shape, and why?
 
 **Changed decision.** Only the shape of the last thin remainder matters, so the guards of the third and fourth passes decide the answer and no values are read.
 

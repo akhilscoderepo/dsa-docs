@@ -166,7 +166,7 @@ public final class SpiralMatrix {
 }
 ```
 
-#### Solution: [Boundary] Thin Remainder (LeetCode 54)
+#### Solution: [Boundary] Thin Remainder (Author exercise)
 <!-- id: mx-thin-remainder -->
 
 **Approach.**

@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A game board is stored as an `int[][]`. A function that counts the mines next to a cell reports one too few for the top-right corner, because one hand-written range test rejects a cell inside the board. A second function that clears every row and column holding a zero wipes half the board, because it reads zeros that it wrote a moment earlier. Both bugs come from treating a grid as a pile of cells and not as rows, columns and a shape with rules. This chapter answers one question: what must a method know about a matrix before it reads or writes a cell?
+A game board is stored as an `int[][]`. A function that counts the mines next to a cell reports one too few for the top-right corner, because one hand-written range test rejects a cell inside the board. A second function that clears every row and column holding a zero turns the whole board to zeros, because it reads zeros that it wrote a moment earlier. Both bugs come from treating a grid as a pile of cells and not as rows, columns and a shape with rules. This chapter answers one question: what must a method know about a matrix before it reads or writes a cell?
 
 ### Prerequisites
 

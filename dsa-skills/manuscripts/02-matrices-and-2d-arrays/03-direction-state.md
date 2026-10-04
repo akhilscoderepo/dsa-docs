@@ -71,8 +71,8 @@ The loop keeps four pieces of state, and each changes at a known moment.
 
 - **r and c** hold the cursor position and change on every step.
 - **d** holds the direction index, from 0 for right to 3 for up, and changes only on a turn.
-- **value** holds the next number to write, from 1 up to `R * C`, and grows after each write.
-- **grid** holds the numbers already written, and a cell value of 0 means the cell is empty.
+- **v** holds the next number to write, from 1 up to `R * C`, and grows after each write.
+- **g** holds the numbers already written, and a cell value of 0 means the cell is empty.
 
 <!-- stage: trace -->
 ### Filling Two Sheets Clockwise
@@ -135,7 +135,7 @@ The pattern fits when one cursor moves by a small cyclic rule and changes course
 
 #### When A Frontier Search Replaces The Cursor
 
-A search over a grid, such as a breadth-first search, also visits cells in some order. It is a false friend of the direction model, and it differs in an important way. A search keeps many candidate cells waiting at once and picks among them. The direction model follows exactly one cursor, and the next cell is forced. If a problem lets the walker choose among several moves, a single direction value cannot describe the state, and the problem needs a search.
+A search over a grid also visits cells in some order. A breadth-first search, for example, keeps a frontier, which is the set of cells waiting to be visited. It is a false friend of the direction model, and it differs in an important way. A search keeps many candidate cells waiting at once and picks among them. The direction model follows exactly one cursor, and the next cell is forced. If a problem lets the walker choose among several moves, a single direction value cannot describe the state, and the problem needs a search.
 
 #### The Case Of A Single Cell
 
