@@ -1,27 +1,29 @@
 from common import *
-CH='05-sorting-and-java-comparators'
-F='05-stability-and-ties.md'
-ents=[("ann",3),("bob",1),("cy",3),("di",1),("eve",2)]
-arr=[]; st=[]
-for i,e in enumerate(ents):
-    j=len(arr)
-    while j>0 and arr[j-1][1]>e[1]: j-=1
-    arr.insert(j,e)
-    pref=", ".join(f"{n} {s}" for n,s in arr)
-    eq=[x for x in arr if x[1]==e[1] and x is not e]
-    why=f"It has the same score as {eq[-1][0]}, so it goes right after it and arrival order is kept." if eq else "No earlier entry has the same score, so only the scores decide."
-    st.append({"at":{"i":i},"vars":{"insert":f"{e[0]} {e[1]}","list":pref},"note":f"Insert {e[0]} with score {e[1]}. {why} The list reads {pref}."})
-assert [a[0] for a in arr]==["bob","di","eve","ann","cy"]
-assert "same score as ann" in st[2]["note"]
-fill(CH,F,block([f"{n} {s}" for n,s in ents],["i"],st),"@@TRACE1@@")
-nums=[5,3,8,1,6]
-bc=lambda x:bin(x).count("1")
-arr=[]; st=[]
-for i,x in enumerate(nums):
-    j=len(arr)
-    while j>0 and (bc(arr[j-1]),arr[j-1])>(bc(x),x): j-=1
-    arr.insert(j,x)
-    pref=", ".join(f"{bc(a)}/{a}" for a in arr)
-    st.append({"at":{"i":i},"vars":{"insert":f"{bc(x)}/{x}","order":pref},"note":f"Insert {x}, which has {bc(x)} one-bits. The key is {bc(x)} over {x}. The order reads {pref}."})
-assert arr==[1,8,3,5,6]
-fill(CH,F,block([str(n) for n in nums],["i"],st),"@@TRACE2@@")
+CH='05-sorting-and-java-comparators'; N='05-stability-and-ties.md'
+T=["A2","B2","C1"]; pr=lambda s:int(s[1:])
+a=list(T); st=[{"at":{"i":0,"j":-1},"vars":{"order":str(a)},"note":"Start: the scan looks for the smallest priority from index 0."}]
+for i in range(len(a)-1):
+    sm=i
+    for j in range(i+1,len(a)):
+        smaller=pr(a[j])<pr(a[sm])
+        st.append({"at":{"i":i,"j":j},"vars":{"smallest":a[sm],"order":str(a)},"note":(f"{a[j]} has a smaller priority than {a[sm]}, so it becomes the smallest." if smaller else f"{a[j]} is not smaller than {a[sm]}, so the smallest stays {a[sm]}.")})
+        if smaller: sm=j
+    if sm!=i:
+        a[i],a[sm]=a[sm],a[i]
+        st.append({"at":{"i":i,"j":sm},"vars":{"order":str(a)},"note":f"Swap index {i} with index {sm}. The array is now {a}."})
+st.append({"at":{"i":3,"j":-1},"vars":{"order":str(a)},"note":"The sort ends. B2 now comes before A2, so the tie order changed."})
+assert a==["C1","B2","A2"]
+fill(CH,N,block(T,["i","j"],st),"@@TRACE1@@")
+a=list(T); st=[{"at":{"i":0,"j":-1},"vars":{"order":str(a)},"note":"Start: the first ticket forms a sorted prefix of length 1."}]
+for i in range(1,len(a)):
+    j=i
+    while j>0:
+        if pr(a[j])<pr(a[j-1]):
+            st.append({"at":{"i":i,"j":j-1},"vars":{"order":str(a)},"note":f"{a[j]} has a strictly smaller priority than {a[j-1]}. Move it left."})
+            a[j],a[j-1]=a[j-1],a[j]; j-=1
+        else:
+            st.append({"at":{"i":i,"j":j-1},"vars":{"order":str(a)},"note":f"{a[j]} is not strictly smaller than {a[j-1]}. It stays, so a tie keeps its order."})
+            break
+st.append({"at":{"i":3,"j":-1},"vars":{"order":str(a)},"note":"The sort ends. A2 still comes before B2."})
+assert a==["C1","A2","B2"]
+fill(CH,N,block(T,["i","j"],st),"@@TRACE2@@")
