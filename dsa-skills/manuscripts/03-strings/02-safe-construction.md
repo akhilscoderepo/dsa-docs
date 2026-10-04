@@ -7,7 +7,7 @@
 
 A reporting tool writes one line of comma-separated values for every day in a month, then one for every day in a year. The month finishes in a blink. The year takes seconds, and a ten-year export takes minutes. The loop that builds the text has no nested loop and no expensive call, so the slowdown looks impossible.
 
-The loop runs the line `result = result + piece` once per value. Java strings never change after creation, so every such line builds a brand new string. This lesson asks one question. How does a program build a long output one piece at a time, with each piece costing a constant amount of work and no stray comma at the end?
+The loop runs the line `result = result + piece` once per value. Java strings never change after creation, so every such line builds a brand new string. The question here is how a program builds a long output one piece at a time, so that each piece costs a constant amount of work and no stray comma ends the line.
 
 <!-- stage: naive -->
 ### Adding Each Piece To The Result
@@ -40,7 +40,7 @@ The loop looks linear, because it runs n times and each pass does one addition. 
 <!-- stage: insight -->
 ### Keep One Buffer For The Finished Output
 
-The class `StringBuilder` holds a growable array of characters. A call to `append` writes the new characters at the end of the same array, and the array grows by a multiplicative factor when it fills up. Each character is copied only a constant number of times on average, so appending n characters in total costs O(n) time.
+The class `StringBuilder` holds a growable array of characters. A call to `append` writes the new characters at the end of the same array, and the array grows by a multiplicative factor when it fills up. The array copies each character only a constant number of times on average, so appending n characters in total costs O(n) time.
 
 #### The Builder Holds The Completed Prefix
 

@@ -5,7 +5,7 @@
 <!-- id: st-remove-spaces -->
 
 **Approach.**
-The loop reads each character once and appends it to a `StringBuilder` unless it is a space. The builder is sized to the input length, because the output is never longer than the input. The invariant is that after index `i`, the builder holds the non-space characters of the first `i + 1` input characters, in order. A call to `toString()` at the end creates the result with one copy. The harness at the end of the class also checks the Java claims made in the lesson text.
+The loop reads each character once and appends it to a `StringBuilder` unless it is a space. The method sizes the builder to the input length, because the output is never longer than the input. The invariant is that after index `i`, the builder holds the non-space characters of the first `i + 1` input characters, in order. A call to `toString()` at the end creates the result with one copy. The harness at the end of the class also checks the Java claims made in the lesson text.
 
 **Complexity.**
 - **Time** is O(n), because each character costs one read and at most one append of amortized constant cost.
