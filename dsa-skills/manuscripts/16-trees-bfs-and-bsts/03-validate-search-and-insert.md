@@ -200,7 +200,7 @@ In Java, state the policy for equal keys before coding. With the policy to rejec
 
 **Prerequisites.** The Duplicate-Key Policy rung and the three removal cases.
 
-**Problem.** Given a binary search tree with distinct keys in level order and a `key`, remove the node holding that key if there is one. A node with two children takes the value of the smallest node on its right side, which is then removed from there. Return the level-order array of the result, with trailing `null` entries removed.
+**Problem.** Given a binary search tree with distinct keys in level order and a `key`, remove the node holding that key if there is one. A node with two children takes the value of the smallest node on its right side, which is then removed from there. Report the surviving tree as a level-order array, trimming any trailing `null` entries.
 
 **Constraints.** 0 <= values.length <= 5000 and keys, including the target, are distinct integers between -100000 and 100000.
 
