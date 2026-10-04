@@ -199,7 +199,7 @@ The library may throw `IllegalArgumentException` for an invalid comparator, but 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 100`; the empty array returns an empty array.
 - **Values** satisfy `0 <= nums[i] <= 10^9`.
-- **Comparison** of two values uses their two concatenations and no numeric subtraction.
+- **Comparison** of a pair uses the pair joined in both orders and no numeric subtraction.
 - **Answer** holds exactly the values of `nums`.
 
 **Example 1.** Input `nums = [824, 8247]`, output `[824, 8247]`, because 8248247 is larger than 8247824.
