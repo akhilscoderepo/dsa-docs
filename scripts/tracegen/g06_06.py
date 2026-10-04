@@ -1,19 +1,16 @@
 from common import *
 CH='06-binary-search'
-F='06-rotated-minimum.md'
-def run(a,dups):
-    lo,hi=0,len(a)-1; st=[]
+def run(a,ph):
+    lo,hi=0,len(a)-1
+    st=[{"at":{"lo":lo,"hi":hi,"mid":-1},"vars":{},"note":f"Start with the whole array, indexes {lo} to {hi}. The pivot lies inside it."}]
     while lo<hi:
-        mid=lo+(hi-lo)//2; m,r=a[mid],a[hi]
-        if m>r:
-            st.append({"at":{"lo":lo,"hi":hi,"mid":mid},"vars":{"middle":m,"rightEnd":r},"note":f"Position {mid} holds {m}, larger than the right end {r}. The middle is in the first stretch, so the drop is to its right and lo becomes {mid+1}."}); lo=mid+1
-        elif m<r or not dups:
-            st.append({"at":{"lo":lo,"hi":hi,"mid":mid},"vars":{"middle":m,"rightEnd":r},"note":f"Position {mid} holds {m}, smaller than the right end {r}. The minimum is at {mid} or earlier, so hi becomes {mid}."}); hi=mid
+        mid=lo+(hi-lo)//2; plo,phi=lo,hi
+        if a[mid]>a[hi]:
+            lo=mid+1; nt=f"The value {a[mid]} is larger than the right endpoint {a[phi]}, so mid is in the high run. The pivot lies right of mid, and lo becomes {lo}."
         else:
-            st.append({"at":{"lo":lo,"hi":hi,"mid":mid},"vars":{"middle":m,"rightEnd":r},"note":f"Position {mid} holds {m}, equal to the right end {r}. The middle gives no advice, so drop one copy of the right end and hi becomes {hi-1}."}); hi-=1
-    st.append({"at":{"lo":lo,"hi":hi,"mid":-1},"vars":{"minimum":a[lo]},"note":f"The edges meet at position {lo}, which holds the minimum {a[lo]}."})
-    return st,lo
-a=[4,5,6,7,0,1,2]; s,p=run(a,False); assert p==4 and "hi becomes 4" in s[2]["note"]
-fill(CH,F,block(a,["lo","hi","mid"],s),"@@TRACE1@@")
-a=[2,2,2,0,1,2]; s,p=run(a,True); assert p==3 and "equal to the right end" in s[0]["note"]
-fill(CH,F,block(a,["lo","hi","mid"],s),"@@TRACE2@@")
+            hi=mid; nt=f"The value {a[mid]} is not larger than the right endpoint {a[phi]}, so the pivot is at mid or left of it. hi becomes {hi}."
+        st.append({"at":{"lo":plo,"hi":phi,"mid":mid},"vars":{"nums[mid]":str(a[mid]),"nums[hi]":str(a[phi])},"note":nt})
+    st.append({"at":{"lo":lo,"hi":hi,"mid":-1},"vars":{"minimum":str(a[lo])},"note":f"One index remains. The pivot is index {lo}, and the minimum is {a[lo]}."})
+    fill(CH,'06-rotated-minimum.md',block(list(a),["lo","hi","mid"],st),ph); return lo
+assert run([3,4,5,1,2],"@@TRACE1@@")==3
+assert run([2,4,6,8,10],"@@TRACE2@@")==0

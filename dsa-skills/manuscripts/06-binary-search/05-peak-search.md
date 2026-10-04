@@ -67,7 +67,7 @@ The state has three names, and a single comparison drives the loop.
 - **hi** is the last index that can still hold a peak.
 - **mid** is `lo + (hi - lo) / 2`, and it is always smaller than `hi` while `lo < hi`.
 
-The comparison `nums[mid] < nums[mid + 1]` is the only read of the data. When the loop ends, `lo == hi` names a peak. A one-element array skips the loop and returns index 0.
+The comparison `nums[mid] < nums[mid + 1]` is the only read of the data. When the loop ends, `lo == hi` names a peak. A single-value array skips the loop and returns index 0.
 
 <!-- stage: trace -->
 ### Two Searches That Follow The Slope
@@ -103,7 +103,7 @@ static int findPeak(int[] nums) {
 }
 ```
 
-Each step either moves `lo` past `mid` or sets `hi = mid` with `mid < hi`, so the interval shrinks and the loop ends. The method reads two values per step, so a search over `n` values reads at most `2 * (floor(log2(n)) + 1)` values. An array of one element returns 0, and the array must not be empty.
+Each step either moves `lo` past `mid` or sets `hi = mid` with `mid < hi`, so the interval shrinks and the loop ends. The method reads two values per step, so a search over `n` values reads at most `2 * (floor(log2(n)) + 1)` values. A single value returns index 0, and the array must not be empty.
 
 <!-- stage: applicability -->
 ### When The Slope Decides
