@@ -4,7 +4,7 @@
 #### Solution: [Build] Binary Tree Level Order Traversal (LeetCode 102)
 <!-- id: tb-level-order -->
 
-**Approach.** Read the queue length once before each ring and remove exactly that many nodes, appending their children for the next ring. The tree is made of real nodes from the array. The oracle is a recursive preorder walk that appends each value to the list for its depth, which never looks at a queue. The assertions compare the two on random trees, run both examples, and show that rereading the live queue size merges rings into one list.
+**Approach.** Read the queue length once before each ring and remove exactly that many nodes, appending their children for the next ring. The tree is made of real nodes from the array. The oracle is a recursive preorder walk that appends each value to the list for its depth, which never looks at a queue. Five thousand random trees are run through both methods in the assertions, run both examples, and show that rereading the live queue size merges rings into one list.
 
 **Complexity.** Each node is enqueued and dequeued once, giving O(n) time and O(w) queue space for a widest ring w.
 
@@ -113,7 +113,7 @@ public final class LevelOrderRun {
 #### Solution: [Vary] Binary Tree Zigzag Level Order Traversal (LeetCode 103)
 <!-- id: tb-zigzag-order -->
 
-**Approach.** Enqueue left then right exactly as in the plain method, and flip a direction flag after each ring. A ring is stored in a `LinkedList`, and a value goes to the front when the flag says right to left. The oracle takes the plain depth groups from a recursive walk and reverses every odd-indexed group afterwards. The assertions compare the two on random trees and confirm that the first ring of the second example stays untouched while the next one reverses.
+**Approach.** Enqueue left then right exactly as in the plain method, and flip a direction flag after each ring. A ring is stored in a `LinkedList`, and a value goes to the front when the flag says right to left. The oracle takes the plain depth groups from a recursive walk and reverses every odd-indexed group afterwards. Both methods are run on thousands of random trees by the assertions and confirm that the first ring of the second example stays untouched while the next one reverses.
 
 **Complexity.** O(n) time for n nodes, with O(w) extra space for the widest ring.
 
@@ -315,7 +315,7 @@ public final class ChainRingsRun {
 #### Solution: [Recognize] Binary Tree Right Side View (LeetCode 199)
 <!-- id: tb-right-side-view -->
 
-**Approach.** Run the ring loop and record the value of the removal whose counter equals the snapshot minus one. A right child chain is the wrong tool, because a left child under a missing right branch still shows from the side. The oracle walks preorder, left before right, and overwrites the slot for each depth, so the last write at a depth is the rightmost node there. The assertions compare the two on random trees and check the two examples, including the left-only chain.
+**Approach.** Run the ring loop and record the value of the removal whose counter equals the snapshot minus one. A right child chain is the wrong tool, because a left child under a missing right branch still shows from the side. The oracle walks preorder, left before right, and overwrites the slot for each depth, so the last write at a depth is the rightmost node there. Random trees of many shapes feed both methods in the assertions and check the two examples, including the left-only chain.
 
 **Complexity.** O(n) time and O(w) space, with no list built per ring.
 

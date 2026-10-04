@@ -83,6 +83,8 @@ KIT = {
 """,
 }
 def expand(text):
+    import re
+    text = re.sub(r"```trace\n(@@TRACE\d@@)\n```", r"\1", text)
     for k, v in KIT.items():
         text = text.replace("@@%s@@\n" % k, v)
     import re
