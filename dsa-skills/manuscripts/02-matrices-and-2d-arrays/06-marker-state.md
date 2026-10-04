@@ -75,7 +75,7 @@ The method keeps a small amount of state, and each piece changes at one point.
 
 #### The Observation Pass
 
-Take the matrix with rows `[1, 2, 3, 4]`, `[5, 0, 7, 8]` and `[9, 10, 0, 12]`. The cells are numbered by row-major index, so the cell `(1, 1)` is cell 5 and the cell `(2, 2)` is cell 10. The pointer `p` marks the cell being read. The scan changes no value. It finds zeros at cell 5 and cell 10. Those two finds mark rows 1 and 2 and columns 1 and 2.
+The first example has the rows `[1, 2, 3, 4]`, `[5, 0, 7, 8]` and `[9, 10, 0, 12]`. The cells are numbered by row-major index, so the cell `(1, 1)` is cell 5 and the cell `(2, 2)` is cell 10. The pointer `p` marks the cell being read. The scan changes no value. It finds zeros at cell 5 and cell 10. Those two finds mark rows 1 and 2 and columns 1 and 2.
 
 #### The Update Pass
 
