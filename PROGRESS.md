@@ -26,7 +26,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 19-recursion-and-backtracking | done |
 | 20-greedy | done |
 | 21-graph-traversal-models-dfs-and-ordinary-bfs | done |
-| 22-bfs-variations | todo |
+| 22-bfs-variations | claimed 22 2026-10-04T09:50Z (scheduled run) |
 | 23-directed-graphs-and-union-find | todo |
 | 24-shortest-paths-and-graph-state-modeling | todo |
 | 25-advanced-graph-optimization | todo |
