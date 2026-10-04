@@ -68,9 +68,10 @@ Sorting takes O(n log n) time, and the single pass after it adds O(n). The pass 
 <!-- stage: variables -->
 ### Frontier, Taken Slot And Moves
 
-The pass keeps three values.
+The pass keeps four values.
 
 - **frontier** is one more than the largest slot that an earlier request holds, stored as a `long`.
+- **asked** is the slot that the current request wants.
 - **taken** is the slot that the current request receives, which is the larger of its asked slot and the frontier.
 - **moves** is the sum of `taken - asked` over the requests so far, stored as a `long`.
 

@@ -5,14 +5,14 @@
 <!-- stage: context -->
 ### A Leaderboard With Mismatched Names
 
-A quiz site stores each player's name in one array and each player's score in another. A report sorts the score array so that the best score comes first. The page then prints the sorted scores beside the original list of names. The top row shows the winner's score next to a player who finished last. Each array is sorted or ordered correctly on its own, but the pairing between them is gone.
+A quiz site stores each player's name in one array and each player's score in another. A report sorts the score array so that the best score comes first. The page then prints the sorted scores beside the original list of names. The top row shows the winner's score next to a player who finished last. Only the score array was reordered, so the pairing between names and scores is gone.
 
 Every field of one item must move together, and a tie on one field needs a rule from another field. This lesson answers two questions. How does a program sort whole items, and how does it state which field decides when the first field ties?
 
 <!-- stage: naive -->
 ### Swapping Every Array In Step
 
-The direct repair keeps the two arrays and swaps both of them whenever the sort swaps two scores. A bubble sort does this with one extra line per array.
+The direct repair keeps the two arrays and swaps both of them whenever the sort swaps two scores. A bubble sort repeatedly swaps adjacent items that are out of order, and it needs one extra swap line per array.
 
 ```java
 static void sortPlayers(String[] names, int[] scores) {

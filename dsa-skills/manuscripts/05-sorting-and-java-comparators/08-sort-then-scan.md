@@ -42,7 +42,7 @@ After the sort, equal scores are adjacent, so a scan can find each new distinct 
 
 #### Compare Each Value With Its Neighbor
 
-An **adjacent comparison** tests whether `sorted[i]` equals the value next to it in the scan direction. A change between neighbors marks the start of a new distinct value. The scan reads each pair once, so it costs O(n) after the sort.
+An **adjacent comparison** tests whether `sorted[i]` equals its right neighbor `sorted[i + 1]`. A change between neighbors marks the start of a new distinct value. The scan reads each pair once, so it costs O(n) after the sort.
 
 #### Count Distinct Values From The Top
 
@@ -59,7 +59,7 @@ A **fallback** is the answer that the problem names when the scan ends before th
 Sorting takes O(n log n) time. The scan then reads each neighbor pair once, which adds at most O(n). The method keeps the rank and one index, so the scan needs O(1) space beyond the sorted copy.
 
 <!-- stage: variables -->
-### Index, Rank And Previous Value
+### Index, Rank And The Sorted Copy
 
 The scan keeps these values.
 

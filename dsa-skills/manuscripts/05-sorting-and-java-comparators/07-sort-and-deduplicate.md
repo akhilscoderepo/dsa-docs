@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### An Order Report That Lists Numbers Twice
 
-A shop exports a daily report of order numbers. Customers resubmit forms, so the same number can appear many times in the raw feed. The report must list each number once, in ascending order, and show how many times it appeared. A first version collects the numbers in a hash set. It drops the counts, and it prints the numbers in an order that looks random. A second version keeps a list of the numbers it has seen so far, and it takes minutes on a feed of 200000 rows.
+A shop exports a daily report of order numbers. Customers resubmit forms, so the same number can appear many times in the raw feed. The report must list each number once, in ascending order, and show how many times it appeared. A first version collects the numbers in a hash set. It drops the counts, and it prints the numbers in an order that looks random. A hash map from number to count would count in O(n) expected time, but it still prints in no fixed order and needs memory for every distinct number. A second version keeps a list of the numbers it has seen so far, and it takes minutes on a feed of 200000 rows.
 
 Both versions answer a different question than the report asks. The report needs one entry per distinct number and one count, in a fixed order. This lesson answers one question. What order of the feed makes equal numbers easy to find, so that one pass produces the whole report?
 
@@ -91,7 +91,7 @@ Take the feed `[4, 7, 4, 9, 7, 4]`. After sorting it is `4, 4, 4, 7, 7, 9`. The 
 
 #### A Feed Where Every Number Is Equal
 
-Now take `[4, 4, 4]`. There is one run, and the second index moves to the end of the array before the pair is emitted. The scan emits `(4, 3)`. A method that emits a pair only when the next value differs would miss this pair, because no later value exists. The loop above never has that problem, since the end of the array also ends a run.
+Now take `[4, 4, 4]`. There is one run, and the second index moves to the end of the array before the pair is emitted. The scan emits `(4, 3)`. A method that emits a pair only when the next value differs would miss this pair, because no later value exists. The loop in the code section below never has that problem, since the end of the array also ends a run.
 
 #### Stepping Through Both Feeds
 

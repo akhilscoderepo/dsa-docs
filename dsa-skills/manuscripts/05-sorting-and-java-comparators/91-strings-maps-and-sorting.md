@@ -155,7 +155,7 @@ Use a sorted key when two items belong together exactly when they hold the same 
 
 #### Where The Key Is Wrong
 
-A false friend is a raw sorted string used when the problem allows a different kind of equivalence. Two strings are close, in the sense of the last exercise, when one becomes the other by swapping two letters everywhere. Their letters differ, so their sorted strings differ, although the strings are equivalent. The right name there combines the set of letters with the sorted list of counts. A count table is another false friend when the alphabet is not fixed, since a table of 26 entries fails for other characters.
+A false friend is a raw sorted string used when the problem allows a different kind of equivalence. Two strings are close when one becomes the other by swapping any two characters or by exchanging two letters everywhere. Their letters differ, so their sorted strings differ, although the strings are equivalent. The right name there combines the set of letters with the sorted list of counts. A count table is another false friend when the alphabet is not fixed, since a table of 26 entries fails for other characters.
 
 #### Java Details That Cause Failures
 

@@ -30,7 +30,7 @@ static void selectionSort(int[] nums) {
 }
 ```
 
-On `[9, 2, 7, 2]` the method finds 2 at index 1 and swaps it to index 0. It then finds the second 2 and leaves it in place. The result is `[2, 2, 7, 9]`, and the original order of the array is gone.
+On `[9, 2, 7, 2]` the method finds 2 at index 1 and swaps it to index 0. It then finds the second 2 at index 3 and swaps it to index 1. The result is `[2, 2, 7, 9]`, and the original order of the array is gone.
 
 <!-- stage: bottleneck -->
 ### Repeated Scans And A Lost Order
@@ -50,7 +50,7 @@ The method should call the library, and it should call the library on an array t
 
 #### What The Library Call Guarantees
 
-The call `Arrays.sort(nums)` sorts an `int[]` into ascending order in place. The documentation promises O(n log n) time on every input. After the call, every adjacent pair satisfies `nums[i] <= nums[i + 1]`, and equal values sit next to each other in one contiguous run. Later scans depend on both facts.
+The call `Arrays.sort(nums)` sorts an `int[]` into ascending order in place. The documentation promises O(n log n) time on every input. After the call, every adjacent pair satisfies `nums[i] <= nums[i + 1]`, and equal values sit next to each other. Later scans depend on both facts.
 
 #### Sort A Copy To Keep The Original
 

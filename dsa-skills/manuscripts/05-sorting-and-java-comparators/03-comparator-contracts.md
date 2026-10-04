@@ -36,7 +36,7 @@ A sort that makes O(n log n) comparisons relies on each answer being consistent 
 <!-- stage: insight -->
 ### Make Every Answer Agree With The Others
 
-A comparator is valid when its answers for all pairs describe one ranking. Three rules give that guarantee. The mirror rule and the chain rule have a section each, and the tie rule sits inside the chain section.
+A comparator is valid when its answers for all pairs describe one ranking. Three rules give that guarantee: mirror answers, chains, and consistent ties. The last section below adds a tool for combining keys, which is not a rule.
 
 #### Mirror Answers For A Swapped Pair
 

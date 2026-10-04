@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A bank report ranks accounts by balance, and a debtor appears above a customer who owes nothing. A support desk serves a ticket from the evening before a ticket from the morning, although both have the same priority. A scoreboard shows the second-highest score as the third-highest. Each failure comes from the same step. The program asked a sort to put items in order, and the rule that decides which of two items goes first was incomplete. This chapter answers two questions. What must that rule promise, and which later decision does the sorted order make safe?
+A bank report ranks accounts from the lowest balance to the highest, and a very rich account appears above a very indebted one. A support desk serves a ticket from the evening before a ticket from the morning, although both have the same priority. A scoreboard shows the second-highest score as the third-highest. Each failure comes from the same step. The program asked a sort to put items in order, and the rule that decides which of two items goes first was incomplete. This chapter answers two questions. What must that rule promise, and which later decision does the sorted order make safe?
 
 ### Prerequisites
 
@@ -28,7 +28,7 @@ One lesson joins this chapter with strings and maps. It opens with a word tool t
 
 ### How To Work Through Each Lesson
 
-Every part of a lesson carries a label, so you always know where you are. A lesson opens with a failing case, and a prediction prompt asks you to guess the cost or the cause before the answer shows. A trace lets you step through the algorithm and watch the state change. A lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, and the change grows with each role. An exercise marked Author exercise was written for this course. An exercise with a LeetCode number follows that problem with its own examples, and its text states any rule that it changes. Each exercise lists its prerequisites and ends with a line that says what is different from the exercise before it. A false friend, a term that appears in every lesson, is a look-alike that seems to fit a problem and fails on it. Write your own attempt before you open a hint or a solution.
+Every part of a lesson carries a label, so you always know where you are. A lesson opens with a failing case, and a prediction prompt asks you to guess the cost or the cause before the answer shows. A trace lets you step through the algorithm and watch the state change. A lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, and the change grows with each role. An exercise marked Author exercise was written for this course. An exercise with a LeetCode number follows that problem with its own examples, and its text states any rule that it changes. Each exercise lists its prerequisites and ends with a line that says what is different from the exercise before it. Each lesson names a false friend, which is a look-alike that seems to fit a problem and fails on it. Each lesson also states an invariant, which is a fact that stays true after every step of the method. Write your own attempt before you open a hint or a solution.
 
 ### What You Can Do After This Chapter
 

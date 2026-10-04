@@ -201,7 +201,7 @@ The documentation of `Arrays.sort(int[])` makes no promise about the order of eq
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Let `words` be an array of strings. Return the words sorted by `String.CASE_INSENSITIVE_ORDER`. Break ties between words that differ only in letter case by placing the word that is greater under `compareTo` first, so a lowercase letter comes before its uppercase form. The comparator returns zero only for identical strings.
+**Problem.** Let `words` be an array of strings. Return the words sorted by `String.CASE_INSENSITIVE_ORDER`, a comparator that ignores letter case. Break ties between words that differ only in letter case by placing the word that is greater under `compareTo` first, so a lowercase letter comes before its uppercase form. The comparator returns zero only for identical strings.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= words.length <= 10^4`.
@@ -234,6 +234,6 @@ The documentation of `Arrays.sort(int[])` makes no promise about the order of eq
 
 **Example 2.** Input `arr = [5, 5, 0]`, output `[0, 5, 5]`.
 
-**Hint.** Which method counts the 1 bits of an `int`, and which key must follow it so that the order does not depend on the input?
+**Hint.** Which method counts the 1 bits of an `int` (the call `Integer.bitCount` does), and which key must follow it so that the order does not depend on the input?
 
 **Changed decision.** The tie rule is numeric and explicit, so the output has one correct order for every input order.

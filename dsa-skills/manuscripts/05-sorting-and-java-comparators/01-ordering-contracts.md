@@ -3,9 +3,9 @@
 ## Compare Two Values Safely
 
 <!-- stage: context -->
-### A Ranking That Puts A Debtor First
+### A Ranking With The Wrong Account First
 
-A bank report ranks accounts from the lowest balance to the highest. The sort works on every test file, so the team ships it. A month later one account with a balance of 2000000000 appears above an account with a balance of -2000000000, and the whole ranking is out of order. The sorting call is correct and the data is valid. Only the rule that decides which of two balances comes first is wrong.
+A bank report ranks accounts from the lowest balance to the highest. The sort works on every test file, so the team ships it. A month later one account with a balance of 2000000000 appears above an account with a balance of -2000000000, although the report ranks from lowest to highest, so the whole ranking is out of order. The sorting call is correct and the data is valid. Only the rule that decides which of two balances comes first is wrong.
 
 Every sort asks the same small question many times: given two values, which one goes first? This lesson answers two questions about that rule. What may the answer look like, and which Java call gives the right answer for every pair of `int` values?
 
@@ -99,7 +99,7 @@ static void sortDescending(Integer[] balances) {
 }
 ```
 
-The descending rule swaps the arguments, which reverses the sign without negating it. Negating the result would fail for the one value `Integer.MIN_VALUE`, because `-Integer.MIN_VALUE` equals itself.
+The descending rule swaps the arguments, which reverses the sign without negating it. Negating a comparison result is unsafe in general, because a result equal to `Integer.MIN_VALUE` stays negative after negation.
 
 #### What The Calls Cost
 
@@ -118,7 +118,7 @@ A false friend here is a rule that passes ordinary tests and still breaks the co
 
 #### Java Details That Cause Failures
 
-A comparator works only on object types, so `Arrays.sort(int[], comparator)` does not exist, and the sort needs an `Integer[]`. A boxed array costs more memory than an `int[]`. When a problem needs only the natural ascending order of primitives, skip the comparator and call `Arrays.sort(int[])`, which the next lesson covers.
+A comparator works only on object types, so `Arrays.sort(int[], comparator)` does not exist, and the sort needs an `Integer[]`. A boxed array holds `Integer` objects instead of plain `int` values, and it costs more memory than an `int[]`. When a problem needs only the natural ascending order of primitives, skip the comparator and call `Arrays.sort(int[])`, which the next lesson covers.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -128,7 +128,7 @@ A comparator works only on object types, so `Arrays.sort(int[], comparator)` doe
 
 **Prerequisites.** The compare contract and `Integer.compare` from this lesson.
 
-**Problem.** Let `nums` be an array of integers. Return a new array that holds the values of `nums` in nondecreasing order. Write the sort yourself and do not call a library sort. The input array keeps its original contents.
+**Problem.** Let `nums` be an array of integers. Return a new array that holds the values of `nums` in nondecreasing order. Any method is allowed, including a hand-written sort or a library sort. The input array keeps its original contents.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 5 * 10^4`; the empty array is legal.
@@ -140,9 +140,9 @@ A comparator works only on object types, so `Arrays.sort(int[], comparator)` doe
 
 **Example 2.** Input `nums = [2147483647, -2147483648, 0]`, output `[-2147483648, 0, 2147483647]`.
 
-**Hint.** When the method merges two sorted halves, which call decides whether the left or the right value moves first?
+**Hint.** Whichever sort you choose, which call decides which of two values moves first?
 
-**Changed decision.** The method writes its own sort, so the comparison decision is visible in the code.
+**Changed decision.** Basic case: every sort needs one comparison decision, and the full 32-bit range makes subtraction unsafe.
 
 #### [Vary] Sort Boxed Integers In Descending Order (Author exercise)
 <!-- id: so-descending-boxed -->
