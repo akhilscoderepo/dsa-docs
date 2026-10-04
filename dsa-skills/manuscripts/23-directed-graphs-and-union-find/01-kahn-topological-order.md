@@ -127,7 +127,7 @@ Do not use it when the relation is undirected, since an edge then has no before 
 
 **Prerequisites.** The indegree array from this lesson, and the idea that an arrow points from before to after.
 
-**Problem.** There are `n` vertices numbered 0 to n-1, and each row `edges[i] = {from, to}` is one directed arrow. Return an `int[]` of length n whose entry v is the number of arrows that end at v. A repeated arrow counts each time it appears, and an arrow from a vertex to itself counts once at that vertex. The `edges` array is not modified.
+**Problem.** Take `n` vertices labelled 0 through n-1, where each row `edges[i] = {from, to}` is one directed arrow. Return an `int[]` of length n whose entry v is the number of arrows that end at v. A repeated arrow counts each time it appears, and an arrow from a vertex to itself counts once at that vertex. The `edges` array is not modified.
 
 **Constraints.** 1 <= n <= 1000, at most 5000 arrows, and both ends of every arrow are valid vertices. Parallel arrows and self-loops are allowed.
 
