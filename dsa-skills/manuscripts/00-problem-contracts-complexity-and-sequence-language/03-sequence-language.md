@@ -29,6 +29,12 @@ On `[2, -5, 3, 4]` this returns 9. The method is fast and simple. It matches the
 <!-- stage: bottleneck -->
 ### Counting Candidates For Each Question
 
+```predict
+The positive-sum method returns 9 on the sample, yet no run of consecutive days adds up to 9. Which question does it answer, and how many candidates does each question have?
+
+The method answers the pick-any-days question. Consecutive runs number only about n^2 / 2, which is O(n^2), while picking any days gives 2^n - 1 choices, so the two questions need different algorithms.
+```
+
 The two questions have search spaces of different sizes. A run of consecutive days is fixed by where it starts and where it ends. A list of `n` values therefore has `n * (n + 1) / 2` non-empty runs, which is O(n^2). For `n = 20` that is 210 candidates. Picking any days while keeping their order, or picking any days at all, gives `2^n - 1` non-empty choices. For `n = 20` that is 1,048,575 candidates. At `n = 60` no machine can enumerate them.
 
 So the two readings give different answers on one sample, and they also call for different algorithms with different costs. The greedy sum solves the larger space quickly, because sums have an easy answer there. It is still wrong for the smaller space, because the smaller space imposes a restriction that the greedy sum ignores. The lesson names that restriction.
@@ -50,12 +56,12 @@ Every subarray is also a subsequence, and every subsequence is also a subset. Th
 
 #### Classifying A Candidate By Its Positions
 
-The invariant that decides a classification is positional. Write the positions of the candidate's values in the original array. If those positions are consecutive, the candidate is a subarray. If they strictly increase but have gaps, it is a subsequence and not a subarray. If they appear in any other order, it is only a subset. Two further words need the same care. A prefix is a subarray that starts at the first position. A suffix is a subarray that ends at the last position.
+Positions alone decide a classification. Write the positions of the candidate's values in the original array. If those positions are consecutive, the candidate is a subarray. If they strictly increase but have gaps, it is a subsequence and not a subarray. If they appear in any other order, it is only a subset. Two further words need the same care. A prefix is a subarray that starts at the first position. A suffix is a subarray that ends at the last position.
 
 <!-- stage: variables -->
 ### One List And Two Tests
 
-Classification needs one list and two tests.
+Classification needs one list and two tests, plus one note on repeated values.
 
 - **Position list** holds the index in the original array of each chosen value, in candidate order.
 - **Gap test** checks that each position equals the previous position plus 1.
@@ -67,7 +73,7 @@ Classification needs one list and two tests.
 
 #### Classifying Candidate `[2, 4]`
 
-Take the array `[1, 2, 3, 4]` and the candidate `[2, 4]`.
+Take the array `[1, 2, 3, 4]` and the candidate `[2, 4]`. In the trace below, the pointers `first` and `second` mark the positions of the first and second candidate values.
 
 The positions are 1 for the value 2 and 3 for the value 4. The order test passes, because the positions rise from 1 to 3. The gap test fails, because the difference is 2, not 1, so position 2 is skipped. The verdict is therefore a subsequence and a subset, and not a subarray.
 
@@ -89,6 +95,8 @@ Both candidates hold the same two values, so they look like the same answer. Onl
 ### Checking Candidates In Code
 
 #### Two Methods For Matching Candidates
+
+The parameter `cand` in both methods is the candidate from the trace.
 
 ```java
 // True when cand appears in nums as one unbroken block.
@@ -127,11 +135,11 @@ The two methods differ by exactly the rule the lesson stated, a block versus an 
 
 Whenever a statement says subarray, substring, subsequence, subset, prefix or suffix, restate its position rule in one line before looking at the examples.
 
-The invariant is that the answer satisfies the stated position rule exactly, and does not merely resemble a sample. The typical failure is a fast greedy that passes the samples but answers a larger search space than the one asked.
+The answer must satisfy the stated position rule exactly and not merely resemble a sample. That requirement is the invariant of the whole lesson. The typical failure is a fast greedy that passes the samples but answers a larger search space than the one asked.
 
 #### Confusing Substring With Subsequence
 
-The false friend in this lesson is a pair of terms that look interchangeable but have different position rules. Here it is the pair of everyday words "substring" and "subsequence", which many people use interchangeably. The same goes for "subarray" and "subset". They are not interchangeable, even when a sample answer satisfies several definitions. Problem statements often choose samples that do.
+Some pairs of terms look interchangeable but have different position rules, and each such pair is a false friend. The everyday words "substring" and "subsequence" are one pair, and many people use them interchangeably. "Subarray" and "subset" are another pair. They are not interchangeable, even when a sample answer satisfies several definitions. Problem statements often choose samples that do.
 
 #### Using Java Methods For Contiguous Blocks
 
@@ -149,7 +157,12 @@ Java supports the contiguous case only.
 
 **Problem.** Let `nums` be an array of distinct integers, and let `cand` be a list of values taken from `nums`. Define three terms by the positions (0-based indexes) of the values of `cand` in `nums`. `cand` is a subarray if its values occupy consecutive positions in increasing order, each one greater by exactly 1 than the previous position. `cand` is a subsequence if its positions strictly increase, with gaps allowed. `cand` is a subset if every value of `cand` occurs in `nums`, in any order. For `nums = [1,2,3,4]` and `cand = [2,4]`, decide for each of the three terms whether it holds. Base every answer on the positions of the values, not on how the values look.
 
-**Constraints.** `nums` holds distinct `int` values, so each value has exactly one position. Here `nums = [1,2,3,4]`, and every value of `cand` occurs in `nums`. `cand` is non-empty: the empty selection is out of scope. The answer is three boolean verdicts, one per term. Neither input changes.
+**Constraints.** The limits are:
+- **Values** in `nums` are distinct `int` values, so each value has exactly one position.
+- **Input** is `nums = [1,2,3,4]`, and every value of `cand` occurs in `nums`.
+- **Candidate** `cand` is non-empty; the empty selection is out of scope.
+- **Answer** is three boolean verdicts, one per term.
+- **Mutation** does not occur; neither input changes.
 
 **Example 1.** Input `nums = [1,2,3,4]` and candidate `[2,4]`, output not a subarray, yes a subsequence and yes a subset.
 
@@ -164,9 +177,14 @@ Java supports the contiguous case only.
 
 **Prerequisites.** The classification exercise above.
 
-**Problem.** Use the definitions of subarray, subsequence and subset from the previous exercise. Let `nums = [1,2,3,4]` and `cand = [4,2]`. Decide for each of the three terms whether it holds. Then name the one decision that differs from the candidate `[2,4]`. That decision is whether the candidate must keep the relative order of the values in `nums`.
+**Problem.** Use the definitions of subarray, subsequence and subset from the Classify [2,4] exercise. Let `nums = [1,2,3,4]` and `cand = [4,2]`. Decide for each of the three terms whether it holds. Then name the one decision that differs from the candidate `[2,4]`. That decision is whether the candidate must keep the relative order of the values in `nums`.
 
-**Constraints.** `nums` holds distinct `int` values, and every value of `cand` occurs in `nums`. `cand` is non-empty. A subset is judged by membership alone and makes no promise about order. The answer is three boolean verdicts plus the name of the changed decision. Neither input changes.
+**Constraints.** The limits are:
+- **Values** in `nums` are distinct `int` values, and every value of `cand` occurs in `nums`.
+- **Candidate** `cand` is non-empty.
+- **Subset** is judged by membership alone and makes no promise about order.
+- **Answer** is three boolean verdicts plus the name of the changed decision.
+- **Mutation** does not occur; neither input changes.
 
 **Example 1.** Input `nums = [1,2,3,4]` and candidate `[4,2]`, output not a subarray, not a subsequence, yes a subset.
 
@@ -183,7 +201,12 @@ Java supports the contiguous case only.
 
 **Problem.** Given an array `nums`, a subarray is a contiguous run of positions, and its sum is the sum of its values. The empty subarray has no positions and has sum 0. Compute the maximum subarray sum of `nums = [-8,-3,-6]` under two specifications. In the first, the subarray must be non-empty. In the second, the empty subarray is allowed. Return both answers and state why they differ.
 
-**Constraints.** `1 <= nums.length <= 10^5` and `-10^4 <= nums[i] <= 10^4`, with `nums[i]` of type `int`. A specification must say whether the empty subarray is legal, and you must not assume a convention. The maximum is a single `int`. If several subarrays reach it, the value is the same. `nums` does not change.
+**Constraints.** The limits are:
+- **Length** is `1 <= nums.length <= 10^5`.
+- **Values** satisfy `-10^4 <= nums[i] <= 10^4` and have type `int`.
+- **Empty subarray** is legal only when the specification says so; assume no convention.
+- **Answer** is a single `int`, the same even if several subarrays reach it.
+- **Mutation** does not occur; `nums` does not change.
 
 **Example 1.** Input `nums = [-8,-3,-6]` with a non-empty requirement, output -3, the best single reading.
 
@@ -198,9 +221,13 @@ Java supports the contiguous case only.
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given an array `nums`, a subarray is a contiguous run of positions. A subsequence is any selection of positions in increasing order, and gaps are allowed. Both must be non-empty here. For `nums = [5,-10,4]`, compute the maximum sum over all non-empty subarrays and the maximum sum over all non-empty subsequences. Explain why a subarray that contains both 5 and 4 must also contain -10, while a subsequence may skip it. The efficient algorithm for the contiguous case belongs to Chapter 01.
+**Problem.** Given an array `nums`, a subarray is a contiguous run of positions. A subsequence is any selection of positions in increasing order, and gaps are allowed. Both must be non-empty here. For `nums = [5,-10,4]`, compute the maximum sum over all non-empty subarrays and the maximum sum over all non-empty subsequences. Explain why a subarray that contains both 5 and 4 must also contain -10, while a subsequence may skip it. The efficient algorithm for the contiguous case belongs to Chapter 01, and a brute force over every candidate is enough at this size.
 
-**Constraints.** `1 <= nums.length <= 20`, with `int` values. The size allows a brute force over every candidate. Each answer is a single `int`. `nums` does not change.
+**Constraints.** The limits are:
+- **Length** is `1 <= nums.length <= 20`.
+- **Values** are `int` values.
+- **Answer** is a single `int` for each question.
+- **Mutation** does not occur; `nums` does not change.
 
 **Example 1.** Input `nums = [5,-10,4]` as a subarray question, output 5.
 

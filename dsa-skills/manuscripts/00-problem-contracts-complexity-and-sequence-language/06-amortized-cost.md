@@ -26,6 +26,12 @@ For one million appends, the method reports a total of about one trillion steps.
 <!-- stage: bottleneck -->
 ### Worst-Case Bound Overstates Total Cost
 
+```predict
+A growable array doubles its capacity and copies every stored element when it is full. After one million appends, about how many element copies have happened in total?
+
+About one million copies in total, which is O(n), and not a trillion. Each resize copies as many elements as it later gives free slots, so the expensive appends are too rare to add up to quadratic cost.
+```
+
 #### Compare The Bound With The Count
 
 The worst-case product is O(n^2), and for `n = 1,000,000` it gives 10^12. A doubling array that performs that many appends actually makes roughly one million copies, which is O(n). The claim is wrong by a factor of about a million. A team that believed it would reject a sound design.
@@ -54,9 +60,9 @@ The **potential method** is another way to compute it. It uses a potential funct
 The invariant behind every amortized argument is that, over any sequence of operations, the total amount charged is at least the total actual work done. The invariant does not say that any single call is cheap.
 
 <!-- stage: variables -->
-### Three Quantities To Track
+### Quantities To Track While Appending
 
-Track these quantities for the growing array.
+Track these five items for the growing array.
 
 - **size** counts the values the array holds.
 - **capacity** counts the slots the array allocates.
@@ -64,7 +70,7 @@ Track these quantities for the growing array.
 - **copy count** totals the elements that resizes have moved so far.
 - **copy count divided by `n`** is the ratio the amortized claim bounds after `n` appends.
 
-The ratio stays bounded under doubling and grows without limit under grow-by-one.
+In the code below, the variable `copies` is the copy count, and in the trace the variable `totalCopies` is the same quantity. The ratio stays bounded under doubling and grows without limit under grow-by-one.
 
 <!-- stage: trace -->
 ### Count Copies Across Eight Appends
@@ -118,11 +124,11 @@ Reach for amortized reasoning when all three conditions hold.
 
 The usual cost of the operation is small. An occasional resize or rebuild does a large amount of work. That rebuild creates room for many cheap calls afterward.
 
-Typical cases are growable arrays, hash table resizing, and a queue built from two stacks, which a later chapter uses. The invariant is that the total charged cost over any sequence of operations pays for the total actual cost.
+Typical cases are growable arrays, hash table resizing, and a queue built from two stacks, which a later chapter uses. In each case the total charged cost over any sequence of operations stays at least as large as the total actual cost. That invariant keeps the average small.
 
 #### Do Not Treat Amortized As Worst Case
 
-A false friend in amortized analysis is a bound that looks like a per-call limit but only holds for the whole sequence. Here it is an amortized O(1) bound read as worst-case O(1) for every call.
+An amortized O(1) bound looks like a per-call limit but holds only for the whole sequence. Reading it as worst-case O(1) for every call makes it a false friend.
 
 Amortized O(1) is not worst-case O(1), and one call can still take O(n). Latency-sensitive loops therefore cannot accept that single slow call. Total-cost problems are unaffected, because only the sum over many calls counts. A random-input average is a different notion, since amortized analysis is a worst-case statement about a sequence.
 
@@ -140,7 +146,13 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Problem.** A dynamic array stores `size` values in a block of `capacity` slots. It starts empty with capacity 1. An append writes one value at position `size`. If `size == capacity` before the write, the array first allocates a block of twice the capacity and copies every stored value into it. Given a number of appends `n`, return the list of capacities that occur, in order, and the total number of element copies. Then state how the total compares with `n`. The expected result is that the total stays proportional to `n`.
 
-**Constraints.** `n` is an `int` with `1 <= n <= 10^6`. Capacity starts at 1, and the initial capacity counts as the first capacity in the list. A resize multiplies the capacity by 2. A resize copies each stored value once, so it costs `size` copies at that moment. The write of the new value is not a copy. The total is a `long`. Only appends occur, with no removals.
+**Constraints.** The limits are:
+- **`n`** is an `int` with `1 <= n <= 10^6`.
+- **Capacity** starts at 1, and the initial capacity counts as the first capacity in the list.
+- **Resize** multiplies the capacity by 2.
+- **Copies** are one per stored value at each resize, so a resize costs `size` copies, and the write of the new value is not a copy.
+- **Total** is a `long`.
+- **Operations** are appends only, with no removals.
 
 **Example 1.** Input 8 appends, output capacities 1, 2, 4, 8 and a total of 7 copies.
 
@@ -157,7 +169,12 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Problem.** Use the dynamic array from the previous exercise, but change the resize rule. When the array is full, the new capacity is the old capacity plus one. Given a number of appends `n`, return the total number of element copies. Show that the total equals `1 + 2 + ... + (n-1)`, and explain why the cost per append becomes O(n) amortized and not O(1).
 
-**Constraints.** `n` is an `int` with `1 <= n <= 10^5`. Capacity starts at 1 and grows by exactly 1 when the array is full. Copies follow the same rule as in the doubling exercise: a resize copies each stored value once, and the write of the new value is not a copy. The total is a `long`, because it reaches about `5 * 10^9`. Only appends occur.
+**Constraints.** The limits are:
+- **`n`** is an `int` with `1 <= n <= 10^5`.
+- **Capacity** starts at 1 and grows by exactly 1 when the array is full.
+- **Copies** follow the doubling exercise: a resize copies each stored value once, and the write of the new value is not a copy.
+- **Total** is a `long`, because it reaches about `5 * 10^9`.
+- **Operations** are appends only.
 
 **Example 1.** Input 8 appends, output 28 copies, compared with 7 for doubling.
 
@@ -174,7 +191,12 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Problem.** Use the doubling array from the first exercise. Perform 1,025 appends. Identify the one append in this sequence that copies the most elements, and report how many elements it copies and how many elements all earlier appends copied together. Then explain why this single O(n) append does not contradict the claim that appends cost O(1) amortized over the whole sequence.
 
-**Constraints.** Capacity starts at 1 and doubles when `size == capacity`. A resize copies each stored value once, and the write of the new value is not a copy. The sequence has exactly 1,025 appends, so the final append is the one to examine. The counts are `long` values. Only appends occur.
+**Constraints.** The limits are:
+- **Capacity** starts at 1 and doubles when `size == capacity`.
+- **Copies** are one per stored value at each resize, and the write of the new value is not a copy.
+- **Sequence length** is exactly 1,025 appends.
+- **Counts** are `long` values.
+- **Operations** are appends only.
 
 **Example 1.** Input 1,025 appends, output that append number 1,025 copies 1,024 elements while the 1,024 appends before it copied 1,023 elements in total.
 
@@ -191,7 +213,11 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Problem.** Start from the same doubling array that the first exercise defines. Give each append a charge of 3 units, as in the accounting method. One unit pays for the write, and the other 2 units go into a credit balance. A resize from capacity `c` to `2c` costs `c` units, taken from the balance. The appends after a resize save credit for the next resize. Show with numbers that the balance never becomes negative, so a charge of 3 units per append is enough. Use plain arithmetic and no formal algebra.
 
-**Constraints.** The charge is exactly 3 units per append: 1 unit to write and 2 units saved. A resize from capacity `c` to `2c` happens when `size == c` and costs `c` units. The balance starts at 0, and all quantities are whole units. Capacity starts at 1 and only appends occur.
+**Constraints.** The limits are:
+- **Charge** is exactly 3 units per append: 1 unit to write and 2 units saved.
+- **Resize** from capacity `c` to `2c` happens when `size == c` and costs `c` units.
+- **Balance** starts at 0, and all quantities are whole units.
+- **Array** starts at capacity 1, and only appends occur.
 
 **Example 1.** Input a resize from capacity 4 to 8 after four stored values, output that the two appends since the previous resize saved 4 units and the copy costs 4.
 

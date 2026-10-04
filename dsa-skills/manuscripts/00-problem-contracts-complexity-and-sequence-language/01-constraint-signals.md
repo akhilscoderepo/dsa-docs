@@ -30,6 +30,12 @@ On a sample with five readings it makes ten comparisons and returns instantly. T
 <!-- stage: bottleneck -->
 ### Counting Comparisons At The Largest Input
 
+```predict
+How many comparisons does the every-pair method make when the list holds 100,000 readings, and can it finish in a normal time?
+
+It makes about five billion comparisons, which is far too many for one call. The sample cannot show this, because the cost depends on the largest legal input.
+```
+
 Count the comparisons instead of timing the sample. For `n` readings there are `n * (n - 1) / 2` pairs, so the work grows as O(n^2). With `n = 5` that is 10 comparisons. With the stated maximum of `n = 100,000` it is 4,999,950,000, close to five billion, for a single call.
 
 A judge or an interview machine performs very roughly one hundred million simple steps in the time we normally get. The exact figure varies by language and hardware. Five billion is fifty times over that figure. The failure is not bad luck or a slow laptop. The sample cannot reveal it, because the sample is tiny. The cost of the method depends on the largest legal input, not the one on the page. The method needs O(1) extra space, which is fine, so time is the entire problem.
@@ -64,14 +70,14 @@ A second input constraint is the value range. If every value is small, a table i
 <!-- stage: variables -->
 ### Numbers To Write Down First
 
-Write down four parameters. Then compute the step count of each candidate approach.
+Keep six items at hand. Then compute the step count of each candidate approach.
 
 - **n** is the largest legal input size.
 - **Value range** is the minimum and maximum allowed element value.
 - **q** is the number of queries or updates the problem requests.
 - **Time limit** is about 10^8 simple steps.
 - **Step count** is the number of steps one approach takes at the maximum, compared with the time limit.
-- **long** holds every estimate, because squaring 100,000 overflows a 32-bit `int`.
+- **long** is the Java type that holds every estimate, because squaring 100,000 overflows a 32-bit `int`.
 
 An overflowed estimate can look comfortably small, so it hides the problem.
 
@@ -80,7 +86,7 @@ An overflowed estimate can look comfortably small, so it hides the problem.
 
 #### Comparing Both Methods At Three Sizes
 
-Compare the pair method with a sort-based method as the input grows.
+Compare the pair method with a sort-based method as the input grows. The trace below lists the three sizes.
 
 With `n = 10`, all pairs take 45 steps and sorting takes about 40. The sample therefore cannot separate the methods. With `n = 1,000`, all pairs take 499,500 steps and sorting takes roughly 10,000, and both finish instantly.
 
@@ -88,7 +94,7 @@ With `n = 100,000`, all pairs take 4,999,950,000 steps, far past the time limit.
 
 #### Reading The Result
 
-The two methods look the same until the input is large. The middle row is the hardest to see, because both methods still pass.
+The two methods look the same until the input is large. The middle size, `n = 1,000`, is the hardest to see, because both methods still pass.
 
 The constraint line is the only part of the statement that says the input is large. Passing tests therefore do not prove feasibility. A solution can pass every test you write and still fail on the maximum.
 
@@ -112,7 +118,7 @@ static long nLogN(long n) {
 static boolean plausible(long stepsAtMax) { return stepsAtMax <= BUDGET; }
 ```
 
-The helpers compute step counts only.
+The helpers compute step counts only. The constant `BUDGET` is the time limit from this lesson, and `plausible` compares a step count with it.
 
 The helpers hold all arithmetic in `long`. The expression `n * (n - 1) / 2` multiplies before it divides, so the product is the value that would overflow an `int`. The helper `nLogN` takes the bit length of `n - 1` as the ceiling of the base-2 logarithm, which is exact for powers of two. Precision stays coarse on purpose, because the helpers ignore constants.
 
@@ -128,17 +134,17 @@ Write the helpers to compute the step count before you write the algorithm.
 
 Use this check whenever a problem gives limits, which is nearly always. Before you commit to an approach, write one line such as "n up to 100,000, all pairs is 5 billion, too slow". Then continue.
 
-The invariant is that the chosen approach stays within the time limit and the memory limit at the maximum legal input. The sample size never replaces the maximum legal input in this check.
+Throughout this check, the approach you pick must stay within the time limit and the memory limit at the maximum legal input. That condition is the invariant of the check. It holds only when you test the maximum, because the sample size never stands in for it.
 
 #### Finding Cases That Break The Precondition
 
-The precondition of this check is that the step count at the maximum input decides feasibility. The check has false friends, cases that match the pattern on the surface but break the precondition that the step count decides feasibility. Two cases qualify.
+The precondition of this check is that the step count at the maximum input decides feasibility. Some cases look like they fit the check but do not. Each is a false friend, because the step count does not decide feasibility there. Two cases qualify.
 
 A difficulty label misleads, because a label such as "easy" or a familiar noun such as "array" does not select a method. A constant factor also misleads near the limit, because a count within a factor of ten of the limit is not decisive. In that near-limit case, the step cost decides, so compare what each step costs.
 
 #### Avoiding Java Memory And Overflow Problems
 
-An `int` overflow wraps silently, as the lesson showed earlier. Boxed collections use several times more memory than primitive arrays. A size near 1,000,000 makes that memory difference matter.
+An `int` overflow wraps silently, as the note on `long` in the numbers list explained. Boxed collections use several times more memory than primitive arrays. A size near 1,000,000 makes that memory difference matter.
 
 The exercises below ask you to make these decisions without writing the algorithm. This lesson chooses the family of approaches. Chapter 01 onward supplies the algorithms.
 
@@ -150,9 +156,14 @@ The exercises below ask you to make these decisions without writing the algorith
 
 **Prerequisites.** Reading Big-O notation for simple loops; this lesson.
 
-**Problem.** A problem statement guarantees that the input size `n` satisfies `1 <= n <= 100_000`. A step is one basic operation, such as one comparison or one addition. Consider three plans. Plan A scans the array once. Plan B sorts the array and then scans it once. Plan C compares every unordered pair of distinct elements. For each plan, compute the number of steps at the largest legal `n`. Then return "plausible" if that number is at most the time limit, and "implausible" if it is larger. Show the step count that supports each answer.
+**Problem.** A problem statement guarantees that the input size `n` satisfies `1 <= n <= 100_000`. A step is one basic operation, such as one comparison or one addition. Consider three plans. Plan A scans the array once. Plan B sorts the array and then scans it once. Plan C compares every unordered pair of distinct elements. For each plan, compute the number of steps at the largest legal `n`. Then return "plausible" if that number is at most the time limit, and "implausible" if it is larger. Show the step count that supports each answer. Plan A costs `n` steps, plan B costs about `n * log2(n)` steps for the sort plus `n` for the scan, and plan C costs `n * (n - 1) / 2` steps.
 
-**Constraints.** The time limit is 10^8 (100,000,000) steps. Compute every count at `n = 100_000`, not at the size of a sample input. Use `long` for every product, because `n * n` exceeds the `int` maximum. Plan A costs `n` steps. Plan B costs about `n * log2(n)` steps for the sort plus `n` steps for the scan. Plan C costs `n * (n - 1) / 2` steps. Ties go to "plausible": a count equal to the budget is plausible. The exercise has no mutable input.
+**Constraints.** The limits are:
+- **Time limit** is 10^8 (100,000,000) steps.
+- **Size** is `n = 100_000`; compute every count there, not at a sample size.
+- **Type** is `long` for every product, because `n * n` exceeds the `int` maximum.
+- **Ties** go to "plausible"; a count equal to the budget is plausible.
+- **Mutation** does not apply, because the exercise has no mutable input.
 
 **Example 1.** Input `n = 100000` with a single scan, output plausible, because the step count is about 10^5.
 
@@ -169,7 +180,13 @@ The exercises below ask you to make these decisions without writing the algorith
 
 **Problem.** A value-indexed table is an array in which slot `v` stores data about the value `v`. Such a table needs one slot for every value that can occur, so its size equals the size of the value range. Consider an input array `nums` of `n` integers, where `1 <= n <= 100_000` and `0 <= nums[i] <= 100`. Compute the memory in bytes of a table with one `int` counter per possible value. Then compute the memory of the same kind of table when `0 <= nums[i] <= 1_000_000_000`. State for each case whether the table is an acceptable plan, and name the limit in the statement that decides the answer.
 
-**Constraints.** Each counter is a 4-byte `int`. The first table has exactly 101 slots, for the values `0` through `100`. The second table has exactly 1,000,000,001 slots, for the values `0` through `1_000_000_000`. The memory is `slots * 4` bytes, computed in `long`. The size `n` does not change the table size. The exercise has no mutable input and no empty input.
+**Constraints.** The limits are:
+- **Counter** is a 4-byte `int`.
+- **First table** has exactly 101 slots, for the values `0` through `100`.
+- **Second table** has exactly 1,000,000,001 slots, for the values `0` through `1_000_000_000`.
+- **Memory** is `slots * 4` bytes, computed in `long`.
+- **Size `n`** does not change the table size.
+- **Input** is never mutated and never empty.
 
 **Example 1.** Input values limited to `0..100`, output a 101-slot table of about 404 bytes, which is trivial.
 
@@ -186,7 +203,13 @@ The exercises below ask you to make these decisions without writing the algorith
 
 **Problem.** An input array `nums` has `n` elements, where `n = 100_000` and `-1_000_000_000 <= nums[i] <= 1_000_000_000`. The sum of the array is the total of all its elements. Decide whether the sum always fits in a Java `int`, that is, whether it always lies between -2,147,483,648 and 2,147,483,647. Return "yes" or "no". If the answer is "no", give one input array whose sum does not fit. Name the type that the accumulator variable must have.
 
-**Constraints.** The largest `int` is 2,147,483,647. The largest `long` is 9,223,372,036,854,775,807. The worst case sets every element to the largest legal magnitude, which is 1_000_000_000. Elements are `int` values. The array has at least one element. An `int` accumulator wraps around silently on overflow and raises no error. The method does not modify `nums`.
+**Constraints.** The limits are:
+- **Largest `int`** is 2,147,483,647.
+- **Largest `long`** is 9,223,372,036,854,775,807.
+- **Worst case** sets every element to the largest legal magnitude, 1_000_000_000.
+- **Elements** are `int` values, and the array has at least one element.
+- **Overflow** wraps an `int` accumulator around silently and raises no error.
+- **Mutation** is not allowed; the method does not modify `nums`.
 
 **Example 1.** Input one hundred thousand copies of 1,000,000,000, output a sum of 100,000,000,000,000, which does not fit in an `int`.
 
@@ -203,7 +226,12 @@ The exercises below ask you to make these decisions without writing the algorith
 
 **Problem.** An array of `n = 100_000` integers does not change. A range-sum query gives two positions `l` and `r` and asks for the sum of the elements from position `l` through position `r`. Compare two workloads on the same array: workload one has a single query, and workload two has `q = 100_000` queries. For each workload, compute the total step count of answering every query with a plain loop over the range. Return whether that plan stays within the time limit. Explain that the number of queries, not the type of the data, decides whether the plan is acceptable. Do not implement a faster plan.
 
-**Constraints.** `n = 100_000` and `1 <= q <= 100_000`. Each query range may cover the whole array, so one query costs up to `n` steps. The time limit is 10^8 steps. Compute the total as `n * q` in `long`, because `10^10` exceeds the `int` maximum. A total equal to the time limit is within the limit. The array is never modified between queries.
+**Constraints.** The limits are:
+- **Size** is `n = 100_000`, and `1 <= q <= 100_000`.
+- **Range** may cover the whole array, so one query costs up to `n` steps.
+- **Time limit** is 10^8 steps; a total equal to it is within the limit.
+- **Type** is `long` for the total `n * q`, because `10^10` exceeds the `int` maximum.
+- **Mutation** does not occur; the array is never modified between queries.
 
 **Example 1.** Input one query, output that a direct loop of at most 100,000 steps is acceptable.
 

@@ -25,14 +25,20 @@ static int warmest(int[] temps) {
 }
 ```
 
-The method never crashes, passes every sample with a positive reading, and looks careful. The author added each guard without a rule from the problem, and no guard ties to one.
+The method never crashes, passes every sample with a positive reading, and looks careful. The author added each guard without a rule from the problem, and none of the guards follows from a rule in the problem.
 
 <!-- stage: bottleneck -->
 ### Wrong Answers With Fine Time Complexity
 
+```predict
+What does the zero-start method report when every reading is negative or the list is empty, and does its running time matter?
+
+It reports 0 in both cases, a value that no reading ever had. The running time is fine, so the only damage is a wrong answer that raises no error.
+```
+
 #### Wrong Output With No Exception
 
-The method returns 0 for `[-8, -3, -6]`, where the true maximum is -3. It also returns 0 for an empty array, which has no maximum at all. The time is O(n) and the space is O(1), so the time and space costs from the earlier lessons look fine. The damage is to correctness, and it is silent. The method throws no exception and gives no warning. It returns a plausible number.
+The method returns 0 for `[-8, -3, -6]`, where the true maximum is -3. It also returns 0 for an empty array, which has no maximum at all. The time is O(n) and the space is O(1), so the time and space costs look fine. The damage is to correctness, and it is silent. The method throws no exception and gives no warning. It returns a plausible number.
 
 #### A Guard Adds Behavior Nobody Asked For
 
@@ -114,8 +120,9 @@ static java.util.OptionalInt warmestOrNone(int[] temps) {
 #### Compare Cost And Empty-Input Behavior
 
 - **warmestNonEmpty** runs in O(n) time and O(1) extra space, and relies on its documented precondition.
+- **warmestOrNone** has the same cost and adds one branch that makes "no answer" explicit in the return type.
 
-The comment on the precondition shows the missing guard is deliberate and not an oversight. The method `warmestOrNone` has the same cost and adds one branch that makes "no answer" explicit in the return type. An `Optional` return type then forces callers to handle the empty case. An `IllegalArgumentException` is a third option for a specification that allows empty input, valid when the documentation states it.
+The comment on the precondition shows the missing guard is deliberate and not an oversight. The type `OptionalInt` is the optional wrapper that holds either one value or nothing, so it forces callers to handle the empty case. An `IllegalArgumentException` is a third option for a specification that allows empty input, valid when the documentation states it.
 
 Neither method invents a value.
 
@@ -126,11 +133,11 @@ Neither method invents a value.
 
 Run the checklist before choosing initial values and before adding guards.
 
-The invariant is that code relies only on what the statement promises, and checks or documents everything else. Starting values therefore come from real input whenever the specification allows. A sentinel is chosen only when it cannot collide with a real answer.
+Code may rely only on what the statement promises, and it must check or document everything else. That rule is the invariant of the checklist. Starting values therefore come from real input whenever the specification allows. A sentinel is chosen only when it cannot collide with a real answer.
 
 #### Skip Guards The Problem Never Asked For
 
-A false friend in input handling is a guard that looks like robustness but contradicts the stated precondition. Here it is a guard added without a specification rule. Branches that handle cases the problem never allows obscure the actual algorithm. They can also define behavior nobody asked for. This is not an argument against validation in production services, where untrusted input needs checks. It is an argument about interview and contest problems, where the statement is the specification and an extra branch is a claim about it.
+Some guards look like robustness but contradict the stated precondition. Such a guard is a false friend, and it appears whenever code adds a check without a specification rule. Branches that handle cases the problem never allows obscure the actual algorithm. They can also define behavior nobody asked for. This is not an argument against validation in production services, where untrusted input needs checks. It is an argument about interview and contest problems, where the statement is the specification and an extra branch is a claim about it.
 
 #### Watch For Java Input Traps
 
@@ -138,7 +145,7 @@ Java adds specific traps.
 
 An `int[][] grid` may be ragged, so `grid[0].length` is unsafe for every row unless the statement guarantees rectangularity. Using `Integer.MIN_VALUE` as a sentinel collides with a legal answer if inputs may reach that value, and negating it overflows.
 
-A null array differs from an empty array. Unmentioned cases are not promised, so a statement that mentions neither null nor empty input promises neither.
+A null array differs from an empty array. A statement that mentions neither null nor empty input promises neither.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -150,7 +157,12 @@ A null array differs from an empty array. Unmentioned cases are not promised, so
 
 **Problem.** The precondition states that the array `nums` has at least one element. Return the largest value in `nums` by starting from `nums[0]` and comparing the remaining elements. Then explain two facts. First, starting from the value 0 gives a wrong result for `nums = [-8,-3]`. Second, an empty-array check is unnecessary under this specification.
 
-**Constraints.** `1 <= nums.length <= 10^5` and `-10^9 <= nums[i] <= 10^9`, with `nums[i]` of type `int`. The result is one `int`. If the maximum appears more than once, the value is the same. `nums` does not change. Do not add branches for inputs the specification excludes.
+**Constraints.** The limits are:
+- **Length** is `1 <= nums.length <= 10^5`.
+- **Values** satisfy `-10^9 <= nums[i] <= 10^9` and have type `int`.
+- **Result** is one `int`, the same even if the maximum appears more than once.
+- **Branches** for inputs the specification excludes are not allowed.
+- **Mutation** does not occur; `nums` does not change.
 
 **Example 1.** Input `nums = [-8,-3]`, output -3, whereas a zero-start version would return 0.
 
@@ -165,9 +177,13 @@ A null array differs from an empty array. Unmentioned cases are not promised, so
 
 **Prerequisites.** The non-empty maximum exercise above.
 
-**Problem.** Change the specification of the previous exercise so that `nums` may be empty. Then define the result for the empty case by choosing exactly one of three responses. A sentinel is a reserved `int` value that means "no answer". An exception is a thrown error. An optional result is a return type that either holds a value or is empty. Document the choice, and make the method signature match it. For a non-empty array, return the largest value.
+**Problem.** Change the specification of the Non-Empty Maximum exercise so that `nums` may be empty. Then define the result for the empty case by choosing exactly one of three responses. A sentinel is a reserved `int` value that means "no answer". An exception is a thrown error. An optional result is a return type that either holds a value or is empty. Document the choice, and make the method signature match it. For a non-empty array, return the largest value.
 
-**Constraints.** `0 <= nums.length <= 10^5` and `-10^9 <= nums[i] <= 10^9`, with `nums[i]` of type `int`. The response for the empty case must not equal any legal maximum. `nums` does not change.
+**Constraints.** The limits are:
+- **Length** is `0 <= nums.length <= 10^5`.
+- **Values** satisfy `-10^9 <= nums[i] <= 10^9` and have type `int`.
+- **Empty response** must not equal any legal maximum.
+- **Mutation** does not occur; `nums` does not change.
 
 **Example 1.** Input `nums = []` under an optional-result specification, output an empty optional.
 
@@ -184,7 +200,12 @@ A null array differs from an empty array. Unmentioned cases are not promised, so
 
 **Problem.** A two-dimensional array `int[][] grid` is rectangular if every row has the same length. It is ragged if rows may have different lengths, including length 0. A cell is one element `grid[r][c]`. Return the number of cells in `grid`. Explain why using `grid[0].length` as the column bound for every row is unsafe when ragged input is legal. Write a loop that is correct for both shapes.
 
-**Constraints.** `0 <= grid.length <= 100`, so `grid` may have no rows. Under the ragged specification each row has a length of at least 0, and rows may differ. Every row is non-null. The result is one `int`. `grid` does not change.
+**Constraints.** The limits are:
+- **Rows** number `0 <= grid.length <= 100`, so `grid` may have no rows.
+- **Row length** is at least 0 under the ragged specification, and rows may differ.
+- **Rows** are never null.
+- **Result** is one `int`.
+- **Mutation** does not occur; `grid` does not change.
 
 **Example 1.** Input `grid = {{1,2,3},{4},{5,6}}` under a ragged specification, output a cell count of 6.
 
@@ -199,9 +220,14 @@ A null array differs from an empty array. Unmentioned cases are not promised, so
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** The precondition is that `nums` is sorted in non-decreasing order, so `nums[i] <= nums[i + 1]` for every valid `i`. Show that this precondition places equal values next to each other in runs. Use that fact to return the number of distinct values in `nums` with one pass over the array. Do not use binary search, two pointers or a set.
+**Problem.** The precondition is that `nums` is sorted in non-decreasing order, so `nums[i] <= nums[i + 1]` for every valid `i`. Show that this precondition places equal values next to each other in runs. Use that fact to return the number of distinct values in `nums` with one pass over the array. Do not use binary search, two pointers or a set. The code does not check the sorted order, because it is a precondition.
 
-**Constraints.** `0 <= nums.length <= 10^5`, with `int` values. The sorted order is a precondition, so the code does not check it. For an empty array, return 0. The result is one `int`. `nums` does not change.
+**Constraints.** The limits are:
+- **Length** is `0 <= nums.length <= 10^5`.
+- **Values** are `int` values.
+- **Empty array** returns 0.
+- **Result** is one `int`.
+- **Mutation** does not occur; `nums` does not change.
 
 **Example 1.** Input `nums = [1,1,2,2,2,5]`, output 3 distinct values.
 

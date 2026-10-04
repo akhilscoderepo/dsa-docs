@@ -30,6 +30,12 @@ It is short and obviously correct. Each statement states its intent plainly. The
 <!-- stage: bottleneck -->
 ### Two Library Calls That Take Linear Time
 
+```predict
+The loop runs once per event. What does the whole processor cost for 100,000 events, given what `remove(0)` and `+` do on each call?
+
+The cost is O(n^2), not O(n). Both calls do work proportional to the current size on every call, so the drain moves about five billion elements and the report building copies billions of characters.
+```
+
 #### Removing From The Front Shifts Elements
 
 Draining an `ArrayList` from the front is the first problem. Removing the element at index 0 shifts every later element one position to the left, as the class documents. So the first removal moves `n - 1` elements, and the next moves `n - 2`. Summed over all `n` removals, the shifts come to `n * (n - 1) / 2`, so the drain costs O(n^2). For 100,000 events that is about five billion element moves.
@@ -45,17 +51,17 @@ Building a string with `+` in a loop is the second problem. Strings are immutabl
 
 Treat every library call in a loop as an operation whose cost you must add to the analysis. The code you write is only part of the work. The call you do not see may be the dominant part.
 
-The cost of a library call is the time and memory it uses internally, without appearing as a loop in your code. **Amortized** cost is the total cost of a sequence of calls divided by the number of calls. The repair is to replace each costly call with a structure that makes the same step cheap. For front removal, keep a read index and leave the list alone, so taking the next event is O(1). For text building, use `StringBuilder`. Its `append` writes into a buffer that grows by a constant factor each time it fills, so the cost per character stays amortized constant, by the same argument as the doubling array in lesson 06.
+The cost of a library call is the time and memory it uses internally, without appearing as a loop in your code. **Amortized** cost is the total cost of a sequence of calls divided by the number of calls. The repair is to replace each costly call with a structure that makes the same step cheap. For front removal, keep a read index and leave the list alone, so taking the next event is O(1). For text building, use `StringBuilder`. Its `append` writes into a buffer that grows by a constant factor each time it fills, so the cost per character stays amortized constant, by the same argument as the doubling array in the amortized cost lesson of this chapter.
 
 <!-- names: amortized, reference equality, value equality -->
 
 #### Comparing Objects By Reference Or Value
 
-Two more Java facts matter for correctness, not speed. **Reference equality**, written `==` on objects, asks whether two names point to the very same object. **Value equality**, written `.equals(...)`, asks whether two objects hold the same contents. Two `String` objects can have identical characters and still fail `==`. A third trap lives in the type system. `Arrays.asList` takes a varargs list of objects. When you pass it an `int[]`, it produces a list with one element, the array itself, instead of a list of the integers inside.
+Two more Java facts matter for correctness, not speed. The first is how objects compare. **Reference equality**, written `==` on objects, asks whether two names point to the very same object. **Value equality**, written `.equals(...)`, asks whether two objects hold the same contents. Two `String` objects can have identical characters and still fail `==`. The second fact lives in the type system. `Arrays.asList` takes a varargs list of objects. When you pass it an `int[]`, it produces a list with one element, the array itself, instead of a list of the integers inside.
 
 #### State What You Know About Each Call
 
-The invariant is that you know the cost and meaning of every library call you rely on, and the claimed bound includes them. Convenience syntax never changes the specification you must satisfy.
+Before you rely on a library call, find out what it costs and what it means, and include that cost in the bound you claim. Convenience syntax never changes the specification you must satisfy.
 
 <!-- stage: variables -->
 ### Three Facts To Write Beside Each Call
@@ -123,22 +129,22 @@ public final class JavaCosts {
 - **`remove(int)`** removes by position.
 - **`remove(Object)`** removes by value, so a `List<Integer>` needs `Integer.valueOf(7)` to remove the value 7.
 
-The two `remove` calls at the end of the code show this trap.
+In the code, the variable `read` is the read index from the previous stages. The two `remove` calls at the end of the code show the trap in the last two bullets.
 
 <!-- stage: applicability -->
 ### Checking Library Calls Inside Loops
 
 Apply this checklist to every loop body.
 
-First, list the library calls in the loop body, and give each one the three facts. Next, check the documented cost of any unfamiliar method name before the analysis. The invariant is that you know the cost and meaning of each call you rely on, and the stated bound includes them.
+First, list the library calls in the loop body, and give each one the three facts. Next, check the documented cost of any unfamiliar method name before the analysis. Throughout, the invariant holds that you know the cost and meaning of each call you rely on, and the stated bound includes them.
 
-The false friend here is familiar syntax. A false friend is code that looks like a safe pattern but is not. A call that looks like a single step is not automatically constant time, primitive-friendly or value-based. The calls `list.remove(0)` and `string + char` look like `list.get(0)` and `builder.append(char)`, but they cost far more.
+Familiar syntax is the false friend here, because code that looks like a safe pattern often is not. A call that looks like a single step is not automatically constant time, primitive-friendly or value-based. The calls `list.remove(0)` and `string + char` look like `list.get(0)` and `builder.append(char)`, but they cost far more.
 
 Two more Java hazards belong on the same list.
 
-A `List<Integer>` costs several times the memory of an `int[]` and adds one pointer dereference per element, which matters near the million-element limits. The call `Arrays.asList(new int[]{1,2,3})` has size 1, not 3, because the array is a single object.
+A `List<Integer>` costs several times the memory of an `int[]` and adds one pointer dereference per element, which matters when inputs reach a million elements. The call `Arrays.asList(new int[]{1,2,3})` has size 1, not 3, because the array is a single object.
 
-The exercises below take each of these in turn.
+The exercises below practice these checks.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -150,7 +156,11 @@ The exercises below take each of these in turn.
 
 **Problem.** An `ArrayList` holds `n` elements. Method A removes every element by calling `remove(0)` until the list is empty. Method B reads the elements in order with an index that runs from 0 to `n - 1`, and it does not change the list. A move is one element copied one position to the left inside the list. Compute the total number of moves for each method when `n = 5`. Then explain why the total for Method A grows with the square of `n`.
 
-**Constraints.** `1 <= n <= 10^5`. The list holds `n` elements at the start. Calling `remove(0)` on a list of size `s` moves `s - 1` elements. Reading an element by index counts as zero moves. The total fits in a `long`, because the largest total is about 5 * 10^9, which exceeds the `int` range.
+**Constraints.** The limits are:
+- **`n`** satisfies `1 <= n <= 10^5`, and the list holds `n` elements at the start.
+- **`remove(0)`** on a list of size `s` moves `s - 1` elements.
+- **Index read** counts as zero moves.
+- **Total** fits in a `long`, because the largest total is about 5 * 10^9, which exceeds the `int` range.
 
 **Example 1.** Input `n = 5` drained with `remove(0)`, output 10 element moves in total.
 
@@ -167,7 +177,10 @@ The exercises below take each of these in turn.
 
 **Problem.** Method A builds a string of `n` characters. It starts with an empty `String` and runs `result = result + ch` once for each character. Method B appends the same `n` characters to a `StringBuilder`. A copy is one character written into a newly created string. Compute the total number of copies made by Method A when `n = 5`. Then explain at which step Method A copies old characters, and why Method B avoids most copies.
 
-**Constraints.** `1 <= n <= 10^5`. Each step adds exactly one `char`. A `String` is immutable, so each `+` creates a new string and copies every old character into it. Appending to a `StringBuilder` with spare capacity copies nothing. The total for Method A fits in a `long`.
+**Constraints.** The limits are:
+- **`n`** satisfies `1 <= n <= 10^5`.
+- **Step** adds exactly one `char`.
+- **Total** for Method A fits in a `long`.
 
 **Example 1.** Input `n = 5` using `+` in a loop, output 15 characters copied in total (1 + 2 + 3 + 4 + 5).
 
@@ -182,9 +195,12 @@ The exercises below take each of these in turn.
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Consider the call `Arrays.asList(new int[]{1,2,3})`. Determine the size and the element type of the list it returns. Explain why the result is a `List<int[]>` with one element and not a `List<Integer>` with three elements. Then give a way to build a `List<Integer>` that holds the integers 1, 2 and 3.
+**Problem.** Consider the call `Arrays.asList(new int[]{1,2,3})`. Determine the size and the element type of the list it returns. Explain why the result is a `List<int[]>` with one element and not a `List<Integer>` with three elements. Then give a way to build a `List<Integer>` that holds the integers 1, 2 and 3. Building the `List<Integer>` from an array of length `n` takes O(n) time and O(n) space.
 
-**Constraints.** `Arrays.asList` takes a varargs parameter of an object type. An `int[]` is a single object, and it is not an `Object[]`, because `int` is a primitive type. A `List<Integer>` stores boxed values. Boxing converts each `int` to an `Integer`. Building the `List<Integer>` from an array of length `n` takes O(n) time and O(n) space.
+**Constraints.** The limits are:
+- **`Arrays.asList`** takes a varargs parameter of an object type.
+- **`int[]`** is a single object and is not an `Object[]`, because `int` is a primitive type.
+- **`List<Integer>`** stores boxed values, and boxing converts each `int` to an `Integer`.
 
 **Example 1.** Input `Arrays.asList(new int[]{1,2,3})`, output a list of size 1 whose only element is the `int[]`.
 
@@ -199,9 +215,13 @@ The exercises below take each of these in turn.
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Two `String` objects hold the same characters, and they are separate objects in memory. Value equality means the two strings contain the same characters in the same order. Reference equality means both names refer to one object. Determine the result of `==` and of `.equals` for the two strings. State which operator tests value equality. Then determine the result of `==` when a string is compared with itself.
+**Problem.** Two `String` objects hold the same characters, and they are separate objects in memory. Value equality means the two strings contain the same characters in the same order. Reference equality means both names refer to one object. Determine the result of `==` and of `.equals` for the two strings. State which operator tests value equality. Then determine the result of `==` when a string is compared with itself. The operator `==` takes O(1) time, and `.equals` takes O(L) time for strings of length L.
 
-**Constraints.** Create each string with `new String("abc")`, which always returns a new object. Each string has length 3. `==` on two object references returns true only if they refer to the same object. `.equals` on two `String` values returns true if and only if their characters match. Use `.equals` to compare contents. `==` takes O(1) time. `.equals` takes O(L) time for strings of length L.
+**Constraints.** The limits are:
+- **Creation** uses `new String("abc")`, which always returns a new object.
+- **Length** is 3 for each string.
+- **`==`** on two object references returns true only if they refer to the same object.
+- **`.equals`** on two `String` values returns true if and only if their characters match.
 
 **Example 1.** Input two separate strings holding "abc", output `==` is false and `.equals` is true.
 

@@ -34,6 +34,12 @@ On `[1, 3, 2, 4, 5, 1]` it returns 3, which is correct. It passes the ticket's e
 <!-- stage: bottleneck -->
 ### Why Random Lists Rarely Hit Edge Cases
 
+```predict
+Which step-count lists does the longest-climb method get wrong, and why do a thousand random lists not contain them?
+
+The method returns 0 for a list of one day and for a list that climbs every day, because it updates `best` only when a climb ends. A random list almost never has length one or one unbroken climb, so the tests never reach those inputs.
+```
+
 Count the work that random testing performs. A thousand lists of a hundred values cost about 100,000 element visits, which is O(n) work per list and trivial to run. Now draw values from a small range such as 0 to 9. A list of more than ten days can never be strictly increasing from start to end. The failing case is an unbroken climb that never triggers the `else` branch, so it is unreachable at that size. A million such lists would still test the same behaviors that a thousand did.
 
 The failing inputs are tiny. A list of one day returns 0 instead of 1, because the loop never runs and `best` keeps its initial value. A list that climbs every day also returns 0. The method updates `best` only when a climb ends, and the last climb never ends inside the loop. Both failures sit at the edge of the loop, where the first and last iterations behave differently from the middle. A small deliberate input reaches them in seconds.
@@ -55,7 +61,7 @@ Each kind of bug has a standard small edge case. For initial values, use the sma
 
 #### State What Every Variable Means
 
-An **invariant** is a statement that stays true after every step. The invariant for a dry run is that after each change you can say what every variable means. In the climb method, `current` is the length of the climb that ends at the index just examined. The variable `best` is the longest climb that has already ended. Written that way, the bug is obvious. A climb that is still open when the loop ends has not been recorded, so `best` is stale.
+An **invariant** is a statement that stays true after every step. In a dry run, you keep one such statement: after each change you can say what every variable means. In the climb method, `current` is the length of the climb that ends at the index just examined. The variable `best` is the longest climb that has already ended. Written that way, the bug is obvious. A climb that is still open when the loop ends has not been recorded, so `best` is stale.
 
 <!-- stage: variables -->
 ### Recording Variables During A Dry Run
@@ -69,7 +75,7 @@ After that, you write a prediction of the result before the code runs. A disagre
 <!-- stage: trace -->
 ### Dry Run On A Strictly Increasing Array
 
-Trace the method on `[1, 2, 3]`.
+Trace the flawed method on `[1, 2, 3]`.
 
 The variable `best` starts at 0, and `current` starts at 1. Index 1 holds 2, which beats 1, so `current` becomes 2 and `best` stays 0. Index 2 holds 3, which beats 2, so `current` becomes 3 and `best` stays 0.
 
@@ -98,23 +104,23 @@ static int longestClimb(int[] steps) {
 }
 ```
 
-The repair has two parts.
+The repair has three changes.
 
 The update rule sets `best` after every step, so an unfinished climb is always counted. The initial value of `best` is 1, because any non-empty list contains a climb of length one. An empty list returns 0 explicitly, because the specification allows it.
 
 - **Time** is O(n), because the loop makes one pass.
 - **Space** is O(1), because two counters hold all the state.
 
-The edge cases `[7]`, `[1, 2, 3]`, `[4, 4, 4]` and `[3, 2, 1]` now pass. Each one hits a different kind of bug, from the initial value to equal neighbors.
+The edge cases `[7]`, `[1, 2, 3]`, `[4, 4, 4]` and `[3, 2, 1]` now pass. Each one targets a different assumption, from the initial value to equal neighbors.
 
 <!-- stage: applicability -->
 ### Edge Cases Versus Random Tests
 
 Before you trust a solution, apply this checklist.
 
-First, write down the kinds of bug that the solution could have. Next, choose one tiny edge-case input for each kind of bug. Then make a prediction first, and run the code after it. The invariant is that a dry run records the meaning of every variable after every change.
+First, write down the kinds of bug that the solution could have. Next, choose one tiny edge-case input for each kind of bug. Then make a prediction first, and run the code after it. Throughout, the invariant of a dry run holds: you record the meaning of every variable after every change.
 
-The large random test is a false friend, which means a test that appears to verify the code while it never reaches the failing precondition. The random test looks like thorough verification, but it rarely reaches the boundary inputs. Random data still catches surprises you did not predict, and the next chapters use it as a cross-check. It is a poor substitute for a deliberately chosen tiny case, because edge cases make up a tiny share of all random inputs.
+The large random test is a false friend. It looks like thorough verification, but it rarely reaches the boundary inputs, so it can pass while the failing precondition stays untested. Random data still catches surprises you did not predict, and the next chapters use it as a cross-check. It is a poor substitute for a deliberately chosen tiny case, because edge cases make up a tiny share of all random inputs.
 
 Java supplies several ready-made edge cases.
 
@@ -130,7 +136,11 @@ Java supplies several ready-made edge cases.
 
 **Problem.** The method `longestClimb(int[] a)` returns the length of the longest strictly increasing run in `a`. A run is a contiguous block of positions. A strictly increasing run has each value larger than the value before it. Execute the corrected loop by hand on the input `[7]`. State the initial value of `best`, the number of loop iterations and the returned value. Then state what the flawed version returns. The flawed version starts `best` at 0 and updates it only inside the loop.
 
-**Constraints.** The input array has exactly one element, `a.length == 1`. The element is an `int`. The method accepts any length from 0 to 10^5, but this exercise fixes the length at 1. The loop starts at index 1 and runs while `i < a.length`. The corrected method returns an `int` of at least 1 for any non-empty array. It does not modify `a`.
+**Constraints.** The limits are:
+- **Length** is exactly 1, so `a.length == 1`, although the method accepts any length from 0 to 10^5.
+- **Element** is an `int`.
+- **Return value** is an `int` of at least 1 for any non-empty array.
+- **Mutation** is none, so `a` is not modified.
 
 **Example 1.** Input `[7]`, output 1, with zero loop iterations.
 
@@ -147,7 +157,12 @@ Java supplies several ready-made edge cases.
 
 **Problem.** Take the array `[4,4,4]`. A strict comparison extends a run when `a[i] > a[i - 1]`. A non-strict comparison extends a run when `a[i] >= a[i - 1]`. Compute the length of the longest run under each comparison. Then explain why this one input gives different answers for the two comparisons.
 
-**Constraints.** The array has length 3 and every element is the `int` value 4. A run is a contiguous block of positions. Each method returns an `int` of at least 1 for a non-empty array. Neither method modifies the array. Two neighbors are equal when `a[i] == a[i - 1]`, and equal neighbors extend a run only under the non-strict comparison.
+**Constraints.** The limits are:
+- **Array** has length 3, and every element is the `int` value 4.
+- **Run** is a contiguous block of positions.
+- **Equal neighbors** satisfy `a[i] == a[i - 1]`.
+- **Return value** is an `int` of at least 1 for a non-empty array.
+- **Mutation** is none for both methods.
 
 **Example 1.** Input `[4,4,4]` with a strict comparison, output 1.
 
@@ -162,9 +177,13 @@ Java supplies several ready-made edge cases.
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Take the array `[Integer.MAX_VALUE, Integer.MAX_VALUE]`. A method adds its elements into a variable of type `int`. Overflow occurs when the true sum lies outside the range of `int`. Predict the value this method returns before you run any code. Then state the true sum and name the type that holds it exactly.
+**Problem.** Take the array `[Integer.MAX_VALUE, Integer.MAX_VALUE]`. A method adds its elements into a variable of type `int`. Overflow occurs when the true sum lies outside the range of `int`. Predict the value this method returns before you run any code. Then state the true sum and name the type that holds it exactly. The corrected sum uses a `long` accumulator, which holds values up to 9,223,372,036,854,775,807.
 
-**Constraints.** The array has length 2. Each element is the `int` value 2,147,483,647, which is the largest `int`. Java `int` arithmetic uses 32-bit two's complement and wraps around on overflow without throwing an exception. The corrected sum uses a `long` accumulator, which holds values up to 9,223,372,036,854,775,807. The method does not modify the array.
+**Constraints.** The limits are:
+- **Array** has length 2.
+- **Elements** are each the `int` value 2,147,483,647, which is the largest `int`.
+- **Arithmetic** is 32-bit two's complement for `int` and wraps around on overflow without an exception.
+- **Mutation** is none, so the array is not modified.
 
 **Example 1.** Input `[2147483647, 2147483647]` summed in an `int`, output -2.
 
@@ -181,7 +200,13 @@ Java supplies several ready-made edge cases.
 
 **Problem.** An array `a` of length 4 holds the three live values `[1,2,3]` in positions 0 to 2. Position 3 is free. To insert a value at index 0, every live value moves one position to the right. A left-to-right shift runs `a[i] = a[i - 1]` for `i = 1, 2, 3`. A right-to-left shift runs the same assignment for `i = 3, 2, 1`. Trace the left-to-right shift. Identify the first write that overwrites a value the loop has not yet read. Then explain why the right-to-left shift preserves every live value.
 
-**Constraints.** The array has length 4 and three live values. The inserted value is 9 at index 0. After a correct shift and insert, the array equals `[9,1,2,3]`. The shift writes positions 1 to 3 only. Position 0 receives the inserted value after the shift completes. All values are `int`.
+**Constraints.** The limits are:
+- **Array** has length 4. Positions 0 to 2 hold live values.
+- **Inserted value** is 9 at index 0.
+- **Shift** writes positions 1 to 3 only.
+- **Position 0** receives the inserted value after the shift completes.
+- **Result** equals `[9,1,2,3]` after a correct shift and insert.
+- **Values** are all `int`.
 
 **Example 1.** Input `[1,2,3,_]` shifted left to right, output `[1,1,1,1]` before the insert, so the data is lost.
 

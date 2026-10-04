@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Shared Array Gets Corrupted
 
-A reporting tool keeps the day's sensor readings in one array and passes it to two functions. The first function removes the readings flagged as faulty. The second prints the full day's readings for an audit. After the first function runs, the audit page shows duplicates and missing values. Nobody has changed the audit code in months.
+A reporting tool keeps the day's sensor readings in one array and passes it to two functions. The first function removes the readings flagged as faulty. The second prints the full day's readings in a daily report. After the first function runs, the report shows duplicates and missing values. Nobody has changed the report code in months.
 
 Neither function is buggy in isolation. The first one rewrote the shared array to save memory. The second one assumed the array was unchanged. The interface never stated whether the input could change. Every problem statement and every method signature answers that question, stated or not. This lesson teaches you to state the answer explicitly.
 
@@ -32,6 +32,12 @@ Called on `[3, 2, 2, 3]` with target 3, it returns 2, and the array afterward re
 <!-- stage: bottleneck -->
 ### The Cost Of Changing Input Silently
 
+```predict
+After the overwriting method returns on `[3, 2, 2, 3]` with target 3, what does a caller who still holds the array see, and is the time cost the problem?
+
+The caller sees `[2, 2, 2, 3]`, so the original data is gone even though the method ran in O(n) time. The cost is a silent change to the caller's data, not speed.
+```
+
 The method runs in O(n) time with O(1) extra space, so no step is slow. The cost is that the method silently changes the caller's data. The array does not become shorter, because a Java array's length is fixed when it is created. Only the first `write` slots are meaningful now. The slots after that still hold old values that look real.
 
 The safe alternative copies the input first. That copy costs O(n) extra space and O(n) extra time. This is cheap for one call and expensive for a million calls. Neither choice is free, and the right one depends on a requirement that the code alone cannot reveal. When the statement says the input must be preserved, in-place rewriting is wrong however fast it is. When the statement asks for constant extra space, copying is wrong however clean it is.
@@ -51,14 +57,14 @@ A precondition states what the input must satisfy and whether the method may mod
 
 #### Counting Extra Memory And Safe Writes
 
-The cost charged to a solution is its **auxiliary space**. State which convention you use, so the argument stays about the algorithm and not about definitions.
+The **auxiliary space** of a solution is its working memory beyond the input and beyond the required output. A returned array of `n` values therefore uses O(n) space that is not auxiliary. State which convention you use, so the argument stays about the algorithm and not about definitions.
 
-Auxiliary space is the working memory beyond the input and beyond the required output, so a returned array of `n` values uses O(n) space that is not auxiliary. A write is safe when it destroys no value that a later read still needs. That is the invariant of the filter, and the filter keeps it because the `write` index never passes the `read` index, and a slot is overwritten only after its original value has been read.
+A write is safe when it destroys no value that a later read still needs. That is the invariant of the filter, and the filter keeps it because the `write` index never passes the `read` index, and a slot is overwritten only after its original value has been read.
 
 <!-- stage: variables -->
 ### Variables The Filter Uses
 
-Three entities need names. When a method may modify its input, the specification must name `k` and state what the suffix holds.
+Four entities need names. When a method may modify its input, the specification must name `k` and state what the suffix holds.
 
 - **Reference** is the variable that points at the array, and two variables can point at the same array.
 - **Container** is the array object with its fixed length.
@@ -78,7 +84,7 @@ At `read = 2` the array holds a 2, so the loop copies it to slot 1. The array lo
 
 #### Reading The Final State
 
-When the loop ends, the state has four facts.
+When the loop ends, the state has these facts.
 
 The value of `write` is 2, so the meaningful prefix is `[2, 2]`, the first two slots. The last two slots still hold `2` and `3`, and the 3 in slot 3 is a leftover from the input, not part of the answer.
 
@@ -112,13 +118,13 @@ static int[] removeValueCopy(int[] nums, int target) {
 }
 ```
 
-The two variants differ in cost and in the data they keep.
+The method `removeValueInPlace` is the same loop as `removeValue` shown first in this lesson. The two variants differ in cost and in the data they keep.
 
 - **removeValueInPlace** takes O(n) time and O(1) auxiliary space, and it gives up the original data.
 - **removeValueCopy** takes O(n) time, because it makes two passes so the result has the exact length.
 - **removeValueCopy** uses O(n) space for the answer it must return.
 
-Neither variant does extra work for the other's specification. Picking the wrong variant for the stated specification is a correctness error, not a style choice.
+Each variant fits only its own specification. Picking the wrong variant for the stated specification is a correctness error, not a style choice.
 
 <!-- stage: applicability -->
 ### Checking The Specification Before Coding
@@ -127,11 +133,11 @@ Neither variant does extra work for the other's specification. Picking the wrong
 
 Check the precondition and the postcondition on the input array before you write any array or string solution.
 
-The invariant is that every write preserves the data a later read still needs. The caller therefore never reads anything outside the stated meaningful prefix. When the statement has no rule about changing the input, you ask or you state your assumption. The default is to leave the input intact when the copy cost is small.
+Every write must preserve the data that a later read still needs. That condition is the invariant of the filter. The caller then reads only the stated meaningful prefix. When the statement has no rule about changing the input, you ask or you state your assumption. The default is to leave the input intact when the copy cost is small.
 
 #### Finding Cases That Break The Precondition
 
-A false friend here is an in-place method that appears to follow the specification but breaks its precondition about who may overwrite the input. Two cases qualify.
+An in-place method can look as if it follows the specification and still break its precondition about who may overwrite the input. Such a method is a false friend. Two cases qualify.
 
 The phrase "in place" does not mean the array shrank, because a Java array never changes length. A loop to `nums.length` after an in-place removal reads stale slots, so the method returns a count instead. A returned reference to the same array does not prove the data is unchanged, because the caller's other references see every write.
 
@@ -153,7 +159,13 @@ Chapter 01 applies these specifications to every in-place exercise.
 
 **Problem.** A method `removeValue(int[] nums, int target)` overwrites `nums` so that the elements not equal to `target` occupy the first positions in their original order. It returns `k`, the count of those elements. The meaningful prefix is the run of positions `0` through `k - 1`. Take `nums = [3,2,2,3]` and `target = 3`, so the method returns `k = 2`. State which values the method guarantees in `nums[0..k-1]`. State what the method specifies about `nums[k..]`. State what the caller must never do with the positions from `k` onward.
 
-**Constraints.** A Java array has a fixed length, so `nums.length` does not change after the call. The method returns an `int` in the range `0` to `nums.length`. It may overwrite any position of the input. `nums` may be empty, and then `k = 0`. If every element equals `target`, then `k = 0` and no position holds a guaranteed value. The values in `nums[k..]` are unspecified, and the caller must not read them as results.
+**Constraints.** The limits are:
+- **Length** is fixed, so `nums.length` does not change after the call.
+- **Return value** is an `int` in the range `0` to `nums.length`.
+- **Mutation** is allowed; the method may overwrite any position of the input.
+- **Empty input** is allowed, and then `k = 0`.
+- **All equal to `target`** gives `k = 0` and no position holds a guaranteed value.
+- **Suffix** values in `nums[k..]` are unspecified, and the caller must not read them as results.
 
 **Example 1.** Input `nums = [3,2,2,3]` and target 3, output `k = 2` and a meaningful prefix of `[2,2]`.
 
@@ -170,7 +182,13 @@ Chapter 01 applies these specifications to every in-place exercise.
 
 **Problem.** Given an array `nums` and an integer `target`, produce the elements of `nums` that are not equal to `target`, in their original order. Two designs exist. The in-place design overwrites `nums`. The copying design allocates a new array `result` and leaves `nums` unchanged. A no-mutation specification states that after the call every position of `nums` holds the same value as before the call. Under a no-mutation specification, choose a design and return `result`. Explain why a method that returns the correct values but modifies `nums` still violates the specification.
 
-**Constraints.** `1 <= nums.length <= 10^5`. Elements and `target` are `int` values. The returned array has exactly as many elements as `nums` has values different from `target`, and may have length 0. The caller may keep using the original array after the call. Under a no-mutation specification the method performs no write to `nums`. Under a permissive specification, either design is valid.
+**Constraints.** The limits are:
+- **Length** is `1 <= nums.length <= 10^5`.
+- **Values** of elements and `target` are `int`.
+- **Result** has exactly as many elements as `nums` has values different from `target`, and may have length 0.
+- **Caller** may keep using the original array after the call.
+- **No-mutation specification** allows no write to `nums`.
+- **Permissive specification** accepts either design.
 
 **Example 1.** Input `nums = [4,1,4,2]` and target 4 under a no-mutation contract, output `[1,2]` with `nums` still equal to `[4,1,4,2]`.
 
@@ -187,7 +205,12 @@ Chapter 01 applies these specifications to every in-place exercise.
 
 **Problem.** In Java, an array variable holds a reference, which is the address of an array object. Two variables are aliases when they hold the same reference. Let `a` and `b` be two `int[]` variables that are aliases. A method receives `a` and assigns new values to its elements. Explain why a reader of `b` sees the new values. Then state the step a caller must take before the call so that `b` keeps the old contents.
 
-**Constraints.** `a` and `b` refer to one array object, so there is exactly one array in memory. The method writes to elements, as in `arr[0] = value`, and never assigns to the parameter variable itself. The elements are `int` values, so a shallow copy is a complete copy. A copy made with `clone()` before the call is a separate array object. The exercise has no return value.
+**Constraints.** The limits are:
+- **Aliases** `a` and `b` refer to one array object, so exactly one array exists in memory.
+- **Writes** go to elements, as in `arr[0] = value`; the method never assigns to the parameter variable itself.
+- **Elements** are `int` values, so a shallow copy is a complete copy.
+- **Copy** made with `clone()` before the call is a separate array object.
+- **Return value** does not exist.
 
 **Example 1.** Input `a = b = [1,2,3]` and a method that sets `a[0] = 9`, output that `b[0]` also reads 9.
 
@@ -202,9 +225,13 @@ Chapter 01 applies these specifications to every in-place exercise.
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** A method receives an array of length `n` and must return a new array of length `n`. Total space is all memory the method allocates, including the returned array. Auxiliary space is the memory the method allocates beyond the input and the returned output. Compute both quantities for a method that fills one new result array. State the total space under the convention that counts the output. State the auxiliary space under the convention that excludes it.
+**Problem.** A method receives an array of length `n` and must return a new array of length `n`. Total space is all memory the method allocates, including the returned array. Auxiliary space is the memory the method allocates beyond the input and the returned output. Compute both quantities for a method that fills one new result array. State the total space under the convention that counts the output. State the auxiliary space under the convention that excludes it. The output alone needs `n` slots under any plan.
 
-**Constraints.** `1 <= n <= 10^5`. The method allocates exactly one result array of length `n` and a constant number of scalar variables. It does not modify the input. Space is measured in `O(...)` notation as a function of `n`. The returned array has length `n`, so the output alone needs `n` slots under any plan.
+**Constraints.** The limits are:
+- **Size** is `1 <= n <= 10^5`.
+- **Allocation** is exactly one result array of length `n` plus a constant number of scalar variables.
+- **Input** is never modified.
+- **Units** are `O(...)` notation as a function of `n`.
 
 **Example 1.** Input an array of length 5 and a method that fills a new array of length 5, output auxiliary space O(1) under the convention that the result is excluded.
 

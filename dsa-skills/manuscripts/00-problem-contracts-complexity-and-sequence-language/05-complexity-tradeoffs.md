@@ -36,6 +36,12 @@ Both methods have two `for` keywords that touch the array. The shortcut classifi
 <!-- stage: bottleneck -->
 ### Sequential Loops Add And Nested Loops Multiply
 
+```predict
+How many times does the innermost line run in `twoScans` and in `pairCount` when the array holds 100,000 orders?
+
+The line in `twoScans` runs about 200,000 times, because the two scans run one after the other and their counts add. The line in `pairCount` runs about five billion times, because the inner loop restarts for every outer index.
+```
+
 Count how often the innermost statement runs. In `twoScans`, the first loop runs `n` times and the second loop runs `n` times afterward. The total is `n + n = 2n`, which is O(n). In `pairCount` the outer loop runs `n` times. The inner loop runs a shrinking number of times: `n - 1`, then `n - 2`, down to 0. The total is `n * (n - 1) / 2`, which is O(n^2).
 
 A wrong classification costs real effort in both directions. If someone calls `twoScans` quadratic, a team rewrites correct, fast code and risks introducing a bug. If someone calls `pairCount` linear, a team accepts a method that needs five billion steps at `n = 100,000`. A rule that cannot tell them apart is worse than no rule, because it produces confident wrong answers. The correct tool is to count executions of the most frequently executed statement.
@@ -79,7 +85,7 @@ Take `pairCount` with `n = 4`.
 
 When `i = 0`, `j` runs over 1, 2 and 3, so the statement executes three times. When `i = 1`, `j` runs over 2 and 3, which adds two executions. When `i = 2`, `j` runs over 3 only, which adds one execution. When `i = 3`, the inner loop has nothing to run, so it adds none.
 
-The total is 3 + 2 + 1 + 0, which is 6. The formula `n * (n - 1) / 2` gives 4 * 3 / 2, which is 6 as well. The hardest step to see is the last one, where an outer iteration contributes nothing. That step is why the answer is half of `n * n`. It also shows why a shrinking inner loop does not make the method linear, because the pieces still add up to a quantity proportional to `n^2`. Doubling `n` to 8 gives 28 executions, nearly four times as many.
+The total is 3 + 2 + 1 + 0, which is 6. The formula `n * (n - 1) / 2` gives 4 * 3 / 2, which is 6 as well. The hardest step to see is the last one, where an outer iteration contributes nothing. That step is why the answer is half of `n * n`. It also shows why a shrinking inner loop does not make the method linear, because the pieces still add up to a quantity proportional to `n^2`. Doubling `n` to 8 gives 28 executions, more than four times as many.
 
 ```trace
 {"cells":[0,1,2,3],"pointers":["i","j"],"steps":[{"at":{"i":0,"j":1},"vars":{"executions":1},"note":"i = 0, j = 1: the inner statement runs for the 1st time."},{"at":{"i":0,"j":2},"vars":{"executions":2},"note":"i = 0, j = 2: the inner statement runs for the 2nd time."},{"at":{"i":0,"j":3},"vars":{"executions":3},"note":"i = 0, j = 3: the inner statement runs for the 3rd time."},{"at":{"i":1,"j":2},"vars":{"executions":4},"note":"i = 1, j = 2: the inner statement runs for the 4th time."},{"at":{"i":1,"j":3},"vars":{"executions":5},"note":"i = 1, j = 3: the inner statement runs for the 5th time."},{"at":{"i":2,"j":3},"vars":{"executions":6},"note":"i = 2, j = 3: the inner statement runs for the 6th time."},{"at":{"i":3,"j":4},"vars":{"executions":6},"note":"i = 3: the inner loop starts at 4 and has nothing to run, so this outer pass adds 0."},{"at":{"i":4,"j":4},"vars":{"executions":6,"formula":6},"note":"Done. 3 + 2 + 1 + 0 = 6, and n(n-1)/2 = 4*3/2 = 6."}]}
@@ -118,17 +124,17 @@ Each counter mirrors the loop structure of the method it models, and `steps++` s
 
 #### Name The Input With Every Bound
 
-Count executions of the most frequently executed statement whenever you claim a time or space bound. Check each item before you state it.
+Count executions of the most frequently executed statement whenever you claim a time or space bound. The executions of that statement give the bound.
 
-The counted statement is the most frequently executed statement, and its executions give the bound. The claim also names the input, which is the worst-case input. The stated bound then holds as an invariant: it describes the cost on that input, in units the problem's variables can express. When the problem has two size variables, both appear in the bound.
+The claim also names its input, which is the worst-case input. The bound must stay true for every input of that size and shape, so it works as an invariant of the claim. It also uses units that the problem's variables can express. When the problem has two size variables, both appear in the bound.
 
 #### Check The Loop-Counting Shortcut
 
-A false friend in loop counting is a shortcut that looks sound but fails in some cases. Counting loops and ignoring their bounds is one. Two loops side by side add, and two loops nested over the same growing input usually multiply. The word usually matters. A nested loop whose inner index only moves forward across the whole run can still total O(n). Later chapters on two pointers and sliding windows depend on exactly that argument. So count executions, because nesting depth alone does not decide the bound.
+Counting loops while ignoring their bounds looks sound but fails in some cases, so it is a false friend. Two loops side by side add, and two loops nested over the same growing input usually multiply. The word usually matters. A nested loop whose inner index only moves forward across the whole run can still total O(n). Later chapters on two pointers and sliding windows depend on exactly that argument. So count executions, because nesting depth alone does not decide the bound.
 
 #### Include Library Call Costs
 
-Java library calls add costs that loop counting misses. Lesson 8 of this chapter lists those calls. Any bound you state must include them.
+Java library calls add costs that loop counting misses. The lesson on common Java method costs in this chapter lists those calls. Any bound you state must include them.
 
 A call to `list.remove(0)` inside a loop costs O(n) per call, because it shifts the remaining elements. String concatenation inside a loop also costs O(n) per call, because it copies the accumulated characters.
 
@@ -142,7 +148,12 @@ A call to `list.remove(0)` inside a loop costs O(n) per call, because it shifts 
 
 **Problem.** A program runs two loops one after the other. Each loop executes its body exactly once for every index from `0` to `n - 1`. A loop-body execution is one pass through the body of a loop. Return the total number of loop-body executions for a given `n`. Then classify that count with big-O notation, and explain why the two loops add their costs and do not multiply them.
 
-**Constraints.** `n` is an `int` with `1 <= n <= 10^5`. The first loop finishes before the second loop starts, and neither loop is nested inside the other. The return value is a `long`. Each loop body costs one unit, and no other work is counted. The count is deterministic and does not depend on the array contents. The program does not modify any input.
+**Constraints.** The limits are:
+- **`n`** is an `int` with `1 <= n <= 10^5`.
+- **Loop order** has the first loop finish before the second starts, with no nesting.
+- **Return value** is a `long`.
+- **Cost unit** is one per loop body, and no other work is counted.
+- **Input** is not read or modified, and the count is deterministic.
 
 **Example 1.** Input `n = 10`, output 20 loop-body executions, which is O(n).
 
@@ -157,9 +168,14 @@ A call to `list.remove(0)` inside a loop costs O(n) per call, because it shifts 
 
 **Prerequisites.** The consecutive-loops exercise above.
 
-**Problem.** Consider the loop pair `for (i = 0; i < n; i++) for (j = i + 1; j < n; j++)`. Return the number of times the inner loop body executes, for a given `n`. Derive a closed formula for that count, and classify the count with big-O notation. The expected formula is `n(n-1)/2`, and the expected bound is O(n^2).
+**Problem.** Consider the loop pair `for (i = 0; i < n; i++) for (j = i + 1; j < n; j++)`. Return the number of times the inner loop body executes, for a given `n`. Derive a closed formula for that count, and classify the count with big-O notation. The expected formula is `n(n-1)/2`, and the expected bound is O(n^2). The inner loop runs `n - 1 - i` times for each `i`, so it shrinks as `i` grows.
 
-**Constraints.** `n` is an `int` with `0 <= n <= 10^5`. When `n = 0`, neither loop runs and the count is 0. The inner loop starts at `i + 1`, so it runs `n - 1 - i` times for each `i`, and it shrinks as `i` grows. The return value is a `long`, because the count reaches about `5 * 10^9` and overflows `int`. Only inner-loop-body executions are counted.
+**Constraints.** The limits are:
+- **`n`** is an `int` with `0 <= n <= 10^5`.
+- **Empty case** has `n = 0`, where neither loop runs and the count is 0.
+- **Inner loop** starts at `i + 1`.
+- **Return value** is a `long`, because the count reaches about `5 * 10^9` and overflows `int`.
+- **Counted work** is inner-loop-body executions only.
 
 **Example 1.** Input `n = 5`, output 10 iterations.
 
@@ -176,7 +192,12 @@ A call to `list.remove(0)` inside a loop costs O(n) per call, because it shifts 
 
 **Problem.** A grid has `rows` rows and `cols` columns, so it has `rows * cols` cells. A traversal visits every cell exactly once. Return the number of cell visits. State the traversal time as `O(rows * cols)`, which keeps both dimensions. Then give one input where replacing both dimensions by a single `n` and claiming O(n^2) overstates the cost by a large factor.
 
-**Constraints.** `rows` and `cols` are `int` values with `1 <= rows, cols <= 10^5` and `rows * cols <= 10^6`. The two dimensions are independent, so neither is assumed to be the larger one. Each cell is visited exactly once, and no cell is skipped. The return value is a `long`. One visit costs one unit. The traversal does not modify the grid.
+**Constraints.** The limits are:
+- **`rows` and `cols`** are `int` values with `1 <= rows, cols <= 10^5` and `rows * cols <= 10^6`.
+- **Dimensions** are independent, so neither is assumed to be the larger one.
+- **Visits** touch each cell exactly once, and no cell is skipped.
+- **Return value** is a `long`.
+- **Cost unit** is one per visit, and the grid is not modified.
 
 **Example 1.** Input `rows = 3, cols = 4`, output 12 visits.
 
@@ -191,9 +212,11 @@ A call to `list.remove(0)` inside a loop costs O(n) per call, because it shifts 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given an integer array `nums`, return `true` if some value appears at positions `i` and `j` with `i != j`, and return `false` if all values are distinct. Compare two methods. The all-pairs method compares every pair of positions and takes O(n^2) time. The sort-then-scan method sorts the values and then compares each element with its predecessor in one O(n) pass, so it takes O(n log n) time. State the tradeoff in full: the lower time, the changed order, and the copy or in-place mutation that decides what happens to the original array.
+**Problem.** Given an integer array `nums`, return `true` if some value appears at positions `i` and `j` with `i != j`, and return `false` if all values are distinct. Compare two methods. The all-pairs method compares every pair of positions and takes O(n^2) time. The sort-then-scan method sorts the values and then compares each element with its predecessor in one O(n) pass, so it takes O(n log n) time. State the tradeoff in full: the lower time, the changed order, and the copy or in-place mutation that decides what happens to the original array. Sorting a copy costs O(n) extra space and leaves `nums` unchanged, while sorting in place destroys the original order. The all-pairs method uses O(1) extra space.
 
-**Constraints.** `nums` is an `int[]` with `1 <= n <= 10^5` elements, where `n = nums.length`. Values may repeat, and every `int` value is allowed. Sorting a copy costs O(n) extra space and leaves `nums` unchanged. Sorting `nums` in place uses O(1) extra space beyond the sort itself, but it destroys the original order. The all-pairs method uses O(1) extra space and does not modify `nums`.
+**Constraints.** The limits are:
+- **`nums`** is an `int[]` with `1 <= n <= 10^5` elements, where `n = nums.length`.
+- **Values** may repeat, and every `int` value is allowed.
 
 **Example 1.** Input `[4,1,3,1]`, output true, because the sorted copy `[1,1,3,4]` has equal neighbors.
 
