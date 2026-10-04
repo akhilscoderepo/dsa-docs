@@ -193,7 +193,7 @@ public final class EmptyAndSingleton {
 #### Solution: [Recognize] Kth Largest Element in a Stream (LeetCode 703)
 <!-- id: hp-kth-largest-stream -->
 
-**Approach.** Keep a natural-order queue that never holds more than the `k` largest values seen. Its root is the smallest of those `k`, which is exactly the k-th largest overall. For each new value, offer it, and if the size is now `k + 1` poll once, which removes the weakest of the `k + 1` candidates. The answer after the addition is the root. The initial values go through the same step, without a report. The assertions check both examples and compare with a version that sorts all values after every addition.
+**Approach.** Keep a natural-order queue that never holds more than the `k` largest values seen. Its root is the smallest of those `k`, which is exactly the k-th largest overall. For each new value, offer it, and if the size is now `k + 1` poll once, which removes the weakest of the `k + 1` candidates. The answer after the addition is the root. The initial values go through the same step, without a report. Both examples are asserted, and a slower version that re-sorts all values after every addition serves as the oracle on random streams.
 
 **Complexity.** Every value costs O(log k) to process, so the time is O((m + n) log k) for m initial values and n additions, and the queue holds at most k + 1 items.
 

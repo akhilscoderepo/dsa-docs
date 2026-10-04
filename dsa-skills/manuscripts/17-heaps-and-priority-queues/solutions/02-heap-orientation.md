@@ -68,7 +68,7 @@ public final class SafeMaxHeap {
 #### Solution: [Vary] Pair Priority (Author exercise)
 <!-- id: hp-pair-priority -->
 
-**Approach.** Store `{duration, index}` pairs and rank them with `comparingInt` on the duration followed by `thenComparingInt` on the index. The index is unique, so the order is total and the polls are fully determined. The output is the index of each polled pair. The assertions check both examples and compare with a sort of the indices by the same tuple on random arrays with many equal durations. They also show that a comparator reading only the duration disagrees with the tuple order on some inputs, which is why the second field has to be part of the comparator.
+**Approach.** Store `{duration, index}` pairs and rank them with `comparingInt` on the duration followed by `thenComparingInt` on the index. The index is unique, so the order is total and the polls are fully determined. The output is the index of each polled pair. Both examples are asserted, and random arrays with many equal durations are checked against a plain sort of the indices by the same tuple. They also show that a comparator reading only the duration disagrees with the tuple order on some inputs, which is why the second field has to be part of the comparator.
 
 **Complexity.** The sorting through the queue costs O(n log n) time, with O(n) memory for the pairs.
 
@@ -120,7 +120,7 @@ public final class PairPriority {
 #### Solution: [Boundary] Equal Priorities And Extreme Integers (Author exercise)
 <!-- id: hp-equal-priorities-extremes -->
 
-**Approach.** The tuple is the priority in descending direction, then the index in ascending direction. The two fields run in opposite directions, so the comparator is written by hand with `Integer.compare(b, a)` on the priority and `Integer.compare(a, b)` on the index, and no subtraction appears. The assertions check both examples and compare with a sort that uses the same two rules on random arrays drawn from a pool that includes both extremes. They also show that reversing a whole chain with `.reversed()` flips the tie-break too, because on `[0, 0]` it yields the indices 1 then 0.
+**Approach.** The tuple is the priority in descending direction, then the index in ascending direction. The two fields run in opposite directions, so the comparator is written by hand with `Integer.compare(b, a)` on the priority and `Integer.compare(a, b)` on the index, and no subtraction appears. Both examples are asserted, and a hand-written sort with the same two rules is the oracle on random arrays drawn from a pool that includes both extremes. They also show that reversing a whole chain with `.reversed()` flips the tie-break too, because on `[0, 0]` it yields the indices 1 then 0.
 
 **Complexity.** The time is O(n log n) and the memory is O(n).
 
