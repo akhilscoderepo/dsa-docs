@@ -96,7 +96,7 @@ The removal is by index on purpose. For a list of `Integer` values, a call such 
 <!-- stage: applicability -->
 ### Shared State Needs An Exact Undo
 
-Use the three moves when one candidate is grown a decision at a time, and the search must come back and try a sibling from the same starting point. Menus, schedules, arrangements and every generator in the remaining lessons of this chapter fit. The invariant to keep in mind is that the working path on exit equals the working path on entry, so any extra state that a call changes, such as a counter or a mark, has its own undo step.
+Use the three moves when one candidate is grown a decision at a time, and the search must come back and try a sibling from the same starting point. Menus, schedules, arrangements and every generator in the remaining lessons of this chapter fit. What must stay true, as the invariant of every call, is that the working path on exit equals the working path on entry, so any extra state that a call changes, such as a counter or a mark, has its own undo step.
 
 The nearest false friend is the version that forgets the undo and keeps going. It looks almost identical and often produces correct first results, which is what makes the bug hard to see, and then every later branch inherits decisions that belong to a finished branch. A second false friend is the copy-per-call method from the naive stage, which is right but pays for a whole copy at every visit, and it is a sensible choice only when the depth is tiny or the search is not pruned.
 
@@ -161,7 +161,7 @@ Do not reach for a shared working path when the state is a single number or an i
 
 **Prerequisites.** The Store A Completed Path rung.
 
-**Problem.** Given an array of distinct integers, return every subset, each written in the original order of the array. Decide each element in turn as include or exclude, trying include first, and record a subset only when every element has been decided.
+**Problem.** Take an array of distinct integers and produce every subset, each written in the original order of the array. Decide each element in turn as include or exclude, trying include first, and record a subset only when every element has been decided.
 
 **Constraints.** 0 <= nums.length <= 10, and the values are distinct integers between -10 and 10.
 

@@ -96,7 +96,7 @@ An empty array records the root and then the loop body never runs, so the result
 <!-- stage: applicability -->
 ### Every Element Optional
 
-Use the walk when each item may be present or absent, the order inside a result follows the input, and the answers are the whole family or those members that pass a test. Selections of features, collections of coins and subsets that must satisfy a condition all share the shape. The invariant to keep in mind is that the path fixes the fate of every element before the index, so a pruning rule can look only at the path and at what remains.
+Use the walk when each item may be present or absent, the order inside a result follows the input, and the answers are the whole family or those members that pass a test. Selections of features, collections of coins and subsets that must satisfy a condition all share the shape. Any pruning rule leans on the invariant that the path fixes the fate of every element before the index, so such a rule may look only at the path and at what remains.
 
 The nearest false friend is the arrangement search of the next lesson. There the state marks which elements are used and a call decides which element fills a position, so two orders of the same elements are two different answers. Here a bundle has no positions, and taking the cumin before the pepper is not a separate bundle, so reusing the used-array idea would produce too many results, in the wrong shape. A second false friend is an input with equal values, which makes some bundles appear more than once, and that is repaired by sorting and skipping, which is the subject of a later lesson.
 
