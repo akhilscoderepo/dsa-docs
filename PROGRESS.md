@@ -21,8 +21,8 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 14-linked-lists | done |
 | 15-trees-dfs | done |
 | 16-trees-bfs-and-bsts | claimed 16 2026-10-04T04:15Z (interactive session, stale claim taken) |
-| 17-heaps-and-priority-queues | todo |
-| 18-tries | todo |
+| 17-heaps-and-priority-queues | claimed 17 2026-10-04T04:20Z (interactive session, parallel agent) |
+| 18-tries | claimed 18 2026-10-04T04:20Z (interactive session, parallel agent) |
 | 19-recursion-and-backtracking | todo |
 | 20-greedy | todo |
 | 21-graph-traversal-models-dfs-and-ordinary-bfs | todo |
