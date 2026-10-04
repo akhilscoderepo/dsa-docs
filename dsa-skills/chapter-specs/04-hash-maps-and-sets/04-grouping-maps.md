@@ -1,4 +1,4 @@
-# Lesson spec: Grouping Maps
+# Lesson spec: Group Values In A Map
 
 **Recognition cue.** Several inputs belong to the same output bucket under a stated equivalence relation. **State.** `groups.get(key)` owns the full list for one equivalence class. **False friend.** A frequency map tells how many; it does not preserve the members required by grouped output.
 

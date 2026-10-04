@@ -1,4 +1,4 @@
-# Lesson spec: Frequency Maps
+# Lesson spec: Count Values With A Map
 
 **Recognition cue.** The decision depends on multiplicity, not just existence. **State.** `count.get(key)` means the exact processed frequency, including the convention for absent keys. **False friend.** A set silently loses the count needed for an anagram or top-frequency decision.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Membership Sets
+# Lesson spec: Check Membership With A Set
 
 **Recognition cue.** The question asks whether something has appeared, exists, or is forbidden; its count and order do not matter. **State.** `seen` contains exactly the relevant values processed so far. **False friend.** A map is needless when membership alone answers the question.
 

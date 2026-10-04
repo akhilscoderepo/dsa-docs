@@ -1,4 +1,4 @@
-# Lesson spec: Set Sequences
+# Lesson spec: Extend Runs With A Set
 
 **Recognition cue.** A numeric sequence can be extended by local predecessor/successor membership tests. **State.** The set describes the complete input; iteration begins only from a sequence start. **False friend.** Sorting can also expose runs, but it mutates or costs `O(n log n)` when a set gives expected `O(n)` time.
 

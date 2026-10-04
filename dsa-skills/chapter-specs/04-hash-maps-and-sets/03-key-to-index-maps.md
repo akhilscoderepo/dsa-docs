@@ -1,4 +1,4 @@
-# Lesson spec: Key-to-Index Maps
+# Lesson spec: Remember Where A Value Appeared
 
 **Recognition cue.** A current value needs one earlier location or complement immediately. **State.** The map records the index meaning stated by the contract: usually the earliest usable index, or the most recent one. **False friend.** Sorting changes original-index requirements and is not a substitute for remembered lookup.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Key Equality
+# Lesson spec: Use Records As Keys
 
 **Recognition cue.** The key is a compound value such as a coordinate, pair, or application object. **State.** Equal logical keys must have equal hashes, and their equality fields must not mutate while stored. **Java hazard.** Use an immutable record or a correctly implemented `equals`/`hashCode`; reference equality is not logical equality.
 

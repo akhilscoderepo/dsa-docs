@@ -1,4 +1,4 @@
-# Lesson spec: Direct Addressing
+# Lesson spec: Choose An Array Or A Map
 
 **Recognition cue.** A compact, known domain makes an array a more direct representation than a map. **State.** `count[value - min]` maps the declared range to slots; a `HashMap` remains the general representation for sparse or open-ended keys. **False friend.** Do not claim `int[26]` works for arbitrary Unicode text.
 
