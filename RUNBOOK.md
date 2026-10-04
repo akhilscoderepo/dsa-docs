@@ -1,6 +1,6 @@
 # Runbook for scheduled generation sessions
 
-Goal: build chapters 05 to 41 of the Java DSA curriculum, one chapter at a time, with every gate passing, pushing each chapter to this repo the moment it is done. Chapters 00 to 04 are finished and are the quality exemplars (read ONE lesson from `dsa-skills/manuscripts/03-strings/` and its solutions file as the style model; do not read whole chapters).
+Goal: build chapters 05 to 41 of the Java DSA curriculum, one chapter at a time, with every gate passing, pushing each chapter to this repo the moment it is done. Chapters 00 to 04 are finished. Chapter 00 is the style exemplar for the writing rules (read ONE lesson from `dsa-skills/manuscripts/00-*/` and its solutions file as the style model; do not read whole chapters).
 
 Pipeline law: `skill/dsa-chapter-pipeline/SKILL.md`. Status vocabulary is exactly "content complete, human review pending". Never write `review-log.md`. Never claim verification that was not run (JDK 25, Windows, phones, printing, teaching quality are unverified).
 
@@ -67,7 +67,7 @@ Bullets are reserved for multi-item parameter lists, technical entity definition
 - **Solution Approach:** a prose paragraph (or a few) that explains the algorithm, its invariant and why each step exists. Complexity stays a Time bullet and a Space bullet, each with its reason.
 
 ## Session start
-1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 6 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
+1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 3 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
 2. Tooling: `cd dsa-skills && [ -d node_modules ] || npm ci`. JDK 21 and Python 3 must exist (`java -version`). Chromium is at `/opt/pw-browsers` (do not run playwright install).
 3. Spec slices: `python3 dsa-skills/experience-first-dsa-teaching/scripts/split_spec.py inputs/chapter-specs/NN-slug.md dsa-skills/chapter-specs/NN-slug` and `cp inputs/chapter-specs/NN-slug.md dsa-skills/chapter-specs/`. Read `chapter-map.md` and ONE lesson slice at a time. If the spec lists a released combination (Teach now row), write a combination lesson for it.
 
@@ -79,7 +79,7 @@ Bullets are reserved for multi-item parameter lists, technical entity definition
 5. After EVERY lesson (not only at chapter end), commit and push the work in progress (`git pull --rebase origin main` first; on a PROGRESS.md conflict keep both sides' lines). A session can be cut off by its token budget at any moment, and unpushed work is lost. When you start a claimed or stale chapter that already has lesson files in `dsa-skills/manuscripts/NN-*`, continue from the first missing lesson instead of rewriting.
 6. When the chapter is complete, commit and push the chapter (manuscripts, `output/NN-*.html`, ids.lock), update PROGRESS.md to `done`, and print the output path. Then start the next chapter.
 
-Overlap note: scheduled runs can overlap. Claims in PROGRESS.md keep two sessions on different chapters; never work on a chapter claimed within the last 6 hours by another session.
+Overlap note: scheduled runs can overlap. Claims in PROGRESS.md keep two sessions on different chapters; never work on a chapter claimed within the last 3 hours by another session.
 
 ## Format rules learned the hard way (these cause most rework)
 - Every `##` and `###` heading: at most 7 words, no colon, no period. The `## Title` must equal the spec lesson heading.
