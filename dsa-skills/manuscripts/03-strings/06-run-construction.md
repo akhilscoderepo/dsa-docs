@@ -178,7 +178,7 @@ Code that writes the result into the same `char[]` it reads must never let the w
 
 **Prerequisites.** The two exercises above and the final run from this lesson.
 
-**Problem.** Let `s` be a string. Return an `int[]` that holds the lengths of the maximal runs of `s`, in order from left to right.
+**Problem.** Given a string `s`, return an `int[]` that holds the lengths of the maximal runs of `s`, in order from left to right.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= s.length() <= 10^5`.

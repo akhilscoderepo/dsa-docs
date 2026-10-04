@@ -185,7 +185,7 @@ The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`, be
 
 **Prerequisites.** The two exercises above and the two kinds of middle from this lesson.
 
-**Problem.** Let `s` be a string. Return the number of palindromic substrings of `s` whose length is even.
+**Problem.** Given a string `s`, count the palindromic substrings of `s` that have even length.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= s.length() <= 1000`.

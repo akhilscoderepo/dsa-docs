@@ -3,7 +3,7 @@
 ## Parse One Character At A Time
 
 <!-- stage: context -->
-### A Variable Name That Breaks The Build
+### A Variable Name That Fails To Compile
 
 A configuration tool lets users name their own variables. It copies each name into generated source code. A user names a variable `9lives`. The tool accepts the name, writes the code, and the compiler rejects the whole file with an error that points at generated lines the user never saw.
 
