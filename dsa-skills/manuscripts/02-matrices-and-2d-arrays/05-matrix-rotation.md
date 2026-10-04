@@ -57,7 +57,7 @@ To **reverse** a row means to swap its first cell with its last, its second with
 
 #### Why The Center Needs No Special Move
 
-When `n` is odd, the cell `(r, c)` with `r = c = (n - 1) / 2` maps to itself under the quarter turn, because `n - 1 - r` equals `r`. The transpose leaves it alone, and the reversal loop stops before the middle cell, so it stays in place. The invariant is that the transpose swaps each pair once and the reversal swaps each row pair once. A fixed cell is not swapped by either step, so the final matrix equals the quarter turn.
+When `n` is odd, the cell `(r, c)` with `r = c = (n - 1) / 2` maps to itself under the quarter turn. The reason is that `n - 1 - r` equals `r`. The transpose leaves it alone, and the reversal loop stops before the middle cell, so it stays in place. The invariant is that the transpose swaps each pair once and the reversal swaps each row pair once. A fixed cell is not swapped by either step, so the final matrix equals the quarter turn.
 
 <!-- stage: variables -->
 ### The Indexes And The Spare Value
@@ -115,7 +115,7 @@ static void rotateClockwise(int[][] m) {
 }
 ```
 
-#### Cost Of The Method
+#### Cost Of The Rotation
 
 The first pass swaps about `n * (n - 1) / 2` pairs, and the second pass swaps about `n / 2` pairs in each of `n` rows. Both passes are O(n^2) time. The method stores only the indexes and one spare value, so it uses O(1) extra space. It reads nothing outside the square, because both indexes stay below `n`.
 
@@ -128,7 +128,7 @@ The method needs a square matrix, and the statement must allow changing the inpu
 
 #### When A Rectangle Breaks The Swaps
 
-A rectangle is a false friend of the square, because the same swap code looks valid for it. A rectangle with `R` rows and `C` columns turns into a matrix with `C` rows and `R` columns. When `R` differs from `C`, the result does not fit in the same array object. The two-swap method fails for a rectangle, and the method that works copies into a new array with `C` rows and `R` columns, in the way of the naive version with the new sizes. The statement decides which one applies, so read the shape promise first.
+A rectangle is a false friend of the square, because the same swap code looks valid for it. A rectangle with `R` rows and `C` columns turns into a matrix with `C` rows and `R` columns. When `R` differs from `C`, the result does not fit in the same array object. The two-swap method fails for a rectangle. The method that works copies into a new array with `C` rows and `R` columns. It is the naive version with the new sizes. The statement decides which one applies, so read the shape promise first.
 
 #### Other Turns From The Same Two Moves
 

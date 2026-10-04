@@ -130,14 +130,14 @@ static List<Integer> spiralOrder(int[][] m) {
 }
 ```
 
-#### Cost Of The Method
+#### Cost Of The Spiral Walk
 
 Each cell is emitted exactly once, so the time is O(rows * cols). The method stores four integers besides the output list, so the extra space is O(1). The output list holds `rows * cols` values, and the problem requires it.
 
 <!-- stage: applicability -->
 ### When The Edges Replace The Visited Table
 
-#### Recognizing The Pattern
+#### When Four Edges Fit
 
 Use this pattern when the output consumes a whole rectangle from the outside in, or fills one from the outside in. The invariant is that the four indexes always enclose the cells not yet handled. Statements such as "in spiral order" or "layer by layer" match it directly.
 
@@ -182,7 +182,7 @@ The same four indexes can write a matrix as easily as they can read one. A pass 
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** Given an `rows x cols` matrix `m`, return all of its values in spiral order. Spiral order starts at `m[0][0]`, moves right along the first row, then down the last column, then left along the last row, then up the first column, and then repeats on the cells that remain.
+**Problem.** Given a matrix `m` with `rows` rows and `cols` columns, return all of its values in spiral order. Spiral order starts at `m[0][0]`, moves right along the first row, then down the last column, then left along the last row, then up the first column, and then repeats on the cells that remain. The walk emits each cell once.
 
 **Constraints.** The limits are:
 - **Shape** is rectangular with `1 <= rows, cols <= 10`.

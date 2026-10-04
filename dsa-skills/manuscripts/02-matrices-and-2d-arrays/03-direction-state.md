@@ -40,7 +40,7 @@ For `n = 3` this writes 1 through 9 correctly. The code assumes that the unfille
 ```predict
 The routine costs O(n^2) on a square sheet. Why does it still break on a 3 by 4 sheet, and what would a counterclockwise version have to change?
 
-On a 3 by 4 sheet, the loops for the bottom row and the left column run after the top and right sides have already consumed the last remaining row or column. They write cells a second time. A counterclockwise version needs all four loops rewritten in a new order with new bounds.
+On a 3 by 4 sheet, the loops for the bottom row and the left column run after the top and right sides have consumed the last remaining row or column. Those loops write cells a second time. A counterclockwise version needs all four loops rewritten in a new order with new bounds.
 ```
 
 The running time is not the problem. Every cell is written once, so the cost is O(R * C) for a sheet with R rows and C columns. The problem is that the movement rule is spread over four loop bodies and four bound updates. Each loop assumes what the earlier loops left behind. A new shape, a new starting corner or a reversed order changes every one of those assumptions. The movement itself follows a simple rule: keep going the same way until the next cell is unusable, then change the way.
@@ -129,11 +129,11 @@ The loop runs `rows * cols` times and does constant work per step, so it costs O
 <!-- stage: applicability -->
 ### When One Cursor Is The Right Model
 
-#### Recognizing The Pattern
+#### When A Single Cursor Fits
 
 The pattern fits when one cursor moves by a small cyclic rule and changes course only when the next step is illegal. The invariant is that `(r, c, d)` and the filled cells fully determine the next step. A statement that says "wind", "spiral", "snake" or "bounce" often describes this pattern.
 
-#### When A Frontier Search Replaces The Cursor
+#### When A Search Replaces The Cursor
 
 A search over a grid also visits cells in some order. A breadth-first search, for example, keeps a frontier, which is the set of cells waiting to be visited. It is a false friend of the direction model, and it differs in an important way. A search keeps many candidate cells waiting at once and picks among them. The direction model follows exactly one cursor, and the next cell is forced. If a problem lets the walker choose among several moves, a single direction value cannot describe the state, and the problem needs a search.
 
@@ -191,7 +191,7 @@ A `1 x 1` sheet writes once, and the first computed next cell is outside the she
 
 **Prerequisites.** The spiral fill exercise above.
 
-**Problem.** Fill an `R x C` grid with the integers 1 through `R * C` in clockwise spiral order, as in the previous exercise but for any rectangle. A turn is counted each time the facing direction changes before a write, and the walker stops right after the last write without testing the next cell. Return the number of turns.
+**Problem.** Fill an `R x C` grid with the integers 1 through `R * C` in clockwise spiral order, as in the previous exercise but for any rectangle. A turn is counted each time the facing direction changes while the walker chooses its next cell. The walker stops right after the last write without choosing another cell, so a 1 by 1 grid has 0 turns. Return the number of turns.
 
 **Constraints.** The limits are:
 - **Size** satisfies `1 <= R, C <= 100`.
@@ -210,7 +210,7 @@ A `1 x 1` sheet writes once, and the first computed next cell is outside the she
 #### [Recognize] Spiral Matrix III (LeetCode 885)
 <!-- id: mx-spiral-outward -->
 
-**Prerequisites.** All three exercises above.
+**Prerequisites.** All three exercises above. The direction table and the turn rule apply, but no filled-cell test does, because the path starts outside the grid.
 
 **Problem.** An `R x C` grid has a walker at `(rStart, cStart)` facing right. The walker follows an outward clockwise spiral on the infinite plane: it walks 1 cell right, 1 down, 2 left, 2 up, 3 right, 3 down, and so on, with each length used twice. The walker may leave the grid and return. Return the coordinates of the grid cells in the order the walker first stands on them, until all `R * C` cells are listed.
 
@@ -224,6 +224,6 @@ A `1 x 1` sheet writes once, and the first computed next cell is outside the she
 
 **Example 2.** Input `R = 2, C = 2, rStart = 1, cStart = 0`, output `[[1,0],[1,1],[0,0],[0,1]]`.
 
-**Hint.** The path is fixed in advance by the segment lengths 1, 1, 2, 2, 3, 3. Which values change after every second segment?
+**Hint.** The path is fixed in advance by the segment lengths 1, 1, 2, 2, 3, 3. The length grows after every second turn, and a cell is recorded only when it lies inside the grid. Which values change after each segment?
 
 **Changed decision.** The cursor is allowed outside the grid, so only legality of the recorded cell, and not legality of the move, is tested.

@@ -78,7 +78,7 @@ The loops use four pieces of state, and each has a fixed meaning.
 
 #### A Grid That Passes
 
-Take the 3 by 3 grid with rows `[3, 5, 1]`, `[2, 3, 5]` and `[9, 2, 3]`. The cells are numbered row by row from left to right, starting at 0, so cell 4 is row 1, column 1. In the trace below, `cell` marks the cell under test and `pred` marks its predecessor. The first row and the first column have no predecessor, so they are skipped. The cell at row 1, column 1 holds 3 and its predecessor holds 3. Every later comparison also matches, so the grid passes.
+Take the 3 by 3 grid with rows `[3, 5, 1]`, `[2, 3, 5]` and `[9, 2, 3]`. The cells are numbered row by row from left to right, starting at 0, which is called row-major order, so cell 4 is row 1, column 1. In the trace below, `cell` marks the cell under test and `pred` marks its predecessor. The first row and the first column have no predecessor, so they are skipped. The cell at row 1, column 1 holds 3 and its predecessor holds 3. Every later comparison also matches, so the grid passes.
 
 #### A Grid That Fails
 
@@ -167,7 +167,7 @@ The predecessor test depends on equality being transitive along a diagonal. It d
 
 **Prerequisites.** The column sums exercise and the diagonal rules from this lesson.
 
-**Problem.** Given a rectangular integer matrix `grid` with `R` rows and `C` columns, let `k = min(R, C)`. The first line holds the cells `(i, i)` for `0 <= i < k`. The second line holds the cells `(i, C - 1 - i)` for `0 <= i < k`. Return the sum of all cells on either line, and count a cell that lies on both lines once.
+**Problem.** This is the rectangular form of the square-only exercise in the previous lesson. Given a rectangular integer matrix `grid` with `R` rows and `C` columns, let `k = min(R, C)`. The first line holds the cells `(i, i)` for `0 <= i < k`. The second line holds the cells `(i, C - 1 - i)` for `0 <= i < k`. Return the sum of all cells on either line, and count a cell that lies on both lines once.
 
 **Constraints.** The limits are:
 - **Shape** is rectangular, and `R` and `C` need not be equal.

@@ -5,7 +5,7 @@ A game board is stored as an `int[][]`. A function that counts the mines next to
 
 ### Prerequisites
 
-You should know Java arrays, nested `for` loops and the cost vocabulary of Chapter 00. The array patterns of Chapter 01 help, especially the read index and the write index. Lesson 06 also uses the bit operations `&` and `>>` once, and it explains each where it appears. The chapter needs no other data structure.
+You should know Java arrays, nested `for` loops and the cost vocabulary of Chapter 00. The array patterns of Chapter 01 help, especially the read index and the write index. Lesson 06 also uses the bit operations `|`, `&` and `>>`, and it explains each where it appears. The chapter needs no other data structure.
 
 ### What The Seven Lessons Cover
 
@@ -21,7 +21,7 @@ Each lesson adds one habit for working with a grid, together with the invariant 
 
 ### How To Work Through Each Lesson
 
-Every part of a lesson carries a label, so you always see where you are. A lesson opens with a failing case, and then a prediction prompt asks you to name the cause before the answer appears. A trace lets you step through the loop and watch the indexes change. Each lesson closes with four exercises, each with a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, in rising order of change. An exercise marked Author exercise was written for this course. An exercise with a LeetCode number follows that problem. Write your own attempt before you open either hint or solution.
+Every part of a lesson carries a label, so you always see where you are. A lesson opens with a failing case, and then a prediction prompt asks you to name the cause before the answer appears. A trace lets you step through the loop and watch the indexes change. Each lesson closes with four exercises, each with a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, in rising order of change. An exercise marked Author exercise was written for this course. An exercise with a LeetCode number follows that problem, and its statement lists any change. Write your own attempt before you open either hint or solution.
 
 ### What You Can Do After This Chapter
 

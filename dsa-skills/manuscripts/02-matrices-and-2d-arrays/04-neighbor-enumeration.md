@@ -47,7 +47,7 @@ The cost per call is constant, so the cost for a whole board is O(R * C). The co
 
 Every touching cell differs from the cell `(r, c)` by a fixed pair of changes, one for the row and one for the column. Such a pair is an **offset**. The cell reached by the offset `(dr, dc)` is `(r + dr, c + dc)`.
 
-#### The Direction Table
+#### The Table Of Offsets
 
 A **direction table** lists the offsets of a rule. The four-cell rule uses `(-1, 0)`, `(1, 0)`, `(0, -1)` and `(0, 1)`. The eight-cell rule adds the four diagonal offsets `(-1, -1)`, `(-1, 1)`, `(1, -1)` and `(1, 1)`. The offset `(0, 0)` is never in the table, because it names the cell itself.
 
@@ -119,7 +119,7 @@ Both tables are created once, as `static final` fields. A table written as `new 
 <!-- stage: applicability -->
 ### Where A Fixed Neighborhood Fits
 
-#### Recognizing The Pattern
+#### When Offsets Fit
 
 The pattern fits when a cell's result depends only on cells at fixed offsets from it. Counting mines and applying a rule to adjacent cells are examples. The invariant is that every offset is tried once, and only cells inside the grid are read. The table is also the place to encode a rule such as "knight moves" or "left and right only".
 

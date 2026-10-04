@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Cleanup Job That Wipes Too Much
 
-A data table is stored as an `int[][]`, and a cleanup job must set a whole row and a whole column to `0` whenever one cell holds `0`. A developer writes the obvious loop. The loop scans the cells, and when it finds a `0` at `(r, c)`, it writes zeros across row `r` and column `c` at once. On `{{0, 2, 3}, {4, 5, 6}, {7, 8, 9}}` the scan reaches column 1 of row 0, finds a zero that the job itself just wrote, and clears column 1 as well. The result turns the whole table to zeros, although the input had a single zero.
+A data table is stored as an `int[][]`, and a cleanup job must set a whole row and a whole column to `0` whenever one cell holds `0`. A developer writes the obvious loop. The loop scans the cells, and when it finds a `0` at `(r, c)`, it writes zeros across row `r` and column `c` at once. On `{{0, 2, 3}, {4, 5, 6}, {7, 8, 9}}` the scan reaches column 1 of row 0. It finds a zero that the job itself just wrote, and it clears column 1 as well. The result turns the whole table to zeros, although the input had a single zero.
 
 The bug comes from reading cells that the loop already changed. This lesson asks how a loop can remember what it must clear without destroying the evidence it still needs.
 
@@ -56,13 +56,13 @@ A **marker** is one stored fact about a row or a column, here "this line must be
 
 #### Markers Kept In The Matrix Itself
 
-Two arrays, `boolean[rows]` and `boolean[cols]`, hold the markers in O(rows + cols) space. The matrix can also carry them. The cell `(0, c)` marks column `c`, and the cell `(r, 0)` marks row `r`. A marker in the **first row** or the first column overwrites a value that the matrix may still need, so the method saves two booleans first. The boolean `firstRow` records whether row 0 held a zero in the input, and `firstCol` records the same for column 0.
+Two arrays, `boolean[rows]` and `boolean[cols]`, hold the markers in O(rows + cols) space. The matrix can also carry them. The cell `(0, c)` marks column `c`, and the cell `(r, 0)` marks row `r`. A marker in the first row or the first column overwrites a value that the matrix may still need, so the method saves two booleans first. The boolean **firstRow** records whether row 0 held a zero in the input, and `firstCol` records the same for column 0.
 
-The method then runs in four steps, and each step follows from the last. It saves `firstRow` and `firstCol`. Next, it scans the cells with `r >= 1` and `c >= 1`, and each zero writes zero into `m[r][0]` and `m[0][c]`. Then it clears each of those inner cells whose first-column cell or first-row cell is zero. Last, it clears row 0 when `firstRow` is true and column 0 when `firstCol` is true. The first row and first column come last, because their cells held the markers until then. This brings the extra space to O(1).
+The method then runs in four steps, and each step follows from the last. It saves `firstRow` and `firstCol`. Next, it scans the cells with `r >= 1` and `c >= 1`, and each zero writes zero into `m[r][0]` and `m[0][c]`. Then it clears each of those inner cells whose first-column cell or first-row cell is zero. Last, it clears row 0 when `firstRow` is true and column 0 when `firstCol` is true. The first row and first column come last, because their cells held the markers until then. This brings the extra space to O(1). The Boundary exercise below asks you to write this method from these steps.
 
 Take `{{3, 4}, {0, 5}}`. The zero at `(1, 0)` lies in column 0, so `firstCol` is true and `firstRow` is false. The inner scan covers only `(1, 1)`, which holds 5, so it writes no marker. The inner clear sees `m[1][0] == 0` and sets `m[1][1]` to 0. The last step clears column 0, and the matrix becomes `{{0, 4}, {0, 0}}`.
 
-<!-- names: marker, observation pass, update pass, first row -->
+<!-- names: marker, observation pass, update pass, firstRow -->
 
 <!-- stage: variables -->
 ### The Marker Arrays And Their Writers
@@ -121,14 +121,14 @@ static void setZeroes(int[][] m) {
 }
 ```
 
-#### Cost Of The Method
+#### Cost Of The Marker Arrays
 
 Each pass visits every cell once, so the time is O(rows * cols). The two marker arrays hold `rows + cols` booleans, so the extra space is O(rows + cols). Storing the markers in the first row and first column lowers the extra space to O(1) and keeps the time.
 
 <!-- stage: applicability -->
 ### When To Record Before Writing
 
-#### Recognizing The Pattern
+#### When Recording First Fits
 
 Use the pattern when a write to one cell changes what a later read of another cell would see, and the later read must see the input. The invariant is that every read in the observation pass sees the original value. Statements such as "set the row and column to zero" or "update all cells at the same time" signal it.
 
@@ -138,7 +138,7 @@ Clearing a line as soon as the scan finds a zero is a false friend of the marker
 
 #### The Same Idea With Two Bits Per Cell
 
-Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 has the value 1, and bit 1 has the value 2. Bit 0 of each cell holds the old state, and bit 1 holds the new state, which `cell |= 2` sets. The expression `cell & 1` keeps only bit 0 and ignores bit 1, so neighbor reads still see the old generation. A final `cell >> 1` shifts bit 1 into place and drops bit 0. The exercise below uses this idea.
+Conway's Game of Life updates every cell from the old values of its eight neighbors. A second matrix would work, but the same job fits in one matrix. Bit 0 has the value 1, and bit 1 has the value 2. Bit 0 of each cell holds the old state, and bit 1 holds the new state, which `cell |= 2` sets. The first pass sets bit 1 only when the next state is live, and the second pass moves it into place. The expression `cell & 1` keeps only bit 0 and ignores bit 1, so neighbor reads still see the old generation. A final `cell >> 1` shifts bit 1 into place and drops bit 0. The exercise below uses this idea.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -169,7 +169,7 @@ Conway's Game of Life updates every cell from the old values of its eight neighb
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** Given an `rows x cols` integer matrix `m`, set every cell of row `r` and every cell of column `c` to `0` for each cell `m[r][c] == 0` in the input. A zero written by the method must not cause any further clearing. Change `m` in place.
+**Problem.** Given an integer matrix `m` with `rows` rows and `cols` columns, set every cell of row `r` and every cell of column `c` to `0` for each cell `m[r][c] == 0` in the input. A zero written by the method must not cause any further clearing. Change `m` in place.
 
 **Constraints.** The limits are:
 - **Shape** is rectangular with `1 <= rows, cols <= 200`.
