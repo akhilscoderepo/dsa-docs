@@ -96,7 +96,7 @@ public final class PreorderMarkersRun {
 #### Solution: [Vary] Recursive Decoder (Author exercise)
 <!-- id: tb-recursive-decoder -->
 
-**Approach.** Read one token. A marker returns null, and a number creates a node whose left child is read by one recursive call and whose right child by the next, with a single shared cursor advanced once per token, so the right call begins exactly where the left call stopped. The oracle is an explicit-stack decoder that keeps a list of open slots and fills the most recent one with each token. The assertions compare level-order arrays on random trees, check that re-encoding gives the original text back, and show with a short list demonstration that `ArrayList.remove(0)` shifts the remaining items, which is why a moving index is used.
+**Approach.** Read one token. A marker returns null, and a number creates a node whose left child is read by one recursive call and whose right child by the next, with a single shared cursor advanced once per token, so the right call begins exactly where the left call stopped. The oracle is an explicit-stack decoder that keeps a list of open slots and fills the most recent one with each token. Level-order arrays from random trees are compared by the assertions, check that re-encoding gives the original text back, and show with a short list demonstration that `ArrayList.remove(0)` shifts the remaining items, which is why a moving index is used.
 
 **Complexity.** O(n) time and O(h) recursion depth.
 
