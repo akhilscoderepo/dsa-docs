@@ -1,0 +1,42 @@
+{
+ "lessons": [
+  "direction-state",
+  "marker-state",
+  "matrix-rotation",
+  "neighbor-enumeration",
+  "shape-contracts",
+  "spiral-boundaries",
+  "structured-traversal"
+ ],
+ "exercises": [
+  "mx-border-sum",
+  "mx-clockwise-walker",
+  "mx-column-sums",
+  "mx-corner-cell",
+  "mx-diagonal-sum",
+  "mx-eight-neighbors",
+  "mx-empty-rows",
+  "mx-game-of-life",
+  "mx-life-next",
+  "mx-mark-bad-rows",
+  "mx-odd-center",
+  "mx-one-ring",
+  "mx-orthogonal-count",
+  "mx-ragged-sum",
+  "mx-rect-diagonals",
+  "mx-rect-sum",
+  "mx-rotate-counter",
+  "mx-rotate-image",
+  "mx-set-zeroes",
+  "mx-set-zeroes-constant",
+  "mx-single-cell",
+  "mx-spiral-fill",
+  "mx-spiral-generate",
+  "mx-spiral-matrix",
+  "mx-spiral-outward",
+  "mx-thin-remainder",
+  "mx-toeplitz",
+  "mx-transpose-square"
+ ],
+ "retired": []
+}

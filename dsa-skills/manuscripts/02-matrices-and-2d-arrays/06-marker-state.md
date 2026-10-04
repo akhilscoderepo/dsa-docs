@@ -215,7 +215,7 @@ Conway's Game of Life updates every cell from the old values of its eight neighb
 - **Mutation** is required; the method returns nothing.
 - **Space** is O(1) extra space.
 
-**Example 1.** Input `m = [[0,1,0],[0,1,0],[0,1,0]]`, output `[[0,0,0],[1,1,1],[0,0,0]]` after the call.
+**Example 1.** Input `m = [[0,0,0,0],[0,1,1,1],[1,1,1,0],[0,0,0,0]]`, output `[[0,0,1,0],[1,0,0,1],[1,0,0,1],[0,1,0,0]]` after the call.
 
 **Example 2.** Input `m = [[0,1,1],[1,0,0],[0,0,0]]`, output `[[0,1,0],[0,1,0],[0,0,0]]` after the call.
 

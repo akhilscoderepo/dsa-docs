@@ -81,7 +81,7 @@ Now take `grid = {{1, 2}, {}, {3}}`. Row 1 holds no cells, so the inner loop run
 #### Stepping Through Both Tables
 
 ```trace
-{"cells":["[1,2]","[3,4]"],"pointers":["r"],"steps":[{"at":{"r":-1},"vars":{"total":0},"note":"Start: no row has been read, so total is 0."},{"at":{"r":0},"vars":{"rowLength":2,"total":3},"note":"Row 0 holds 2 cell(s) and adds 3. The total is 3."},{"at":{"r":1},"vars":{"rowLength":2,"total":10},"note":"Row 1 holds 2 cell(s) and adds 7. The total is 10."},{"at":{"r":2},"vars":{"total":10},"note":"The row index equals grid.length, so the loop ends with total 10."}]}
+{"cells":["[1,2]","[3,4]"],"pointers":["r"],"steps":[{"at":{"r":-1},"vars":{"total":0},"note":"Start: no row has been read, so total is 0."},{"at":{"r":0},"vars":{"rowLength":2,"total":3},"note":"Row 0 holds 2 cell(s) and adds 3. The total is 3."},{"at":{"r":1},"vars":{"rowLength":2,"total":10},"note":"Row 1 holds 2 cell(s) and adds 7. The total is 10."}]}
 ```
 
 ```trace

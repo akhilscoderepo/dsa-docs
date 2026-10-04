@@ -321,9 +321,9 @@ public final class GameOfLife {
 
     public static void main(String[] args) {
         // Statement examples.
-        int[][] a = {{0, 1, 0}, {0, 1, 0}, {0, 1, 0}};
+        int[][] a = {{0, 0, 0, 0}, {0, 1, 1, 1}, {1, 1, 1, 0}, {0, 0, 0, 0}};
         step(a);
-        if (!Arrays.deepEquals(a, new int[][] {{0, 0, 0}, {1, 1, 1}, {0, 0, 0}})) throw new AssertionError("example 1");
+        if (!Arrays.deepEquals(a, new int[][] {{0, 0, 1, 0}, {1, 0, 0, 1}, {1, 0, 0, 1}, {0, 1, 0, 0}})) throw new AssertionError("example 1");
         int[][] b = {{0, 1, 1}, {1, 0, 0}, {0, 0, 0}};
         step(b);
         if (!Arrays.deepEquals(b, new int[][] {{0, 1, 0}, {0, 1, 0}, {0, 0, 0}})) throw new AssertionError("example 2");
