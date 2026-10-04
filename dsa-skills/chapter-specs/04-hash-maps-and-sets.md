@@ -69,7 +69,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 Each structure earns its place by storing exactly the information the next decision needs. The point is not to reach automatically for a `HashMap`; it is to say what a key means, what its value means, and why order is irrelevant.
 
-### Membership Sets
+### Check Membership With A Set
 
 **Recognition cue.** The question asks whether something has appeared, exists, or is forbidden; its count and order do not matter. **State.** `seen` contains exactly the relevant values processed so far. **False friend.** A map is needless when membership alone answers the question.
 
@@ -78,7 +78,7 @@ Each structure earns its place by storing exactly the information the next decis
 - **Boundary - LC 202 Happy Number.** Detect the repeated numeric state rather than allowing an infinite loop. `19 -> true`; `2 -> false`.
 - **Recognize - LC 128 Longest Consecutive Sequence.** Start only at values whose predecessor is absent; this prevents repeatedly expanding the same run.
 
-### Frequency Maps
+### Count Values With A Map
 
 **Recognition cue.** The decision depends on multiplicity, not just existence. **State.** `count.get(key)` means the exact processed frequency, including the convention for absent keys. **False friend.** A set silently loses the count needed for an anagram or top-frequency decision.
 
@@ -87,7 +87,7 @@ Each structure earns its place by storing exactly the information the next decis
 - **Boundary - Author exercise: Remove Zero Counts.** Process additions and removals; delete a key precisely when its count returns to zero. This prevents an empty count from being mistaken for membership.
 - **Recognize - LC 1207 Unique Number of Occurrences.** Count each value with a map, then use a set to verify that no two values have the same frequency.
 
-### Key-to-Index Maps
+### Remember Where A Value Appeared
 
 **Recognition cue.** A current value needs one earlier location or complement immediately. **State.** The map records the index meaning stated by the contract: usually the earliest usable index, or the most recent one. **False friend.** Sorting changes original-index requirements and is not a substitute for remembered lookup.
 
@@ -96,7 +96,7 @@ Each structure earns its place by storing exactly the information the next decis
 - **Boundary - Author exercise: First Index Wins.** Given repeated values, preserve the first index when the output requires the widest valid pair; name why overwriting would change the answer.
 - **Recognize - Author exercise: Widest Equal-Value Pair.** Store the first index of each value and return the largest distance between two equal values.
 
-### Grouping Maps
+### Group Values In A Map
 
 **Recognition cue.** Several inputs belong to the same output bucket under a stated equivalence relation. **State.** `groups.get(key)` owns the full list for one equivalence class. **False friend.** A frequency map tells how many; it does not preserve the members required by grouped output.
 
@@ -105,7 +105,7 @@ Each structure earns its place by storing exactly the information the next decis
 - **Boundary - Author exercise: Empty Buckets.** Do not return keys that received no values; map creation must be demand-driven.
 - **Recognize - LC 49 Group Anagrams.** Use a fixed-alphabet count signature as the grouping key; the map owns the buckets for equal signatures.
 
-### Set Sequences
+### Extend Runs With A Set
 
 **Recognition cue.** A numeric sequence can be extended by local predecessor/successor membership tests. **State.** The set describes the complete input; iteration begins only from a sequence start. **False friend.** Sorting can also expose runs, but it mutates or costs `O(n log n)` when a set gives expected `O(n)` time.
 
@@ -114,7 +114,7 @@ Each structure earns its place by storing exactly the information the next decis
 - **Boundary - Author exercise: Duplicate Starts.** Insert duplicates into the set first, then prove they cannot create duplicate runs.
 - **Recognize - LC 202 Happy Number.** Store previously seen states in a set and stop when the numeric sequence reaches `1` or repeats.
 
-### Key Equality
+### Use Records As Keys
 
 **Recognition cue.** The key is a compound value such as a coordinate, pair, or application object. **State.** Equal logical keys must have equal hashes, and their equality fields must not mutate while stored. **Java hazard.** Use an immutable record or a correctly implemented `equals`/`hashCode`; reference equality is not logical equality.
 
@@ -123,7 +123,7 @@ Each structure earns its place by storing exactly the information the next decis
 - **Boundary - Author exercise: Mutable-Key Failure.** Explain why mutating a field that participates in `hashCode` after insertion makes a stored entry effectively unreachable.
 - **Recognize - Author exercise: Count Directed Transitions.** Use an immutable `Pair(from, to)` record as a frequency-map key while keeping `(a, b)` distinct from `(b, a)`.
 
-### Direct Addressing
+### Choose An Array Or A Map
 
 **Recognition cue.** A compact, known domain makes an array a more direct representation than a map. **State.** `count[value - min]` maps the declared range to slots; a `HashMap` remains the general representation for sparse or open-ended keys. **False friend.** Do not claim `int[26]` works for arbitrary Unicode text.
 

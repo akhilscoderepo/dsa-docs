@@ -5,7 +5,7 @@
 <!-- id: hm-two-sum -->
 
 **Approach.**
-The loop computes the complement `target - nums[i]` and looks it up in a map from value to position before it stores `nums[i]`. A hit returns the stored position and `i`. The lookup comes first so that a value never pairs with its own position, and so that the array `[5, 5]` with target 10 finds two different 5s. The invariant is that before index `i` is processed, the map holds the values of `nums[0..i-1]`. The method therefore finds any pair that ends at `i` at that index. The harness asserts that the store-first variant breaks on `[5, 5]`, that `put` returns the previous value, and that the subtraction stays inside `int` for values within one billion.
+The loop computes the complement `target - nums[i]` and looks it up in a map from value to position before it stores `nums[i]`. A hit returns the stored position and `i`. The lookup comes first so that a value never pairs with its own position, and so that the array `[5, 5]` with target 10 finds two different 5s. The invariant states that before index `i` is processed, the map holds the values of `nums[0..i-1]`. The method therefore finds any pair that ends at `i` at that index. The harness asserts that the store-first variant breaks on `[5, 5]`, that `put` returns the previous value, and that the subtraction stays inside `int` for values within one billion.
 
 **Complexity.**
 - **Time** is O(n) on average, because the loop makes one lookup and one store of expected constant time per index.

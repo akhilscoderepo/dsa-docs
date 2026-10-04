@@ -125,12 +125,12 @@ The expression `max - min + 1` wraps around in `int` when the interval spans the
 <!-- stage: exercises -->
 ### Exercises
 
-#### [Build] Words Containing Each Letter (Author exercise)
+#### [Build] Lowercase Character Counts (Author exercise)
 <!-- id: hm-words-per-letter -->
 
 **Prerequisites.** The letter table and the offset `c - 'a'` from this lesson.
 
-**Problem.** Let `words` be an array of strings of lowercase English letters. Return an `int[26]` where entry `k` is the number of words that contain the letter `'a' + k` at least once. A word counts once for a letter, however often the letter occurs in it.
+**Problem.** Count the lowercase letters across a list of words, with each word counted once for a letter. Let `words` be an array of strings of lowercase English letters. Return an `int[26]` where entry `k` is the number of words that contain the letter `'a' + k` at least once. A word counts once for a letter, however often the letter occurs in it.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= words.length <= 10^4`, and each word has at most 100 letters.
@@ -146,12 +146,12 @@ The expression `max - min + 1` wraps around in `int` when the interval spans the
 
 **Changed decision.** Basic case: a table over a declared alphabet, with a per-word marker so that each letter counts once for each word.
 
-#### [Vary] Anagram Over ASCII (Author exercise)
+#### [Vary] Anagram Over ASCII (LeetCode 242)
 <!-- id: hm-anagram-ascii -->
 
 **Prerequisites.** Words Containing Each Letter above and the anagram exercise from the frequency map lesson.
 
-**Problem.** Let `s` and `t` be strings in which every character has a code below 128. Return true when `t` is a rearrangement of `s`.
+**Problem.** This variation of Valid Anagram states an alphabet bound. Let `s` and `t` be strings in which every character has a code below 128. Return true when `t` is a rearrangement of `s`.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= s.length(), t.length() <= 10^5`.

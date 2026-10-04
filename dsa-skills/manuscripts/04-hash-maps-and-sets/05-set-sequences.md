@@ -71,7 +71,7 @@ A question about the longest run can return the length, or the start of the long
 
 The loop keeps three pieces of state.
 
-- **all** is the set of distinct input numbers, and it stays fixed after the build.
+- **all** is the set of distinct input numbers, and it stays fixed once the loop starts.
 - **x** is the number the loop currently visits, and it starts a run only if `x - 1` is absent.
 - **len** is the length of the successor walk from `x`, and it resets to 1 for every run start.
 
@@ -144,12 +144,12 @@ The call `set.contains(x + 1L)` boxes a `Long`, and a `Set<Integer>` never holds
 <!-- stage: exercises -->
 ### Exercises
 
-#### [Build] Start Of The Longest Run (Author exercise)
+#### [Build] Start Of The Longest Run (LeetCode 128)
 <!-- id: hm-longest-run-start -->
 
 **Prerequisites.** The predecessor test and the successor walk from this lesson.
 
-**Problem.** Let `nums` be an integer array. A run is a maximal block of consecutive integers that all occur in `nums`. Return an `int[]` with two entries: the start of a longest run and its length. When several runs share the longest length, return the one with the smallest start. For the empty array, return `[0, 0]`.
+**Problem.** This variation of Longest Consecutive Sequence asks for the start of the run and not only its length. Let `nums` be an integer array. A run is a maximal block of consecutive integers that all occur in `nums`. Return an `int[]` with two entries: the start of a longest run and its length. When several runs share the longest length, return the one with the smallest start. For the empty array, return `[0, 0]`.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 10^5`.
@@ -165,12 +165,12 @@ The call `set.contains(x + 1L)` boxes a `Long`, and a `Set<Integer>` never holds
 
 **Changed decision.** Basic case: the answer reports the start of the run, and a tie compares starts.
 
-#### [Vary] Shared By Three Arrays (Author exercise)
+#### [Vary] Shared By Three Arrays (LeetCode 349)
 <!-- id: hm-shared-by-three -->
 
 **Prerequisites.** Start Of The Longest Run above and the intersection exercise from the first lesson.
 
-**Problem.** Let `a`, `b` and `c` be integer arrays. Return an `int[]` of the values that occur in all three arrays. Report each value once, in the order of its first occurrence in `a`.
+**Problem.** This variation of Intersection Of Two Arrays uses three arrays. Let `a`, `b` and `c` be integer arrays. Return an `int[]` of the values that occur in all three arrays. Report each value once, in the order of its first occurrence in `a`.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= a.length, b.length, c.length <= 10^4`.
@@ -207,12 +207,12 @@ The call `set.contains(x + 1L)` boxes a `Long`, and a `Set<Integer>` never holds
 
 **Changed decision.** The program counts run starts over the set of distinct values and never walks the successors.
 
-#### [Recognize] Generator Period (Author exercise)
+#### [Recognize] Generator Period (LeetCode 202)
 <!-- id: hm-generator-period -->
 
 **Prerequisites.** All three exercises above and the happy number exercise from the first lesson.
 
-**Problem.** A pseudo-random generator keeps a state `s` from 0 to 9999. Its next state is `(s * s / 100) % 10000`, using integer division. Starting from `seed`, return the number of distinct states the generator visits, counting the seed. The generator stops counting at the first state that repeats.
+**Problem.** This variation of Happy Number counts the states of a generator in place of testing for the value 1. A pseudo-random generator keeps a state `s` from 0 to 9999. Its next state is `(s * s / 100) % 10000`, using integer division. Starting from `seed`, return the number of distinct states the generator visits, counting the seed. The generator stops counting at the first state that repeats.
 
 **Constraints.** The limits are:
 - **Seed** satisfies `0 <= seed <= 9999`.

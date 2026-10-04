@@ -113,7 +113,7 @@ static boolean containsDuplicate(int[] nums) {
 
 #### What The Method Costs
 
-The loop runs n times and each `add` takes expected constant time. The average time is therefore linear in n. The set holds up to n values, so the space is O(n). The call `seen.add(nums[i])` both tests and stores, so the loop never searches the set twice for one value.
+The loop makes n calls, and each `add` takes expected constant time. The average time is therefore linear in n. The set holds up to n values, so the space is O(n). The call `seen.add(nums[i])` both tests and stores, so the loop never searches the set twice for one value.
 
 <!-- stage: applicability -->
 ### When A Set Answers The Question

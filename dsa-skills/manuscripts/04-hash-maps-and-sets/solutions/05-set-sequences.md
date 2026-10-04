@@ -1,7 +1,7 @@
 <!-- solutions-for: 04-hash-maps-and-sets -->
 ### Solutions For Runs In A Set
 
-#### Solution: [Build] Start Of The Longest Run (Author exercise)
+#### Solution: [Build] Start Of The Longest Run (LeetCode 128)
 <!-- id: hm-longest-run-start -->
 
 **Approach.**
@@ -75,7 +75,7 @@ public final class LongestRunStart {
 }
 ```
 
-#### Solution: [Vary] Shared By Three Arrays (Author exercise)
+#### Solution: [Vary] Shared By Three Arrays (LeetCode 349)
 <!-- id: hm-shared-by-three -->
 
 **Approach.**
@@ -201,7 +201,7 @@ public final class DuplicateStarts {
 }
 ```
 
-#### Solution: [Recognize] Generator Period (Author exercise)
+#### Solution: [Recognize] Generator Period (LeetCode 202)
 <!-- id: hm-generator-period -->
 
 **Approach.**

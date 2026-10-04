@@ -1,7 +1,7 @@
 <!-- solutions-for: 04-hash-maps-and-sets -->
 ### Solutions For Arrays Versus Maps
 
-#### Solution: [Build] Words Containing Each Letter (Author exercise)
+#### Solution: [Build] Lowercase Character Counts (Author exercise)
 <!-- id: hm-words-per-letter -->
 
 **Approach.**
@@ -80,7 +80,7 @@ public final class WordsPerLetter {
 }
 ```
 
-#### Solution: [Vary] Anagram Over ASCII (Author exercise)
+#### Solution: [Vary] Anagram Over ASCII (LeetCode 242)
 <!-- id: hm-anagram-ascii -->
 
 **Approach.**

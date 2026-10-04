@@ -28,7 +28,7 @@ Two lessons join this chapter with earlier ones. Each opens with the failure tha
 
 ### How To Work Through Each Lesson
 
-Every part of a lesson carries a label, so you always know where you are. A lesson opens with a failing case, and a prediction prompt asks you to guess the cause before the answer shows. A trace lets you step through the loop and watch each value change. A lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, and the change grows with each role. An exercise marked Author exercise was written for this course, and an exercise with a LeetCode number follows that problem with its own examples. Write your own attempt before you open a hint or a solution.
+Every part of a lesson carries a label, so you always know where you are. A lesson opens with a failing case, and a prediction prompt asks you to guess the cause before the answer shows. A trace lets you step through the loop and watch each value change. A lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, and the change grows with each role. An exercise marked Author exercise was written for this course, and an exercise with a LeetCode number follows that problem with its own examples, and its text states any rule that it changes. Write your own attempt before you open a hint or a solution.
 
 ### What You Can Do After This Chapter
 
