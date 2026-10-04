@@ -1,4 +1,4 @@
-# Lesson spec: Comparator Contracts
+# Lesson spec: Write A Valid Comparator
 
 **Recognition cue.** Objects or boxed values require an order different from their natural order. **Invariant.** The comparator is antisymmetric, transitive, and returns zero only when elements are interchangeable for the required ordering.
 

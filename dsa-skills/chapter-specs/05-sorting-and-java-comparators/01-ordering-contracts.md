@@ -1,4 +1,4 @@
-# Lesson spec: Ordering Contracts
+# Lesson spec: Compare Two Values Safely
 
 **Recognition cue.** A problem asks for a deterministic order before any scan can make a local decision. **Java hazard.** Use `Integer.compare(a, b)` or `Long.compare(a, b)`; subtraction can overflow. **False friend.** Sorting primitive values cannot preserve custom-object tie behavior by accident.
 

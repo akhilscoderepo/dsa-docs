@@ -1,4 +1,4 @@
-# Lesson spec: Stability And Ties
+# Lesson spec: Keep Equal Items In Order
 
 **Recognition cue.** Equal primary keys must retain or explicitly replace original order. **State.** The tie rule is part of correctness, not a cosmetic comparator detail. **Java hazard.** `Arrays.sort(Object[])` is stable; do not rely on primitive-array stability.
 

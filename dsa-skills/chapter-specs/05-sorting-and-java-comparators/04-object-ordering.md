@@ -1,4 +1,4 @@
-# Lesson spec: Object Ordering
+# Lesson spec: Sort Objects By Several Fields
 
 **Recognition cue.** The thing being ordered has several fields and a stated priority. **State.** The comparator encodes the contract, including tie ownership. **Java hazard.** `Comparator` applies to objects such as `int[][]`, not `int[]` elements directly.
 

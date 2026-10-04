@@ -1,4 +1,4 @@
-# Lesson spec: Sort Then Scan
+# Lesson spec: Scan The Sorted Array
 
 **Recognition cue.** Sorting exposes a simple adjacent relation but does not itself compute the answer. **State.** A scan retains the best local candidate under the new order. **False friend.** Binary search needs a monotone query contract, not merely sorted input.
 

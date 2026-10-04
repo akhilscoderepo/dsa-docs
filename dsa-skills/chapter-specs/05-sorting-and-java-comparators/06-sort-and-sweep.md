@@ -1,4 +1,4 @@
-# Lesson spec: Sort And Sweep
+# Lesson spec: Sweep A Sorted Array
 
 **Recognition cue.** After sorting, only neighboring or frontier items can affect the next decision. **State.** A sweep summary owns everything still relevant from earlier items. **False friend.** Intervals add endpoint semantics and receive their full chapter later.
 

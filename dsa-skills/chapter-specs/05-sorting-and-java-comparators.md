@@ -141,7 +141,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 
 ## Released Combination Lessons
 
-### Strings, Maps, And Sorting
+### Group Strings By Sorted Letters
 
 **What each part contributes.** String traversal supplies characters; sorting produces a canonical sequence; the map uses that sequence as a grouping key. **Recognition cue.** Different strings belong together when their character multisets agree. **False friend.** A frequency-array signature is valid only under a stated alphabet contract; it is a variation, not the reason sorted signatures work.
 

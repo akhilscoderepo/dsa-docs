@@ -1,4 +1,4 @@
-# Lesson spec: Arrays Sort
+# Lesson spec: Sort A Primitive Array
 
 **Recognition cue.** Primitive values need a complete natural ordering and mutation of the input is permitted. **Invariant.** After `Arrays.sort(nums)`, every adjacent pair is nondecreasing and equal values form contiguous runs. **False friend.** `Arrays.sort(int[])` cannot accept a custom comparator.
 
