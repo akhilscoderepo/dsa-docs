@@ -5,7 +5,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | Chapter | Status |
 |---|---|
 | 00-problem-contracts-complexity-and-sequence-language | done |
-| 01-arrays-core-operations | todo |
+| 01-arrays-core-operations | claimed 01 2026-10-04T15:45Z (interactive session) |
 | 02-matrices-and-2d-arrays | todo |
 | 03-strings | todo |
 | 04-hash-maps-and-sets | todo |
