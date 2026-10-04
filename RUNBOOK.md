@@ -19,6 +19,7 @@ The user finds long sentences that stack several abstract nouns hard to read ("p
 - Name the real thing: `left`, `map.get(key)`, "the window `[left, right]`", not "the process", "the situation", "the aspect".
 - Use standard industry terms. Say "adversarial test" or "edge case" (not "hostile test"), "precondition and postcondition" or "specification" (not a bare "contract" for a vague idea). Do not invent metaphors or catchphrases. Fixed course terms from the spec (lesson titles, ids) stay as they are.
 - This changes wording only. Keep all stages, all content depth and the format rules below.
+- No colloquial analogies or invented definitions anywhere. Explain with standard computer science definitions: array index relationships, time complexity classes, memory footprints, input preconditions and postconditions. Concrete scenarios are fine only when they are real software cases (a log parser, a cache, a request queue), never a metaphor (cloakroom, racks, storage unit) used to describe the algorithm. Frame every discussion in standard data structures, algorithmic paradigms, execution steps, input constraints and memory allocation rules. Headings state the exact concept, data-structure state, memory condition or analysis method under study.
 - Run `python3 scripts/voice_lint.py NN` (advisory) and fix flagged sentences with targeted edits.
 
 ## Heading hierarchy and heading voice (set by the user, Oct 4)
@@ -31,9 +32,9 @@ Levels are fixed, and no level is skipped:
 - Run `python3 scripts/voice_lint.py NN`; it also flags stages over 200 words with no sub-heading.
 
 ## Exercise and solution presentation (set by the user, Oct 4)
-Machine keys stay fixed (the audit parses them): `#### [Build|Vary|Boundary|Recognize] Title`, `<!-- id: -->`, bold field labels `Problem`, `Constraints`, `Example 1/2`, `Hint`, `Changed decision`, `Prerequisites`, and `#### Solution:` records with `Approach` and `Complexity`. The builder shows standard display names: roles Basic / Variation / Edge Cases / Pattern Recognition, `Problem` as "Problem Statement", and the solution toggle as "Algorithmic Solution". Do not invent other names.
-- Problem: a formal, jargon-free textbook statement. Define input, output, and every term (subarray, step, alias). No story filler, slang or metaphors.
-- Constraints: brutally precise. Value ranges, lengths including empty input, `int` vs `long`, ties, return convention, mutation rules.
+Machine keys stay fixed (the audit parses them): `#### [Build|Vary|Boundary|Recognize] Title`, `<!-- id: -->`, bold field labels `Problem`, `Constraints`, `Example 1/2`, `Hint`, `Changed decision`, `Prerequisites`, and `#### Solution:` records with `Approach` and `Complexity`. The builder shows standard display names: roles Basic / Variation / Edge Cases / Pattern Recognition, `Problem` as "Problem Specification", `Constraints` as "Input Constraints", and the solution toggle as "Algorithmic Solution". Do not invent other names.
+- Problem (shown as "Problem Specification"): a formal textbook specification. Define input, output, and every term (subarray, step, alias). No story filler, slang or metaphors.
+- Constraints (shown as "Input Constraints"): brutally precise. Value ranges, lengths including empty input, `int` vs `long`, ties, return convention, mutation rules.
 - Solution Approach: the algorithm, its invariant, and why each step exists, in the voice rules. Complexity states `Time: O(...), because ...` and `Space: O(...), because ...`.
 - Java in solutions: Javadoc on each solution method with purpose, Time, Space and the invariant. A comment on every primary statement (loop header, condition, update, return) explaining WHY it runs and where cost or memory comes from. Comments only describe; they never change executable code. The test harness gets one comment per group of assertions.
 

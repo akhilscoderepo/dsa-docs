@@ -74,7 +74,7 @@ def highlight(code):
 
 # Manuscript tokens stay machine keys; readers see standard textbook names.
 ROLE_DISPLAY = {"Build": "Basic", "Vary": "Variation", "Boundary": "Edge Cases", "Recognize": "Pattern Recognition"}
-DISPLAY_LABEL = {"Problem": "Problem Statement"}
+DISPLAY_LABEL = {"Problem": "Problem Specification", "Constraints": "Input Constraints"}
 
 
 class Builder:
