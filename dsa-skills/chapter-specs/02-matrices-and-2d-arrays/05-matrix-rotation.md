@@ -1,4 +1,4 @@
-# Lesson spec: Matrix Rotation
+# Lesson spec: Rotating A Square In Place
 
 **Recognition cue.** A square matrix must be transformed in place. **Invariant.** Transposition swaps each off-diagonal pair once; reversing each row then completes a clockwise rotation. **False friend.** A rectangular matrix cannot be rotated in place into the same dimensions.
 

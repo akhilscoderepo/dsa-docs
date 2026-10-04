@@ -1,4 +1,4 @@
-# Lesson spec: Shape Contracts
+# Lesson spec: Rectangular And Ragged Arrays
 
 **Recognition cue.** Correct traversal depends on whether the matrix is rectangular, square, or ragged. **Invariant.** Every access uses a row and a column legal for that row. **Java hazard.** A ragged `int[][]` requires `grid[r].length`; `grid[0].length` is not a universal column bound.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Neighbor Enumeration
+# Lesson spec: Checking The Neighbors Of A Cell
 
 **Recognition cue.** A cell operation depends on a fixed local neighborhood. **State.** A direction table enumerates candidate offsets; bounds checks decide which neighbors exist. **Java hazard.** Allocate the direction table once, outside hot loops.
 

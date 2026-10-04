@@ -1,4 +1,4 @@
-# Lesson spec: Structured Traversal
+# Lesson spec: Walking Rows, Columns And Diagonals
 
 **Recognition cue.** The requested cells form rows, columns, diagonals, or the outer boundary. **State.** Indices describe the exact geometric region still unvisited. **False friend.** Connectivity through neighbors is graph traversal and remains deferred.
 

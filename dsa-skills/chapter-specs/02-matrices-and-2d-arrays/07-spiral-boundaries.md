@@ -1,4 +1,4 @@
-# Lesson spec: Spiral Boundaries
+# Lesson spec: Walking A Matrix In Spiral Order
 
 **Recognition cue.** Output consumes a rectangle layer by layer. **Invariant.** `top`, `bottom`, `left`, and `right` enclose exactly the unvisited rectangle. **False friend.** Direction-state simulation and shrinking-boundary traversal can produce similar output, but their state and failure modes differ.
 

@@ -56,7 +56,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Shape Contracts
+### Rectangular And Ragged Arrays
 
 **Recognition cue.** Correct traversal depends on whether the matrix is rectangular, square, or ragged. **Invariant.** Every access uses a row and a column legal for that row. **Java hazard.** A ragged `int[][]` requires `grid[r].length`; `grid[0].length` is not a universal column bound.
 
@@ -65,7 +65,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Rows.** Distinguish `new int[0][]` from `new int[][]{{}}` before reading row zero.
 - **Recognize - LC 1572 Matrix Diagonal Sum.** The square-shape guarantee makes both diagonal coordinates legal; subtract the center once when `n` is odd.
 
-### Structured Traversal
+### Walking Rows, Columns And Diagonals
 
 **Recognition cue.** The requested cells form rows, columns, diagonals, or the outer boundary. **State.** Indices describe the exact geometric region still unvisited. **False friend.** Connectivity through neighbors is graph traversal and remains deferred.
 
@@ -74,7 +74,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Perimeter Sum.** Avoid counting corners twice in a one-row or one-column matrix.
 - **Recognize - LC 766 Toeplitz Matrix.** Compare each cell with its upper-left predecessor instead of rescanning whole diagonals.
 
-### Direction State
+### Moving With A Direction
 
 **Recognition cue.** Movement follows a small cyclic direction rule and changes when the next step is illegal or already consumed. **State.** `(row, col, direction)` fully describes the next simulation step. **False friend.** A BFS frontier explores many positions; direction-state simulation follows one evolving cursor.
 
@@ -83,7 +83,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Single Cell.** A `1 x 1` board writes exactly once and never performs an extra turn.
 - **Recognize - LC 885 Spiral Matrix III.** Allow the cursor outside the result rectangle while recording only legal coordinates.
 
-### Neighbor Enumeration
+### Checking The Neighbors Of A Cell
 
 **Recognition cue.** A cell operation depends on a fixed local neighborhood. **State.** A direction table enumerates candidate offsets; bounds checks decide which neighbors exist. **Java hazard.** Allocate the direction table once, outside hot loops.
 
@@ -92,7 +92,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Corner Cell.** Verify `(0,0)` has only its legal neighbors and never uses negative indices.
 - **Recognize - LC 289 Game of Life.** Count eight local neighbors; in-place state encoding is taught only after the next marker lesson.
 
-### Matrix Rotation
+### Rotating A Square In Place
 
 **Recognition cue.** A square matrix must be transformed in place. **Invariant.** Transposition swaps each off-diagonal pair once; reversing each row then completes a clockwise rotation. **False friend.** A rectangular matrix cannot be rotated in place into the same dimensions.
 
@@ -101,7 +101,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Odd Center.** Show why the center of a `3 x 3` matrix remains valid without special movement.
 - **Recognize - Author exercise: Counterclockwise Rotation.** Transpose, then reverse columns; name the changed transformation.
 
-### Marker State
+### Marking Rows Before Clearing Them
 
 **Recognition cue.** Rows and columns must be marked for a later mutation, but immediate writes would destroy evidence still needed. **State.** Marker storage records affected rows/columns until the observation pass completes. **False friend.** Hash sets are an allowed auxiliary solution, but Chapter 04 owns general set state.
 
@@ -110,7 +110,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - LC 73 Constant-Space Variant.** Reserve the first row/column as markers and keep separate flags for their original state.
 - **Recognize - LC 289 Game of Life.** Encode old and new cell state together so neighbor reads still see the original generation.
 
-### Spiral Boundaries
+### Walking A Matrix In Spiral Order
 
 **Recognition cue.** Output consumes a rectangle layer by layer. **Invariant.** `top`, `bottom`, `left`, and `right` enclose exactly the unvisited rectangle. **False friend.** Direction-state simulation and shrinking-boundary traversal can produce similar output, but their state and failure modes differ.
 

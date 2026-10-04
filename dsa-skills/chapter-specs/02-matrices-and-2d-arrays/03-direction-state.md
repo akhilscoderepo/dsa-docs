@@ -1,4 +1,4 @@
-# Lesson spec: Direction State
+# Lesson spec: Moving With A Direction
 
 **Recognition cue.** Movement follows a small cyclic direction rule and changes when the next step is illegal or already consumed. **State.** `(row, col, direction)` fully describes the next simulation step. **False friend.** A BFS frontier explores many positions; direction-state simulation follows one evolving cursor.
 

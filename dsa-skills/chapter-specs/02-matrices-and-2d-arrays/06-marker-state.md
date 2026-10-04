@@ -1,4 +1,4 @@
-# Lesson spec: Marker State
+# Lesson spec: Marking Rows Before Clearing Them
 
 **Recognition cue.** Rows and columns must be marked for a later mutation, but immediate writes would destroy evidence still needed. **State.** Marker storage records affected rows/columns until the observation pass completes. **False friend.** Hash sets are an allowed auxiliary solution, but Chapter 04 owns general set state.
 
