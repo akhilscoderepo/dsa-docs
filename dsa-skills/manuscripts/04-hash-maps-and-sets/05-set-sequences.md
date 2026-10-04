@@ -64,7 +64,7 @@ Every run has exactly one start, so the loop walks each run once. Every number o
 
 #### Choose The Answer Convention
 
-A question about the longest run can return the length, or the start of the longest run, or both. When two runs tie, the contract picks the smaller start. The loop therefore compares starts as well as lengths. A rule such as "the first run found" would depend on the iteration order of the set, which the set does not promise.
+A question about the longest run can return the length, the start, or both. The code below returns the length. The traces also track the start of the best run, and the first exercise asks for it. When two runs tie and the contract wants the smaller start, the loop compares starts as well as lengths. A rule such as "the first run found" would depend on the iteration order of the set, which the set does not promise.
 
 <!-- stage: variables -->
 ### Set, Start And Walk Length

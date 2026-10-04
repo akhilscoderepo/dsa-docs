@@ -126,7 +126,7 @@ Each pass makes n map operations of expected constant time, which gives a linear
 
 #### Look For The Number Of Times
 
-Use a frequency map when the answer depends on how often a value occurs, for example the first unique value or the most common value. Another case asks whether two collections hold the same values with the same multiplicities. The invariant is that `count.get(key)` equals the exact frequency of the key in the processed part of the input, with absent keys read as 0. A removal that brings a count to 0 must delete the entry, so that the map size and `containsKey` still describe the values that are present.
+Use a frequency map when the answer depends on how often a value occurs, for example the first unique value or the most common value. Another case asks whether two collections hold the same values with the same multiplicities. The invariant is that `count.get(key)` equals the exact frequency of the key in the processed part of the input, with absent keys read as 0. A removal that brings a count to 0 must delete the entry with `count.remove(key)`, so that the map size and `containsKey` still describe the values that are present.
 
 #### A Set Is A False Friend
 
@@ -134,7 +134,7 @@ A false friend here is a set, which can say that a value occurred but not how of
 
 #### Java Details That Cause Failures
 
-The call `count.get(key)` returns `null` for an absent key, and unboxing the result in `int c = count.get(key)` throws `NullPointerException`. Use `getOrDefault(key, 0)` when the key may be absent. A comparison `count.get(a) == count.get(b)` compares `Integer` objects by reference, and it can pass for small counts, because Java caches the values from -128 to 127. It can then fail for larger counts. Use `equals`. When the program needs both key and value from a map, loop with `for (Map.Entry<K, V> e : map.entrySet())` and do not call `get` inside a loop over `keySet()`.
+The call `count.get(key)` returns `null` for an absent key, and unboxing the result in `int c = count.get(key)` throws `NullPointerException`. Use `getOrDefault(key, 0)` when the key may be absent. A comparison `count.get(a) == count.get(b)` compares `Integer` objects by reference, and it can pass for small counts, because Java caches the values from -128 to 127. It can then fail for larger counts. Use `equals`. When the program needs both key and value from a map, loop with `for (Map.Entry<K, V> e : map.entrySet())` and do not call `get` inside a loop over `keySet()`, because each `get` repeats a lookup that the entry already answers.
 
 <!-- stage: exercises -->
 ### Exercises

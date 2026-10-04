@@ -145,7 +145,7 @@ Use a record key when the thing to look up consists of several values, such as a
 
 #### A Delimited String Is A False Friend
 
-A false friend here is a string such as `row + "," + col` used as the key. It works, but each lookup builds a new string and the code must trust the delimiter. A mistake such as `"1" + "11"` against `"11" + "1"` merges different pairs when the delimiter is missing. A record states the fields and needs no parsing.
+A false friend here is a string such as `row + "," + col` used as the key. It works, but each lookup builds a new string and the code must trust the delimiter. Without the comma, the pairs (1, 11) and (11, 1) both produce the text 111, so the two different pairs merge. A record states the fields and needs no parsing.
 
 #### Java Details That Cause Failures
 

@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A log tool reports that every word occurs once, because it stored each word in a set and never kept a count. A seating checker rejects a legal plan, because it used one set for the whole room. A lookup that should return at once takes a minute, because it scans a list for every request. Each failure has the same root. The program needed one remembered fact about the values it had already read, and it stored the wrong fact or stored it in a structure that cannot answer quickly. This chapter answers one question: which fact must the program keep, and which Java structure returns it in expected constant time?
+A log tool reports that every word occurs once, because it stored each word in a set and never kept a count. A puzzle-board checker rejects a legal move, because it used one set for the whole board. A lookup that should return at once takes a minute, because it scans a list for every request. Each failure has the same root. The program needed one remembered fact about the values it had already read, and it stored the wrong fact or stored it in a structure that cannot answer quickly. This chapter answers one question: which fact must the program keep, and which Java structure returns it in expected constant time?
 
 ### Prerequisites
 
@@ -28,7 +28,7 @@ Two lessons join this chapter with earlier ones. Each opens with the failure tha
 
 ### How To Work Through Each Lesson
 
-Every part of a lesson carries a label, so you always know where you are. A lesson opens with a failing case, and a prediction prompt asks you to guess the cause before the answer shows. A trace lets you step through the loop and watch each value change. A lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, and the change grows with each role. An exercise marked Author exercise was written for this course, and an exercise with a LeetCode number follows that problem with its own examples, and its text states any rule that it changes. Write your own attempt before you open a hint or a solution.
+Every part of a lesson carries a label, so you always know where you are. A lesson opens with a failing case, and a prediction prompt asks you to guess the cost or the cause before the answer shows. A trace lets you step through the loop and watch each value change. A lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, and the change grows with each role. An exercise marked Author exercise was written for this course, and an exercise with a LeetCode number follows that problem with its own examples, and its text states any rule that it changes. Write your own attempt before you open a hint or a solution.
 
 ### What You Can Do After This Chapter
 

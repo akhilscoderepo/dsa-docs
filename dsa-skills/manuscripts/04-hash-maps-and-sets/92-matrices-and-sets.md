@@ -54,9 +54,9 @@ On a board with a repeated digit in some row, the method returns false at the se
 ### Every Pair Of Cells Gets Compared Twice
 
 ```predict
-A board has side n and every cell is filled. About how many cell reads does the method make, and which comparison does it make twice?
+A 9 by 9 board has every cell filled. About how many cell reads does the method make, and how does the count grow for a board of side n with blocks of side about the square root of n?
 
-Each filled cell reads about 3 * n cells, so the total is about 3 * n^3, which is O(n^3) for side n. The comparison of cell A with cell B repeats when the loop reaches B and reads A back.
+Each filled cell reads 27 cells, so the total is 81 * 27 = 2187 reads. For side n, each cell reads about 3 * n cells, so the total grows as O(n^3). The comparison of cell A with cell B repeats when the loop reaches B and reads A back.
 ```
 
 For the 9 by 9 board the total is 81 * 27 = 2187 reads, which looks harmless. The growth shows when the side grows or when a program validates millions of boards. The method asks, for every cell, a question that the neighbors in its groups answer too. Two cells in one row compare against each other once from each side. A program that remembers the digits of each group needs one lookup for each group of a cell, so the work for a whole board falls to O(n^2).
@@ -83,7 +83,7 @@ The **scope sets** are three lists of nine sets, one list for the rows, one for 
 After the loop has read the cells before `(r, c)` in row-major order, each scope set holds exactly the digits of the filled cells of its scope among those cells. No scope holds a repeat. Each cell costs three set tests and three insertions of expected constant time, so the loop costs O(n^2) on average. The sets hold at most one entry per filled cell for each of the three scopes, so the space is O(n^2).
 
 <!-- stage: variables -->
-### Three Set Arrays And A Cell
+### Three Set Lists And A Cell
 
 The loop uses four pieces of state.
 
@@ -114,7 +114,7 @@ Now take `(0,0)=5`, `(1,4)=3` and `(2,2)=5`. The cell `(2,2)` has row 2 and colu
 ```
 
 <!-- stage: code -->
-### Three Arrays Of Sets
+### Three Lists Of Sets
 
 #### Checking A Nine By Nine Board
 

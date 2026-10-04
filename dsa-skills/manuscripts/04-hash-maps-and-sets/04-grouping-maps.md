@@ -50,7 +50,7 @@ Each job belongs to exactly one worker, and the method still tests it against al
 
 #### Compute A Group Key For Each Value
 
-Two values are in the same group when they have the same result under a fixed rule. The result of the rule is the **group key**. Here the rule is `Math.floorMod(job, m)`. The rule splits the input into groups, with each value in exactly one group, which is the standard way an equivalence relation partitions a set.
+Two values are in the same group when they have the same result under a fixed rule. The result of the rule is the **group key**. Here the rule is `Math.floorMod(job, m)`. The rule splits the input into groups, with each value in exactly one group, so the groups do not overlap and together cover every value.
 
 <!-- names: grouping map, group key, bucket -->
 
@@ -100,6 +100,8 @@ Now take `jobs = [8, 3, 12, 5, 4]` and `m = 4`. The keys are 0, 3, 0, 1 and 0. T
 ### One Pass With A Grouping Map
 
 #### Building The Buckets
+
+The code uses `LinkedHashMap`, a map that returns its entries in the order of first insertion.
 
 ```java
 static List<List<Integer>> groupJobs(int[] jobs, int m) {

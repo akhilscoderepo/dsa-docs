@@ -130,7 +130,7 @@ The expression `max - min + 1` wraps around in `int` when the interval spans the
 
 **Prerequisites.** The letter table and the offset `c - 'a'` from this lesson.
 
-**Problem.** Count the lowercase letters across a list of words, with each word counted once for a letter. Let `words` be an array of strings of lowercase English letters. Return an `int[26]` where entry `k` is the number of words that contain the letter `'a' + k` at least once. A word counts once for a letter, however often the letter occurs in it.
+**Problem.** Count, for each lowercase letter, the words that contain it. Let `words` be an array of strings of lowercase English letters. Return an `int[26]` where entry `k` is the number of words that contain the letter `'a' + k` at least once. A word counts once for a letter, however often the letter occurs in it.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= words.length <= 10^4`, and each word has at most 100 letters.
@@ -193,7 +193,7 @@ The expression `max - min + 1` wraps around in `int` when the interval spans the
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Implement a class `MyHashMap` without `java.util.HashMap` and without any array indexed by the key. The class supports `put(int key, int value)`, which stores or replaces the value, `get(int key)`, which returns the value or -1 when the key is absent, and `remove(int key)`, which deletes the key if present.
+**Problem.** Implement a class `MyHashMap` without `java.util.HashMap` and without an array that has one slot for each possible key. The class supports `put(int key, int value)`, which stores or replaces the value, `get(int key)`, which returns the value or -1 when the key is absent, and `remove(int key)`, which deletes the key if present.
 
 **Constraints.** The limits are:
 - **Keys** are any 32-bit integers, so the key range is 2^32.
