@@ -77,7 +77,7 @@ The safe rule runs the same insertion. It compares -2000000000 with 2000000000 u
 #### Stepping Through Both Rules
 
 ```trace
-{"cells":[2000000000,5,-2000000000],"pointers":["i","j"],"steps":[{"at":{"i":0,"j":-1},"vars":{"array":"[2000000000, 5, -2000000000]"},"note":"Start: the value at index 0 is a sorted prefix of length 1."},{"at":{"i":1,"j":0},"vars":{"compare":"5 vs 2000000000","sign":"negative","array":"[2000000000, 5, -2000000000]"},"note":"The sign is negative, so 5 goes before 2000000000. Swap them."},{"at":{"i":2,"j":1},"vars":{"compare":"-2000000000 vs 2000000000","sign":"positive","array":"[5, 2000000000, -2000000000]"},"note":"The sign is positive, so -2000000000 stays after 2000000000. Stop this insertion."},{"at":{"i":3,"j":-1},"vars":{"array":"[5, 2000000000, -2000000000]"},"note":"The sort ends with the array [5, 2000000000, -2000000000], which is not sorted."}]}
+{"cells":[2000000000,5,-2000000000],"pointers":["i","j"],"steps":[{"at":{"i":0,"j":-1},"vars":{"array":"[2000000000, 5, -2000000000]"},"note":"Start: the value at index 0 is a sorted prefix of length 1."},{"at":{"i":1,"j":0},"vars":{"compare":"5 vs 2000000000","sign":"negative","array":"[2000000000, 5, -2000000000]"},"note":"The sign is negative, so 5 goes before 2000000000. Swap them."},{"at":{"i":2,"j":1},"vars":{"compare":"-2000000000 vs 2000000000","sign":"positive","array":"[5, 2000000000, -2000000000]"},"note":"The sign is positive, so -2000000000 stays after 2000000000. Stop this insertion."}]}
 ```
 
 ```trace
