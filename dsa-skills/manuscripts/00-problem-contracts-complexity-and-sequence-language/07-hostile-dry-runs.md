@@ -62,28 +62,22 @@ An **invariant** is a statement that stays true after every step. The invariant 
 
 A dry run uses a variable table with one row per state change and one column per variable. A sample output reproduces a result but does not show whether a variable lost its meaning. Check the meanings, not only the outputs. Follow this procedure.
 
-- **Input** comes first, and you pick it before you execute anything.
-- **Kind of bug** is named next, and the input targets it.
-- **Variable meaning** goes beside each column in a few words.
-- **Prediction** of the result is written before the code runs.
-- **Disagreement** between prediction and code is the purpose of the exercise.
+You pick the input first, before you execute anything. Next you name the kind of bug, and the input targets it. Then you write the meaning of each variable beside its column in a few words.
+
+After that, you write a prediction of the result before the code runs. A disagreement between prediction and code is the purpose of the exercise.
 
 <!-- stage: trace -->
 ### Dry Run On A Strictly Increasing Array
 
 Trace the method on `[1, 2, 3]`.
 
-- **best** starts at 0, and **current** starts at 1.
-- **Index 1** holds 2, which beats 1, so `current` becomes 2 and `best` stays 0.
-- **Index 2** holds 3, which beats 2, so `current` becomes 3 and `best` stays 0.
-- **Loop exit** returns `best`, which is 0, although the true answer is 3.
-- **current** holds 3 in the final row, an open climb that no line moves into `best`.
+The variable `best` starts at 0, and `current` starts at 1. Index 1 holds 2, which beats 1, so `current` becomes 2 and `best` stays 0. Index 2 holds 3, which beats 2, so `current` becomes 3 and `best` stays 0.
+
+The loop then exits and returns `best`, which is 0, although the true answer is 3. The variable `current` holds 3 in the final row, an open climb that no line moves into `best`.
 
 The remaining observations explain why the sample inputs miss the defect.
 
-- **One-element list** runs no loop body, so the result is the initial 0.
-- **Missing update** after the loop is the step that matters.
-- **Sample ending with a drop** hides the defect, because the `else` branch updates `best` at the right moment.
+A one-element list runs no loop body, so the result is the initial 0. The missing update after the loop is the step that matters. A sample ending with a drop hides the defect, because the `else` branch updates `best` at the right moment.
 
 ```trace
 {"cells":[1,2,3],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"best":0,"current":1},"note":"Start: best = 0, current = 1. The loop begins at index 1."},{"at":{"i":1},"vars":{"best":0,"current":2},"note":"Index 1: 2 beats 1, so current becomes 2. best is untouched because no climb has ended."},{"at":{"i":2},"vars":{"best":0,"current":3},"note":"Index 2: 3 beats 2, so current becomes 3. best is untouched because no climb has ended."},{"at":{"i":3},"vars":{"best":0,"current":3},"note":"The loop ends and returns best = 0. current holds an open climb of 3 that nothing recorded. The true answer is 3."}]}
@@ -106,9 +100,8 @@ static int longestClimb(int[] steps) {
 
 The repair has two parts.
 
-- **Update rule** sets `best` after every step, so an unfinished climb is always counted.
-- **Initial value** of `best` is 1, because any non-empty list contains a climb of length one.
-- **Empty list** returns 0 explicitly, because the specification allows it.
+The update rule sets `best` after every step, so an unfinished climb is always counted. The initial value of `best` is 1, because any non-empty list contains a climb of length one. An empty list returns 0 explicitly, because the specification allows it.
+
 - **Time** is O(n), because the loop makes one pass.
 - **Space** is O(1), because two counters hold all the state.
 
@@ -119,18 +112,13 @@ The edge cases `[7]`, `[1, 2, 3]`, `[4, 4, 4]` and `[3, 2, 1]` now pass. Each on
 
 Before you trust a solution, apply this checklist.
 
-- **Kinds of bug** that the solution could have are written down.
-- **Edge case** is one tiny input chosen for each kind of bug.
-- **Prediction** is made first, and then the code runs.
-- **Invariant** is that a dry run records the meaning of every variable after every change.
+First, write down the kinds of bug that the solution could have. Next, choose one tiny edge-case input for each kind of bug. Then make a prediction first, and run the code after it. The invariant is that a dry run records the meaning of every variable after every change.
 
 The large random test is a false friend, which means a test that appears to verify the code while it never reaches the failing precondition. The random test looks like thorough verification, but it rarely reaches the boundary inputs. Random data still catches surprises you did not predict, and the next chapters use it as a cross-check. It is a poor substitute for a deliberately chosen tiny case, because edge cases make up a tiny share of all random inputs.
 
 Java supplies several ready-made edge cases.
 
-- **`Integer.MAX_VALUE` and `Integer.MIN_VALUE`** break accumulators and negation, since `Math.abs(Integer.MIN_VALUE)` is still negative.
-- **A freshly allocated `int[]`** holds zeros, which can look like real data.
-- **Boxed `Integer` comparison with `==`** works for small values and fails for larger ones.
+`Integer.MAX_VALUE` and `Integer.MIN_VALUE` break accumulators and negation, since `Math.abs(Integer.MIN_VALUE)` is still negative. A freshly allocated `int[]` holds zeros, which can look like real data. A boxed `Integer` comparison with `==` works for small values and fails for larger ones.
 
 <!-- stage: exercises -->
 ### Exercises

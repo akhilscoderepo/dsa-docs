@@ -75,17 +75,13 @@ If you cannot describe a call by these three facts, read its documentation befor
 
 Take a list holding 10, 20, 30 and 40, and drain it with `remove(0)`.
 
-- **First call** removes 10 and shifts the other 3 values one place left.
-- **Second call** removes 20, now at the front, and shifts the remaining 2.
-- **Third call** removes 30 and shifts the last 1.
-- **Fourth call** removes 40 and shifts 0.
+The first call removes 10 and shifts the other 3 values one place left. The second call removes 20, now at the front, and shifts the remaining 2. The third call removes 30 and shifts the last 1. The fourth call removes 40 and shifts 0.
 
 #### Comparing The Total With A Read Index
 
-- **Total moves** are 3 + 2 + 1 + 0 = 6.
-- **Formula** `n * (n - 1) / 2` gives 4 * 3 / 2 = 6.
-- **Read index** goes from 0 to 3, reads each event in place and moves 0 elements.
-- **First call** moves the most elements: 3 for four events and 99,999 for 100,000 events.
+The total moves are 3 + 2 + 1 + 0 = 6. The formula `n * (n - 1) / 2` agrees, because 4 * 3 / 2 = 6. A read index goes from 0 to 3, reads each event in place and moves 0 elements.
+
+The first call moves the most elements: 3 for four events and 99,999 for 100,000 events.
 
 The cost grows quadratically with size, so it stays invisible on small tests.
 
@@ -134,16 +130,13 @@ The two `remove` calls at the end of the code show this trap.
 
 Apply this checklist to every loop body.
 
-- **Library calls** in the loop body are listed, and each gets the three facts.
-- **Documented cost** is checked for any unfamiliar method name before the analysis.
-- **Invariant** is that you know the cost and meaning of each call you rely on, and the stated bound includes them.
+First, list the library calls in the loop body, and give each one the three facts. Next, check the documented cost of any unfamiliar method name before the analysis. The invariant is that you know the cost and meaning of each call you rely on, and the stated bound includes them.
 
 The false friend here is familiar syntax. A false friend is code that looks like a safe pattern but is not. A call that looks like a single step is not automatically constant time, primitive-friendly or value-based. The calls `list.remove(0)` and `string + char` look like `list.get(0)` and `builder.append(char)`, but they cost far more.
 
 Two more Java hazards belong on the same list.
 
-- **`List<Integer>`** costs several times the memory of an `int[]` and adds one pointer dereference per element, which matters near the million-element limits.
-- **`Arrays.asList(new int[]{1,2,3})`** has size 1, not 3, because the array is a single object.
+A `List<Integer>` costs several times the memory of an `int[]` and adds one pointer dereference per element, which matters near the million-element limits. The call `Arrays.asList(new int[]{1,2,3})` has size 1, not 3, because the array is a single object.
 
 The exercises below take each of these in turn.
 

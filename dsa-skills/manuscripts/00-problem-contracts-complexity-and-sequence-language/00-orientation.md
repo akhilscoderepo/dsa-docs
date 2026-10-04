@@ -24,13 +24,11 @@ The chapter has eight lessons. Each lesson trains one analysis skill.
 
 Work through each lesson in the same order.
 
-- **Context and naive code** come first. Read the short scenario and the first version of the code.
-- **Prediction** comes next. Decide what is wrong before you reach the next section.
-- **Trace** follows. Step through it with the buttons and watch the step the text points out.
-- **Exercises** come after the trace. Do the four exercises in order without opening the hint.
-- **Notes box** holds your own answer. Write it before you read the solution.
-- **Solution** comes last. Every solution has Java that runs with assertions during the build.
-- **Build checks** execute each numeric claim in the solutions, so no claim is only written down.
+The lesson starts with the context and the naive code. Read the short scenario and the first version of the code. Next comes the prediction, where you decide what is wrong before you reach the next section.
+
+The trace follows, so step through it with the buttons and watch the step the text points out. After the trace, do the four exercises in order without opening the hint. Then write your own answer in the notes box before you read the solution.
+
+The solution comes last, and every solution has Java that runs with assertions during the build. Finally, the build checks execute each numeric claim in the solutions, so no claim is only written down.
 
 ### What You Can Do After This Chapter
 

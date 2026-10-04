@@ -82,17 +82,15 @@ An overflowed estimate can look comfortably small, so it hides the problem.
 
 Compare the pair method with a sort-based method as the input grows.
 
-- **n = 10** gives 45 all-pairs steps against about 40 for sorting, so the sample cannot separate the methods.
-- **n = 1,000** gives 499,500 all-pairs steps against roughly 10,000 for sorting, and both finish instantly.
-- **n = 100,000** gives 4,999,950,000 all-pairs steps, far past the time limit.
-- **Sorting** needs about 1.7 million steps at `n = 100,000`, a rounding error against that count.
+With `n = 10`, all pairs take 45 steps and sorting takes about 40. The sample therefore cannot separate the methods. With `n = 1,000`, all pairs take 499,500 steps and sorting takes roughly 10,000, and both finish instantly.
+
+With `n = 100,000`, all pairs take 4,999,950,000 steps, far past the time limit. Sorting needs about 1.7 million steps at that size, a rounding error against that count.
 
 #### Reading The Result
 
 The two methods look the same until the input is large. The middle row is the hardest to see, because both methods still pass.
 
-- **Constraint line** is the only part of the statement that says the input is large.
-- **Passing tests** do not prove feasibility, because a solution can pass every test you write and still fail on the maximum.
+The constraint line is the only part of the statement that says the input is large. Passing tests therefore do not prove feasibility. A solution can pass every test you write and still fail on the maximum.
 
 ```trace
 {"cells":[10,1000,100000],"pointers":["n"],"steps":[{"at":{"n":0},"vars":{"scan":10,"sort":40,"allPairs":45,"allPairsVsBudget":"within"},"note":"n = 10: all pairs is 45 steps and sorting about 40, so the sample cannot tell the plans apart."},{"at":{"n":1},"vars":{"scan":1000,"sort":10000,"allPairs":499500,"allPairsVsBudget":"within"},"note":"n = 1,000: all pairs is 499,500 and sorting about 10,000. Both still finish instantly, which is the dangerous middle."},{"at":{"n":2},"vars":{"scan":100000,"sort":1700000,"allPairs":4999950000,"allPairsVsBudget":"over"},"note":"n = 100,000: all pairs is 4,999,950,000, fifty times the budget, while sorting is 1,700,000. The constraint line was the only warning."}]}
@@ -116,10 +114,8 @@ static boolean plausible(long stepsAtMax) { return stepsAtMax <= BUDGET; }
 
 The helpers compute step counts only.
 
-- **long** holds all arithmetic in the helpers.
-- **n * (n - 1) / 2** multiplies before it divides, so the product is the value that would overflow an `int`.
-- **nLogN** takes the bit length of `n - 1` as the ceiling of the base-2 logarithm, which is exact for powers of two.
-- **Precision** stays coarse on purpose, because the helpers ignore constants.
+The helpers hold all arithmetic in `long`. The expression `n * (n - 1) / 2` multiplies before it divides, so the product is the value that would overflow an `int`. The helper `nLogN` takes the bit length of `n - 1` as the ceiling of the base-2 logarithm, which is exact for powers of two. Precision stays coarse on purpose, because the helpers ignore constants.
+
 - **Time** is O(1) per call, because each helper evaluates one expression.
 - **Space** is O(1) per call, because each helper stores a few `long` values.
 
@@ -132,22 +128,17 @@ Write the helpers to compute the step count before you write the algorithm.
 
 Use this check whenever a problem gives limits, which is nearly always. Before you commit to an approach, write one line such as "n up to 100,000, all pairs is 5 billion, too slow". Then continue.
 
-- **Invariant** is that the chosen approach stays within the time limit and the memory limit at the maximum legal input.
-- **Sample size** never replaces the maximum legal input in this check.
+The invariant is that the chosen approach stays within the time limit and the memory limit at the maximum legal input. The sample size never replaces the maximum legal input in this check.
 
 #### Finding Cases That Break The Precondition
 
 The precondition of this check is that the step count at the maximum input decides feasibility. The check has false friends, cases that match the pattern on the surface but break the precondition that the step count decides feasibility. Two cases qualify.
 
-- **Difficulty label** misleads, because a label such as "easy" or a familiar noun such as "array" does not select a method.
-- **Constant factor** misleads near the limit, because a count within a factor of ten of the limit is not decisive.
-- **Step cost** decides the near-limit case, so compare what each step costs.
+A difficulty label misleads, because a label such as "easy" or a familiar noun such as "array" does not select a method. A constant factor also misleads near the limit, because a count within a factor of ten of the limit is not decisive. In that near-limit case, the step cost decides, so compare what each step costs.
 
 #### Avoiding Java Memory And Overflow Problems
 
-- **int overflow** wraps silently, as the lesson showed earlier.
-- **Boxed collections** use several times more memory than primitive arrays.
-- **Size near 1,000,000** makes that memory difference matter.
+An `int` overflow wraps silently, as the lesson showed earlier. Boxed collections use several times more memory than primitive arrays. A size near 1,000,000 makes that memory difference matter.
 
 The exercises below ask you to make these decisions without writing the algorithm. This lesson chooses the family of approaches. Chapter 01 onward supplies the algorithms.
 

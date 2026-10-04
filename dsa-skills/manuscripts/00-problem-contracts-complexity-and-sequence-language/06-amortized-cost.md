@@ -73,19 +73,15 @@ The ratio stays bounded under doubling and grows without limit under grow-by-one
 
 Start with capacity 1.
 
-- **Append 1** finds one free slot and writes, so no copy happens.
-- **Append 2** finds the array full, grows the capacity to 2, copies the single stored element and writes.
-- **Append 3** finds capacity 2 full, grows to 4 and copies two elements.
-- **Append 4** fits without any work.
+Append 1 finds one free slot and writes, so no copy happens. Append 2 finds the array full, so it grows the capacity to 2, copies the single stored element and writes.
+
+Append 3 finds capacity 2 full, so it grows to 4 and copies two elements. Append 4 then fits without any work.
 
 #### Append Five Triggers The Largest Resize
 
 The fifth append triggers the largest resize so far.
 
-- **Append 5** finds capacity 4 full, grows to 8 and copies four elements.
-- **Appends 6 to 8** fit without copying.
-- **Capacities** are 1, 2, 4 and 8.
-- **Total copies** are 1 + 2 + 4, which is 7 for eight appends and fewer than one per append.
+Append 5 finds capacity 4 full, so it grows to 8 and copies four elements. Appends 6 to 8 then fit without copying. The capacities are 1, 2, 4 and 8. The total copies are 1 + 2 + 4, which is 7 for eight appends and fewer than one per append.
 
 The hardest step is the fifth, where one append copies four elements and the total still stays linear. Every doubling gives the array as many free slots as it copied elements, so as many cheap appends follow. That pattern is the mechanism behind the bound.
 
@@ -120,9 +116,7 @@ The loop mirrors what a growable array does when a value arrives. The condition 
 
 Reach for amortized reasoning when all three conditions hold.
 
-- **Usual cost** of the operation is small.
-- **Occasional resize or rebuild** does a large amount of work.
-- **Rebuild** creates room for many cheap calls afterward.
+The usual cost of the operation is small. An occasional resize or rebuild does a large amount of work. That rebuild creates room for many cheap calls afterward.
 
 Typical cases are growable arrays, hash table resizing, and a queue built from two stacks, which a later chapter uses. The invariant is that the total charged cost over any sequence of operations pays for the total actual cost.
 
@@ -130,10 +124,7 @@ Typical cases are growable arrays, hash table resizing, and a queue built from t
 
 A false friend in amortized analysis is a bound that looks like a per-call limit but only holds for the whole sequence. Here it is an amortized O(1) bound read as worst-case O(1) for every call.
 
-- **Amortized O(1)** is not worst-case O(1), and one call can still take O(n).
-- **Latency-sensitive loops** cannot accept that single slow call.
-- **Total-cost problems** are unaffected, because only the sum over many calls counts.
-- **Random-input average** is a different notion, since amortized analysis is a worst-case statement about a sequence.
+Amortized O(1) is not worst-case O(1), and one call can still take O(n). Latency-sensitive loops therefore cannot accept that single slow call. Total-cost problems are unaffected, because only the sum over many calls counts. A random-input average is a different notion, since amortized analysis is a worst-case statement about a sequence.
 
 #### Check How Java's ArrayList Grows
 

@@ -72,19 +72,17 @@ Three entities need names. When a method may modify its input, the specification
 
 Run the filter on `[3, 2, 2, 3]` with target 3.
 
-- **read = 0** holds a 3, so the loop skips it and writes nothing.
-- **read = 1** holds a 2, so the loop copies it to slot 0 and the array becomes `[2, 2, 2, 3]`.
-- **read = 2** holds a 2, so the loop copies it to slot 1, and the array looks unchanged because slot 1 already held a 2.
-- **read = 3** holds a 3, so the loop skips it.
+At `read = 0` the array holds a 3, so the loop skips it and writes nothing. At `read = 1` the array holds a 2, so the loop copies it to slot 0 and the array becomes `[2, 2, 2, 3]`.
+
+At `read = 2` the array holds a 2, so the loop copies it to slot 1. The array looks unchanged because slot 1 already held a 2. At `read = 3` the array holds a 3, so the loop skips it.
 
 #### Reading The Final State
 
 When the loop ends, the state has four facts.
 
-- **write** is 2, so the meaningful prefix is `[2, 2]`, the first two slots.
-- **Last two slots** still hold `2` and `3`, and the 3 in slot 3 is a leftover from the input, not part of the answer.
-- **Overwrite at slot 0** destroyed the first 3, which was safe because the loop had already read and rejected it.
-- **Other references** to this array now see `[2, 2, 2, 3]` and have lost the original.
+The value of `write` is 2, so the meaningful prefix is `[2, 2]`, the first two slots. The last two slots still hold `2` and `3`, and the 3 in slot 3 is a leftover from the input, not part of the answer.
+
+The overwrite at slot 0 destroyed the first 3, which was safe because the loop had already read and rejected it. As a result, other references to this array now see `[2, 2, 2, 3]` and have lost the original.
 
 ```trace
 {"cells":[3,2,2,3],"pointers":["read","write"],"steps":[{"at":{"read":0,"write":0},"vars":{"array":"[3,2,2,3]","k":0},"note":"Read slot 0, a 3: skip it. Nothing is written and write stays at 0."},{"at":{"read":1,"write":1},"vars":{"array":"[2,2,2,3]","k":1},"note":"Read slot 1, a 2: keep it and write it to slot 0. The array reads [2, 2, 2, 3]."},{"at":{"read":2,"write":2},"vars":{"array":"[2,2,2,3]","k":2},"note":"Read slot 2, a 2: keep it and write it to slot 1. The array reads [2, 2, 2, 3]."},{"at":{"read":3,"write":2},"vars":{"array":"[2,2,2,3]","k":2},"note":"Read slot 3, a 3: skip it. Nothing is written and write stays at 2."},{"at":{"read":4,"write":2},"vars":{"array":"[2,2,2,3]","k":2},"note":"Done. k = 2, so only the first 2 slots are the answer. The 3 left in the last slot is stale."}]}
@@ -129,26 +127,19 @@ Neither variant does extra work for the other's specification. Picking the wrong
 
 Check the precondition and the postcondition on the input array before you write any array or string solution.
 
-- **Invariant** is that every write preserves the data a later read still needs.
-- **Caller** never reads anything outside the stated meaningful prefix.
-- **Missing rule about changing the input** means you ask, or you state your assumption.
-- **Default** is to leave the input intact when the copy cost is small.
+The invariant is that every write preserves the data a later read still needs. The caller therefore never reads anything outside the stated meaningful prefix. When the statement has no rule about changing the input, you ask or you state your assumption. The default is to leave the input intact when the copy cost is small.
 
 #### Finding Cases That Break The Precondition
 
 A false friend here is an in-place method that appears to follow the specification but breaks its precondition about who may overwrite the input. Two cases qualify.
 
-- **"In place"** does not mean the array shrank, because a Java array never changes length.
-- **Loop to nums.length** after an in-place removal reads stale slots, so the method returns a count.
-- **Returned same reference** does not prove the data is unchanged, because the caller's other references see every write.
+The phrase "in place" does not mean the array shrank, because a Java array never changes length. A loop to `nums.length` after an in-place removal reads stale slots, so the method returns a count instead. A returned reference to the same array does not prove the data is unchanged, because the caller's other references see every write.
 
 #### Passing Arrays To Java Methods
 
 Java passes an `int[]` parameter as a reference value.
 
-- **String** is immutable, so a method that appears to modify one builds a new one.
-- **Assignment to the parameter variable** does not affect the caller.
-- **Writes through the parameter** do affect the caller.
+A `String` is immutable, so a method that appears to modify one builds a new one. Assignment to the parameter variable does not affect the caller. Writes through the parameter do affect the caller.
 
 Chapter 01 applies these specifications to every in-place exercise.
 

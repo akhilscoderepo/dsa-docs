@@ -77,17 +77,11 @@ Mark each answer as a precondition from the statement or an assumption of your c
 
 Run both initializations on `[-8, -3, -6]`.
 
-- **best** starts at 0 in the zero-start version.
-- **-8** fails the comparison, because -8 is not larger than 0, so best stays 0.
-- **-3 and -6** fail the same comparison.
-- **Result** is 0, although no reading reached 0.
+In the zero-start version, `best` starts at 0. The value -8 fails the comparison, because -8 is not larger than 0, so `best` stays 0. The values -3 and -6 fail the same comparison. The result is therefore 0, although no reading reached 0.
 
 #### Run The First-Element Version
 
-- **best** starts at -8, a real reading.
-- **-3** passes the comparison, because -3 is larger than -8, so best becomes -3.
-- **-6** fails the comparison, so best stays -3.
-- **Result** is -3, which is correct.
+In the first-element version, `best` starts at -8, a real reading. The value -3 passes the comparison, because -3 is larger than -8, so `best` becomes -3. The value -6 fails the comparison, so `best` stays -3. The result is -3, which is correct.
 
 The starting value is the step most often overlooked. The zero-start version starts above every value in the array, so no later comparison can correct it.
 
@@ -120,10 +114,8 @@ static java.util.OptionalInt warmestOrNone(int[] temps) {
 #### Compare Cost And Empty-Input Behavior
 
 - **warmestNonEmpty** runs in O(n) time and O(1) extra space, and relies on its documented precondition.
-- **Comment on the precondition** shows the missing guard is deliberate and not an oversight.
-- **warmestOrNone** has the same cost and adds one branch that makes "no answer" explicit in the return type.
-- **Optional return type** forces callers to handle the empty case.
-- **IllegalArgumentException** is a third option for a specification that allows empty input, valid when the documentation states it.
+
+The comment on the precondition shows the missing guard is deliberate and not an oversight. The method `warmestOrNone` has the same cost and adds one branch that makes "no answer" explicit in the return type. An `Optional` return type then forces callers to handle the empty case. An `IllegalArgumentException` is a third option for a specification that allows empty input, valid when the documentation states it.
 
 Neither method invents a value.
 
@@ -134,9 +126,7 @@ Neither method invents a value.
 
 Run the checklist before choosing initial values and before adding guards.
 
-- **Invariant** is that code relies only on what the statement promises, and checks or documents everything else.
-- **Starting values** come from real input whenever the specification allows.
-- **Sentinel** is chosen only when it cannot collide with a real answer.
+The invariant is that code relies only on what the statement promises, and checks or documents everything else. Starting values therefore come from real input whenever the specification allows. A sentinel is chosen only when it cannot collide with a real answer.
 
 #### Skip Guards The Problem Never Asked For
 
@@ -146,10 +136,9 @@ A false friend in input handling is a guard that looks like robustness but contr
 
 Java adds specific traps.
 
-- **int[][] grid** may be ragged, so `grid[0].length` is unsafe for every row unless the statement guarantees rectangularity.
-- **Integer.MIN_VALUE** as a sentinel collides with a legal answer if inputs may reach that value, and negating it overflows.
-- **null array** differs from an empty array.
-- **Unmentioned cases** are not promised, so a statement that mentions neither null nor empty input promises neither.
+An `int[][] grid` may be ragged, so `grid[0].length` is unsafe for every row unless the statement guarantees rectangularity. Using `Integer.MIN_VALUE` as a sentinel collides with a legal answer if inputs may reach that value, and negating it overflows.
+
+A null array differs from an empty array. Unmentioned cases are not promised, so a statement that mentions neither null nor empty input promises neither.
 
 <!-- stage: exercises -->
 ### Exercises

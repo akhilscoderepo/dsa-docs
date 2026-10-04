@@ -6,12 +6,9 @@
 
 **Approach.**
 
-- **`remove(0)`** shifts every later element one position left, as the `ArrayList` documentation states.
-- **Moves** for a list of size `s` number `s - 1`, so draining `n` elements moves `(n - 1) + (n - 2) + ... + 0`, which is `n(n - 1) / 2`.
-- **Totals** are 10 moves for `n = 5` and about five billion for `n = 100,000`.
-- **Read index** leaves the list unchanged, so each step costs one `get` and zero moves.
-- **Counting loop** in the code models the shifting and computes the numbers.
-- **Real `ArrayList`** drained both ways yields the same elements in the same order, and the code checks it.
+The call `remove(0)` shifts every later element one position left, as the `ArrayList` documentation states. For a list of size `s`, the moves number `s - 1`, so draining `n` elements moves `(n - 1) + (n - 2) + ... + 0`, which is `n(n - 1) / 2`. The totals are 10 moves for `n = 5` and about five billion for `n = 100,000`.
+
+In contrast, a read index leaves the list unchanged, so each step costs one `get` and zero moves. The counting loop in the code models the shifting and computes the numbers. A real `ArrayList` drained both ways yields the same elements in the same order, and the code checks it.
 
 **Complexity.**
 
@@ -62,11 +59,9 @@ public final class FrontRemoval {
 
 **Approach.**
 
-- **`String`** is immutable, so `result + ch` creates a new string and copies every old character into it.
-- **Copies** at step `k` number `k`, so `n` steps copy `1 + 2 + ... + n`, which is `n(n + 1) / 2`.
-- **Totals** are 15 for `n = 5` and about five billion for 100,000.
-- **`StringBuilder`** appends into a buffer and grows its capacity by a constant factor, so most appends copy nothing.
-- **Assertions** in the code check three claims: concatenation yields a new object, the old string stays unchanged, and the builder's capacity changes only a few times over a million appends.
+A `String` is immutable, so `result + ch` creates a new string and copies every old character into it. The copies at step `k` number `k`, so `n` steps copy `1 + 2 + ... + n`, which is `n(n + 1) / 2`. The totals are 15 for `n = 5` and about five billion for 100,000.
+
+In contrast, `StringBuilder` appends into a buffer and grows its capacity by a constant factor, so most appends copy nothing. The assertions in the code check three claims: concatenation yields a new object, the old string stays unchanged, and the builder's capacity changes only a few times over a million appends.
 
 **Complexity.**
 
@@ -114,12 +109,9 @@ public final class StringConstruction {
 
 **Approach.**
 
-- **Declaration** of `Arrays.asList` has a varargs parameter of an object type.
-- **Type rule** says an `int[]` is not an `Object[]`, so the compiler passes the whole array as one argument.
-- **Result** is a list with a single element, the array itself, of type `List<int[]>`.
-- **`Arrays.asList(1, 2, 3)`** passes three separate boxed arguments, which form a three-element varargs array, so the list has three elements.
-- **Loop** over the array adds each value to a `List<Integer>`, which boxes it.
-- **Stream** over the array boxes the values as an alternative, and both options visit every element once.
+The declaration of `Arrays.asList` has a varargs parameter of an object type. The type rule says an `int[]` is not an `Object[]`, so the compiler passes the whole array as one argument. The result is a list with a single element, the array itself, of type `List<int[]>`.
+
+In contrast, `Arrays.asList(1, 2, 3)` passes three separate boxed arguments, which form a three-element varargs array, so the list has three elements. A loop over the array adds each value to a `List<Integer>`, which boxes it. A stream over the array boxes the values as an alternative, and both options visit every element once.
 
 **Complexity.**
 
@@ -159,11 +151,9 @@ public final class PrimitiveArrays {
 
 **Approach.**
 
-- **`==`** on objects compares references, so two strings created with `new String("abc")` are different objects and the result is false.
-- **`.equals`** compares contents, so it returns true for the same characters.
-- **Content comparison** must use `.equals`, and hash-based collections rely on it, along with `hashCode`, to find a matching key. Chapter 04 builds on that.
-- **Self-comparison** with `==` is true, because both names refer to one object.
-- **`==` between strings** is unreliable, because literals in the same class may be shared, so the bug appears only sometimes.
+The operator `==` on objects compares references, so two strings created with `new String("abc")` are different objects and the result is false. In contrast, `.equals` compares contents, so it returns true for the same characters. Content comparison must use `.equals`, and hash-based collections rely on it, along with `hashCode`, to find a matching key. Chapter 04 builds on that.
+
+Self-comparison with `==` is true, because both names refer to one object. However, `==` between strings is unreliable, because literals in the same class may be shared, so the bug appears only sometimes.
 
 **Complexity.**
 

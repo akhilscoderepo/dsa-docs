@@ -6,12 +6,9 @@
 
 **Approach.**
 
-- **Loop header** `for (i = 1; i < 1; ...)` tests `1 < 1`, which is false, so the body never runs.
-- **Result** comes entirely from the initialization, because no iteration can repair it.
-- **Corrected method** starts `best` at 1, because any non-empty array holds a run of length one, so it returns 1.
-- **Flawed method** starts `best` at 0 and raises it only inside the loop, so it returns 0.
-- **Invariant** is that `best` holds the longest run seen so far, and an empty prefix must not count as a run of length one.
-- **Dry-run table** has a single row, the initial one, and that row already shows the wrong value of `best`.
+The loop header `for (i = 1; i < 1; ...)` tests `1 < 1`, which is false, so the body never runs. The result comes entirely from the initialization, because no iteration can repair it.
+
+The corrected method starts `best` at 1, because any non-empty array holds a run of length one, so it returns 1. The flawed method starts `best` at 0 and raises it only inside the loop, so it returns 0. The invariant is that `best` holds the longest run seen so far, and an empty prefix must not count as a run of length one. The dry-run table has a single row, the initial one, and that row already shows the wrong value of `best`.
 
 **Complexity.**
 
@@ -74,11 +71,9 @@ public final class Singleton {
 
 **Approach.**
 
-- **Strict comparison** `a[i] > a[i - 1]` fails on two equal neighbors, so `cur` resets to 1 at both steps and `best` stays 1.
-- **Non-strict comparison** `a[i] >= a[i - 1]` passes on equal neighbors, so `cur` grows to 2 and then 3, and `best` becomes 3.
-- **Values** never differ between the two runs, so the comparison operator alone changes the answer.
-- **Invariant** is that `cur` is the length of the run that ends at index `i` under the chosen comparison.
-- **Distinct values** cannot separate the two versions, because they contain no equal neighbors.
+The strict comparison `a[i] > a[i - 1]` fails on two equal neighbors, so `cur` resets to 1 at both steps and `best` stays 1. The non-strict comparison `a[i] >= a[i - 1]` passes on equal neighbors, so `cur` grows to 2 and then 3, and `best` becomes 3.
+
+The values never differ between the two runs, so the comparison operator alone changes the answer. The invariant is that `cur` is the length of the run that ends at index `i` under the chosen comparison. Distinct values cannot separate the two versions, because they contain no equal neighbors.
 
 **Complexity.**
 
@@ -128,11 +123,9 @@ public final class AllEqual {
 
 **Approach.**
 
-- **True sum** is 2 * 2,147,483,647 = 4,294,967,294, which exceeds the `int` maximum of 2,147,483,647.
-- **Two's-complement wrap-around** keeps the sum modulo 2^32 in a 32-bit `int`, so the stored value is 4,294,967,294 - 2^32, which is -2.
-- **Prediction** of -2 is made before the code runs, and the run confirms it.
-- **Long accumulator** holds 4,294,967,294 exactly, and each `int` element widens to `long` before the addition.
-- **Test input** sits at the extreme value of the type, where wrap-around is guaranteed.
+The true sum is 2 * 2,147,483,647 = 4,294,967,294, which exceeds the `int` maximum of 2,147,483,647. Two's-complement wrap-around keeps the sum modulo 2^32 in a 32-bit `int`, so the stored value is 4,294,967,294 - 2^32, which is -2. The prediction of -2 is made before the code runs, and the run confirms it.
+
+A `long` accumulator holds 4,294,967,294 exactly, and each `int` element widens to `long` before the addition. The test input sits at the extreme value of the type, where wrap-around is guaranteed.
 
 **Complexity.**
 
@@ -170,14 +163,11 @@ public final class NumericExtremes {
 
 **Approach.**
 
-- **Left-to-right step** `a[1] = a[0]` overwrites the old `a[1]`, which holds 2, before the loop reads it.
-- **First bad write** is that step, because it overwrites unread data.
-- **Next steps** `a[2] = a[1]` and `a[3] = a[2]` copy the value just written, so `a[2]` receives 1 instead of 2, and `a[3]` receives 1 again. Every slot ends up holding the first value.
-- **Right-to-left steps** `a[3] = a[2]`, `a[2] = a[1]` and `a[1] = a[0]` each write a slot whose old value the loop has already moved.
-- **Invariant** is that every slot to the left of the write position is still unread and unchanged.
-- **Insert** writes 9 into slot 0 after the shift.
-- **Rule** is to copy in the direction that keeps the destination behind the source.
-- **`System.arraycopy`** handles overlapping ranges correctly, as its documentation states, so it is a safe alternative.
+In the left-to-right version, the step `a[1] = a[0]` overwrites the old `a[1]`, which holds 2, before the loop reads it. That step is the first bad write, because it overwrites unread data. The next steps `a[2] = a[1]` and `a[3] = a[2]` copy the value just written, so `a[2]` receives 1 instead of 2, and `a[3]` receives 1 again. Every slot ends up holding the first value.
+
+In the right-to-left version, the steps `a[3] = a[2]`, `a[2] = a[1]` and `a[1] = a[0]` each write a slot whose old value the loop has already moved. The invariant is that every slot to the left of the write position is still unread and unchanged. After the shift, the insert writes 9 into slot 0.
+
+The rule is to copy in the direction that keeps the destination behind the source. `System.arraycopy` handles overlapping ranges correctly, as its documentation states, so it is a safe alternative.
 
 **Complexity.**
 

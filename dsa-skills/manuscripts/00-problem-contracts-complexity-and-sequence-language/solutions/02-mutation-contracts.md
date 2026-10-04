@@ -64,13 +64,9 @@ public final class MeaningfulPrefix {
 
 **Approach.**
 
-- **Precondition** is that the specification forbids writes to `nums`.
-- **First pass** counts the kept values, so the method knows the exact length of the result.
-- **Allocation** creates `out` with that length.
-- **Second pass** copies the kept values into `out` in order.
-- **Original array** must stay whole, because the caller relies on it, so any write to `nums` changes data the caller still owns even when the returned numbers are correct.
-- **Permissive specification** allows rewriting in place, which saves O(n) memory.
-- **Design** follows from the specification and not from preference.
+The specification forbids writes to `nums`, so the method must leave the input whole. First, a pass counts the kept values, so the method knows the exact length of the result. Then the method allocates `out` with that length. A second pass copies the kept values into `out` in order.
+
+The original array must stay whole because the caller relies on it. Any write to `nums` changes data the caller still owns, even when the returned numbers are correct. A permissive specification allows rewriting in place, which saves O(n) memory. Therefore the design follows from the specification and not from preference.
 
 **Complexity.**
 
@@ -117,12 +113,9 @@ public final class PreserveInput {
 
 **Approach.**
 
-- **Assignment** `b = a` copies the reference and not the array, so one array object has two names.
-- **Write through either name** is visible through the other, because both names point to the same elements.
-- **Separate contents** need a copy before the call, for example `int[] b = a.clone()`.
-- **clone()** allocates a second array and copies the elements.
-- **Primitive array** is copied completely by `clone()`.
-- **Array of arrays** needs a deeper copy, because `clone()` copies only the outer references.
+The assignment `b = a` copies the reference and not the array, so one array object has two names. Because both names point to the same elements, a write through either name is visible through the other.
+
+Separate contents need a copy before the call, for example `int[] b = a.clone()`. The call `clone()` allocates a second array and copies the elements. A primitive array is copied completely by `clone()`. An array of arrays needs a deeper copy, because `clone()` copies only the outer references.
 
 **Complexity.**
 
@@ -162,12 +155,9 @@ public final class AliasedInput {
 
 **Approach.**
 
-- **Result array** of `n` values needs at least O(n) memory of any kind, because the result itself has that size.
-- **Total space** counts everything, so it is O(n).
-- **Auxiliary space** counts only the working memory beyond the input and the required output.
-- **Auxiliary space of this method** is O(1), because it adds only a few scalars.
-- **Convention** must be stated, because the two answers describe the same code.
-- **Interview request** for O(1) space almost always means auxiliary space.
+A result array of `n` values needs at least O(n) memory of any kind, because the result itself has that size. Total space counts everything, so it is O(n). Auxiliary space counts only the working memory beyond the input and the required output. For this method, auxiliary space is O(1), because the method adds only a few scalars.
+
+The two answers describe the same code, so the convention must be stated. An interview request for O(1) space almost always means auxiliary space.
 
 **Complexity.**
 

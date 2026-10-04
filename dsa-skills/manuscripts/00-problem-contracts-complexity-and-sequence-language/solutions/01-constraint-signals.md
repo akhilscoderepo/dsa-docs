@@ -6,14 +6,9 @@
 
 **Approach.**
 
-- **Maximum input** is `n = 100_000`, with a time limit of 10^8 steps.
-- **Single scan** takes about 100,000 steps.
-- **Sort then scan** takes about `n * 17`, which is 1.7 million steps, because `log2(100_000)` rounds up to 17.
-- **All pairs** takes `n * (n - 1) / 2`, which is 4,999,950,000 steps.
-- **Verdict for the first two plans** is "plausible", because they stay far below the limit.
-- **Verdict for all pairs** is "implausible", because it is about fifty times over the limit.
-- **long** holds every count, because the pair count exceeds the `int` maximum.
-- **Assertions** in the code state each claim, so the verdict is a checked fact.
+The maximum input is `n = 100_000`, with a time limit of 10^8 steps. A single scan takes about 100,000 steps. Sort then scan takes about `n * 17`, which is 1.7 million steps, because `log2(100_000)` rounds up to 17. All pairs takes `n * (n - 1) / 2`, which is 4,999,950,000 steps.
+
+The verdict for the first two plans is "plausible", because they stay far below the limit. The verdict for all pairs is "implausible", because it is about fifty times over the limit. A `long` holds every count, because the pair count exceeds the `int` maximum. The assertions in the code state each claim, so the verdict is a checked fact.
 
 **Complexity.**
 
@@ -63,13 +58,9 @@ public final class BudgetCheck {
 
 **Approach.**
 
-- **Value-indexed table** has one slot per possible value, so its size equals the value range and does not depend on `n`.
-- **Memory** is the slot count times 4 bytes.
-- **Values in 0..100** need 101 counters, which is 404 bytes.
-- **Values in 0..1_000_000_000** need 1,000,000,001 counters, about four gigabytes.
-- **Size limit** `n <= 100_000` is identical in both cases.
-- **Value limit** is the input constraint that changes the decision.
-- **Counting loop** increments `counts[v]` for each element `v`, in one pass.
+A value-indexed table has one slot per possible value, so its size equals the value range and does not depend on `n`. The memory is the slot count times 4 bytes. Values in 0..100 need 101 counters, which is 404 bytes. Values in 0..1_000_000_000 need 1,000,000,001 counters, about four gigabytes.
+
+The size limit `n <= 100_000` is identical in both cases. The value limit is therefore the input constraint that changes the decision. The counting loop increments `counts[v]` for each element `v`, in one pass.
 
 **Complexity.**
 
@@ -116,12 +107,9 @@ public final class SmallDomain {
 
 **Approach.**
 
-- **Largest sum** is `100_000 * 1_000_000_000`, which is 10^14.
-- **int ceiling** is 2,147,483,647, far below that bound, so an `int` cannot always hold the sum and the answer is "no".
-- **Accumulator** must be a `long`, which holds values up to about 9.2 * 10^18.
-- **Adversarial input** is one hundred thousand copies of the largest legal value.
-- **Small sample** such as `[5, 7, 9]` passes with either type, so small tests cannot replace reading the limit.
-- **int accumulator** wraps around silently, so the program gives a wrong answer and no error.
+The largest sum is `100_000 * 1_000_000_000`, which is 10^14. The `int` ceiling is 2,147,483,647, far below that bound, so an `int` cannot always hold the sum and the answer is "no". The accumulator must be a `long`, which holds values up to about 9.2 * 10^18.
+
+The adversarial input is one hundred thousand copies of the largest legal value. A small sample such as `[5, 7, 9]` passes with either type, so small tests cannot replace reading the limit. An `int` accumulator wraps around silently, so the program gives a wrong answer and no error.
 
 **Complexity.**
 
@@ -163,12 +151,9 @@ public final class HiddenOverflow {
 
 **Approach.**
 
-- **One query** reads at most `n = 100_000` elements, far below the time limit of 10^8.
-- **q queries** cost up to `100_000 * 100_000 = 10^10` steps, a hundred times the limit.
-- **Array size** stays the same across both workloads, and only the operation count changes.
-- **Design** must therefore spend time up front to make each query cheap.
-- **Prefix-sum chapter** provides that design, and this exercise only decides that it is needed.
-- **Break-even point** is 1,000 queries, because `100_000 * 1_000` equals the limit.
+One query reads at most `n = 100_000` elements, far below the time limit of 10^8. In contrast, q queries cost up to `100_000 * 100_000 = 10^10` steps, a hundred times the limit. The array size stays the same across both workloads, and only the operation count changes.
+
+The design must therefore spend time up front to make each query cheap. The prefix-sum chapter provides that design, and this exercise only decides that it is needed. The break-even point is 1,000 queries, because `100_000 * 1_000` equals the limit.
 
 **Complexity.**
 

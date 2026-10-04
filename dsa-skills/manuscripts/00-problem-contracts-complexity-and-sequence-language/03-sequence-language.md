@@ -69,19 +69,13 @@ Classification needs one list and two tests.
 
 Take the array `[1, 2, 3, 4]` and the candidate `[2, 4]`.
 
-- **Positions** are 1 for the value 2 and 3 for the value 4.
-- **Order test** passes, because the positions rise from 1 to 3.
-- **Gap test** fails, because the difference is 2, not 1, so position 2 is skipped.
-- **Verdict** is a subsequence and a subset, and not a subarray.
+The positions are 1 for the value 2 and 3 for the value 4. The order test passes, because the positions rise from 1 to 3. The gap test fails, because the difference is 2, not 1, so position 2 is skipped. The verdict is therefore a subsequence and a subset, and not a subarray.
 
 #### Classifying Candidate `[4, 2]`
 
 Now take the candidate `[4, 2]` on the same array.
 
-- **Positions** are 3 for the value 4, then 1 for the value 2.
-- **Order test** fails, because the positions fall.
-- **Gap test** fails, because the difference is -2, not 1.
-- **Verdict** is a subset only, because a subset makes no promise about order.
+The positions are 3 for the value 4, then 1 for the value 2. The order test fails, because the positions fall. The gap test also fails, because the difference is -2, not 1. The verdict is therefore a subset only, because a subset makes no promise about order.
 
 Both candidates hold the same two values, so they look like the same answer. Only the positions show that one candidate respects the original order and the other does not. The order test is the step most often missed on this second candidate.
 
@@ -121,8 +115,8 @@ static boolean isInOrder(int[] nums, int[] cand) {
 
 - **isContiguousBlock** costs O(n * m) for a candidate of length `m`, because it tries every start position and compares a block.
 - **isInOrder** costs O(n), because it is a single left-to-right scan.
-- **Earliest match** is a safe greedy choice, because taking an earlier position never makes a later match harder.
-- **Subset test** ignores order and compares counts of values, and a later chapter on hash maps makes it cheap.
+
+The earliest match is a safe greedy choice, because taking an earlier position never makes a later match harder. The subset test ignores order and compares counts of values, and a later chapter on hash maps makes it cheap.
 
 The two methods differ by exactly the rule the lesson stated, a block versus an ordered selection.
 
@@ -133,8 +127,7 @@ The two methods differ by exactly the rule the lesson stated, a block versus an 
 
 Whenever a statement says subarray, substring, subsequence, subset, prefix or suffix, restate its position rule in one line before looking at the examples.
 
-- **Invariant** is that the answer satisfies the stated position rule exactly, and does not merely resemble a sample.
-- **Typical failure** is a fast greedy that passes the samples but answers a larger search space than the one asked.
+The invariant is that the answer satisfies the stated position rule exactly, and does not merely resemble a sample. The typical failure is a fast greedy that passes the samples but answers a larger search space than the one asked.
 
 #### Confusing Substring With Subsequence
 
@@ -144,10 +137,7 @@ The false friend in this lesson is a pair of terms that look interchangeable but
 
 Java supports the contiguous case only.
 
-- **String.substring** returns a block.
-- **Arrays.copyOfRange** returns a block and excludes its end index.
-- **Subsequence** has no library call, so you code it as a scan.
-- **"Contiguous" or "consecutive"** in a statement gives the subarray rule even without the word.
+`String.substring` returns a block, and `Arrays.copyOfRange` returns a block and excludes its end index. A subsequence has no library call, so you code it as a scan. The words "contiguous" or "consecutive" in a statement give the subarray rule even without the word itself.
 
 <!-- stage: exercises -->
 ### Exercises

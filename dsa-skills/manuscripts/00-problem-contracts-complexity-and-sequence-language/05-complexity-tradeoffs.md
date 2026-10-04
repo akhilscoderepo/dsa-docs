@@ -77,10 +77,7 @@ Never merge two dimensions silently into one letter.
 
 Take `pairCount` with `n = 4`.
 
-- **i = 0** runs `j` over 1, 2 and 3, so the statement executes three times.
-- **i = 1** runs `j` over 2 and 3, which adds two executions.
-- **i = 2** runs `j` over 3 only, which adds one execution.
-- **i = 3** leaves the inner loop nothing to run, so it adds none.
+When `i = 0`, `j` runs over 1, 2 and 3, so the statement executes three times. When `i = 1`, `j` runs over 2 and 3, which adds two executions. When `i = 2`, `j` runs over 3 only, which adds one execution. When `i = 3`, the inner loop has nothing to run, so it adds none.
 
 The total is 3 + 2 + 1 + 0, which is 6. The formula `n * (n - 1) / 2` gives 4 * 3 / 2, which is 6 as well. The hardest step to see is the last one, where an outer iteration contributes nothing. That step is why the answer is half of `n * n`. It also shows why a shrinking inner loop does not make the method linear, because the pieces still add up to a quantity proportional to `n^2`. Doubling `n` to 8 gives 28 executions, nearly four times as many.
 
@@ -123,10 +120,7 @@ Each counter mirrors the loop structure of the method it models, and `steps++` s
 
 Count executions of the most frequently executed statement whenever you claim a time or space bound. Check each item before you state it.
 
-- **Counted statement** is the most frequently executed statement, and its executions give the bound.
-- **Input** is the worst-case input, and the claim names it.
-- **Stated bound** holds as an invariant: it describes the cost on that input, in units the problem's variables can express.
-- **Size variables** all appear in the bound when the problem has two of them.
+The counted statement is the most frequently executed statement, and its executions give the bound. The claim also names the input, which is the worst-case input. The stated bound then holds as an invariant: it describes the cost on that input, in units the problem's variables can express. When the problem has two size variables, both appear in the bound.
 
 #### Check The Loop-Counting Shortcut
 
@@ -136,8 +130,7 @@ A false friend in loop counting is a shortcut that looks sound but fails in some
 
 Java library calls add costs that loop counting misses. Lesson 8 of this chapter lists those calls. Any bound you state must include them.
 
-- **`list.remove(0)`** inside a loop costs O(n) per call, because it shifts the remaining elements.
-- **String concatenation** inside a loop costs O(n) per call, because it copies the accumulated characters.
+A call to `list.remove(0)` inside a loop costs O(n) per call, because it shifts the remaining elements. String concatenation inside a loop also costs O(n) per call, because it copies the accumulated characters.
 
 <!-- stage: exercises -->
 ### Exercises

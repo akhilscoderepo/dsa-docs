@@ -5,11 +5,9 @@
 <!-- id: pc-classify-2-4 -->
 
 **Approach.**
-- **Positions** in `[1,2,3,4]` are index 1 for the value 2 and index 3 for the value 4.
-- **Order test** passes, because the positions strictly increase (1 then 3), so the candidate is a subsequence.
-- **Gap test** fails, because index 2 is skipped, so the candidate is not a subarray.
-- **Membership test** passes, because both values occur in `nums`, so the candidate is a subset.
-- **Invariant** is that every verdict reads only the position list, never how the values look.
+In `[1,2,3,4]`, the candidate `[2,4]` has positions index 1 for the value 2 and index 3 for the value 4. The order test passes, because the positions strictly increase (1 then 3), so the candidate is a subsequence. However, the gap test fails, because index 2 is skipped, so the candidate is not a subarray. The membership test passes, because both values occur in `nums`, so the candidate is a subset.
+
+The invariant is that every verdict reads only the position list, never how the values look.
 
 **Complexity.**
 - **Time** is O(n * m) in this brute-force code, because each of the `m` candidate values scans up to `n` positions; a value-to-position map reduces it to O(n + m).
@@ -69,12 +67,9 @@ public final class ClassifyPositions {
 <!-- id: pc-order-matters -->
 
 **Approach.**
-- **Positions** of `[4,2]` are 3 then 1, so the positions fall.
-- **Gap test** fails, because a drop is not "previous position plus 1", so the candidate is not a subarray.
-- **Order test** fails, because the positions do not increase, so the candidate is not a subsequence.
-- **Membership test** passes, because both values occur in the array, so the candidate is a subset.
-- **Changed decision** is the direction of the positions, compared with `[2,4]`.
-- **Invariant** is that the subset test ignores positions, while the other two tests use them.
+In `[4,2]`, the positions are 3 then 1, so the positions fall. The gap test fails, because a drop is not "previous position plus 1", so the candidate is not a subarray. The order test fails too, because the positions do not increase, so the candidate is not a subsequence. The membership test still passes, because both values occur in the array, so the candidate is a subset.
+
+Compared with `[2,4]`, the changed decision is the direction of the positions. The invariant is that the subset test ignores positions, while the other two tests use them.
 
 **Complexity.**
 - **Time** is O(n), because each `indexOf` call scans the array of `n` values at most once, and the code makes a constant number of calls.
@@ -111,14 +106,11 @@ public final class OrderMatters {
 <!-- id: pc-empty-choice -->
 
 **Approach.**
-- **Specification** must state whether the empty subarray is legal, because its sum 0 beats every sum on an all-negative array.
-- **best** starts at `Integer.MIN_VALUE` under the non-empty requirement, so the first block sum replaces it.
-- **best** starts at 0 when the empty choice is allowed, the sum of no elements.
-- **start** loop tries every start position.
-- **sum** extends the end one step at a time as a running sum, so each block sum costs one addition.
-- **best** keeps the larger of itself and the block sum after each extension.
-- **Result** for `[-8,-3,-6]` is -3 under the non-empty requirement, the best single value, and 0 when the empty choice is allowed.
-- **Invariant** is that `best` holds the maximum over the legal blocks seen so far.
+The specification must state whether the empty subarray is legal, because its sum 0 beats every sum on an all-negative array. Under the non-empty requirement, `best` starts at `Integer.MIN_VALUE`, so the first block sum replaces it. When the empty choice is allowed, `best` starts at 0, the sum of no elements.
+
+The `start` loop then tries every start position. For each start, `sum` extends the end one step at a time as a running sum, so each block sum costs one addition. After each extension, `best` keeps the larger of itself and the block sum. The invariant is that `best` holds the maximum over the legal blocks seen so far.
+
+For `[-8,-3,-6]`, the result is -3 under the non-empty requirement, the best single value. The result is 0 when the empty choice is allowed.
 
 **Complexity.**
 - **Time** is O(n^2), because the two nested loops visit every start and end pair once, and a running sum makes each block cost O(1).
@@ -166,12 +158,9 @@ public final class EmptyChoice {
 <!-- id: pc-contiguous-maximum -->
 
 **Approach.**
-- **Blocks containing 5 and 4** reduce to one block, the whole array, which also contains the -10 between them, so its sum is -1.
-- **Other blocks** give `[5]` = 5, `[-10]` = -10, `[4]` = 4 and `[5,-10]` = -5, so the best subarray sum is 5.
-- **Bit mask** enumerates subsequences, where bit `i` says whether index `i` is chosen.
-- **Positions 0 and 2** skip the -10 and give 9, the best subsequence sum.
-- **Position rule** alone moves the answer from 5 to 9, because the data and the objective are identical.
-- **Invariant** in each function is that `best` holds the maximum over the candidates examined so far.
+The blocks containing 5 and 4 reduce to one block, the whole array, which also contains the -10 between them, so its sum is -1. The other blocks give `[5]` = 5, `[-10]` = -10, `[4]` = 4 and `[5,-10]` = -5, so the best subarray sum is 5.
+
+A bit mask enumerates subsequences, where bit `i` says whether index `i` is chosen. Positions 0 and 2 skip the -10 and give 9, the best subsequence sum. The position rule alone moves the answer from 5 to 9, because the data and the objective are identical. In each function, the invariant is that `best` holds the maximum over the candidates examined so far.
 
 **Complexity.**
 - **Time** is O(n^2) for the subarray function, because it visits each start and end pair once.

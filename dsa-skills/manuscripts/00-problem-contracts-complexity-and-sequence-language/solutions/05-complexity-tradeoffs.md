@@ -6,13 +6,9 @@
 
 **Approach.** The method adds two sequential loops.
 
-- **First loop** executes its body `n` times.
-- **Second loop** executes its body `n` times, because its bound is `n` and not a value from the first loop.
-- **Total** is `n + n = 2n`, because sequential loops add.
-- **Constant factor** of two drops from the bound, so the bound is O(n).
-- **Doubling `n`** still doubles the running time, because the factor exists but does not change how cost grows.
-- **Multiplication** applies only when one loop sits inside the other.
-- **Harness** asserts the counts for `n = 10`, `n = 1` and a doubled `n`.
+The first loop executes its body `n` times. The second loop also executes its body `n` times, because its bound is `n` and not a value from the first loop. The total is `n + n = 2n`, because sequential loops add.
+
+The constant factor of two drops from the bound, so the bound is O(n). Doubling `n` still doubles the running time, because the factor exists but does not change how cost grows. Multiplication applies only when one loop sits inside the other. The harness asserts the counts for `n = 10`, `n = 1` and a doubled `n`.
 
 **Complexity.**
 
@@ -52,12 +48,9 @@ public final class ConsecutiveLoops {
 
 **Approach.** The method counts a loop whose inner bound depends on `i`.
 
-- **Inner count** is `n - 1` for `i = 0`, `n - 2` for `i = 1`, and 0 for `i = n - 1`.
-- **Sum** `(n - 1) + (n - 2) + ... + 1` equals `n(n - 1) / 2`.
-- **Bound** is O(n^2), because the formula is about half of `n^2` and the bound drops the constant factor.
-- **Exact count** keeps the factor one half.
-- **Inner bound** depends on `i`, so the total is a sum and not the product `n * n`.
-- **Harness** checks the formula for every `n` from 0 to 60 and not only for two sizes.
+The inner count is `n - 1` for `i = 0`, `n - 2` for `i = 1`, and 0 for `i = n - 1`. Therefore the sum `(n - 1) + (n - 2) + ... + 1` equals `n(n - 1) / 2`. The bound is O(n^2), because the formula is about half of `n^2` and the bound drops the constant factor. The exact count keeps the factor one half.
+
+The inner bound depends on `i`, so the total is a sum and not the product `n * n`. The harness checks the formula for every `n` from 0 to 60 and not only for two sizes.
 
 **Complexity.**
 
@@ -101,11 +94,9 @@ public final class TriangularWork {
 
 **Approach.** The traversal nests a column loop inside a row loop.
 
-- **Row loop** runs `rows` times, and each run starts a column loop of `cols` visits.
-- **Cost** is `rows * cols`, because nested loops multiply, and the bound keeps both variables.
-- **Merged claim** O(n^2) calls both dimensions `n`. It is correct for a square grid and far too pessimistic for a long thin grid.
-- **Thin grid** with `rows = 1000` and `cols = 2` has 2,000 visits, while the merged claim suggests 1,000,000.
-- **Two letters** show how the cost responds to each dimension separately.
+The row loop runs `rows` times, and each run starts a column loop of `cols` visits. Therefore the cost is `rows * cols`, because nested loops multiply, and the bound keeps both variables.
+
+The merged claim O(n^2) calls both dimensions `n`. It is correct for a square grid and far too pessimistic for a long thin grid. For example, a thin grid with `rows = 1000` and `cols = 2` has 2,000 visits, while the merged claim suggests 1,000,000. Two letters show how the cost responds to each dimension separately.
 
 **Complexity.**
 
@@ -148,14 +139,9 @@ public final class TwoDimensions {
 
 **Approach.** The method sorts a copy and scans it once.
 
-- **Copy** of the array is sorted, so `nums` stays unchanged.
-- **Scan** of the copy compares each element with its predecessor.
-- **Sorted order** places equal values next to each other, so a duplicate exists exactly when some pair of neighbors is equal.
-- **Return value** is `true` at the first equal pair and `false` when the scan ends without one.
-- **Sort** costs O(n log n) and the scan costs O(n), so the sort dominates.
-- **Copy** needs O(n) extra space, whereas sorting in place would destroy the original order and every index.
-- **All-pairs method** needs O(1) extra space but O(n^2) time, so the sorted approach buys speed with memory.
-- **Harness** compares both methods on 2,000 random small arrays.
+The method sorts a copy of the array, so `nums` stays unchanged. Then a scan of the copy compares each element with its predecessor. Sorted order places equal values next to each other, so a duplicate exists exactly when some pair of neighbors is equal. The return value is `true` at the first equal pair and `false` when the scan ends without one.
+
+The sort costs O(n log n) and the scan costs O(n), so the sort dominates. The copy needs O(n) extra space, whereas sorting in place would destroy the original order and every index. The all-pairs method needs O(1) extra space but O(n^2) time, so the sorted approach buys speed with memory. The harness compares both methods on 2,000 random small arrays.
 
 **Complexity.**
 

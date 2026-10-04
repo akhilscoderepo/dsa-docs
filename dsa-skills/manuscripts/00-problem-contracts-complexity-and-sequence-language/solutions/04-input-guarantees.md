@@ -5,12 +5,9 @@
 <!-- id: pc-non-empty-maximum -->
 
 **Approach.**
-- **best** starts at `nums[0]`, a real member of the input, because the specification promises at least one element.
-- **Loop** visits the remaining elements from index 1.
-- **best** keeps the larger of itself and the current element at each step.
-- **Invariant** is that `best` equals the maximum of the elements read so far, so it is the maximum of the whole array when the loop ends.
-- **Zero start** assumes zero is below every value, and fails on `[-8,-3]` with result 0 instead of -3.
-- **Empty-array guard** is dead code under this specification, and it implies a precondition the problem never stated.
+The method starts `best` at `nums[0]`, a real member of the input, because the specification promises at least one element. Then the loop visits the remaining elements from index 1. At each step, `best` keeps the larger of itself and the current element. The invariant is that `best` equals the maximum of the elements read so far, so it is the maximum of the whole array when the loop ends.
+
+A zero start assumes zero is below every value, and it fails on `[-8,-3]` with result 0 instead of -3. An empty-array guard is dead code under this specification, and it implies a precondition the problem never stated.
 
 **Complexity.**
 - **Time** is O(n), because the loop reads each of the `n` elements once.
@@ -64,12 +61,9 @@ public final class NonEmptyMaximum {
 <!-- id: pc-possibly-empty -->
 
 **Approach.**
-- **OptionalInt** makes absence part of the return type, so a caller must handle the case where no answer exists.
-- **Sentinel** is rejected, because a value such as `Integer.MIN_VALUE` collides with a legal answer.
-- **Range** `-10^9..10^9` makes every integer a legal maximum, so no safe sentinel exists unless the range excludes one.
-- **Empty input** returns `OptionalInt.empty()` when `nums.length == 0`.
-- **Non-empty input** starts `best` at `nums[0]`, keeps the larger value in a loop, and returns `OptionalInt.of(best)`.
-- **Documentation** says "empty when the array is empty" and adds no other convention.
+`OptionalInt` makes absence part of the return type, so a caller must handle the case where no answer exists. A sentinel is rejected, because a value such as `Integer.MIN_VALUE` collides with a legal answer. The range `-10^9..10^9` makes every integer a legal maximum, so no safe sentinel exists unless the range excludes one.
+
+Empty input returns `OptionalInt.empty()` when `nums.length == 0`. Non-empty input starts `best` at `nums[0]`, keeps the larger value in a loop, and returns `OptionalInt.of(best)`. The documentation says "empty when the array is empty" and adds no other convention.
 
 **Complexity.**
 - **Time** is O(n), because the loop reads each of the `n` elements once.
@@ -111,14 +105,9 @@ public final class PossiblyEmpty {
 <!-- id: pc-rectangular-or-ragged -->
 
 **Approach.**
-- **grid[0].length** measures only the first row.
-- **Shorter row** makes that bound overrun and throw `ArrayIndexOutOfBoundsException`.
-- **Longer row** makes that bound skip the extra cells silently.
-- **Inner bound** is `c < grid[r].length`, which evaluates the length of the current row `r`.
-- **count** increases by one per inner iteration.
-- **Invariant** is that `count` equals the number of cells in the rows and columns already visited.
-- **Rectangular grids** also work with this form, so it is correct whatever the shape.
-- **Zero rows and zero-length rows** make the matching loop body not run.
+The bound `grid[0].length` measures only the first row. A shorter row makes that bound overrun and throw `ArrayIndexOutOfBoundsException`. A longer row makes that bound skip the extra cells silently.
+
+Therefore the inner bound is `c < grid[r].length`, which evaluates the length of the current row `r`. The variable `count` increases by one per inner iteration. The invariant is that `count` equals the number of cells in the rows and columns already visited. Rectangular grids also work with this form, so it is correct whatever the shape. Zero rows and zero-length rows make the matching loop body not run.
 
 **Complexity.**
 - **Time** is O(R + C), where R is the number of rows and C is the total number of cells, because the outer loop runs R times and the inner iterations add up to C.
@@ -178,12 +167,9 @@ public final class RectangularOrRagged {
 <!-- id: pc-sorted-promise -->
 
 **Approach.**
-- **Sorted order** places equal values next to each other, so a new value starts exactly when `nums[i]` differs from `nums[i - 1]`.
-- **Empty array** has no values, so the method returns 0.
-- **distinct** starts at 1, because the first element begins the first run.
-- **Scan** runs from index 1 and adds one at every position where `nums[i] != nums[i - 1]`.
-- **Invariant** is that `distinct` equals the number of runs in `nums[0..i]`, which equals the number of distinct values because the array is sorted.
-- **Unsorted array** breaks the precondition, so the same loop counts runs and `[1,2,1]` gives 3 instead of 2.
+Sorted order places equal values next to each other, so a new value starts exactly when `nums[i]` differs from `nums[i - 1]`. An empty array has no values, so the method returns 0. Otherwise, `distinct` starts at 1, because the first element begins the first run.
+
+Then the scan runs from index 1 and adds one at every position where `nums[i] != nums[i - 1]`. The invariant is that `distinct` equals the number of runs in `nums[0..i]`, which equals the number of distinct values because the array is sorted. An unsorted array breaks the precondition, so the same loop counts runs and `[1,2,1]` gives 3 instead of 2.
 
 **Complexity.**
 - **Time** is O(n), because the loop makes one comparison for each of the `n - 1` later elements.

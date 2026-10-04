@@ -6,14 +6,9 @@
 
 **Approach.** The simulation tracks the array state and counts copies.
 
-- **State** is `size`, `capacity` and a running copy count.
-- **Resize test** runs before each append and checks `size == capacity`.
-- **Resize action** doubles the capacity, adds `size` to the copy count and records the new capacity.
-- **Write** increases `size` by one.
-- **Eight appends** find the array full on appends 2, 3 and 5, so the capacity goes 1 to 2, 2 to 4 and 4 to 8.
-- **Copies** are 1, 2 and 4, a total of 7, which is below one copy per append.
-- **Copy sizes** double, so they form a geometric series that sums to less than twice the last term.
-- **Simulation** records the capacities it passes through, so the code produces the list and nothing is counted by hand.
+The state is `size`, `capacity` and a running copy count. Before each append, the resize test checks `size == capacity`. When the test passes, the resize action doubles the capacity, adds `size` to the copy count and records the new capacity. Then the write increases `size` by one.
+
+Eight appends find the array full on appends 2, 3 and 5, so the capacity goes 1 to 2, 2 to 4 and 4 to 8. The copies are 1, 2 and 4, a total of 7, which is below one copy per append. The copy sizes double, so they form a geometric series that sums to less than twice the last term. The simulation records the capacities it passes through, so the code produces the list and nothing is counted by hand.
 
 **Complexity.**
 
@@ -76,12 +71,9 @@ public final class DoublingArray {
 
 **Approach.** Growth by one slot makes every append after the first trigger a resize.
 
-- **Capacity** grows by one, so the array is full on every append after the first.
-- **Copy cost** of an append that finds `s` stored values is `s` elements.
-- **Total** over `n` appends is `1 + 2 + ... + (n - 1) = n(n - 1) / 2`, so eight appends cost 28 copies against 7 for doubling.
-- **Average** per append is about `n / 2`, which is O(n).
-- **Growth policy** gives room for only one more append per resize, so no resize pays for later ones.
-- **Amortized bound** therefore loses its O(1) value.
+When capacity grows by one, the array is full on every append after the first. The copy cost of an append that finds `s` stored values is `s` elements. Therefore the total over `n` appends is `1 + 2 + ... + (n - 1) = n(n - 1) / 2`, so eight appends cost 28 copies against 7 for doubling.
+
+The average per append is about `n / 2`, which is O(n). This growth policy gives room for only one more append per resize, so no resize pays for later ones. The amortized bound therefore loses its O(1) value.
 
 **Complexity.**
 
@@ -131,13 +123,9 @@ public final class GrowByOne {
 
 **Approach.** The 1,025th append is the first one after the array fills at 1,024 values.
 
-- **Full array** holds 1,024 values in capacity 1,024.
-- **Append 1,025** finds no room, doubles the capacity to 2,048 and copies all 1,024 stored values.
-- **Earlier resizes** copied `1 + 2 + 4 + ... + 512`, which is 1,023 elements in total.
-- **Single resize** therefore equals the total of every earlier resize plus one.
-- **Geometric series** keeps the total copies below two per append.
-- **Average** stays constant despite one costly call, because the previous 1,024 appends already created the room that this resize uses.
-- **Return value** of the code holds the total and the copies of the last append.
+A full array holds 1,024 values in capacity 1,024. Append 1,025 finds no room, doubles the capacity to 2,048 and copies all 1,024 stored values. The earlier resizes copied `1 + 2 + 4 + ... + 512`, which is 1,023 elements in total. Therefore the single resize equals the total of every earlier resize plus one.
+
+The geometric series keeps the total copies below two per append. The average stays constant despite one costly call, because the previous 1,024 appends already created the room that this resize uses. The return value of the code holds the total and the copies of the last append.
 
 **Complexity.**
 
@@ -189,13 +177,9 @@ public final class OneExpensiveAppend {
 
 **Approach.** The accounting method counts the appends between two resizes.
 
-- **Array after a resize** to capacity `2c` holds `c` values, so exactly `c` slots are empty.
-- **Appends before the next resize** number `c`.
-- **Charge** per append is 3 units: 1 unit pays for the write and 2 units go into the balance.
-- **Saved credit** after those `c` appends is `2c` units.
-- **Next resize** from `2c` to `4c` copies `2c` values, so the saved credit pays for it exactly.
-- **First resize** from 1 to 2 copies one value, and the 2 units saved by the first append fund it with one unit to spare.
-- **Simulation** tracks the credit balance and asserts that it never goes negative.
+After a resize to capacity `2c`, the array holds `c` values, so exactly `c` slots are empty. Therefore `c` appends happen before the next resize. The charge per append is 3 units: 1 unit pays for the write and 2 units go into the balance. After those `c` appends, the saved credit is `2c` units.
+
+The next resize from `2c` to `4c` copies `2c` values, so the saved credit pays for it exactly. The first resize from 1 to 2 copies one value, and the 2 units saved by the first append fund it with one unit to spare. The simulation tracks the credit balance and asserts that it never goes negative.
 
 **Complexity.**
 
