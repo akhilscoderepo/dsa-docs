@@ -1,4 +1,4 @@
-# Lesson spec: Indexed Scans
+# Lesson spec: Scan A String By Index
 
 **Recognition cue.** Each character can be inspected independently or folded into a small running answer. **State.** `i` is the next unexamined index. **False friend.** A reversed or paired comparison needs two pointers, not one scan.
 

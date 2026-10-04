@@ -1,4 +1,4 @@
-# Lesson spec: Center Expansion
+# Lesson spec: Expand Palindromes From The Center
 
 **Recognition cue.** A substring is defined by symmetry around one character or one gap. **State.** `left` and `right` expand only while characters match; the center remains fixed for one attempt. **False friend.** This is not opposite-end validation of the whole string.
 

@@ -4,13 +4,13 @@ Strings are indexed sequences with immutable values in Java. This chapter stays 
 
 ## Lesson order
 
-01. Indexed Scans  ->  01-indexed-scans.md
-02. Safe Construction  ->  02-safe-construction.md
-03. Parsing State  ->  03-parsing-state.md
-04. Normalization  ->  04-normalization.md
-05. Fixed Alphabet Counts  ->  05-fixed-alphabet-counts.md
-06. Run Construction  ->  06-run-construction.md
-07. Center Expansion  ->  07-center-expansion.md
+01. Scan A String By Index  ->  01-indexed-scans.md
+02. Build Strings With StringBuilder  ->  02-safe-construction.md
+03. Parse One Character At A Time  ->  03-parsing-state.md
+04. Normalize Before Comparing  ->  04-normalization.md
+05. Count Letters In An Array  ->  05-fixed-alphabet-counts.md
+06. Compress Runs Of Characters  ->  06-run-construction.md
+07. Expand Palindromes From The Center  ->  07-center-expansion.md
 
 # Chapter 03: Strings
 

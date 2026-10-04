@@ -1,4 +1,4 @@
-# Lesson spec: Run Construction
+# Lesson spec: Compress Runs Of Characters
 
 **Recognition cue.** Equal adjacent characters form one completed run. **State.** The current character and run length describe the suffix not yet emitted. **False friend.** Arbitrary duplicate grouping needs a map or sort.
 

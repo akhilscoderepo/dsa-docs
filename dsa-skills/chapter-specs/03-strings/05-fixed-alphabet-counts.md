@@ -1,4 +1,4 @@
-# Lesson spec: Fixed Alphabet Counts
+# Lesson spec: Count Letters In An Array
 
 **Recognition cue.** The character set is explicitly small, such as lowercase English letters. **State.** `count[c - 'a']` is the processed count. **False friend.** General characters or words require Chapter 04 maps.
 

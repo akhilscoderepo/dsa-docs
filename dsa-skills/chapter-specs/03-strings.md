@@ -56,7 +56,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 Strings are indexed sequences with immutable values in Java. This chapter stays with string-local state: it does not borrow maps, two pointers, or windows before those chapters release them.
 
-### Indexed Scans
+### Scan A String By Index
 
 **Recognition cue.** Each character can be inspected independently or folded into a small running answer. **State.** `i` is the next unexamined index. **False friend.** A reversed or paired comparison needs two pointers, not one scan.
 
@@ -65,7 +65,7 @@ Strings are indexed sequences with immutable values in Java. This chapter stays 
 - **Boundary - Author exercise: First Delimiter.** Return the first index of `':'`, or `-1`; test `":x"` and `"abc"`.
 - **Recognize - LC 709 To Lower Case.** Each output character depends only on its input character.
 
-### Safe Construction
+### Build Strings With StringBuilder
 
 **Recognition cue.** The output is built incrementally. **State.** A `StringBuilder` contains exactly the completed output prefix. **Java hazard.** Repeated `+` in a loop creates repeated immutable strings. **False friend.** Do not use `StringBuilder.insert(0, ...)` for reversal; it turns linear work quadratic.
 
@@ -74,7 +74,7 @@ Strings are indexed sequences with immutable values in Java. This chapter stays 
 - **Boundary - Author exercise: Empty Result.** `"   " -> ""`; never leave a trailing separator.
 - **Recognize - LC 6 Zigzag Conversion.** Builders own the independently constructed rows.
 
-### Parsing State
+### Parse One Character At A Time
 
 **Recognition cue.** Characters change a small parser state: digit, sign, decimal point, token boundary, or error. **State.** State variables record what has already been legally consumed. **False friend.** Nested scopes require a stack and arrive in Chapter 11.
 
@@ -83,7 +83,7 @@ Strings are indexed sequences with immutable values in Java. This chapter stays 
 - **Boundary - LC 65 Valid Number.** A decimal point and exponent each have placement rules; test `"."` and `"2e10"`.
 - **Recognize - LC 165 Compare Version Numbers.** Parse components without converting an unbounded version to one integer.
 
-### Normalization
+### Normalize Before Comparing
 
 **Recognition cue.** Equivalent inputs differ only by case, separators, or a stated canonical representation. **State.** The normalized representation preserves the equality contract. **False friend.** Sorting as a canonical signature is released only after Chapter 05.
 
@@ -92,7 +92,7 @@ Strings are indexed sequences with immutable values in Java. This chapter stays 
 - **Boundary - Author exercise: Punctuation Only.** `"?!" -> ""`; make the empty normalized result legal.
 - **Recognize - LC 482 License Key Formatting.** Normalize case and regroup from a clear output contract.
 
-### Fixed Alphabet Counts
+### Count Letters In An Array
 
 **Recognition cue.** The character set is explicitly small, such as lowercase English letters. **State.** `count[c - 'a']` is the processed count. **False friend.** General characters or words require Chapter 04 maps.
 
@@ -101,7 +101,7 @@ Strings are indexed sequences with immutable values in Java. This chapter stays 
 - **Boundary - Author exercise: Invalid Alphabet.** Reject or document any character outside the declared alphabet.
 - **Recognize - LC 383 Ransom Note.** Count the available lowercase letters in `magazine`, consume them while scanning `ransomNote`, and fail as soon as a required count becomes negative.
 
-### Run Construction
+### Compress Runs Of Characters
 
 **Recognition cue.** Equal adjacent characters form one completed run. **State.** The current character and run length describe the suffix not yet emitted. **False friend.** Arbitrary duplicate grouping needs a map or sort.
 
@@ -110,7 +110,7 @@ Strings are indexed sequences with immutable values in Java. This chapter stays 
 - **Boundary - Author exercise: Final Run.** Ensure `"aaab"` emits both `3a` and `1b`.
 - **Recognize - Author exercise: Run-Length Encoding.** Convert a string such as `"aaabbc"` to `"3a2b1c"` by emitting each maximal run exactly once.
 
-### Center Expansion
+### Expand Palindromes From The Center
 
 **Recognition cue.** A substring is defined by symmetry around one character or one gap. **State.** `left` and `right` expand only while characters match; the center remains fixed for one attempt. **False friend.** This is not opposite-end validation of the whole string.
 

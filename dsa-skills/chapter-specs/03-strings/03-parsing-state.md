@@ -1,4 +1,4 @@
-# Lesson spec: Parsing State
+# Lesson spec: Parse One Character At A Time
 
 **Recognition cue.** Characters change a small parser state: digit, sign, decimal point, token boundary, or error. **State.** State variables record what has already been legally consumed. **False friend.** Nested scopes require a stack and arrive in Chapter 11.
 

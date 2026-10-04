@@ -1,4 +1,4 @@
-# Lesson spec: Safe Construction
+# Lesson spec: Build Strings With StringBuilder
 
 **Recognition cue.** The output is built incrementally. **State.** A `StringBuilder` contains exactly the completed output prefix. **Java hazard.** Repeated `+` in a loop creates repeated immutable strings. **False friend.** Do not use `StringBuilder.insert(0, ...)` for reversal; it turns linear work quadratic.
 

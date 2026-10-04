@@ -1,4 +1,4 @@
-# Lesson spec: Normalization
+# Lesson spec: Normalize Before Comparing
 
 **Recognition cue.** Equivalent inputs differ only by case, separators, or a stated canonical representation. **State.** The normalized representation preserves the equality contract. **False friend.** Sorting as a canonical signature is released only after Chapter 05.
 
