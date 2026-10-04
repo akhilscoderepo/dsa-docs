@@ -8,7 +8,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 01-arrays-core-operations | done |
 | 02-matrices-and-2d-arrays | done |
 | 03-strings | done |
-| 04-hash-maps-and-sets | todo |
+| 04-hash-maps-and-sets | claimed 04 21:37Z 2026-10-04 |
 | 05-sorting-and-java-comparators | todo |
 | 06-binary-search | todo |
 | 07-prefix-sums-and-difference-arrays | todo |
@@ -52,3 +52,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 - 01 (2026-10-04): content complete, human review pending. Built interactively under the current writing and reader-flow rules. Lesson 07 has a fifth exercise (LC 229, required by the spec). Remaining WARNs: low-diversity trace wording in 06 and 11, spec-role in 11 and 12 (spec lists LC 152 and LC 918 twice), one template-phrase in 04. The final reader review (RUNBOOK section 10) has not run on this chapter.
 - 02 (2026-10-04): content complete, human review pending. Lessons 06 and 07 were written in this run; 01 to 05 came from the earlier claim. Final reader review (RUNBOOK section 10) ran 4 passes with an independent reader subagent each time; pass 1 found 25 items, pass 2 15, pass 3 12, pass 4 10 (mostly local wording, one wrong fact), all fixed except: quiz answer positions in 95-review, a Java sketch for the Game of Life bit trick, and the dense constant-space paragraph in lesson 06 (accepted, an exercise follows). A fifth pass has not run, so a clean pass is not confirmed. Remaining WARNs: spec-role in 06 and 07 (the spec lists LC 73 and LC 54 twice), low-diversity insight in 07. Lesson 01's first trace lost its final off-grid step so the smoke test passes. JDK 21 only; JDK 25, Windows, phones and printing are unverified.
 - 03 (2026-10-04): content complete, human review pending. Built unattended in one run, lessons 01 to 07 pushed one by one. Final reader review (RUNBOOK section 10) ran 3 passes with an independent reader subagent each time; pass 1 found 19 points, pass 2 11, pass 3 5, all fixed or accepted (accepted: exercise role display names, 'False Friend' headings, LC 443 as the Build exercise, the long abba trace, lesson 01's first trace has no final off-grid step so the smoke test passes). A fourth pass has not run, so a clean pass is not confirmed. Remaining WARNs: low-diversity trace wording in 01, repeated 'Let s be a string' phrasing in exercise text, spec role order. JDK 21 only; JDK 25, Windows, phones and printing are unverified. Lesson titles were retitled in plain wording in the working specs (dsa-skills/chapter-specs), not in inputs/.
+- claimed 04 2026-10-04T21:37Z
