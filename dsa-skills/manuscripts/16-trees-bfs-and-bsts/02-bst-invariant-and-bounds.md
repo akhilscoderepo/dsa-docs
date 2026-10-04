@@ -135,7 +135,7 @@ In Java, an `int` bound cannot represent "no limit" when the data may hold `Inte
 
 **Prerequisites.** The Validate One Root And Children rung.
 
-**Problem.** The input is a binary search tree with distinct keys, given as a level-order array with `null` for absent children. List, for every present node in level order, the pair `[lo, hi]` of exclusive bounds it inherits from its ancestors, using `null` for an end that no ancestor limits.
+**Problem.** The input is a search tree of distinct integers, stored as a level-order array with `null` for absent children. List, for every present node in level order, the pair `[lo, hi]` of exclusive bounds it inherits from its ancestors, using `null` for an end that no ancestor limits.
 
 **Constraints.** 1 <= values.length <= 500 and the values are distinct integers between -100000 and 100000 forming a valid search tree.
 

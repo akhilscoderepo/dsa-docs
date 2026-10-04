@@ -149,7 +149,7 @@ In Java, state the policy for equal keys before coding. With the policy to rejec
 
 **Prerequisites.** The BST invariant and bounds lesson.
 
-**Problem.** The racks are a binary search tree with distinct keys, given in level order with `null` for absent children. Given a `key`, find the node holding it and return the subtree rooted there as a level-order array, or an empty array when no node holds the key.
+**Problem.** The racks form a search tree of distinct keys, listed in level order with `null` for absent children. Given a `key`, find the node holding it and return the subtree rooted there as a level-order array, or an empty array when no node holds the key.
 
 **Constraints.** 0 <= values.length <= 5000 and the keys, including the stub, are distinct integers between 1 and 10000.
 
