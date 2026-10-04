@@ -7,7 +7,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 00-problem-contracts-complexity-and-sequence-language | done |
 | 01-arrays-core-operations | done |
 | 02-matrices-and-2d-arrays | done |
-| 03-strings | todo |
+| 03-strings | claimed 03 2026-10-04T20:38Z |
 | 04-hash-maps-and-sets | todo |
 | 05-sorting-and-java-comparators | todo |
 | 06-binary-search | todo |
