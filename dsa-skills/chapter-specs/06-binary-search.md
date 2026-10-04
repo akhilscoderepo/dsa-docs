@@ -89,7 +89,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 All integer searches use an explicitly stated interval convention and the overflow-safe midpoint `lo + (hi - lo) / 2`.
 
-### Exact Search
+### Find A Value In Sorted Data
 
 **Recognition cue.** The array is sorted and the question asks whether or where one exact target occurs. **Invariant.** If the target exists, it remains inside the current search interval. **False friend.** Unsorted input has no safe half to discard.
 
@@ -98,7 +98,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - Author exercise: Two Elements.** Trace `[1,3]` for targets `1`, `3`, and `2`; prove the interval shrinks after every comparison.
 - **Recognize - LC 74 Search a 2D Matrix.** Treat a globally row-major sorted matrix as one virtual sorted array; the full combination lesson appears below.
 
-### First And Last
+### Find The First Or Last Match
 
 **Recognition cue.** Duplicates exist and the output asks for an extreme occurrence. **Invariant.** A found target is a candidate, not permission to stop; continue toward the requested boundary.
 
@@ -107,7 +107,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - LC 34 Find First and Last Position.** Return `[-1,-1]` when absent and handle all-equal arrays.
 - **Recognize - LC 278 First Bad Version.** The first true position is the same boundary shape without explicit duplicates.
 
-### Lower And Upper Bounds
+### Find Where A Value Belongs
 
 **Recognition cue.** The output is an insertion boundary: first value `>= target` or first value `> target`. **Invariant.** One side is known to fail the predicate and the other contains the first possible success. **False friend.** Exact search may stop on equality; bounds may not.
 
@@ -116,7 +116,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - Author exercise: Outside Range.** Test a target smaller than every value and larger than every value; insertion positions may be `0` or `n`.
 - **Recognize - LC 744 Find Smallest Letter Greater Than Target.** Apply upper-bound logic plus the stated wraparound contract.
 
-### First True
+### Find The First True Value
 
 **Recognition cue.** A monotone predicate changes once from false to true. **Invariant.** `hi` remains a possible first true answer while discarded positions are proved false or cannot improve it. **False friend.** A non-monotone predicate cannot justify discarding half.
 
@@ -125,7 +125,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - Author exercise: No True Value.** Define and return sentinel `n` when the contract permits all false.
 - **Recognize - LC 1539 Kth Missing Positive Number.** The count of missing values by index is monotone and becomes a searchable predicate.
 
-### Peak Search
+### Find A Peak By Slope
 
 **Recognition cue.** Local slope determines which side must contain a peak. **Invariant.** Comparing `nums[mid]` with `nums[mid+1]` preserves at least one peak in the remaining interval. **False friend.** This is not target search; equality and direction mean something different.
 
@@ -134,7 +134,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - Author exercise: Endpoint Peak.** Trace strictly increasing and strictly decreasing arrays.
 - **Recognize - LC 1095 Find in Mountain Array.** Peak discovery precedes two ordered searches; API-call cost becomes part of the contract.
 
-### Rotated Minimum
+### Find The Minimum After Rotation
 
 **Recognition cue.** A strictly increasing array was rotated and only the pivot/minimum is needed. **Invariant.** Comparison with the right endpoint identifies which side contains the discontinuity.
 
@@ -143,7 +143,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - Author exercise: Two Values.** Trace `[2,1]` and `[1,2]`.
 - **Recognize - LC 154 Find Minimum in Rotated Sorted Array II.** Duplicates can destroy the strict comparison; shrinking equality may degrade to linear time.
 
-### Rotated Target
+### Find A Target After Rotation
 
 **Recognition cue.** A target must be found in a rotated array. **Invariant.** At least one half is normally sorted; determine it before asking whether the target belongs there. **False friend.** Finding the minimum alone does not finish target lookup.
 
@@ -152,7 +152,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - LC 81 Search in Rotated Sorted Array II.** When left, mid, and right are equal, sorted-half identity is ambiguous.
 - **Recognize - Author exercise: Explain Both Strategies.** Compare one-pass sorted-half search with pivot-plus-search; state complexity and proof obligations.
 
-### Integer Answers
+### Search Whole Number Answers
 
 **Recognition cue.** The answer is an integer value in a numeric range, and feasibility is monotone. **Invariant.** Every discarded candidate is proved infeasible or no better than an already feasible boundary. **False friend.** Binary search applies to the ordered answer space, not because the input happens to be an array.
 
@@ -161,7 +161,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - LC 1482 Minimum Number of Days to Make m Bouquets.** Detect impossible total demand before searching.
 - **Recognize - LC 410 Split Array Largest Sum.** Search a maximum allowed part sum and greedily count required partitions.
 
-### Continuous Answers
+### Search Real Number Answers
 
 **Recognition cue.** Feasibility is monotone over real values and the problem accepts bounded numeric error. **State.** Maintain a real interval containing the answer and a documented convergence policy. **Java hazard.** A fixed iteration count bounds work; an epsilon loop must still make progress under `double` precision.
 
@@ -172,7 +172,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 
 ## Released Combination Lessons
 
-### Time Indexed Lookup
+### Look Up Values By Time
 
 **Contributions.** A `HashMap` selects the history for one key; an ordered timestamp list makes binary search valid. A map alone cannot choose the latest timestamp `<= queryTime` without scanning that history.
 
@@ -181,7 +181,7 @@ All integer searches use an explicitly stated interval convention and the overfl
 - **Boundary - LC 981 Early Query.** Return the specified empty value when every timestamp is later than the query.
 - **Recognize - LC 1146 Snapshot Array.** Each index owns an ordered history searched by snapshot ID.
 
-### Matrix Search
+### Search A Sorted Matrix
 
 **Contributions.** Matrix shape maps a virtual one-dimensional index to `(row, col)`; binary search discards ordered ranges.
 
