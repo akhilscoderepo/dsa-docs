@@ -66,7 +66,7 @@ The loop keeps three pieces of state, and each one changes at a known moment.
 
 #### Extra Spaces In The Middle
 
-Take `s = "to  be"`. The symbol `␣` in the trace below stands for one space. The pointer `i` marks the character under test. At `i = 0` the character `t` is not a space and `i` is `0`, so a word starts and the count becomes 1. At `i = 1` the character `o` follows `t`, so no word starts. Both spaces at `i = 2` and `i = 3` are spaces, so they never start a word. At `i = 4` the character `b` follows a space, so the second word starts. The final count is 2.
+Take `s = "to  be"`. The symbol `␣` in the trace below stands for one space. The pointer `i` marks the character under test. At `i = 0` the character `t` is not a space and `i` is `0`, so a word starts and the count becomes 1. At `i = 1` the character `o` follows `t`, so no word starts. Both spaces at `i = 2` and `i = 3` are spaces, so they never start a word. At `i = 4` the character `b` follows a space, so the second word starts. The final count is 2, and the loop ends when `i` reaches 6, which equals the length.
 
 #### Spaces At Both Ends
 
@@ -75,7 +75,7 @@ Now take `s = "␣x␣y␣"`. At `i = 0` the character is a space, so no word st
 #### Stepping Through Both Strings
 
 ```trace
-{"cells":["t","o","\u2423","\u2423","b","e"],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"words":0},"note":"Start: no character has been read, so words is 0."},{"at":{"i":0},"vars":{"startsWord":true,"words":1},"note":"Position 0 holds 't' and it is the first position, so a word starts. The count is 1."},{"at":{"i":1},"vars":{"startsWord":false,"words":1},"note":"Position 1 holds 'o' and the character before it is a letter, so no word starts. The count is 1."},{"at":{"i":2},"vars":{"startsWord":false,"words":1},"note":"Position 2 holds a space, so no word starts. The count is 1."},{"at":{"i":3},"vars":{"startsWord":false,"words":1},"note":"Position 3 holds a space, so no word starts. The count is 1."},{"at":{"i":4},"vars":{"startsWord":true,"words":2},"note":"Position 4 holds 'b' and the character before it is a space, so a word starts. The count is 2."},{"at":{"i":5},"vars":{"startsWord":false,"words":2},"note":"Position 5 holds 'e' and the character before it is a letter, so no word starts. The count is 2."},{"at":{"i":6},"vars":{"words":2},"note":"The index equals the length, so the loop ends with 2 words."}]}
+{"cells":["t","o","␣","␣","b","e"],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"words":0},"note":"Start: no character has been read, so words is 0."},{"at":{"i":0},"vars":{"startsWord":true,"words":1},"note":"Position 0 holds 't' and it is the first position, so a word starts. The count is 1."},{"at":{"i":1},"vars":{"startsWord":false,"words":1},"note":"Position 1 holds 'o' and the character before it is a letter, so no word starts. The count is 1."},{"at":{"i":2},"vars":{"startsWord":false,"words":1},"note":"Position 2 holds a space, so no word starts. The count is 1."},{"at":{"i":3},"vars":{"startsWord":false,"words":1},"note":"Position 3 holds a space, so no word starts. The count is 1."},{"at":{"i":4},"vars":{"startsWord":true,"words":2},"note":"Position 4 holds 'b' and the character before it is a space, so a word starts. The count is 2."},{"at":{"i":5},"vars":{"startsWord":false,"words":2},"note":"Position 5 holds 'e' and the character before it is a letter, so no word starts. The count is 2."}]}
 ```
 
 ```trace

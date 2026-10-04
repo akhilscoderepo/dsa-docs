@@ -1,0 +1,42 @@
+{
+ "lessons": [
+  "center-expansion",
+  "fixed-alphabet-counts",
+  "indexed-scans",
+  "normalization",
+  "parsing-state",
+  "run-construction",
+  "safe-construction"
+ ],
+ "exercises": [
+  "st-atoi",
+  "st-compare-versions",
+  "st-count-and-say",
+  "st-count-digits",
+  "st-detect-capital",
+  "st-empty-result",
+  "st-even-center",
+  "st-final-run",
+  "st-find-difference",
+  "st-first-delim",
+  "st-invalid-alphabet",
+  "st-last-word",
+  "st-letters-only",
+  "st-license-key",
+  "st-longest-even-palindrome",
+  "st-longest-palindrome",
+  "st-palindromic-substrings",
+  "st-punctuation-only",
+  "st-ransom-note",
+  "st-remove-spaces",
+  "st-reverse-words",
+  "st-run-length-encoding",
+  "st-signed-token",
+  "st-string-compression",
+  "st-to-lower",
+  "st-valid-number",
+  "st-vowel-counts",
+  "st-zigzag"
+ ],
+ "retired": []
+}

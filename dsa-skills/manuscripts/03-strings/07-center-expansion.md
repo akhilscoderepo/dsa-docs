@@ -185,12 +185,12 @@ The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`, be
 
 **Prerequisites.** The two exercises above and the two kinds of middle from this lesson.
 
-**Problem.** Given a string `s`, count the palindromic substrings of `s` that have even length.
+**Problem.** Given a string `s`, count the palindromic substrings of `s` that have even length. Substrings at different positions count separately.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= s.length() <= 1000`.
 - **Characters** are lowercase English letters.
-- **Positions** count separately, even when the text is equal.
+- **Equal text** at different positions still counts once for each position.
 - **Answer** is 0 when `s` has no even-length palindromic substring.
 
 **Example 1.** Input `s = "abba"`, output 2, from `bb` and `abba`.
