@@ -1,35 +1,19 @@
 from common import *
-CH='05-sorting-and-java-comparators'
-runs=[(52,4),(49,2),(52,1),(47,3)]
-def cmp(a,b):
-    if a[0]!=b[0]: return (-1 if a[0]<b[0] else 1),"time"
-    return (-1 if a[1]<b[1] else (1 if a[1]>b[1] else 0)),"lane"
-arr=[]; st=[]
-for i,r in enumerate(runs):
-    j=len(arr); notes=[]
-    while j>0:
-        s,key=cmp(r,arr[j-1])
-        if s<0:
-            notes.append(f"{r[0]}/{r[1]} against {arr[j-1][0]}/{arr[j-1][1]}: the {key} decides, so it moves ahead")
-            j-=1
-        else:
-            notes.append(f"{r[0]}/{r[1]} against {arr[j-1][0]}/{arr[j-1][1]}: the {key} decides, so it stays behind")
-            break
-    arr.insert(j,r)
-    txt="; ".join(notes)+"." if notes else "It is the first runner, so nothing is compared."
-    pref=", ".join(f"{a}/{b}" for a,b in arr)
-    st.append({"at":{"i":i},"vars":{"insert":f"{r[0]}/{r[1]}","sortedPrefix":pref},"note":f"Insert {r[0]}/{r[1]}. {txt} The list is now {pref}."})
-assert arr==[(47,3),(49,2),(52,1),(52,4)]
-# check the 52/1 against 52/4 step mentions lane
-assert "the lane decides" in st[2]["note"]
-fill(CH,'03-comparator-contracts.md',block([f"{a}/{b}" for a,b in runs],["i"],st),"@@TRACE1@@")
-g=lambda x,y:(y+x)>(x+y)   # y+x larger means x goes after y ; compare(x,y)<0 when (y+x)<(x+y)
-def before(x,y): return (x+y)>(y+x)
-pairs=[("3","30"),("30","34"),("3","34")]
-st=[]
-for i,(x,y) in enumerate(pairs):
-    b=before(x,y)
-    first,second=(x,y) if b else (y,x)
-    st.append({"at":{"i":i},"vars":{"pair":f"{x},{y}","glueXY":x+y,"glueYX":y+x,"first":first},"note":f"Compare {x} with {y}. Gluing {x} first gives {x+y} and gluing {y} first gives {y+x}. The larger string wins, so {first} goes ahead of {second}."})
-assert before("34","3") and before("3","30") and before("34","30")
-fill(CH,'03-comparator-contracts.md',block(["3","30","34"],["i"],st),"@@TRACE2@@")
+CH='05-sorting-and-java-comparators'; N='03-comparator-contracts.md'
+names=["bb","a","cc"]
+def bad(a,b): return -1 if len(a)<len(b) else 1
+def good(a,b): return (len(a)>len(b))-(len(a)<len(b))
+def run(cmp,ph,tail):
+    st=[]
+    for i in range(3):
+        for j in range(i+1,3):
+            x,y=names[i],names[j]; p,q=cmp(x,y),cmp(y,x)
+            if p==q:
+                note=f'Both orders return {p}. '+("Each name claims to go second, which is a contradiction." if p==1 else "The two names are interchangeable by length.")
+            else:
+                note=f'The answers {p} and {q} mirror each other, so the order is clear.'
+            st.append({"at":{"i":i,"j":j},"vars":{"first":f'compare("{x}", "{y}") = {p}',"second":f'compare("{y}", "{x}") = {q}'},"note":note})
+    st.append({"at":{"i":3,"j":-1},"vars":{},"note":tail})
+    fill(CH,N,block(names,["i","j"],st),ph)
+run(bad,"@@TRACE1@@","One pair contradicts itself, so the rule is not a valid comparator.")
+run(good,"@@TRACE2@@","Every pair mirrors or ties, so the rule is a valid comparator.")
