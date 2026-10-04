@@ -1,0 +1,37 @@
+{
+ "lessons": [
+  "binary-tries",
+  "insert-and-search",
+  "prefix-nodes",
+  "trie-and-string-search",
+  "wildcard-branching",
+  "word-break-trie-search"
+ ],
+ "exercises": [
+  "tn-add-search-words",
+  "tn-best-xor-partner",
+  "tn-empty-and-prefix-only",
+  "tn-ends-from-index",
+  "tn-equal-and-sign",
+  "tn-final-wildcard",
+  "tn-implement-trie",
+  "tn-insert-fixed-bits",
+  "tn-insert-lowercase",
+  "tn-max-xor-pair",
+  "tn-multiple-wildcards",
+  "tn-one-segmentation",
+  "tn-prefix-count",
+  "tn-prefix-not-word",
+  "tn-search-versus-starts",
+  "tn-shared-prefixes",
+  "tn-trie-domain-contract",
+  "tn-wildcard-root-length",
+  "tn-word-break-state",
+  "tn-word-is-prefix",
+  "ts-longest-buildable",
+  "ts-replace-words",
+  "ts-trie-distinct-words",
+  "ts-wildcard-search-cost"
+ ],
+ "retired": []
+}
