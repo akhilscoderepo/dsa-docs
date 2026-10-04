@@ -37,6 +37,13 @@ Machine keys stay fixed (the audit parses them): `#### [Build|Vary|Boundary|Reco
 - Solution Approach: the algorithm, its invariant, and why each step exists, in the voice rules. Complexity states `Time: O(...), because ...` and `Space: O(...), because ...`.
 - Java in solutions: Javadoc on each solution method with purpose, Time, Space and the invariant. A comment on every primary statement (loop header, condition, update, return) explaining WHY it runs and where cost or memory comes from. Comments only describe; they never change executable code. The test harness gets one comment per group of assertions.
 
+## Standard heading names for lessons, stages and sub-headings (set by the user, Oct 4)
+Never use the author's invented topic names ("Constraint Signals", "Mutation Contracts", "Sequence Language", "Hostile Dry Runs"). Every H2, H3 and H4 must name the concrete software-engineering concept in universally recognized industry wording, with no metaphor. Example: "Analyzing Input Limits And Operation Budgets" instead of "Constraint Signals".
+- Lesson `## Title` (H2): standard textbook topic phrase, at most 8 words, no colon or period, for example "Choosing Algorithms From Input Constraints", "Preconditions, Postconditions And Mutation", "Defining Subarrays, Subsequences And Subsets", "Designing Adversarial Test Cases". The audit compares the title with the spec lesson heading, so when you retitle, edit the same heading in the working spec files first (`dsa-skills/chapter-specs/NN-slug.md` and the slice `NN-slug/MM-*.md`), then the manuscript. `lesson-id`, file names and exercise ids never change.
+- Stage `###` and sub-heading `####` text: say what the section teaches ("Why Quadratic Pair Counting Exceeds The Time Limit"), not a story ("The Solution That Passed Every Sample").
+- Chapter titles passed to `build.sh` and the orientation/review headings follow the same rule.
+- `voice_lint.py` does not detect metaphors; check headings yourself before you build.
+
 ## Session start
 1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 6 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
 2. Tooling: `cd dsa-skills && [ -d node_modules ] || npm ci`. JDK 21 and Python 3 must exist (`java -version`). Chromium is at `/opt/pw-browsers` (do not run playwright install).
