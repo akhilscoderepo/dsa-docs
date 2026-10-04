@@ -50,7 +50,7 @@ A **word start** is a position `i` where `s.charAt(i)` is not a space and either
 
 #### Test The Position Before Reading Behind It
 
-The test reads `s.charAt(i - 1)`, which is illegal when `i` is `0`. Java evaluates `&&` and `||` from left to right and skip the right side once the left side decides the result. Writing `i == 0 ||` first means the call that reads behind the index runs only when `i` is at least 1.
+The test reads `s.charAt(i - 1)`, which is illegal when `i` is `0`. Java evaluates `&&` and `||` from left to right. It skips the right side once the left side decides the result. Writing `i == 0 ||` first means the call that reads behind the index runs only when `i` is at least 1.
 
 <!-- stage: variables -->
 ### Index, Word Start Test And Count
@@ -66,7 +66,7 @@ The loop keeps three pieces of state, and each one changes at a known moment.
 
 #### Extra Spaces In The Middle
 
-Take `s = "to  be"`. The symbol `␣` in the trace below stands for one space. The pointer `i` marks the character under test. At `i = 0` the character `t` is not a space and `i` is `0`, so a word starts and the count becomes 1. At `i = 1` the character `o` follows `t`, so no word starts. Both spaces at `i = 2` and `i = 3` are spaces, so they never start a word. At `i = 4` the character `b` follows a space, so the second word starts. The final count is 2, and the loop ends when `i` reaches 6, which equals the length.
+Take `s = "to  be"`. The symbol `␣` in the trace below stands for one space. The pointer `i` marks the character that the current step examines. At `i = 0` the character `t` is not a space and `i` is `0`, so a word starts and the count becomes 1. At `i = 1` the character `o` follows `t`, so no word starts. Both spaces at `i = 2` and `i = 3` are spaces, so they never start a word. At `i = 4` the character `b` follows a space, so the second word starts. The final count is 2, and the loop ends when `i` reaches 6, which equals the length.
 
 #### Spaces At Both Ends
 

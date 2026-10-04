@@ -7,7 +7,7 @@
 
 A word-game helper highlights the longest palindrome inside a line of letters. A palindrome is a string that reads the same from left to right and from right to left, such as `racecar`. On a test line of 40 letters, the helper answers at once. On a line of 2000 letters, it freezes for several seconds.
 
-The helper checks far more substrings than the line can hold distinct answers for. The question is how a program finds the longest palindromic substring without testing every substring from scratch, using only the characters around positions in the line.
+The helper tests about n squared over 2 substrings, and each test copies and reverses text. The question is how a program finds the longest palindromic substring without that repeated work.
 
 <!-- stage: naive -->
 ### Test Every Substring
@@ -60,7 +60,7 @@ For one middle, the loop sets `left` and `right`. An odd center at index `c` sta
 
 #### Stop At The First Mismatch
 
-The first mismatch, or a bound that `left` or `right` crosses, ends the attempt. No larger palindrome around this middle exists, because every larger one would need the failed pair to match. The attempt leaves `left` and `right` one step beyond the palindrome, so its length is `right - left - 1`. The invariant is that `s[left + 1 .. right - 1]` is a palindrome around the fixed middle whenever the loop tests a new pair.
+The first mismatch, or a bound that `left` or `right` crosses, ends the attempt. No larger palindrome around this middle exists, because every larger one would need the failed pair to match. The attempt leaves `left` and `right` one step beyond the palindrome, so its length is `right - left - 1`. The invariant is that the characters strictly between `left` and `right` form a palindrome around the fixed middle whenever the loop tests a new pair.
 
 <!-- stage: variables -->
 ### Left End, Right End And Best Length
@@ -133,7 +133,7 @@ A false friend is a task that mentions palindromes and has a different structure
 
 #### Java Details That Cause Failures
 
-The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`, because `&&` stops at the first false operand and the call would throw on an index outside the string. A call to `s.substring(a, b)` includes index `a` and excludes index `b`. After `expand` returns length `L` for the middle that started at `(left, right)`, the start of the palindrome is not `left`, because the loop already moved `left`. The start comes from the starting middle, as the solutions show.
+The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`, because `&&` stops at the first false operand and the call would throw on an index outside the string. A call to `s.substring(a, b)` includes index `a` and excludes index `b`. After `expand` returns length `L` for the middle that started at `(left, right)`, the start of the palindrome is not `left`, because the loop already moved `left`. The start comes from the middle `c` and the length `L`, as `c - (L - 1) / 2` with integer division, for both odd and even lengths.
 
 <!-- stage: exercises -->
 ### Exercises

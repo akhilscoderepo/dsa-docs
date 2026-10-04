@@ -48,7 +48,7 @@ A **maximal run** is a block of equal characters that cannot grow, because the c
 
 #### Keep The Start Of The Current Run
 
-The loop keeps `start`, the index where the current run began. Its character is `s.charAt(start)`, and its length so far is `i - start`. These two facts describe the part of the string that is read and not yet emitted. The loop needs no other memory about the past.
+The loop keeps `start`, the index where the current run began. Its character is `s.charAt(start)`, and its length so far is `i - start`. These two facts describe the part of the string that the loop has read and not yet measured. The loop needs no other memory about the past.
 
 <!-- names: maximal run, run boundary, final run -->
 
@@ -111,7 +111,7 @@ static int longestRun(String s) {
 
 #### What The Method Costs
 
-The loop makes at most n iterations, and each iteration does a constant amount of work, so the time is O(n). The method keeps two integers beyond the input, so the space is O(1). The empty string never enters the loop, because `i` starts at 1 and the bound is 0, so the method returns 0 without a special case.
+The loop makes at most n iterations, and each iteration does a constant amount of work, so the time is O(n). The method keeps a constant number of integers beyond the input, so the space is O(1). The empty string never enters the loop, because `i` starts at 1 and the bound is 0, so the method returns 0 without a special case.
 
 <!-- stage: applicability -->
 ### Telling Runs From Duplicates

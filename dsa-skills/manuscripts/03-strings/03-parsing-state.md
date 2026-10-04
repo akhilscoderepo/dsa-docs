@@ -68,7 +68,7 @@ Three values carry the whole parser, and each one changes at a fixed point.
 
 - **state** holds `START` or `BODY` and changes only when a transition fires.
 - **i** points at the character the parser reads next and moves right by one each round.
-- **letter and digit tests** classify the character at `i` once per iteration and use only ASCII ranges.
+- **letter and digit tests** classify the character at `i` once per round with ASCII ranges, and the letter test also accepts an underscore.
 
 <!-- stage: trace -->
 ### Parsing One Valid And One Invalid Name
@@ -79,7 +79,7 @@ Take `s = "x_1"`. The parser starts in `START`. At `i = 0` the character `x` is 
 
 #### An Invalid Name
 
-Now take `s = "ab-c"`. The first two letters move the parser to `BODY` and keep it there. At `i = 2` the hyphen is neither a letter, an underscore nor a digit, so no transition exists. The method returns false at that index and never reads the final letter. A digit at `i = 0` would fail in the same way, because `START` accepts no digit.
+Now take `s = "ab-c"`. The first two letters move the parser to `BODY` and keep it there. At `i = 2` the hyphen is neither a letter, an underscore nor a digit, so no transition exists. The method returns false at that index and never reads the final letter. The trace labels this outcome `REJECT`, which only marks that the method returned false. A digit at `i = 0` would fail in the same way, because `START` accepts no digit.
 
 #### Stepping Through Both Names
 
@@ -118,7 +118,7 @@ static boolean isIdentifier(String s) {
 
 #### What The Loop Costs
 
-The loop reads each character once and does a fixed number of comparisons per character, so it runs in O(n) time. It keeps one integer and two booleans, so it uses O(1) space. The explicit ranges `'a'` to `'z'` and `'A'` to `'Z'` keep the test to ASCII, which fits the rule that a name uses only ASCII letters.
+The loop reads each character once and does a fixed number of comparisons per character, so it runs in O(n) time. It keeps a constant number of integers and booleans, so it uses O(1) space. The explicit ranges `'a'` to `'z'` and `'A'` to `'Z'` keep the test to ASCII, which fits the rule that a name uses only ASCII letters.
 
 <!-- stage: applicability -->
 ### When A Small State Is Enough

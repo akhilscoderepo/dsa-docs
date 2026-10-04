@@ -202,7 +202,7 @@ The call `toLowerCase()` without an argument depends on the default locale of th
 #### [Recognize] License Key Formatting (LeetCode 482)
 <!-- id: st-license-key -->
 
-**Prerequisites.** All three exercises above and the reverse-by-append habit from the previous lesson.
+**Prerequisites.** All three exercises above and the reverse-by-append habit from the StringBuilder lesson.
 
 **Problem.** Let `s` be a string of letters, digits and dashes, and let `k` be a positive integer. Remove the dashes and convert the letters to uppercase. Then split the remaining characters into groups separated by single dashes. Every group holds exactly `k` characters, except that the first group may hold fewer, and it holds at least one character. Return the formatted key, or the empty string when no character remains.
 
