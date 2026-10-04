@@ -147,7 +147,7 @@ A false friend here is a plain scan that compares only neighbors. A scan cannot 
 
 #### Java Details That Cause Failures
 
-The call `forward.get(a)` returns `null` for a new letter, so keep the result in a `Character` and test it for null before comparing. A comparison of two `Character` objects with `!=` compares references, so compare the unboxed `char` values. The word pattern exercise splits a sentence with `split(" ")`, and the exercise guarantees single spaces so that no empty token appears.
+The call `forward.get(a)` returns `null` for a new letter, so keep the result in a `Character` and test it for null before comparing. A comparison of two `Character` objects with `!=` compares references, so compare the unboxed `char` values.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -157,7 +157,7 @@ The call `forward.get(a)` returns `null` for a new letter, so keep the result in
 
 **Prerequisites.** The frequency map from the second lesson and the string scan from this lesson.
 
-**Problem.** Let `s` and `t` be strings of lowercase letters. Return the smallest index `i` such that the letter `s.charAt(i)` occurs exactly once in `s` and does not occur in `t`. Return -1 when no index qualifies.
+**Problem.** This variation of First Unique Character adds a second string. Let `s` and `t` be strings of lowercase letters. Return the smallest index `i` such that the letter `s.charAt(i)` occurs exactly once in `s` and does not occur in `t`. Return -1 when no index qualifies.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= s.length() <= 10^5`.
@@ -178,7 +178,7 @@ The call `forward.get(a)` returns `null` for a new letter, so keep the result in
 
 **Prerequisites.** First Unique Character In A String above.
 
-**Problem.** Let `s` and `t` be strings of lowercase letters with equal length. In one step, replace any one character of `t` with any lowercase letter. Return the smallest number of steps that turn `t` into an anagram of `s`. The answer is 0 exactly when `t` is already an anagram of `s`.
+**Problem.** This variation of Valid Anagram counts the changes needed and does not only answer yes or no. Let `s` and `t` be strings of lowercase letters with equal length. In one step, replace any one character of `t` with any lowercase letter. Return the smallest number of steps that turn `t` into an anagram of `s`. The answer is 0 exactly when `t` is already an anagram of `s`.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= s.length() == t.length() <= 10^5`.
@@ -192,7 +192,7 @@ The call `forward.get(a)` returns `null` for a new letter, so keep the result in
 
 **Hint.** For each letter, how many more copies does `s` hold than `t`?
 
-**Changed decision.** The program compares two ledgers and sums the shortfalls instead of testing for equality.
+**Changed decision.** The program compares two letter tables and sums the shortfalls instead of testing for equality.
 
 #### [Boundary] Isomorphic Strings (LeetCode 205)
 <!-- id: hm-isomorphic -->

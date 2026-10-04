@@ -76,7 +76,7 @@ The **box index** names the block of the cell `(r, c)` by `(r / 3) * 3 + c / 3`,
 
 #### Keep The Scope Sets Apart
 
-The **scope sets** are three arrays of nine sets, one array for the rows, one for the columns and one for the blocks. For the digit `d` at `(r, c)`, the loop tests `rows[r]`, `cols[c]` and `boxes[b]`, where `b` is the box index. If any of the three holds `d`, the board is illegal. Otherwise the loop adds `d` to all three. The same digit can sit in `rows[0]` and `rows[4]` without a conflict, because the sets belong to different scopes.
+The **scope sets** are three lists of nine sets, one list for the rows, one for the columns and one for the blocks. For the digit `d` at `(r, c)`, the loop tests `rows[r]`, `cols[c]` and `boxes[b]`, where `b` is the box index. If any of the three holds `d`, the board is illegal. Otherwise the loop adds `d` to all three. The same digit can sit in `rows[0]` and `rows[4]` without a conflict, because the sets belong to different scopes.
 
 #### The Invariant
 

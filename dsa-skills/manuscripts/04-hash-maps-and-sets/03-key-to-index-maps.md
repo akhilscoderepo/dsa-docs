@@ -55,7 +55,7 @@ An **index map** is a map whose key is a value from the input and whose value is
 
 #### Choose Which Position To Keep
 
-A value can occur more than once, so the contract decides which position the map keeps. The **overwrite rule** states the choice. For Two Sum, either position of an equal pair gives a valid answer, because the first match ends the loop. For a question about the distance to the most recent equal value, the loop overwrites the entry with the newer position. For a question about the widest distance between equal values, the loop keeps the first position and does not overwrite. The contract names the meaning of the stored position, and the code follows that meaning.
+A value can occur more than once, so the contract decides which position the map keeps. The contract is the exact rule that the problem statement gives for input and output. The **overwrite rule** states the choice. For Two Sum, either position of an equal pair gives a valid answer, because the first match ends the loop. For a question about the distance to the most recent equal value, the loop overwrites the entry with the newer position. For a question about the widest distance between equal values, the loop keeps the first position and does not overwrite. The contract names the meaning of the stored position, and the code follows that meaning.
 
 #### What The Pass Costs
 
@@ -79,7 +79,7 @@ Take `nums = [8, 2, 11, 3]` and `target = 14`. At `i = 0` the price 8 has comple
 
 #### Keeping The Most Recent Position
 
-The same map answers a different question. Take `nums = [5, 1, 5, 5]` and a limit `k = 1`. The question asks whether two equal values sit at most `k` positions apart. At `i = 2` the value 5 was last seen at position 0, a gap of 2, which is too wide. The loop overwrites the entry with position 2. At `i = 3` the value 5 was last seen at position 2, a gap of 1, so the answer is true.
+The same map answers a different question, which the second exercise below states in full. Take `nums = [5, 1, 5, 5]` and a limit `k = 1`. The question asks whether two equal values sit at most `k` positions apart. At `i = 2` the value 5 was last seen at position 0, a gap of 2, which is too wide. The loop overwrites the entry with position 2. At `i = 3` the value 5 was last seen at position 2, a gap of 1, so the answer is true.
 
 #### Stepping Through Both Arrays
 
@@ -128,7 +128,7 @@ A false friend here is sorting the array and then searching for the partner. Sor
 
 #### Java Details That Cause Failures
 
-The call `put` returns the previous value of the key, or `null` when the key was absent, so one call can both read and replace. The subtraction `target - nums[i]` can wrap around when the values span the whole 32-bit range, so the constraints below keep every value and the target within one billion.
+The call `put` returns the previous value of the key, or `null` when the key was absent, so one call can both read and replace. The call `putIfAbsent(key, value)` stores the value only when the key has no entry. The subtraction `target - nums[i]` can wrap around when the values span the whole 32-bit range, so the constraints below keep every value and the target within one billion.
 
 <!-- stage: exercises -->
 ### Exercises

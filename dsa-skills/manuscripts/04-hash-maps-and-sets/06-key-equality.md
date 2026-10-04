@@ -134,7 +134,7 @@ final class Cells {
 
 #### What The Method Costs
 
-The loop creates one record and makes one map operation for each order, so the expected time is O(n). The map holds one entry per distinct cell, so the space is O(d). The call `merge` returns the new count, which the loop compares with `best`. The record `Point` sits inside the same class as the method.
+The loop creates one record and makes one map operation for each order, so the expected time is O(n). The map holds one entry per distinct cell, so the space is O(d). The call `merge(p, 1, Integer::sum)` stores 1 for a new key and otherwise adds 1 to the stored count. It returns the new count, which the loop compares with `best`. The record `Point` sits inside the same class as the method.
 
 <!-- stage: applicability -->
 ### When The Key Has Several Parts

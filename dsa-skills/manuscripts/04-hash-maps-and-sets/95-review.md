@@ -43,4 +43,4 @@ Return to this page after the lessons and again a few days later. Each question 
 
 ### Questions To Ask Before Writing Code
 
-Before you declare a map or a set, answer three questions in your own words. What does the key mean, and what does the value mean? Does the question need existence, a count, a position or the full list of members? Is the number of possible keys small enough for an array, or does the problem leave the keys open? The invariant that you write for the loop then names what the structure holds after each element, and each exercise in this chapter changes one of the three answers.
+Before you declare a map or a set, answer three questions in your own words. What does the key mean, and what does the value mean? Does the question need existence, a count, a position or the full list of members? Is the number of possible keys small enough for an array, or does the problem leave the keys open? The invariant that you write for the loop then names what the structure holds after each element, and most exercises in this chapter change one of the three answers.

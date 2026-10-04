@@ -64,7 +64,7 @@ Every run has exactly one start, so the loop walks each run once. Every number o
 
 #### Choose The Answer Convention
 
-A question about the longest run can return the length, or the start of the longest run, or both. When two runs tie, the contract picks the smaller start or the first found. The loop compares `len > best` for the first found and compares starts too when the contract names the smaller start.
+A question about the longest run can return the length, or the start of the longest run, or both. When two runs tie, the contract picks the smaller start. The loop therefore compares starts as well as lengths. A rule such as "the first run found" would depend on the iteration order of the set, which the set does not promise.
 
 <!-- stage: variables -->
 ### Set, Start And Walk Length
@@ -84,7 +84,7 @@ Take `nums = [50, 12, 13, 49, 11, 51, 52, 14]`. The number 50 has 49 in the set,
 
 #### Duplicates In The Array
 
-Now take `nums = [3, 3, 2, 1, 1, 9]`. The set holds 3, 2, 1 and 9 in order of first appearance, so the loop visits each number once. The numbers 3 and 2 have predecessors and skip. The number 1 has no 0, so it starts a walk that reaches 2 and 3 and gives length 3. The number 9 has no 8 and starts a walk of length 1.
+Now take `nums = [3, 3, 2, 1, 1, 9]`. The set holds 3, 2, 1 and 9. The trace below lists them in order of first appearance, and the loop visits each number once. The numbers 3 and 2 have predecessors and skip. The number 1 has no 0, so it starts a walk that reaches 2 and 3 and gives length 3. The number 9 has no 8 and starts a walk of length 1.
 
 #### Stepping Through Both Inputs
 

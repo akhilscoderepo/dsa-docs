@@ -134,7 +134,7 @@ A false friend here is a set, which can say that a value occurred but not how of
 
 #### Java Details That Cause Failures
 
-The call `count.get(key)` returns `null` for an absent key, and unboxing the result in `int c = count.get(key)` throws `NullPointerException`. Use `getOrDefault(key, 0)` when the key may be absent. A comparison `count.get(a) == count.get(b)` compares `Integer` objects by reference, and it can pass for small counts, because Java caches the values from -128 to 127. It can then fail for larger counts. Use `equals`. When the program needs both key and value from a map, iterate over `entrySet()` and do not call `get` inside a loop over `keySet()`.
+The call `count.get(key)` returns `null` for an absent key, and unboxing the result in `int c = count.get(key)` throws `NullPointerException`. Use `getOrDefault(key, 0)` when the key may be absent. A comparison `count.get(a) == count.get(b)` compares `Integer` objects by reference, and it can pass for small counts, because Java caches the values from -128 to 127. It can then fail for larger counts. Use `equals`. When the program needs both key and value from a map, loop with `for (Map.Entry<K, V> e : map.entrySet())` and do not call `get` inside a loop over `keySet()`.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -177,9 +177,9 @@ The call `count.get(key)` returns `null` for an absent key, and unboxing the res
 
 **Example 2.** Input `s = "aab"`, `t = "abb"`, output false, because the counts of `a` differ.
 
-**Hint.** If one string adds to the ledger and the other subtracts from it, what must every count be at the end?
+**Hint.** If one string adds to the counts and the other subtracts from them, what must every count be at the end?
 
-**Changed decision.** The output compares two ledgers for equality and has no positions.
+**Changed decision.** The output compares two sets of counts for equality and has no positions.
 
 #### [Boundary] Remove Zero Counts (Author exercise)
 <!-- id: hm-remove-zero-counts -->

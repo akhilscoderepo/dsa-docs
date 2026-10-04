@@ -114,7 +114,7 @@ static List<List<Integer>> groupJobs(int[] jobs, int m) {
 
 #### What The Method Costs
 
-Across n iterations, the loop computes one key, makes one map operation and one append. The expected total time is O(n). The buckets together hold n values, so the space is O(n). The method does not depend on `m`, so a value of `m` near one billion costs nothing extra. A `LinkedHashMap` returns the buckets in the order in which their keys first appeared.
+Across n iterations, the loop computes one key, makes one map operation and one append. The expected total time is O(n). The buckets together hold n values, so the space is O(n). The method does not depend on `m`, so a value of `m` near one billion costs nothing extra. A `LinkedHashMap` returns the buckets in the order in which their keys first appeared. The method with one scan for each worker lists groups by worker number instead, so the two orders can differ, and each exercise states the order it needs.
 
 <!-- stage: applicability -->
 ### When A Map Of Lists Fits

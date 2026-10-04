@@ -149,7 +149,7 @@ The expression `max - min + 1` wraps around in `int` when the interval spans the
 #### [Vary] Anagram Over ASCII (LeetCode 242)
 <!-- id: hm-anagram-ascii -->
 
-**Prerequisites.** Words Containing Each Letter above and the anagram exercise from the frequency map lesson.
+**Prerequisites.** Lowercase Character Counts above and the anagram exercise from the frequency map lesson.
 
 **Problem.** This variation of Valid Anagram states an alphabet bound. Let `s` and `t` be strings in which every character has a code below 128. Return true when `t` is a rearrangement of `s`.
 

@@ -47,7 +47,7 @@ The program needs a container that stores values and answers "is this value stor
 
 #### Store Only What The Question Needs
 
-A **hash set** stores distinct values. Adding a value takes expected constant time, and so does asking whether a value is stored. Expected constant time means O(1) on average over typical input. Java provides it as `HashSet`. The set keeps no count and no position for a value, because this question never asks for either.
+A **hash set** stores distinct values. It finds a value by computing a number from the value, called the hash code, and using that number to choose where to look. Adding a value takes expected constant time, and so does asking whether a value is stored. Expected constant time means O(1) on average over the hash codes of the stored values, with rare slower cases. Java provides it as `HashSet`. The set keeps no count and no position for a value, because this question never asks for either.
 
 <!-- names: hash set, membership test, seen set -->
 
@@ -122,9 +122,9 @@ The loop makes n calls, and each `add` takes expected constant time. The average
 
 Use a set when the question asks whether a value has appeared, exists in another collection, or is forbidden. The question must ignore how often the value occurred and where it occurred. The invariant is that the set holds exactly the relevant values processed so far. Common cases include rejecting duplicate identifiers, finding the values two arrays share, and stopping a process that revisits a state.
 
-#### A Map Is A False Friend
+#### When Existence Is Not Enough
 
-A false friend here is a task that needs more than existence. If the answer depends on how many times a value occurred, the set discards the count and gives wrong answers. A map from value to count is needed instead. If the answer needs the position of an earlier value, the set has no position to return. The next two lessons teach those cases. A set stays correct whenever the question asks only whether a value is present.
+A false friend is a tool that looks right for a question but answers a different one. Here the false friend is a set on a task that needs more than existence. If the answer depends on how many times a value occurred, the set discards the count and gives wrong answers. A map from value to count is needed instead. If the answer needs the position of an earlier value, the set has no position to return. The next two lessons teach those cases. A set stays correct whenever the question asks only whether a value is present.
 
 #### Java Details That Cause Failures
 
