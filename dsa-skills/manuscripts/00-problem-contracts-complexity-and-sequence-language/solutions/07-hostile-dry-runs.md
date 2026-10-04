@@ -4,7 +4,7 @@
 #### Solution: [Build] Singleton (Author exercise)
 <!-- id: pc-singleton -->
 
-**Approach.** With one element the loop `for (i = 1; i < 1; ...)` never executes, so the result comes entirely from the initialization. The corrected method starts `best` at 1, because any non-empty list holds a climb of length one, and returns 1. The flawed version starts `best` at 0 and only updates it inside the loop, so it returns 0. The dry-run ledger therefore has a single row, the initial one, and that row already shows the wrong meaning for `best`.
+**Approach.** With one element the loop `for (i = 1; i < 1; ...)` never executes, so the result comes entirely from the initialization. The corrected method starts `best` at 1, because any non-empty list holds a climb of length one. It returns 1. The flawed version starts `best` at 0 and updates it only inside the loop, so it returns 0. The dry-run table therefore has a single row, the initial one. That row already shows the wrong meaning for `best`.
 
 **Complexity.** O(n) time, O(1) space, and zero loop iterations for a single element.
 
@@ -37,7 +37,7 @@ public final class Singleton {
 #### Solution: [Vary] All Equal (Author exercise)
 <!-- id: pc-all-equal -->
 
-**Approach.** With a strict comparison, two equal neighbors do not extend a climb, so every day restarts at length 1 and the answer is 1. With a non-strict comparison, equal neighbors do extend the run, so the answer is 3. The values never differ, so this one input separates the two comparisons completely, and no input with distinct values could do so.
+**Approach.** With a strict comparison, two equal neighbors do not extend a climb, so every day restarts at length 1 and the answer is 1. With a non-strict comparison, equal neighbors do extend the run, so the answer is 3. The values never differ, so this one input separates the two comparisons completely. No input with distinct values can do that.
 
 **Complexity.** O(n) time and O(1) space for each version.
 
@@ -67,7 +67,7 @@ public final class AllEqual {
 #### Solution: [Boundary] Numeric Extremes (Author exercise)
 <!-- id: pc-numeric-extremes -->
 
-**Approach.** The true sum is 2 * 2,147,483,647 = 4,294,967,294, which is above the `int` maximum. In two's-complement arithmetic the result wraps around to 4,294,967,294 - 2^32, which is -2. Predict that before running, then confirm it. The fix is a `long` accumulator, which holds 4,294,967,294 exactly. The attacker works because it sits at the extreme of the type, where the wrap-around is guaranteed.
+**Approach.** The true sum is 2 * 2,147,483,647 = 4,294,967,294, which is above the `int` maximum. In two's-complement arithmetic the result wraps around to 4,294,967,294 - 2^32, which is -2. Predict that before you run the code, then confirm it. The fix is a `long` accumulator, which holds 4,294,967,294 exactly. The attacker works because it sits at the extreme of the type, where the wrap-around is guaranteed.
 
 **Complexity.** O(n) time, O(1) space.
 
@@ -88,7 +88,7 @@ public final class NumericExtremes {
 #### Solution: [Recognize] Mutation Order (Author exercise)
 <!-- id: pc-mutation-order -->
 
-**Approach.** Copying left to right does `a[1] = a[0]`, which overwrites the old `a[1]` before it was read, then `a[2] = a[1]`, which copies the already overwritten value, and so on, so every slot ends up holding the first value. Copying right to left does `a[3] = a[2]`, `a[2] = a[1]`, `a[1] = a[0]`, and each write lands on a slot whose old value has already been moved. After the shift the insert writes 9 into slot 0. The general rule is to copy in the direction that keeps the destination behind the source. `System.arraycopy` handles overlapping ranges correctly, as its documentation states, so it is a safe shortcut.
+**Approach.** Copying left to right does `a[1] = a[0]`, which overwrites the old `a[1]` before the loop reads it. Then `a[2] = a[1]` copies the already overwritten value, and so on, so every slot ends up holding the first value. Copying right to left does `a[3] = a[2]`, `a[2] = a[1]` and `a[1] = a[0]`. Each write lands on a slot whose old value the loop has already moved. After the shift, the insert writes 9 into slot 0. The general rule is to copy in the direction that keeps the destination behind the source. `System.arraycopy` handles overlapping ranges correctly, as its documentation states, so it is a safe shortcut.
 
 **Complexity.** O(n) time for the shift, O(1) extra space.
 

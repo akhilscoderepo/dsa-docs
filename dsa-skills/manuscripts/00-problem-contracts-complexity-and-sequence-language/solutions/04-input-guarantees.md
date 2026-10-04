@@ -4,7 +4,7 @@
 #### Solution: [Build] Non-Empty Maximum (Author exercise)
 <!-- id: pc-non-empty-maximum -->
 
-**Approach.** The contract promises at least one element, so `nums[0]` is a real member of the input and a safe starting point. Starting from zero assumes zero is below every value, which fails on `[-8,-3]`, where it returns 0 instead of -3. An empty-array guard would be dead code under this contract, and its presence would suggest a promise that the problem never made.
+**Approach.** The specification promises at least one element, so `nums[0]` is a real member of the input and a safe starting point. Starting from zero assumes zero is below every value. That assumption fails on `[-8,-3]`, where the method returns 0 instead of -3. An empty-array guard is dead code under this specification, and it suggests a promise that the problem never made.
 
 **Complexity.** O(n) time, O(1) extra space.
 
@@ -33,7 +33,7 @@ public final class NonEmptyMaximum {
 #### Solution: [Vary] Possibly Empty (Author exercise)
 <!-- id: pc-possibly-empty -->
 
-**Approach.** Pick the optional-result design. `OptionalInt` makes absence part of the type, so a caller must decide what to do with it. A sentinel such as `Integer.MIN_VALUE` would collide with a legal answer when the range may contain that value, and any integer in `-10^9..10^9` can be a legal maximum, so no safe sentinel exists unless the range excludes one. The signature returns the optional, the documentation says "empty when the array is empty", and nothing else is invented.
+**Approach.** Pick the optional-result design. `OptionalInt` makes absence part of the type, so a caller must decide what to do with it. A sentinel such as `Integer.MIN_VALUE` collides with a legal answer when the range may contain that value. Any integer in `-10^9..10^9` can be a legal maximum, so no safe sentinel exists unless the range excludes one. The signature returns the optional, the documentation says "empty when the array is empty", and the method invents nothing else.
 
 **Complexity.** O(n) time, O(1) extra space.
 
@@ -59,7 +59,7 @@ public final class PossiblyEmpty {
 #### Solution: [Boundary] Rectangular Or Ragged (Author exercise)
 <!-- id: pc-rectangular-or-ragged -->
 
-**Approach.** `grid[0].length` measures only the first row. When rows can differ it overruns a shorter row with an `ArrayIndexOutOfBoundsException`, or it silently skips cells in a longer one. The safe bound is each row's own length, `grid[r].length`, evaluated inside the outer loop. That form is correct for rectangular grids too, so it costs nothing to use when the shape is unclear.
+**Approach.** `grid[0].length` measures only the first row. When rows differ, that bound overruns a shorter row with an `ArrayIndexOutOfBoundsException`. In a longer row, it silently skips cells. The safe bound is each row's own length, `grid[r].length`, evaluated inside the outer loop. That form is correct for rectangular grids too, so it costs nothing to use when the shape is unclear.
 
 **Complexity.** O(total cells) time and O(1) extra space.
 
@@ -94,7 +94,7 @@ public final class RectangularOrRagged {
 #### Solution: [Recognize] Sorted Promise (Author exercise)
 <!-- id: pc-sorted-promise -->
 
-**Approach.** Sorted order means equal values are neighbors, so a new value has started exactly when the current element differs from the previous one. Count 1 for the first element and then one more at every position where `nums[i] != nums[i - 1]`. This relies on the sorted guarantee and never checks it. On an unsorted array the same loop would count runs, not distinct values, and `[1,2,1]` would be wrong.
+**Approach.** Sorted order means equal values are neighbors, so a new value starts exactly when the current element differs from the previous one. Count 1 for the first element, and add one at every position where `nums[i] != nums[i - 1]`. This relies on the sorted guarantee and never checks it. On an unsorted array the same loop counts runs, not distinct values, so `[1,2,1]` gives the wrong answer.
 
 **Complexity.** O(n) time, O(1) extra space.
 

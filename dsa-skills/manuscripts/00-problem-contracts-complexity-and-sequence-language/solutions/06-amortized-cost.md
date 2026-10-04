@@ -4,7 +4,7 @@
 #### Solution: [Build] Doubling Array (Author exercise)
 <!-- id: pc-doubling-array -->
 
-**Approach.** The array is full on the second append, the third, and the fifth, and not again before the eighth. Those resizes take the capacity from 1 to 2, 2 to 4 and 4 to 8, and they copy 1, 2 and 4 elements, for a total of 7. Seven copies for eight appends is below one copy per append. The simulation records the capacities it passes through, so the list is produced by code instead of by hand.
+**Approach.** The array is full on the second append, the third and the fifth, and not again before the eighth. Those resizes take the capacity from 1 to 2, 2 to 4 and 4 to 8. They copy 1, 2 and 4 elements, for a total of 7. Seven copies for eight appends is below one copy per append. The simulation records the capacities it passes through, so code produces the list instead of hand counting.
 
 **Complexity.** The simulation is O(n) time. The doubling array performs O(n) total copies for `n` appends, so O(1) amortized per append.
 
@@ -42,7 +42,7 @@ public final class DoublingArray {
 #### Solution: [Vary] Grow By One (Author exercise)
 <!-- id: pc-grow-by-one -->
 
-**Approach.** With growth by one slot, the array is full on every append after the first. At the append that follows `s` stored values, it copies `s` elements. The total over `n` appends is `1 + 2 + ... + (n - 1)`, which equals `n(n - 1) / 2`, so eight appends cost 28 copies against 7 for doubling. The cost per append averages about `n / 2`, which is O(n), so the policy loses the constant amortized bound.
+**Approach.** With growth by one slot, the array is full on every append after the first. An append that finds `s` stored values copies `s` elements. The total over `n` appends is `1 + 2 + ... + (n - 1)`, which equals `n(n - 1) / 2`, so eight appends cost 28 copies against 7 for doubling. The cost per append averages about `n / 2`, which is O(n), so the policy loses the constant amortized bound.
 
 **Complexity.** O(n^2) total copies, hence O(n) amortized per append.
 
@@ -72,7 +72,7 @@ public final class GrowByOne {
 #### Solution: [Boundary] One Expensive Append (Author exercise)
 <!-- id: pc-one-expensive-append -->
 
-**Approach.** After 1,024 values the capacity is exactly 1,024, so the array is full. The 1,025th append is the one that finds no room, doubles to 2,048 and copies all 1,024 stored values. All earlier resizes copied 1 + 2 + 4 + ... + 512, which is 1,023 elements in total. So the single spike equals the total of every earlier spike plus one, a geometric series, and the total copies stay below two per append. One costly call does not break the average, because the previous 1,024 appends already created that room.
+**Approach.** After 1,024 values the capacity is exactly 1,024, so the array is full. The 1,025th append finds no room, doubles to 2,048 and copies all 1,024 stored values. All earlier resizes copied 1 + 2 + 4 + ... + 512, which is 1,023 elements in total. So the single spike equals the total of every earlier spike plus one. This is a geometric series, and the total copies stay below two per append. One costly call does not break the average, because the previous 1,024 appends already created that room.
 
 **Complexity.** The spike is O(n) for that one call. The total for `n` appends is O(n), so O(1) amortized.
 
@@ -103,7 +103,7 @@ public final class OneExpensiveAppend {
 #### Solution: [Recognize] Potential Intuition (Author exercise)
 <!-- id: pc-potential-intuition -->
 
-**Approach.** After a resize to capacity `2c` the array holds `c` values, so exactly `c` empty slots remain and `c` more appends can happen before the next resize. Charge each of those appends 3 units, spend 1 on the write and save 2. The `c` appends save `2c` units, and the next resize costs `2c` copies, so the stored credit pays for it exactly. The first resize from 1 to 2 copies one value and is funded by the 2 units the first append saved, with one unit to spare. The simulation tracks the credit balance and asserts it never goes negative once the first resize has passed.
+**Approach.** After a resize to capacity `2c` the array holds `c` values, so exactly `c` empty slots remain and `c` more appends can happen before the next resize. Charge each of those appends 3 units, spend 1 on the write and save 2. The `c` appends save `2c` units, and the next resize costs `2c` copies, so the stored credit pays for it exactly. The first resize from 1 to 2 copies one value. The 2 units that the first append saved fund it, with one unit to spare. The simulation tracks the credit balance and asserts that it never goes negative once the first resize has passed.
 
 **Complexity.** O(n) time for the simulation, and the charge of 3 per append gives O(1) amortized cost.
 

@@ -4,7 +4,7 @@
 #### Solution: [Build] Classify [2,4] (Author exercise)
 <!-- id: pc-classify-2-4 -->
 
-**Approach.** Find the position of each candidate value in `[1,2,3,4]`. The value 2 sits at position 1 and the value 4 at position 3. The positions increase, so the original order is kept, which makes the candidate a subsequence. They are not consecutive, because position 2 is skipped, so it is not a subarray. Any selection of positions is a subset, so it is one as well. The code classifies by the position list, so each verdict is derived and not asserted from eyesight.
+**Approach.** Find the position of each candidate value in `[1,2,3,4]`. The value 2 sits at position 1 and the value 4 at position 3. The positions increase, so the original order is kept, and the candidate is a subsequence. The positions are not consecutive, because position 2 is skipped, so the candidate is not a subarray. Any selection of positions is a subset, so the candidate is a subset as well. The code classifies by the position list, so each verdict is derived and not judged by eye.
 
 **Complexity.** O(n + m) time to locate the positions of `m` candidate values in an array of `n`, and O(m) space for the position list.
 
@@ -36,7 +36,7 @@ public final class ClassifyPositions {
 #### Solution: [Vary] Order Matters (Author exercise)
 <!-- id: pc-order-matters -->
 
-**Approach.** The candidate `[4,2]` has positions 3 and then 1, so the positions fall. The no-gaps test fails, because a drop is not "one more than the previous position". The ordered test fails as well. Only the membership test passes, because both values occur in the array, which is all a subset needs. The one changed decision from `[2,4]` is therefore the direction of the positions.
+**Approach.** The candidate `[4,2]` has positions 3 and then 1, so the positions fall. The no-gaps test fails, because a drop is not "one more than the previous position". The ordered test fails as well. Only the membership test passes, because both values occur in the array, and a subset needs nothing more. The one changed decision from `[2,4]` is therefore the direction of the positions.
 
 **Complexity.** O(n + m) time and O(m) space, as in the previous exercise.
 
@@ -60,7 +60,7 @@ public final class OrderMatters {
 #### Solution: [Boundary] Empty Choice (Author exercise)
 <!-- id: pc-empty-choice -->
 
-**Approach.** The contract must say whether an empty block is legal, because its sum is 0 and 0 beats every sum on an all-negative array. With the non-empty requirement the best choice is the single largest reading, -3. With the empty choice allowed the best is to choose nothing, which gives 0. Both answers come from the same brute force, and the only difference is whether the starting best is the sum of nothing or the first block's sum.
+**Approach.** The specification must say whether an empty block is legal, because its sum is 0 and 0 beats every sum on an all-negative array. With the non-empty requirement, the best choice is the single largest reading, -3. With the empty choice allowed, the best choice is to pick nothing, which gives 0. Both answers come from the same brute force. The only difference is the starting best, which is either the sum of nothing or the first block's sum.
 
 **Complexity.** The brute force is O(n^2) time with a running sum per start, and O(1) space.
 
@@ -90,9 +90,9 @@ public final class EmptyChoice {
 #### Solution: [Recognize] Contiguous Maximum (Author exercise)
 <!-- id: pc-contiguous-maximum -->
 
-**Approach.** Every block of consecutive positions that contains both the 5 and the 4 also contains the -10 between them, so its sum is -1. The best block is the single value 5, giving 5. A subsequence may skip the -10, so it can take positions 0 and 2 for a sum of 9. The data and the objective are identical, and the position rule alone moves the answer from 5 to 9.
+**Approach.** Every block of consecutive positions that contains both the 5 and the 4 also contains the -10 between them, so its sum is -1. The best block is the single value 5, which gives 5. A subsequence may skip the -10, so it can take positions 0 and 2 for a sum of 9. The data and the objective are identical. The position rule alone moves the answer from 5 to 9.
 
-**Complexity.** Enumerating all blocks is O(n^2) and all subsequences is O(2^n) time, and both use O(1) extra space beyond the loops.
+**Complexity.** Enumerating all blocks takes O(n^2) time, and enumerating all subsequences takes O(2^n) time. Both use O(1) extra space beyond the loops.
 
 ```java run
 public final class ContiguousMaximum {

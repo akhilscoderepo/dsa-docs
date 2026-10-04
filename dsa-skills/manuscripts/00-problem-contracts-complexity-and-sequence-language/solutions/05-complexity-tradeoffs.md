@@ -4,7 +4,7 @@
 #### Solution: [Build] Consecutive Loops (Author exercise)
 <!-- id: pc-consecutive-loops -->
 
-**Approach.** The second scan runs `n` times no matter how many times the first one ran, so the two counts are added, giving `n + n = 2n`. Dropping the constant factor of two leaves O(n). The factor still exists, since doubling the work means doubling the time, but it does not change how the cost scales when `n` grows. The counter below runs the two loops and asserts the count.
+**Approach.** The second scan runs `n` times no matter how many times the first one ran, so the two counts add up to `n + n = 2n`. Dropping the constant factor of two leaves O(n). The factor still exists, because doubling the work doubles the time. It does not change how the cost scales when `n` grows. The counter below runs the two loops and asserts the count.
 
 **Complexity.** O(n) time, O(1) extra space.
 
@@ -28,7 +28,7 @@ public final class ConsecutiveLoops {
 #### Solution: [Vary] Triangular Work (Author exercise)
 <!-- id: pc-triangular-work -->
 
-**Approach.** For `i = 0` the inner loop runs `n - 1` times, for `i = 1` it runs `n - 2` times, and so on down to 0. The total is `(n - 1) + (n - 2) + ... + 1`, which equals `n(n - 1) / 2`. That expression is about half of `n^2`, so the class is O(n^2). The half is a constant factor and is dropped from the bound while remaining visible in the count. The assertions check the formula over many sizes instead of two.
+**Approach.** For `i = 0` the inner loop runs `n - 1` times. For `i = 1` it runs `n - 2` times, and so on down to 0. The total is `(n - 1) + (n - 2) + ... + 1`, which equals `n(n - 1) / 2`. That expression is about half of `n^2`, so the class is O(n^2). The half is a constant factor, so the bound drops it, but the count still shows it. The assertions check the formula over many sizes instead of two.
 
 **Complexity.** O(n^2) time, O(1) extra space.
 
@@ -55,7 +55,7 @@ public final class TriangularWork {
 #### Solution: [Boundary] Two Dimensions (Author exercise)
 <!-- id: pc-two-dimensions -->
 
-**Approach.** A grid traversal visits every cell once, so the cost is `rows * cols`, with both variables kept in the bound. If both are called `n`, the bound reads O(n^2), which is right for a square grid and badly pessimistic for a long thin one. With `rows = 1000` and `cols = 2` the real count is 2,000, while the merged claim would suggest a million. Keeping two letters also lets you say how the cost responds to each dimension separately.
+**Approach.** A grid traversal visits every cell once, so the cost is `rows * cols`, with both variables kept in the bound. If both are called `n`, the bound reads O(n^2), which is right for a square grid and badly pessimistic for a long thin one. With `rows = 1000` and `cols = 2` the real count is 2,000, while the merged claim suggests a million. Keeping two letters also lets you say how the cost responds to each dimension separately.
 
 **Complexity.** O(rows * cols) time, O(1) extra space.
 
@@ -81,7 +81,7 @@ public final class TwoDimensions {
 #### Solution: [Recognize] Sort Then Scan (Author exercise)
 <!-- id: pc-sort-then-scan -->
 
-**Approach.** Sort a copy of the array, then scan once comparing each element with the previous one. Equal values must be adjacent after sorting, so any duplicate shows up as equal neighbors. The cost is O(n log n) for the sort plus O(n) for the scan, which is dominated by the sort. The tradeoffs are that the sorted copy needs O(n) extra space, or sorting in place would destroy the original order and any index information. All-pairs comparison needs O(1) extra space and O(n^2) time, so the choice buys speed with memory. The randomized check compares both methods on many small arrays.
+**Approach.** Sort a copy of the array, then scan once comparing each element with the previous one. Equal values must be adjacent after sorting, so any duplicate shows up as equal neighbors. The cost is O(n log n) for the sort plus O(n) for the scan, and the sort dominates. The tradeoffs are these. The sorted copy needs O(n) extra space, and sorting in place destroys the original order and any index information. All-pairs comparison needs O(1) extra space and O(n^2) time, so the sorted approach buys speed with memory. The randomized check compares both methods on many small arrays.
 
 **Complexity.** O(n log n) time and O(n) extra space for the sorted copy, versus O(n^2) time and O(1) space for all pairs.
 
