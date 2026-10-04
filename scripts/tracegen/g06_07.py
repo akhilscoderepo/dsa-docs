@@ -1,27 +1,24 @@
 from common import *
 CH='06-binary-search'
-F='07-rotated-target.md'
-def run(a,t,dups):
-    lo,hi=0,len(a)-1; st=[]
+def run(a,t,ph):
+    lo,hi=0,len(a)-1
+    st=[{"at":{"lo":lo,"hi":hi,"mid":-1},"vars":{"target":str(t)},"note":f"Start with the whole array, indexes {lo} to {hi}."}]
+    res=-1
     while lo<=hi:
-        mid=lo+(hi-lo)//2
-        base={"at":{"lo":lo,"hi":hi,"mid":mid},"vars":{"middle":a[mid],"target":t}}
-        if a[mid]==t:
-            st.append({**base,"note":f"Position {mid} holds {a[mid]}, which equals the target {t}. The search ends and reports position {mid}."}); return st,mid
-        if dups and a[lo]==a[mid]==a[hi]:
-            st.append({**base,"note":f"The first, middle and last values are all {a[mid]}, so neither half can be proved sorted. Drop both ends: lo becomes {lo+1} and hi becomes {hi-1}."}); lo+=1; hi-=1
-        elif a[lo]<=a[mid]:
-            if a[lo]<=t<a[mid]:
-                st.append({**base,"note":f"The left half {a[lo]} to {a[mid]} is sorted and the target {t} lies in its range, so hi becomes {mid-1}."}); hi=mid-1
-            else:
-                st.append({**base,"note":f"The left half {a[lo]} to {a[mid]} is sorted and the target {t} is outside its range, so lo becomes {mid+1}."}); lo=mid+1
+        mid=lo+(hi-lo)//2; plo,phi=lo,hi; v=a[mid]
+        if v==t:
+            st.append({"at":{"lo":plo,"hi":phi,"mid":mid},"vars":{"nums[mid]":str(v),"target":str(t)},"note":f"The value {v} equals the target, so the search returns index {mid}."}); res=mid; break
+        if a[lo]<=a[mid]:
+            half="left"; inr=a[lo]<=t<a[mid]
+            if inr: hi=mid-1; nt=f"The left half is sorted, from {a[plo]} to {v}. The target {t} lies inside it, so hi becomes {hi}."
+            else: lo=mid+1; nt=f"The left half is sorted, from {a[plo]} to {v}. The target {t} is outside it, so lo becomes {lo}."
         else:
-            if a[mid]<t<=a[hi]:
-                st.append({**base,"note":f"The right half {a[mid]} to {a[hi]} is sorted and the target {t} lies in its range, so lo becomes {mid+1}."}); lo=mid+1
-            else:
-                st.append({**base,"note":f"The right half {a[mid]} to {a[hi]} is sorted and the target {t} is outside its range, so hi becomes {mid-1}."}); hi=mid-1
-    return st,-1
-a=[4,5,6,7,0,1,2]; s,r=run(a,0,False); assert r==4 and len(s)==3 and "lies in its range" in s[1]["note"]
-fill(CH,F,block(a,["lo","hi","mid"],s),"@@TRACE1@@")
-a=[1,0,1,1,1]; s,r=run(a,0,True); assert r==1 and "all 1" in s[0]["note"]
-fill(CH,F,block(a,["lo","hi","mid"],s),"@@TRACE2@@")
+            half="right"; inr=a[mid]<t<=a[hi]
+            if inr: lo=mid+1; nt=f"The right half is sorted, from {v} to {a[phi]}. The target {t} lies inside it, so lo becomes {lo}."
+            else: hi=mid-1; nt=f"The right half is sorted, from {v} to {a[phi]}. The target {t} is outside it, so hi becomes {hi}."
+        st.append({"at":{"lo":plo,"hi":phi,"mid":mid},"vars":{"nums[mid]":str(v),"sorted half":half},"note":nt})
+    if res==-1:
+        st.append({"at":{"lo":min(lo,len(a)),"hi":hi,"mid":-1},"vars":{"target":str(t)},"note":"The interval is empty, so the target is absent and the search returns -1."})
+    fill(CH,'07-rotated-target.md',block(list(a),["lo","hi","mid"],st),ph); return res
+assert run([6,7,9,1,2,3,4],2,"@@TRACE1@@")==4
+assert run([4,5,6,7,0,1,2],3,"@@TRACE2@@")==-1
