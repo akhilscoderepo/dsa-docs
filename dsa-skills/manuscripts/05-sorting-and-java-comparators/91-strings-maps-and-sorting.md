@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Word Tool That Compares Every Pair
 
-A word-game tool shows players all words that use the same letters, so `rat`, `tar` and `art` appear together. The first version takes each new word and compares it with every group found so far. On a list of 200 words it answers at once. On the full dictionary of 100000 words, it runs for hours, and each answer also depends on the order of the list.
+A word-game tool shows players all words that use the same letters, so `rat`, `tar` and `art` appear together. The first version takes each new word and compares it with every group found so far. On a list of 200 words it answers at once. On the full dictionary of 100000 words, it runs for hours, and the order of its groups depends on the order of the list.
 
 The comparison itself is correct, but the tool repeats it for every pair of a word and a group. This lesson answers one question. What single value can the tool compute for each word, so that two words belong together exactly when their values are equal?
 
@@ -140,6 +140,8 @@ static List<List<String>> groupWords(String[] words) {
 }
 ```
 
+The call `computeIfAbsent(key, ...)` returns the list stored under `key`, and it first creates an empty list when the key is missing. The line therefore replaces a `get` followed by a null check and a `put`.
+
 #### What The Method Costs
 
 Let n be the number of words and L the length of the longest word. Each word costs O(L log L) to sort and expected O(L) to hash. The total time is O(n * L log L). The map and its lists hold every word once, so the space is O(n * L). The iteration order of `groups.values()` is not specified, so a caller that needs a fixed order of groups must sort the keys.
@@ -149,11 +151,11 @@ Let n be the number of words and L the length of the longest word. Each word cos
 
 #### Look For Equal Letters With Equal Counts
 
-Use a sorted key when two items belong together exactly when they hold the same elements the same number of times, and the elements can be sorted. The invariant is that the key depends only on the multiset of elements, and that equal multisets give equal keys. The same idea names groups of rotated words after a different normalization, and it names groups of numbers by their digits.
+Use a sorted key when two items belong together exactly when they hold the same elements the same number of times, and the elements can be sorted. The invariant is that the key depends only on the multiset of elements, and that equal multisets give equal keys. The same idea names groups of numbers by the digits they hold.
 
 #### Where The Key Is Wrong
 
-A false friend is a raw sorted string used when the problem allows a different kind of equivalence. Two strings are close in a different sense when one becomes the other by swapping the roles of two letters. Their letters differ, so their sorted strings differ, although the strings are equivalent. The right name there combines the set of letters with the sorted list of counts. A count table is another false friend when the alphabet is not fixed, since a table of 26 entries fails for other characters.
+A false friend is a raw sorted string used when the problem allows a different kind of equivalence. Two strings are close, in the sense of the last exercise, when one becomes the other by swapping two letters everywhere. Their letters differ, so their sorted strings differ, although the strings are equivalent. The right name there combines the set of letters with the sorted list of counts. A count table is another false friend when the alphabet is not fixed, since a table of 26 entries fails for other characters.
 
 #### Java Details That Cause Failures
 

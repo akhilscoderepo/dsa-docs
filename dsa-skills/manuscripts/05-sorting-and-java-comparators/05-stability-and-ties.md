@@ -145,7 +145,7 @@ Ask for each sort what the problem says about equal keys. If tied items are indi
 
 #### Where Stability Does Not Help
 
-A false friend is the idea that a stable sort fixes every tie problem. A stable sort preserves the order that the input had, and the input order may be arbitrary. If the problem asks for ties in alphabetical order, the comparator needs an alphabetical key. A stable sort also gives nothing across two separate sorts: two sorts by two keys leave the order of the last sort on top, and an earlier sort affects only the ties of the later one.
+A false friend is the idea that a stable sort fixes every tie problem. A stable sort preserves the order that the input had, and the input order may be arbitrary. If the problem asks for ties in alphabetical order, the comparator needs an alphabetical key. A stable sort does help across two passes: sorting by the second key first and then by the first key, with a stable sort, gives the first key priority and the second key as the tie rule. A sort that is not stable breaks that pairing.
 
 #### Java Details That Cause Failures
 

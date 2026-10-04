@@ -20,7 +20,7 @@ static void sortAscending(Integer[] balances) {
 }
 ```
 
-The lambda is a **comparator**, a function that takes two values and returns a number. A negative result means the first value goes first, zero means neither goes first, and a positive result means the second value goes first. On `[40, -7, 12]` the rule gives the sorted order `[-7, 12, 40]`.
+The lambda `(a, b) -> a - b` is shorthand for a method that takes `a` and `b` and returns the difference. It is a **comparator**, a function that takes two values and returns a number. A negative result means the first value goes first, zero means neither goes first, and a positive result means the second value goes first. On `[40, -7, 12]` the rule gives the sorted order `[-7, 12, 40]`.
 
 <!-- stage: bottleneck -->
 ### The Subtraction Leaves The int Range
@@ -68,7 +68,7 @@ The comparator keeps no state between calls, so the same pair always gives the s
 
 #### The Subtraction Rule On Three Balances
 
-Take `[2000000000, 5, -2000000000]` and sort it by insertion, which compares each new value with the values on its left. The subtraction rule compares 5 with 2000000000 and correctly moves 5 left. It then compares -2000000000 with 2000000000 and gets a wrapped positive result, so it believes that -2000000000 is already in the right place. The sort stops with the array `[5, 2000000000, -2000000000]`, which is not sorted.
+Take `[2000000000, 5, -2000000000]` and sort it by insertion. An insertion sort takes each value in turn and compares it with the values on its left, moving it left until it fits. The subtraction rule compares 5 with 2000000000 and correctly moves 5 left. It then compares -2000000000 with 2000000000 and gets a wrapped positive result, so it believes that -2000000000 is already in the right place. The sort stops with the array `[5, 2000000000, -2000000000]`, which is not sorted.
 
 #### The Safe Rule On The Same Balances
 
@@ -110,7 +110,7 @@ The sort makes O(n log n) comparisons, and each comparison takes constant time. 
 
 #### Look For A Question About Order
 
-Use an explicit comparison whenever the problem asks for a deterministic order before any scan can decide locally. The invariant is the contract above: the rule ranks every pair, never contradicts itself, and treats ties as interchangeable. Checking the contract on the extreme values and on equal values catches most faulty rules.
+Use an explicit comparison whenever the problem needs the items in one particular order. The invariant is the contract above: the rule ranks every pair, never contradicts itself, and treats ties as interchangeable. Checking the contract on the extreme values and on equal values catches most faulty rules.
 
 #### Where A Rule Looks Right And Is Not
 
@@ -128,7 +128,7 @@ A comparator works only on object types, so `Arrays.sort(int[], comparator)` doe
 
 **Prerequisites.** The compare contract and `Integer.compare` from this lesson.
 
-**Problem.** Let `nums` be an array of integers. Return a new array that holds the values of `nums` in nondecreasing order. The input array keeps its original contents.
+**Problem.** Let `nums` be an array of integers. Return a new array that holds the values of `nums` in nondecreasing order. Write the sort yourself and do not call a library sort. The input array keeps its original contents.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 5 * 10^4`; the empty array is legal.
@@ -184,7 +184,7 @@ A comparator works only on object types, so `Arrays.sort(int[], comparator)` doe
 
 **Hint.** Which comparison operators answer the question without producing a number that can wrap?
 
-**Changed decision.** The method must normalize the sign, because the library result is negative, zero or positive and not -1, 0 or 1.
+**Changed decision.** The method must normalize the sign, because a comparison guarantees only the sign of its result, and a value such as 2 or -7 is allowed.
 
 #### [Recognize] Largest Number (LeetCode 179)
 <!-- id: so-largest-number -->

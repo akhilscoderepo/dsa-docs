@@ -119,7 +119,7 @@ Both methods run in O(n log n) time for a range or an array of n values. The cop
 <!-- stage: applicability -->
 ### When The Library Sort Fits
 
-#### Check The Order Contract First
+#### Check What The Caller Allows
 
 Use `Arrays.sort` on a primitive array when the natural ascending order of the values is the order that the decision needs, and the caller allows a change or a copy. The invariant is that after the call every adjacent pair is nondecreasing and equal values form one run. A problem that says only "return the answer" gives no right to reorder its input, so the safe default is a copy.
 
@@ -164,7 +164,7 @@ The method `Arrays.sort(int[])` returns `void`, so code such as `return Arrays.s
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 10^5`.
-- **Bounds** satisfy `0 <= from <= to <= nums.length`.
+- **Valid bounds** satisfy `0 <= from <= to <= nums.length`.
 - **Empty range** occurs when `from == to` and changes nothing.
 - **Invalid bounds** may be passed, and the method reports them with the exception that the Java library throws.
 

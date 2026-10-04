@@ -245,8 +245,8 @@ public final class MinIncrement {
 
     public static void main(String[] args) {
         // The statement examples and the empty input.
-        if (minIncrements(new int[] {5, 2, 5, 5}) != 3) throw new AssertionError("example 1");
-        if (minIncrements(new int[] {0, 0, 0, 0, 10}) != 6) throw new AssertionError("example 2");
+        if (minIncrements(new int[] {3, 3, 3, 1, 1}) != 4) throw new AssertionError("example 1");
+        if (minIncrements(new int[] {100, 99, 100, 99, 100, 98}) != 7) throw new AssertionError("example 2");
         if (minIncrements(new int[0]) != 0) throw new AssertionError("empty");
         // A run of 100000 equal values needs more moves than int holds, so the counter must be long.
         int[] run = new int[100000];

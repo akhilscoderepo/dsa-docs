@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Scoreboard That Repeats One Score
 
-A game site shows the third-highest score on its front page. The first version sorts the scores and reads the third value from the end. On most days it works. On a day when two players tie for first place, the page shows the second-highest score as if it were the third. On a day with only two scores, the page crashes.
+A game site shows the third-highest score on its front page. The first version sorts the scores and reads the third value from the end. On most days it works. On a day when two players tie for first place, the page shows the second-highest score as if it were the third. On a day with only two scores, the page crashes. The page should show the highest score whenever fewer than three distinct scores exist.
 
 Sorting arranged the scores, and the code still answered the wrong question. The third position in an array and the third distinct score are different things. This lesson answers one question. After a sort, which small piece of state must a scan carry so that the answer counts the right thing and survives short inputs?
 
@@ -125,7 +125,7 @@ Use sort and scan when, in sorted order, the answer depends on whether neighbors
 
 #### Where Sorted Input Is Not Enough
 
-A false friend is binary search, which also needs sorted input. Binary search needs a yes-or-no question whose answers change only once along the array, and sorted order alone does not give that. Another false friend is a problem whose answer does not depend on neighbors, such as the sum of all values, where a sort adds cost and no help. When the answer needs only the largest or smallest few values, a single pass without a sort already works in O(n).
+A false friend is binary search, which a later chapter teaches and which also needs sorted input. Binary search needs a yes-or-no question whose answers change only once along the array, and sorted order alone does not give that. Another false friend is a problem whose answer does not depend on neighbors, such as the sum of all values, where a sort adds cost and no help. When the answer needs only the largest or smallest few values, a single pass without a sort already works in O(n).
 
 #### Java Details That Cause Failures
 
@@ -216,4 +216,4 @@ Do not start a scan from `Integer.MIN_VALUE` as an "empty" marker, because the i
 
 **Hint.** In the sorted array, what value should sit at each index, and what is the answer if every index matches?
 
-**Changed decision.** The adjacent relation is the gap between an index and its value, and the fallback is `n`.
+**Changed decision.** The scan compares each value with its index, and the fallback is `n`.

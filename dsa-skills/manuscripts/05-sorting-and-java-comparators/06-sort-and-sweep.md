@@ -53,11 +53,11 @@ A **sweep** is one pass over sorted data in which each item is processed once an
 
 #### The Frontier Is The Summary
 
-The **frontier** is the smallest slot that no earlier request has taken. Request `i` takes the larger of its asked slot and the frontier. The new frontier is that slot plus one. The cost of the move is the taken slot minus the asked slot, and it is never negative, because the frontier is only used when it exceeds the asked slot.
+The **frontier** is one more than the largest slot that an earlier request has taken. Request `i` takes the larger of its asked slot and the frontier. The new frontier is that slot plus one. The cost of the move is the taken slot minus the asked slot, and it is never negative, because the frontier is only used when it exceeds the asked slot.
 
 #### Why Taking The Smallest Slot Is Safe
 
-A **safe move** is a choice that cannot make a later choice worse. Sorted requests make the smallest legal slot a safe move. A later request asks for a slot at least as large as the current request. Any slot below the frontier is taken. Taking a larger slot than necessary can only push the frontier up and add cost later. The invariant after item `i` is that the taken slots are distinct, each is at least its asked slot, and the frontier is one more than the largest taken slot.
+A **safe move** is a choice that cannot make a later choice worse. Sorted requests make the smallest legal slot a safe move. The order of arrival does not change the total, because the final set of slots is the same for every order. A later request asks for a slot at least as large as the current request. Every slot from the current asked slot up to the frontier minus one is taken, so no later request can use a slot below the frontier. Taking a larger slot than necessary can only push the frontier up and add cost later. The invariant after item `i` is that the taken slots are distinct, each is at least its asked slot, and the frontier is one more than the largest taken slot.
 
 <!-- names: sweep, frontier, safe move -->
 
@@ -70,7 +70,7 @@ Sorting takes O(n log n) time, and the single pass after it adds O(n). The pass 
 
 The pass keeps three values.
 
-- **frontier** is the smallest slot that no earlier request holds, stored as a `long`.
+- **frontier** is one more than the largest slot that an earlier request holds, stored as a `long`.
 - **taken** is the slot that the current request receives, which is the larger of its asked slot and the frontier.
 - **moves** is the sum of `taken - asked` over the requests so far, stored as a `long`.
 
@@ -163,7 +163,7 @@ A running total of moves can exceed `int`, so declare it as `long`. Initialize t
 #### [Vary] Queue Reconstruction By Height (LeetCode 406)
 <!-- id: so-queue-or-none -->
 
-**Prerequisites.** Queue Reconstruction By Height from the lesson on sorting objects, and the sweep from this lesson.
+**Prerequisites.** Queue Reconstruction By Height from the lesson on sorting objects.
 
 **Problem.** Let `people` be an array of pairs `[h, k]`, where `k` is the number of people in front of this person with height at least `h`. Return a queue in which every `k` is correct. Unlike the earlier exercise, the input may have no valid queue. Return an empty array in that case.
 
@@ -200,7 +200,7 @@ A running total of moves can exceed `int`, so declare it as `long`. Initialize t
 
 **Hint.** Which variable of the sweep holds the largest taken slot, and in which type must the frontier be stored?
 
-**Changed decision.** The answer is the frontier of the sweep and not its cost, and the frontier passes the `int` range.
+**Changed decision.** The answer is the last taken slot of the sweep and not its cost, and that slot passes the `int` range.
 
 #### [Recognize] Minimum Increment To Make Array Unique (LeetCode 945)
 <!-- id: so-min-increment -->
@@ -215,9 +215,9 @@ A running total of moves can exceed `int`, so declare it as `long`. Initialize t
 - **Answer** can exceed the `int` range and is returned as a `long`.
 - **Mutation** of `nums` is not allowed.
 
-**Example 1.** Input `nums = [5, 2, 5, 5]`, output 3.
+**Example 1.** Input `nums = [3, 3, 3, 1, 1]`, output 4.
 
-**Example 2.** Input `nums = [0, 0, 0, 0, 10]`, output 6.
+**Example 2.** Input `nums = [100, 99, 100, 99, 100, 98]`, output 7.
 
 **Hint.** After sorting, what is the smallest value that the current item can take, given everything before it?
 

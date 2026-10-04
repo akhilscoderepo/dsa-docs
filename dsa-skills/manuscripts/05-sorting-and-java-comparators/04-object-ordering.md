@@ -135,7 +135,7 @@ A false friend is the pair of parallel arrays, because any step that reorders on
 
 #### Java Details That Cause Failures
 
-A comparator for `int[]` elements works only when the array holds the elements as an object, as `int[][]` does. A key stored as `int` that is negated for descending order fails for `Integer.MIN_VALUE`, so use `reversed()` or swap the arguments. Strings compare by `compareTo`, which orders by UTF-16 code unit and puts every uppercase letter before every lowercase letter.
+The call `Arrays.sort(int[][], comparator)` is legal because each row is an object. A key stored as `int` that is negated for descending order fails for `Integer.MIN_VALUE`, so use `reversed()` or swap the arguments. Strings compare by `compareTo`, which orders by UTF-16 code unit and puts every uppercase ASCII letter before every lowercase ASCII letter.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -220,6 +220,6 @@ A comparator for `int[]` elements works only when the array holds the elements a
 
 **Example 2.** Input `people = [[3, 1], [3, 0], [3, 2]]`, output `[[3, 0], [3, 1], [3, 2]]`.
 
-**Hint.** If the tallest people are placed first, which people can later insertions disturb, and at which index must a person go?
+**Hint.** The call `list.add(index, x)` inserts at an index and shifts later items. If the tallest people are placed first, which people can later insertions disturb, and at which index must a person go?
 
 **Changed decision.** The first sort key makes a position meaningful, because shorter people never change the count of taller people.

@@ -87,7 +87,7 @@ Only the current run is unresolved at any time, and `i` jumps to `j` when the ru
 
 #### A Feed With Three Distinct Numbers
 
-Take the feed `[4, 7, 4, 9, 7, 4]`. After sorting it is `4, 4, 4, 7, 7, 9`. The first run starts at index 0 and ends at index 3, so it has length 3. The second run covers indexes 3 and 4 with length 2. The last run holds the 9 at index 5 with length 1.
+Take the feed `[4, 7, 4, 9, 7, 4]`. After sorting it is `4, 4, 4, 7, 7, 9`. The first run starts at index 0 and stops before index 3, so it has length 3. The second run covers indexes 3 and 4 with length 2. The last run holds the 9 at index 5 with length 1.
 
 #### A Feed Where Every Number Is Equal
 
@@ -139,7 +139,7 @@ Use sort and scan when the answer needs one item or one count for each distinct 
 
 #### Where Sorting Is Not The Tool
 
-A false friend is a method that removes duplicates from an array that is already sorted, a task that later chapters teach with two pointers. That method assumes sorted input and does not sort. Another false friend is a problem that needs only existence, such as whether any duplicate exists. A hash set answers that question in O(n) expected time without an order, so a sort costs more than the question needs. If the answer must follow the order of first appearance, sorting destroys the information, unless the program stores indexes first.
+A false friend is a method that assumes the input is already sorted. Such a method gives wrong counts on unsorted input, so the sort must come first. Another false friend is a problem that needs only existence, such as whether any duplicate exists. A hash set answers that question in O(n) expected time without an order, so a sort costs more than the question needs. If the answer must follow the order of first appearance, sorting destroys the information, unless the program stores indexes first.
 
 #### Java Details That Cause Failures
 
@@ -228,6 +228,6 @@ Compare array values with `==` on primitives, and use `equals` on boxed values, 
 
 **Example 2.** Input `words = ["m", "mo", "ma", "mop"]`, output `"mop"`.
 
-**Hint.** In sorted order, where does a word appear compared with its prefixes, and which buildable word does the scan see first among equal lengths?
+**Hint.** In sorted order, where does a word appear compared with its prefixes, which set of buildable words does the scan keep, and which buildable word does the scan see first among equal lengths?
 
 **Changed decision.** Sorted order places every prefix before its words and makes the tie choice deterministic.

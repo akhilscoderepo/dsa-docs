@@ -36,19 +36,19 @@ A sort that makes O(n log n) comparisons relies on each answer being consistent 
 <!-- stage: insight -->
 ### Make Every Answer Agree With The Others
 
-A comparator is valid when its answers for all pairs describe one ranking. Three properties give that guarantee.
+A comparator is valid when its answers for all pairs describe one ranking. Three rules give that guarantee. The mirror rule and the chain rule have a section each, and the tie rule sits inside the chain section.
 
 #### Mirror Answers For A Swapped Pair
 
 A comparator is **antisymmetric** when `compare(a, b)` and `compare(b, a)` have opposite signs, and both are zero when the values tie. The naive rule fails here, because it returns 1 for both orders of an equal pair. Returning 0 for ties fixes this property.
 
-#### Chains Of Answers Must Hold
+#### Chains Of Answers And Ties Must Hold
 
 A comparator is **transitive** when `a` before `b` and `b` before `c` always imply `a` before `c`. Ties must be transitive too. If `a` ties with `b`, then `a` and `b` must compare the same way against every third value `c`. Rules that compare by one fixed key are transitive automatically. Rules that mix keys, or that compare unrelated quantities, can break the chain.
 
 #### Combine Keys In A Fixed Priority
 
-Many orders use several keys, such as length first and then alphabetical order. The method `thenComparing` expresses this directly: the second key is consulted only when the first key returns zero. Each key on its own is a valid ranking, and the priority rule keeps the combination valid. The library builders `Comparator.comparingInt` and `Comparator.comparingLong` read a key from each object and compare the keys safely.
+Many orders use several keys, such as length first and then alphabetical order. The method `thenComparing` expresses this directly: the second key is consulted only when the first key returns zero. Each key on its own is a valid ranking, and the priority rule keeps the combination valid. The notation `String::length` is shorthand for `s -> s.length()`. The library builders `Comparator.comparingInt` and `Comparator.comparingLong` read a key from each object and compare the keys safely.
 
 <!-- names: antisymmetric, transitive, thenComparing -->
 
@@ -72,7 +72,7 @@ The comparator holds no counters and no random numbers, so it returns the same r
 
 #### The Rule That Never Returns Zero
 
-Take the names `["bb", "a", "cc"]` with lengths 2, 1 and 2. The check compares each pair in both orders. For the pair `"bb"` and `"cc"`, the naive rule returns 1 in both orders. Both answers say that the first name of the call goes second, which is a contradiction.
+Take the names `["bb", "a", "cc"]` with lengths 2, 1 and 2. The test compares each pair in both orders. For the pair `"bb"` and `"cc"`, the naive rule returns 1 in both orders. Both answers say that the first name of the call goes second, which is a contradiction.
 
 #### The Rule With A Tie Answer
 
@@ -185,7 +185,7 @@ The library may throw `IllegalArgumentException` for an invalid comparator, but 
 
 **Example 2.** Input `sample = [3, 3, 8]` and `c = Integer::compare`, output true.
 
-**Hint.** Which rule fails for the pair of the smallest and the largest value under subtraction?
+**Hint.** Which rule fails for the triple of the smallest value, 0 and the largest value under subtraction?
 
 **Changed decision.** The method checks a comparator and does not sort, so the contract becomes the thing under test.
 
