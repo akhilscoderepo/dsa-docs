@@ -57,6 +57,42 @@ KIT = {
         return out.toArray(new Integer[0]);
     }
 """,
+"RELABEL": """    static Integer[] relabel(Integer[] shape) {
+        Integer[] out = shape.clone();
+        int next = 0;
+        for (int i = 0; i < out.length; i++) if (out[i] != null) out[i] = next++;
+        return out;
+    }
+
+    static int countNodes(Integer[] v) {
+        int c = 0;
+        for (Integer x : v) if (x != null) c++;
+        return c;
+    }
+""",
+"ORACLELCA": """    static Node find(Node n, int val) {
+        if (n == null) return null;
+        if (n.val == val) return n;
+        Node inLeft = find(n.left, val);
+        return inLeft != null ? inLeft : find(n.right, val);
+    }
+
+    static Node viaParents(Node root, int p, int q) {
+        IdentityHashMap<Node, Node> parent = new IdentityHashMap<>();
+        ArrayDeque<Node> todo = new ArrayDeque<>();
+        todo.add(root);
+        parent.put(root, null);
+        while (!todo.isEmpty()) {
+            Node n = todo.poll();
+            for (Node c : new Node[] {n.left, n.right}) if (c != null) { parent.put(c, n); todo.add(c); }
+        }
+        Set<Node> above = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (Node a = find(root, p); a != null; a = parent.get(a)) above.add(a);
+        Node a = find(root, q);
+        while (!above.contains(a)) a = parent.get(a);
+        return a;
+    }
+""",
 "PLAININSERT": """    static Node plainInsert(Node root, int key) {
         if (root == null) return new Node(key);
         Node at = root;
