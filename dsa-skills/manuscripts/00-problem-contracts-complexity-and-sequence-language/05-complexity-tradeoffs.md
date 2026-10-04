@@ -128,9 +128,9 @@ Java adds hidden costs that loop counting misses. A library call inside a loop, 
 
 **Prerequisites.** Counting loop executions as in this lesson.
 
-**Problem.** Determine the time cost of scanning an `n`-element array twice in a row. Explain why `O(n) + O(n)` simplifies to `O(n)` and why the two scans do not multiply.
+**Problem.** A program runs two loops one after the other. Each loop executes its body exactly once for every index from `0` to `n - 1`. A loop-body execution is one pass through the body of a loop. Return the total number of loop-body executions for a given `n`. Then classify that count with big-O notation, and explain why the two loops add their costs and do not multiply them.
 
-**Constraints.** `1 <= n <= 10^5`. The two scans are sequential, and neither is nested inside the other.
+**Constraints.** `n` is an `int` with `1 <= n <= 10^5`. The first loop finishes before the second loop starts, and neither loop is nested inside the other. The return value is a `long`. Each loop body costs one unit, and no other work is counted. The count is deterministic and does not depend on the array contents. The program does not modify any input.
 
 **Example 1.** Input `n = 10`, output 20 loop-body executions, which is O(n).
 
@@ -145,9 +145,9 @@ Java adds hidden costs that loop counting misses. A library call inside a loop, 
 
 **Prerequisites.** The consecutive-loops exercise above.
 
-**Problem.** Count the iterations of `for (i = 0; i < n; i++) for (j = i + 1; j < n; j++)`. Derive the formula `n(n-1)/2` and classify the loop pair as O(n^2).
+**Problem.** Consider the loop pair `for (i = 0; i < n; i++) for (j = i + 1; j < n; j++)`. Return the number of times the inner loop body executes, for a given `n`. Derive a closed formula for that count, and classify the count with big-O notation. The expected formula is `n(n-1)/2`, and the expected class is O(n^2).
 
-**Constraints.** `0 <= n <= 10^5`. The inner loop starts at `i + 1`, so it shrinks as `i` grows.
+**Constraints.** `n` is an `int` with `0 <= n <= 10^5`. When `n = 0`, neither loop runs and the count is 0. The inner loop starts at `i + 1`, so it runs `n - 1 - i` times for each `i`, and it shrinks as `i` grows. The return value is a `long`, because the count reaches about `5 * 10^9` and overflows `int`. Only inner-loop-body executions are counted.
 
 **Example 1.** Input `n = 5`, output 10 iterations.
 
@@ -162,9 +162,9 @@ Java adds hidden costs that loop counting misses. A library call inside a loop, 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A grid has `rows` and `cols`. State the traversal time as `O(rows * cols)` rather than silently calling both dimensions `n`, and show one input where calling it O(n^2) overstates the cost badly.
+**Problem.** A grid has `rows` rows and `cols` columns, so it has `rows * cols` cells. A traversal visits every cell exactly once. Return the number of cell visits. State the traversal time as `O(rows * cols)`, which keeps both dimensions. Then give one input where replacing both dimensions by a single `n` and claiming O(n^2) overstates the cost by a large factor.
 
-**Constraints.** `1 <= rows, cols <= 10^5`, with `rows * cols <= 10^6`. Visit every cell exactly once.
+**Constraints.** `rows` and `cols` are `int` values with `1 <= rows, cols <= 10^5` and `rows * cols <= 10^6`. The two dimensions are independent, so neither is assumed to be the larger one. Each cell is visited exactly once, and no cell is skipped. The return value is a `long`. One visit costs one unit. The traversal does not modify the grid.
 
 **Example 1.** Input `rows = 3, cols = 4`, output 12 visits.
 
@@ -179,9 +179,9 @@ Java adds hidden costs that loop counting misses. A library call inside a loop, 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** To detect whether an array contains a duplicate, compare O(n^2) all-pairs work with O(n log n) sorting followed by one O(n) scan of neighbors. State the tradeoff in full: the lower time, the changed order, and the copy or mutation needed to keep the original intact.
+**Problem.** Given an integer array `nums`, return `true` if some value appears at positions `i` and `j` with `i != j`, and return `false` if all values are distinct. Compare two methods. The all-pairs method compares every pair of positions and takes O(n^2) time. The sort-then-scan method sorts the values and then compares each element with its predecessor in one O(n) pass, so it takes O(n log n) time. State the tradeoff in full: the lower time, the changed order, and the copy or in-place mutation that decides what happens to the original array.
 
-**Constraints.** `1 <= n <= 10^5`. Sorting a copy costs O(n) extra space, while sorting in place destroys the original order.
+**Constraints.** `nums` is an `int[]` with `1 <= n <= 10^5` elements, where `n = nums.length`. Values may repeat, and every `int` value is allowed. Sorting a copy costs O(n) extra space and leaves `nums` unchanged. Sorting `nums` in place uses O(1) extra space beyond the sort itself, but it destroys the original order. The all-pairs method uses O(1) extra space and does not modify `nums`.
 
 **Example 1.** Input `[4,1,3,1]`, output true, because the sorted copy `[1,1,3,4]` has equal neighbors.
 

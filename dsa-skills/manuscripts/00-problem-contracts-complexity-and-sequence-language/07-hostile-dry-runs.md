@@ -107,9 +107,9 @@ Java supplies several ready-made attackers. `Integer.MAX_VALUE` and `Integer.MIN
 
 **Prerequisites.** The variable table from this lesson.
 
-**Problem.** Dry-run the corrected `longestClimb` loop over `[7]`. Verify the initialization, the number of loop iterations and the returned value. Then say what the original flawed version returns.
+**Problem.** The method `longestClimb(int[] a)` returns the length of the longest strictly increasing run in `a`. A run is a contiguous block of positions. A strictly increasing run has each value larger than the value before it. Execute the corrected loop by hand on the input `[7]`. State the initial value of `best`, the number of loop iterations and the returned value. Then state what the flawed version returns. The flawed version starts `best` at 0 and updates it only inside the loop.
 
-**Constraints.** The input has exactly one element. The method contract allows lengths from 0 to 10^5.
+**Constraints.** The input array has exactly one element, `a.length == 1`. The element is an `int`. The method accepts any length from 0 to 10^5, but this exercise fixes the length at 1. The loop starts at index 1 and runs while `i < a.length`. The corrected method returns an `int` of at least 1 for any non-empty array. It does not modify `a`.
 
 **Example 1.** Input `[7]`, output 1, with zero loop iterations.
 
@@ -124,9 +124,9 @@ Java supplies several ready-made attackers. `Integer.MAX_VALUE` and `Integer.MIN
 
 **Prerequisites.** The singleton exercise above.
 
-**Problem.** Use `[4,4,4]` to test strict versus non-strict comparisons. Compute the longest strictly increasing run and the longest non-decreasing run. Then explain why this one input tells the two comparisons apart.
+**Problem.** Take the array `[4,4,4]`. A strict comparison extends a run when `a[i] > a[i - 1]`. A non-strict comparison extends a run when `a[i] >= a[i - 1]`. Compute the length of the longest run under each comparison. Then explain why this one input gives different answers for the two comparisons.
 
-**Constraints.** The array holds three equal values. A strict comparison uses `>` and a non-strict one uses `>=`.
+**Constraints.** The array has length 3 and every element is the `int` value 4. A run is a contiguous block of positions. Each method returns an `int` of at least 1 for a non-empty array. Neither method modifies the array. Two neighbors are equal when `a[i] == a[i - 1]`, and equal neighbors extend a run only under the non-strict comparison.
 
 **Example 1.** Input `[4,4,4]` with a strict comparison, output 1.
 
@@ -141,9 +141,9 @@ Java supplies several ready-made attackers. `Integer.MAX_VALUE` and `Integer.MIN
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Use `[Integer.MAX_VALUE, Integer.MAX_VALUE]` against code that accumulates a sum into an `int`. Predict the overflow before you run anything. Then state the correct sum and the type that holds it.
+**Problem.** Take the array `[Integer.MAX_VALUE, Integer.MAX_VALUE]`. A method adds its elements into a variable of type `int`. Overflow occurs when the true sum lies outside the range of `int`. Predict the value this method returns before you run any code. Then state the true sum and name the type that holds it exactly.
 
-**Constraints.** The largest `int` is 2,147,483,647 and wrap-around arithmetic applies on overflow. Use `long` for the corrected sum.
+**Constraints.** The array has length 2. Each element is the `int` value 2,147,483,647, which is the largest `int`. Java `int` arithmetic uses 32-bit two's complement and wraps around on overflow without throwing an exception. The corrected sum uses a `long` accumulator, which holds values up to 9,223,372,036,854,775,807. The method does not modify the array.
 
 **Example 1.** Input `[2147483647, 2147483647]` summed in an `int`, output -2.
 
@@ -158,9 +158,9 @@ Java supplies several ready-made attackers. `Integer.MAX_VALUE` and `Integer.MIN
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** To insert a value at index 0 of `[1,2,3]`, the elements must shift right inside an array of length 4. Trace a left-to-right copy. Show exactly where it overwrites data that the loop has not read yet. Then justify copying right to left.
+**Problem.** An array `a` of length 4 holds the three live values `[1,2,3]` in positions 0 to 2. Position 3 is free. To insert a value at index 0, every live value moves one position to the right. A left-to-right shift runs `a[i] = a[i - 1]` for `i = 1, 2, 3`. A right-to-left shift runs the same assignment for `i = 3, 2, 1`. Trace the left-to-right shift. Identify the first write that overwrites a value the loop has not yet read. Then explain why the right-to-left shift preserves every live value.
 
-**Constraints.** The array has length 4 with three live values. Inserting 9 at index 0 should produce `[9,1,2,3]`.
+**Constraints.** The array has length 4 and three live values. The inserted value is 9 at index 0. After a correct shift and insert, the array equals `[9,1,2,3]`. The shift writes positions 1 to 3 only. Position 0 receives the inserted value after the shift completes. All values are `int`.
 
 **Example 1.** Input `[1,2,3,_]` shifted left to right, output `[1,1,1,1]` before the insert, so the data is lost.
 

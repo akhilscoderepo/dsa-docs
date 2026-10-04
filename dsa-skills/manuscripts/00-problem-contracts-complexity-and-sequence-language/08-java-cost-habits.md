@@ -125,9 +125,9 @@ Two more Java hazards belong on the same list. Boxed collections such as `List<I
 
 **Prerequisites.** The hidden-cost questions from this lesson.
 
-**Problem.** Explain why repeated `ArrayList.remove(0)` calls shift elements a quadratic number of times when they drain `n` elements. Contrast that with a read index. State the move counts of both for `n = 5`.
+**Problem.** An `ArrayList` holds `n` elements. Method A removes every element by calling `remove(0)` until the list is empty. Method B reads the elements in order with an index that runs from 0 to `n - 1`, and it does not change the list. A move is one element copied one position to the left inside the list. Compute the total number of moves for each method when `n = 5`. Then explain why the total for Method A grows with the square of `n`.
 
-**Constraints.** `1 <= n <= 10^5`. Count one move for each element shifted left. Reading an element by index counts as zero moves.
+**Constraints.** `1 <= n <= 10^5`. The list holds `n` elements at the start. Calling `remove(0)` on a list of size `s` moves `s - 1` elements. Reading an element by index counts as zero moves. The total fits in a `long`, because the largest total is about 5 * 10^9, which exceeds the `int` range.
 
 **Example 1.** Input `n = 5` drained with `remove(0)`, output 10 element moves in total.
 
@@ -142,9 +142,9 @@ Two more Java hazards belong on the same list. Boxed collections such as `List<I
 
 **Prerequisites.** The front-removal exercise above.
 
-**Problem.** Compare `result = result + ch` in a loop with `StringBuilder.append(ch)` for building a string of `n` characters. Explain where the repeated copying happens. Then count the characters copied by the concatenation version for `n = 5`.
+**Problem.** Method A builds a string of `n` characters. It starts with an empty `String` and runs `result = result + ch` once for each character. Method B appends the same `n` characters to a `StringBuilder`. A copy is one character written into a newly created string. Compute the total number of copies made by Method A when `n = 5`. Then explain at which step Method A copies old characters, and why Method B avoids most copies.
 
-**Constraints.** `1 <= n <= 10^5`. Count one copy per character moved into a new string. Appending to a builder with spare capacity copies nothing.
+**Constraints.** `1 <= n <= 10^5`. Each step adds exactly one `char`. A `String` is immutable, so each `+` creates a new string and copies every old character into it. Appending to a `StringBuilder` with spare capacity copies nothing. The total for Method A fits in a `long`.
 
 **Example 1.** Input `n = 5` using `+` in a loop, output 15 characters copied in total (1 + 2 + 3 + 4 + 5).
 
@@ -159,9 +159,9 @@ Two more Java hazards belong on the same list. Boxed collections such as `List<I
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Evaluate `Arrays.asList(new int[]{1,2,3})`. State why the result is a one-element `List<int[]>` and not a `List<Integer>`. Then show a way to get a list of the three integers.
+**Problem.** Consider the call `Arrays.asList(new int[]{1,2,3})`. Determine the size and the element type of the list it returns. Explain why the result is a `List<int[]>` with one element and not a `List<Integer>` with three elements. Then give a way to build a `List<Integer>` that holds the integers 1, 2 and 3.
 
-**Constraints.** `Arrays.asList` takes a varargs array of objects. An `int[]` is itself a single object, not an array of objects.
+**Constraints.** `Arrays.asList` takes a varargs parameter of an object type. An `int[]` is a single object, and it is not an `Object[]`, because `int` is a primitive type. A `List<Integer>` stores boxed values. Boxing converts each `int` to an `Integer`. Building the `List<Integer>` from an array of length `n` takes O(n) time and O(n) space.
 
 **Example 1.** Input `Arrays.asList(new int[]{1,2,3})`, output a list of size 1 whose only element is the `int[]`.
 
@@ -176,9 +176,9 @@ Two more Java hazards belong on the same list. Boxed collections such as `List<I
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Compare two distinct `String` objects that contain the same characters. Explain why `.equals` expresses value equality while `==` tests reference identity. Say which one a solution should use for contents.
+**Problem.** Two `String` objects hold the same characters, and they are separate objects in memory. Value equality means the two strings contain the same characters in the same order. Reference identity means both names refer to one object. Determine the result of `==` and of `.equals` for the two strings. State which operator tests value equality. Then determine the result of `==` when a string is compared with itself.
 
-**Constraints.** Create each string with `new String("abc")` so that the two objects are guaranteed to be separate. Use `.equals` for contents.
+**Constraints.** Create each string with `new String("abc")`, which always returns a new object. Each string has length 3. `==` on two object references returns true only if they refer to the same object. `.equals` on two `String` values returns true if and only if their characters match. Use `.equals` to compare contents. `==` takes O(1) time. `.equals` takes O(L) time for strings of length L.
 
 **Example 1.** Input two separate strings holding "abc", output `==` is false and `.equals` is true.
 

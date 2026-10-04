@@ -124,9 +124,9 @@ One more hazard sits in the language. Strings are immutable, so a method that ap
 
 **Prerequisites.** The filter method in this lesson.
 
-**Problem.** Given `nums = [3,2,2,3]`, suppose a method removes the value 3 in place and returns `k = 2`. State exactly what is guaranteed about `nums[0..k-1]`, what is unspecified about `nums[k..]`, and what the caller must never do with the suffix.
+**Problem.** A method `removeValue(int[] nums, int target)` overwrites `nums` so that the elements not equal to `target` occupy the first positions in their original order. It returns `k`, the count of those elements. The meaningful prefix is the run of positions `0` through `k - 1`. Take `nums = [3,2,2,3]` and `target = 3`, so the method returns `k = 2`. State which values the method guarantees in `nums[0..k-1]`. State what the method specifies about `nums[k..]`. State what the caller must never do with the positions from `k` onward.
 
-**Constraints.** Java array length is fixed at creation. The method returns an `int` and may overwrite the input.
+**Constraints.** A Java array has a fixed length, so `nums.length` does not change after the call. The method returns an `int` in the range `0` to `nums.length`. It may overwrite any position of the input. `nums` may be empty, and then `k = 0`. If every element equals `target`, then `k = 0` and no position holds a guaranteed value. The values in `nums[k..]` are unspecified, and the caller must not read them as results.
 
 **Example 1.** Input `nums = [3,2,2,3]` and target 3, output `k = 2` and a meaningful prefix of `[2,2]`.
 
@@ -141,9 +141,9 @@ One more hazard sits in the language. Strings are immutable, so a method that ap
 
 **Prerequisites.** The meaningful-prefix exercise above.
 
-**Problem.** A contract forbids modifying the input array. Choose between overwriting `nums` and allocating a new `result`, and explain why a method that returns correct values but leaves the input modified still violates the interface.
+**Problem.** Given an array `nums` and an integer `target`, produce the elements of `nums` that are not equal to `target`, in their original order. Two designs exist. The in-place design overwrites `nums`. The copying design allocates a new array `result` and leaves `nums` unchanged. A no-mutation specification states that after the call every position of `nums` holds the same value as before the call. Under a no-mutation specification, choose a design and return `result`. Explain why a method that returns the correct values but modifies `nums` still violates the specification.
 
-**Constraints.** `1 <= nums.length <= 10^5`. Assume callers may keep using the original array after the call.
+**Constraints.** `1 <= nums.length <= 10^5`. Elements and `target` are `int` values. The returned array has exactly as many elements as `nums` has values different from `target`, and may have length 0. The caller may keep using the original array after the call. Under a no-mutation specification the method performs no write to `nums`. Under a permissive specification, either design is valid.
 
 **Example 1.** Input `nums = [4,1,4,2]` and target 4 under a no-mutation contract, output `[1,2]` with `nums` still equal to `[4,1,4,2]`.
 
@@ -158,9 +158,9 @@ One more hazard sits in the language. Strings are immutable, so a method that ap
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Two variables `a` and `b` refer to the same `int[]`. A method receives `a` and rewrites its contents in place. Trace why the change is visible through `b`, and state what a caller must do first if both views must remain independent.
+**Problem.** In Java, an array variable holds a reference, which is the address of an array object. Two variables are aliases when they hold the same reference. Let `a` and `b` be two `int[]` variables that are aliases. A method receives `a` and assigns new values to its elements. Explain why a reader of `b` sees the new values. Then state the step a caller must take before the call so that `b` keeps the old contents.
 
-**Constraints.** `a` and `b` reference one array object. The method assigns into elements and never reassigns the parameter variable itself.
+**Constraints.** `a` and `b` refer to one array object, so there is exactly one array in memory. The method writes to elements, as in `arr[0] = value`, and never assigns to the parameter variable itself. The elements are `int` values, so a shallow copy is a complete copy. A copy made with `clone()` before the call is a separate array object. The exercise has no return value.
 
 **Example 1.** Input `a = b = [1,2,3]` and a method that sets `a[0] = 9`, output that `b[0]` also reads 9.
 
@@ -175,9 +175,9 @@ One more hazard sits in the language. Strings are immutable, so a method that ap
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** A method must return an array of length `n` built from its input. Distinguish the O(n) returned output from additional working memory, and state both conventions explicitly: one in which the output counts as space and one in which only auxiliary space counts.
+**Problem.** A method receives an array of length `n` and must return a new array of length `n`. Total space is all memory the method allocates, including the returned array. Auxiliary space is the memory the method allocates beyond the input and the returned output. Compute both quantities for a method that fills one new result array. State the total space under the convention that counts the output. State the auxiliary space under the convention that excludes it.
 
-**Constraints.** `1 <= n <= 10^5`. The method may allocate one result array and a constant number of scalar variables.
+**Constraints.** `1 <= n <= 10^5`. The method allocates exactly one result array of length `n` and a constant number of scalar variables. It does not modify the input. Space is measured in `O(...)` notation as a function of `n`. The returned array has length `n`, so the output alone needs `n` slots under any plan.
 
 **Example 1.** Input an array of length 5 and a method that fills a new array of length 5, output auxiliary space O(1) under the convention that the result is excluded.
 

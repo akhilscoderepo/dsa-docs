@@ -122,9 +122,9 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Prerequisites.** Reading Big-O notation for simple loops; this lesson.
 
-**Problem.** A problem allows `1 <= n <= 100_000`. Classify each of three plans as plausible or implausible for an ordinary interview time limit. The plans are a single scan, a sort followed by a scan, and a comparison of every pair of elements. Support each answer with the step count at the maximum input.
+**Problem.** A problem statement guarantees that the input size `n` satisfies `1 <= n <= 100_000`. A step is one basic operation, such as one comparison or one addition. Consider three plans. Plan A scans the array once. Plan B sorts the array and then scans it once. Plan C compares every unordered pair of distinct elements. For each plan, compute the number of steps at the largest legal `n`. Then return "plausible" if that number is at most the step budget, and "implausible" if it is larger. Show the step count that supports each answer.
 
-**Constraints.** Use a budget of about 10^8 simple steps. Compute at `n = 100_000`, not at the sample size, and use `long` for any product.
+**Constraints.** The step budget is 10^8 (100,000,000) steps. Compute every count at `n = 100_000`, not at the size of a sample input. Use `long` for every product, because `n * n` exceeds the `int` maximum. Plan A costs `n` steps. Plan B costs about `n * log2(n)` steps for the sort plus `n` steps for the scan. Plan C costs `n * (n - 1) / 2` steps. Ties go to "plausible": a count equal to the budget is plausible. The exercise has no mutable input.
 
 **Example 1.** Input `n = 100000` with a single scan, output plausible, because the step count is about 10^5.
 
@@ -139,9 +139,9 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Prerequisites.** The budget check above.
 
-**Problem.** The limits are `1 <= n <= 100_000` and `0 <= nums[i] <= 100`. Explain why an auxiliary array of 101 counters is a reasonable plan here, and why the same plan is not reasonable when values can be any integer up to a billion. State the memory used in each case.
+**Problem.** A value-indexed table is an array in which slot `v` stores data about the value `v`. Such a table needs one slot for every value that can occur, so its size equals the size of the value range. Consider an input array `nums` of `n` integers, where `1 <= n <= 100_000` and `0 <= nums[i] <= 100`. Compute the memory in bytes of a table with one `int` counter per possible value. Then compute the memory of the same kind of table when `0 <= nums[i] <= 1_000_000_000`. State for each case whether the table is an acceptable plan, and name the limit in the statement that decides the answer.
 
-**Constraints.** Assume 4-byte `int` counters. Compare the 101-counter table against a table indexed directly by values up to 1,000,000,000.
+**Constraints.** Each counter is a 4-byte `int`. The first table has exactly 101 slots, for the values `0` through `100`. The second table has exactly 1,000,000,001 slots, for the values `0` through `1_000_000_000`. The memory is `slots * 4` bytes, computed in `long`. The size `n` does not change the table size. The exercise has no mutable input and no empty input.
 
 **Example 1.** Input values limited to `0..100`, output a 101-slot table of about 404 bytes, which is trivial.
 
@@ -156,9 +156,9 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** The limits are `n = 100_000` and `|nums[i]| <= 1_000_000_000`. Decide whether the sum of the whole array always fits in a Java `int`. Name the adversarial input that decides the question, and say which type the accumulator should use.
+**Problem.** An input array `nums` has `n` elements, where `n = 100_000` and `-1_000_000_000 <= nums[i] <= 1_000_000_000`. The sum of the array is the total of all its elements. Decide whether the sum always fits in a Java `int`, that is, whether it always lies between -2,147,483,648 and 2,147,483,647. Return "yes" or "no". If the answer is "no", give one input array whose sum does not fit. Name the type that the accumulator variable must have.
 
-**Constraints.** The largest `int` is 2,147,483,647. Consider the worst case, in which every element has the maximum legal magnitude.
+**Constraints.** The largest `int` is 2,147,483,647. The largest `long` is 9,223,372,036,854,775,807. The worst case sets every element to the largest legal magnitude, which is 1_000_000_000. Elements are `int` values. The array has at least one element. An `int` accumulator wraps around silently on overflow and raises no error. The method does not modify `nums`.
 
 **Example 1.** Input one hundred thousand copies of 1,000,000,000, output a sum of 100,000,000,000,000, which does not fit in an `int`.
 
@@ -173,9 +173,9 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Prerequisites.** The budget check and the small-domain exercise.
 
-**Problem.** A fixed array of 100,000 values is queried for range sums. Compare two situations: one query, and one hundred thousand queries over the same unchanged array. State which plans are acceptable in each, and explain why the number of operations, rather than the word "array", changes the design. Do not implement the faster plan, since the prefix-sum chapter owns it.
+**Problem.** An array of `n = 100_000` integers does not change. A range-sum query gives two positions `l` and `r` and asks for the sum of the elements from position `l` through position `r`. Compare two workloads on the same array: workload one has a single query, and workload two has `q = 100_000` queries. For each workload, compute the total step count of answering every query with a plain loop over the range. Return whether that plan stays within the step budget. Explain that the number of queries, not the type of the data, decides whether the plan is acceptable. Do not implement a faster plan.
 
-**Constraints.** `n = 100_000`, up to `q = 100_000` queries, each over an arbitrary range. Use the budget of about 10^8 steps.
+**Constraints.** `n = 100_000` and `1 <= q <= 100_000`. Each query range may cover the whole array, so one query costs up to `n` steps. The step budget is 10^8 steps. Compute the total as `n * q` in `long`, because `10^10` exceeds the `int` maximum. A total equal to the budget is within budget. The array is never modified between queries.
 
 **Example 1.** Input one query, output that a direct loop of at most 100,000 steps is acceptable.
 

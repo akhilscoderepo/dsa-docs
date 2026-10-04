@@ -116,9 +116,9 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Prerequisites.** The size, capacity and copy-count bookkeeping in this lesson.
 
-**Problem.** Start with capacity 1 and append eight values, doubling the capacity whenever the array is full. List the capacities that occur, count every element copy, and observe that the total stays proportional to the number of appends.
+**Problem.** A dynamic array stores `size` values in a block of `capacity` slots. It starts empty with capacity 1. An append writes one value at position `size`. If `size == capacity` before the write, the array first allocates a block of twice the capacity and copies every stored value into it. Given a number of appends `n`, return the list of capacities that occur, in order, and the total number of element copies. Then state how the total compares with `n`. The expected result is that the total stays proportional to `n`.
 
-**Constraints.** Capacity starts at 1 and doubles on demand. A copy moves each stored element once and the new value's write is not counted as a copy.
+**Constraints.** `n` is an `int` with `1 <= n <= 10^6`. Capacity starts at 1, and the initial capacity counts as the first capacity in the list. A resize multiplies the capacity by 2. A resize copies each stored value once, so it costs `size` copies at that moment. The write of the new value is not a copy. The total is a `long`. Only appends occur, with no removals.
 
 **Example 1.** Input 8 appends, output capacities 1, 2, 4, 8 and a total of 7 copies.
 
@@ -133,9 +133,9 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Prerequisites.** The doubling-array exercise above.
 
-**Problem.** Repeat the experiment when the capacity increases by exactly one each time the array is full. Sum `1 + 2 + ... + (n-1)` and explain why append becomes O(n) amortized instead of O(1).
+**Problem.** Use the dynamic array from the previous exercise, but change the resize rule. When the array is full, the new capacity is the old capacity plus one. Given a number of appends `n`, return the total number of element copies. Show that the total equals `1 + 2 + ... + (n-1)`, and explain why the cost per append becomes O(n) amortized and not O(1).
 
-**Constraints.** Capacity starts at 1 and grows by 1 on demand. Copies follow the same counting rule as the doubling exercise.
+**Constraints.** `n` is an `int` with `1 <= n <= 10^5`. Capacity starts at 1 and grows by exactly 1 when the array is full. Copies follow the same rule as in the doubling exercise: a resize copies each stored value once, and the write of the new value is not a copy. The total is a `long`, because it reaches about `5 * 10^9`. Only appends occur.
 
 **Example 1.** Input 8 appends, output 28 copies, compared with 7 for doubling.
 
@@ -150,9 +150,9 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** In a doubling array that reaches 1,025 stored values, identify the single append that triggers an O(n) copy. Reconcile that spike with the claim that appends are amortized O(1) over the whole sequence.
+**Problem.** Use the doubling array from the first exercise. Perform 1,025 appends. Identify the one append in this sequence that copies the most elements, and report how many elements it copies and how many elements all earlier appends copied together. Then explain why this single O(n) append does not contradict the claim that appends cost O(1) amortized over the whole sequence.
 
-**Constraints.** Capacity starts at 1 and doubles on demand. Count 1,025 appends in total, so the final append is the one to examine.
+**Constraints.** Capacity starts at 1 and doubles when `size == capacity`. A resize copies each stored value once, and the write of the new value is not a copy. The sequence has exactly 1,025 appends, so the final append is the one to examine. The counts are `long` values. Only appends occur.
 
 **Example 1.** Input 1,025 appends, output that append number 1,025 copies 1,024 elements while the 1,024 appends before it copied 1,023 elements in total.
 
@@ -167,9 +167,9 @@ Java's `ArrayList` documents that `add` runs in amortized constant time, so an i
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Treat the unused slots after a doubling as prepaid capacity. Explain, without formal algebra, how that stored potential funds the future cheap appends and the next resize, and show with numbers why a charge of three units per append is enough.
+**Problem.** Start from the same doubling array that the first exercise defines. Give each append a charge of 3 units. One unit pays for the write, and the other 2 units go into a credit balance. A resize from capacity `c` to `2c` costs `c` units, taken from the balance. The unused slots after a resize are the appends that save credit for the next resize. Show with numbers that the balance never becomes negative, so a charge of 3 units per append is enough. Use plain arithmetic and no formal algebra.
 
-**Constraints.** Charge three units per append: one to write and two saved. A resize from capacity `c` to `2c` costs `c` units.
+**Constraints.** The charge is exactly 3 units per append: 1 unit to write and 2 units saved. A resize from capacity `c` to `2c` happens when `size == c` and costs `c` units. The balance starts at 0, and all quantities are whole units. Capacity starts at 1 and only appends occur.
 
 **Example 1.** Input a resize from capacity 4 to 8 after four stored values, output that the two appends since the previous resize saved 4 units and the copy costs 4.
 

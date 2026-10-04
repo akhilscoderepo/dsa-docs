@@ -4,22 +4,33 @@
 #### Solution: [Build] Consecutive Loops (Author exercise)
 <!-- id: pc-consecutive-loops -->
 
-**Approach.** The second scan runs `n` times no matter how many times the first one ran, so the two counts add up to `n + n = 2n`. Dropping the constant factor of two leaves O(n). The factor still exists, because doubling the work doubles the time. It does not change how the cost scales when `n` grows. The counter below runs the two loops and asserts the count.
+**Approach.** First, run the first loop. It executes its body `n` times. Second, run the second loop. It also executes its body `n` times, whatever the first loop did, because its bound is `n` and not a value from the first loop. Third, add the two counts, because the loops run one after the other. The total is `n + n = 2n`. Fourth, drop the constant factor of two to get O(n). The factor still exists, since doubling the work doubles the running time. It does not change how the cost grows when `n` grows. Multiplication would apply only if one loop sat inside the other. The harness below asserts the counts for `n = 10`, `n = 1` and a doubled `n`.
 
-**Complexity.** O(n) time, O(1) extra space.
+**Complexity.** Time: O(n), because the two loops execute `2n` bodies in total and the constant 2 drops. Space: O(1), because the code keeps one counter and one index and allocates nothing else.
 
 ```java run
 public final class ConsecutiveLoops {
+    /**
+     * Counts loop-body executions of two sequential scans over n positions.
+     * Time: O(n), because each loop runs n times and the two counts add.
+     * Space: O(1), because only the counter and the loop index are stored.
+     */
     static long countTwoScans(int n) {
+        // The counter is a long so that large n cannot overflow it.
         long steps = 0;
+        // First scan: runs n times, so it contributes n to the total (this is the O(n) cost).
         for (int i = 0; i < n; i++) steps++;
+        // Second scan: starts after the first ends, so its n executions add instead of multiply.
         for (int i = 0; i < n; i++) steps++;
+        // Return 2n; the caller drops the constant factor to classify the cost as O(n).
         return steps;
     }
 
     public static void main(String[] args) {
+        // Checks the counts from Example 1 and Example 2.
         if (countTwoScans(10) != 20) throw new AssertionError("n = 10");
         if (countTwoScans(1) != 2) throw new AssertionError("n = 1");
+        // Checks linear growth: doubling n doubles the count.
         if (countTwoScans(2000) != 2 * countTwoScans(1000)) throw new AssertionError("doubling n doubles the count");
     }
 }
@@ -28,25 +39,37 @@ public final class ConsecutiveLoops {
 #### Solution: [Vary] Triangular Work (Author exercise)
 <!-- id: pc-triangular-work -->
 
-**Approach.** For `i = 0` the inner loop runs `n - 1` times. For `i = 1` it runs `n - 2` times, and so on down to 0. The total is `(n - 1) + (n - 2) + ... + 1`, which equals `n(n - 1) / 2`. That expression is about half of `n^2`, so the class is O(n^2). The half is a constant factor, so the bound drops it, but the count still shows it. The assertions check the formula over many sizes instead of two.
+**Approach.** First, count the inner iterations for each value of `i`. For `i = 0` the inner loop runs `n - 1` times. For `i = 1` it runs `n - 2` times. The count falls by one each time until it reaches 0 for `i = n - 1`. Second, add these counts: `(n - 1) + (n - 2) + ... + 1`. This sum equals `n(n - 1) / 2`. Third, read the class from the formula. The formula is about half of `n^2`, so the class is O(n^2). The half is a constant factor, so the bound drops it, but the exact count keeps it. The inner bound depends on `i`, so the total is a sum and not the product `n * n`. The harness checks the formula for every `n` from 0 to 60 and not only for two sizes.
 
-**Complexity.** O(n^2) time, O(1) extra space.
+**Complexity.** Time: O(n^2), because the inner body executes `n(n - 1) / 2` times. Space: O(1), because the code keeps one counter and two indices.
 
 ```java run
 public final class TriangularWork {
+    /**
+     * Counts executions of the inner body of a shrinking nested loop.
+     * Time: O(n^2), because the inner body runs n(n-1)/2 times in total.
+     * Space: O(1), because only the counter and two indices are stored.
+     */
     static long countTriangular(int n) {
+        // The counter is a long because the count reaches about 5 * 10^9 for n = 10^5.
         long steps = 0;
+        // Outer loop: n iterations; each one starts an inner loop whose length depends on i.
         for (int i = 0; i < n; i++)
+            // Inner loop starts at i + 1, so it runs n - 1 - i times and shrinks as i grows.
             for (int j = i + 1; j < n; j++) steps++;
+        // Return the total, which the caller compares with n(n-1)/2.
         return steps;
     }
 
     public static void main(String[] args) {
+        // Checks Example 1 and Example 2 (the inner loop never runs for n = 1).
         if (countTriangular(5) != 10) throw new AssertionError("n = 5");
         if (countTriangular(1) != 0) throw new AssertionError("n = 1");
+        // Checks the closed formula for every size from 0 to 60, including the empty case.
         for (int n = 0; n <= 60; n++) {
             if (countTriangular(n) != (long) n * (n - 1) / 2) throw new AssertionError("formula at n = " + n);
         }
+        // Checks quadratic growth: doubling n from 4 to 8 gives 28, nearly four times 6.
         if (countTriangular(8) != 28) throw new AssertionError("doubling 4 to 8 is nearly four times the work");
     }
 }
@@ -55,24 +78,36 @@ public final class TriangularWork {
 #### Solution: [Boundary] Two Dimensions (Author exercise)
 <!-- id: pc-two-dimensions -->
 
-**Approach.** A grid traversal visits every cell once, so the cost is `rows * cols`, with both variables kept in the bound. If both are called `n`, the bound reads O(n^2), which is right for a square grid and badly pessimistic for a long thin one. With `rows = 1000` and `cols = 2` the real count is 2,000, while the merged claim suggests a million. Keeping two letters also lets you say how the cost responds to each dimension separately.
+**Approach.** First, visit every cell once with a row loop and a column loop nested inside it. The row loop runs `rows` times, and each run starts a column loop of `cols` visits. Second, multiply, because the loops nest. The cost is `rows * cols`, and the bound keeps both variables. Third, compare with the merged claim. If both dimensions are called `n`, the bound reads O(n^2). That is correct for a square grid and far too pessimistic for a long thin grid. With `rows = 1000` and `cols = 2` the real count is 2,000, while the merged claim suggests 1,000,000. Keeping two letters also shows how the cost responds to each dimension separately.
 
-**Complexity.** O(rows * cols) time, O(1) extra space.
+**Complexity.** Time: O(rows * cols), because each of the `rows` outer passes runs `cols` visits. Space: O(1), because the code keeps one counter and two indices and does not store the grid.
 
 ```java run
 public final class TwoDimensions {
+    /**
+     * Counts cell visits of a full row-by-column traversal.
+     * Time: O(rows * cols), because each of the rows passes runs cols visits.
+     * Space: O(1), because only the counter and two indices are stored.
+     */
     static long countGrid(int rows, int cols) {
+        // The counter is a long so that large grids cannot overflow it.
         long steps = 0;
+        // Outer loop: one pass per row, so it runs rows times.
         for (int r = 0; r < rows; r++)
+            // Inner loop: one visit per column in this row; nesting multiplies the cost to rows * cols.
             for (int c = 0; c < cols; c++) steps++;
+        // Return the visit count, which equals rows * cols.
         return steps;
     }
 
     public static void main(String[] args) {
+        // Checks Example 1 and the thin grid from Example 2.
         if (countGrid(3, 4) != 12) throw new AssertionError("3 x 4");
         if (countGrid(1000, 2) != 2000) throw new AssertionError("1000 x 2");
+        // Checks that the merged n^2 claim (1,000,000) overstates the true count of 2,000 by over 400 times.
         long merged = 1000L * 1000L;
         if (!(merged > 400 * countGrid(1000, 2))) throw new AssertionError("calling both dimensions n overstates the cost");
+        // Checks that a single-row grid is linear in cols.
         if (countGrid(1, 500) != 500) throw new AssertionError("a single row is linear");
     }
 }
@@ -81,33 +116,54 @@ public final class TwoDimensions {
 #### Solution: [Recognize] Sort Then Scan (Author exercise)
 <!-- id: pc-sort-then-scan -->
 
-**Approach.** Sort a copy of the array, then scan once comparing each element with the previous one. Equal values must be adjacent after sorting, so any duplicate shows up as equal neighbors. The cost is O(n log n) for the sort plus O(n) for the scan, and the sort dominates. The tradeoffs are these. The sorted copy needs O(n) extra space, and sorting in place destroys the original order and any index information. All-pairs comparison needs O(1) extra space and O(n^2) time, so the sorted approach buys speed with memory. The randomized check compares both methods on many small arrays.
+**Approach.** First, copy the array and sort the copy. Second, scan the copy once and compare each element with the one before it. After sorting, equal values sit next to each other. So a duplicate exists exactly when some pair of neighbors is equal. Third, return `true` at the first equal pair and `false` if the scan ends without one. The sort costs O(n log n) and the scan costs O(n), so the sort dominates. The tradeoffs are these. The copy needs O(n) extra space, and sorting in place would destroy the original order and every index. The all-pairs method needs only O(1) extra space but O(n^2) time. So the sorted approach buys speed with memory. The harness compares both methods on 2,000 random small arrays.
 
-**Complexity.** O(n log n) time and O(n) extra space for the sorted copy, versus O(n^2) time and O(1) space for all pairs.
+**Complexity.** Time: O(n log n), because sorting the copy costs O(n log n) and the scan adds O(n). Space: O(n), because the copy holds `n` values. The all-pairs method takes O(n^2) time and O(1) space.
 
 ```java run
 import java.util.Arrays;
 import java.util.Random;
 
 public final class SortThenScan {
+    /**
+     * Detects a duplicate by sorting a copy and comparing neighbors.
+     * Time: O(n log n), because the sort dominates the O(n) scan.
+     * Space: O(n), because the copy holds every value.
+     * Invariant: after sorting, equal values are adjacent.
+     */
     static boolean hasDuplicateSorted(int[] nums) {
+        // Clone first so the caller's array keeps its order; this is the O(n) extra space.
         int[] copy = nums.clone();
+        // Sort the copy; this O(n log n) step brings equal values next to each other.
         Arrays.sort(copy);
+        // Scan once from index 1; each step compares a value with its predecessor, so the scan is O(n).
         for (int i = 1; i < copy.length; i++) if (copy[i] == copy[i - 1]) return true;
+        // No equal neighbors means no equal values anywhere, so all values are distinct.
         return false;
     }
+    /**
+     * Detects a duplicate by comparing every pair of positions.
+     * Time: O(n^2), because there are n(n-1)/2 pairs in the worst case.
+     * Space: O(1), because nothing is copied.
+     */
     static boolean hasDuplicateAllPairs(int[] nums) {
+        // Outer loop: picks the first position of each pair.
         for (int i = 0; i < nums.length; i++)
+            // Inner loop: pairs i with each later position, which gives the quadratic cost.
             for (int j = i + 1; j < nums.length; j++) if (nums[i] == nums[j]) return true;
+        // Every pair differs, so there is no duplicate.
         return false;
     }
 
     public static void main(String[] args) {
+        // Checks Example 1: a duplicate is found and the original order stays intact.
         int[] a = {4, 1, 3, 1};
         int[] snapshot = a.clone();
         if (!hasDuplicateSorted(a)) throw new AssertionError("duplicate present");
         if (!Arrays.equals(a, snapshot)) throw new AssertionError("the copy keeps the original order intact");
+        // Checks Example 2: all values are distinct.
         if (hasDuplicateSorted(new int[] {4, 1, 3, 2})) throw new AssertionError("all distinct");
+        // Checks both methods against each other on 2,000 random arrays with values in 0..9.
         Random rnd = new Random(7);
         for (int t = 0; t < 2000; t++) {
             int[] x = new int[rnd.nextInt(8)];

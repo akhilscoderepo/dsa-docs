@@ -127,9 +127,9 @@ Java gives mild support for the contiguous case and none for the others. `String
 
 **Prerequisites.** The position rules for subarray, subsequence and subset in this lesson.
 
-**Problem.** For `nums = [1,2,3,4]`, decide whether `[2,4]` is a subarray, a subsequence and a subset. Justify each answer from the positions of the values in the original array, not from how the values look.
+**Problem.** Let `nums` be an array of distinct integers, and let `cand` be a list of values taken from `nums`. Define three terms by the positions (0-based indexes) of the values of `cand` in `nums`. `cand` is a subarray if its values occupy consecutive positions in increasing order, each one greater by exactly 1 than the previous position. `cand` is a subsequence if its positions strictly increase, with gaps allowed. `cand` is a subset if every value of `cand` occurs in `nums`, in any order. For `nums = [1,2,3,4]` and `cand = [2,4]`, decide for each of the three terms whether it holds. Base every answer on the positions of the values, not on how the values look.
 
-**Constraints.** The array holds distinct values, so each value has one position. Treat the empty selection as out of scope for this exercise.
+**Constraints.** `nums` holds distinct `int` values, so each value has exactly one position. Here `nums = [1,2,3,4]`, and every value of `cand` occurs in `nums`. `cand` is non-empty: the empty selection is out of scope. The answer is three boolean verdicts, one per term. Neither input changes.
 
 **Example 1.** Input `nums = [1,2,3,4]` and candidate `[2,4]`, output not a subarray, yes a subsequence and yes a subset.
 
@@ -144,9 +144,9 @@ Java gives mild support for the contiguous case and none for the others. `String
 
 **Prerequisites.** The classification exercise above.
 
-**Problem.** For the same input `nums = [1,2,3,4]`, classify the candidate `[4,2]`. State the single changed decision compared with `[2,4]`. That decision is whether the original relative order must be preserved.
+**Problem.** Use the definitions of subarray, subsequence and subset from the previous exercise. Let `nums = [1,2,3,4]` and `cand = [4,2]`. Decide for each of the three terms whether it holds. Then name the one decision that differs from the candidate `[2,4]`. That decision is whether the candidate must keep the relative order of the values in `nums`.
 
-**Constraints.** The values are distinct. A subset is judged by membership alone, with no promise about order.
+**Constraints.** `nums` holds distinct `int` values, and every value of `cand` occurs in `nums`. `cand` is non-empty. A subset is judged by membership alone and makes no promise about order. The answer is three boolean verdicts plus the name of the changed decision. Neither input changes.
 
 **Example 1.** Input `nums = [1,2,3,4]` and candidate `[4,2]`, output not a subarray, not a subsequence, yes a subset.
 
@@ -161,9 +161,9 @@ Java gives mild support for the contiguous case and none for the others. `String
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A statement asks for the maximum sum of a subarray of `nums = [-8,-3,-6]`. Read the specification before you decide whether the empty subarray is legal. Show how the answer differs when the empty choice is allowed and when it is forbidden.
+**Problem.** Given an array `nums`, a subarray is a contiguous run of positions, and its sum is the sum of its values. The empty subarray has no positions and has sum 0. Compute the maximum subarray sum of `nums = [-8,-3,-6]` under two specifications. In the first, the subarray must be non-empty. In the second, the empty subarray is allowed. Return both answers and state why they differ.
 
-**Constraints.** `1 <= nums.length <= 10^5` and `-10^4 <= nums[i] <= 10^4`. The statement must say whether the result may be empty. Do not assume a convention.
+**Constraints.** `1 <= nums.length <= 10^5` and `-10^4 <= nums[i] <= 10^4`, with `nums[i]` of type `int`. A specification must say whether the empty subarray is legal, and you must not assume a convention. The maximum is a single `int`. If several subarrays reach it, the value is the same. `nums` does not change.
 
 **Example 1.** Input `nums = [-8,-3,-6]` with a non-empty requirement, output -3, the best single reading.
 
@@ -178,9 +178,9 @@ Java gives mild support for the contiguous case and none for the others. `String
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** For `nums = [5,-10,4]`, compute the maximum sum of a non-empty subarray and the maximum sum of a non-empty subsequence. Explain why a subarray cannot skip a negative middle value while a subsequence can. The algorithm for the contiguous case belongs to Chapter 01.
+**Problem.** Given an array `nums`, a subarray is a contiguous run of positions. A subsequence is any selection of positions in increasing order, and gaps are allowed. Both must be non-empty here. For `nums = [5,-10,4]`, compute the maximum sum over all non-empty subarrays and the maximum sum over all non-empty subsequences. Explain why a subarray that contains both 5 and 4 must also contain -10, while a subsequence may skip it. The efficient algorithm for the contiguous case belongs to Chapter 01.
 
-**Constraints.** `1 <= nums.length <= 20`, small enough to enumerate every candidate by brute force.
+**Constraints.** `1 <= nums.length <= 20`, with `int` values. The size allows a brute force over every candidate. Each answer is a single `int`. `nums` does not change.
 
 **Example 1.** Input `nums = [5,-10,4]` as a subarray question, output 5.
 

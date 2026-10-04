@@ -72,6 +72,11 @@ def highlight(code):
     return "".join(out)
 
 
+# Manuscript tokens stay machine keys; readers see standard textbook names.
+ROLE_DISPLAY = {"Build": "Basic", "Vary": "Variation", "Boundary": "Edge Cases", "Recognize": "Pattern Recognition"}
+DISPLAY_LABEL = {"Problem": "Problem Statement"}
+
+
 class Builder:
     def __init__(self, validated):
         self.validated, self.ids, self.counters = validated, {}, {"trace": 0, "quiz": 0}
@@ -131,14 +136,17 @@ class Builder:
             if fm:
                 fields[fm.group(1)] = para.strip()
         def f(label, cls=None):
-            return f'<div class="f f-{SLUG(label)}">{self.md.render(fields[label])}</div>' if label in fields else ""
+            if label not in fields: return ""
+            shown = DISPLAY_LABEL.get(label, label)
+            para = re.sub(r"^\*\*[^*]+?\.\*\*", f"**{shown}.**", fields[label], count=1)
+            return f'<div class="f f-{SLUG(label)}">{self.md.render(para)}</div>'
         sol = solutions.get(ex_id)
-        sol_html = (f'<details class="solution"><summary>Show solution (attempt it first)</summary><div>{self.render(sol)}</div></details>'
+        sol_html = (f'<details class="solution"><summary>Algorithmic Solution (attempt the problem first)</summary><div>{self.render(sol)}</div></details>'
                     if sol else '<p class="src">No solution recorded yet.</p>')
         hint = (f'<details class="hint"><summary>Hint</summary><div>{self.md.render(re.sub(r"^[*][*]Hint[.][*][*]\s*", "", fields["Hint"]))}</div></details>'
                 if "Hint" in fields else "")
         opts = "".join(f'<option value="{v}">{l}</option>' for v, l in STATUS)
-        return (f'<article class="exercise" data-id="{ex_id}"><header><span class="role role-{SLUG(role)}">{html.escape(role)}</span>'
+        return (f'<article class="exercise" data-id="{ex_id}"><header><span class="role role-{SLUG(role)}">{html.escape(ROLE_DISPLAY.get(role, role))}</span>'
                 f'<h4>{html.escape(base)}</h4><span class="src">{html.escape(src.group(1)) if src else ""}</span>'
                 f'<select class="status-sel" data-id="{ex_id}" aria-label="Status for {html.escape(base)}">{opts}</select></header>'
                 f'<div class="body">{f("Problem")}{f("Constraints")}{f("Example 1")}{f("Example 2")}{f("Prerequisites")}{f("Changed decision")}{hint}</div>'

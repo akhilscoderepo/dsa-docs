@@ -30,6 +30,13 @@ Levels are fixed, and no level is skipped:
 - Heading text follows the voice rules: at most 7 words, no colon, no period, concrete and standard terms, no story or metaphor names (no "The Cloakroom With Branching Racks"). Prefer a verb phrase or a named entity: "Move The Left Pointer", "What `map.get` Returns". Keep sibling headings in parallel form.
 - Run `python3 scripts/voice_lint.py NN`; it also flags stages over 200 words with no sub-heading.
 
+## Exercise and solution presentation (set by the user, Oct 4)
+Machine keys stay fixed (the audit parses them): `#### [Build|Vary|Boundary|Recognize] Title`, `<!-- id: -->`, bold field labels `Problem`, `Constraints`, `Example 1/2`, `Hint`, `Changed decision`, `Prerequisites`, and `#### Solution:` records with `Approach` and `Complexity`. The builder shows standard display names: roles Basic / Variation / Edge Cases / Pattern Recognition, `Problem` as "Problem Statement", and the solution toggle as "Algorithmic Solution". Do not invent other names.
+- Problem: a formal, jargon-free textbook statement. Define input, output, and every term (subarray, step, alias). No story filler, slang or metaphors.
+- Constraints: brutally precise. Value ranges, lengths including empty input, `int` vs `long`, ties, return convention, mutation rules.
+- Solution Approach: the algorithm, its invariant, and why each step exists, in the voice rules. Complexity states `Time: O(...), because ...` and `Space: O(...), because ...`.
+- Java in solutions: Javadoc on each solution method with purpose, Time, Space and the invariant. A comment on every primary statement (loop header, condition, update, return) explaining WHY it runs and where cost or memory comes from. Comments only describe; they never change executable code. The test harness gets one comment per group of assertions.
+
 ## Session start
 1. `git pull --rebase origin main`; read `PROGRESS.md`. Pick the lowest chapter number that is neither `done` nor claimed within the last 6 hours. Claim it: add a line to PROGRESS.md (`claimed NN <UTC time>`), commit, push.
 2. Tooling: `cd dsa-skills && [ -d node_modules ] || npm ci`. JDK 21 and Python 3 must exist (`java -version`). Chromium is at `/opt/pw-browsers` (do not run playwright install).

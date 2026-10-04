@@ -126,9 +126,9 @@ Java adds specific traps. `int[][] grid` may be ragged, so `grid[0].length` is n
 
 **Prerequisites.** The input checklist from this lesson.
 
-**Problem.** Under a specification that promises a non-empty array, return its maximum by initializing from `nums[0]`. Explain why initializing from zero fails for `[-8,-3]`. Explain why an empty-array guard is unnecessary under this exact specification.
+**Problem.** The specification guarantees that the array `nums` has at least one element. Return the largest value in `nums` by starting from `nums[0]` and comparing the remaining elements. Then explain two facts. First, starting from the value 0 gives a wrong result for `nums = [-8,-3]`. Second, an empty-array check is unnecessary under this specification.
 
-**Constraints.** `1 <= nums.length <= 10^5` and `-10^9 <= nums[i] <= 10^9`. Do not add branches for inputs the contract excludes.
+**Constraints.** `1 <= nums.length <= 10^5` and `-10^9 <= nums[i] <= 10^9`, with `nums[i]` of type `int`. The result is one `int`. If the maximum appears more than once, the value is the same. `nums` does not change. Do not add branches for inputs the specification excludes.
 
 **Example 1.** Input `nums = [-8,-3]`, output -3, whereas a zero-start version would return 0.
 
@@ -143,13 +143,13 @@ Java adds specific traps. `int[][] grid` may be ragged, so `grid[0].length` is n
 
 **Prerequisites.** The non-empty maximum exercise above.
 
-**Problem.** Change the specification so the array may be empty. Choose and document exactly one response for the empty case: a sentinel, an exception or an optional result. Make the method signature agree with that choice.
+**Problem.** Change the specification of the previous exercise so that `nums` may be empty. Then define the result for the empty case by choosing exactly one of three responses. A sentinel is a reserved `int` value that means "no answer". An exception is a thrown error. An optional result is a return type that either holds a value or is empty. Document the choice, and make the method signature match it. For a non-empty array, return the largest value.
 
-**Constraints.** `0 <= nums.length <= 10^5` and `-10^9 <= nums[i] <= 10^9`. The chosen response must not collide with any legal maximum.
+**Constraints.** `0 <= nums.length <= 10^5` and `-10^9 <= nums[i] <= 10^9`, with `nums[i]` of type `int`. The response for the empty case must not equal any legal maximum. `nums` does not change.
 
-**Example 1.** Input `nums = []` under an optional-result contract, output an empty optional.
+**Example 1.** Input `nums = []` under an optional-result specification, output an empty optional.
 
-**Example 2.** Input `nums = [-5]` under the same contract, output an optional holding -5, so a legal negative answer is never confused with "no answer".
+**Example 2.** Input `nums = [-5]` under the same specification, output an optional holding -5, so a legal negative answer is never confused with "no answer".
 
 **Hint.** Is there any `int` value that can never be a legal maximum for this range? If not, what should carry the "no answer" signal instead?
 
@@ -160,9 +160,9 @@ Java adds specific traps. `int[][] grid` may be ragged, so `grid[0].length` is n
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** For `int[][] grid`, distinguish a rectangular guarantee from a ragged array. Explain why `grid[0].length` is unsafe as the column bound for every row when ragged input is legal. Write the loop that is safe in both cases.
+**Problem.** A two-dimensional array `int[][] grid` is rectangular if every row has the same length. It is ragged if rows may have different lengths, including length 0. A cell is one element `grid[r][c]`. Return the number of cells in `grid`. Explain why using `grid[0].length` as the column bound for every row is unsafe when ragged input is legal. Write a loop that is correct for both shapes.
 
-**Constraints.** `0 <= grid.length <= 100`. Under the ragged contract each row may have a different length, including zero.
+**Constraints.** `0 <= grid.length <= 100`, so `grid` may have no rows. Under the ragged specification each row has a length of at least 0, and rows may differ. Every row is non-null. The result is one `int`. `grid` does not change.
 
 **Example 1.** Input `grid = {{1,2,3},{4},{5,6}}` under a ragged contract, output a cell count of 6.
 
@@ -177,9 +177,9 @@ Java adds specific traps. `int[][] grid` may be ragged, so `grid[0].length` is n
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** An array is promised sorted in non-decreasing order. Show which conclusion this promise makes valid, namely that equal values form adjacent runs. Use that conclusion to count the distinct values in one pass. Do not introduce binary search or two pointers.
+**Problem.** The specification guarantees that `nums` is sorted in non-decreasing order, so `nums[i] <= nums[i + 1]` for every valid `i`. Show that this guarantee places equal values next to each other in runs. Use that fact to return the number of distinct values in `nums` with one pass over the array. Do not use binary search, two pointers or a set.
 
-**Constraints.** `0 <= nums.length <= 10^5`. The sorted order is a guarantee and need not be checked.
+**Constraints.** `0 <= nums.length <= 10^5`, with `int` values. The sorted order is guaranteed, so the code does not check it. For an empty array, return 0. The result is one `int`. `nums` does not change.
 
 **Example 1.** Input `nums = [1,1,2,2,2,5]`, output 3 distinct values.
 
