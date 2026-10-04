@@ -197,7 +197,7 @@ The call `Character.isLetterOrDigit(c)` accepts letters and digits from other sc
 
 **Example 2.** Input `s = "."`, output false, because the mantissa has no digit.
 
-**Hint.** Which facts must the loop remember about the dot, the digits and the exponent, and when is a sign legal?
+**Hint.** Keep four yes-or-no facts: a digit was seen, a dot was seen, an exponent mark was seen, and a digit followed that mark. When is a sign legal, and which of the four facts decide acceptance at the end?
 
 **Changed decision.** The parser tracks several independent facts, and acceptance depends on two of them at the end.
 

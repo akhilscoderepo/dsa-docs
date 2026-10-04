@@ -73,7 +73,7 @@ The method needs only three values, and the text below says when each one change
 
 - **table** holds 26 counters and gains one increment per character.
 - **i** walks over the text positions and moves right by one each round.
-- **best** holds the table index of the largest counter found so far while the scan over the table, described below, reads it.
+- **best** holds the table index of the largest counter found so far while the scan over the table, described above, reads it.
 
 <!-- stage: trace -->
 ### Counting Letters In Two Texts

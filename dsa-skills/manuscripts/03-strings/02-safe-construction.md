@@ -7,7 +7,7 @@
 
 A reporting tool writes one line of comma-separated values for every day in a month, then one for every day in a year. The month finishes in a blink. The year takes seconds, and a ten-year export takes minutes. The loop that builds the text has no nested loop and no expensive call, so the slowdown looks impossible.
 
-The loop runs the line `result = result + piece` once per value. Java strings never change after creation, so every such line builds a brand new string. The question here is how a program builds a long output one piece at a time, so that each piece costs a constant amount of work and no stray comma ends the line.
+The loop runs the line `result = result + piece` once per value. Java strings never change after creation, so every such line builds a brand new string. The question here is how a program builds a long output one piece at a time. Each piece should cost a constant amount of work, and no stray comma should end the line.
 
 <!-- stage: naive -->
 ### Adding Each Piece To The Result
@@ -167,6 +167,7 @@ The call `out.append('a' + 1)` appends the text `98`, because `'a' + 1` is an `i
 - **Characters** are English letters, digits and `' '`.
 - **Words** exist, so `s` holds at least one non-space character.
 - **Spaces** may repeat and may appear at both ends of `s`.
+- **Storage** of the words in an `ArrayList<String>` is allowed.
 
 **Example 1.** Input `s = "  one  two three "`, output `"three two one"`.
 

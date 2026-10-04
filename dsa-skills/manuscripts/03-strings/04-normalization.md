@@ -63,7 +63,7 @@ Normalization needs three values, and each has a clear rule for when it changes.
 
 - **out** holds the canonical form of the characters read so far and only grows at its end.
 - **i** marks the position of the next character to classify and advances by one each round.
-- **character class** is one of three cases: uppercase letter, lowercase letter or digit, and noise. Each iteration decides the class of the character at `i`.
+- **character class** is one of three cases: an uppercase letter, a kept character (a lowercase letter or a digit), or noise. Each iteration decides the class of the character at `i`.
 
 <!-- stage: trace -->
 ### Normalizing Two Inputs

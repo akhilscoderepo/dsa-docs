@@ -7,7 +7,7 @@
 
 A sign-up form rejects any password that repeats one character more than twice in a row. A user types `Passsword1` and gets an error. The check must find the longest stretch of identical neighbors in the text. A first attempt works on every test password and still times out on one input, a pasted string of 100000 equal characters.
 
-The stretch can start at any position, and the test input makes that fact expensive. The question is how a loop measures every stretch of identical neighbors, and handles the very last stretch, without looking at any character more than a constant number of times.
+The stretch can start at any position, and the test input makes that fact expensive. The question is how a loop measures every stretch of identical neighbors, including the very last one. It should look at each character only a constant number of times.
 
 <!-- stage: naive -->
 ### Extending From Every Position

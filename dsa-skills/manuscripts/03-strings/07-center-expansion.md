@@ -84,6 +84,8 @@ Now take `s = "abba"`. The odd middles give length 1 each, and the first gap com
 
 #### Stepping Through Both Strings
 
+The loop tries a gap after every index, so the last gap has no right neighbor and ends at once.
+
 ```trace
 {"cells":["a","b","a"],"pointers":["left","right"],"steps":[{"at":{"left":-1,"right":0},"vars":{"best":0},"note":"Start: no middle has been tried, so best is 0."},{"at":{"left":0,"right":0},"vars":{"best":0},"note":"Odd center index 0: indexes 0 and 0 hold 'a' and 'a', which match, so both ends move outward."},{"at":{"left":-1,"right":1},"vars":{"best":1},"note":"Odd center index 0: at indexes -1 and 1, a bound is crossed, so the attempt ends with length 1. The best length is 1."},{"at":{"left":0,"right":1},"vars":{"best":1},"note":"Gap after index 0: at indexes 0 and 1, 'a' and 'b' differ, so the attempt ends with length 0. The best length is 1."},{"at":{"left":1,"right":1},"vars":{"best":1},"note":"Odd center index 1: indexes 1 and 1 hold 'b' and 'b', which match, so both ends move outward."},{"at":{"left":0,"right":2},"vars":{"best":1},"note":"Odd center index 1: indexes 0 and 2 hold 'a' and 'a', which match, so both ends move outward."},{"at":{"left":-1,"right":3},"vars":{"best":3},"note":"Odd center index 1: at indexes -1 and 3, a bound is crossed, so the attempt ends with length 3. The best length is 3."},{"at":{"left":1,"right":2},"vars":{"best":3},"note":"Gap after index 1: at indexes 1 and 2, 'b' and 'a' differ, so the attempt ends with length 0. The best length is 3."},{"at":{"left":2,"right":2},"vars":{"best":3},"note":"Odd center index 2: indexes 2 and 2 hold 'a' and 'a', which match, so both ends move outward."},{"at":{"left":1,"right":3},"vars":{"best":3},"note":"Odd center index 2: at indexes 1 and 3, a bound is crossed, so the attempt ends with length 1. The best length is 3."},{"at":{"left":2,"right":3},"vars":{"best":3},"note":"Gap after index 2: at indexes 2 and 3, a bound is crossed, so the attempt ends with length 0. The best length is 3."}]}
 ```
@@ -133,7 +135,7 @@ A false friend is a task that mentions palindromes and has a different structure
 
 #### Java Details That Cause Failures
 
-The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`, because `&&` stops at the first false operand and the call would throw on an index outside the string. A call to `s.substring(a, b)` includes index `a` and excludes index `b`. After `expand` returns length `L` for the middle that started at `(left, right)`, the start of the palindrome is not `left`, because the loop already moved `left`. The start comes from the middle `c` and the length `L`, as `c - (L - 1) / 2` with integer division, for both odd and even lengths.
+The test `left >= 0 && right < s.length()` must come before `s.charAt(left)`. The operator `&&` stops at the first false operand, so the call never runs on an index outside the string. A call to `s.substring(a, b)` includes index `a` and excludes index `b`. After `expand` returns length `L` for the middle at `c`, the start of the palindrome lies to the left of `c`, so the start is not `c` itself. The start comes from the middle `c` and the length `L`, as `c - (L - 1) / 2` with integer division, for both odd and even lengths.
 
 <!-- stage: exercises -->
 ### Exercises
