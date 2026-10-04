@@ -109,6 +109,35 @@ def field(body, label):
     return m.group(1).strip() if m else None
 
 
+NUMW = {"two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10}
+PROCESS_TALK = re.compile(r"\b(the build|build checks?|the audit|audit(ed)? (checks?|passes)|during the build|stamp|lint)\b", re.I)
+
+
+def reader_checks(f, text, rep, standard):
+    """Reader-experience checks (user rules): consistent counts, no tool talk, a predict prompt, exercise limits as a list."""
+    plain = strip_fences(text)
+    if standard and "```predict" not in text:
+        rep.warn(f, "predict-missing", "add a ```predict block (question, blank line, answer) after the naive stage so the reader commits to a guess before the reveal")
+    for m in PROCESS_TALK.finditer(re.sub(r"(?m)^#### Solution:.*$", "", plain)):
+        rep.warn(f, "process-talk", f"learner text mentions tooling ('{m.group(0)}'); describe the topic, not the pipeline")
+        break
+    lines = plain.split("\n")
+    for i, l in enumerate(lines):
+        m = re.search(r"\b(" + "|".join(NUMW) + r")\s+(?:\w+\s+){0,3}?(parameters|quantities|things|facts|questions|checks|properties|numbers|values|cases|rules|terms|steps)\b", l, re.I)
+        if m and i + 1 < len(lines):
+            j = i + 1
+            while j < len(lines) and not lines[j].strip(): j += 1
+            k = 0
+            while j < len(lines) and re.match(r"\s*[-*]\s", lines[j]): k += 1; j += 1
+            if k and k != NUMW[m.group(1).lower()]:
+                rep.warn(f, "count-mismatch", f"text says '{m.group(1)} {m.group(2)}' but the list that follows has {k} items")
+    for body in re.findall(r"(?ms)^#### \[\w+\][^\n]*\n(.*?)(?=^#### |\Z)", text):
+        cm = re.search(r"\*\*Constraints\.\*\*(.*?)(?=\n\*\*|\Z)", body, re.S)
+        if cm and len(re.findall(r"[.!?](?:\s|$)", cm.group(1))) > 4 and not re.search(r"(?m)^\s*[-*]\s", cm.group(1)):
+            rep.warn(f, "constraints-paragraph", "exercise Constraints runs over four sentences; present the limits as a short list")
+            break
+
+
 def parse_spec(path):
     text, lessons = read(path), {}
     for sec in ("Lesson Blueprints", "Released Combination Lessons"):
@@ -172,6 +201,7 @@ def audit_chapter(ch, spec, draft, rep, corpus):
             rep.err(f, "lesson-title", f"lesson file must have exactly one H2 title, found {len(h2)}")
         title = h2[0] if h2 else f.stem
         titles[NORM(title)] = (title, f)
+        reader_checks(f, text, rep, kind != "combination")
         lm = re.search(r"<!--\s*lesson-id:\s*([^\s>]+)\s*-->", text)
         if not lm:
             rep.err(f, "lesson-id-missing", f"[{title}] needs <!-- lesson-id: your-permanent-slug --> under the lesson-kind marker")

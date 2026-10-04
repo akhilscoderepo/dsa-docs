@@ -66,3 +66,11 @@ footer.page{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);fo
 @media(max-width:900px){.layout{display:block}#menu-btn{display:inline-block}nav.side{display:none;position:fixed;inset:3.1rem 0 0 0;height:auto;z-index:15;background:var(--bg);border-right:0}body.nav-open nav.side{display:block}.bar{width:70px}.topbar .title small{display:none}main{padding-top:1rem}}
 @media print{.topbar,nav.side,.notes-wrap .row,.tp-ctl,.copy,.lesson-done,#menu-btn,.mynotes .row{display:none!important}.layout{display:block}body{background:#fff;color:#000;font-size:11pt}.exercise,.trace,.quiz{break-inside:avoid}textarea{border:1px solid #999;min-height:4rem}h2{break-before:page}}
 @media (max-width:900px){button,select,.btn,details>summary{min-height:36px}input[type=checkbox]{width:28px;height:28px;min-width:28px}.lesson-done input{transform:none}details>summary{display:flex;align-items:center}}
+
+.stage-tag{display:inline-block;margin:1.4rem 0 .2rem;padding:.1rem .55rem;border:1px solid var(--line);border-radius:999px;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted,#667)}
+.stage-nav{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0 1rem}
+.stage-nav a{padding:.15rem .6rem;border:1px solid var(--line);border-radius:999px;font-size:.78rem;text-decoration:none;color:inherit}
+.stage-nav a:hover{background:var(--panel)}
+details.predict{margin:1rem 0;padding:.7rem 1rem;border:1px solid var(--accent);border-radius:10px;background:var(--panel)}
+details.predict>summary{cursor:pointer;font-weight:600}
+@media print{.stage-nav{display:none}}

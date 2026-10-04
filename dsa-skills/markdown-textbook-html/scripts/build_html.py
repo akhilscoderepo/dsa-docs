@@ -74,7 +74,9 @@ def highlight(code):
 
 # Manuscript tokens stay machine keys; readers see standard textbook names.
 ROLE_DISPLAY = {"Build": "Basic", "Vary": "Variation", "Boundary": "Edge Cases", "Recognize": "Pattern Recognition"}
-DISPLAY_LABEL = {"Problem": "Problem Specification", "Constraints": "Input Constraints"}
+DISPLAY_LABEL = {"Problem": "Problem Specification", "Constraints": "Input Constraints", "Changed decision": "What This Exercise Changes"}
+STAGE_LABEL = {"context": "Problem", "contributions": "What Each Technique Adds", "naive": "Simple approach", "bottleneck": "Bottleneck",
+               "insight": "Key idea", "variables": "State", "trace": "Walkthrough", "code": "Code", "applicability": "When to use it", "exercises": "Exercises"}
 
 
 class Builder:
@@ -89,6 +91,10 @@ class Builder:
             t = tokens[idx]
             parts = t.info.split()
             lang, flags = (parts[0] if parts else ""), set(parts[1:])
+            if lang == "predict":
+                q, _, a = t.content.strip().partition("\n\n")
+                return (f'<details class="predict"><summary>Predict first: {html.escape(q.strip())}</summary>'
+                        f'<div>{b.md.render(a.strip())}</div></details>\n')
             if lang in ("trace", "quiz"):
                 try:
                     json.loads(t.content)
@@ -114,6 +120,7 @@ class Builder:
         md.add_render_rule("table_open", lambda s, t, i, o, e: '<div class="tablewrap"><table>')
         md.add_render_rule("table_close", lambda s, t, i, o, e: "</table></div>")
         self.md = md
+        b.md = md
 
     def render(self, text):
         return self.md.render(re.sub(r"<!--.*?-->", "", text, flags=re.S))
@@ -180,12 +187,14 @@ class Builder:
                 intro = self.render(pieces[0])
                 cards = "".join(self.exercise(f.stem, p, sols) for p in pieces[1:])
                 n_ex = len(pieces) - 1
-                body.append(f'<div class="stage stage-exercises">{intro}{cards}</div>')
+                body.append(f'<div class="stage stage-exercises" id="{lid}-exercises"><span class="stage-tag">{STAGE_LABEL["exercises"]}</span>{intro}{cards}</div>')
             else:
-                body.append(f'<div class="stage stage-{stage}">{self.render(chunk)}</div>')
-        done = (f'<label class="lesson-done"><input type="checkbox" data-id="{lid}"><span><strong>Rebuild check.</strong> I can state the invariant, '
-                f'explain why the naive version is too slow, and write the method again without looking.</span></label>')
-        sec = f'<section class="lesson" id="{lid}"><h2 id="{lid}-title">{html.escape(title)}</h2>' + "".join(body) + done + "</section>"
+                body.append(f'<div class="stage stage-{stage}" id="{lid}-{stage}"><span class="stage-tag">{STAGE_LABEL.get(stage, stage)}</span>{self.render(chunk)}</div>')
+        done = (f'<label class="lesson-done"><input type="checkbox" data-id="{lid}"><span><strong>Self-check.</strong> I can explain why the simple approach is too slow, '
+                f'state the key idea in one sentence, and write the method again without looking.</span></label>')
+        chips = "".join(f'<a href="#{lid}-{p}">{html.escape(STAGE_LABEL.get(p, p))}</a>' for p in parts[1::2])
+        sec = (f'<section class="lesson" id="{lid}"><h2 id="{lid}-title">{html.escape(title)}</h2><nav class="stage-nav" aria-label="Lesson parts">{chips}</nav>'
+               + "".join(body) + done + "</section>")
         self.index.append({"id": lid, "title": title, "text": visible_text(sec)})
         return lid, title, n_ex, sec
 

@@ -29,6 +29,17 @@ Write headings and prose the way an experienced engineer explains the topic alou
 - **Scope:** lesson titles, stage headings, sub-headings, prose, hints, exercise text and code comments.
 - **Check:** read every heading aloud. If it sounds like an index entry and not like something a person would say, rewrite it.
 
+### Reader flow (set by the user, Oct 4). The goal is that a first-time reader reaches flow state.
+- **Hook first:** every chapter orientation and every lesson opens with a concrete problem or failure the reader recognizes, then states the question the section answers. Never open by announcing what the text does not cover. Keep everything before the first lesson short.
+- **Predict, then reveal:** after the simple approach, add a `predict` block (a fenced block whose first paragraph is the question and whose remaining text is the answer). The reader commits to a guess before the explanation. The builder hides the answer.
+- **Internal consistency:** every count in prose equals the length of the list it introduces. Every back-reference ("earlier", "the previous lesson", "above") points to something that exists at that spot. Prose may refer to a widget or table only after it appears or with an explicit "below". A term has one name across the prose, code identifiers and comments; when a defined term and a code identifier differ, rename the identifier or say once that they mean the same thing.
+- **Natural required wording:** the audit requires certain words, so place them inside sentences that explain the idea in plain language. A required word never becomes a standalone label sentence.
+- **Orientation inside a lesson:** the builder shows a part label on every stage and a clickable list of the lesson's parts. Write each stage so it makes sense under its label.
+- **Exercises scan easily:** the problem specification is short and states one task. Input Constraints with several facts are a short list of limits, one fact per line. Anything about the method's own cost belongs in the solution, not the constraints.
+- **Learner text only:** never mention the build, the audit, the stamp, lint, assertions run during build, or any pipeline step. Describe the topic.
+- **One self-check per lesson in plain language,** shown by the builder at the end.
+- The audit warns on a missing `predict` block, a count that does not match its list, tooling words in learner text, and an exercise Constraints paragraph of more than four sentences. Resolve each warning by editing the text, not by silencing the check.
+
 ### Heading hierarchy
 Levels are fixed and never skipped:
 - Page title (H1) comes from the builder. Never write `# ` in a manuscript.
