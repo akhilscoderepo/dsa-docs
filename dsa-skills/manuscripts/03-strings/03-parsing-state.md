@@ -67,7 +67,7 @@ A state is **accepting** when the text may end there and still be valid. For a v
 Three values carry the whole parser, and each one changes at a fixed point.
 
 - **state** holds `START` or `BODY` and changes only when a transition fires.
-- **i** holds the index of the next unexamined character and grows by one per iteration.
+- **i** points at the character the parser reads next and moves right by one each round.
 - **letter and digit tests** classify the character at `i` once per iteration and use only ASCII ranges.
 
 <!-- stage: trace -->

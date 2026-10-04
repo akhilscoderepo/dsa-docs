@@ -59,7 +59,7 @@ The call `out.insert(0, text)` places text at the front. It shifts every existin
 <!-- stage: variables -->
 ### Builder, Index And Separator Rule
 
-Three values carry the whole loop, and each one changes at a fixed point.
+Three values carry the whole loop, and the loop updates each at a set moment.
 
 - **out** holds the completed prefix of the output and only grows at its end.
 - **i** holds the index of the next element to write and grows by one per iteration.
