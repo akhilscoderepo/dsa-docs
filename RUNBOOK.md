@@ -1,6 +1,6 @@
 # Runbook for scheduled generation sessions
 
-Goal: build chapters 05 to 41 of the Java DSA curriculum, one chapter at a time, with every gate passing, pushing each chapter to this repo the moment it is done. Chapters 00 to 04 are finished. Chapter 00 is the style exemplar for the writing rules (read ONE lesson from `dsa-skills/manuscripts/00-*/` and its solutions file as the style model; do not read whole chapters).
+Goal: build chapters 01 to 41 of the Java DSA curriculum, one chapter at a time, with every gate passing, pushing each chapter to this repo the moment it is done. Chapter 00 is finished. Chapter 00 is the style exemplar for the writing rules (read ONE lesson from `dsa-skills/manuscripts/00-*/` and its solutions file as the style model; do not read whole chapters).
 
 Pipeline law: `skill/dsa-chapter-pipeline/SKILL.md`. Status vocabulary is exactly "content complete, human review pending". Never write `review-log.md`. Never claim verification that was not run (JDK 25, Windows, phones, printing, teaching quality are unverified).
 
@@ -95,7 +95,7 @@ Overlap note: scheduled runs can overlap. Claims in PROGRESS.md keep two session
 - Examples are recomputed by code, never copied from LeetCode statements.
 
 ## Finishing
-When PROGRESS.md shows chapters 05 to 41 all `done`: run the full-corpus audit (`python3 dsa-skills/dsa-curriculum-auditor/scripts/audit_manuscripts.py dsa-skills/manuscripts --spec dsa-skills/chapter-specs`), fix everything except `no-human-review`, rebuild the index with `python3 dsa-skills/markdown-textbook-html/scripts/build_index.py dsa-skills/manuscripts output --title "Java DSA Curriculum"`, push, and disable the scheduled task (update_trigger with enabled=false).
+When PROGRESS.md shows chapters 01 to 41 all `done`: run the full-corpus audit (`python3 dsa-skills/dsa-curriculum-auditor/scripts/audit_manuscripts.py dsa-skills/manuscripts --spec dsa-skills/chapter-specs`), fix everything except `no-human-review`, rebuild the index with `python3 dsa-skills/markdown-textbook-html/scripts/build_index.py dsa-skills/manuscripts output --title "Java DSA Curriculum"`, push, and disable the scheduled task (update_trigger with enabled=false).
 Final report: what passed, remaining warnings, what is unverified, human review pending.
 
 ## 10. Final reader review (last step before delivery)
