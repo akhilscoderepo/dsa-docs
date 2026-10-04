@@ -1,12 +1,19 @@
 <!-- solutions-for: 03-sequence-language -->
-### Sequence Language
+### Solutions For Subarrays, Subsequences And Subsets
 
 #### Solution: [Build] Classify [2,4] (Author exercise)
 <!-- id: pc-classify-2-4 -->
 
-**Approach.** First, find the position of each candidate value in `[1,2,3,4]`. The value 2 sits at position 1 and the value 4 at position 3. Second, test whether the positions strictly increase. They do (1 then 3), so the original order is kept and the candidate is a subsequence. Third, test whether each position is exactly one more than the previous. Position 2 is skipped, so the test fails and the candidate is not a subarray. Fourth, check membership. Both values occur in `nums`, so the candidate is a subset. The code derives each verdict from the position list, so no verdict rests on how the values look. The invariant is that every verdict reads only the positions.
+**Approach.**
+- **Positions** in `[1,2,3,4]` are index 1 for the value 2 and index 3 for the value 4.
+- **Order test** passes, because the positions strictly increase (1 then 3), so the candidate is a subsequence.
+- **Gap test** fails, because index 2 is skipped, so the candidate is not a subarray.
+- **Membership test** passes, because both values occur in `nums`, so the candidate is a subset.
+- **Invariant** is that every verdict reads only the position list, never how the values look.
 
-**Complexity.** Time: O(n * m) in this brute-force code, because each of the `m` candidate values scans up to `n` positions of the array. Keeping a value-to-position map would reduce this to O(n + m). Space: O(m), because the position array holds one entry per candidate value.
+**Complexity.**
+- **Time** is O(n * m) in this brute-force code, because each of the `m` candidate values scans up to `n` positions; a value-to-position map reduces it to O(n + m).
+- **Space** is O(m), because the position array holds one entry per candidate value.
 
 ```java run
 public final class ClassifyPositions {
@@ -61,9 +68,17 @@ public final class ClassifyPositions {
 #### Solution: [Vary] Order Matters (Author exercise)
 <!-- id: pc-order-matters -->
 
-**Approach.** First, find the positions of `[4,2]`. They are 3 and then 1, so the positions fall. Second, apply the no-gaps test. A drop is not "one more than the previous position", so the test fails and the candidate is not a subarray. Third, apply the ordered test. The positions do not increase, so the candidate is not a subsequence. Fourth, apply the membership test. Both values occur in the array, and a subset needs nothing more, so the candidate is a subset. The decision that differs from `[2,4]` is the direction of the positions. The invariant is that a subset test ignores positions, while the other two tests use them.
+**Approach.**
+- **Positions** of `[4,2]` are 3 then 1, so the positions fall.
+- **Gap test** fails, because a drop is not "previous position plus 1", so the candidate is not a subarray.
+- **Order test** fails, because the positions do not increase, so the candidate is not a subsequence.
+- **Membership test** passes, because both values occur in the array, so the candidate is a subset.
+- **Changed decision** is the direction of the positions, compared with `[2,4]`.
+- **Invariant** is that the subset test ignores positions, while the other two tests use them.
 
-**Complexity.** Time: O(n), because each `indexOf` call scans the array of `n` values at most once, and the code makes a constant number of calls. Space: O(1), because the code stores only a few integers.
+**Complexity.**
+- **Time** is O(n), because each `indexOf` call scans the array of `n` values at most once, and the code makes a constant number of calls.
+- **Space** is O(1), because the code stores only a few integers.
 
 ```java run
 public final class OrderMatters {
@@ -95,9 +110,19 @@ public final class OrderMatters {
 #### Solution: [Boundary] Empty Choice (Author exercise)
 <!-- id: pc-empty-choice -->
 
-**Approach.** First, read the specification. It must say whether the empty subarray is legal, because its sum is 0 and 0 beats every sum on an all-negative array. Second, start `best` from the right value. With the non-empty requirement, `best` starts at `Integer.MIN_VALUE`, so the first block sum replaces it. With the empty choice allowed, `best` starts at 0, the sum of nothing. Third, try every start position. For each start, extend the end one step at a time and keep a running sum, so each block sum costs one addition. Fourth, after each extension, keep the larger of `best` and the block sum. For `[-8,-3,-6]` the non-empty answer is -3, the best single value. The empty-allowed answer is 0. The invariant is that `best` always holds the maximum over the legal blocks seen so far.
+**Approach.**
+- **Specification** must state whether the empty subarray is legal, because its sum 0 beats every sum on an all-negative array.
+- **best** starts at `Integer.MIN_VALUE` under the non-empty requirement, so the first block sum replaces it.
+- **best** starts at 0 when the empty choice is allowed, the sum of no elements.
+- **start** loop tries every start position.
+- **sum** extends the end one step at a time as a running sum, so each block sum costs one addition.
+- **best** keeps the larger of itself and the block sum after each extension.
+- **Result** for `[-8,-3,-6]` is -3 under the non-empty requirement, the best single value, and 0 when the empty choice is allowed.
+- **Invariant** is that `best` holds the maximum over the legal blocks seen so far.
 
-**Complexity.** Time: O(n^2), because the two nested loops visit every start and end pair once, and a running sum makes each block cost O(1). Space: O(1), because the code stores only `best`, `sum` and the loop indexes.
+**Complexity.**
+- **Time** is O(n^2), because the two nested loops visit every start and end pair once, and a running sum makes each block cost O(1).
+- **Space** is O(1), because the code stores only `best`, `sum` and the loop indexes.
 
 ```java run
 public final class EmptyChoice {
@@ -140,9 +165,18 @@ public final class EmptyChoice {
 #### Solution: [Recognize] Contiguous Maximum (Author exercise)
 <!-- id: pc-contiguous-maximum -->
 
-**Approach.** First, list the blocks of consecutive positions that contain both the 5 and the 4. Only one exists, the whole array, and it also contains the -10 between them, so its sum is -1. Second, compare the other blocks: `[5]` gives 5, `[-10]` gives -10, `[4]` gives 4, and `[5,-10]` gives -5. The best subarray sum is therefore 5. Third, enumerate subsequences with a bit mask. Bit `i` of the mask says whether position `i` is chosen, so positions 0 and 2 give 9 and skip the -10. The best subsequence sum is therefore 9. The data and the objective are identical, so the position rule alone moves the answer from 5 to 9. The invariant in each function is that `best` holds the maximum over the candidates examined so far.
+**Approach.**
+- **Blocks containing 5 and 4** reduce to one block, the whole array, which also contains the -10 between them, so its sum is -1.
+- **Other blocks** give `[5]` = 5, `[-10]` = -10, `[4]` = 4 and `[5,-10]` = -5, so the best subarray sum is 5.
+- **Bit mask** enumerates subsequences, where bit `i` says whether index `i` is chosen.
+- **Positions 0 and 2** skip the -10 and give 9, the best subsequence sum.
+- **Position rule** alone moves the answer from 5 to 9, because the data and the objective are identical.
+- **Invariant** in each function is that `best` holds the maximum over the candidates examined so far.
 
-**Complexity.** Time: O(n^2) for the subarray function, because it visits each start and end pair once. Time: O(2^n * n) for the subsequence function, because it tests `2^n` masks and sums up to `n` values for each. Space: O(1) for both, because each keeps only `best`, a sum, and loop indexes.
+**Complexity.**
+- **Time** is O(n^2) for the subarray function, because it visits each start and end pair once.
+- **Time** is O(2^n * n) for the subsequence function, because it tests `2^n` masks and sums up to `n` values for each.
+- **Space** is O(1) for both, because each keeps only `best`, a sum and loop indexes.
 
 ```java run
 public final class ContiguousMaximum {

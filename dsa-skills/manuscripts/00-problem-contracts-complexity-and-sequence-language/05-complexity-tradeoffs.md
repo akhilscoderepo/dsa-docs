@@ -1,16 +1,16 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: complexity-tradeoffs -->
-## Complexity Tradeoffs
+## Comparing Time And Space Complexity Trade-Offs
 
 <!-- stage: context -->
-### Why Two Engineers Disagree About Loops
+### Why Loop Count Misjudges Time Complexity
 
 Two engineers review the same method in a code review. The method scans a list of orders once to find the largest. It then scans the list a second time to count how many orders match that largest value. One engineer says the method has two loops, so it is quadratic and needs a rewrite. The other says it is obviously linear and fine as it is.
 
 They are not arguing about taste, because one of them is simply wrong. To find out which, count how many times the innermost line runs. Do not count the loops on the screen. The same dispute appears whenever someone compares two solutions that spend different resources. One solution uses more memory to save time. Another changes the input to save both. To choose between them, you need a shared way to say what each one costs.
 
 <!-- stage: naive -->
-### Count The Loops
+### Reading Loop Count As The Exponent
 
 The popular shortcut reads the number of loops as the exponent. One loop is linear, two loops are quadratic, and three loops are cubic. Here are two methods that a loop-counter treats identically.
 
@@ -34,14 +34,14 @@ static int pairCount(int[] orders) {
 Both methods have two `for` keywords that touch the array. The shortcut classifies them the same way. They are not the same.
 
 <!-- stage: bottleneck -->
-### Loops Do Not Multiply Unless They Nest
+### Sequential Loops Add And Nested Loops Multiply
 
 Count how often the innermost statement runs. In `twoScans`, the first loop runs `n` times and the second loop runs `n` times afterward. The total is `n + n = 2n`, which is O(n). In `pairCount` the outer loop runs `n` times. The inner loop runs a shrinking number of times: `n - 1`, then `n - 2`, down to 0. The total is `n * (n - 1) / 2`, which is O(n^2).
 
 A wrong classification costs real effort in both directions. If someone calls `twoScans` quadratic, a team rewrites correct, fast code and risks introducing a bug. If someone calls `pairCount` linear, a team accepts a method that needs five billion steps at `n = 100,000`. A rule that cannot tell them apart is worse than no rule, because it produces confident wrong answers. The correct tool is to count executions of the dominant statement.
 
 <!-- stage: insight -->
-### Add, Multiply, Keep The Largest
+### Rules For Counting Dominant Operations
 
 #### Add And Multiply Loop Costs
 
@@ -51,25 +51,36 @@ Loops that run one after another add their costs. A loop nested inside another m
 
 That fastest-growing part is the **dominant term**. In `2n + 5` it is `2n`. The bound drops the constant factor because it does not change how the cost scales, so the bound is O(n). In `n^2 / 2 - n / 2` the dominant term is `n^2 / 2`, so the bound is O(n^2). The smaller terms matter for tiny inputs and stop mattering as the input grows.
 
-<!-- names: dominant term, worst legal input, tradeoff -->
+<!-- names: dominant term, worst-case input, tradeoff -->
 
-#### Name The Worst Legal Input
+#### Define The Worst-Case Input
 
-A bound is meaningful only for a named input. The bound describes the dominant work on the **worst legal input**: the input of the largest allowed size and the most unfavorable shape. A method that stops early on some inputs still needs a judgment on the input where it does not stop early.
+A bound is meaningful only for a named input. The bound describes the dominant work on the **worst-case input**: the input of the largest allowed size and the most unfavorable shape. A method that stops early on some inputs still needs a judgment on the input where it does not stop early.
 
 #### Compare Costs As A Tradeoff
 
-A **tradeoff** exists when two correct solutions spend different resources. The resources include time, extra memory, a preprocessing step, or permission to change the input. To compare the solutions, write each cost in the same units and state what each solution gives up. Sorting first costs O(n log n) and may reorder or copy the data. In return, it can replace an all-pairs search with a single pass. The honest comparison is that you pay a modest cost to avoid a large one, and you give up the original order.
+A **tradeoff** exists when two correct solutions spend different resources. The resources include time, extra memory, a preprocessing step, or permission to change the input. To compare the solutions, write each cost in the same units and state what each solution gives up. Sorting first costs O(n log n) and may reorder or copy the data. In return, it can replace an all-pairs search with a single pass. The comparison is that the sorted solution pays a modest cost to avoid a large one and gives up the original order.
 
 <!-- stage: variables -->
-### What Is Being Counted
+### Quantities Defined Before Counting
 
-Name three things before you compute a bound. The first is the size variable `n`, plus any second dimension such as `rows` and `cols`. Never merge two dimensions silently into one letter. The second is the exact operation you count, such as comparisons, array reads or element copies. The third is the shape of the loops. The loops are sequential, nested with a fixed inner bound, or nested with an inner bound that shrinks or depends on the outer index.
+Define three quantities before you compute a bound.
+
+- **Size variable** `n` counts the input elements, and a second dimension such as `rows` and `cols` keeps its own letter.
+- **Counted operation** is one exact operation, such as a comparison, an array read or an element copy.
+- **Loop shape** is sequential, nested with a fixed inner bound, or nested with an inner bound that depends on the outer index.
+
+Never merge two dimensions silently into one letter.
 
 <!-- stage: trace -->
-### Counting A Shrinking Inner Loop
+### Operation Count Of A Triangular Loop
 
-Take `pairCount` with `n = 4`. When `i` is 0, `j` runs 1, 2 and 3, so the statement executes three times. When `i` is 1, `j` runs 2 and 3, which adds two executions. When `i` is 2, `j` runs only 3, which adds one. When `i` is 3, the inner loop has nothing left to run.
+Take `pairCount` with `n = 4`.
+
+- **i = 0** runs `j` over 1, 2 and 3, so the statement executes three times.
+- **i = 1** runs `j` over 2 and 3, which adds two executions.
+- **i = 2** runs `j` over 3 only, which adds one execution.
+- **i = 3** leaves the inner loop nothing to run, so it adds none.
 
 The total is 3 + 2 + 1 + 0, which is 6. The formula `n * (n - 1) / 2` gives 4 * 3 / 2, which is 6 as well. The hardest step to see is the last one, where an outer iteration contributes nothing. That step is why the answer is half of `n * n`. It also shows why a shrinking inner loop does not make the method linear, because the pieces still add up to a quantity proportional to `n^2`. Doubling `n` to 8 gives 28 executions, nearly four times as many.
 
@@ -78,7 +89,7 @@ The total is 3 + 2 + 1 + 0, which is 6. The formula `n * (n - 1) / 2` gives 4 * 
 ```
 
 <!-- stage: code -->
-### Counting Executions Directly
+### Counter Methods For Each Loop Shape
 
 ```java
 static long countTwoScans(int n) {
@@ -106,19 +117,27 @@ static long countGrid(int rows, int cols) {
 Each counter mirrors the loop structure of the method it models, and `steps++` stands for the dominant statement. The first returns `2n`, the second `n * (n - 1) / 2` and the third `rows * cols`. The counters use `long` because the triangular count for `n = 100,000` already exceeds what an `int` can hold. Their own running time equals the count they return. For that reason, use them only on small inputs to check a formula before you trust it.
 
 <!-- stage: applicability -->
-### Stating A Bound Honestly
+### Conditions For Stating A Bound
 
 #### State The Bound And Its Input
 
-Count executions of the dominant statement whenever you claim a time or space bound, and say which input the bound describes. The invariant is that the stated bound describes the dominant work on the worst legal input, in units that the problem's variables can express. If the problem has two size variables, the bound uses both.
+Count executions of the dominant statement whenever you claim a time or space bound. Check each item before you state it.
 
-#### Beware The Loop-Counting Shortcut
+- **Counted statement** is the dominant statement, and its executions give the bound.
+- **Input** is the worst-case input, and the claim names it.
+- **Stated bound** holds as an invariant: it describes the dominant work on that input, in units the problem's variables can express.
+- **Size variables** all appear in the bound when the problem has two of them.
 
-The false friend is the loop-counting shortcut. Two loops side by side add, and two loops nested over the same growing input usually multiply. The word usually matters. A nested loop whose inner index only moves forward across the whole run can still total O(n). Later chapters on two pointers and sliding windows depend on exactly that argument. So count executions, because nesting depth alone does not decide the bound.
+#### Check The Loop-Counting Rule
 
-#### Include Hidden Java Costs
+A false friend in loop counting is a shortcut that looks sound but breaks the assumption that every inner loop has the same bound. The loop-counting shortcut produces one. Two loops side by side add, and two loops nested over the same growing input usually multiply. The word usually matters. A nested loop whose inner index only moves forward across the whole run can still total O(n). Later chapters on two pointers and sliding windows depend on exactly that argument. So count executions, because nesting depth alone does not decide the bound.
 
-Java adds hidden costs that loop counting misses. A library call inside a loop, such as `list.remove(0)` or string concatenation, may itself cost O(n) per call. Lesson 8 of this chapter lists those calls. Any bound you state must include them.
+#### Include Library Call Costs
+
+Java library calls add costs that loop counting misses. Lesson 8 of this chapter lists those calls. Any bound you state must include them.
+
+- **`list.remove(0)`** inside a loop costs O(n) per call, because it shifts the remaining elements.
+- **String concatenation** inside a loop costs O(n) per call, because it copies the accumulated characters.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -138,7 +157,7 @@ Java adds hidden costs that loop counting misses. A library call inside a loop, 
 
 **Hint.** Do the executions of the second loop depend on how many times the first loop ran? What does a constant factor do to growth as `n` doubles?
 
-**Changed decision.** First rung: separates adding sequential work from multiplying nested work.
+**Changed decision.** Baseline case: separates adding sequential work from multiplying nested work.
 
 #### [Vary] Triangular Work (Author exercise)
 <!-- id: pc-triangular-work -->

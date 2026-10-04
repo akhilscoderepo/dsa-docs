@@ -1,4 +1,4 @@
-# Lesson spec: Input Guarantees
+# Lesson spec: Input Preconditions And Defensive Assumptions
 
 **Recognition cue.** Correct initialization and guards depend on facts promised by the caller: non-empty input, sorted order, legal indices, rectangular shape, or bounded values. **State.** List guarantees separately from assumptions introduced by the solution. **Invariant.** Code may rely on a documented guarantee but must not invent one. **False friend.** Defensive branches added from habit can obscure the actual algorithm and may define behavior the problem never requested.
 

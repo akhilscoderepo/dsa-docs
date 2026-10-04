@@ -1,12 +1,22 @@
 <!-- solutions-for: 08-java-cost-habits -->
-### Java Cost Habits
+### Java Library Call Time And Space Costs
 
 #### Solution: [Build] Front Removal (Author exercise)
 <!-- id: pc-front-removal -->
 
-**Approach.** First, recall what `remove(0)` does. It shifts every later element one position left, as the `ArrayList` documentation states. Second, sum the moves. A list of size `s` moves `s - 1` elements, so draining `n` elements moves `(n - 1) + (n - 2) + ... + 0`, which is `n(n - 1) / 2`. That gives 10 moves for `n = 5` and about five billion for `n = 100,000`. Third, compare with the read index. It leaves the list unchanged, so each step costs one `get` and zero moves. The code models the shifting with a counting loop, so it computes the numbers. Then it checks that a real `ArrayList` drained both ways yields the same elements in the same order.
+**Approach.**
 
-**Complexity.** Time: O(n^2) for draining with `remove(0)`, because the shift counts form the sum `n(n - 1) / 2`. The read-index version takes O(n) time, because it does one constant-time `get` per element. Space: O(1) extra for the counting model and for the read index, because each keeps only a few counters.
+- **`remove(0)`** shifts every later element one position left, as the `ArrayList` documentation states.
+- **Moves** for a list of size `s` number `s - 1`, so draining `n` elements moves `(n - 1) + (n - 2) + ... + 0`, which is `n(n - 1) / 2`.
+- **Totals** are 10 moves for `n = 5` and about five billion for `n = 100,000`.
+- **Read index** leaves the list unchanged, so each step costs one `get` and zero moves.
+- **Counting loop** in the code models the shifting and computes the numbers.
+- **Real `ArrayList`** drained both ways yields the same elements in the same order, and the code checks it.
+
+**Complexity.**
+
+- **Time** is O(n^2) for draining with `remove(0)`, because the shift counts form the sum `n(n - 1) / 2`. The read-index version takes O(n), because it does one constant-time `get` per element.
+- **Space** is O(1) extra for the counting model and for the read index, because each keeps only a few counters.
 
 ```java run
 import java.util.ArrayList;
@@ -50,9 +60,18 @@ public final class FrontRemoval {
 #### Solution: [Vary] String Construction (Author exercise)
 <!-- id: pc-string-construction -->
 
-**Approach.** First, note that a `String` is immutable. The expression `result + ch` therefore creates a new string and copies every old character into it. Second, sum the copies. Step `k` copies the new string of length `k`, so `n` steps copy `1 + 2 + ... + n`, which is `n(n + 1) / 2`. That gives 15 for `n = 5` and about five billion for 100,000. Third, compare with `StringBuilder`. It appends into a buffer and grows its capacity geometrically, so most appends copy nothing. The code asserts three claims. Concatenation yields a new object. The old string stays unchanged. The builder's capacity changes only a few times over a million appends.
+**Approach.**
 
-**Complexity.** Time: O(n^2) for concatenation in a loop, because the copy counts form the sum `n(n + 1) / 2`. The builder version takes O(n) time in total, because each append costs amortized O(1) when the capacity doubles. Space: O(n) for the final string in both versions, because the result holds `n` characters.
+- **`String`** is immutable, so `result + ch` creates a new string and copies every old character into it.
+- **Copies** at step `k` number `k`, so `n` steps copy `1 + 2 + ... + n`, which is `n(n + 1) / 2`.
+- **Totals** are 15 for `n = 5` and about five billion for 100,000.
+- **`StringBuilder`** appends into a buffer and grows its capacity geometrically, so most appends copy nothing.
+- **Assertions** in the code check three claims: concatenation yields a new object, the old string stays unchanged, and the builder's capacity changes only a few times over a million appends.
+
+**Complexity.**
+
+- **Time** is O(n^2) for concatenation in a loop, because the copy counts form the sum `n(n + 1) / 2`. The builder version takes O(n) in total, because each append costs amortized O(1) when the capacity doubles.
+- **Space** is O(n) for the final string in both versions, because the result holds `n` characters.
 
 ```java run
 public final class StringConstruction {
@@ -93,9 +112,19 @@ public final class StringConstruction {
 #### Solution: [Boundary] Primitive Arrays (Author exercise)
 <!-- id: pc-primitive-arrays -->
 
-**Approach.** First, read the declaration. `Arrays.asList` has a varargs parameter of an object type. Second, apply the type rule. An `int[]` is not an `Object[]`, so the compiler passes the whole array as one argument. The list therefore holds a single element, the array itself, and its type is `List<int[]>`. Third, contrast with `Arrays.asList(1, 2, 3)`. Three separate boxed arguments form a three-element varargs array, so the list has three elements. Fourth, build a real `List<Integer>`. Loop over the array and add each value, which boxes it. Alternatively, stream the array and box the values. Both options visit every element once.
+**Approach.**
 
-**Complexity.** Time: O(1) to wrap the single array, because `asList` stores one reference. Time: O(n) to build a real `List<Integer>`, because the loop or the stream visits each element once. Space: O(n) for the real list, because it holds `n` boxed values. The wrapper needs O(1) space.
+- **Declaration** of `Arrays.asList` has a varargs parameter of an object type.
+- **Type rule** says an `int[]` is not an `Object[]`, so the compiler passes the whole array as one argument.
+- **Result** is a list with a single element, the array itself, of type `List<int[]>`.
+- **`Arrays.asList(1, 2, 3)`** passes three separate boxed arguments, which form a three-element varargs array, so the list has three elements.
+- **Loop** over the array adds each value to a `List<Integer>`, which boxes it.
+- **Stream** over the array boxes the values as an alternative, and both options visit every element once.
+
+**Complexity.**
+
+- **Time** is O(1) to wrap the single array, because `asList` stores one reference. Building a real `List<Integer>` takes O(n), because the loop or the stream visits each element once.
+- **Space** is O(n) for the real list, because it holds `n` boxed values. The wrapper needs O(1) space.
 
 ```java run
 import java.util.ArrayList;
@@ -128,9 +157,18 @@ public final class PrimitiveArrays {
 #### Solution: [Recognize] Value Equality (Author exercise)
 <!-- id: pc-value-equality -->
 
-**Approach.** First, apply the rule for `==` on objects. It compares references, so two strings created with `new String("abc")` are different objects and `==` is false. Second, apply the rule for `.equals`. It compares contents, so it returns true for the same characters. A solution that cares about contents must use `.equals`. Hash-based collections rely on it, along with `hashCode`, to find a matching key, and Chapter 04 builds on that. Third, compare a string with itself. Both names refer to one object, so `==` is true. Never rely on `==` between strings, because literals in the same class may be shared. As a result, the bug appears only sometimes.
+**Approach.**
 
-**Complexity.** Time: `==` is O(1), because it compares two references. `.equals` is O(L) in the string length, because it may compare every character. Space: O(1) for both, because neither allocates memory.
+- **`==`** on objects compares references, so two strings created with `new String("abc")` are different objects and the result is false.
+- **`.equals`** compares contents, so it returns true for the same characters.
+- **Content comparison** must use `.equals`, and hash-based collections rely on it, along with `hashCode`, to find a matching key. Chapter 04 builds on that.
+- **Self-comparison** with `==` is true, because both names refer to one object.
+- **`==` between strings** is unreliable, because literals in the same class may be shared, so the bug appears only sometimes.
+
+**Complexity.**
+
+- **Time** is O(1) for `==`, because it compares two references, and O(L) for `.equals` in the string length, because it may compare every character.
+- **Space** is O(1) for both, because neither allocates memory.
 
 ```java run
 public final class ValueEquality {

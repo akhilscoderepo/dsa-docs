@@ -1,12 +1,24 @@
 <!-- solutions-for: 06-amortized-cost -->
-### Amortized Cost
+### Amortized Cost Solutions
 
 #### Solution: [Build] Doubling Array (Author exercise)
 <!-- id: pc-doubling-array -->
 
-**Approach.** First, track `size`, `capacity` and a running copy count. Second, before each append, test whether `size == capacity`. If so, double the capacity, add `size` to the copy count, and record the new capacity. Third, write the value by increasing `size`. For eight appends the array is full on the second, third and fifth appends. Those resizes take the capacity from 1 to 2, 2 to 4 and 4 to 8. They copy 1, 2 and 4 elements, for a total of 7. Seven copies for eight appends is below one copy per append. The copy sizes double, so they form a geometric series that sums to less than twice the last term. The simulation records the capacities it passes through, so the code produces the list and nothing is counted by hand.
+**Approach.** The simulation tracks the array state and counts copies.
 
-**Complexity.** Time: O(n) for the simulation, because the loop runs once per append and each iteration does constant work. The array itself performs O(n) total copies for `n` appends, so each append costs O(1) amortized. Space: O(log n) for the list of capacities, because the capacity doubles each time and the list holds one entry per doubling.
+- **State** is `size`, `capacity` and a running copy count.
+- **Resize test** runs before each append and checks `size == capacity`.
+- **Resize action** doubles the capacity, adds `size` to the copy count and records the new capacity.
+- **Write** increases `size` by one.
+- **Eight appends** find the array full on appends 2, 3 and 5, so the capacity goes 1 to 2, 2 to 4 and 4 to 8.
+- **Copies** are 1, 2 and 4, a total of 7, which is below one copy per append.
+- **Copy sizes** double, so they form a geometric series that sums to less than twice the last term.
+- **Simulation** records the capacities it passes through, so the code produces the list and nothing is counted by hand.
+
+**Complexity.**
+
+- **Time** is O(n) for the simulation, because the loop runs once per append and each iteration does constant work. The array itself performs O(n) total copies, so each append costs O(1) amortized.
+- **Space** is O(log n) for the list of capacities, because the capacity doubles each time and the list holds one entry per doubling.
 
 ```java run
 import java.util.ArrayList;
@@ -62,9 +74,19 @@ public final class DoublingArray {
 #### Solution: [Vary] Grow By One (Author exercise)
 <!-- id: pc-grow-by-one -->
 
-**Approach.** First, notice that capacity grows by one slot, so the array is full on every append after the first. Second, note that an append that finds `s` stored values copies `s` elements. Third, add these costs over `n` appends: `1 + 2 + ... + (n - 1)`. The sum equals `n(n - 1) / 2`, so eight appends cost 28 copies against 7 for doubling. Fourth, divide by `n`. The cost per append averages about `n / 2`, which is O(n). The policy gives room for only one more append per resize, so no resize pays for later ones. Because of this, it loses the constant amortized bound.
+**Approach.** Growth by one slot makes every append after the first trigger a resize.
 
-**Complexity.** Time: O(n^2) total copies for `n` appends, because the copy costs form an arithmetic series. That is O(n) amortized per append. Space: O(1) extra for the simulation, because it keeps only integer counters.
+- **Capacity** grows by one, so the array is full on every append after the first.
+- **Copy cost** of an append that finds `s` stored values is `s` elements.
+- **Total** over `n` appends is `1 + 2 + ... + (n - 1) = n(n - 1) / 2`, so eight appends cost 28 copies against 7 for doubling.
+- **Average** per append is about `n / 2`, which is O(n).
+- **Growth policy** gives room for only one more append per resize, so no resize pays for later ones.
+- **Amortized bound** therefore loses its constant value.
+
+**Complexity.**
+
+- **Time** is O(n^2) total copies for `n` appends, because the copy costs form an arithmetic series. That is O(n) amortized per append.
+- **Space** is O(1) extra for the simulation, because it keeps only integer counters.
 
 ```java run
 public final class GrowByOne {
@@ -107,9 +129,20 @@ public final class GrowByOne {
 #### Solution: [Boundary] One Expensive Append (Author exercise)
 <!-- id: pc-one-expensive-append -->
 
-**Approach.** First, observe that after 1,024 values the capacity is exactly 1,024, so the array is full. Second, follow the 1,025th append. It finds no room, doubles the capacity to 2,048 and copies all 1,024 stored values. Third, add the earlier resizes. They copied 1 + 2 + 4 + ... + 512, which is 1,023 elements in total. So the single spike equals the total of every earlier spike plus one. This is a geometric series, so the total copies stay below two per append. One costly call does not break the average, because the previous 1,024 appends already created the room that this resize uses. The code returns both the total and the copies of the last append.
+**Approach.** The 1,025th append is the first one after the array fills at 1,024 values.
 
-**Complexity.** Time: the spike is O(n) for that one call, and the simulation is O(n) overall, because its loop runs once per append. The total for `n` appends is O(n) copies, so each append costs O(1) amortized. Space: O(1), because the code keeps a few counters.
+- **Full array** holds 1,024 values in capacity 1,024.
+- **Append 1,025** finds no room, doubles the capacity to 2,048 and copies all 1,024 stored values.
+- **Earlier resizes** copied `1 + 2 + 4 + ... + 512`, which is 1,023 elements in total.
+- **Single resize** therefore equals the total of every earlier resize plus one.
+- **Geometric series** keeps the total copies below two per append.
+- **Average** survives one costly call, because the previous 1,024 appends already created the room that this resize uses.
+- **Return value** of the code holds the total and the copies of the last append.
+
+**Complexity.**
+
+- **Time** is O(n) for that one resize, and the simulation is O(n) overall, because its loop runs once per append. The total for `n` appends is O(n) copies, so each append costs O(1) amortized.
+- **Space** is O(1), because the code keeps a few counters.
 
 ```java run
 public final class OneExpensiveAppend {
@@ -154,9 +187,20 @@ public final class OneExpensiveAppend {
 #### Solution: [Recognize] Potential Intuition (Author exercise)
 <!-- id: pc-potential-intuition -->
 
-**Approach.** First, look at the array right after a resize to capacity `2c`. It holds `c` values, so exactly `c` slots are empty. That means `c` more appends can happen before the next resize. Second, charge each of those appends 3 units. Spend 1 unit on the write and save 2 units. Third, add the savings. The `c` appends save `2c` units, and the next resize from `2c` to `4c` copies `2c` values. So the saved credit pays for the resize exactly. The first resize from 1 to 2 copies one value. The 2 units saved by the first append fund it, with one unit to spare. The simulation tracks the credit balance and asserts that it never goes negative.
+**Approach.** The credit argument counts the appends between two resizes.
 
-**Complexity.** Time: O(n) for the simulation, because the loop runs once per append. Space: O(1), because the code keeps only `capacity`, `size` and `credit`. The charge of 3 units per append shows that the cost is O(1) amortized.
+- **Array after a resize** to capacity `2c` holds `c` values, so exactly `c` slots are empty.
+- **Appends before the next resize** number `c`.
+- **Charge** per append is 3 units: 1 unit pays for the write and 2 units go into the balance.
+- **Saved credit** after those `c` appends is `2c` units.
+- **Next resize** from `2c` to `4c` copies `2c` values, so the saved credit pays for it exactly.
+- **First resize** from 1 to 2 copies one value, and the 2 units saved by the first append fund it with one unit to spare.
+- **Simulation** tracks the credit balance and asserts that it never goes negative.
+
+**Complexity.**
+
+- **Time** is O(n) for the simulation, because the loop runs once per append. The charge of 3 units per append shows that each append costs O(1) amortized.
+- **Space** is O(1), because the code keeps only `capacity`, `size` and `credit`.
 
 ```java run
 public final class PotentialIntuition {

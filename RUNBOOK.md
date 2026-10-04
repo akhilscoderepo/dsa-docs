@@ -49,7 +49,8 @@ Never use the author's invented topic names ("Constraint Signals", "Mutation Con
 Use bullets whenever the content is mathematical steps, multi-item parameters, complexity metrics, trade-off comparisons, step-by-step trace logic or requirement check-lists. Do not leave those inside dense paragraphs, and do not write loose scratchpad bullets.
 - Every bullet starts with a **bolded key technical entity** (a variable, structure, operation or metric), then a short active-voice fragment that states its exact operation or constraint. Example: `- **left** moves to mid + 1 when the value at mid is below the target.` Example: `- **Time** is O(n log n), because the sort dominates the single scan.`
 - One fact per bullet, fragments of about 20 words at most, parallel form within a list.
-- The narrative stages (context, naive, bottleneck, insight) stay prose-led and still obey the audit limit of 30% bullet lines. Put the bullets in variables, trace commentary, complexity summaries, applicability checks, constraints and solution Approach steps.
+- Context, naive, bottleneck and insight stay prose-led and obey the audit limit of 30% bullet lines. Trace and applicability may be bullet-led (the audit allows up to 85%), but open or close the list with at least one connecting prose sentence. Variables, complexity summaries, constraints and solution Approach steps use bullets freely.
+- Lesson `##` titles also obey the audit's 7-word limit (hyphenated words count as one).
 - Bullets never replace connected reasoning: keep the explanation of why in sentences and use the list for the parts a reader scans.
 
 ## Session start

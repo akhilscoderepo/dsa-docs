@@ -1,4 +1,4 @@
-# Lesson spec: Amortized Cost
+# Lesson spec: Amortized Analysis Of Operation Sequences
 
 **Recognition cue.** An operation is usually cheap but occasionally performs a large repair or resize whose cost is spread across many earlier/later operations. **State.** Track stored “credit” or a potential such as unused capacity. **Invariant.** Across a sequence of operations, the total charged cost pays for every actual operation. **False friend.** Amortized `O(1)` is not worst-case `O(1)` for each individual call.
 

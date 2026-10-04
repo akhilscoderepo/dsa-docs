@@ -1,12 +1,25 @@
 <!-- solutions-for: 02-mutation-contracts -->
-### Mutation Contracts
+### Solutions For Preconditions And Postconditions
 
 #### Solution: [Build] Meaningful Prefix (Author exercise)
 <!-- id: pc-meaningful-prefix -->
 
-**Approach.** The method keeps two indexes. `read` visits every position once. `write` marks the next free slot of the prefix. The invariant is that `nums[0..write-1]` holds the kept values seen so far, in their original order. When `nums[read]` differs from the target, the method copies it to `nums[write]` and advances `write`. When the loop ends, `write` equals `k`. The guarantee follows from the invariant: `nums[0..k-1]` holds the kept values in order. Nothing else is promised. The slots from `k` onward hold whatever the rewrite left behind, so they are unspecified and the caller must never read them as data. The array's own `length` stays 4 and says nothing about the answer. The returned `k` is the only boundary. When the method removes every element, `k = 0` and the entire array is unspecified.
+**Approach.**
 
-**Complexity.** Time: O(n), because the loop visits each position once and does O(1) work per position. Space: O(1) auxiliary, because the method keeps two integer indexes and allocates no array.
+- **read** visits every position once.
+- **write** marks the next free slot of the prefix.
+- **Invariant** is that `nums[0..write-1]` holds the kept values seen so far, in their original order.
+- **Copy step** runs when `nums[read]` differs from the target, and it copies the value to `nums[write]` and advances `write`.
+- **k** equals `write` when the loop ends.
+- **Postcondition** follows from the invariant: `nums[0..k-1]` holds the kept values in order, and nothing else is promised.
+- **Suffix** `nums[k..]` holds whatever the rewrite left behind, so it is unspecified and the caller must never read it as data.
+- **Array length** stays 4 and says nothing about the answer, so the returned `k` is the only boundary.
+- **Empty result** occurs when the method removes every element, so `k = 0` and the entire array is unspecified.
+
+**Complexity.**
+
+- **Time** is O(n), because the loop visits each position once and does O(1) work per position.
+- **Space** is O(1) auxiliary, because the method keeps two integer indexes and allocates no array.
 
 ```java run
 import java.util.Arrays;
@@ -49,9 +62,20 @@ public final class MeaningfulPrefix {
 #### Solution: [Vary] Preserve Input (Author exercise)
 <!-- id: pc-preserve-input -->
 
-**Approach.** Under a no-mutation specification, the method never writes into `nums`. First, one pass counts the kept values, so the method knows the exact length of the result. Second, the method allocates `out` with that length. Third, a second pass copies the kept values into `out` in order. The caller holds the original array and relies on it staying whole. Correct returned numbers are not enough, because any write to `nums` silently changes data the caller still owns. When the specification is permissive, rewriting in place is valid and saves O(n) memory. The design follows from the specification and not from habit.
+**Approach.**
 
-**Complexity.** Time: O(n), because the method makes two passes and each pass does O(1) work per element. Space: O(n), because the returned array can hold up to n values. The in-place variant takes O(n) time and O(1) auxiliary space.
+- **Precondition** is that the specification forbids writes to `nums`.
+- **First pass** counts the kept values, so the method knows the exact length of the result.
+- **Allocation** creates `out` with that length.
+- **Second pass** copies the kept values into `out` in order.
+- **Original array** must stay whole, because the caller relies on it, so any write to `nums` changes data the caller still owns even when the returned numbers are correct.
+- **Permissive specification** allows rewriting in place, which saves O(n) memory.
+- **Design** follows from the specification and not from preference.
+
+**Complexity.**
+
+- **Time** is O(n), because the method makes two passes and each pass does O(1) work per element.
+- **Space** is O(n), because the returned array can hold up to n values. The in-place variant takes O(n) time and O(1) auxiliary space.
 
 ```java run
 import java.util.Arrays;
@@ -91,9 +115,19 @@ public final class PreserveInput {
 #### Solution: [Boundary] Aliased Input (Author exercise)
 <!-- id: pc-aliased-input -->
 
-**Approach.** The assignment `b = a` copies the reference, not the array, so one array object has two names. A write through either name is visible through the other, because both names point to the same elements. If the two views must stay independent, the caller takes a copy before the call, for example `int[] b = a.clone()`. That call allocates a second array and copies the elements. For an array of primitives the copy is complete. An array of arrays needs a deeper copy, because `clone()` copies only the outer references.
+**Approach.**
 
-**Complexity.** Time: O(n) for the clone, because it copies n elements, and O(1) to read or write one element through a reference. Space: O(n) for the clone, because it allocates a second array of n elements. The assignment `b = a` costs O(1) space, because it copies one reference.
+- **Assignment** `b = a` copies the reference and not the array, so one array object has two names.
+- **Write through either name** is visible through the other, because both names point to the same elements.
+- **Independent views** need a copy before the call, for example `int[] b = a.clone()`.
+- **clone()** allocates a second array and copies the elements.
+- **Primitive array** is copied completely by `clone()`.
+- **Array of arrays** needs a deeper copy, because `clone()` copies only the outer references.
+
+**Complexity.**
+
+- **Time** is O(n) for the clone, because it copies n elements, and O(1) to read or write one element through a reference.
+- **Space** is O(n) for the clone, because it allocates a second array of n elements. The assignment `b = a` costs O(1) space, because it copies one reference.
 
 ```java run
 import java.util.Arrays;
@@ -126,9 +160,20 @@ public final class AliasedInput {
 #### Solution: [Recognize] Output Space (Author exercise)
 <!-- id: pc-output-space -->
 
-**Approach.** A method that must hand back `n` values needs at least O(n) memory of any kind, because the result itself has that size. Convention one counts everything, so the total is O(n). Convention two charges only auxiliary space, the working memory beyond the input and the required output. Under it the same method uses O(1), because it adds only a few scalars. The two answers describe the same code, so a solution description should say which convention it uses. An interviewer who asks for O(1) space almost always means the second.
+**Approach.**
 
-**Complexity.** Time: O(n), because the loop writes each of the n result slots once. Space: O(n) total counting the result, because the result array has n slots. Auxiliary space: O(1) when the result is excluded, because the method adds only the loop index.
+- **Result array** of `n` values needs at least O(n) memory of any kind, because the result itself has that size.
+- **Total space** counts everything, so it is O(n).
+- **Auxiliary space** counts only the working memory beyond the input and the required output.
+- **Auxiliary space of this method** is O(1), because it adds only a few scalars.
+- **Convention** must be stated, because the two answers describe the same code.
+- **Interview request** for O(1) space almost always means auxiliary space.
+
+**Complexity.**
+
+- **Time** is O(n), because the loop writes each of the n result slots once.
+- **Space** is O(n) total counting the result, because the result array has n slots.
+- **Auxiliary space** is O(1) when the result is excluded, because the method adds only the loop index.
 
 ```java run
 public final class OutputSpace {

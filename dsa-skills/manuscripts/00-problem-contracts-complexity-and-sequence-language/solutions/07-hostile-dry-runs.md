@@ -1,12 +1,22 @@
 <!-- solutions-for: 07-hostile-dry-runs -->
-### Hostile Dry Runs
+### Designing Adversarial Test Inputs
 
 #### Solution: [Build] Singleton (Author exercise)
 <!-- id: pc-singleton -->
 
-**Approach.** First, read the loop header `for (i = 1; i < 1; ...)`. The test `1 < 1` is false, so the body never runs. Second, conclude that the result comes entirely from the initialization, because no iteration can repair it. Third, check the corrected method. It starts `best` at 1, because any non-empty array holds a run of length one, so it returns 1. Fourth, check the flawed method. It starts `best` at 0 and raises it only inside the loop, so it returns 0. The invariant is that `best` holds the longest run seen so far, and an empty prefix must not count as a run of length one. The dry-run table has a single row, the initial one, and that row already shows the wrong value of `best`.
+**Approach.**
 
-**Complexity.** Time: O(n), because the loop visits each index from 1 to `n - 1` once, and it runs zero times when `n = 1`. Space: O(1), because the method keeps only `best` and `cur`.
+- **Loop header** `for (i = 1; i < 1; ...)` tests `1 < 1`, which is false, so the body never runs.
+- **Result** comes entirely from the initialization, because no iteration can repair it.
+- **Corrected method** starts `best` at 1, because any non-empty array holds a run of length one, so it returns 1.
+- **Flawed method** starts `best` at 0 and raises it only inside the loop, so it returns 0.
+- **Invariant** is that `best` holds the longest run seen so far, and an empty prefix must not count as a run of length one.
+- **Dry-run table** has a single row, the initial one, and that row already shows the wrong value of `best`.
+
+**Complexity.**
+
+- **Time** is O(n), because the loop visits each index from 1 to `n - 1` once, and it runs zero times when `n = 1`.
+- **Space** is O(1), because the method keeps only `best` and `cur`.
 
 ```java run
 public final class Singleton {
@@ -62,9 +72,18 @@ public final class Singleton {
 #### Solution: [Vary] All Equal (Author exercise)
 <!-- id: pc-all-equal -->
 
-**Approach.** First, run the strict comparison `a[i] > a[i - 1]` on `[4,4,4]`. Two equal neighbors fail the test, so `cur` resets to 1 at both steps and `best` stays 1. Second, run the non-strict comparison `a[i] >= a[i - 1]`. Equal neighbors pass, so `cur` grows to 2 and then to 3, and `best` becomes 3. Third, observe that the values never differ, so the only thing that changes the answer is the comparison operator. The invariant is that `cur` is the length of the run that ends at index `i` under the chosen comparison. An input with distinct values cannot separate the two versions, because it contains no equal neighbors.
+**Approach.**
 
-**Complexity.** Time: O(n), because each version makes one pass and does constant work per index. Space: O(1), because each version stores only `best` and `cur`.
+- **Strict comparison** `a[i] > a[i - 1]` fails on two equal neighbors, so `cur` resets to 1 at both steps and `best` stays 1.
+- **Non-strict comparison** `a[i] >= a[i - 1]` passes on equal neighbors, so `cur` grows to 2 and then 3, and `best` becomes 3.
+- **Values** never differ between the two runs, so the comparison operator alone changes the answer.
+- **Invariant** is that `cur` is the length of the run that ends at index `i` under the chosen comparison.
+- **Distinct values** cannot separate the two versions, because they contain no equal neighbors.
+
+**Complexity.**
+
+- **Time** is O(n), because each version makes one pass and does constant work per index.
+- **Space** is O(1), because each version stores only `best` and `cur`.
 
 ```java run
 public final class AllEqual {
@@ -107,9 +126,18 @@ public final class AllEqual {
 #### Solution: [Boundary] Numeric Extremes (Author exercise)
 <!-- id: pc-numeric-extremes -->
 
-**Approach.** First, compute the true sum on paper: 2 * 2,147,483,647 = 4,294,967,294. This value exceeds the `int` maximum of 2,147,483,647. Second, apply two's-complement wrap-around. A 32-bit `int` keeps the sum modulo 2^32, so the stored value is 4,294,967,294 - 2^32, which is -2. Predict -2 before you run the code, then confirm it. Third, fix the bug with a `long` accumulator. The `long` holds 4,294,967,294 exactly, and each `int` element widens to `long` before the addition. The input works as an adversarial test because it sits at the extreme of the type, where the wrap-around is guaranteed.
+**Approach.**
 
-**Complexity.** Time: O(n), because each method adds every element once. Space: O(1), because each method keeps one accumulator.
+- **True sum** is 2 * 2,147,483,647 = 4,294,967,294, which exceeds the `int` maximum of 2,147,483,647.
+- **Two's-complement wrap-around** keeps the sum modulo 2^32 in a 32-bit `int`, so the stored value is 4,294,967,294 - 2^32, which is -2.
+- **Prediction** of -2 is made before the code runs, and the run confirms it.
+- **Long accumulator** holds 4,294,967,294 exactly, and each `int` element widens to `long` before the addition.
+- **Adversarial input** sits at the extreme of the type, where the wrap-around is guaranteed.
+
+**Complexity.**
+
+- **Time** is O(n), because each method adds every element once.
+- **Space** is O(1), because each method keeps one accumulator.
 
 ```java run
 public final class NumericExtremes {
@@ -140,9 +168,21 @@ public final class NumericExtremes {
 #### Solution: [Recognize] Mutation Order (Author exercise)
 <!-- id: pc-mutation-order -->
 
-**Approach.** First, trace the left-to-right shift. The step `a[1] = a[0]` overwrites the old `a[1]`, which holds 2, before the loop reads it. That write is the first one that destroys unread data. Second, continue the trace. The step `a[2] = a[1]` copies the value just written, so it copies 1 instead of 2, and `a[3] = a[2]` copies 1 again. Every slot ends up holding the first value. Third, trace the right-to-left shift. The steps `a[3] = a[2]`, `a[2] = a[1]` and `a[1] = a[0]` each write a slot whose old value the loop has already moved. The invariant is that every slot to the left of the write position is still unread and unchanged. After the shift, the insert writes 9 into slot 0. The general rule is to copy in the direction that keeps the destination behind the source. `System.arraycopy` handles overlapping ranges correctly, as its documentation states, so it is a safe shortcut.
+**Approach.**
 
-**Complexity.** Time: O(n), because the shift moves each live value once. Space: O(1), because the shift works in place and needs no second array.
+- **Left-to-right step** `a[1] = a[0]` overwrites the old `a[1]`, which holds 2, before the loop reads it.
+- **First destructive write** is that step, because it destroys unread data.
+- **Next steps** `a[2] = a[1]` and `a[3] = a[2]` copy the value just written, so `a[2]` receives 1 instead of 2, and `a[3]` receives 1 again. Every slot ends up holding the first value.
+- **Right-to-left steps** `a[3] = a[2]`, `a[2] = a[1]` and `a[1] = a[0]` each write a slot whose old value the loop has already moved.
+- **Invariant** is that every slot to the left of the write position is still unread and unchanged.
+- **Insert** writes 9 into slot 0 after the shift.
+- **Rule** is to copy in the direction that keeps the destination behind the source.
+- **`System.arraycopy`** handles overlapping ranges correctly, as its documentation states, so it is a safe alternative.
+
+**Complexity.**
+
+- **Time** is O(n), because the shift moves each live value once.
+- **Space** is O(1), because the shift works in place and needs no second array.
 
 ```java run
 import java.util.Arrays;

@@ -19,6 +19,7 @@ STAGES = ["context", "naive", "bottleneck", "insight", "variables", "trace", "co
 STAGES_COMBO = STAGES[:1] + ["contributions"] + STAGES[1:]
 MIN_WORDS = {"context": 60, "naive": 30, "bottleneck": 60, "insight": 120, "variables": 40, "trace": 100,
              "code": 30, "applicability": 80, "contributions": 60}
+BULLET_LED = {"trace", "applicability"}  # structured bullets allowed (user rule, Oct 4); context/naive/bottleneck/insight stay prose-led
 NARRATIVE = {"context", "naive", "bottleneck", "insight", "trace", "applicability", "contributions"}
 ROLES = ["Build", "Vary", "Boundary", "Recognize", "Extend", "Medium", "Hard", "Challenge"]
 FIELDS = [("Prerequisites", 3), ("Problem", 15), ("Constraints", 5), ("Example 1", 3), ("Example 2", 3),
@@ -204,7 +205,8 @@ def audit_chapter(ch, spec, draft, rep, corpus):
                 lines = [l for l in strip_fences(body).split("\n") if l.strip() and not l.startswith("#") and not l.startswith("<!--")]
                 bullets = sum(1 for l in lines if re.match(r"\s*([-*]|\d+\.)\s", l))
                 tables = sum(1 for l in lines if l.lstrip().startswith("|"))
-                if lines and bullets / len(lines) > 0.3:
+                cap = 0.85 if s in BULLET_LED else 0.3
+                if lines and bullets / len(lines) > cap:
                     rep.err(f, "bullet-heavy", f"[{title}] stage '{s}' is {bullets}/{len(lines)} bullet lines; write narrative prose")
                 if s == "trace" and lines and tables / len(lines) > 0.3:
                     rep.err(f, "trace-table", f"[{title}] the trace stage is mostly a table; narrate it")

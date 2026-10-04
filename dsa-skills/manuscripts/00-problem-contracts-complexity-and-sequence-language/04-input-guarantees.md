@@ -1,18 +1,18 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: input-guarantees -->
-## Input Guarantees
+## Input Preconditions And Defensive Assumptions
 
 <!-- stage: context -->
-### A Wrong Maximum On The Coldest Night
+### Silent Wrong Results From Unstated Input Properties
 
 A weather station logs overnight temperatures in degrees below and above freezing. A small method reports the warmest reading of the night. For months it reports sensible values. Then a cold snap arrives and every reading is negative. The report says the warmest reading was 0 degrees, a night that never reached it.
 
-A colleague proposes a fix: return 0 whenever something looks wrong. That fix also hides the night the logger was offline and sent an empty list. Both failures have the same cause. The method makes silent guesses about its input, and nobody wrote down what the caller promised. This lesson separates what the input is guaranteed to be from what the code merely hopes.
+A colleague proposes a fix: return 0 whenever something looks wrong. That fix also hides the night the logger was offline and sent an empty list. Both failures have the same cause. The method makes silent guesses about its input, and nobody wrote down what the caller promised. This lesson separates what the input is guaranteed to be from what the code assumes.
 
 <!-- stage: naive -->
-### Start From Zero And Guard Everything
+### Zero Initialization With Defensive Guards
 
-The first version initializes the answer to zero, because zero feels neutral. It adds a guard for the empty case, because the code might crash.
+The first version initializes the answer to zero, because zero seems a safe default. It adds a guard for the empty case, because the code might crash.
 
 ```java
 static int warmest(int[] temps) {
@@ -25,64 +25,82 @@ static int warmest(int[] temps) {
 }
 ```
 
-The method never crashes, passes every sample with a positive reading, and looks careful. Habit added each defensive line, and no line ties to a rule in the problem.
+The method never crashes, passes every sample with a positive reading, and looks careful. The author added each defensive line without a rule from the problem, and no line ties to one.
 
 <!-- stage: bottleneck -->
-### Confident Wrong Answers
+### Incorrect Results With Correct Complexity
 
-#### Wrong Results Without Errors
+#### Incorrect Output Without Exceptions
 
-The method returns 0 for `[-8, -3, -6]`, where the true maximum is -3. It also returns 0 for an empty array, which has no maximum at all. The time is O(n) and the space is O(1), so every cost the earlier lessons taught us to check looks fine. The damage is to correctness, and it is silent. The method throws no exception and gives no warning. It returns a plausible number.
+The method returns 0 for `[-8, -3, -6]`, where the true maximum is -3. It also returns 0 for an empty array, which has no maximum at all. The time is O(n) and the space is O(1), so every complexity metric from the earlier lessons looks fine. The damage is to correctness, and it is silent. The method throws no exception and gives no warning. It returns a plausible number.
 
-#### Guards That Claim Too Much
+#### Unrequested Behavior From Guard Clauses
 
 The defensive guard does a second kind of damage. It defines a behavior, "empty means 0", that the problem never requested. If the specification promises a non-empty array, the guard is dead code that suggests the opposite promise. If the specification allows empty input and expects an error, the guard hides that error. In both cases the code makes a claim about the problem that the author did not intend. Failures like this are expensive because they pass review, since each line reads as careful.
 
 <!-- stage: insight -->
-### Rely On The Promise, Never Invent One
+### Input Guarantees Versus Assumptions
 
-Every problem makes a set of promises about its input, and a solution is correct only for inputs that keep them. Collect those promises before writing code. Keep them in a separate list from anything your solution adds on top.
+Every problem states guarantees about its input, and a solution is correct only for inputs that satisfy them. Collect those guarantees before writing code. Keep them in a separate list from anything your solution adds on top.
 
-#### Separate Guarantees From Assumptions
+#### Definitions Of Guarantee And Assumption
 
 An **input guarantee** is a fact the caller has promised in the problem statement. Examples are a non-empty array, a range for the values, a rectangular grid, or sorted input. An **assumption** is anything your code depends on that the statement did not promise, even if it feels obvious. The rule is that code may rely on a documented guarantee and must never invent one. If your code needs an assumption, it must check the assumption at run time or write it into the specification you hand back.
 
 <!-- names: input guarantee, assumption, sentinel -->
 
-#### Initialize From Real Input
+#### Initialization From A Real Element
 
 A guarantee also decides how to initialize. With a promised non-empty array, the maximum starts at the first element, because that element is a real member of the input. Starting from zero assumes that zero lies below every value. When the specification allows empty input, the method needs a documented way to say "there is no answer". One choice is a **sentinel**, a reserved value that cannot be a real answer. The alternatives are to throw an exception or to return an optional wrapper that makes absence part of the type. Whichever you pick, the method signature and the documentation must agree on it.
 
-#### Draw Stronger Conclusions
+#### Structural Conclusions From Guarantees
 
 A guarantee can also unlock a stronger conclusion. If the statement promises a sorted array, equal values sit side by side in runs. The code can use that structural fact without checking it.
 
 <!-- stage: variables -->
-### Five Questions About The Input
+### Input Checklist For Preconditions
 
-For any problem, keep five questions in view. Can the input be empty or null, and does the statement say so? What are the value and size ranges? Is there an ordering promise, such as sorted order? What is the shape, meaning whether a two-dimensional input is rectangular? What must the method return when no answer exists? Under each question, mark whether the statement promises the answer or your code assumes it. Anything in the second category needs a check or a note.
+Check five input properties for every problem.
+
+- **Emptiness** asks whether the input can be empty or null, and whether the statement says so.
+- **Value and size ranges** ask for the limits on each element and on the length.
+- **Ordering** asks whether the statement guarantees sorted order.
+- **Shape** asks whether a two-dimensional input is rectangular.
+- **No-answer result** asks what the method returns when no answer exists.
+
+Mark each answer as a guarantee from the statement or an assumption of your code. Every assumption needs a check or a note.
 
 <!-- stage: trace -->
-### Two Initializations Side By Side
+### Zero-Start Versus First-Element Initialization
 
-#### Run The Zero-Start Version
+#### Tracing The Zero-Start Version
 
-Run both initializations on `[-8, -3, -6]`. The zero-start version holds 0 from the beginning. At -8 the comparison fails, because -8 is not larger than 0, so the best stays 0. At -3 and at -6 the same thing happens. The loop ends and reports 0, for a night in which no reading reached 0.
+Run both initializations on `[-8, -3, -6]`.
 
-#### Run The First-Element Version
+- **best** starts at 0 in the zero-start version.
+- **-8** fails the comparison, because -8 is not larger than 0, so best stays 0.
+- **-3 and -6** fail the same comparison.
+- **Result** is 0, although no reading reached 0.
 
-The first-element version starts from -8, because that is a real reading. At -3 the comparison succeeds, because -3 is larger than -8, so the best becomes -3. At -6 the comparison fails and the best stays -3. The loop reports -3, which is correct. The hardest step to notice is the very first one. The zero-start version never had a chance. Its starting value was already larger than everything it would see, and no later step could fix that.
+#### Tracing The First-Element Version
 
-#### Replay Both Versions Step By Step
+- **best** starts at -8, a real reading.
+- **-3** passes the comparison, because -3 is larger than -8, so best becomes -3.
+- **-6** fails the comparison, so best stays -3.
+- **Result** is -3, which is correct.
+
+The initialization is the step most often overlooked. The zero-start version starts above every value in the array, so no later comparison can correct it.
+
+#### Step Trace Of Both Versions
 
 ```trace
 {"cells":[-8,-3,-6],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"zeroStart":0,"firstStart":-8},"note":"Start. The zero version holds 0 and the first-element version holds -8, a real reading."},{"at":{"i":0},"vars":{"zeroStart":0,"firstStart":-8},"note":"Read -8. Zero version: not larger than 0, so it stays 0. First-element version holds -8."},{"at":{"i":1},"vars":{"zeroStart":0,"firstStart":-3},"note":"Read -3. Zero version: not larger than 0, so it stays 0. First-element version holds -3."},{"at":{"i":2},"vars":{"zeroStart":0,"firstStart":-3},"note":"Read -6. Zero version: not larger than 0, so it stays 0. First-element version holds -3."},{"at":{"i":3},"vars":{"zeroStart":0,"firstStart":-3},"note":"Loop ends. The zero version reports 0, a night that never reached 0. The first-element version reports -3."}]}
 ```
 
 <!-- stage: code -->
-### Guarantees Stated In The Signature
+### Methods With Documented Preconditions
 
-#### Write Both Methods
+#### Non-Empty And Optional-Return Methods
 
 ```java
 // Contract: temps is non-empty. No guard, because the guarantee already covers it.
@@ -99,24 +117,39 @@ static java.util.OptionalInt warmestOrNone(int[] temps) {
 }
 ```
 
-#### Compare Their Behavior
+#### Comparing Complexity And Failure Behavior
 
-Both methods run in O(n) time with O(1) extra space. The first trusts its guarantee and says so in a comment, so a reader knows the missing guard is deliberate and not an oversight. The second spends one branch to make "no answer" explicit. Callers must handle it, because the type forces them to. Neither method invents a value. A third option for a specification that allows empty input is to throw `IllegalArgumentException` and document it. That option is also fine, as long as the specification says so.
+- **warmestNonEmpty** runs in O(n) time and O(1) extra space, and relies on its documented guarantee.
+- **Comment on the guarantee** shows the missing guard is deliberate and not an oversight.
+- **warmestOrNone** has the same cost and adds one branch that makes "no answer" explicit in the return type.
+- **Optional return type** forces callers to handle the empty case.
+- **IllegalArgumentException** is a third option for a specification that allows empty input, valid when the documentation states it.
+
+Neither method invents a value.
 
 <!-- stage: applicability -->
-### Before Any Guard Or Initial Value
+### Applying Guarantees To Guards And Initial Values
 
-#### Run The Checklist First
+#### Running The Checklist First
 
-Run the checklist before choosing initial values and before adding guards. The invariant to hold is that code relies only on what the statement guarantees and checks or documents everything else. Initial values come from real input whenever the specification allows. Choose a sentinel only when it cannot collide with a real answer.
+Run the checklist before choosing initial values and before adding guards.
 
-#### Spot The False Friend
+- **Invariant** is that code relies only on what the statement guarantees, and checks or documents everything else.
+- **Initial values** come from real input whenever the specification allows.
+- **Sentinel** is chosen only when it cannot collide with a real answer.
 
-The false friend is defensive programming added from habit. Branches that handle cases the problem never allows obscure the actual algorithm. They can also define behavior nobody asked for. This is not an argument against validation in production services, where untrusted input needs checks. It is an argument about interview and contest problems, where the statement is the specification and an extra branch is a claim about it.
+#### Adding Guards Without Specification Rules
 
-#### Watch For Java Traps
+A false friend in input handling is a guard that looks like robustness but contradicts the stated precondition. Here it is defensive programming added without a specification rule. Branches that handle cases the problem never allows obscure the actual algorithm. They can also define behavior nobody asked for. This is not an argument against validation in production services, where untrusted input needs checks. It is an argument about interview and contest problems, where the statement is the specification and an extra branch is a claim about it.
 
-Java adds specific traps. `int[][] grid` may be ragged, so `grid[0].length` is not safe for every row unless the statement promises rectangularity. `Integer.MIN_VALUE` as a sentinel collides with a legal answer if inputs may reach that value, and negating it overflows. A `null` array differs from an empty array. A statement that mentions neither has promised neither.
+#### Avoiding Java Input Traps
+
+Java adds specific traps.
+
+- **int[][] grid** may be ragged, so `grid[0].length` is unsafe for every row unless the statement guarantees rectangularity.
+- **Integer.MIN_VALUE** as a sentinel collides with a legal answer if inputs may reach that value, and negating it overflows.
+- **null array** differs from an empty array.
+- **Unmentioned cases** are not guaranteed, so a statement that mentions neither null nor empty input promises neither.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -136,7 +169,7 @@ Java adds specific traps. `int[][] grid` may be ragged, so `grid[0].length` is n
 
 **Hint.** Which real element of the input is guaranteed to exist? What does a starting value of zero assume about the data?
 
-**Changed decision.** First rung: the starting value comes from the input itself, because the specification guarantees it exists.
+**Changed decision.** Basic case: the starting value comes from the input itself, because the specification guarantees it exists.
 
 #### [Vary] Possibly Empty (Author exercise)
 <!-- id: pc-possibly-empty -->

@@ -1,4 +1,4 @@
-# Lesson spec: Complexity Tradeoffs
+# Lesson spec: Comparing Time And Space Complexity Trade-Offs
 
 **Recognition cue.** Two correct solutions consume different combinations of time, memory, preprocessing, or mutation. **State.** Name `n`, any secondary dimension, and the exact operation being counted. **Invariant.** The stated bound must describe the dominant work on the worst legal input. **False friend.** Two loops written next to each other are additive; two loops nested over the same growing input are usually multiplicative.
 

@@ -1,12 +1,23 @@
 <!-- solutions-for: 05-complexity-tradeoffs -->
-### Complexity Tradeoffs
+### Complexity Trade-Off Solutions
 
 #### Solution: [Build] Consecutive Loops (Author exercise)
 <!-- id: pc-consecutive-loops -->
 
-**Approach.** First, run the first loop. It executes its body `n` times. Second, run the second loop. It also executes its body `n` times, whatever the first loop did, because its bound is `n` and not a value from the first loop. Third, add the two counts, because the loops run one after the other. The total is `n + n = 2n`. Fourth, drop the constant factor of two to get O(n). The factor still exists, since doubling the work doubles the running time. It does not change how the cost grows when `n` grows. Multiplication would apply only if one loop sat inside the other. The harness below asserts the counts for `n = 10`, `n = 1` and a doubled `n`.
+**Approach.** The method adds two sequential loops.
 
-**Complexity.** Time: O(n), because the two loops execute `2n` bodies in total and the constant 2 drops. Space: O(1), because the code keeps one counter and one index and allocates nothing else.
+- **First loop** executes its body `n` times.
+- **Second loop** executes its body `n` times, because its bound is `n` and not a value from the first loop.
+- **Total** is `n + n = 2n`, because sequential loops add.
+- **Constant factor** of two drops from the bound, so the class is O(n).
+- **Doubling `n`** still doubles the running time, because the factor exists but does not change how cost grows.
+- **Multiplication** applies only when one loop sits inside the other.
+- **Harness** asserts the counts for `n = 10`, `n = 1` and a doubled `n`.
+
+**Complexity.**
+
+- **Time** is O(n), because the two loops execute `2n` bodies in total and the constant 2 drops.
+- **Space** is O(1), because the code keeps one counter and one index and allocates nothing else.
 
 ```java run
 public final class ConsecutiveLoops {
@@ -39,9 +50,19 @@ public final class ConsecutiveLoops {
 #### Solution: [Vary] Triangular Work (Author exercise)
 <!-- id: pc-triangular-work -->
 
-**Approach.** First, count the inner iterations for each value of `i`. For `i = 0` the inner loop runs `n - 1` times. For `i = 1` it runs `n - 2` times. The count falls by one each time until it reaches 0 for `i = n - 1`. Second, add these counts: `(n - 1) + (n - 2) + ... + 1`. This sum equals `n(n - 1) / 2`. Third, read the class from the formula. The formula is about half of `n^2`, so the class is O(n^2). The half is a constant factor, so the bound drops it, but the exact count keeps it. The inner bound depends on `i`, so the total is a sum and not the product `n * n`. The harness checks the formula for every `n` from 0 to 60 and not only for two sizes.
+**Approach.** The method counts a loop whose inner bound depends on `i`.
 
-**Complexity.** Time: O(n^2), because the inner body executes `n(n - 1) / 2` times. Space: O(1), because the code keeps one counter and two indices.
+- **Inner count** is `n - 1` for `i = 0`, `n - 2` for `i = 1`, and 0 for `i = n - 1`.
+- **Sum** `(n - 1) + (n - 2) + ... + 1` equals `n(n - 1) / 2`.
+- **Class** is O(n^2), because the formula is about half of `n^2` and the bound drops the constant factor.
+- **Exact count** keeps the factor one half.
+- **Inner bound** depends on `i`, so the total is a sum and not the product `n * n`.
+- **Harness** checks the formula for every `n` from 0 to 60 and not only for two sizes.
+
+**Complexity.**
+
+- **Time** is O(n^2), because the inner body executes `n(n - 1) / 2` times.
+- **Space** is O(1), because the code keeps one counter and two indices.
 
 ```java run
 public final class TriangularWork {
@@ -78,9 +99,18 @@ public final class TriangularWork {
 #### Solution: [Boundary] Two Dimensions (Author exercise)
 <!-- id: pc-two-dimensions -->
 
-**Approach.** First, visit every cell once with a row loop and a column loop nested inside it. The row loop runs `rows` times, and each run starts a column loop of `cols` visits. Second, multiply, because the loops nest. The cost is `rows * cols`, and the bound keeps both variables. Third, compare with the merged claim. If both dimensions are called `n`, the bound reads O(n^2). That is correct for a square grid and far too pessimistic for a long thin grid. With `rows = 1000` and `cols = 2` the real count is 2,000, while the merged claim suggests 1,000,000. Keeping two letters also shows how the cost responds to each dimension separately.
+**Approach.** The traversal nests a column loop inside a row loop.
 
-**Complexity.** Time: O(rows * cols), because each of the `rows` outer passes runs `cols` visits. Space: O(1), because the code keeps one counter and two indices and does not store the grid.
+- **Row loop** runs `rows` times, and each run starts a column loop of `cols` visits.
+- **Cost** is `rows * cols`, because nested loops multiply, and the bound keeps both variables.
+- **Merged claim** O(n^2) calls both dimensions `n`. It is correct for a square grid and far too pessimistic for a long thin grid.
+- **Thin grid** with `rows = 1000` and `cols = 2` has 2,000 visits, while the merged claim suggests 1,000,000.
+- **Two letters** show how the cost responds to each dimension separately.
+
+**Complexity.**
+
+- **Time** is O(rows * cols), because each of the `rows` outer passes runs `cols` visits.
+- **Space** is O(1), because the code keeps one counter and two indices and does not store the grid.
 
 ```java run
 public final class TwoDimensions {
@@ -116,9 +146,21 @@ public final class TwoDimensions {
 #### Solution: [Recognize] Sort Then Scan (Author exercise)
 <!-- id: pc-sort-then-scan -->
 
-**Approach.** First, copy the array and sort the copy. Second, scan the copy once and compare each element with the one before it. After sorting, equal values sit next to each other. So a duplicate exists exactly when some pair of neighbors is equal. Third, return `true` at the first equal pair and `false` if the scan ends without one. The sort costs O(n log n) and the scan costs O(n), so the sort dominates. The tradeoffs are these. The copy needs O(n) extra space, and sorting in place would destroy the original order and every index. The all-pairs method needs only O(1) extra space but O(n^2) time. So the sorted approach buys speed with memory. The harness compares both methods on 2,000 random small arrays.
+**Approach.** The method sorts a copy and scans it once.
 
-**Complexity.** Time: O(n log n), because sorting the copy costs O(n log n) and the scan adds O(n). Space: O(n), because the copy holds `n` values. The all-pairs method takes O(n^2) time and O(1) space.
+- **Copy** of the array is sorted, so `nums` stays unchanged.
+- **Scan** of the copy compares each element with its predecessor.
+- **Sorted order** places equal values next to each other, so a duplicate exists exactly when some pair of neighbors is equal.
+- **Return value** is `true` at the first equal pair and `false` when the scan ends without one.
+- **Sort** costs O(n log n) and the scan costs O(n), so the sort dominates.
+- **Copy** needs O(n) extra space, whereas sorting in place would destroy the original order and every index.
+- **All-pairs method** needs O(1) extra space but O(n^2) time, so the sorted approach buys speed with memory.
+- **Harness** compares both methods on 2,000 random small arrays.
+
+**Complexity.**
+
+- **Time** is O(n log n), because sorting the copy costs O(n log n) and the scan adds O(n). The all-pairs method takes O(n^2).
+- **Space** is O(n), because the copy holds `n` values. The all-pairs method takes O(1).
 
 ```java run
 import java.util.Arrays;

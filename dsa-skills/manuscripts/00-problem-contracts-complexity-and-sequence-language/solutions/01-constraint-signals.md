@@ -1,12 +1,24 @@
 <!-- solutions-for: 01-constraint-signals -->
-### Constraint Signals
+### Solutions For Input Constraint Analysis
 
 #### Solution: [Build] Budget Check (Author exercise)
 <!-- id: pc-budget-check -->
 
-**Approach.** First, fix the maximum input `n = 100_000` and the budget of 10^8 steps. Second, count the steps of each plan at that `n`. A single scan takes about 100,000 steps. A sort followed by a scan takes about `n * 17`, which is 1.7 million steps, because `log2(100_000)` rounds up to 17. All pairs takes `n * (n - 1) / 2`, which is 4,999,950,000 steps. Third, compare each count with the budget. The first two plans stay far below it, so they are plausible. The third is about fifty times over, so it is implausible. The code states the budget and asserts each claim, so the verdict is a checked fact and not a feeling. The count must use `long`, because the pair count exceeds the `int` maximum.
+**Approach.**
 
-**Complexity.** Time: O(1), because the estimate evaluates three closed-form expressions and runs no loop. Space: O(1), because the estimate stores a few `long` values. The plans it judges run in O(n), O(n log n) and O(n^2) time.
+- **Maximum input** is `n = 100_000`, with a time limit of 10^8 steps.
+- **Single scan** takes about 100,000 steps.
+- **Sort then scan** takes about `n * 17`, which is 1.7 million steps, because `log2(100_000)` rounds up to 17.
+- **All pairs** takes `n * (n - 1) / 2`, which is 4,999,950,000 steps.
+- **Verdict for the first two plans** is "plausible", because they stay far below the limit.
+- **Verdict for all pairs** is "implausible", because it is about fifty times over the limit.
+- **long** holds every count, because the pair count exceeds the `int` maximum.
+- **Assertions** in the code state each claim, so the verdict is a checked fact.
+
+**Complexity.**
+
+- **Time** is O(1), because the estimate evaluates three closed-form expressions and runs no loop. The plans it judges run in O(n), O(n log n) and O(n^2) time.
+- **Space** is O(1), because the estimate stores a few `long` values.
 
 ```java run
 public final class BudgetCheck {
@@ -49,9 +61,20 @@ public final class BudgetCheck {
 #### Solution: [Vary] Small Domain (Author exercise)
 <!-- id: pc-small-domain -->
 
-**Approach.** First, observe that a value-indexed table has one slot per possible value. Its size therefore equals the size of the value range and does not depend on `n`. Second, multiply the slot count by 4 bytes. Values in `0..100` need 101 counters, which is 404 bytes. Values in `0..1_000_000_000` need a billion and one counters, about four gigabytes. Third, compare the two results. The size limit `n <= 100_000` is identical in both cases. The value limit is the signal that changes the decision. Counting then needs one pass: the loop increments `counts[v]` for each element `v`.
+**Approach.**
 
-**Complexity.** Time: O(n), because the counting loop reads each element once and does O(1) work for it. Space: O(V), where V is the number of possible values, because the table has one slot per value. That means 101 slots in the first case and about 10^9 slots in the second.
+- **Value-indexed table** has one slot per possible value, so its size equals the value range and does not depend on `n`.
+- **Memory** is the slot count times 4 bytes.
+- **Values in 0..100** need 101 counters, which is 404 bytes.
+- **Values in 0..1_000_000_000** need 1,000,000,001 counters, about four gigabytes.
+- **Size limit** `n <= 100_000` is identical in both cases.
+- **Value limit** is the input constraint that changes the decision.
+- **Counting loop** increments `counts[v]` for each element `v`, in one pass.
+
+**Complexity.**
+
+- **Time** is O(n), because the counting loop reads each element once and does O(1) work for it.
+- **Space** is O(V), where V is the number of possible values, because the table has one slot per value. That means 101 slots in the first case and about 10^9 slots in the second.
 
 ```java run
 public final class SmallDomain {
@@ -91,9 +114,19 @@ public final class SmallDomain {
 #### Solution: [Boundary] Hidden Overflow (Author exercise)
 <!-- id: pc-hidden-overflow -->
 
-**Approach.** First, bound the sum. The largest possible sum is `100_000 * 1_000_000_000`, which is 10^14. Second, compare it with the `int` ceiling of 2,147,483,647. The bound is far larger, so an `int` cannot always hold the sum, and the answer is "no". Third, choose the type. The accumulator must be a `long`, which holds values up to about 9.2 * 10^18. The adversarial input is one hundred thousand copies of the largest legal value. A small sample like `[5, 7, 9]` passes with either type, so you must read the limit and cannot rely on small tests. The `int` accumulator wraps around silently, so the program gives a wrong answer and no error.
+**Approach.**
 
-**Complexity.** Time: O(n), because the loop adds each element once. Space: O(1), because the method keeps one accumulator. Widening the accumulator from `int` to `long` adds no asymptotic cost.
+- **Largest sum** is `100_000 * 1_000_000_000`, which is 10^14.
+- **int ceiling** is 2,147,483,647, far below that bound, so an `int` cannot always hold the sum and the answer is "no".
+- **Accumulator** must be a `long`, which holds values up to about 9.2 * 10^18.
+- **Adversarial input** is one hundred thousand copies of the largest legal value.
+- **Small sample** such as `[5, 7, 9]` passes with either type, so small tests cannot replace reading the limit.
+- **int accumulator** wraps around silently, so the program gives a wrong answer and no error.
+
+**Complexity.**
+
+- **Time** is O(n), because the loop adds each element once.
+- **Space** is O(1), because the method keeps one accumulator. Widening the accumulator from `int` to `long` adds no asymptotic cost.
 
 ```java run
 public final class HiddenOverflow {
@@ -128,9 +161,19 @@ public final class HiddenOverflow {
 #### Solution: [Recognize] Query Pressure (Author exercise)
 <!-- id: pc-query-pressure -->
 
-**Approach.** First, cost one query. A plain loop over a range reads at most `n = 100_000` elements, far below the budget of 10^8. Second, multiply by the query count. One hundred thousand such queries cost up to `100_000 * 100_000 = 10^10` steps, a hundred times the budget. Third, compare the two workloads. The array and its size stay the same, and only the operation count changes. Therefore the design must spend time up front to make each query cheap. The prefix-sum chapter provides that design. This exercise only decides that the design is needed. The loop stays affordable up to 1,000 queries, because `100_000 * 1_000` equals the budget.
+**Approach.**
 
-**Complexity.** Time: O(n * q) for the plain-loop plan, because each of the q queries scans up to n elements. The estimate itself takes O(1) time, because it multiplies two numbers. Space: O(1), because the plan stores no extra structure and the estimate stores one `long`.
+- **One query** reads at most `n = 100_000` elements, far below the time limit of 10^8.
+- **q queries** cost up to `100_000 * 100_000 = 10^10` steps, a hundred times the limit.
+- **Array size** stays the same across both workloads, and only the operation count changes.
+- **Design** must therefore spend time up front to make each query cheap.
+- **Prefix-sum chapter** provides that design, and this exercise only decides that it is needed.
+- **Break-even point** is 1,000 queries, because `100_000 * 1_000` equals the limit.
+
+**Complexity.**
+
+- **Time** is O(n * q) for the plain-loop plan, because each of the q queries scans up to n elements. The estimate itself takes O(1) time, because it multiplies two numbers.
+- **Space** is O(1), because the plan stores no extra structure and the estimate stores one `long`.
 
 ```java run
 public final class QueryPressure {

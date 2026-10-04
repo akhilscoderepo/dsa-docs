@@ -1,4 +1,4 @@
-# Lesson spec: Sequence Language
+# Lesson spec: Defining Subarrays, Subsequences And Subsets
 
 **Recognition cue.** The prompt uses terms such as subarray, substring, subsequence, subset, prefix, or suffix. **State.** Write down which index relationships must be preserved. **Invariant.** A subarray/substring occupies consecutive positions; a subsequence preserves relative order but may skip positions; a subset need not preserve either adjacency or order. **False friend.** These words are not interchangeable even when a sample answer happens to satisfy several definitions.
 

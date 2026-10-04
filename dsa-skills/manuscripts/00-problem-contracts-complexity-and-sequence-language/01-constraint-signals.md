@@ -1,18 +1,18 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: constraint-signals -->
-## Constraint Signals
+## Analyzing Input Limits And Operation Budgets
 
 <!-- stage: context -->
-### Why A Correct Solution Still Failed
+### Why Correct Code Fails On Large Input
 
-A teammate posts a pair-finding method for review. The task is to find two readings in a list whose sum equals a target. The method passes all three sample inputs on the first run. She submits it to the grader and gets a time-limit failure on the fourth test. The logic is correct, which is the unsettling part. The method never could finish on the largest allowed input. The last two lines of the problem statement would have told her so before she typed anything.
+A developer posts a pair-finding method for code review. The task is to find two readings in a list whose sum equals a target. The method passes all three sample inputs on the first run. She submits it to the grader, and the fourth test fails because the method runs too slowly. The logic is correct. The method cannot finish on the largest allowed input. The last two lines of the problem statement show this before any code exists.
 
-Those lines are the constraints, and most people read them last, if at all. This lesson teaches you to read them first. A constraint promises how big the input can get. Each promise rules some approaches in and others out before any code exists.
+Those lines are the constraints, and most readers check them last, if at all. This lesson teaches you to read them first. A constraint states how large the input can get. Each constraint rules some approaches in and others out before you write code.
 
 <!-- stage: naive -->
-### Translate The Sample Directly Into Code
+### Brute-Force Pair Enumeration
 
-The habit behind the failure is to turn the sample straight into code and trust it. For the pair task, the direct translation checks every pair of positions.
+The common error is to turn the sample straight into code and trust it. For the pair task, the direct translation checks every pair of positions.
 
 ```java
 static boolean hasPairBrute(int[] nums, int target) {
@@ -28,28 +28,28 @@ static boolean hasPairBrute(int[] nums, int target) {
 On a sample with five readings it makes ten comparisons and returns instantly. The method is correct, and it is a reasonable first draft.
 
 <!-- stage: bottleneck -->
-### Count The Comparisons At Maximum Input
+### Counting Comparisons At Maximum Input Size
 
 Count the comparisons instead of timing the sample. For `n` readings there are `n * (n - 1) / 2` pairs, so the work grows as O(n^2). With `n = 5` that is 10 comparisons. With the stated maximum of `n = 100,000` it is 4,999,950,000, close to five billion, for a single call.
 
-A judge or an interview machine performs very roughly one hundred million simple steps in the time we normally get. The exact figure varies by language and hardware. Five billion is fifty times over that, so the failure is not bad luck or a slow laptop. The sample cannot reveal it because the sample is tiny. The method's cost depends on the largest legal input, not the one on the page. The method needs O(1) extra space, which is fine, so the time is the entire problem.
+A judge or an interview machine performs very roughly one hundred million simple steps in the time we normally get. The exact figure varies by language and hardware. Five billion is fifty times over that figure. The failure is not bad luck or a slow laptop. The sample cannot reveal it, because the sample is tiny. The cost of the method depends on the largest legal input, not the one on the page. The method needs O(1) extra space, which is fine, so time is the entire problem.
 
 <!-- stage: insight -->
-### Read The Limits, Then Do The Arithmetic
+### Estimating Step Counts From Input Constraints
 
-#### Compute Steps At The Maximum
+#### Computing Step Counts At The Maximum
 
-Before choosing an approach, write down the largest legal input. Then compute how many steps each candidate takes on it. Compare that number to what the time limit allows. This takes ten seconds and eliminates whole families of solutions at once.
+Before choosing an approach, write down the largest legal input. Then compute how many steps each candidate takes on it. Compare that number with what the time limit allows. This takes ten seconds and eliminates whole families of solutions at once.
 
-#### Define Budget And Growth Class
+#### Defining Time Limit And Complexity Class
 
-The number to compare against is the **operation budget**, the count of simple steps a solution may take on its worst legal input. A workable rule of thumb for interview-style limits is about 10^8 steps. The rule is deliberately coarse. It separates "obviously fine" from "obviously impossible" and does not predict a stopwatch. The count for a candidate depends on its **growth class**, meaning how the step count changes as the input size changes. A single pass grows linearly, sorting grows a little faster than linearly, and all pairs grows with the square.
+The **time limit** is the number of basic operations a solution may perform on its worst legal input. A rule of thumb for interview-style problems is about 10^8 basic operations. The rule is coarse. It separates clearly feasible from clearly infeasible and does not predict a stopwatch. The count for a candidate depends on its **time complexity class**. The class describes how the operation count grows with the input size. A single pass is O(n). Sorting is O(n log n). Comparing all pairs is O(n^2).
 
-<!-- names: operation budget, growth class, constraint signal -->
+<!-- names: time limit, time complexity class, input constraint -->
 
-#### Match Each Limit To A Signal
+#### Mapping Input Size To Complexity Class
 
-Each limit in a statement is a **constraint signal**, a hint about which growth classes are allowed. The table lists the usual pairings. They guide a first filter and are not laws.
+Each limit in a problem statement is an **input constraint**. It restricts which time complexity classes are feasible. The table lists the usual pairings. They give a first filter and are not laws.
 
 | Largest input size | Growth classes that usually fit |
 | --- | --- |
@@ -59,23 +59,40 @@ Each limit in a statement is a **constraint signal**, a hint about which growth 
 | about 100,000 | linear and n log n work |
 | about 1,000,000 | linear work, small constants |
 
-A second signal hides in the value range. If every value is tiny, a table indexed by value is affordable. If values are huge, that table is impossible. A third signal is how many operations the problem asks for. The size of the data and the number of questions about it are two different quantities. Both belong in the arithmetic.
+A second input constraint is the value range. If every value is small, a table indexed by value fits in memory. If values are huge, that table is impossible. A third input constraint is the number of operations the problem requests. The size of the data and the number of queries are different quantities. Both belong in the arithmetic.
 
 <!-- stage: variables -->
-### Write Down Three Numbers And A Budget
+### Parameters For The Step Count Estimate
 
-Write down the largest input size, the range of the values, and the number of operations the problem asks you to perform. Add the budget as a fourth line, about 10^8. For each approach you consider, compute its step count at the maximum and compare it with the budget. Use `long` for that arithmetic. Squaring 100,000 already overflows a 32-bit `int`, and an overflowed estimate can look comfortably small.
+Write down four parameters. Then compute the step count of each candidate approach.
+
+- **n** is the largest legal input size.
+- **Value range** is the minimum and maximum allowed element value.
+- **q** is the number of operations the problem requests.
+- **Time limit** is about 10^8 basic operations.
+- **Step count** is the operation count of one approach at the maximum, compared with the time limit.
+- **long** holds every estimate, because squaring 100,000 overflows a 32-bit `int`.
+
+An overflowed estimate can look comfortably small, so it hides the problem.
 
 <!-- stage: trace -->
-### Compare Two Methods As n Grows
+### Comparing Step Counts As n Grows
 
-#### Watch The Gap Open
+#### Observing The Gap In Step Counts
 
-Watch the pair method next to a sort-based method as the input grows. At `n = 10` the all-pairs count is 45 and a sort costs about 40 steps. The two look alike, so the sample teaches nothing. At `n = 1,000` all pairs reaches 499,500 against roughly 10,000 for sorting, and both are still instant. At `n = 100,000` the gap opens completely. All pairs needs 4,999,950,000 steps, far past the budget. Sorting needs about 1.7 million, a rounding error against it.
+Compare the pair method with a sort-based method as the input grows.
 
-#### Read The Lesson Of The Run
+- **n = 10** gives 45 all-pairs steps against about 40 for sorting, so the sample cannot separate the methods.
+- **n = 1,000** gives 499,500 all-pairs steps against roughly 10,000 for sorting, and both finish instantly.
+- **n = 100,000** gives 4,999,950,000 all-pairs steps, far past the time limit.
+- **Sorting** needs about 1.7 million steps at `n = 100,000`, a rounding error against that count.
 
-The two methods look the same until the input is large. The constraint line is the only place that says the input is large. The hardest step to see is the middle one, where both methods still pass. A solution can pass every test you think to write and still fail on the one the constraint announces.
+#### Interpreting The Trace Result
+
+The two methods look the same until the input is large. The middle row is the hardest to see, because both methods still pass.
+
+- **Constraint line** is the only part of the statement that says the input is large.
+- **Passing tests** do not prove feasibility, because a solution can pass every test you write and still fail on the maximum.
 
 ```trace
 {"cells":[10,1000,100000],"pointers":["n"],"steps":[{"at":{"n":0},"vars":{"scan":10,"sort":40,"allPairs":45,"allPairsVsBudget":"within"},"note":"n = 10: all pairs is 45 steps and sorting about 40, so the sample cannot tell the plans apart."},{"at":{"n":1},"vars":{"scan":1000,"sort":10000,"allPairs":499500,"allPairsVsBudget":"within"},"note":"n = 1,000: all pairs is 499,500 and sorting about 10,000. Both still finish instantly, which is the dangerous middle."},{"at":{"n":2},"vars":{"scan":100000,"sort":1700000,"allPairs":4999950000,"allPairsVsBudget":"over"},"note":"n = 100,000: all pairs is 4,999,950,000, fifty times the budget, while sorting is 1,700,000. The constraint line was the only warning."}]}
@@ -97,22 +114,42 @@ static long nLogN(long n) {
 static boolean plausible(long stepsAtMax) { return stepsAtMax <= BUDGET; }
 ```
 
-All arithmetic uses `long`. The expression `n * (n - 1) / 2` multiplies before it divides, so the product `n * (n - 1)` is the value that would overflow an `int`. The `nLogN` helper takes the bit length of `n - 1` as the ceiling of the base-2 logarithm, which is exact for powers of two. The helper is a thinking tool, so it stays coarse on purpose and ignores constants. Each call is O(1). The code is worth writing because it builds a good habit, computing before coding.
+The helpers compute step counts only.
+
+- **long** holds all arithmetic in the helpers.
+- **n * (n - 1) / 2** multiplies before it divides, so the product is the value that would overflow an `int`.
+- **nLogN** takes the bit length of `n - 1` as the ceiling of the base-2 logarithm, which is exact for powers of two.
+- **Precision** stays coarse on purpose, because the helpers ignore constants.
+- **Time** is O(1) per call, because each helper evaluates one expression.
+- **Space** is O(1) per call, because each helper stores a few `long` values.
+
+Write the helpers to compute the step count before you write the algorithm.
 
 <!-- stage: applicability -->
-### When Constraints Decide
+### Applying Input Constraints Before Coding
 
-#### Apply The Invariant
+#### Applying The Invariant
 
-Use this reading whenever a problem gives limits, which is nearly always. The invariant is that a proposed approach stays within its operation budget and memory budget at the maximum legal input, not at the sample size. Before you commit to an idea, write one line such as "n up to 100,000, all pairs is 5 billion, too slow". Then continue.
+Use this reading whenever a problem gives limits, which is nearly always. Before you commit to an approach, write one line such as "n up to 100,000, all pairs is 5 billion, too slow". Then continue.
 
-#### Avoid The False Friends
+- **Invariant** is that the chosen approach stays within the time limit and the memory limit at the maximum legal input.
+- **Sample size** never replaces the maximum legal input in this check.
 
-The first false friend is the problem's difficulty label or its familiar noun. The word "array" does not select a method, and "easy" does not mean a brute force passes. The constraints select the method. Another false friend is trusting the constant factor too much. When the count is within a factor of ten of the budget, the arithmetic is no longer decisive, so look at what each step costs.
+#### Identifying Cases That Violate The Precondition
 
-#### Watch Java Memory And Overflow
+The precondition of this reading is that the step count at the maximum input decides feasibility. The reading has false friends, cases that match the pattern on the surface but break the precondition that the step count decides feasibility. Two cases qualify.
 
-Java adds the overflow hazard already mentioned. Boxed collections also use several times more memory than primitive arrays, which matters when the size limit is near a million. The exercises below ask you to make these calls without writing the algorithm. This lesson chooses the family, and Chapter 01 onward supplies the algorithms.
+- **Difficulty label** misleads, because a label such as "easy" or a familiar noun such as "array" does not select a method.
+- **Constant factor** misleads near the limit, because a count within a factor of ten of the limit is not decisive.
+- **Step cost** decides the near-limit case, so compare what each step costs.
+
+#### Handling Java Memory And Overflow
+
+- **int overflow** wraps silently, as the lesson showed earlier.
+- **Boxed collections** use several times more memory than primitive arrays.
+- **Size near 1,000,000** makes that memory difference matter.
+
+The exercises below ask you to make these decisions without writing the algorithm. This lesson chooses the family of approaches. Chapter 01 onward supplies the algorithms.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -122,9 +159,9 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Prerequisites.** Reading Big-O notation for simple loops; this lesson.
 
-**Problem.** A problem statement guarantees that the input size `n` satisfies `1 <= n <= 100_000`. A step is one basic operation, such as one comparison or one addition. Consider three plans. Plan A scans the array once. Plan B sorts the array and then scans it once. Plan C compares every unordered pair of distinct elements. For each plan, compute the number of steps at the largest legal `n`. Then return "plausible" if that number is at most the step budget, and "implausible" if it is larger. Show the step count that supports each answer.
+**Problem.** A problem statement guarantees that the input size `n` satisfies `1 <= n <= 100_000`. A step is one basic operation, such as one comparison or one addition. Consider three plans. Plan A scans the array once. Plan B sorts the array and then scans it once. Plan C compares every unordered pair of distinct elements. For each plan, compute the number of steps at the largest legal `n`. Then return "plausible" if that number is at most the time limit, and "implausible" if it is larger. Show the step count that supports each answer.
 
-**Constraints.** The step budget is 10^8 (100,000,000) steps. Compute every count at `n = 100_000`, not at the size of a sample input. Use `long` for every product, because `n * n` exceeds the `int` maximum. Plan A costs `n` steps. Plan B costs about `n * log2(n)` steps for the sort plus `n` steps for the scan. Plan C costs `n * (n - 1) / 2` steps. Ties go to "plausible": a count equal to the budget is plausible. The exercise has no mutable input.
+**Constraints.** The time limit is 10^8 (100,000,000) steps. Compute every count at `n = 100_000`, not at the size of a sample input. Use `long` for every product, because `n * n` exceeds the `int` maximum. Plan A costs `n` steps. Plan B costs about `n * log2(n)` steps for the sort plus `n` steps for the scan. Plan C costs `n * (n - 1) / 2` steps. Ties go to "plausible": a count equal to the budget is plausible. The exercise has no mutable input.
 
 **Example 1.** Input `n = 100000` with a single scan, output plausible, because the step count is about 10^5.
 
@@ -132,7 +169,7 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Hint.** Do the estimate at the largest legal `n` and write the number out. Which two of the three plans land below 10^8, and which lands far above it?
 
-**Changed decision.** First rung of the ladder: replaces a feeling about speed with a computed step count at the maximum input.
+**Changed decision.** First exercise in the sequence: replaces a feeling about speed with a computed step count at the maximum input.
 
 #### [Vary] Small Domain (Author exercise)
 <!-- id: pc-small-domain -->
@@ -147,9 +184,9 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Example 2.** Input values limited to `0..1_000_000_000`, output a table of about 4 gigabytes, which is not an acceptable plan.
 
-**Hint.** The size of a value-indexed table is the size of the value range, not the number of elements. Which signal in the statement is doing the work here, the size limit or the value limit?
+**Hint.** The size of a value-indexed table is the size of the value range, not the number of elements. Which input constraint in the statement decides the answer here, the size limit or the value limit?
 
-**Changed decision.** The signal changes from the input size to the value range, which decides whether a value-indexed table is affordable.
+**Changed decision.** The deciding input constraint changes from the input size to the value range, which decides whether a value-indexed table is affordable.
 
 #### [Boundary] Hidden Overflow (Author exercise)
 <!-- id: pc-hidden-overflow -->
@@ -166,21 +203,21 @@ Java adds the overflow hazard already mentioned. Boxed collections also use seve
 
 **Hint.** Multiply the largest element by the largest count and compare the product with the `int` ceiling. Does the answer change if the values are mostly small but one adversarial test uses the maximum?
 
-**Changed decision.** The question moves from running time to numeric range, so the constraint signal now decides the accumulator type.
+**Changed decision.** The question moves from running time to numeric range, so the input constraint now decides the accumulator type.
 
 #### [Recognize] Query Pressure (Author exercise)
 <!-- id: pc-query-pressure -->
 
 **Prerequisites.** The budget check and the small-domain exercise.
 
-**Problem.** An array of `n = 100_000` integers does not change. A range-sum query gives two positions `l` and `r` and asks for the sum of the elements from position `l` through position `r`. Compare two workloads on the same array: workload one has a single query, and workload two has `q = 100_000` queries. For each workload, compute the total step count of answering every query with a plain loop over the range. Return whether that plan stays within the step budget. Explain that the number of queries, not the type of the data, decides whether the plan is acceptable. Do not implement a faster plan.
+**Problem.** An array of `n = 100_000` integers does not change. A range-sum query gives two positions `l` and `r` and asks for the sum of the elements from position `l` through position `r`. Compare two workloads on the same array: workload one has a single query, and workload two has `q = 100_000` queries. For each workload, compute the total step count of answering every query with a plain loop over the range. Return whether that plan stays within the time limit. Explain that the number of queries, not the type of the data, decides whether the plan is acceptable. Do not implement a faster plan.
 
-**Constraints.** `n = 100_000` and `1 <= q <= 100_000`. Each query range may cover the whole array, so one query costs up to `n` steps. The step budget is 10^8 steps. Compute the total as `n * q` in `long`, because `10^10` exceeds the `int` maximum. A total equal to the budget is within budget. The array is never modified between queries.
+**Constraints.** `n = 100_000` and `1 <= q <= 100_000`. Each query range may cover the whole array, so one query costs up to `n` steps. The time limit is 10^8 steps. Compute the total as `n * q` in `long`, because `10^10` exceeds the `int` maximum. A total equal to the time limit is within the limit. The array is never modified between queries.
 
 **Example 1.** Input one query, output that a direct loop of at most 100,000 steps is acceptable.
 
 **Example 2.** Input `q = 100000` queries, output that looping per query costs up to 10^10 steps in the worst case, so a smarter plan is required.
 
-**Hint.** Multiply the cost of one query by the number of queries. At what query count does the plain loop leave the budget?
+**Hint.** Multiply the cost of one query by the number of queries. At what query count does the plain loop exceed the time limit?
 
-**Changed decision.** The signal changes from the size of the data to the number of operations asked about it.
+**Changed decision.** The deciding input constraint changes from the size of the data to the number of operations asked about it.

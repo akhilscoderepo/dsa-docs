@@ -1,16 +1,16 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: hostile-dry-runs -->
-## Hostile Dry Runs
+## Designing Adversarial Test Inputs
 
 <!-- stage: context -->
-### Why Random Tests Miss This Bug
+### Why Random Tests Miss Boundary Cases
 
 A developer writes a method that finds the longest climb in a list of daily step counts. A climb is the longest stretch where each day beats the one before. She tests it with the examples from the ticket. Then she tests it with a thousand random lists of a hundred days each, and everything passes. A week after release, a user with a single logged day sees "longest climb: 0 days" on their dashboard.
 
-The random tests were not careless. They could not reach the failing case, because a random list of a hundred days almost never forms one unbroken climb and almost never has length one. A bug that hides behind a boundary appears only when you choose the boundary on purpose. This lesson shows how to design the smallest input that attacks one specific weakness. It also shows how to trace the variables by hand so the weakness becomes visible. The title uses the course's older word "hostile" for what the industry calls adversarial tests, and the lesson uses the industry term from here on.
+The random tests were not careless. They could not reach the failing case, because a random list of a hundred days almost never forms one unbroken climb and almost never has length one. A bug that hides behind a boundary appears only when you choose the boundary on purpose. This lesson shows how to design the smallest input that attacks one specific weakness. It also shows how to trace the variables by hand so the weakness becomes visible. Such a test is called an adversarial test case.
 
 <!-- stage: naive -->
-### A Method That Passes Every Sample
+### A Linear Scan That Passes Sample Tests
 
 The method below has a flaw that a reader does not see, because every line looks reasonable.
 
@@ -29,52 +29,68 @@ static int longestClimb(int[] steps) {
 }
 ```
 
-On `[1, 3, 2, 4, 5, 1]` it returns 3, which is correct. It passes the ticket's examples and, as the story shows, nearly every random list. Most people stop when the tests turn green.
+On `[1, 3, 2, 4, 5, 1]` it returns 3, which is correct. It passes the ticket's examples and nearly every random list. Most people stop when the tests turn green.
 
 <!-- stage: bottleneck -->
-### Why Random Volume Misses Edge Cases
+### Why Random Tests Cannot Reach Boundaries
 
-Count what random testing actually buys. A thousand lists of a hundred values cost about 100,000 element visits, which is O(n) work per list and trivial to run. Now draw values from a small range such as 0 to 9. A list of more than ten days can never be strictly increasing from start to end. The failing case is an unbroken climb that never triggers the `else` branch, so it is unreachable at that size. A million such lists would still test the same behaviors that a thousand did.
+Count the work that random testing performs. A thousand lists of a hundred values cost about 100,000 element visits, which is O(n) work per list and trivial to run. Now draw values from a small range such as 0 to 9. A list of more than ten days can never be strictly increasing from start to end. The failing case is an unbroken climb that never triggers the `else` branch, so it is unreachable at that size. A million such lists would still test the same behaviors that a thousand did.
 
 The failing inputs are tiny. A list of one day returns 0 instead of 1, because the loop never runs and `best` keeps its initial value. A list that climbs every day also returns 0. The method updates `best` only when a climb ends, and the last climb never ends inside the loop. Both failures sit at the edge of the loop, where the first and last iterations behave differently from the middle. A small deliberate input reaches them in seconds.
 
 <!-- stage: insight -->
-### Aim One Small Input At One Weakness
+### Choosing Adversarial Inputs By Failure Mode
 
-#### Think Like An Attacker
+#### Adversarial Input And Failure Mode
 
-Choose test inputs the way an attacker would, one weakness at a time. Each plausible implementation depends on an unstated happy-path assumption. The adversarial input is the smallest one that makes that assumption false.
+Choose each test input to violate one assumption of the implementation. Each plausible implementation depends on an unstated happy-path assumption. The adversarial input is the smallest one that makes that assumption false.
 
 A **dry run** is a hand execution of the code on a chosen input. You write down the value of every variable after every state change. An **adversarial input** is a small input chosen to break one specific assumption. A **failure mode** is the category of assumption under attack. The usual categories are initialization, equality, boundaries, overflow and mutation order.
 
 <!-- names: dry run, adversarial input, failure mode -->
 
-#### Pick One Attacker Per Failure Mode
+#### Smallest Input For Each Failure Mode
 
-Each failure mode has a standard small attacker. For initialization, use the smallest legal input, often a single element. For equality, use all-equal values, so strict and non-strict comparisons give different answers. For boundaries, use inputs that fill or empty the structure exactly. For overflow, use extreme values in the type that accumulates. For mutation order, use an input where a write destroys a value that the code has not read yet.
+Each failure mode has a standard small adversarial input. For initialization, use the smallest legal input, often a single element. For equality, use all-equal values, so strict and non-strict comparisons give different answers. For boundaries, use inputs that fill or empty the structure exactly. For overflow, use extreme values in the type that accumulates. For mutation order, use an input where a write destroys a value that the code has not read yet.
 
-#### Check What Each Variable Means
+#### Variable Meaning As The Dry Run Invariant
 
 The invariant for a dry run is that after each state change you can say what every variable means. In the climb method, `current` is the length of the climb that ends at the index just examined. The variable `best` is the longest climb that has already ended. Written that way, the bug is obvious. A climb that is still open when the loop ends has not been recorded, so `best` is stale.
 
 <!-- stage: variables -->
-### Track Variables In A Table
+### Variable Table For A Dry Run
 
-For a dry run, keep a small table with one row per state change and one column per variable. Next to each variable, write its meaning in a few words. A sample output reproduces a result but does not show whether a meaning broke, so you check the meanings, not the outputs. Pick the input first. Say which failure mode it attacks. Predict the result before you execute anything. A prediction that disagrees with the code is the whole point of the exercise.
+A dry run uses a variable table with one row per state change and one column per variable. A sample output reproduces a result but does not show whether a variable lost its meaning. Check the meanings, not only the outputs. Follow this procedure.
+
+- **Input** comes first, and you pick it before you execute anything.
+- **Failure mode** is named next, and the input targets it.
+- **Variable meaning** goes beside each column in a few words.
+- **Prediction** of the result is written before the code runs.
+- **Disagreement** between prediction and code is the purpose of the exercise.
 
 <!-- stage: trace -->
-### Dry Run On An Unbroken Climb
+### Dry Run On A Strictly Increasing Array
 
-Trace the method on `[1, 2, 3]`. The variables start at `best = 0` and `current = 1`. At index 1 the value 2 beats 1, so `current` becomes 2 and `best` stays 0. At index 2 the value 3 beats 2, so `current` becomes 3 and `best` is still 0.
+Trace the method on `[1, 2, 3]`.
 
-The loop ends. The method returns `best`, which is 0, although the true answer is 3. The table shows the problem in the final row. The variable `current` holds 3, a climb that is still open, and no line of code moves it into `best`. For the one-element list the same table shows the bug sooner, since the loop body never runs and the result is the initial 0. The step that matters is the one that does not happen, the missing update after the loop. A sample that ends with a drop hides it, because the `else` branch performs the update at the right moment.
+- **best** starts at 0, and **current** starts at 1.
+- **Index 1** holds 2, which beats 1, so `current` becomes 2 and `best` stays 0.
+- **Index 2** holds 3, which beats 2, so `current` becomes 3 and `best` stays 0.
+- **Loop exit** returns `best`, which is 0, although the true answer is 3.
+- **current** holds 3 in the final row, an open climb that no line moves into `best`.
+
+The remaining observations explain why the sample inputs miss the defect.
+
+- **One-element list** runs no loop body, so the result is the initial 0.
+- **Missing update** after the loop is the step that matters.
+- **Sample ending with a drop** hides the defect, because the `else` branch updates `best` at the right moment.
 
 ```trace
 {"cells":[1,2,3],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"best":0,"current":1},"note":"Start: best = 0, current = 1. The loop begins at index 1."},{"at":{"i":1},"vars":{"best":0,"current":2},"note":"Index 1: 2 beats 1, so current becomes 2. best is untouched because no climb has ended."},{"at":{"i":2},"vars":{"best":0,"current":3},"note":"Index 2: 3 beats 2, so current becomes 3. best is untouched because no climb has ended."},{"at":{"i":3},"vars":{"best":0,"current":3},"note":"The loop ends and returns best = 0. current holds an open climb of 3 that nothing recorded. The true answer is 3."}]}
 ```
 
 <!-- stage: code -->
-### Fix The Method And Rerun Attackers
+### Corrected Method And Adversarial Test Results
 
 ```java
 static int longestClimb(int[] steps) {
@@ -88,16 +104,33 @@ static int longestClimb(int[] steps) {
 }
 ```
 
-The repair has two parts. The method updates `best` after every step, so an unfinished climb is always counted. It also starts `best` at 1, because any non-empty list contains a climb of length one. The specification of this method allows the empty list, and the method returns 0 for it explicitly. The method runs in O(n) time and O(1) space. The attackers `[7]`, `[1, 2, 3]`, `[4, 4, 4]` and `[3, 2, 1]` now pass. Each one hits a different failure mode, from initialization to equality.
+The repair has two parts.
+
+- **Update rule** sets `best` after every step, so an unfinished climb is always counted.
+- **Initial value** of `best` is 1, because any non-empty list contains a climb of length one.
+- **Empty list** returns 0 explicitly, because the specification allows it.
+- **Time** is O(n), because the loop makes one pass.
+- **Space** is O(1), because two counters hold all the state.
+
+The adversarial inputs `[7]`, `[1, 2, 3]`, `[4, 4, 4]` and `[3, 2, 1]` now pass. Each one hits a different failure mode, from initialization to equality.
 
 <!-- stage: applicability -->
-### Choose The Smallest Adversarial Input
+### Adversarial Inputs Versus Random Testing
 
-Before you trust a solution, write down which failure modes it could have. Pick one tiny input for each. The invariant is that a dry run records the meaning of every variable after every state change. Each adversarial input then targets one weakness. Make the prediction first, then run the code.
+Before you trust a solution, apply this checklist.
 
-The false friend is the large random test. Random data catches surprises you did not think of, and the next chapters use it as a cross-check. It is a poor substitute for a deliberately chosen tiny case, because edge cases occupy a vanishing share of the random space.
+- **Failure modes** that the solution could have are written down.
+- **Adversarial input** is one tiny input chosen for each failure mode.
+- **Prediction** is made first, and then the code runs.
+- **Invariant** is that a dry run records the meaning of every variable after every state change.
 
-Java supplies several ready-made attackers. `Integer.MAX_VALUE` and `Integer.MIN_VALUE` break accumulators and negation, since `Math.abs(Integer.MIN_VALUE)` is still negative. A freshly allocated `int[]` holds zeros, which can look like real data. Comparing boxed `Integer` objects with `==` works for small values and fails for larger ones.
+The large random test is a false friend, which means a test that appears to verify the code while it never reaches the failing precondition. The random test looks like thorough verification, but it rarely reaches the boundary inputs. Random data still catches surprises you did not predict, and the next chapters use it as a cross-check. It is a poor substitute for a deliberately chosen tiny case, because edge cases occupy a vanishing share of the random input space.
+
+Java supplies several ready-made adversarial inputs.
+
+- **`Integer.MAX_VALUE` and `Integer.MIN_VALUE`** break accumulators and negation, since `Math.abs(Integer.MIN_VALUE)` is still negative.
+- **A freshly allocated `int[]`** holds zeros, which can look like real data.
+- **Boxed `Integer` comparison with `==`** works for small values and fails for larger ones.
 
 <!-- stage: exercises -->
 ### Exercises

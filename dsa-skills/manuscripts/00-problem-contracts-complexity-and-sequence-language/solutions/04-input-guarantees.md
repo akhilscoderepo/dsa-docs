@@ -1,12 +1,20 @@
 <!-- solutions-for: 04-input-guarantees -->
-### Input Guarantees
+### Solutions For Input Preconditions
 
 #### Solution: [Build] Non-Empty Maximum (Author exercise)
 <!-- id: pc-non-empty-maximum -->
 
-**Approach.** First, set `best` to `nums[0]`. The specification promises at least one element, so `nums[0]` is a real member of the input and a safe starting point. Second, loop over the remaining elements from index 1. Third, at each step keep the larger of `best` and the current element. The invariant is that `best` equals the maximum of the elements read so far. When the loop ends, `best` is the maximum of the whole array. Starting from zero assumes zero is below every value. That assumption fails on `[-8,-3]`, where the zero-start method returns 0 instead of -3. An empty-array guard is dead code under this specification, and it suggests a promise that the problem never made.
+**Approach.**
+- **best** starts at `nums[0]`, a real member of the input, because the specification guarantees at least one element.
+- **Loop** visits the remaining elements from index 1.
+- **best** keeps the larger of itself and the current element at each step.
+- **Invariant** is that `best` equals the maximum of the elements read so far, so it is the maximum of the whole array when the loop ends.
+- **Zero start** assumes zero is below every value, and fails on `[-8,-3]` with result 0 instead of -3.
+- **Empty-array guard** is dead code under this specification, and it implies a guarantee the problem never made.
 
-**Complexity.** Time: O(n), because the loop reads each of the `n` elements once. Space: O(1), because the method stores only `best` and the loop index.
+**Complexity.**
+- **Time** is O(n), because the loop reads each of the `n` elements once.
+- **Space** is O(1), because the method stores only `best` and the loop index.
 
 ```java run
 public final class NonEmptyMaximum {
@@ -55,9 +63,17 @@ public final class NonEmptyMaximum {
 #### Solution: [Vary] Possibly Empty (Author exercise)
 <!-- id: pc-possibly-empty -->
 
-**Approach.** First, choose the optional-result design. `OptionalInt` makes absence part of the return type, so a caller must decide what to do when no answer exists. Second, reject the sentinel. A value such as `Integer.MIN_VALUE` collides with a legal answer when the range may contain that value. Every integer in `-10^9..10^9` can be a legal maximum, so no safe sentinel exists unless the range excludes one. Third, write the method. Return `OptionalInt.empty()` when `nums.length == 0`. Otherwise start from `nums[0]`, keep the larger value in a loop, and return `OptionalInt.of(best)`. The documentation says "empty when the array is empty", and the method adds no other convention.
+**Approach.**
+- **OptionalInt** makes absence part of the return type, so a caller must handle the case where no answer exists.
+- **Sentinel** is rejected, because a value such as `Integer.MIN_VALUE` collides with a legal answer.
+- **Range** `-10^9..10^9` makes every integer a legal maximum, so no safe sentinel exists unless the range excludes one.
+- **Empty input** returns `OptionalInt.empty()` when `nums.length == 0`.
+- **Non-empty input** starts `best` at `nums[0]`, keeps the larger value in a loop, and returns `OptionalInt.of(best)`.
+- **Documentation** says "empty when the array is empty" and adds no other convention.
 
-**Complexity.** Time: O(n), because the loop reads each of the `n` elements once. Space: O(1), because the method stores only `best`, and the returned optional is a constant-size object.
+**Complexity.**
+- **Time** is O(n), because the loop reads each of the `n` elements once.
+- **Space** is O(1), because the method stores only `best`, and the returned optional is a constant-size object.
 
 ```java run
 import java.util.OptionalInt;
@@ -94,9 +110,20 @@ public final class PossiblyEmpty {
 #### Solution: [Boundary] Rectangular Or Ragged (Author exercise)
 <!-- id: pc-rectangular-or-ragged -->
 
-**Approach.** First, note that `grid[0].length` measures only the first row. When rows differ, that bound overruns a shorter row and throws `ArrayIndexOutOfBoundsException`. In a longer row, it silently skips the extra cells. Second, use each row's own length as the inner bound. Write `c < grid[r].length`, so the bound is evaluated for the current row `r`. Third, count one cell per inner iteration. The invariant is that `count` equals the number of cells in the rows and columns already visited. This form is also correct for rectangular grids, so it costs nothing when the shape is unclear. It handles zero rows and zero-length rows, because the matching loop body simply does not run.
+**Approach.**
+- **grid[0].length** measures only the first row.
+- **Shorter row** makes that bound overrun and throw `ArrayIndexOutOfBoundsException`.
+- **Longer row** makes that bound skip the extra cells silently.
+- **Inner bound** is `c < grid[r].length`, which evaluates the length of the current row `r`.
+- **count** increases by one per inner iteration.
+- **Invariant** is that `count` equals the number of cells in the rows and columns already visited.
+- **Rectangular grids** also work with this form, so it is correct whatever the shape.
+- **Zero rows and zero-length rows** make the matching loop body not run.
 
-**Complexity.** Time: O(R + C), where R is the number of rows and C is the total number of cells, because the outer loop runs R times and the inner iterations add up to C; this is O(total cells) when rows are non-empty. Space: O(1), because the method stores only `count` and two indexes.
+**Complexity.**
+- **Time** is O(R + C), where R is the number of rows and C is the total number of cells, because the outer loop runs R times and the inner iterations add up to C.
+- **Time** reduces to O(total cells) when rows are non-empty.
+- **Space** is O(1), because the method stores only `count` and two indexes.
 
 ```java run
 public final class RectangularOrRagged {
@@ -150,9 +177,17 @@ public final class RectangularOrRagged {
 #### Solution: [Recognize] Sorted Promise (Author exercise)
 <!-- id: pc-sorted-promise -->
 
-**Approach.** First, use the guarantee. Sorted order puts equal values next to each other, so a new value starts exactly when the current element differs from the previous one. Second, handle the empty array. It has no values, so return 0. Third, count 1 for the first element. Fourth, scan from index 1 and add one at every position where `nums[i] != nums[i - 1]`. The invariant is that `distinct` equals the number of runs in `nums[0..i]`, which equals the number of distinct values because the array is sorted. The code relies on the sorted guarantee and never checks it. On an unsorted array the same loop counts runs, not distinct values, so `[1,2,1]` gives 3 instead of 2.
+**Approach.**
+- **Sorted order** places equal values next to each other, so a new value starts exactly when `nums[i]` differs from `nums[i - 1]`.
+- **Empty array** has no values, so the method returns 0.
+- **distinct** starts at 1, because the first element begins the first run.
+- **Scan** runs from index 1 and adds one at every position where `nums[i] != nums[i - 1]`.
+- **Invariant** is that `distinct` equals the number of runs in `nums[0..i]`, which equals the number of distinct values because the array is sorted.
+- **Unsorted array** breaks the guarantee, so the same loop counts runs and `[1,2,1]` gives 3 instead of 2.
 
-**Complexity.** Time: O(n), because the loop makes one comparison for each of the `n - 1` later elements. Space: O(1), because the method stores only `distinct` and the loop index, and no set is needed.
+**Complexity.**
+- **Time** is O(n), because the loop makes one comparison for each of the `n - 1` later elements.
+- **Space** is O(1), because the method stores only `distinct` and the loop index, and no set is needed.
 
 ```java run
 public final class SortedPromise {

@@ -1,12 +1,12 @@
 <!-- section: review -->
 ## Review
 
-Use this section after you finish the lessons, and again a few days later. The questions describe situations without naming the habit, so decide before you open the options. They test recognition and prediction. A guided ladder of exercises does not test those.
+Use this section after you finish the lessons, and again a few days later. The questions describe situations without naming the lesson topic, so decide before you open the options. They test recognition and prediction. The guided exercises do not test those.
 
 ### Recognition Questions
 
 ```quiz
-{"id":"pc-rev-budget","q":"A problem allows n up to 200,000 and asks for the count of pairs with a given difference. A teammate proposes checking every pair. What does the constraint signal say?","options":["Fine, because the sample has only six values.","Too slow: about 2 * 10^10 pair checks is far past a budget near 10^8.","Fine, because pairs are checked with simple subtraction.","Too slow only if the values are negative."],"answer":1,"explain":"The count of pairs is n * (n - 1) / 2, which at n = 200,000 is about 2 * 10^10. The sample size is irrelevant, and the cost of each comparison does not change the growth class."}
+{"id":"pc-rev-budget","q":"A problem allows n up to 200,000 and asks for the count of pairs with a given difference. A colleague proposes checking every pair. What does the input constraint imply?","options":["Fine, because the sample has only six values.","Too slow: about 2 * 10^10 pair checks is far past a limit of about 10^8 basic operations.","Fine, because pairs are checked with simple subtraction.","Too slow only if the values are negative."],"answer":1,"explain":"The count of pairs is n * (n - 1) / 2, which at n = 200,000 is about 2 * 10^10. The sample size is irrelevant, and the cost of each comparison does not change the time complexity class."}
 ```
 
 ```quiz
@@ -18,7 +18,7 @@ Use this section after you finish the lessons, and again a few days later. The q
 ```
 
 ```quiz
-{"id":"pc-rev-guarantee","q":"A statement promises that the array is non-empty. Which first line of a maximum-finding method matches the promise?","options":["if (nums.length == 0) return 0; int best = 0;","int best = nums[0];","int best = Integer.MAX_VALUE;","int best = -1;"],"answer":1,"explain":"The first element is a real member of the input, so it is a safe start. Zero and -1 assume the data sits above those values. The empty guard defines a behavior the statement never asks for."}
+{"id":"pc-rev-guarantee","q":"A statement promises that the array is non-empty. Which first line of a maximum-finding method matches the promise?","options":["if (nums.length == 0) return 0; int best = 0;","int best = nums[0];","int best = Integer.MAX_VALUE;","int best = -1;"],"answer":1,"explain":"The first element is a real member of the input, so it is a valid initial value. Zero and -1 assume every element exceeds those values. The empty guard defines a behavior the statement never asks for."}
 ```
 
 ```quiz
@@ -30,13 +30,13 @@ Use this section after you finish the lessons, and again a few days later. The q
 ```
 
 ```quiz
-{"id":"pc-rev-dryrun","q":"Your method returns the longest run of equal values. Which single input best attacks its initialization?","options":["A random array of 100,000 values.","A single-element array.","An array sorted in descending order.","An array with a negative first value."],"answer":1,"explain":"With one element the loop body never runs, so the result comes entirely from the initial values of the variables. Random data rarely reaches that case."}
+{"id":"pc-rev-dryrun","q":"Your method returns the longest run of equal values. Which single input best tests its initialization?","options":["A random array of 100,000 values.","A single-element array.","An array sorted in descending order.","An array with a negative first value."],"answer":1,"explain":"With one element the loop body never runs, so the result comes entirely from the initial values of the variables. Random data rarely reaches that case."}
 ```
 
 ```quiz
 {"id":"pc-rev-java","q":"Which line inside a loop over n items can silently make the loop quadratic?","options":["total += list.get(i);","list.remove(0);","builder.append(ch);","count++;"],"answer":1,"explain":"Removing at index 0 of an ArrayList shifts every later element, so each call costs O(n). The other lines are constant or amortized constant per call."}
 ```
 
-### Rebuild Prompts
+### Recall Exercises
 
-Close this page and answer from memory, then check against the lessons. State the contract sheet for a problem of your choice in five lines. Write the loop that counts the steps of a nested loop whose inner index starts one past the outer index, and give its closed form. Explain in two sentences why a doubling array has amortized constant append cost, using either credit or prepaid room. Name three Java calls whose cost or meaning surprises people in a loop. State the cheaper alternative for each.
+Close this page and answer from memory, then check against the lessons. State the preconditions, postconditions and mutation rules for a problem of your choice in five lines. Write the loop that counts the steps of a nested loop whose inner index starts one past the outer index, and give its closed form. Explain in two sentences why a doubling array has amortized constant append cost, using either the aggregate method or the accounting method. Name three Java calls whose time complexity or meaning surprises people in a loop. State the lower-cost alternative for each.

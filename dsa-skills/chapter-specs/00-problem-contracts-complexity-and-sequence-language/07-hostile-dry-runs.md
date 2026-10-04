@@ -1,4 +1,4 @@
-# Lesson spec: Hostile Dry Runs
+# Lesson spec: Designing Adversarial Test Inputs
 
 **Recognition cue.** A plausible implementation depends on an unstated happy-path assumption. **State.** Select the smallest input that attacks initialization, equality, boundaries, overflow, or mutation order. **Invariant.** A dry run must track variable meanings after every state change, not merely reproduce the sample output. **False friend.** Large random tests are poor substitutes for a tiny case designed around one failure mode.
 

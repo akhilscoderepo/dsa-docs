@@ -51,7 +51,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 This chapter teaches the language used to reason about every later problem. Its exercises are deliberately small: the learner should practice reading a contract, predicting a cost, and constructing a hostile test before a named algorithm competes for attention.
 
-### Constraint Signals
+### Analyzing Input Limits And Operation Budgets
 
 **Recognition cue.** The input limits rule out entire classes of solutions before code is written. **State.** Record the largest possible input size, value range, and required operation count. **Invariant.** A proposed approach must remain within its time and memory budget at the maximum legal input. **False friend.** Difficulty labels and familiar nouns such as “array” do not select an algorithm; the contract does.
 
@@ -60,7 +60,7 @@ This chapter teaches the language used to reason about every later problem. Its 
 - **Boundary - Author exercise: Hidden Overflow.** Given `n = 100_000` and `|nums[i]| <= 1_000_000_000`, decide whether the total sum fits in Java `int`. The hostile case is one hundred thousand maximum positive values.
 - **Recognize - Author exercise: Query Pressure.** Compare one range-sum query with one hundred thousand range-sum queries over unchanged data. State why the number of operations, rather than the word “array,” changes the acceptable design. The later Prefix Sum chapter owns the implementation.
 
-### Mutation Contracts
+### Specifying Preconditions, Postconditions And Mutation
 
 **Recognition cue.** The prompt states whether the input may change and whether extra storage counts against the target. **State.** Separate the physical container from the logical result. **Invariant.** Every write preserves data still needed by a later read. **False friend.** “In place” does not mean “the Java array becomes shorter,” and output storage required by the return value is not always counted as auxiliary space.
 
@@ -69,7 +69,7 @@ This chapter teaches the language used to reason about every later problem. Its 
 - **Boundary - Author exercise: Aliased Input.** Two variables refer to the same array. Trace why mutating through one reference is observable through the other. The exercise changes no algorithm; it changes the caller-visible contract.
 - **Recognize - Author exercise: Output Space.** A method must return an array of length `n`. Distinguish the `O(n)` returned output from additional working memory, then state both conventions explicitly instead of hiding one.
 
-### Sequence Language
+### Defining Subarrays, Subsequences And Subsets
 
 **Recognition cue.** The prompt uses terms such as subarray, substring, subsequence, subset, prefix, or suffix. **State.** Write down which index relationships must be preserved. **Invariant.** A subarray/substring occupies consecutive positions; a subsequence preserves relative order but may skip positions; a subset need not preserve either adjacency or order. **False friend.** These words are not interchangeable even when a sample answer happens to satisfy several definitions.
 
@@ -78,7 +78,7 @@ This chapter teaches the language used to reason about every later problem. Its 
 - **Boundary - Author exercise: Empty Choice.** State whether an empty subarray or subsequence is legal only after reading the problem’s non-empty/empty contract; do not assume one universal convention.
 - **Recognize - Author exercise: Contiguous Maximum.** Explain why “maximum sum subarray” cannot freely skip a negative middle value, while a maximum-sum subsequence may. Kadane’s algorithm remains deferred to Chapter 01.
 
-### Input Guarantees
+### Input Preconditions And Defensive Assumptions
 
 **Recognition cue.** Correct initialization and guards depend on facts promised by the caller: non-empty input, sorted order, legal indices, rectangular shape, or bounded values. **State.** List guarantees separately from assumptions introduced by the solution. **Invariant.** Code may rely on a documented guarantee but must not invent one. **False friend.** Defensive branches added from habit can obscure the actual algorithm and may define behavior the problem never requested.
 
@@ -87,7 +87,7 @@ This chapter teaches the language used to reason about every later problem. Its 
 - **Boundary - Author exercise: Rectangular Or Ragged.** For `int[][] grid`, distinguish a rectangular guarantee from a ragged array. Explain why `grid[0].length` is unsafe as the bound for every row when ragged input is legal.
 - **Recognize - Author exercise: Sorted Promise.** Show which conclusion becomes valid when an array is guaranteed sorted: equal values form adjacent runs. Do not yet introduce binary search or two pointers.
 
-### Complexity Tradeoffs
+### Comparing Time And Space Complexity Trade-Offs
 
 **Recognition cue.** Two correct solutions consume different combinations of time, memory, preprocessing, or mutation. **State.** Name `n`, any secondary dimension, and the exact operation being counted. **Invariant.** The stated bound must describe the dominant work on the worst legal input. **False friend.** Two loops written next to each other are additive; two loops nested over the same growing input are usually multiplicative.
 
@@ -96,7 +96,7 @@ This chapter teaches the language used to reason about every later problem. Its 
 - **Boundary - Author exercise: Two Dimensions.** A grid has `rows` and `cols`. State traversal time as `O(rows * cols)` rather than silently calling both dimensions `n`.
 - **Recognize - Author exercise: Sort Then Scan.** Compare `O(n^2)` all-pairs work with `O(n log n)` sorting followed by `O(n)` scanning. State the tradeoff: changed order, possible mutation/copying, and lower asymptotic time.
 
-### Amortized Cost
+### Amortized Analysis Of Operation Sequences
 
 **Recognition cue.** An operation is usually cheap but occasionally performs a large repair or resize whose cost is spread across many earlier/later operations. **State.** Track stored “credit” or a potential such as unused capacity. **Invariant.** Across a sequence of operations, the total charged cost pays for every actual operation. **False friend.** Amortized `O(1)` is not worst-case `O(1)` for each individual call.
 
@@ -105,7 +105,7 @@ This chapter teaches the language used to reason about every later problem. Its 
 - **Boundary - Author exercise: One Expensive Append.** Identify the append that triggers an `O(n)` copy and reconcile it with an `O(1)` amortized bound over the whole sequence.
 - **Recognize - Author exercise: Potential Intuition.** Treat unused slots after doubling as prepaid capacity. Explain, without formal algebra, how this stored potential funds future cheap appends and the next resize.
 
-### Hostile Dry Runs
+### Designing Adversarial Test Inputs
 
 **Recognition cue.** A plausible implementation depends on an unstated happy-path assumption. **State.** Select the smallest input that attacks initialization, equality, boundaries, overflow, or mutation order. **Invariant.** A dry run must track variable meanings after every state change, not merely reproduce the sample output. **False friend.** Large random tests are poor substitutes for a tiny case designed around one failure mode.
 
@@ -114,7 +114,7 @@ This chapter teaches the language used to reason about every later problem. Its 
 - **Boundary - Author exercise: Numeric Extremes.** Use `[Integer.MAX_VALUE, Integer.MAX_VALUE]` against code that accumulates into `int`; predict the overflow before running it.
 - **Recognize - Author exercise: Mutation Order.** For right-shifting `[1,2,3]` to insert at index 0, trace a left-to-right copy and show exactly where data is overwritten. Then justify right-to-left copying.
 
-### Java Cost Habits
+### Java Library Call Time And Space Costs
 
 **Recognition cue.** A Java library call appears inside a loop or silently changes representation. **State.** Include the API operation’s actual cost and semantics in the algorithm analysis. **Invariant.** Convenience syntax must not invalidate the target complexity or output contract. **False friend.** Familiar-looking APIs are not automatically constant time, primitive-friendly, or value-based.
 

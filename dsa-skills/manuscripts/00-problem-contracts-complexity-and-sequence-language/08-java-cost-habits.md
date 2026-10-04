@@ -1,18 +1,18 @@
 <!-- lesson-kind: standard -->
 <!-- lesson-id: java-cost-habits -->
-## Java Cost Habits
+## Java Library Call Time And Space Costs
 
 <!-- stage: context -->
-### Why The Job Fails At Scale
+### Why Library Calls Dominate Running Time
 
-An engineer builds an event processor. It takes events off the front of a list and handles them one at a time. For each event it appends a summary line to a growing report string. In testing, with a few hundred events, it finishes before she can switch windows. On the first real night, with a hundred thousand events, it is still running when the morning shift arrives.
+An engineer builds an event processor. It takes events off the front of a list and handles them one at a time. For each event it appends a summary line to a growing report string. In testing, with a few hundred events, it finishes in milliseconds. On the first real night, with a hundred thousand events, it is still running hours later.
 
-She re-reads the code and finds no nested loops, so the usual quadratic suspects are absent. The slowness comes from two ordinary-looking library calls. Each call does a large piece of work behind the scenes every time it runs. A correct algorithm is only half of the job in Java. The other half is knowing what the convenient calls actually do.
+She re-reads the code and finds no nested loops, so no nested loop explains quadratic time. The slowness comes from two ordinary-looking library calls. Each call performs O(n) work internally every time it runs. A correct algorithm needs correct cost accounting for every library call it uses. In Java, that means knowing what each convenient call does.
 
 <!-- stage: naive -->
-### A Processor That Reads Well
+### Event Processor With List And String Calls
 
-The processor looks like this when you write it the way it first reads.
+The processor below is the direct first implementation.
 
 ```java
 static String processAll(List<Integer> events) {
@@ -28,57 +28,73 @@ static String processAll(List<Integer> events) {
 It is short and obviously correct. Each statement states its intent plainly. The call `remove(0)` takes the first event, and `+` builds text. A reviewer has no reason to object. The loop runs once per event, so it looks like O(n).
 
 <!-- stage: bottleneck -->
-### Two Calls That Each Cost O(n)
+### Two Library Calls With Linear Cost
 
-#### Front Removal Shifts Elements
+#### Front Removal Shifts Array Elements
 
 Draining an `ArrayList` from the front is the first problem. Removing the element at index 0 shifts every later element one position to the left, as the class documents. So the first removal moves `n - 1` elements, and the next moves `n - 2`. Summed over all `n` removals, the shifts come to `n * (n - 1) / 2`, so the drain costs O(n^2). For 100,000 events that is about five billion element moves.
 
-#### Concatenation Copies Characters
+#### Concatenation Copies Every Character
 
-Building a string with `+` in a loop is the second problem. Strings are immutable, so each concatenation creates a brand-new string and copies every character of the old one. After `k` steps the string has about `k` times a constant number of characters. The total number of characters copied therefore also grows as O(n^2), and it reaches billions for a long report. Neither cost shows up as a loop in the source. The loop count said O(n), and each library call multiplied it by another factor of `n`.
+Building a string with `+` in a loop is the second problem. Strings are immutable, so each concatenation creates a new string object and copies every character of the old one. After `k` steps the string has about `k` times a constant number of characters. The total number of characters copied therefore also grows as O(n^2), and it reaches billions for a long report. Neither cost shows up as a loop in the source. The loop count said O(n), and each library call multiplied it by another factor of `n`.
 
 <!-- stage: insight -->
-### Every Call Has A Cost
+### Including Library Call Costs In Analysis
 
-#### Add Every Call To The Analysis
+#### Library Call Cost In Complexity Analysis
 
 Treat every library call in a loop as an operation whose cost you must add to the analysis. The code you write is only part of the work. The call you do not see may be the dominant part.
 
-A **hidden cost** is work that a library operation performs without appearing as a loop in your code. The repair is to replace each costly call with a structure that makes the same step cheap. For front removal, keep a read index and leave the list alone, so taking the next event is O(1). For text building, use `StringBuilder`. Its `append` writes into a buffer that grows geometrically, so the cost per character stays amortized constant, by the same argument as the doubling array in the previous lesson.
+A **library call cost** is the time and memory that a library operation uses internally, without appearing as a loop in your code. The repair is to replace each costly call with a structure that makes the same step cheap. For front removal, keep a read index and leave the list alone, so taking the next event is O(1). For text building, use `StringBuilder`. Its `append` writes into a buffer that grows geometrically, so the cost per character stays amortized constant, by the same argument as the doubling array in the previous lesson.
 
-<!-- names: hidden cost, reference equality, value equality -->
+<!-- names: library call cost, reference equality, value equality -->
 
-#### Separate References From Values
+#### Reference Equality Versus Value Equality
 
 Two more Java facts matter for correctness, not speed. **Reference equality**, written `==` on objects, asks whether two names point to the very same object. **Value equality**, written `.equals(...)`, asks whether two objects hold the same contents. Two `String` objects can have identical characters and still fail `==`. A third trap lives in the type system. `Arrays.asList` takes a varargs list of objects. When you pass it an `int[]`, it produces a list with one element, the array itself, instead of a list of the integers inside.
 
-#### State The Invariant
+#### Invariant For Library Call Usage
 
 The invariant is that you know the cost and meaning of every library call you rely on, and the claimed bound includes them. Convenience syntax never changes the specification you must satisfy.
 
 <!-- stage: variables -->
-### Ask Three Questions About Each Call
+### Library Call Properties To Record
 
-For each library call inside a loop, write three things beside it. First, write its cost per call as a function of the sizes involved, and say whether that cost is amortized. Second, say whether it mutates its input or returns something new. Third, say whether it compares by reference or by value, and whether it works on primitives or on boxed objects. If you cannot describe a call on those three lines, look it up before you rely on it.
+Write three properties beside each library call inside a loop.
+
+- **Cost per call** is a function of the sizes involved, and you state whether it is amortized.
+- **Mutation** states whether the call changes its input or returns a new object.
+- **Equality and types** state whether the call compares by reference or by value, and whether it works on primitives or boxed objects.
+
+If you cannot describe a call by these three properties, read its documentation before you rely on it.
 
 <!-- stage: trace -->
-### Draining Four Events From The Front
+### Tracing A Front-Removal Drain
 
-#### Drain With remove(0)
+#### Element Moves Per remove(0) Call
 
-Take a list holding 10, 20, 30 and 40, and drain it with `remove(0)`. The first call removes 10 and shifts the other three values one place left, so three elements move. The second call removes 20, which is now at the front, and shifts the remaining two. The third call removes 30 and shifts the last one. The fourth call removes 40 and has nothing left to shift.
+Take a list holding 10, 20, 30 and 40, and drain it with `remove(0)`.
 
-#### Compare With A Read Index
+- **First call** removes 10 and shifts the other 3 values one place left.
+- **Second call** removes 20, now at the front, and shifts the remaining 2.
+- **Third call** removes 30 and shifts the last 1.
+- **Fourth call** removes 40 and shifts 0.
 
-The moves are 3, then 2, then 1, then 0, which is 6 in all. The formula `n * (n - 1) / 2` gives 4 * 3 / 2, which is also 6. With a read index, the code never touches the list. The index goes from 0 to 3, each event is read in place, and zero elements move. Watch the first call, because it moves the most elements. With four events it moves three. With 100,000 events it moves 99,999. That is why the cost explodes with size and stays invisible on small tests.
+#### Element Moves With A Read Index
+
+- **Total moves** are 3 + 2 + 1 + 0 = 6.
+- **Formula** `n * (n - 1) / 2` gives 4 * 3 / 2 = 6.
+- **Read index** goes from 0 to 3, reads each event in place and moves 0 elements.
+- **First call** moves the most elements: 3 for four events and 99,999 for 100,000 events.
+
+The cost grows quadratically with size, so it stays invisible on small tests.
 
 ```trace
 {"cells":[10,20,30,40],"pointers":["removed"],"steps":[{"at":{"removed":0},"vars":{"movedThisCall":3,"totalMoved":3,"readIndexMoves":0},"note":"remove(0) takes 10 and shifts 3 later elements left. Total moved: 3. A read index would have moved nothing."},{"at":{"removed":1},"vars":{"movedThisCall":2,"totalMoved":5,"readIndexMoves":0},"note":"remove(0) takes 20 and shifts 2 later elements left. Total moved: 5. A read index would have moved nothing."},{"at":{"removed":2},"vars":{"movedThisCall":1,"totalMoved":6,"readIndexMoves":0},"note":"remove(0) takes 30 and shifts 1 later element left. Total moved: 6. A read index would have moved nothing."},{"at":{"removed":3},"vars":{"movedThisCall":0,"totalMoved":6,"readIndexMoves":0},"note":"remove(0) takes 40 and shifts 0 later elements left. Total moved: 6. A read index would have moved nothing."}]}
 ```
 
 <!-- stage: code -->
-### Faster Code And Overload Checks
+### Linear Time Processor And remove Overloads
 
 ```java
 import java.util.*;
@@ -106,16 +122,30 @@ public final class JavaCosts {
 }
 ```
 
-The loop makes one pass. The time is O(n) for the loop plus amortized O(1) per append, so O(n) in total. The extra space is the report itself. The two `remove` calls at the end show the overload trap. An `int` argument removes by position, and an object argument removes by value. A `List<Integer>` needs `Integer.valueOf(7)` to remove the value 7, which is easy to get wrong in a hurry.
+- **Time** is O(n), because the loop makes one pass and each append costs amortized O(1).
+- **Space** is O(n) extra, because the report string holds every line.
+- **`remove(int)`** removes by position.
+- **`remove(Object)`** removes by value, so a `List<Integer>` needs `Integer.valueOf(7)` to remove the value 7.
+
+The two `remove` calls at the end of the code show this overload trap.
 
 <!-- stage: applicability -->
-### Checking The Calls You Did Not Write
+### Auditing Library Calls Inside Loops
 
-Scan every loop body for library calls and ask the three questions. The invariant is that you know the cost and meaning of each call you rely on, and the bound you state includes them. When a method name in a loop is unfamiliar, check its documented cost before you write the analysis.
+Apply this checklist to every loop body.
 
-The false friend is familiar syntax. A call that looks like a single step is not automatically constant time, primitive-friendly or value-based. The calls `list.remove(0)` and `string + char` look like their cheap cousins, `list.get(0)` and `builder.append(char)`, but they cost far more.
+- **Library calls** in the loop body are listed, and each gets the three properties.
+- **Documented cost** is checked for any unfamiliar method name before the analysis.
+- **Invariant** is that you know the cost and meaning of each call you rely on, and the stated bound includes them.
 
-Two more Java hazards belong on the same list. Boxed collections such as `List<Integer>` cost several times the memory of an `int[]` and add a pointer chase per element, which matters near the million-element limits. Also, `Arrays.asList(new int[]{1,2,3})` has size 1, not 3, because the array is a single object. The exercises below take each of these in turn.
+The false friend is familiar syntax. The risk is a library call that matches the single-step pattern in appearance but breaks its precondition: a call that looks like a single step is not automatically constant time, primitive-friendly or value-based. The calls `list.remove(0)` and `string + char` look like `list.get(0)` and `builder.append(char)`, but they cost far more.
+
+Two more Java hazards belong on the same list.
+
+- **`List<Integer>`** costs several times the memory of an `int[]` and adds one pointer dereference per element, which matters near the million-element limits.
+- **`Arrays.asList(new int[]{1,2,3})`** has size 1, not 3, because the array is a single object.
+
+The exercises below take each of these in turn.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -123,7 +153,7 @@ Two more Java hazards belong on the same list. Boxed collections such as `List<I
 #### [Build] Front Removal (Author exercise)
 <!-- id: pc-front-removal -->
 
-**Prerequisites.** The hidden-cost questions from this lesson.
+**Prerequisites.** The three library call properties from this lesson.
 
 **Problem.** An `ArrayList` holds `n` elements. Method A removes every element by calling `remove(0)` until the list is empty. Method B reads the elements in order with an index that runs from 0 to `n - 1`, and it does not change the list. A move is one element copied one position to the left inside the list. Compute the total number of moves for each method when `n = 5`. Then explain why the total for Method A grows with the square of `n`.
 
