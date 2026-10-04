@@ -97,3 +97,12 @@ Overlap note: scheduled runs can overlap. Claims in PROGRESS.md keep two session
 ## Finishing
 When PROGRESS.md shows chapters 05 to 41 all `done`: run the full-corpus audit (`python3 dsa-skills/dsa-curriculum-auditor/scripts/audit_manuscripts.py dsa-skills/manuscripts --spec dsa-skills/chapter-specs`), fix everything except `no-human-review`, rebuild the index with `python3 dsa-skills/markdown-textbook-html/scripts/build_index.py dsa-skills/manuscripts output --title "Java DSA Curriculum"`, push, and disable the scheduled task (update_trigger with enabled=false).
 Final report: what passed, remaining warnings, what is unverified, human review pending.
+
+## 10. Final reader review (last step before delivery)
+After the gates pass, read the built chapter once as a first-time reader with an engineering background, in reading order, and judge it by how it feels to continue.
+- **Flow test:** the reader moves from one section to the next without stopping to reread, look something up elsewhere or wonder what a term means. Every point where a reader would pause is a defect.
+- **Quit test:** nothing makes the reader feel the material is too dense, too long without a break, unclear in purpose or beyond their level. Every point where a reader would consider giving up is a defect.
+- **Checks per point:** a term used before it is defined, a jump in difficulty, a long unbroken stretch, an unclear goal, a reference to something not yet shown, a count or name that disagrees with its list, wording that sounds like an index entry.
+- **Method:** record each defect with its location and the class of cause. Fix the cause at its class in the rules, audit or builder, then rebuild. Repeat the read until a full pass finds no pause point and no quit point.
+- **Independence:** the review is done by a reader that did not write the chapter.
+- **Report:** state the pass count and what changed. Do not claim the chapter is easy to read. Human review stays pending.
