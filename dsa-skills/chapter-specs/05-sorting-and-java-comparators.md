@@ -67,7 +67,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 Sorting is not the answer by itself. It is a transformation that makes a later local decision valid; every lesson names the order and the decision it unlocks.
 
-### Ordering Contracts
+### Compare Two Values Safely
 
 **Recognition cue.** A problem asks for a deterministic order before any scan can make a local decision. **Java hazard.** Use `Integer.compare(a, b)` or `Long.compare(a, b)`; subtraction can overflow. **False friend.** Sorting primitive values cannot preserve custom-object tie behavior by accident.
 
@@ -76,7 +76,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 - **Boundary - Author exercise: Extreme Comparator.** Order `Integer.MIN_VALUE`, `0`, and `Integer.MAX_VALUE` without subtraction.
 - **Recognize - LC 179 Largest Number.** The decisive comparator is concatenation order, not numeric order.
 
-### Arrays Sort
+### Sort A Primitive Array
 
 **Recognition cue.** Primitive values need a complete natural ordering and mutation of the input is permitted. **Invariant.** After `Arrays.sort(nums)`, every adjacent pair is nondecreasing and equal values form contiguous runs. **False friend.** `Arrays.sort(int[])` cannot accept a custom comparator.
 
@@ -85,7 +85,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 - **Boundary - Author exercise: Empty, Singleton, And Extreme Values.** Verify natural ordering without comparator subtraction.
 - **Recognize - LC 217 Contains Duplicate.** Sort, then detect equal adjacent values.
 
-### Comparator Contracts
+### Write A Valid Comparator
 
 **Recognition cue.** Objects or boxed values require an order different from their natural order. **Invariant.** The comparator is antisymmetric, transitive, and returns zero only when elements are interchangeable for the required ordering.
 
@@ -94,7 +94,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 - **Boundary - Author exercise: Equal Keys And Extreme Values.** Test comparator consistency and overflow safety.
 - **Recognize - LC 179 Largest Number.** Order strings by `b+a` versus `a+b` to maximize concatenation.
 
-### Object Ordering
+### Sort Objects By Several Fields
 
 **Recognition cue.** The thing being ordered has several fields and a stated priority. **State.** The comparator encodes the contract, including tie ownership. **Java hazard.** `Comparator` applies to objects such as `int[][]`, not `int[]` elements directly.
 
@@ -103,7 +103,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 - **Boundary - Author exercise: Equal Primary Keys.** State the secondary tie rule rather than relying on current order.
 - **Recognize - LC 406 Queue Reconstruction by Height.** The first sort key makes insertion-by-position meaningful.
 
-### Stability And Ties
+### Keep Equal Items In Order
 
 **Recognition cue.** Equal primary keys must retain or explicitly replace original order. **State.** The tie rule is part of correctness, not a cosmetic comparator detail. **Java hazard.** `Arrays.sort(Object[])` is stable; do not rely on primitive-array stability.
 
@@ -112,7 +112,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 - **Boundary - Author exercise: Comparator Equality.** Verify comparator returns zero only for interchangeable output positions.
 - **Recognize - LC 1356 Sort Integers by The Number of 1 Bits.** The numeric tie rule must be explicit.
 
-### Sort And Sweep
+### Sweep A Sorted Array
 
 **Recognition cue.** After sorting, only neighboring or frontier items can affect the next decision. **State.** A sweep summary owns everything still relevant from earlier items. **False friend.** Intervals add endpoint semantics and receive their full chapter later.
 
@@ -121,7 +121,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 - **Boundary - Author exercise: A Long Run of Equal Values.** After sorting, compute the increments needed to make every value unique; use `long` for the accumulated cost and test a large duplicate run.
 - **Recognize - LC 945 Minimum Increment to Make Array Unique.** After sorting, raise each value to at least one more than the previous finalized value.
 
-### Sort And Deduplicate
+### Remove Duplicates After Sorting
 
 **Recognition cue.** Equal values become adjacent after sorting, and output needs one representative or a count per run. **State.** The current run is the only unresolved duplicate group. **False friend.** Sorted in-place deduplication from Arrays assumes the input was already sorted.
 
@@ -130,7 +130,7 @@ Sorting is not the answer by itself. It is a transformation that makes a later l
 - **Boundary - Author exercise: All Equal.** Verify one emitted representative from `[4,4,4]`.
 - **Recognize - LC 720 Longest Word in Dictionary.** A sorted word order can make deterministic tie choice explicit.
 
-### Sort Then Scan
+### Scan The Sorted Array
 
 **Recognition cue.** Sorting exposes a simple adjacent relation but does not itself compute the answer. **State.** A scan retains the best local candidate under the new order. **False friend.** Binary search needs a monotone query contract, not merely sorted input.
 
