@@ -116,7 +116,7 @@ The condition `left <= right` stops the loop for an empty window. The sum and th
 
 #### Cost Of The Count
 
-Each index enters once and leaves at most once. The running time is therefore linear, and the working memory is constant. The answer can reach about `n * (n + 1) / 2`, so `int` overflows for `n` above about 65,000. The `long` type holds the count for any `n` that fits in memory.
+The window passes over each index once on the way in and at most once on the way out. The running time is therefore linear, and the working memory is constant. The answer can reach about `n * (n + 1) / 2`, so `int` overflows for `n` above about 65,000. The `long` type holds the count for any `n` that fits in memory.
 
 <!-- stage: applicability -->
 ### When The Count Rule Applies
