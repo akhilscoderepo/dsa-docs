@@ -12,7 +12,7 @@ The longest-valid lesson shrank the window only while it was invalid. This lesso
 <!-- stage: naive -->
 ### Read Forward From Every Start
 
-The direct method fixes a start index and reads forward until every required word has appeared. The first end index that works gives the shortest cover for that start. The method keeps the best result over all starts.
+Each start index begins a separate search that reads forward until every required word has appeared. The first end index that works gives the shortest cover for that start. The method keeps the best result over all starts.
 
 ```java
 static int shortestFromEveryStart(String s, String need) {
