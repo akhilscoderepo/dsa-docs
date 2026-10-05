@@ -38,7 +38,7 @@ The loop makes about `sqrt(x) / step` passes, which is O(sqrt(x) / step). Halvin
 The test `i * step squared <= x` has the same monotone shape as the whole number checks. Every value below the root passes the test and every value above it fails. The loop uses that fact only to decide when to stop, and it discards one step of the range per test. A search that discards half of the remaining range per test would need only a few dozen tests for the same precision.
 
 <!-- stage: insight -->
-### Halve The Interval Until It Is Narrow Enough
+### Halve The Interval Until Narrow Enough
 
 A real interval can be halved exactly as an integer range is. Keep an interval `[lo, hi]` with a passing value at `hi` and a failing value at `lo`, and replace one end by the midpoint after each test.
 
@@ -59,7 +59,7 @@ The width of the interval after `t` rounds is the starting width divided by 2^t.
 <!-- stage: variables -->
 ### The Interval And The Count
 
-The loop keeps two real numbers and a counter.
+The loop keeps four values: two ends, a midpoint and a counter.
 
 - **lo** is a value known to fail the check, or the lowest value of the range.
 - **hi** is a value known to pass the check, or the highest value of the range.
@@ -122,7 +122,7 @@ An absolute tolerance of 0.000001 is generous for a root near 1000000 and meanin
 <!-- stage: exercises -->
 ### Exercises
 
-#### [Build] Square Root By Bisection (Author exercise)
+#### [Build] Square Root (Author exercise)
 <!-- id: bs-real-sqrt -->
 
 **Prerequisites.** The previous lesson and the bisection of this lesson.
@@ -143,7 +143,7 @@ An absolute tolerance of 0.000001 is generous for a root near 1000000 and meanin
 
 **Changed decision.** Basic case: the answer is a real number, so the interval ends take the value `mid` and the loop uses a round count.
 
-#### [Vary] Widest Gap Between Points (Author exercise)
+#### [Vary] Maximum Minimum Distance (Author exercise)
 <!-- id: bs-real-widest-gap -->
 
 **Prerequisites.** The previous exercise.
@@ -164,7 +164,7 @@ An absolute tolerance of 0.000001 is generous for a root near 1000000 and meanin
 
 **Changed decision.** The check counts how many points fit for a gap `d`, and the search keeps the largest passing value, so a passing `mid` becomes `lo`.
 
-#### [Boundary] Relative Error For Tiny And Huge Roots (Author exercise)
+#### [Boundary] Scale-Aware Error (Author exercise)
 <!-- id: bs-real-relative-error -->
 
 **Prerequisites.** Both exercises above.
@@ -185,7 +185,7 @@ An absolute tolerance of 0.000001 is generous for a root near 1000000 and meanin
 
 **Changed decision.** The tolerance depends on the answer, so the round count is derived from the largest ratio of starting width to answer.
 
-#### [Recognize] Count The Bisection Rounds (Author exercise)
+#### [Recognize] Fixed Iterations (Author exercise)
 <!-- id: bs-real-round-count -->
 
 **Prerequisites.** All exercises above.

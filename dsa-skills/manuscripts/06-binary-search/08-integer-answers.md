@@ -65,7 +65,7 @@ The search returns the **smallest feasible value**, the lowest candidate whose c
 <!-- stage: variables -->
 ### The Range And The Check
 
-The loop keeps two candidates and one function.
+The loop keeps four values: two candidates, a midpoint and a check.
 
 - **lo** is the lowest candidate that may still pass.
 - **hi** is a candidate that is known to pass, and it only moves down.

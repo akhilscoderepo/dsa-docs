@@ -1,7 +1,7 @@
 <!-- solutions-for: 06-binary-search -->
 ### Solutions For Real Number Answers
 
-#### Solution: [Build] Square Root By Bisection (Author exercise)
+#### Solution: [Build] Square Root (Author exercise)
 <!-- id: bs-real-sqrt -->
 
 **Approach.**
@@ -51,7 +51,7 @@ public final class SqrtBisection {
 }
 ```
 
-#### Solution: [Vary] Widest Gap Between Points (Author exercise)
+#### Solution: [Vary] Maximum Minimum Distance (Author exercise)
 <!-- id: bs-real-widest-gap -->
 
 **Approach.**
@@ -129,7 +129,7 @@ public final class WidestGap {
 }
 ```
 
-#### Solution: [Boundary] Relative Error For Tiny And Huge Roots (Author exercise)
+#### Solution: [Boundary] Scale-Aware Error (Author exercise)
 <!-- id: bs-real-relative-error -->
 
 **Approach.**
@@ -177,7 +177,7 @@ public final class RelativeRoot {
 }
 ```
 
-#### Solution: [Recognize] Count The Bisection Rounds (Author exercise)
+#### Solution: [Recognize] Fixed Iterations (Author exercise)
 <!-- id: bs-real-round-count -->
 
 **Approach.**
