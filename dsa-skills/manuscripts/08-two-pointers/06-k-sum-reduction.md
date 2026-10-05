@@ -48,7 +48,7 @@ The innermost loop is a two-sum question in disguise. The earlier lesson already
 
 #### One Reduction Per Fixed Value
 
-A **reduction** turns a problem with `k` values into a smaller problem. Fixing `nums[i]` as the first value turns a `k`-value search with target `t` into a `(k - 1)`-value search with the **remaining target** `t - nums[i]`, over the indexes after `i`. The array is sorted, so a search over the later indexes can start just after `i` and never reuse an earlier index.
+A **reduction** turns a problem with `k` values into a smaller problem. Fixing `nums[i]` as the first value turns a `k`-value search with target `t` into a `(k - 1)`-value search with the **remaining target** `t - nums[i]`, over the indexes after `i`. Starting the search just after `i` never reuses an earlier index, and the sorted order of the array lets the pair scan work on that suffix.
 
 #### The Base Case Is The Pair Scan
 
@@ -163,9 +163,9 @@ The method needs a sorted array and a sum that grows when a value grows. For a p
 
 **Example 2.** Input `nums = [0,0,0,0]` and `target = 0`, output 4.
 
-**Hint.** When the two scan ends hold different values, how many index pairs does one match stand for?
+**Hint.** Sort a copy first. When the two scan ends hold different values, how many index pairs does one match stand for?
 
-**Changed decision.** The scan counts index combinations, so it multiplies run lengths and no longer skips copies.
+**Changed decision.** The scan counts index combinations, so it counts whole runs by their lengths and does not list one representative.
 
 #### [Vary] 3Sum Closest (LeetCode 16)
 <!-- id: tp-three-sum-closest -->
@@ -196,7 +196,7 @@ The method needs a sorted array and a sum that grows when a value grows. For a p
 **Problem.** Take a sorted integer array `nums` and a `long` target. Return `true` when three values at different indexes sum to `target`.
 
 **Constraints.** The limits are:
-- **Length** is `0 <= nums.length <= 10^5`; the empty array is valid.
+- **Length** is `0 <= nums.length <= 3000`; the empty array is valid.
 - **Values** are `int` values over the full `int` range, sorted in nondecreasing order.
 - **Target** is a `long`.
 - **Arithmetic** must not wrap: three values near `2^31` need a `long` sum.

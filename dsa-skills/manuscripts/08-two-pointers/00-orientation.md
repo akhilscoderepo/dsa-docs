@@ -5,7 +5,7 @@ A checkout page looks for two items that add up to a gift card balance, and it f
 
 ### Prerequisites
 
-You should know Java arrays, `String` methods such as `charAt`, and the cost words of Chapter 00. The lessons use sorting from Chapter 05 and the idea of a prefix of an array from Chapter 01. The chapter explains `long` sums and the swap of two slots at the point where each first matters. No data structure beyond arrays and strings appears.
+You should know Java arrays, `String` methods such as `charAt`, and the cost words of Chapter 00. The lessons use sorting from Chapter 05 and the idea of a prefix of an array from Chapter 01. The chapter explains `long` sums and the swap of two slots at the point where each first matters. The solutions use a few library classes such as `HashSet` and `StringBuilder` only as checks.
 
 ### The Seven Lessons
 

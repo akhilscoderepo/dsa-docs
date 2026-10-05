@@ -52,7 +52,7 @@ The first index of the cycle is the **entry**. Two different indexes point to th
 
 #### Floyd's Algorithm In Two Phases
 
-**Floyd's algorithm** uses two pointers that move at different speeds along the walk. In phase one, `slow` advances by one link per round and `fast` advances by two links. They must meet inside the cycle, because the fast pointer gains one step on the slow pointer per round. In phase two, one pointer returns to index 0, and both pointers move one step per round. They meet at the entry. The reason is that the distance from the meeting point to the entry, going around the cycle, equals the tail length.
+**Floyd's algorithm** uses two pointers that move at different speeds along the walk. In phase one, `slow` advances by one link per round and `fast` advances by two links. They must meet inside the cycle, because the fast pointer gains one step on the slow pointer per round. In phase two, one pointer returns to index 0, and both pointers move one step per round. They meet at the entry. The reason is that the number of steps from the meeting point to the entry, going around the cycle, equals the tail length plus a whole number of laps of the cycle, so the restarted pointer and the other pointer arrive together.
 
 <!-- names: next index, tail, cycle, entry, Floyd's algorithm -->
 

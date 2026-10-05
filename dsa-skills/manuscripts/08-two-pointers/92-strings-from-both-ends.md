@@ -117,7 +117,7 @@ static boolean isPalindrome(String s) {
 }
 ```
 
-The inner loops keep the guard `left < right`, so a text of only punctuation ends without reading outside the string. An empty text and a text with no letters or digits return true, because no pair is compared. The method reads the string and allocates nothing. The class `Character` works on UTF-16 units, so a character outside the Basic Multilingual Plane counts as two units here.
+The inner loops keep the guard `left < right`, so a text of only punctuation ends without reading outside the string. An empty text and a text with no letters or digits return true, because no pair is compared. The method reads the string and allocates nothing. A Java `char` holds one half of a character that needs two `char` values, so text with such characters is outside the scope of this lesson.
 
 <!-- stage: applicability -->
 ### When The Two Ends Fit
@@ -132,7 +132,7 @@ The nearest wrong idea is to use the same two pointers for a subsequence test. A
 
 #### Conditions That Break The Fit
 
-The method needs a rule that tells which characters count, and it needs equality that does not depend on neighbors. A check for a palindrome of words needs a tokenizer first. For text that holds characters outside the Basic Multilingual Plane, the scan compares pieces of a character, and the code must walk by code point instead.
+The method needs a rule that tells which characters count, and it needs equality that does not depend on neighbors. A check for a palindrome of words needs a tokenizer first. Some characters, such as many emoji, occupy two `char` values in a Java string. The scan would treat each half separately, and `isLetterOrDigit` is false for a half, so such text needs a scan by whole characters instead.
 
 <!-- stage: exercises -->
 ### Exercises

@@ -12,7 +12,7 @@ The two-way split of the previous lesson separates two groups. A third group bre
 <!-- stage: naive -->
 ### Sorting By Priority
 
-The direct method sorts the array with a comparator on the priority field. The sort handles any number of distinct priorities, so it certainly handles three.
+The direct method sorts the array by priority. The sort handles any number of distinct priorities, so it certainly handles three.
 
 ```java
 static void groupSlow(int[] priority) {

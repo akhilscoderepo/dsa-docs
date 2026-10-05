@@ -67,7 +67,7 @@ The test for a value may look at the value alone, as in "not equal to `val`". It
 <!-- stage: variables -->
 ### Three Names And Their Roles
 
-The compaction keeps three pieces of state, and two of them change.
+The compaction keeps three names, and all of them change during the scan: the indexes by moving and `nums` by writes.
 
 - **read** is the index of the next unread value, and it increases by one per iteration.
 - **write** is the index of the next free output slot and the length of the kept prefix, and it never exceeds `read`.
@@ -125,7 +125,7 @@ The nearest wrong idea is a sliding window, a later technique in which a range o
 
 #### Conditions That Break The Fit
 
-The method needs a test that decides a value from that value and the kept prefix alone. A test that needs values after `read` cannot run in one pass. The method also mutates the input, so a contract that forbids writing to the array needs a new array. Finally, the order is stable only when each kept value is copied in read order.
+The method needs a test that decides a value from that value and the kept prefix alone. A test that needs values after `read` cannot run in one pass. The method also mutates the input, so a contract that forbids writing to the array needs a new array. Finally, the scan is stable, which means that kept values keep their relative order, only because each one is copied in read order.
 
 <!-- stage: exercises -->
 ### Exercises

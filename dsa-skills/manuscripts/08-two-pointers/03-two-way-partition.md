@@ -61,20 +61,20 @@ A second form uses one scan index and one boundary. The boundary `store` marks t
 <!-- stage: variables -->
 ### Three Names Mark The Regions
 
-The opposite-end scan keeps three names, and two of them change.
+The opposite-end scan keeps three names, and all of them change during the scan: the pointers by moving and `nums` by swaps.
 
 - **left** is the first index of the unresolved range, and indexes before it hold the first category.
 - **right** is the last index of the unresolved range, and indexes after it hold the second category.
 - **nums** is the array, and each swap exchanges two of its values.
 
-The loop runs while `left < right`. When it stops, the unresolved range holds at most one value, and that value is already in a valid place.
+The loop runs while `left < right`. When it stops, the unresolved range holds at most one value, or the pointers have crossed, and in both cases every value is in a valid region.
 
 <!-- stage: trace -->
 ### Two Partitions On Different Inputs
 
 #### Even Values First
 
-The input is `[3, 8, 5, 2, 6, 7]`. The first category is the even values. The scan moves `left` over evens and `right` over odds. When `left` stands on an odd value and `right` stands on an even value, it swaps them. The scan ends when the two pointers meet, and then no unresolved value is left.
+The input is `[3, 8, 5, 2, 6, 7]`. The first category is the even values. The scan moves `left` over evens and `right` over odds. When `left` stands on an odd value and `right` stands on an even value, it swaps them. The scan ends when the two pointers meet or cross, and then no unresolved value is left.
 
 ```trace
 {"cells":[3,8,5,2,6,7],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":5},"vars":{"array":"[3, 8, 5, 2, 6, 7]"},"note":"The value 7 at right is odd, so right moves left."},{"at":{"left":0,"right":4},"vars":{"array":"[6, 8, 5, 2, 3, 7]"},"note":"The values 3 and 6 are both misplaced, so the scan swaps them and moves both pointers."},{"at":{"left":1,"right":3},"vars":{"array":"[6, 8, 5, 2, 3, 7]"},"note":"The value 8 at left is even, so left moves right."},{"at":{"left":2,"right":3},"vars":{"array":"[6, 8, 2, 5, 3, 7]"},"note":"The values 5 and 2 are both misplaced, so the scan swaps them and moves both pointers."},{"at":{"left":3,"right":2},"vars":{"array":"[6, 8, 2, 5, 3, 7]"},"note":"The pointers have crossed. Every even value stands before every odd value."}]}
@@ -119,7 +119,7 @@ The invariant is that every index before `left` holds a first-category value and
 
 #### The False Friend
 
-The nearest wrong idea is stable compaction from the previous lesson. Compaction keeps the order of the kept values and may write many values. A partition promises only the two regions, and it writes at most two values per swap. Using a partition where the problem needs the original order gives a wrong answer. The values `[4, 1, 2]` may come back as `[2, 4, 1]`, which is a valid partition, while a stable method keeps `[4, 2, 1]`.
+The nearest wrong idea is stable compaction from the previous lesson. Compaction keeps the order of the kept values and may write many values. A partition promises only the two regions, and it writes at most two values per swap. Using a partition where the problem needs the original order gives a wrong answer. The values `[5, 2, 8, 3]` come back as `[8, 2, 5, 3]`, which is a valid partition, while a stable method returns `[2, 8, 5, 3]`.
 
 #### Conditions That Break The Fit
 

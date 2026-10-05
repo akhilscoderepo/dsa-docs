@@ -192,7 +192,7 @@ The method pays O(n log n) for the sort, so a single query on a small array may 
 - **Target** is a `long`.
 - **Mutation** of the input does not occur.
 
-**Example 1.** Input `nums = [10,2,7,4,15]` and `target = 20`, output `{0,1,2}`, whose sum 19 is closest.
+**Example 1.** Input `nums = [10,2,7,4,15]` and `target = 20`, output `{0,1,2}`, whose sum 19 ties with the sum 21 of another triple, and the smaller sum wins.
 
 **Example 2.** Input `nums = [1,1,1,1]` and `target = 5`, output any triple, for example `{0,1,2}`.
 
