@@ -1,26 +1,30 @@
 from common import *
-CH='10-intervals'
-F='03-merge-and-insert.md'
-rep=[[8,10],[1,3],[15,18],[2,6]]
-srt=sorted(rep); out=[]; st=[]
-idx={tuple(r):i for i,r in enumerate(rep)}
-for r in srt:
-    if not out or r[0]>out[-1][1]:
-        out.append(list(r)); note=f"The report {r[0]} to {r[1]} starts past the active end, so it opens a new active stretch. The output now has {len(out)} stretches."
+CH='10-intervals'; FILE='03-merge-insert.md'
+S=lambda l:" ".join(f"[{a},{b}]" for a,b in l) if l else "none"
+w=[[8,10],[1,3],[2,6],[6,7],[15,18]]
+s=sorted(w,key=lambda p:(p[0],p[1]))
+res=[]; st=[{"at":{"i":-1},"vars":{"result":"none"},"note":"The windows are sorted by start. The result is empty."}]
+for i,(a,b) in enumerate(s):
+    if not res or res[-1][1]<a:
+        res.append([a,b]); note=f"The start {a} is after the active end, or the result is empty, so [{a},{b}] opens a new active interval."
+        if i==0: note=f"The result is empty, so [{a},{b}] becomes the active interval."
     else:
-        old=out[-1][1]; out[-1][1]=max(out[-1][1],r[1]); note=f"The report {r[0]} to {r[1]} starts inside the active stretch, so its end becomes {out[-1][1]} and nothing is added to the output."
-    st.append({"at":{"i":idx[tuple(r)]},"vars":{"activeStart":out[-1][0],"activeEnd":out[-1][1],"stretches":len(out)},"note":note})
-assert out==[[1,6],[8,10],[15,18]] and "end becomes 6" in st[1]["note"]
-fill(CH,F,block([f"{a}-{b}" for a,b in rep],["i"],st),"@@TRACE1@@")
-board=[[1,2],[3,5],[6,7],[8,10],[12,16]]; lo,hi=4,8; st=[]; out=[]
-for i,(s,e) in enumerate(board):
-    if e<lo:
-        out.append([s,e]); note=f"The stretch {s} to {e} ends before the new report starts at {lo}, so it is copied unchanged."
-    elif s<=hi:
-        lo=min(lo,s); hi=max(hi,e); note=f"The stretch {s} to {e} reaches the new report, so it is absorbed and the new report becomes {lo} to {hi}."
-    else:
-        if not any(o==[lo,hi] for o in out): out.append([lo,hi])
-        out.append([s,e]); note=f"The stretch {s} to {e} starts after the new report ends, so the grown report {lo} to {hi} is written first and this stretch is copied."
-    st.append({"at":{"i":i},"vars":{"newStart":lo,"newEnd":hi,"written":len(out)},"note":note})
-assert out==[[1,2],[3,10],[12,16]] and "becomes 3 to 10" in st[3]["note"]
-fill(CH,F,block([f"{a}-{b}" for a,b in board],["i"],st),"@@TRACE2@@")
+        old=res[-1][1]; res[-1][1]=max(old,b); note=f"The start {a} is at most the active end {old}, so the window joins and the active end becomes {res[-1][1]}."
+    st.append({"at":{"i":i},"vars":{"window":f"[{a},{b}]","result":S(res)},"note":note})
+assert res==[[1,7],[8,10],[15,18]]
+fill(CH,FILE,block([x[0] for x in s],["i"],st),"@@TRACE1@@")
+lst=[[1,2],[3,5],[6,7],[8,10],[12,16]]; add=[4,9]
+start,end=add; out=[]; i=0
+st=[{"at":{"i":-1},"vars":{"new":"[4,9]","part":"start"},"note":"The list is sorted and has no overlaps. The new interval is [4,9]."}]
+while i<len(lst) and lst[i][1]<start:
+    out.append(lst[i]); st.append({"at":{"i":i},"vars":{"part":"copy before","output":S(out)},"note":f"The entry [{lst[i][0]},{lst[i][1]}] ends before {start}, so it is copied."}); i+=1
+while i<len(lst) and lst[i][0]<=end:
+    start=min(start,lst[i][0]); end=max(end,lst[i][1])
+    st.append({"at":{"i":i},"vars":{"part":"absorb","merged":f"[{start},{end}]"},"note":f"The entry [{lst[i][0]},{lst[i][1]}] starts at or before the merged end, so the merged interval becomes [{start},{end}]."}); i+=1
+out.append([start,end])
+st.append({"at":{"i":i},"vars":{"part":"write merged","output":S(out)},"note":f"The entry [{lst[i][0]},{lst[i][1]}] starts after the merged end {end}, so the block ends. The merged interval [{start},{end}] is written."})
+while i<len(lst):
+    out.append(lst[i]); i+=1
+st.append({"at":{"i":len(lst)},"vars":{"part":"copy after","output":S(out)},"note":"The remaining entries are copied unchanged. The pass is complete."})
+assert out==[[1,2],[3,10],[12,16]]
+fill(CH,FILE,block([x[0] for x in lst],["i"],st),"@@TRACE2@@")
