@@ -62,7 +62,7 @@ The **sorted copy** is the array of packed keys after sorting. The pair scan fro
 
 #### Fixing More Values
 
-For three values the method fixes one packed key and scans the rest of the sorted copy for a pair. A four-value search fixes two keys. The total cost is O(n log n) for the sort, plus O(n) for one scan, O(n^2) for three values and O(n^3) for four values. Each added value multiplies the scan cost by `n`, as in the reduction lesson.
+For three values the method fixes one packed key and scans the rest of the sorted copy for a pair. A four-value search fixes two keys. The total cost is O(n log n) for the sort, plus O(n) for one scan, O(n^2) with one fixed key and O(n^3) with two fixed keys. Each added fixed key multiplies the scan cost by `n`, as in the reduction lesson.
 
 <!-- stage: variables -->
 ### What The Sorted Copy Holds
@@ -205,10 +205,10 @@ The method pays O(n log n) for the sort, so a single query on a small array may 
 
 **Prerequisites.** All exercises above.
 
-**Problem.** Take an integer array `nums` of positive values and a `long` target. Among all four values at different indexes, return the largest sum that does not exceed `target`. Return `-1` when every four-value sum exceeds `target`.
+**Problem.** Take an integer array `nums` of positive values and a `long` target. Among all choices of four different indexes, return the largest sum that does not exceed `target`. Return `-1` when every four-value sum exceeds `target`.
 
 **Constraints.** The limits are:
-- **Length** is `0 <= nums.length <= 200`; fewer than four values give `-1`.
+- **Length** is `0 <= nums.length <= 200`; an array shorter than four gives `-1`.
 - **Values** are `int` values from 1 to `10^9`.
 - **Target** is a `long` up to `4 * 10^9`.
 - **Return type** is `long`.
