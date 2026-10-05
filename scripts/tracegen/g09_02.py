@@ -1,35 +1,26 @@
 from common import *
-CH='09-sliding-window'
-F='02-fixed-frequency-windows.md'
-
-def run(text,card,letters):
-    m=len(card)
-    need={c:card.count(c) for c in letters}
-    have={c:0 for c in letters}
-    st=[]; found=[]
-    for right,ch in enumerate(text):
-        have[ch]+=1
-        if right>=m: have[text[right-m]]-=1
-        if right>=m-1:
-            left=right-m+1
-            ok=(have==need)
-            if ok: found.append(left)
-            vars_={c:have[c] for c in letters}
-            vars_["match"]="yes" if ok else "no"
-            stretch=text[left:right+1]
-            if right==m-1:
-                note=f"The first {m} beads are in the tally, so the stretch is {stretch}."
+CH='09-sliding-window'; F='02-fixed-frequency-window.md'
+def run(s,p,show):
+    k=len(p); need={}; have={}
+    for c in p: need[c]=need.get(c,0)+1
+    st=[]; hits=[]
+    for r,c in enumerate(s):
+        have[c]=have.get(c,0)+1; note=f"The character '{c}' enters."
+        if r>=k:
+            o=s[r-k]; have[o]-=1; note+=f" The character '{o}' leaves."
+        v={}
+        if r>=k-1:
+            eq=all(have.get(x,0)==need.get(x,0) for x in set(have)|set(need)); l=r-k+1
+            v={"window":s[l:r+1],"equal":"yes" if eq else "no"}
+            if eq: hits.append(l); note+=f" The counts match, so the start {l} is recorded."
             else:
-                note=f"{text[right-m]} leaves and {ch} enters, so the stretch is {stretch}."
-            note+=(f" The tally matches the card, so the start {left} joins the answers." if ok else " The tally differs from the card, so nothing is recorded.")
-            st.append({"at":{"left":left,"right":right},"vars":vars_,"note":note})
-    return st,found
-
-t1="abcbacab"
-s1,f1=run(t1,"abc","abc")
-assert f1==[0,2,3,5] and s1[2]["vars"]["match"]=="yes" and "cba" in s1[2]["note"] and len(s1)==6
-fill(CH,F,block(list(t1),["left","right"],s1),"@@TRACE1@@")
-t2="zzabzaab"
-s2,f2=run(t2,"aab","abz")
-assert f2==[5] and s2[2]["vars"]["match"]=="no" and "abz" in s2[2]["note"] and s2[-1]["vars"]["match"]=="yes"
-fill(CH,F,block(list(t2),["left","right"],s2),"@@TRACE2@@")
+                bad=[x for x in sorted(set(have)|set(need)) if have.get(x,0)!=need.get(x,0)][0]
+                note+=f" The counts differ at '{bad}': the window holds {have.get(bad,0)} and the pattern needs {need.get(bad,0)}."
+        else:
+            l=0; note+=" The window is not full yet, so no test is made."
+        st.append({"at":{"left":l,"right":r},"vars":v,"note":note})
+    return st,hits
+s1="bacdcab"; st,h=run(s1,"abc",0); assert h==[i for i in range(len(s1)-2) if sorted(s1[i:i+3])==sorted("abc")]==[0,4]
+fill(CH,F,block(list(s1),["left","right"],st),"@@TRACE1@@")
+s2="cabxaab"; st,h=run(s2,"aab",0); assert h==[4]
+fill(CH,F,block(list(s2),["left","right"],st),"@@TRACE2@@")
