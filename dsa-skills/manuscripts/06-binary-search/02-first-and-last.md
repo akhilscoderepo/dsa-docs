@@ -23,7 +23,7 @@ static int earliestByWalking(int[] nums, int target) {
 }
 ```
 
-On `[5, 7, 7, 7, 7, 9]` with target 7, the first match is index 2. The walk then moves to index 1 and stops. The result is correct.
+On `[5, 7, 7, 7, 7, 9]` with target 7, the match that the search finds first is index 2. The walk then moves to index 1 and stops. The result is correct.
 
 ```predict
 The array holds 1,000,000 entries that all equal the target. The search returns index 499,999. How many steps does the walk take, and how does that compare with the search itself?
@@ -58,7 +58,7 @@ For the **last occurrence**, the roles of the sides swap. An equal entry is stor
 Each later candidate comes from an interval that lies entirely on the better side of the previous one. The newest candidate is therefore always at least as good as the older ones, so a plain assignment is enough.
 
 <!-- stage: variables -->
-### Five Names For Two Searches
+### Four Names For Two Searches
 
 The first-occurrence and last-occurrence searches share five names.
 
@@ -186,7 +186,7 @@ The two boundaries give the size of a group. The count of entries equal to the t
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^5`.
-- **Values** are `int` values in non-decreasing order, and the array may hold one repeated value only.
+- **Values** are `int` values in non-decreasing order, and any value may repeat.
 - **Target** is any `int`.
 - **Answer** has `first <= last` when the target occurs, and both entries are `-1` otherwise.
 

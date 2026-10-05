@@ -14,7 +14,7 @@ Some grids hold more order than each row alone. In one case, the whole grid is s
 
 A matrix has a fixed shape of `rows` and `cols`. The shape converts a single number into a cell: the number `k` names the cell in row `k / cols` and column `k % cols`. With this conversion, the grid can be addressed as if it were one long array, without copying a value.
 
-Binary search adds the ability to discard half of a sorted range with one comparison. It needs a range with a first and a last position, and the shape supplies that range as the numbers `0` to `rows * cols - 1`. The two parts need each other. The shape gives the search a range to cut, and the search gives the shape a reason to exist. The conversion holds only when the grid is sorted across rows, and a second kind of order needs a different move.
+Binary search adds the ability to discard half of a sorted range with one comparison. It needs a range with a first and a last position, and the shape supplies that range as the numbers `0` to `rows * cols - 1`. The two parts work together. The shape supplies the range of numbers to cut, and the search cuts that range with one comparison per step. The conversion holds only when the grid is sorted across rows, and a second kind of order needs a different move.
 
 <!-- stage: naive -->
 ### Reading Every Cell

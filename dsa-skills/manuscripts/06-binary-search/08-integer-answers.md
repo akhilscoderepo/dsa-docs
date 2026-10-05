@@ -122,7 +122,7 @@ The method `hoursNeeded` returns a `long`, because the sum of many large stacks 
 
 #### The Invariant
 
-The invariant is that `hi` always passes the check and every candidate below `lo` fails it. Setup establishes it, because `hi` is the largest stack and `lo - 1` is the empty set of candidates below 1. Each update keeps it, because a passing `mid` becomes the new `hi` and a failing `mid` raises `lo` past a candidate that fails. When `lo == hi`, one candidate is both the lowest possible and a passing one.
+The invariant is that `hi` always passes the check and every candidate below `lo` fails it. Setup establishes it, because `hi` is the largest stack and no candidate lies below 1, so the claim is true at the start. Each update keeps it, because a passing `mid` becomes the new `hi` and a failing `mid` raises `lo` past a candidate that fails. When `lo == hi`, one candidate is both the lowest possible and a passing one.
 
 #### The False Friend
 

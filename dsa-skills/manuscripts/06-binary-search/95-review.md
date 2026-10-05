@@ -34,7 +34,7 @@ Return to this page after the lessons and again a few days later. Each question 
 ```
 
 ```quiz
-{"id": "bs-rev-speed-check", "q": "Piles `[5, 9, 14, 20]` must be finished in 9 hours. Speed 6 needs 1 + 2 + 3 + 4 = 10 hours. How does the answer search move?", "options": ["Sets `hi = 6`", "Returns 6", "Sets `lo = 7`", "Sets `lo = 6`"], "answer": 2, "explain": "Speed 6 fails, and every lower speed fails too, so the answer is above 6. The update `lo = mid + 1` drops the failing candidate."}
+{"id": "bs-rev-speed-check", "q": "Piles `[5, 9, 14, 20]` must be finished in 9 hours. The midpoint is speed 6, which needs 1 + 2 + 3 + 4 = 10 hours. How does the answer search move?", "options": ["Sets `hi = 6`", "Returns 6", "Sets `lo = 7`", "Sets `lo = 6`"], "answer": 2, "explain": "Speed 6 fails, and every lower speed fails too, so the answer is above 6. The update `lo = mid + 1` drops the failing candidate."}
 ```
 
 ```quiz

@@ -56,7 +56,7 @@ Take the rising case. Walk right from `mid + 1` while values keep rising. The wa
 
 #### The Interval And Its Exit
 
-This search uses the closed interval `[lo, hi]` with `hi = nums.length - 1` and the loop test `lo < hi`. The loop stops when one index remains. Because `mid < hi`, the index `mid + 1` is always inside the array. Equality never occurs for neighbors that differ, so the rule needs no tie case.
+This search uses the closed interval `[lo, hi]` with `hi = nums.length - 1` and the loop test `lo < hi`. Unlike the closed search of the first lesson, this loop stops when one index remains, so `hi = mid` is safe. Because `mid < hi`, the index `mid + 1` is always inside the array. Equality never occurs for neighbors that differ, so the rule needs no tie case.
 
 <!-- stage: variables -->
 ### One Interval And One Comparison

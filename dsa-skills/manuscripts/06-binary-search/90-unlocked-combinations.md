@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A search needs a range with order, and two earlier structures supply one in new places. This chapter teaches both pairings as lessons with exercises. A third pairing waits for a later owner and is only named here.
+A search needs a range with order, and two earlier structures supply one in new places. This chapter teaches both pairings as lessons with exercises. A third pairing waits for a later chapter and is only named here.
 
 ### Pairings Taught In This Chapter
 
