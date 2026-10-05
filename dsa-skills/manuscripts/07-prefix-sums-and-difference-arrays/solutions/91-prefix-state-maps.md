@@ -185,7 +185,7 @@ public final class TargetRemainder {
 <!-- id: psm-min-length -->
 
 **Approach.**
-The earliest-index map stores the first boundary of each remainder class, with class 0 at index -1. At index `i` the current class either repeats or is new. A repeat with stored index `p` gives a window of length `i - p`, which is the longest window for this end and this class, so the method returns true when that length is at least `minLen`. A shorter repeat does not end the search, because a later end can reach a longer window from the same stored index. A new class records its index. The prefix is a `long` and uses `Math.floorMod` for negative totals.
+The earliest-index map stores the first boundary of each remainder class, with class 0 at index -1. At index `i` the current class either repeats or is new. A repeat with stored index `p` gives a window of length `i - p`. That window is the longest one for this end and this class. The method returns true when its length is at least `minLen`. A shorter repeat does not end the search, because a later end can reach a longer window from the same stored index. A new class records its index. The prefix is a `long` and uses `Math.floorMod` for negative totals.
 
 **Complexity.**
 - **Time** is O(n) expected, because each value costs one hash operation.

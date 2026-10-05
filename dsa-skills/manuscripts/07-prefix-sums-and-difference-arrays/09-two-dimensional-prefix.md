@@ -54,14 +54,14 @@ The entry `P[r + 1][c + 1]` combines the entry above, the entry to the left and 
 
 #### A Query By Inclusion-Exclusion
 
-**Inclusion-exclusion** counts a union of regions by adding the regions and subtracting their overlaps. The rectangle from `(r1, c1)` to `(r2, c2)` equals the large rectangle `P[r2 + 1][c2 + 1]`, minus the strip above, `P[r1][c2 + 1]`, minus the strip on the left, `P[r2 + 1][c1]`. The two subtractions remove the corner region `P[r1][c1]` twice, so the formula adds it back once. A query reads four entries, so it costs O(1), and the build costs O(m * n).
+**Inclusion-exclusion** counts a union of regions by adding the regions and subtracting their overlaps. The rectangle from `(r1, c1)` to `(r2, c2)` equals the large rectangle `P[r2 + 1][c2 + 1]`, minus the strip above, `P[r1][c2 + 1]`, minus the strip on the left, `P[r2 + 1][c1]`. The two subtractions remove the corner region `P[r1][c1]` twice, so the formula adds it back once. A query reads four entries, so it costs O(1), and the construction of `P` costs O(m * n).
 
 <!-- names: prefix matrix, sentinel border, inclusion-exclusion -->
 
 <!-- stage: variables -->
 ### Six Names And Their Roles
 
-The query and the build use six names.
+The query and the construction use six names.
 
 - **P** is the `long` matrix with `m + 1` rows and `n + 1` columns, built once and never changed.
 - **r1** and **c1** are the top row and the left column of the rectangle.
@@ -150,7 +150,7 @@ The grid must not change between queries, since one change alters every entry to
 
 **Hint.** Build the matrix with one extra row and one extra column of zeros. Which four entries bound the rectangle?
 
-**Changed decision.** Basic case: the build costs `m * n` once, and each query reads four entries.
+**Changed decision.** Basic case: filling the matrix costs `m * n` once, and each query reads four entries.
 
 #### [Vary] Matrix Block Sum (LeetCode 1314)
 <!-- id: ps-block-sum-1314 -->

@@ -121,7 +121,7 @@ public final class CountXorK {
 <!-- id: ps-xor-empty-prefix -->
 
 **Approach.**
-A range has XOR 0 exactly when its two boundaries have equal prefix XOR values. The map stores the earliest index of each value, with 0 at index -1 for the empty prefix. That entry is the only partner for a range that starts at index 0, so without it the whole array would never match. A repeat at index `i` with stored index `p` gives a range of length `i - p`, and the entry is never overwritten, so the length is the longest for its value.
+A range has XOR 0 exactly when its two boundaries have equal prefix XOR values. The map stores the earliest index of each value, with 0 at index -1 for the empty prefix. That entry is the only partner for a range that starts at index 0, so without it the whole array would never match. A repeat at index `i` with stored index `p` gives a range of length `i - p`. The entry is never overwritten, so that length is the longest for its value.
 
 **Complexity.**
 - **Time** is O(n) expected, because each value costs one hash operation.

@@ -131,7 +131,7 @@ public final class Continuous523 {
 <!-- id: ps-negative-remainders -->
 
 **Approach.**
-The method keeps a `long` running sum and stores `Math.floorMod(sum, k)` after each value. The first entry is 0 for the empty prefix. The call returns a value from 0 to `k - 1` for positive `k`, so negative sums map to the class of the equal remainder, for example -3 with `k = 5` gives 2. The raw operator `%` would return -3 and break the range. The cast to `int` is safe, because the result is below `k`, which is at most 10^9.
+The method keeps a `long` running sum and stores `Math.floorMod(sum, k)` after each value. The first entry is 0 for the empty prefix. The call returns a value from 0 to `k - 1` for positive `k`. A negative sum such as -3 with `k = 5` therefore maps to the class 2. The raw operator `%` would return -3 and break the range. The cast to `int` is safe, because the result is below `k`, which is at most 10^9.
 
 **Complexity.**
 - **Time** is O(n), because each value costs one addition and one `floorMod`.

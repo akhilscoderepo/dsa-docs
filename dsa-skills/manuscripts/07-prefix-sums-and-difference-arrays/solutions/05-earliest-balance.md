@@ -129,7 +129,7 @@ public final class EqualAAndB {
 <!-- id: ps-balanced-start -->
 
 **Approach.**
-The map stores balance 0 at index -1, so a span that begins at index 0 can match. A repeat at index `i` with stored index `p` is a span that covers indexes `p + 1` through `i`, so its start is `p + 1` and its length is `i - p`. The method replaces the best pair only when the new length is strictly larger. Among spans of equal length, the one with the smaller start also has the smaller end, so the loop meets it first and keeps it. Without any repeat, the answer stays `[-1, 0]`.
+The map stores balance 0 at index -1, so a span that begins at index 0 can match. A repeat at index `i` with stored index `p` is a span that covers indexes `p + 1` through `i`. Its start is `p + 1`, and its length is `i - p`. The method replaces the best pair only when the new length is strictly larger. Among spans of equal length, the one with the smaller start also has the smaller end, so the loop meets it first and keeps it. Without any repeat, the answer stays `[-1, 0]`.
 
 **Complexity.**
 - **Time** is O(n) expected, because each value costs one hash operation.

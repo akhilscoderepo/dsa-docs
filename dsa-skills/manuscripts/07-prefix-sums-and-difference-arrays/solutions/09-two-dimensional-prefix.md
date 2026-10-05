@@ -5,7 +5,7 @@
 <!-- id: ps-matrix-sum-304 -->
 
 **Approach.**
-The prefix matrix has one extra row and one extra column of zeros. Each entry `P[r + 1][c + 1]` adds the entry above and the entry to the left, subtracts their shared part `P[r][c]` once and adds the cell. A query then reads the large rectangle `P[r2 + 1][c2 + 1]`, removes the rows above with `P[r1][c2 + 1]`, removes the columns on the left with `P[r2 + 1][c1]`, and adds back the corner `P[r1][c1]`, which both removals subtracted. The invariant is that `P[r][c]` is the sum of the rows `0..r-1` and the columns `0..c-1`.
+The prefix matrix has one extra row and one extra column of zeros. Each entry `P[r + 1][c + 1]` adds the entry above and the entry to the left, subtracts their shared part `P[r][c]` once and adds the cell. A query reads the large rectangle `P[r2 + 1][c2 + 1]`. It removes the rows above with `P[r1][c2 + 1]` and the columns on the left with `P[r2 + 1][c1]`. It then adds back the corner `P[r1][c1]`, which both removals subtracted. The invariant is that `P[r][c]` is the sum of the rows `0..r-1` and the columns `0..c-1`.
 
 **Complexity.**
 - **Time** is O(m * n + q), because the build visits each cell once and each query reads four entries.
@@ -65,7 +65,7 @@ public final class MatrixSum304 {
 <!-- id: ps-block-sum-1314 -->
 
 **Approach.**
-Each output cell is one rectangle query, with the rows `i - k` through `i + k` and the columns `j - k` through `j + k`. The corners are clamped to the matrix, so the top row becomes `max(0, i - k)` and the bottom row becomes `min(m - 1, i + k)`, and the columns follow the same rule. After clamping, the rectangle lies inside the matrix and the four-read formula applies without any case for the edges. The build runs once, and every cell then costs four reads.
+Each output cell is one rectangle query, with the rows `i - k` through `i + k` and the columns `j - k` through `j + k`. The method clamps the corners to the matrix. The top row becomes `max(0, i - k)`, and the bottom row becomes `min(m - 1, i + k)`. The columns follow the same rule. After clamping, the rectangle lies inside the matrix and the four-read formula applies without any case for the edges. The build runs once, and every cell then costs four reads.
 
 **Complexity.**
 - **Time** is O(m * n), because the build and the answer loop each visit every cell a constant number of times.
@@ -127,7 +127,7 @@ public final class BlockSum1314 {
 <!-- id: ps-single-cell -->
 
 **Approach.**
-The cell `(r, c)` is the rectangle from `(r, c)` to `(r, c)`. The inclusion-exclusion formula gives `P[r + 1][c + 1] - P[r][c + 1] - P[r + 1][c] + P[r][c]`. The first entry holds the rectangle down to the cell, the second removes the rows above, the third removes the columns to the left, and the last restores the corner that both removals took away. What remains is exactly the one cell. The border of zeros keeps every index non-negative, including for the cells in the first row and the first column.
+The cell `(r, c)` is the rectangle from `(r, c)` to `(r, c)`. The inclusion-exclusion formula gives `P[r + 1][c + 1] - P[r][c + 1] - P[r + 1][c] + P[r][c]`. The first entry holds the rectangle down to the cell. The second removes the rows above, and the third removes the columns to the left. The last restores the corner that both removals took away. What remains is exactly the one cell. The border of zeros keeps every index non-negative, including for the cells in the first row and the first column.
 
 **Complexity.**
 - **Time** is O(m * n), because each cell costs four reads.
@@ -180,7 +180,7 @@ public final class SingleCell {
 <!-- id: ps-origin-rectangle -->
 
 **Approach.**
-A rectangle with its top-left cell at `(0, 0)` and its bottom-right cell at `(r, c)` is the query with `r1 = 0` and `c1 = 0`. The formula reads `P[r + 1][c + 1] - P[0][c + 1] - P[r + 1][0] + P[0][0]`, and all three of the last entries are in the border of zeros, so the sum equals `P[r + 1][c + 1]`. The border row is index 0, so the code reads no negative index for these queries. The method builds the matrix and keeps the maximum of the entries from `P[1][1]` to `P[m][n]`. The whole matrix is the entry `P[m][n]`.
+A rectangle with its top-left cell at `(0, 0)` and its bottom-right cell at `(r, c)` is the query with `r1 = 0` and `c1 = 0`. The formula reads `P[r + 1][c + 1] - P[0][c + 1] - P[r + 1][0] + P[0][0]`. The last three entries lie in the border of zeros, so the sum equals `P[r + 1][c + 1]`. The border row is index 0, so the code reads no negative index for these queries. The method builds the matrix and keeps the maximum of the entries from `P[1][1]` to `P[m][n]`. The whole matrix is the entry `P[m][n]`.
 
 **Complexity.**
 - **Time** is O(m * n), because the build and the scan each visit every cell once.

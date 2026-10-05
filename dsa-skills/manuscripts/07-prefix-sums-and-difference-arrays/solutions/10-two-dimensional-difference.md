@@ -5,7 +5,7 @@
 <!-- id: ps-one-rectangle -->
 
 **Approach.**
-The difference matrix has one extra row and one extra column. The update writes `+value` at the top-left corner, `-value` at the column just right of the rectangle, `-value` at the row just below it, and `+value` at the corner past both. The final pass sums each cell with its upper and left neighbours and subtracts the upper-left neighbour, which makes each cell equal to the sum of all entries above and to its left. Only the cells inside the rectangle keep the net `+value`. The invariant is that a cell's value equals the sum of `D[i][j]` over `i <= r` and `j <= c`.
+The difference matrix has one extra row and one extra column. The update writes `+value` at the top-left corner. It writes `-value` in the column just right of the rectangle and in the row just below it. It writes `+value` at the corner past both. The final pass adds the upper and left neighbours to each entry and subtracts the upper-left neighbour. Each cell then equals the sum of all entries above it and to its left. Only the cells inside the rectangle keep the net `+value`. The invariant is that a cell's value equals the sum of `D[i][j]` over `i <= r` and `j <= c`.
 
 **Complexity.**
 - **Time** is O(m * n), because the update costs four writes and the pass visits each cell once.
@@ -68,7 +68,7 @@ public final class OneRectangle {
 <!-- id: ps-increment-2536 -->
 
 **Approach.**
-All queries share one difference matrix of size `(n + 1)` by `(n + 1)`. Each query adds four corner writes, with `+1` at the top-left corner, `-1` at the column right of the rectangle, `-1` at the row below it, and `+1` at the corner past both. Writes from different queries add up in the same entries. A single pass of the two-dimensional running sum then gives every cell the number of rectangles that contain it. The batching is the point, because the work per query stays constant.
+All queries share one difference matrix of size `(n + 1)` by `(n + 1)`. Each query adds four corner writes. The value `+1` goes to the top-left corner and `+1` to the corner past both sides. The value `-1` goes to the column right of the rectangle and to the row below it. Writes from different queries add up in the same entries. A single pass of the two-dimensional running sum then gives every cell the number of rectangles that contain it. The batching is the point, because the work per query stays constant.
 
 **Complexity.**
 - **Time** is O(n^2 + q), because each query costs four writes and the pass visits n^2 cells.

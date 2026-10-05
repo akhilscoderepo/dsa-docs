@@ -121,7 +121,7 @@ public final class ProductExceptSelf238 {
 <!-- id: ps-product-zeros -->
 
 **Approach.**
-The two passes need no case for zeros. With one zero at index `z`, the left product of every index after `z` and the right product of every index before `z` contain the zero, so those answers are 0. The index `z` multiplies a left part and a right part that both avoid the zero, so it keeps the product of all other values. With two or more zeros, every answer has one of them on a side, so every entry is 0. The result uses `long`, because values up to 100 in magnitude overflow `int` after five factors.
+The two passes need no case for zeros. With one zero at index `z`, every index after `z` has the zero in its left product. Every index before `z` has it in its right product. Those answers are 0. The index `z` multiplies a left part and a right part that both avoid the zero, so it keeps the product of all other values. With two or more zeros, every answer has one of them on a side, so every entry is 0. The result uses `long`, because values up to 100 in magnitude overflow `int` after five factors.
 
 **Complexity.**
 - **Time** is O(n), because each pass costs n multiplications.

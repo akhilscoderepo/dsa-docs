@@ -5,7 +5,7 @@
 <!-- id: ps-one-range-add -->
 
 **Approach.**
-The delta array has `n + 1` slots. The update writes `+value` at `left` and `-value` at `right + 1`. A running sum over the first `n` slots then gives `value` for the indexes `left` through `right` and 0 elsewhere, because the second write cancels the first from `right + 1` onward. The invariant is that the total at index `i` equals the sum of the deltas at indexes 0 through `i`.
+The delta array has `n + 1` slots. The update writes `+value` at `left` and `-value` at `right + 1`. A running sum over the first `n` slots then gives `value` for the indexes `left` through `right` and 0 elsewhere. The second write cancels the first from `right + 1` onward. The invariant is that the total at index `i` equals the sum of the deltas at indexes 0 through `i`.
 
 **Complexity.**
 - **Time** is O(n), because the update costs O(1) and the final pass visits each index once.
@@ -60,7 +60,7 @@ public final class OneRangeAdd {
 <!-- id: ps-flight-bookings-1109 -->
 
 **Approach.**
-Flights are numbered from 1, and the array index starts at 0, so a booking `[first, last, seats]` becomes the range `first - 1` through `last - 1`. Each booking writes `+seats` at `first - 1` and `-seats` at `last`, which is the cancelling index `(last - 1) + 1`. The delta array has `n + 1` slots, so the write for `last = n` is valid. One running sum then gives the seats on every flight, and overlapping bookings add up because every write uses `+=` and `-=`.
+Flights are numbered from 1, and the array index starts at 0. A booking `[first, last, seats]` therefore becomes the range `first - 1` through `last - 1`. Each booking writes `+seats` at `first - 1` and `-seats` at `last`, which is the cancelling index `(last - 1) + 1`. The delta array has `n + 1` slots, so the write for `last = n` is valid. One running sum then gives the seats on every flight, and overlapping bookings add up because every write uses `+=` and `-=`.
 
 **Complexity.**
 - **Time** is O(n + m) for `m` bookings, because each booking costs two writes and the final pass costs n additions.
