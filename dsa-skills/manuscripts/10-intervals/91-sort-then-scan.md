@@ -7,7 +7,7 @@
 
 A maintenance team keeps one list of closed work windows, such as `[5,7]`, `[1,4]`, `[3,6]` and `[9,9]`. Management asks four questions about it. How many hours does at least one window cover? What does the list look like after one more window is added? How many windows can run without any two sharing an hour? How few inspection visits reach every window? A developer sorts the list by start for the first question and gets it right. The same sort for the third question can keep one long window and reject several short windows that would have fit.
 
-The list is the same in all four questions, and the sort order that works changes with the question. This lesson answers one question. How do you pick the order, and the one value to carry through the scan, for each of the four questions?
+The list is the same in all four questions, and the sort order that works changes with the question. The task here is to answer one question. How do you pick the order, and the one value to carry through the scan, for each of the four questions?
 
 <!-- stage: contributions -->
 ### What Sorting And Interval Rules Each Add

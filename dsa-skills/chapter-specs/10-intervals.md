@@ -83,7 +83,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Zero-Length Range.** State whether `[x,x]` is one point and whether `[x,x)` is empty.
 - **Recognize - Author exercise: Merge Under A Supplied Contract.** Implement the same scan twice with only the overlap predicate changed.
 
-### Merge And Insert
+### Merge Intervals And Insert A New One
 
 **Recognition cue.** Overlapping ranges should become their union, or one new range must be added to an already sorted disjoint list. **Invariant.** The output contains finalized disjoint intervals plus at most one active interval that may still grow. **False friend.** Insert does not require re-sorting when the input contract already supplies order and disjointness.
 

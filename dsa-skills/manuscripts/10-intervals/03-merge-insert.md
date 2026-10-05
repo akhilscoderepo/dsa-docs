@@ -7,7 +7,7 @@
 
 A monitoring page lists every outage as a window of minutes, such as `[8,10]`, `[1,3]`, `[2,6]` and `[15,18]`. The page draws one bar for each stretch of time with an outage. The windows `[1,3]` and `[2,6]` must therefore become one bar from minute 1 to minute 6. The previous lesson settled when two windows overlap. Counting the bars does not help here, because the page needs the start and end of every bar. A second feature adds one new window to a list that is already sorted and has no overlaps. The page must redraw only what changed.
 
-Both features ask for the same result, a list of non-overlapping windows that covers exactly the same minutes as the input. This lesson answers two questions. What must a single scan remember to build that list, and what does the scan skip when the list is already in order?
+Both features ask for the same result, a list of non-overlapping windows that covers exactly the same minutes as the input. The lesson has two goals, each stated as a question. What must a single scan remember to build that list, and what does the scan skip when the list is already in order?
 
 <!-- stage: naive -->
 ### Add Each Window To The Result

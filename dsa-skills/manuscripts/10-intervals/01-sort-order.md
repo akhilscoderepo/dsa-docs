@@ -7,7 +7,7 @@
 
 A booking tool receives three reservations in arrival order: hours `[1,4]`, `[7,9]` and `[2,5]`. The tool must merge reservations that share any hour. A short loop compares each new reservation with the last merged one only. It keeps `[1,4]`, sees that `[7,9]` shares no hour with it, and appends `[7,9]`. It then compares `[2,5]` with `[7,9]`, finds no overlap, and appends `[2,5]` too. The output is `[1,4]`, `[7,9]`, `[2,5]`, although `[1,4]` and `[2,5]` plainly share the hours 2 to 4.
 
-The loop is cheap, but it looks at the wrong neighbour. The reservation `[2,5]` belongs next to `[1,4]`, and the arrival order put `[7,9]` between them. This lesson answers one question. Which order makes the last merged interval the only one that the next interval can overlap?
+The loop is cheap, but it looks at the wrong neighbour. The reservation `[2,5]` belongs next to `[1,4]`, and the arrival order put `[7,9]` between them. The lesson turns on a single question. Which order makes the last merged interval the only one that the next interval can overlap?
 
 <!-- stage: naive -->
 ### Compare Every Pair Until Nothing Changes

@@ -7,7 +7,7 @@
 
 A capacity report needs the peak number of users logged in at one moment. Each login session is a half-open time range, so session `[1,4)` ends before time 4 begins. The log holds `[1,4)` and `[4,6)`. A user leaves at time 4 and the next user arrives at time 4, so at no moment are two users logged in. The report says the peak is 2 and asks for another server.
 
-The report is wrong because of how the code handled time 4. Two changes happen at the same coordinate, one departure and one arrival, and the code applied the arrival first. The numbers in the log are fine, and the order of two changes at one coordinate produced the error. This lesson answers one question: how does a scan count active intervals when several changes land on the same coordinate?
+The report is wrong because of how the code handled time 4. Two changes happen at the same coordinate, one departure and one arrival, and the code applied the arrival first. The numbers in the log are fine, and the order of two changes at one coordinate produced the error. The goal of this lesson is one answer. How does a scan count active intervals when several changes land on the same coordinate?
 
 <!-- stage: naive -->
 ### Count The Sessions Around Every Start
@@ -66,7 +66,7 @@ A half-open interval with `start == end` holds no coordinate. Its end event runs
 <!-- stage: variables -->
 ### What The Sweep Keeps
 
-The sweep keeps one list and three values.
+The sweep keeps four pieces of state.
 
 - **events** is an array of pairs `{coordinate, change}` with `2n` entries, sorted by coordinate and then by the tie policy.
 - **active** is the running count, which equals the number of intervals that hold the current coordinate.

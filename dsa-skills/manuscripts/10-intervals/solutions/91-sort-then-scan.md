@@ -82,7 +82,7 @@ public final class CoveredLength {
 <!-- id: iv-comb-insert-half-open -->
 
 **Approach.**
-The list is sorted and its intervals do not overlap, so the intervals that overlap the new one form an unbroken block. The method uses one index and three loops. The first loop copies every interval whose end is at most the new start, because under the half-open rule an end at the new start only touches it. The second loop absorbs every interval whose start is below the grown end, so a start equal to the grown end stops the block. The method then writes the grown interval and copies the rest. Compared with the closed version, the comparisons `<` and `<=` swap places. The invariant is that every interval before index `i` is already in the output or absorbed into the grown interval.
+The list is sorted and its intervals do not overlap, so the intervals that meet the new one lie together in an unbroken block. The method uses one index and three loops. The first loop copies every interval whose end is at most the new start, because under the half-open rule an end at the new start only touches it. The second loop absorbs every interval whose start is below the grown end, so a start equal to the grown end stops the block. The method then writes the grown interval and copies the rest. Compared with the closed version, the comparisons `<` and `<=` swap places. The invariant is that every interval before index `i` is already in the output or absorbed into the grown interval.
 
 **Complexity.**
 - **Time** is O(n), because the three loops share one index that crosses the list once.

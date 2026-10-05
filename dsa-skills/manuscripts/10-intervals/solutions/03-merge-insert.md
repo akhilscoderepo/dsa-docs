@@ -271,7 +271,7 @@ public final class GroupSizes {
 <!-- id: iv-insert-interval -->
 
 **Approach.**
-The list is sorted by start and has no overlaps, so the intervals that overlap the new one form one unbroken block. The method uses one index and three loops. The first loop copies every interval whose end is below the new start, since those cannot overlap it. The second loop absorbs every interval whose start is at most the grown end, taking the smaller start and the larger end, and it stops at the first interval that starts after the grown end. The method then writes the grown interval and the third loop copies the rest. The invariant is that every interval before index `i` is either in the output or absorbed into the grown interval.
+The list is sorted by start and has no overlaps, so the intervals that meet the new one sit together in one block. The method uses one index and three loops. The first loop copies every interval whose end is below the new start, since those cannot overlap it. The second loop absorbs every interval whose start is at most the grown end, taking the smaller start and the larger end, and it stops at the first interval that starts after the grown end. The method then writes the grown interval and the third loop copies the rest. The invariant is that every interval before index `i` is either in the output or absorbed into the grown interval.
 
 **Complexity.**
 - **Time** is O(n), because the three loops share one index that moves from 0 to `n` once.

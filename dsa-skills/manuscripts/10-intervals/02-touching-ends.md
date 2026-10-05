@@ -7,7 +7,7 @@
 
 A hotel system stores guest A in room 12 from day 1 to day 3. It stores guest B in the same room from day 3 to day 5. The front desk says the booking is fine. Guest A checks out on the morning of day 3, and guest B checks in that afternoon. The booking code reports a double booking and rejects guest B. Both sides read the same numbers, `[1,3]` and `[3,5]`, and they disagree about one shared value.
 
-The data does not decide the answer. A rule about the ends decides it, and the code and the front desk follow different rules. This lesson answers one question. How does a rule about the ends turn into the exact comparison that tests two intervals for overlap?
+The data does not decide the answer. A rule about the ends decides it, and the code and the front desk follow different rules. The lesson works toward one answer. How does a rule about the ends turn into the exact comparison that tests two intervals for overlap?
 
 <!-- stage: naive -->
 ### Use The Same Comparison Every Time
@@ -57,7 +57,7 @@ Two intervals share a **point** when some coordinate lies in both. Let `lo` be t
 <!-- stage: variables -->
 ### What The Overlap Test Reads
 
-The test needs three values and one choice.
+The test needs four pieces of state.
 
 - **lo** is the larger start of the two intervals, `Math.max(a[0], b[0])`.
 - **hi** is the smaller end of the two intervals, `Math.min(a[1], b[1])`.

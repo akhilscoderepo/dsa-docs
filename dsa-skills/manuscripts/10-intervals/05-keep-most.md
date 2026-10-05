@@ -7,7 +7,7 @@
 
 A conference room accepts requests in the order they arrive. The requests are the half-open time slots `[1,10)`, `[2,3)`, `[4,5)` and `[6,7)`. The first request holds the room from hour 1 to hour 10. The system accepts it and rejects the other three, because each of them falls inside it. The room hosts one event. The three short requests share no hour with each other, so the room could host three events by accepting those and rejecting the long one.
 
-The arrival order gave the wrong answer. A different rule can give the right one, but the rule is not obvious. Choosing the request that starts first would again pick `[1,10)`. This lesson answers one question: which request should the room keep when two requests clash, so that the room hosts as many events as possible?
+The arrival order gave the wrong answer. A different rule can give the right one, but the rule is not obvious. Choosing the request that starts first would again pick `[1,10)`. The question to settle is this. Which request should the room keep when two requests clash, so that the room hosts as many events as possible?
 
 <!-- stage: naive -->
 ### Try Every Set Of Requests
