@@ -5,14 +5,14 @@
 <!-- stage: context -->
 ### Highlighting The Rows That Match
 
-A ledger screen lists payments in the order they arrived, and the user can ask for two payments that add up to an amount. The screen must highlight the two matching rows. A developer sorts the payments and runs the pair scan, which is fast. The screen then highlights rows 0 and 2, while the matching payments sit in rows 3 and 0 of the table.
+A ledger screen lists payments in the order they arrived, and the user can ask for two payments that add up to an amount. The screen must highlight the two matching rows. A developer sorts the payments and runs the pair scan, which is fast. The screen then highlights rows 1 and 2, the positions in the sorted list, while the matching payments sit in rows 0 and 3 of the table.
 
 The sorted list has the right values at the wrong positions. The scan is correct and the answer is still wrong, because sorting threw away the row numbers. The problem is to keep the speed of the scan and still report the original rows.
 
 <!-- stage: contributions -->
 ### What Sorting And The Scan Each Add
 
-Sorting puts the values in nondecreasing order. That order gives a relation between the sum of two indexes and the sums of their neighbors, and the relation is what makes elimination safe. Sorting costs O(n log n) comparisons, and it moves every value to a new index. Sorting does not say which pair to test next, and it does not remember where a value came from.
+Sorting puts the values in nondecreasing order. That order means that moving to a later index never lowers a pair sum, and this fact makes elimination safe. Sorting costs O(n log n) comparisons, and it moves every value to a new index. Sorting does not say which pair to test next, and it does not remember where a value came from.
 
 The opposite-end scan supplies the choice of the next pair. It tests one pair of sorted indexes and discards one index, so a pass costs O(n). The scan reports indexes of the array that it reads, so on a sorted copy it reports sorted indexes. Only the combination answers the user's question. Sorting creates the order, the scan uses the order, and an extra piece of state carries the original row through the sort.
 
@@ -69,7 +69,7 @@ For three values the method fixes one packed key and scans the rest of the sorte
 
 The method keeps these pieces of state.
 
-- **keys** is the `long[]` of packed keys, sorted, and it replaces the input after the first step.
+- **keys** is the `long[]` of packed keys, sorted, and the scan reads it in place of the input.
 - **left** and **right** are the scan indexes into `keys`, and they move as in the first lesson.
 - **value** at an index is `(int) (keys[index] >> 32)`, and the row is `(int) keys[index]`.
 - **nums** is the input array, and the method never changes it.

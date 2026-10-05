@@ -60,9 +60,9 @@ Each step moves one pointer by one position, and the pointers never move back. T
 <!-- names: interval, left pointer, right pointer, two pointers, elimination -->
 
 <!-- stage: variables -->
-### Three Names Define The Scan
+### Three Names In The Scan
 
-The scan keeps three pieces of state, and two of them change.
+The scan keeps three pieces of state, and all of them change.
 
 - **left** is the smallest index that can still belong to an answer, and it only increases.
 - **right** is the largest index that can still belong to an answer, and it only decreases.
@@ -83,7 +83,7 @@ The input is `[1, 3, 4, 6, 8, 11]` and the target is 10. The first sum is 12, wh
 
 #### Choosing The Shorter Wall
 
-The input is a list of wall heights `[4, 2, 5, 3, 6, 1]`. The area of a pair is the smaller height times the distance between the indexes. After each area, the scan moves the pointer at the shorter wall, because a wider pair with the same shorter wall cannot be taller than that wall.
+The input is a list of wall heights `[4, 2, 5, 3, 6, 1]`. The area of a pair is the smaller height times the distance between the indexes. After each area, the scan moves the pointer at the shorter wall, because a narrower pair that keeps the same shorter wall cannot have a larger area.
 
 ```trace
 {"cells":[4,2,5,3,6,1],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":5},"vars":{"area":"5","best":"5"},"note":"The area is min(4, 1) * 5 = 5. The wall at index 5 is shorter, so right moves left."},{"at":{"left":0,"right":4},"vars":{"area":"16","best":"16"},"note":"The area is min(4, 6) * 4 = 16. The wall at index 0 is not taller, so left moves right."},{"at":{"left":1,"right":4},"vars":{"area":"6","best":"16"},"note":"The area is min(2, 6) * 3 = 6. The wall at index 1 is not taller, so left moves right."},{"at":{"left":2,"right":4},"vars":{"area":"10","best":"16"},"note":"The area is min(5, 6) * 2 = 10. The wall at index 2 is not taller, so left moves right."},{"at":{"left":3,"right":4},"vars":{"area":"3","best":"16"},"note":"The area is min(3, 6) * 1 = 3. The wall at index 3 is not taller, so left moves right."}]}
@@ -106,7 +106,7 @@ static int[] findPair(int[] nums, long target) {
 }
 ```
 
-The cast `(long) nums[left]` widens before the addition, so the sum of two values near 2 * 10^9 stays exact. An empty array and a one-element array give `right <= left`, so the loop body never runs and the method returns `{-1, -1}`. The method reads the array and never writes to it.
+The cast `(long) nums[left]` widens before the addition, so the sum of two `int` values stays exact even when it passes 2,147,483,647. An empty array and a one-element array give `right <= left`, so the loop body never runs and the method returns `{-1, -1}`. The method reads the array and never writes to it.
 
 <!-- stage: applicability -->
 ### When The Scan Fits
@@ -117,7 +117,7 @@ The invariant is that every pair with a sum equal to the target has both indexes
 
 #### The False Friend
 
-The nearest wrong idea is to run the same scan on an unsorted array. The moves rest on the claim that a smaller left value gives smaller sums, and that claim fails without order. On `[5, 1, 4, 2]` with target 6, the scan adds `5 + 2 = 7`, moves `right`, and then adds `5 + 4 = 9`. It never reaches the pair `(1, 5)`. A sort first costs O(n log n) and moves the indexes, which matters when the answer must name original positions.
+The nearest wrong idea is to run the same scan on an unsorted array. The moves rest on the claim that a smaller left value gives smaller sums, and that claim fails without order. On `[12, 3, 5, 8]` with target 13, the scan adds `12 + 8`, `12 + 5` and `12 + 3`, finds every sum too large, and stops. It never tests the pair `5 + 8`. A sort first costs O(n log n) and moves the indexes, which matters when the answer must name original positions.
 
 #### Conditions That Break The Fit
 
@@ -158,7 +158,7 @@ The elimination needs a monotone relation: a pointer move must change the quanti
 - **Length** is `2 <= nums.length <= 10^5`.
 - **Values** are `int` values with `|nums[i]| <= 10^9`, sorted in nondecreasing order.
 - **Target** is an `int`.
-- **Return type** is `long`, because a pair sum can exceed the `int` range.
+- **Return type** is `long`, so that the sum of two `int` values never wraps.
 
 **Example 1.** Input `nums = [1,4,9,16]` and `target = 12`, output 13.
 
@@ -206,6 +206,6 @@ The elimination needs a monotone relation: a pointer move must change the quanti
 
 **Example 2.** Input `height = [5,5]`, output 5.
 
-**Hint.** The array is not sorted. Which quantity is monotone when you move the pointer at the taller wall?
+**Hint.** The array is not sorted. Which quantity cannot grow when you move the pointer at the shorter wall?
 
 **Changed decision.** The monotone quantity is the area bound by the shorter wall, not the sum of two values.

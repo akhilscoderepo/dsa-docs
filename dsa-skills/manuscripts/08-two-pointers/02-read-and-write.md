@@ -62,7 +62,7 @@ This scan is a **compaction**, which means a pass that moves the kept values to 
 
 #### What The Test Can Consult
 
-The test for a value may look at the value alone, as in "not equal to `val`". It may also look at the kept prefix, as in "different from the last kept value". The pointers do not change in the second case. Only the admission rule changes.
+The test for a value may look at the value alone, as in "not equal to `val`". It may also look at the kept prefix, as in "different from the last kept value". The pointers do not change in the second case. Only the admission rule changes. The **admission rule** is the test that decides whether a value is copied into the kept prefix.
 
 <!-- stage: variables -->
 ### Three Names And Their Roles
@@ -121,7 +121,7 @@ The invariant is that `nums[0..write-1]` holds exactly the admitted values among
 
 #### The False Friend
 
-The nearest wrong idea is a sliding window. A window has a left boundary that removes state from a range. The write index removes nothing. It marks where the next output value goes, and the values behind it are final. Code that shrinks `write` to undo an earlier choice has left this pattern.
+The nearest wrong idea is a sliding window, a later technique in which a range of the array grows on the right and shrinks on the left while a running state follows it. The left end of a window removes state from the range. The write index removes nothing. It marks where the next output value goes, and the values behind it are final. Code that shrinks `write` to undo an earlier choice has left this pattern.
 
 #### Conditions That Break The Fit
 

@@ -73,7 +73,7 @@ A subsequence test starts both pointers at the beginning. The pointer over the l
 <!-- stage: variables -->
 ### What The Scan Remembers
 
-The scan keeps three pieces of state.
+The scan keeps these names.
 
 - **left** and **right** are the indexes of the current symmetric pair, and they move toward each other.
 - **s** is the text, which the scan reads and never changes in the comparison problems.

@@ -27,9 +27,9 @@ static int[] splitCopy(int[] nums) {
 For `[3, 8, 5, 2, 6, 7]` the method returns `[8, 2, 6, 3, 5, 7]`. It is correct, and every value is written once. The cost is the second array.
 
 ```predict
-The input holds 5 million values, and 4 of them are in the wrong half. How many values must change place at minimum, and how many does `splitCopy` write?
+The input holds 5 million values, and 4 of them are in the wrong half, 2 odd values at the front and 2 even values at the back. How many swaps does a rearrangement inside the array need at most, and how many values does `splitCopy` write?
 
-Only the misplaced values must move, so a rearrangement inside the array needs at most 4 swaps here. The method `splitCopy` writes all 5 million values into a new array and holds 10 million slots at once. The time is O(n) and the extra space is O(n).
+Only the misplaced values must move, so a rearrangement inside the array needs 2 swaps here. The method `splitCopy` writes all 5 million values into a new array and holds 10 million slots at once. The time is O(n) and the extra space is O(n).
 ```
 
 <!-- stage: bottleneck -->
@@ -59,9 +59,9 @@ Every step shrinks the unresolved range by at least one index. The loop runs at 
 A second form uses one scan index and one boundary. The boundary `store` marks the first slot of the second category. The scan index `i` moves forward. When `nums[i]` belongs to the first category, the scan swaps it with `nums[store]` and advances `store`. The invariant is the same: values before the boundary satisfy one category, and values after the scan index are unresolved. This form is the right one when a predicate against a pivot value is needed and the first category cannot be known from the ends alone.
 
 <!-- stage: variables -->
-### Four Names Mark The Regions
+### Three Names Mark The Regions
 
-The opposite-end scan keeps three pieces of state, and all of them change.
+The opposite-end scan keeps three names, and two of them change.
 
 - **left** is the first index of the unresolved range, and indexes before it hold the first category.
 - **right** is the last index of the unresolved range, and indexes after it hold the second category.
@@ -77,7 +77,7 @@ The loop runs while `left < right`. When it stops, the unresolved range holds at
 The input is `[3, 8, 5, 2, 6, 7]`. The first category is the even values. The scan moves `left` over evens and `right` over odds. When `left` stands on an odd value and `right` stands on an even value, it swaps them. The scan ends when the two pointers meet, and then no unresolved value is left.
 
 ```trace
-{"cells":[3,8,5,2,6,7],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":5},"vars":{"array":"[3, 8, 5, 2, 6, 7]"},"note":"The value 7 at right is odd, so right moves left."},{"at":{"left":0,"right":4},"vars":{"array":"[6, 8, 5, 2, 3, 7]"},"note":"The values 3 and 6 are both misplaced, so the scan swaps them and moves both pointers."},{"at":{"left":1,"right":3},"vars":{"array":"[6, 8, 5, 2, 3, 7]"},"note":"The value 8 at left is even, so left moves right."},{"at":{"left":2,"right":3},"vars":{"array":"[6, 8, 2, 5, 3, 7]"},"note":"The values 5 and 2 are both misplaced, so the scan swaps them and moves both pointers."},{"at":{"left":3,"right":2},"vars":{"array":"[6, 8, 2, 5, 3, 7]"},"note":"The pointers have met. Every even value stands before every odd value."}]}
+{"cells":[3,8,5,2,6,7],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":5},"vars":{"array":"[3, 8, 5, 2, 6, 7]"},"note":"The value 7 at right is odd, so right moves left."},{"at":{"left":0,"right":4},"vars":{"array":"[6, 8, 5, 2, 3, 7]"},"note":"The values 3 and 6 are both misplaced, so the scan swaps them and moves both pointers."},{"at":{"left":1,"right":3},"vars":{"array":"[6, 8, 5, 2, 3, 7]"},"note":"The value 8 at left is even, so left moves right."},{"at":{"left":2,"right":3},"vars":{"array":"[6, 8, 2, 5, 3, 7]"},"note":"The values 5 and 2 are both misplaced, so the scan swaps them and moves both pointers."},{"at":{"left":3,"right":2},"vars":{"array":"[6, 8, 2, 5, 3, 7]"},"note":"The pointers have crossed. Every even value stands before every odd value."}]}
 ```
 
 #### Values Below A Pivot First
@@ -119,7 +119,7 @@ The invariant is that every index before `left` holds a first-category value and
 
 #### The False Friend
 
-The nearest wrong idea is stable compaction from the previous lesson. Compaction keeps the order of the kept values and may write many values. A partition promises only the two regions, and it writes at most two values per swap. Using a partition where the problem needs the original order gives a wrong answer. The values `[2, 4]` may come back as `[4, 2]`.
+The nearest wrong idea is stable compaction from the previous lesson. Compaction keeps the order of the kept values and may write many values. A partition promises only the two regions, and it writes at most two values per swap. Using a partition where the problem needs the original order gives a wrong answer. The values `[4, 1, 2]` may come back as `[2, 4, 1]`, which is a valid partition, while a stable method keeps `[4, 2, 1]`.
 
 #### Conditions That Break The Fit
 

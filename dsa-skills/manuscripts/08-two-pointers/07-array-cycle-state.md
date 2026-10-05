@@ -44,7 +44,7 @@ A walk that starts at index 0 and moves to `nums[index]` each time must run out 
 
 #### Values As Next Indexes
 
-Read `nums[i]` as the **next index** after `i`. The contract makes this safe: the table has `n + 1` slots and every value lies between 1 and `n`, so every value is a legal index, and no value points to index 0. The walk from index 0 is a path of indexes that eventually repeats. After a possibly empty **tail** of indexes visited once, the walk runs around a **cycle**, a loop of indexes that it visits again and again.
+Read `nums[i]` as the **next index** after `i`. The contract makes this safe: the table has `n + 1` slots and every value lies between 1 and `n`, so every value is a legal index, and no value points to index 0. The walk from index 0 is a path of indexes that eventually repeats. After a **tail** of indexes visited once, the walk runs around a **cycle**, a loop of indexes that it visits again and again.
 
 #### The Entry Is The Repeated Value
 

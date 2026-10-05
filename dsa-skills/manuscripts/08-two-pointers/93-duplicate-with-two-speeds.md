@@ -85,7 +85,7 @@ The program never computes `t` or `c`. The proof uses them to show that the seco
 
 #### Phase One Closes The Gap
 
-The table is `[1, 3, 4, 2, 2]`, and the walk is `0, 1, 3, 2, 4, 2, 4, ...`. So `t = 3` and `c = 2`. The trace tracks the number of links each pointer has made. The gap between them grows by one per round. The pointers meet in the round where the gap is a multiple of the loop length 2, and the trace lists the number of links of each pointer in every round.
+The table is `[1, 3, 4, 2, 2]`, and the walk is `0, 1, 3, 2, 4, 2, 4, ...`. So `t = 3` and `c = 2`. The trace tracks the number of links each pointer has made. The gap between them grows by one per round. The pointers can meet only after both are inside the loop and the gap is a multiple of the loop length 2. That happens in round 4, and the trace lists the number of links of each pointer in every round.
 
 ```trace
 {"cells":[1,3,4,2,2],"pointers":["slow","fast"],"steps":[{"at":{"slow":1,"fast":3},"vars":{"links slow":"1","links fast":"2","gap":"1"},"note":"After round 1, slow made 1 links and fast made 2 links. The gap is 1."},{"at":{"slow":3,"fast":4},"vars":{"links slow":"2","links fast":"4","gap":"2"},"note":"After round 2, slow made 2 links and fast made 4 links. The gap is 2."},{"at":{"slow":2,"fast":4},"vars":{"links slow":"3","links fast":"6","gap":"3"},"note":"After round 3, slow made 3 links and fast made 6 links. The gap is 3."},{"at":{"slow":4,"fast":4},"vars":{"links slow":"4","links fast":"8","gap":"4"},"note":"After round 4, slow made 4 links and fast made 8 links. The gap is 4. The pointers meet because the gap 4 is a multiple of the loop length 2."}]}
@@ -121,7 +121,7 @@ static int repeatedValue(IntUnaryOperator view) {
 The parameter is an `IntUnaryOperator`, a function from a slot number to a value. It offers no way to write, so the type itself forbids the sign marking and the cyclic placement of the alternative fixes. Calling `view.applyAsInt(i)` returns `nums[i]`, and a caller can pass `i -> nums[i]`. The method needs the contract that every value lies between 1 and `n` for a table of `n + 1` slots, or a read may leave the array.
 
 <!-- stage: applicability -->
-### Choosing Among The Four Fixes
+### Choosing Among The Fixes
 
 #### The Invariant
 
@@ -129,7 +129,7 @@ The invariant of phase two is that the two pointers are the same number of links
 
 #### The False Friend
 
-The nearest wrong idea is to pick a fix by speed alone. Sign marking and cyclic placement run in O(n) time and O(1) space, and both write to the table. A set reads only and costs O(n) space. Sorting costs O(n log n) and needs a copy. The two speeds are the only choice that is read-only with O(1) space, which is why the contract decides the method.
+The nearest wrong idea is to pick a fix by speed alone. Sign marking and cyclic placement run in O(n) time and O(1) space, and both write to the table. A set reads only and costs O(n) space. Sorting costs O(n log n) and needs a copy. Each of these fixes breaks one requirement. The two speeds are the only choice that is read-only with O(1) space, which is why the contract decides the method.
 
 #### Conditions That Break The Fit
 
@@ -220,4 +220,4 @@ The method needs every value to be a legal slot and no value to equal 0. It need
 
 **Hint.** A method that has no write access cannot mark or place values. Which alternative remains that uses constant extra space?
 
-**Changed decision.** The type of the input rules out two of the four fixes, so the method must be the one that only reads.
+**Changed decision.** The type of the input rules out the fixes that write to the table, so the method must be the one that only reads.

@@ -29,7 +29,7 @@ Three lessons join the rules with ideas from earlier chapters.
 
 ### How To Work Through Each Lesson
 
-Each lesson opens with a slow program and asks you to predict its cost before the answer appears. Two traces follow, with both indexes drawn above the array. Four exercises close the lesson, from the basic case to a problem that you must recognize without a hint. The hints and the solutions stay hidden until you open them, so make an attempt first. An exercise marked Author exercise was written for this course. An exercise with a LeetCode number follows that problem, and its text states every rule that it changes.
+Each lesson opens with a slow program and asks you to predict its cost before the answer appears. Two traces follow, with the indexes drawn above the array. Four exercises close the lesson, from the basic case to a problem that you must recognize from its wording, with a hint hidden until you ask. The hints and the solutions stay hidden until you open them, so make an attempt first. An exercise marked Author exercise was written for this course. An exercise with a LeetCode number follows that problem, and its text states every rule that it changes.
 
 ### What You Can Do After This Chapter
 

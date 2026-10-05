@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Grouping Requests By Priority
 
-A server keeps one million pending requests in an array. Each request carries a priority of 0, 1 or 2. The scheduler wants all requests of priority 0 first, then priority 1, then priority 2. The requests are objects with many other fields, so the program cannot just count the priorities and rewrite them.
+A server keeps one million pending requests in an array. Each request carries a priority of 0, 1 or 2. The scheduler wants all requests of priority 0 first, then priority 1, then priority 2. The requests are objects with many other fields, so the program cannot just count the priorities and rewrite them. The examples below show only the priority values.
 
 The two-way split of the previous lesson separates two groups. A third group breaks it: after one split, the second group still mixes priorities 1 and 2. The question is how one pass can settle all three groups.
 
@@ -43,7 +43,7 @@ The boxed copy adds O(n) extra memory on top of that. A scan that decides a valu
 
 #### Three Boundaries In One Array
 
-A **three-way partition** puts every value of the first group before every value of the second group, and every value of the second group before every value of the third group. This partition is also called the **Dutch national flag** partition. The scan keeps three indexes `low`, `mid` and `high`. Indexes before `low` hold the first group. Indexes from `low` up to but not including `mid` hold the **middle region**, the second group. Indexes from `mid` to `high` are unresolved, and indexes after `high` hold the third group.
+A **three-way partition** puts every value of the first group before every value of the second group, and every value of the second group before every value of the third group. This partition is also called the **Dutch national flag** partition, named after a flag with three colored bands in a fixed order. The scan keeps three indexes `low`, `mid` and `high`. Indexes before `low` hold the first group. Indexes from `low` up to but not including `mid` hold the **middle region**, the second group. Indexes from `mid` to `high` are unresolved, and indexes after `high` hold the third group.
 
 <!-- names: three-way partition, Dutch national flag, middle region -->
 
@@ -58,7 +58,7 @@ The value that arrives at `mid` from `high` has not been inspected. It can belon
 <!-- stage: variables -->
 ### Three Indexes Split The Array
 
-The scan keeps three indexes, and all of them change.
+The scan keeps three indexes, and all of them change during the loop.
 
 - **low** is the first slot of the middle region, and every slot before it holds the first group.
 - **mid** is the slot under inspection, and slots from `low` to `mid - 1` hold the middle region.
@@ -107,7 +107,7 @@ static void swap(int[] a, int i, int j) {
 }
 ```
 
-The loop condition is `mid <= high`, not `mid < high`. With `<` the slot at `high` is never inspected when `mid == high`, and one value stays in the wrong group. An empty array has `high = -1`, so the loop never runs. An array of one group only moves `mid`, or only `high`, and the other regions stay empty.
+The loop condition is `mid <= high`, not `mid < high`. With `<` the slot at `high` is never inspected when `mid == high`, and one value stays in the wrong group. An empty array has `high = -1`, so the loop never runs. An array that holds only zeros moves `low` and `mid` together, an array that holds only ones moves `mid`, and an array that holds only twos moves `high`.
 
 <!-- stage: applicability -->
 ### When Three Regions Fit

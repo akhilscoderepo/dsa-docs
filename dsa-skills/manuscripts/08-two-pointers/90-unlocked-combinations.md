@@ -9,7 +9,7 @@ Sorting with two indexes forms the lesson Find Sums In Sorted Arrays. Sorting cr
 
 Strings with two indexes form the lesson Check Strings From Both Ends. The string supplies indexed characters and rules for which characters count, and the indexes supply the movement. The lesson contrasts a scan that moves inward with a scan that moves in one direction.
 
-Array values read as links, with two speeds, form the lesson Find A Duplicate With Two Speeds. The bounded table supplies the links and the guarantee of a repeat. The two speeds find the first repeated slot without writing to the table.
+Array values read as links, with two speeds, form the lesson Find A Duplicate With Two Speeds. The bounded table supplies the links and the guarantee of a repeat. The two speeds find the entry slot of the loop, which holds a repeated value, without writing to the table.
 
 ### Pairings That Wait
 
