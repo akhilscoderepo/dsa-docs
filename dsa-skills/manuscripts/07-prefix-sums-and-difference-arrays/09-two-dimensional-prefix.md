@@ -46,7 +46,7 @@ A **prefix matrix** `P` has `m + 1` rows and `n + 1` columns. The entry `P[r][c]
 
 #### The Border Of Zeros
 
-The first row and the first column of `P` are 0, because a rectangle with zero rows or zero columns has no cells. This is a **sentinel border**, which means extra entries that exist so that the formulas need no special case at the edges. The sum of the cell `grid[r][c]` lives in `P[r + 1][c + 1]`.
+The first row and the first column of `P` are 0, because a rectangle with zero rows or zero columns has no cells. This is a **sentinel border**, which means extra entries that exist so that the formulas need no special case at the edges. The cell `grid[r][c]` is the last cell that `P[r + 1][c + 1]` adds.
 
 #### Building Each Entry From Three Neighbours
 
@@ -59,9 +59,9 @@ The entry `P[r + 1][c + 1]` combines the entry above, the entry to the left and 
 <!-- names: prefix matrix, sentinel border, inclusion-exclusion -->
 
 <!-- stage: variables -->
-### Six Names And Their Roles
+### Seven Names And Their Roles
 
-The query and the construction use six names.
+The query reads four entries of the matrix, and the code writes the matrix as `p`.
 
 - **P** is the `long` matrix with `m + 1` rows and `n + 1` columns, built once and never changed.
 - **r1** and **c1** are the top row and the left column of the rectangle.
@@ -69,8 +69,7 @@ The query and the construction use six names.
 - **whole** is `P[r2 + 1][c2 + 1]`, the sum from the top-left cell to the bottom-right corner.
 - **above** is `P[r1][c2 + 1]`, the rows that lie over the rectangle.
 - **left** is `P[r2 + 1][c1]`, the columns that lie to its left.
-
-The fourth read, `P[r1][c1]`, is the corner region that the two subtractions count twice.
+- **corner** is `P[r1][c1]`, the region that the two subtractions both remove, so the formula adds it back.
 
 <!-- stage: trace -->
 ### Two Queries On One Matrix
@@ -194,7 +193,7 @@ The grid must not change between queries, since one change alters every entry to
 
 **Changed decision.** The rectangle shrinks to one cell, so the inclusion-exclusion formula must return exactly that cell.
 
-#### [Recognize] Whole Matrix Query (Author exercise)
+#### [Recognize] Best Rectangle At The Origin (Author exercise)
 <!-- id: ps-origin-rectangle -->
 
 **Prerequisites.** All exercises above.

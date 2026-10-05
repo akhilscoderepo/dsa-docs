@@ -41,7 +41,7 @@ It tests 30,000 * 30,001 / 2 = 450,015,000 pairs. The loops visit every pair of 
 
 The method tests every pair of ends, which costs O(n^2). Most tests fail, and nothing carries information from one pair to the next. The sum of the pair from boundary `a` to boundary `b` equals `prefix[b] - prefix[a]`, so the test asks whether two prefix values differ by a multiple of `k`.
 
-Two numbers differ by a multiple of `k` exactly when they leave the same remainder after division by `k`. The test for a pair therefore compares two remainders. The method can sort all earlier prefixes by their remainder and look up the matching group, in the way the previous lesson looked up equal totals.
+Two numbers differ by a multiple of `k` exactly when they leave the same remainder after division by `k`. The test for a pair therefore compares two remainders. The method can group all earlier prefixes by their remainder and look up the matching group, in the way the previous lesson looked up equal totals.
 
 <!-- stage: insight -->
 ### Group Prefix Values By Their Remainder

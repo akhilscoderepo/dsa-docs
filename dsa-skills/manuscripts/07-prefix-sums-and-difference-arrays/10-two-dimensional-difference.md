@@ -65,7 +65,7 @@ The updates write to the row `r2 + 1` and the column `c2 + 1`. For a rectangle t
 <!-- stage: variables -->
 ### Five Names And Their Roles
 
-The method keeps five names.
+The method keeps five names, and the pass also reads the three neighbours of each cell, `up`, `left` and `diag`.
 
 - **D** is the `long` matrix with `m + 1` rows and `n + 1` columns that holds the corner deltas.
 - **r1**, **c1**, **r2** and **c2** are the corners of an update, and both corners belong to the rectangle.

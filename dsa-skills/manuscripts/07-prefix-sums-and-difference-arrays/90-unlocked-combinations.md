@@ -9,7 +9,7 @@ Prefix state with a hash map forms the lesson Count And Measure Spans With Maps.
 
 ### Pairings That Wait
 
-Prefix sums with a sliding window are deferred to Chapter 09. A sliding window keeps two moving ends and one running total, and it needs the comparison of the window against a bound as the ends move. That comparison belongs to the sliding window chapter. No exercise here assigns those problems.
+Prefix sums with a sliding window are deferred to the chapter on sliding windows. A sliding window keeps two moving ends and one running total, and it needs the comparison of the window against a bound as the ends move. That comparison belongs to the sliding window chapter. No exercise here assigns those problems.
 
 Range updates and range queries on the same changing array are deferred to the chapter on range query structures. A segment tree or a Fenwick tree answers both operations in logarithmic time. This chapter handles updates before one read, or queries on unchanged data, and it names the limit of each method. No exercise here assigns the mixed case.
 

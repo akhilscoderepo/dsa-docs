@@ -176,7 +176,7 @@ public final class SingleCell {
 }
 ```
 
-#### Solution: [Recognize] Whole Matrix Query (Author exercise)
+#### Solution: [Recognize] Best Rectangle At The Origin (Author exercise)
 <!-- id: ps-origin-rectangle -->
 
 **Approach.**

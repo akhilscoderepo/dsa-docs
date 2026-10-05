@@ -7,7 +7,7 @@
 
 A pricing engine applies up to 100,000 rules to an order, and each rule scales the price by a multiplier. The team wants a report that shows, for every rule, the combined multiplier of all the other rules. That report tells them what the price would be without that one rule.
 
-One rule has the multiplier 0, because it makes an item free. The usual shortcut for such a report fails on that rule. The task is to compute, for every position, a combined value of all other positions in one linear pass.
+One rule has the multiplier 0, because it makes an item free. A shortcut that divides the total by one multiplier fails on that rule. The task is to compute, for every position, a combined value of all other positions in one linear pass.
 
 <!-- stage: naive -->
 ### Multiplying All The Other Values
@@ -60,7 +60,7 @@ The values after index `i` form a **suffix** of the array, which is a run of val
 
 #### The Cost Of Two Passes
 
-Each pass costs n multiplications, so the method costs O(n) time. The result array is the output itself, so the extra memory beyond it is one `suffix` variable, O(1). The same two passes work for any combining operation that has a neutral value, such as sum, product or maximum.
+Each pass costs n multiplications, so the method costs O(n) time. The result array is the output itself, so the extra memory beyond it is one `suffix` variable, O(1). The same two passes work for any combining operation that has a neutral value, such as a sum or a product.
 
 <!-- stage: variables -->
 ### Four Names And Their Roles
@@ -129,7 +129,7 @@ Division by the total is the false friend. It looks shorter, and it works for an
 
 #### Conditions That Break The Fit
 
-The operation must be associative, so the grouping of the factors may not change the result. It also needs a neutral value for the empty side. Sum, product, maximum and minimum meet both conditions. A median does not, and it needs a different method.
+The operation must be associative, so the grouping of the factors may not change the result. It also needs a neutral value for the empty side. Sum and product meet both conditions. Maximum and minimum do too, once the contract names a value for an empty side. A median does not, and it needs a different method.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -137,7 +137,7 @@ The operation must be associative, so the grouping of the factors may not change
 #### [Build] Sum Except Self (Author exercise)
 <!-- id: ps-sum-except-self -->
 
-**Prerequisites.** The left pass and the right pass of this lesson, and the long type from the first lesson.
+**Prerequisites.** The long type from the first lesson. The left pass and the right pass are optional here, because a total makes this version shorter.
 
 **Problem.** Given an integer array `nums`, return an array `out` where `out[i]` is the sum of all values of `nums` except `nums[i]`.
 

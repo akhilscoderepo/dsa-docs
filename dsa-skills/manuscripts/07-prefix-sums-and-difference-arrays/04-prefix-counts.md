@@ -73,9 +73,9 @@ The one-pass loop keeps five values.
 - **seen** is the frequency map from a prefix value to the count of earlier boundaries with that value.
 - **k** is the target sum and never changes.
 - **count** is the number of matching subarrays found so far.
-- **i** is the index of the value that the loop adds next.
+- **v** is the value that the loop adds next.
 
-At the start of step `i`, `seen` holds the prefix entries of boundaries 0 through `i`. The lookup reads it before `cur` is stored.
+At the start of each step, `seen` holds the prefix entries of boundaries 0 through `i`. The lookup reads it before `cur` is stored.
 
 <!-- stage: trace -->
 ### Two Counts Step By Step

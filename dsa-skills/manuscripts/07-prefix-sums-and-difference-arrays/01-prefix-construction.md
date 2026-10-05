@@ -5,9 +5,9 @@
 <!-- stage: context -->
 ### A Report That Recounts Every Day
 
-A sales report lists 100,000 daily revenue figures. Beside each day it prints the revenue earned from the first day up to that day. The report job works for a small shop with 365 days. For ten years of data from a large store, it runs for minutes, because every row adds up all earlier days again.
+A sales report lists 100,000 daily revenue figures. Beside each day it prints the revenue earned from the first day up to that day. The report job is fast for a small shop with 365 days. A report over 100,000 figures slows down noticeably, because every row adds up all earlier days again.
 
-Row 50,000 repeats the work of row 49,999 and adds one number. The question is how a program can store the sum of everything before a position, so that the next position costs a single addition.
+Row 50,000 repeats the work of row 49,999 and adds one number. The question is how a program can store the sum of everything before a position, so that the next position costs one addition.
 
 <!-- stage: naive -->
 ### Adding The Days Again For Every Row
@@ -63,7 +63,7 @@ Each entry is a sum of up to `n` values. With 100,000 values near 10^9, the sum 
 <!-- stage: variables -->
 ### Four Names And Their Roles
 
-The construction uses four names, and three of them change.
+The construction uses four names, and two of them change.
 
 - **nums** is the input array and is never modified.
 - **prefix** is the `long` array of length `n + 1`, and entry `i` holds the sum of the first `i` values.
@@ -117,7 +117,7 @@ The invariant is that after the step for index `i`, the entries `prefix[0]` thro
 
 #### The False Friend
 
-The false friend is the index shift between the two arrays. The value `prefix[i]` excludes `nums[i]`, while a loop that stores totals in a same-length array makes entry `i` include it. Mixing the two conventions moves every answer by one position. The sentinel convention keeps one rule everywhere, and `prefix[i + 1]` is the total through index `i`.
+The nearest wrong idea is the index shift between the two arrays. The value `prefix[i]` excludes `nums[i]`, while a loop that stores totals in a same-length array makes entry `i` include it. Mixing the two conventions moves every answer by one position. The sentinel convention keeps one rule everywhere, and `prefix[i + 1]` is the total through index `i`.
 
 #### Conditions That Break The Fit
 

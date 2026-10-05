@@ -61,12 +61,12 @@ Preprocessing costs O(n) time and O(n) space, once. Each query reads two entries
 <!-- stage: variables -->
 ### Five Names And Their Roles
 
-The query code uses five names. Only `left` and `right` change from one query to the next.
+The query code uses five names, and `end` follows from `right`. Only `left` and `right` change from one query to the next.
 
 - **prefix** is the `long` array of length `n + 1` from the previous lesson, built once and never changed.
 - **left** is the first index inside the window.
 - **right** is the last index inside the window.
-- **right + 1** is the prefix index that includes `nums[right]`.
+- **end** is `right + 1`, the prefix index that includes `nums[right]`.
 - **answer** is `prefix[right + 1] - prefix[left]` and has type `long`.
 
 Both reads use valid indexes when `0 <= left <= right < n`. The largest read is `prefix[n]`, and the smallest is `prefix[0]`.
@@ -193,7 +193,7 @@ The array must stay unchanged. One update to `nums[i]` changes every entry after
 #### [Recognize] XOR Queries Of A Subarray (LeetCode 1310)
 <!-- id: ps-xor-queries -->
 
-**Prerequisites.** All exercises above. The operator `^` combines two integers bit by bit, and `x ^ x` equals 0 for every `x`.
+**Prerequisites.** All exercises above. The operator `^` is the exclusive or of two integers. This exercise needs only two facts, `x ^ x` equals 0 and `x ^ 0` equals `x`, and the next lessons repeat them.
 
 **Problem.** Given an integer array `arr` and a list of queries `[left, right]`, return for each query the XOR of `arr[left]` through `arr[right]`. Subtraction cannot undo XOR, but XOR undoes itself, so a stored prefix state answers each query.
 

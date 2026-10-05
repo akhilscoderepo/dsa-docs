@@ -12,7 +12,7 @@ A month holds tens of thousands of builds. The engineer needs the length of the 
 <!-- stage: naive -->
 ### Counting Passes And Failures For Every Pair
 
-The direct method tries every start index. For each start it extends the end and keeps one counter that adds 1 for a pass and subtracts 1 for a fail. A counter of 0 means equal numbers, and the method records the length.
+The direct method tries every start index. For each start it extends the end and keeps one counter that adds 1 for a pass (the value 1) and subtracts 1 for a fail (the value 0). A counter of 0 means equal numbers, and the method records the length.
 
 ```java
 static int longestEqual(int[] nums) {
@@ -41,7 +41,7 @@ It examines 50,000 * 50,001 / 2 = 1,250,025,000 pairs. The loops visit every pai
 
 Each start gets its own inner loop, and the loops together visit every pair. The cost is O(n^2), which is more than a billion steps for 50,000 builds. The method also looks for a zero counter from each start, and it does not use what earlier starts already computed.
 
-The previous lesson counted matching pairs with a frequency map. This question asks for the longest span and not the number of spans, so a count of pairs does not answer it. The answer needs the position of the best start for each end, and a position is a different thing to store than a count.
+A frequency map, as in the lesson on counting sums, counts matching pairs. This question asks for the longest span and not the number of spans, so a count of pairs does not answer it. The answer needs the position of the best start for each end, and a position is a different thing to store than a count.
 
 <!-- stage: insight -->
 ### Remember Where Each Balance First Appeared
@@ -73,7 +73,7 @@ The one-pass loop keeps five values.
 - **first** is the map from a balance to the earliest index where it appeared.
 - **best** is the length of the longest span found so far.
 - **i** is the index of the current value.
-- **start index** is `first.get(bal)`, the earliest index with the same balance, and the span begins right after it.
+- **seen** is `first.get(bal)`, the earliest index with the same balance. The span begins right after that index.
 
 Before the first step, `first` holds only the pair balance 0 at index -1. A lookup that finds a balance gives a span of length `i - first.get(bal)`. A lookup that misses stores the pair `bal` at `i`.
 
@@ -179,7 +179,7 @@ The condition for a span must reduce to an equal state at two boundaries. A requ
 
 **Changed decision.** The step has three values, so some positions repeat the previous balance and extend a span for free.
 
-#### [Boundary] Prefix From Zero (Author exercise)
+#### [Boundary] Balanced Span With Start (Author exercise)
 <!-- id: ps-balanced-start -->
 
 **Prerequisites.** The first exercise and the second trace of this lesson.

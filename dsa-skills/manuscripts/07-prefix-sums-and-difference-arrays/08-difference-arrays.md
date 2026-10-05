@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Bookings That Slow With Every Request
 
-An airline sells seats on a chain of 50,000 consecutive flight legs. Each booking request adds a number of seats to every leg between two stops. The system handles 20,000 requests and then prints the total number of booked seats on every leg once. A request that spans the whole chain touches all 50,000 legs, and 20,000 such requests take more than a minute.
+An airline sells seats on a chain of 50,000 consecutive flight legs. Each booking request adds a number of seats to every leg between two stops. The system handles 20,000 requests and then prints the total number of booked seats on every leg once. A request that spans the whole chain touches all 50,000 legs, and 20,000 such requests perform a billion additions.
 
 Nobody reads the totals until all requests have arrived. The system updates a range for each request and reads every leg once. This lesson asks how a program can apply each range update in constant time and still produce all final totals.
 
@@ -61,7 +61,7 @@ An update that reaches the last index writes to `diff[right + 1]`, which is `dif
 <!-- stage: variables -->
 ### Five Names And Their Roles
 
-The method keeps five names.
+The method keeps five names, and the code reads `left`, `right` and `value` from the update triple.
 
 - **diff** is the `long` array of length `n + 1` that holds the deltas, and its last slot absorbs writes past the end.
 - **left** and **right** are the first and last index of an update, and both belong to the range.

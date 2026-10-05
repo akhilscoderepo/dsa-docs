@@ -1,7 +1,7 @@
 <!-- solutions-for: 07-prefix-sums-and-difference-arrays -->
 ### Solutions For Running XOR
 
-#### Solution: [Build] XOR Queries Of A Subarray (LeetCode 1310)
+#### Solution: [Build] XOR Of Half-Open Windows (LeetCode 1310)
 <!-- id: ps-xor-half-open -->
 
 **Approach.**
@@ -117,7 +117,7 @@ public final class CountXorK {
 }
 ```
 
-#### Solution: [Boundary] Empty Prefix (Author exercise)
+#### Solution: [Boundary] Longest Zero XOR Span (Author exercise)
 <!-- id: ps-xor-empty-prefix -->
 
 **Approach.**

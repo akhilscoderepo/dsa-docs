@@ -7,7 +7,7 @@
 
 An analytics team keeps a stream of signed amounts and answers three questions about it. How many stretches add up to a threshold? What is the longest stretch with equal credits and debits? How many stretches add up to a multiple of a divisor? Each report builds a `HashMap` that maps a running total to a number, and the three programs look almost alike.
 
-The first report is correct. The second prints a count where the question asks for a length. The third undercounts as soon as some amounts are negative. All three reports use the same map idea, so the defects have to come from two choices inside it. The problem is to decide what the map keys mean and what the map values remember.
+The first report is correct. The second prints a count where the question asks for a length. The third undercounts as soon as some amounts are negative. These are two kinds of defect, and each one traces back to a choice inside the map. All three reports use the same map idea, so the defects have to come from two choices inside it. The problem is to decide what the map keys mean and what the map values remember.
 
 <!-- stage: contributions -->
 ### What The Prefix And The Map Add
@@ -57,7 +57,7 @@ Every prefix-and-map solution answers two questions before it writes a loop. The
 
 #### The State Behind The Key
 
-A **boundary state** is a value computed from the prefix up to one boundary, such that two boundaries with related states enclose a valid window. For a sum equal to `k`, the state is the raw total, and the partner of total `t` has total `t - k`. For a balance, the state is the running balance, and the partner has the same balance. For divisibility, the state is the normalized remainder `Math.floorMod(total, k)`, and the partner has the same remainder. Several parts can combine into one key, as in the exercise that tracks two differences at once.
+A **boundary state** is a value computed from the prefix up to one boundary, such that two boundaries with related states enclose a valid window. For a sum equal to `k`, the state is the raw total, and the partner of total `t` has total `t - k`. For a balance, the state is the running balance, and the partner has the same balance. For divisibility, the state is the normalized remainder `Math.floorMod(total, k)`, and the partner has the same remainder. Several parts can combine into one key, as in the second exercise below, which tracks two differences at once.
 
 #### What The Map Stores
 
@@ -72,7 +72,7 @@ At each boundary the loop reads the partner state first and records the current 
 <!-- stage: variables -->
 ### Five Names And Their Roles
 
-Every solution in this lesson keeps the same five names.
+Every solution in this lesson follows the same five roles. The code uses shorter names such as `first`, `p`, `out` and `best` for them.
 
 - **cur** is the running total through the current value and has type `long`.
 - **state** is the key that the current boundary contributes, such as `cur`, a balance or a normalized remainder.

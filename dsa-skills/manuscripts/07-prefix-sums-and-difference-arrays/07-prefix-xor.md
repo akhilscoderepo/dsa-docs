@@ -65,10 +65,10 @@ The same idea works for the count of ranges with XOR equal to a target `k`. The 
 <!-- stage: variables -->
 ### Five Names And Their Roles
 
-The construction and the counting loop use five names.
+The construction and the counting loop use five names, and the query uses a sixth, `end`.
 
 - **px** is the array of length `n + 1` where entry `i` is the XOR of the first `i` values.
-- **left** and **right** are the first and last index of a query range.
+- **left** and **right** are the first and last index of a query range, and **end** is `right + 1`.
 - **k** is the target XOR in the counting version.
 - **seen** is the frequency map from a prefix XOR value to the number of earlier boundaries with that value.
 - **cur** is the prefix XOR through the current value in the counting loop.
@@ -141,7 +141,7 @@ The operation must have an inverse for the stored-prefix method. A bitwise AND a
 <!-- stage: exercises -->
 ### Exercises
 
-#### [Build] XOR Queries Of A Subarray (LeetCode 1310)
+#### [Build] XOR Of Half-Open Windows (LeetCode 1310)
 <!-- id: ps-xor-half-open -->
 
 **Prerequisites.** The prefix XOR array and the self-inverse property of this lesson.
@@ -183,7 +183,7 @@ The operation must have an inverse for the stored-prefix method. A bitwise AND a
 
 **Changed decision.** The lookup key changes from a difference to an XOR, while the structure of the counting loop stays.
 
-#### [Boundary] Empty Prefix (Author exercise)
+#### [Boundary] Longest Zero XOR Span (Author exercise)
 <!-- id: ps-xor-empty-prefix -->
 
 **Prerequisites.** The first exercise and the earliest-index map of the lesson on balanced spans.
