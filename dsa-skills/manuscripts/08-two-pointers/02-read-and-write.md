@@ -135,81 +135,81 @@ The method needs a test that decides a value from that value and the kept prefix
 
 **Prerequisites.** The compaction of this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `val`, remove every occurrence of `val` in place. Return `k`, the number of values not equal to `val`. The first `k` slots of `nums` must hold those values in their original order. Slots from index `k` on may hold any value.
+**Problem.** Take an integer array `nums`, an integer `val` and a limit `limit`. Remove the first `limit` occurrences of `val` in place, and keep every other value, including later occurrences of `val`. Return `k`, the new length. The first `k` slots hold the kept values in their original order. The original problem removes every occurrence, and this version removes a bounded number.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 100`; the empty array is valid.
 - **Values** are `int` values from 0 to 50, and `val` is an `int` from 0 to 100.
-- **Order** of the kept values equals their order in the input.
+- **Limit** is an `int` with `0 <= limit <= 100`; a limit of 0 removes nothing.
 - **Extra space** is O(1).
 
-**Example 1.** Input `nums = [4,1,4,2,4,3]` and `val = 4`, output `k = 3` with prefix `[1,2,3]`.
+**Example 1.** Input `nums = [4,1,4,2,4,3]`, `val = 4` and `limit = 2`, output `k = 4` with prefix `[1,2,4,3]`.
 
-**Example 2.** Input `nums = [7,7]` and `val = 7`, output `k = 0`.
+**Example 2.** Input `nums = [7,7]`, `val = 7` and `limit = 0`, output `k = 2` with prefix `[7,7]`.
 
-**Hint.** Copy a value only when it passes the test. What does `write` count at every moment?
+**Hint.** The test now needs a count of the removals so far. Which variable holds it, and which condition stops removing?
 
-**Changed decision.** Basic case: one pass that keeps the original order of the values that stay.
+**Changed decision.** The admission test consults a counter as well as the value, so one value can be kept or removed depending on earlier removals.
 
 #### [Vary] Move Zeroes (LeetCode 283)
 <!-- id: tp-move-zeroes -->
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** Given an integer array `nums`, move every `0` to the end in place. The nonzero values keep their relative order, and the array length does not change.
+**Problem.** Take an integer array `nums`. Move every `0` to the front in place. The nonzero values keep their relative order and end at the back of the array. The original problem moves zeros to the end, and this version moves them to the front.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^4`.
 - **Values** are `int` values; negative values are allowed.
 - **Mutation** is required, and the method returns nothing.
-- **Writes** should be few: a value that is already in place may be left untouched.
+- **Extra space** is O(1).
 
-**Example 1.** Input `nums = [0,3,0,-2,5]`, output `[3,-2,5,0,0]`.
+**Example 1.** Input `nums = [0,3,0,-2,5]`, output `[0,0,3,-2,5]`.
 
 **Example 2.** Input `nums = [1,2]`, output `[1,2]`.
 
-**Hint.** After the compaction, which slots hold stale values, and what should they hold?
+**Hint.** The kept values must fill the array from its last slot. In which direction should the read index and the write index move?
 
-**Changed decision.** The array keeps its length, so the stale suffix must be repaired with zeros.
+**Changed decision.** The kept prefix becomes a kept suffix, so both indexes run from the last slot toward the first.
 
 #### [Boundary] Remove Duplicates From Sorted Array (LeetCode 26)
 <!-- id: tp-dedup-sorted -->
 
 **Prerequisites.** The first exercise and the kept prefix of this lesson.
 
-**Problem.** Given an integer array `nums` sorted in nondecreasing order, keep one copy of each distinct value in place. Return `k`, the number of distinct values. The first `k` slots hold them in sorted order.
+**Problem.** Take an integer array `nums` that is not sorted. Replace every block of equal adjacent values by one copy, in place. Return `k`, the new length. The first `k` slots hold the result in the original order. Equal values that are not adjacent stay. The original problem takes a sorted array, and this version takes any array.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 3 * 10^4`; the empty array is valid.
-- **Values** are `int` values, sorted in nondecreasing order.
-- **Runs** may have length 1, so a value with no neighbor must stay.
+- **Values** are `int` values, in any order.
+- **Runs** may have length 1, so a value with no equal neighbor must stay.
 - **Extra space** is O(1).
 
-**Example 1.** Input `nums = [2,2,5,7,7,7,9]`, output `k = 4` with prefix `[2,5,7,9]`.
+**Example 1.** Input `nums = [2,2,5,2,2,2,9]`, output `k = 4` with prefix `[2,5,2,9]`.
 
 **Example 2.** Input `nums = []`, output `k = 0`.
 
-**Hint.** The first value is always admitted. Which earlier value does each later value compare with?
+**Hint.** The first value is always admitted. Which earlier value does each later value compare with, and is it still true that equal values sit together?
 
-**Changed decision.** The test looks at the kept prefix, and the empty input needs a guard before the first admission.
+**Changed decision.** The array is not sorted, so the test compares with the last kept value only, and equal values far apart stay.
 
 #### [Recognize] Remove Duplicates From Sorted Array II (LeetCode 80)
 <!-- id: tp-dedup-twice -->
 
 **Prerequisites.** The second trace of this lesson.
 
-**Problem.** Given an integer array `nums` sorted in nondecreasing order, keep at most two copies of each value in place. Return `k`, the length of the result. The first `k` slots hold the result in sorted order.
+**Problem.** Take a nondecreasing integer array `nums` and an integer `k >= 1`. Keep at most `k` copies of each value in place. Return `m`, the length of the result. The first `m` slots hold the result in sorted order. The original problem fixes `k` at 2, and this version takes `k` as a parameter.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 3 * 10^4`.
-- **Values** are `int` values, sorted in nondecreasing order.
-- **Copies** per value in the output are at most two.
+- **Values** are `int` values, in nondecreasing order.
+- **Copies** per value in the output are at most `k`, with `1 <= k <= 100`.
 - **Extra space** is O(1).
 
-**Example 1.** Input `nums = [3,3,3,3,4,4,4]`, output `k = 4` with prefix `[3,3,4,4]`.
+**Example 1.** Input `nums = [3,3,3,3,4,4,4]` and `k = 3`, output `m = 6` with prefix `[3,3,3,4,4,4]`.
 
-**Example 2.** Input `nums = [1,2,2,2,5]`, output `k = 4` with prefix `[1,2,2,5]`.
+**Example 2.** Input `nums = [1,2,2,2,5]` and `k = 1`, output `m = 3` with prefix `[1,2,5]`.
 
-**Hint.** Compare the candidate with the value two slots behind `write`, and never with the value at `read - 2`. Why?
+**Hint.** Compare the candidate with the value `k` slots behind `write`, and never with the value at `read - k`. Why?
 
-**Changed decision.** The admission rule reads the kept prefix at distance two, while `read` still advances by one.
+**Changed decision.** The admission rule reads the kept prefix at distance `k`, so the distance is a parameter and `k = 1` gives plain deduplication.
