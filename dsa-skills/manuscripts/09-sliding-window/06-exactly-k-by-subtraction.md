@@ -123,7 +123,7 @@ The test `nums[i] % 2 != 0` is correct for negative numbers, because `-3 % 2` is
 
 #### Cost Of The Difference
 
-Each call of `atMost` costs O(n), and `countExactly` makes two calls, so the time is O(n). The extra memory is O(1). The sum is a `long`, because a range count of about `n * n / 2` overflows `int` for `n` near 100,000.
+Each call of `atMost` costs O(n), and `countExactly` makes two calls, so the whole count runs in linear time. The extra memory is constant. The sum is a `long`, because a range count of about `n * n / 2` overflows `int` for `n` near 100,000.
 
 <!-- stage: applicability -->
 ### When The Subtraction Applies
