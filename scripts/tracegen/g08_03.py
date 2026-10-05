@@ -1,24 +1,28 @@
 from common import *
-CH='08-two-pointers'
-F='03-two-way-partition.md'
-def run(src):
-    a=list(src); lo,hi=0,len(a)-1; st=[]
-    def rec(note):
-        st.append({"at":{"lo":lo,"hi":hi},"vars":{"row":",".join(map(str,a)),"evensSoFar":lo},"note":note})
-    while lo<=hi:
-        if a[lo]%2==0:
-            rec(f"Position {lo} holds {a[lo]}, which is even and already in the front region, so lo moves to {lo+1}."); lo+=1
-        elif lo==hi:
-            rec(f"Both pointers sit on position {lo}, which holds the odd {a[lo]}. It is in the back region, so hi moves to {hi-1}."); hi-=1
-        elif a[hi]%2!=0:
-            rec(f"Position {lo} holds the odd {a[lo]}, and position {hi} holds {a[hi]}, which is odd and already in the back region, so hi moves to {hi-1}."); hi-=1
+CH='08-two-pointers'; F='03-two-way-partition.md'
+def t1():
+    a=[3,8,5,2,6,7]; l,r=0,len(a)-1; st=[]
+    while l<r:
+        v={"array":str(a)}
+        if a[l]%2==0: st.append({"at":{"left":l,"right":r},"vars":v,"note":f"The value {a[l]} at left is even, so left moves right."}); l+=1
+        elif a[r]%2!=0: st.append({"at":{"left":l,"right":r},"vars":v,"note":f"The value {a[r]} at right is odd, so right moves left."}); r-=1
         else:
-            rec(f"Position {lo} holds the odd {a[lo]} and position {hi} holds the even {a[hi]}. They form a misplaced pair, so both are exchanged and the pointers move to {lo+1} and {hi-1}.")
-            a[lo],a[hi]=a[hi],a[lo]; lo+=1; hi-=1
-    rec(f"The pointers have crossed, so no position is unresolved. The first {lo} positions are even and the rest are odd.")
-    assert all(x%2==0 for x in a[:lo]) and all(x%2!=0 for x in a[lo:]) and sorted(a)==sorted(src)
-    return a,lo,st
-a,lo,st=run([3,8,5,6,2,7,4,1]); assert lo==4
-fill(CH,F,block([3,8,5,6,2,7,4,1],["lo","hi"],st),"@@TRACE1@@")
-a,lo,st=run([12,7,9,10,5]); assert lo==2
-fill(CH,F,block([12,7,9,10,5],["lo","hi"],st),"@@TRACE2@@")
+            x,y=a[l],a[r]; a[l],a[r]=y,x
+            st.append({"at":{"left":l,"right":r},"vars":{"array":str(a)},"note":f"The values {x} and {y} are both misplaced, so the scan swaps them and moves both pointers."}); l+=1; r-=1
+    st.append({"at":{"left":l,"right":r},"vars":{"array":str(a)},"note":"The pointers have met. Every even value stands before every odd value."})
+    assert all(x%2==0 for x in a[:3]) and all(x%2 for x in a[3:])
+    return block([3,8,5,2,6,7],["left","right"],st)
+def t2():
+    a=[7,2,9,3,5,1]; P=5; s=0; st=[]
+    for i in range(len(a)):
+        if a[i]<P:
+            if i!=s:
+                x,y=a[s],a[i]; a[s],a[i]=y,x
+                st.append({"at":{"i":i,"store":s},"vars":{"array":str(a)},"note":f"The value {y} is below {P}, so it swaps with {x} at store and store advances."})
+            else: st.append({"at":{"i":i,"store":s},"vars":{"array":str(a)},"note":f"The value {a[i]} is below {P} and already sits at store, so store advances."})
+            s+=1
+        else: st.append({"at":{"i":i,"store":s},"vars":{"array":str(a)},"note":f"The value {a[i]} is not below {P}, so only i moves."})
+    st.append({"at":{"i":len(a),"store":s},"vars":{"array":str(a)},"note":f"The scan ends with store = {s}. The first {s} slots hold the values below {P}."})
+    assert all(x<P for x in a[:s]) and all(x>=P for x in a[s:]) and s==3
+    return block([7,2,9,3,5,1],["i","store"],st)
+fill(CH,F,t1(),"@@TRACE1@@"); fill(CH,F,t2(),"@@TRACE2@@")
