@@ -7,7 +7,7 @@
 
 A monitoring page charts the requests per minute for the last 100,000 minutes, about 70 days. The user drags two handles to choose a window of minutes, and the page shows the total number of requests inside it. Short windows respond at once. A window that covers most of the chart freezes the page, because every drag event adds up tens of thousands of numbers.
 
-The data does not change while the user drags. Only the window changes. This lesson answers one question. How does a program answer a sum over any window of unchanging data in constant time?
+The data does not change while the user drags. Only the window changes. The goal is a constant-time answer for the sum over any window of this unchanging data.
 
 <!-- stage: naive -->
 ### Adding The Window Values Each Time

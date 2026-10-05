@@ -7,7 +7,7 @@
 
 A pricing engine applies up to 100,000 rules to an order, and each rule scales the price by a multiplier. The team wants a report that shows, for every rule, the combined multiplier of all the other rules. That report tells them what the price would be without that one rule.
 
-One rule has the multiplier 0, because it makes an item free. The usual shortcut for such a report fails on that rule. This lesson answers one question. How does a program compute, for every position, a combined value of all other positions in one linear pass?
+One rule has the multiplier 0, because it makes an item free. The usual shortcut for such a report fails on that rule. The task is to compute, for every position, a combined value of all other positions in one linear pass.
 
 <!-- stage: naive -->
 ### Multiplying All The Other Values

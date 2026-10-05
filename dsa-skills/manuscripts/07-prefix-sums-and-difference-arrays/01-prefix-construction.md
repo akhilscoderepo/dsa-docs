@@ -7,7 +7,7 @@
 
 A sales report lists 100,000 daily revenue figures. Beside each day it prints the revenue earned from the first day up to that day. The report job works for a small shop with 365 days. For ten years of data from a large store, it runs for minutes, because every row adds up all earlier days again.
 
-Row 50,000 repeats the work of row 49,999 and adds one number. This lesson answers one question. How does a program store the sum of everything before a position, so that the next position costs a single addition?
+Row 50,000 repeats the work of row 49,999 and adds one number. The question is how a program can store the sum of everything before a position, so that the next position costs a single addition.
 
 <!-- stage: naive -->
 ### Adding The Days Again For Every Row

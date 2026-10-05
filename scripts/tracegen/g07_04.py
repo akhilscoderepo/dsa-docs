@@ -1,16 +1,14 @@
 from common import *
-from collections import defaultdict
 CH='07-prefix-sums-and-difference-arrays'
-F='04-prefix-counts.md'
-def run(a,k,third_note=None):
-    seen=defaultdict(int); seen[0]=1; p=0; ans=0; st=[]
-    for i,x in enumerate(a):
-        p+=x; need=p-k; hit=seen[need]; ans+=hit; seen[p]+=1
-        st.append({"at":{"i":i},"vars":{"balance":p,"need":need,"found":hit,"answer":ans},"note":f"The balance is {p}, so the complement is {need}. The table holds it {hit} times, so the answer is {ans}. Then record the balance {p}."})
-    return st,ans
-a=[3,4,7,2,-3,1,4,2]
-st,ans=run(a,7); assert ans==4 and st[2]["vars"]["balance"]==14 and st[2]["vars"]["need"]==7 and st[2]["vars"]["found"]==1
-fill(CH,F,block([str(x) for x in a],["i"],st),"@@TRACE1@@")
-a=[0,0,0]
-st,ans=run(a,0); assert ans==6 and st[2]["vars"]["found"]==3
-fill(CH,F,block([str(x) for x in a],["i"],st),"@@TRACE2@@")
+def run(a,k,ph):
+    seen={0:1}; cur=0; cnt=0
+    st=[{"at":{"i":-1},"vars":{"seen":"{0=1}","count":"0"},"note":"The map starts with the seed: prefix 0 occurs once, for boundary 0."}]
+    def m(): return "{"+", ".join(f"{x}={c}" for x,c in seen.items())+"}"
+    for i,v in enumerate(a):
+        cur+=v; hit=seen.get(cur-k,0); cnt+=hit
+        note=f"Prefix is {cur}. The key {cur-k} occurs {hit} time{'s' if hit!=1 else ''} before, so the count becomes {cnt}. Then the map records {cur}."
+        seen[cur]=seen.get(cur,0)+1
+        st.append({"at":{"i":i},"vars":{"cur":str(cur),"look up":str(cur-k),"seen":m(),"count":str(cnt)},"note":note})
+    fill(CH,'04-prefix-counts.md',block(a,["i"],st),ph); return cnt
+assert run([3,4,7,2,-3,1,4,2],7,"@@TRACE1@@")==4
+assert run([0,0,0],0,"@@TRACE2@@")==6
