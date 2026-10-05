@@ -152,7 +152,7 @@ The elimination needs a monotone relation: a pointer move must change the quanti
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** Take an integer array `nums` in nondecreasing order and an integer `target`. Return the sum of the pair `i < j` whose sum has the smallest absolute difference from `target`. When two sums are equally close, return the smaller sum.
+**Problem.** Take an integer array `nums` in nondecreasing order and an integer `target`. Return the sum of the pair `i < j` whose sum has the smallest absolute difference from `target`. Break a tie between two equally close sums by returning the smaller one.
 
 **Constraints.** The limits are:
 - **Length** is `2 <= nums.length <= 10^5`.
