@@ -1,18 +1,22 @@
 from common import *
-from collections import defaultdict
 CH='07-prefix-sums-and-difference-arrays'
-F='07-prefix-xor.md'
-a=[6,2,7,4]; px=[0]; st=[]
-for i,x in enumerate(a):
-    px.append(px[-1]^x)
-    st.append({"at":{"i":i},"vars":{"card":x,"prefixXor":px[-1]},"note":f"XOR the card {x} into the running value, which becomes {px[-1]}, and store it in slot {i+1}."})
-assert px==[0,6,4,3,7]
-st.append({"at":{"i":3},"vars":{"slotHigh":px[4],"slotLow":px[1],"answer":px[4]^px[1]},"note":f"The query covers positions 1 to 3, so read slot 4, which holds {px[4]}, and slot 1, which holds {px[1]}. Their XOR is {px[4]^px[1]}."})
-assert px[4]^px[1]==1==(2^7^4)
-fill(CH,F,block([str(x) for x in a],["i"],st),"@@TRACE1@@")
-a=[4,2,2,6,4]; k=6; seen=defaultdict(int); seen[0]=1; cur=0; cnt=0; st=[]
-for i,x in enumerate(a):
-    cur^=x; need=cur^k; hit=seen[need]; cnt+=hit; seen[cur]+=1
-    st.append({"at":{"i":i},"vars":{"prefix":cur,"need":need,"found":hit,"count":cnt},"note":f"The prefix is {cur} and the complement {cur} XOR {k} is {need}. It occurred {hit} times before, so the count is {cnt}."})
-assert cnt==4 and st[3]["vars"]["prefix"]==2 and st[3]["vars"]["need"]==4 and st[3]["vars"]["found"]==2
-fill(CH,F,block([str(x) for x in a],["i"],st),"@@TRACE2@@")
+def q(a,l,r,ph):
+    px=[0]
+    for v in a: px.append(px[-1]^v)
+    st=[{"at":{"left":-1,"end":-1},"vars":{"query":f"[{l}, {r}]"},"note":f"The prefix XOR array is ready. The query asks for index {l} through index {r}, so the reads are px[{r+1}] and px[{l}]."},
+        {"at":{"left":-1,"end":r+1},"vars":{"px[end]":str(px[r+1])},"note":f"Read px[{r+1}] = {px[r+1]}, the XOR of the first {r+1} values."},
+        {"at":{"left":l,"end":r+1},"vars":{"px[end]":str(px[r+1]),"px[left]":str(px[l])},"note":f"Read px[{l}] = {px[l]}, the XOR of the first {l} values."},
+        {"at":{"left":l,"end":r+1},"vars":{"answer":f"{px[r+1]} ^ {px[l]} = {px[r+1]^px[l]}"},"note":f"The first {l} values meet twice and cancel, so the answer is {px[r+1]^px[l]}."}]
+    fill(CH,'07-prefix-xor.md',block(px,["left","end"],st),ph); return px[r+1]^px[l]
+assert q([5,1,7,2,6],1,3,"@@TRACE1@@")==4
+def cnt(a,k,ph):
+    seen={0:1}; cur=0; c=0
+    def m(): return "{"+", ".join(f"{x}={n}" for x,n in sorted(seen.items()))+"}"
+    st=[{"at":{"i":-1},"vars":{"seen":m(),"count":"0"},"note":"The map starts with prefix XOR 0 once, for boundary 0."}]
+    for i,v in enumerate(a):
+        cur^=v; key=cur^k; hit=seen.get(key,0); c+=hit
+        note=f"Prefix XOR is {cur}. The key {cur} ^ {k} = {key} occurs {hit} time{'s' if hit!=1 else ''} before, so the count becomes {c}."
+        seen[cur]=seen.get(cur,0)+1
+        st.append({"at":{"i":i},"vars":{"cur":str(cur),"look up":str(key),"seen":m(),"count":str(c)},"note":note})
+    fill(CH,'07-prefix-xor.md',block(a,["i"],st),ph); return c
+assert cnt([4,2,2,6,4],6,"@@TRACE2@@")==4
