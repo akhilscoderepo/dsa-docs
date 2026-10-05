@@ -146,7 +146,7 @@ static int countNotCovered(int[][] slots) {
 }
 ```
 
-Both methods cost O(n log n) time for the sort and O(n) space for the clone, and each scan adds O(n) time and O(1) space. The `long` initial values are below every `int`, so the first request is always kept.
+Sorting dominates both methods at O(n log n) time, and the clone takes O(n) space. Each scan afterwards adds only O(n) time and O(1) space. The `long` initial values are below every `int`, so the first request is always kept.
 
 <!-- stage: applicability -->
 ### When The Greedy Choice Applies

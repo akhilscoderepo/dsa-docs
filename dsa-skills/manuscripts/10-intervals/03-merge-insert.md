@@ -149,7 +149,7 @@ static int[][] insert(int[][] list, int[] add) {
 }
 ```
 
-The merge costs O(n log n) time for the sort and O(n) space for the result, and the insert costs O(n) time and O(n) space. The conversion `toArray(new int[size][])` is an output step and not a speed-up, because it copies `size` row references once.
+The merge spends O(n log n) time sorting and holds O(n) entries in its result. The insert needs O(n) time and O(n) space. The conversion `toArray(new int[size][])` is an output step and not a speed-up, because it copies `size` row references once.
 
 <!-- stage: applicability -->
 ### When Merge And Insert Apply
