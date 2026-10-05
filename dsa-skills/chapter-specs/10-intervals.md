@@ -65,7 +65,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Endpoint Ordering Contracts
+### Choose How To Sort Intervals
 
 **Recognition cue.** Each record describes a range and the algorithm needs a reliable order before making local overlap decisions. **Invariant.** Intervals already processed precede every unresolved interval under the stated comparator. **False friend.** Sorting by end supports selection problems, but it does not replace sorting by start for ordinary merging. **Java hazard.** Use `Integer.compare(a[0], b[0])`, not subtraction that can overflow.
 
@@ -74,7 +74,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Equal And Extreme Endpoints.** Test equal starts and integer extremes with safe comparisons.
 - **Recognize - LC 56 Merge Intervals.** Choose start order because only the current merged interval can overlap the next one.
 
-### Touching-Boundary Semantics
+### Decide When Touching Intervals Overlap
 
 **Recognition cue.** Correctness changes when one interval ends exactly where another begins. **Invariant.** The overlap predicate follows the declared model: closed `[a,b]`, open, or half-open `[a,b)`. **False friend.** Memorizing `<=` or `<` without the contract produces plausible but inconsistent answers.
 
@@ -92,7 +92,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: One Interval Covers Many.** Let one long range absorb several following ranges and touching endpoints.
 - **Recognize - LC 57 Insert Interval.** Emit intervals before the new range, merge its overlap block, then emit intervals after it.
 
-### Two-List Intersection
+### Intersect Two Lists Of Intervals
 
 **Recognition cue.** Two lists are individually sorted and disjoint, and the output needs all pairwise overlaps. **Invariant.** The current pair is the only unresolved cross-list pair involving both current intervals; after emitting their intersection, the interval with the smaller end cannot meet a later interval in the other list. **False friend.** Merging the lists computes a union, not intersections.
 
@@ -101,7 +101,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Touching Intersections.** Compare the closed and half-open answers at equal endpoints.
 - **Recognize - LC 986 Interval List Intersections.** Emit an overlap and advance the interval with the smaller end.
 
-### Overlap And Coverage
+### Keep The Most Intervals Without Overlap
 
 **Recognition cue.** The objective is to keep many compatible intervals, remove overlaps, or detect intervals fully covered by another. **Invariant.** For non-overlap selection, the kept interval has the smallest possible end among processed choices; for coverage, the greatest reachable end summarizes prior containers. **False friend.** Merging changes intervals and loses which original intervals should be removed.
 
@@ -110,7 +110,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - LC 1288 Remove Covered Intervals.** Sort equal starts by descending end so a shorter interval cannot hide its container.
 - **Recognize - LC 452 Minimum Number of Arrows to Burst Balloons.** Treat each arrow as a point kept inside the current intersection of compatible balloons.
 
-### Event Sweep Ties
+### Count Active Intervals With Events
 
 **Recognition cue.** The answer depends on how many intervals are active at each coordinate rather than on their merged geometry. **Invariant.** The running count equals the number of active intervals after all events at the current coordinate have been processed in contract-defined order. **False friend.** Sorting starts and ends independently can find a maximum count, but an explicit event stream is clearer when ties or multiple event types matter.
 
@@ -121,7 +121,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Sorting And Intervals
+### Sort Intervals Then Scan Once
 
 Sorting exposes intervals in an order where one local state—the active end or last selected end—summarizes all processed input. Interval semantics supply the overlap predicate. Sorting alone does not determine whether the task wants union, insertion, or maximum compatible selection.
 

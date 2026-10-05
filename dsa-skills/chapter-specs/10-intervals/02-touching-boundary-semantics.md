@@ -1,4 +1,4 @@
-# Lesson spec: Touching-Boundary Semantics
+# Lesson spec: Decide When Touching Intervals Overlap
 
 **Recognition cue.** Correctness changes when one interval ends exactly where another begins. **Invariant.** The overlap predicate follows the declared model: closed `[a,b]`, open, or half-open `[a,b)`. **False friend.** Memorizing `<=` or `<` without the contract produces plausible but inconsistent answers.
 

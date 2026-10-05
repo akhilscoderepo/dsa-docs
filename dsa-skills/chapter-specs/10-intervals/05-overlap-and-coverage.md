@@ -1,4 +1,4 @@
-# Lesson spec: Overlap And Coverage
+# Lesson spec: Keep The Most Intervals Without Overlap
 
 **Recognition cue.** The objective is to keep many compatible intervals, remove overlaps, or detect intervals fully covered by another. **Invariant.** For non-overlap selection, the kept interval has the smallest possible end among processed choices; for coverage, the greatest reachable end summarizes prior containers. **False friend.** Merging changes intervals and loses which original intervals should be removed.
 

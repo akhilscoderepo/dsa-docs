@@ -1,4 +1,4 @@
-# Lesson spec: Event Sweep Ties
+# Lesson spec: Count Active Intervals With Events
 
 **Recognition cue.** The answer depends on how many intervals are active at each coordinate rather than on their merged geometry. **Invariant.** The running count equals the number of active intervals after all events at the current coordinate have been processed in contract-defined order. **False friend.** Sorting starts and ends independently can find a maximum count, but an explicit event stream is clearer when ties or multiple event types matter.
 

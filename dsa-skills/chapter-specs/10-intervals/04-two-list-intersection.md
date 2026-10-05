@@ -1,4 +1,4 @@
-# Lesson spec: Two-List Intersection
+# Lesson spec: Intersect Two Lists Of Intervals
 
 **Recognition cue.** Two lists are individually sorted and disjoint, and the output needs all pairwise overlaps. **Invariant.** The current pair is the only unresolved cross-list pair involving both current intervals; after emitting their intersection, the interval with the smaller end cannot meet a later interval in the other list. **False friend.** Merging the lists computes a union, not intersections.
 

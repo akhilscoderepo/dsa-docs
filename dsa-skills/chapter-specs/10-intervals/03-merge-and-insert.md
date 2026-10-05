@@ -1,4 +1,4 @@
-# Lesson spec: Merge And Insert
+# Lesson spec: Merge Intervals And Insert A New One
 
 **Recognition cue.** Overlapping ranges should become their union, or one new range must be added to an already sorted disjoint list. **Invariant.** The output contains finalized disjoint intervals plus at most one active interval that may still grow. **False friend.** Insert does not require re-sorting when the input contract already supplies order and disjointness.
 

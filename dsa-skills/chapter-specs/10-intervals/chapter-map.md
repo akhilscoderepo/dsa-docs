@@ -4,12 +4,12 @@
 
 ## Lesson order
 
-01. Endpoint Ordering Contracts  ->  01-endpoint-ordering-contracts.md
-02. Touching-Boundary Semantics  ->  02-touching-boundary-semantics.md
-03. Merge And Insert  ->  03-merge-and-insert.md
-04. Two-List Intersection  ->  04-two-list-intersection.md
-05. Overlap And Coverage  ->  05-overlap-and-coverage.md
-06. Event Sweep Ties  ->  06-event-sweep-ties.md
+01. Choose How To Sort Intervals  ->  01-endpoint-ordering-contracts.md
+02. Decide When Touching Intervals Overlap  ->  02-touching-boundary-semantics.md
+03. Merge Intervals And Insert A New One  ->  03-merge-and-insert.md
+04. Intersect Two Lists Of Intervals  ->  04-two-list-intersection.md
+05. Keep The Most Intervals Without Overlap  ->  05-overlap-and-coverage.md
+06. Count Active Intervals With Events  ->  06-event-sweep-ties.md
 
 # Chapter 10: Intervals
 
@@ -38,7 +38,7 @@ State prerequisite knowledge in the finished chapter. Confirm the input/mutation
 
 ## Released Combination Lessons
 
-### Sorting And Intervals
+### Sort Intervals Then Scan Once
 
 Sorting exposes intervals in an order where one local state—the active end or last selected end—summarizes all processed input. Interval semantics supply the overlap predicate. Sorting alone does not determine whether the task wants union, insertion, or maximum compatible selection.
 
