@@ -1,18 +1,20 @@
 from common import *
 CH='07-prefix-sums-and-difference-arrays'
-F='01-prefix-construction.md'
-a=[4,-2,5,3,-6,1]; tot=0; st=[]
-for i,x in enumerate(a):
-    tot+=x
-    st.append({"at":{"i":i},"vars":{"amount":x,"total":tot},"note":f"Add {x} to the total, which becomes {tot}, and write it into slot {i+1}."})
-assert st[4]["vars"]["total"]==4 and a[4]<0
-fill(CH,F,block([str(x) for x in a],["i"],st),"@@TRACE1@@")
-a=[2,-1,8,4,2,2,5]; T=sum(a); assert T==22
-left=0; st=[]
-for i,x in enumerate(a):
-    right=T-left-x
-    if left==right:
-        st.append({"at":{"i":i},"vars":{"left":left,"amount":x,"right":right},"note":f"The left sum is {left}, the amount is {x}, and the right sum is {T} - {left} - {x} = {right}, so position {i} is a pivot."}); break
-    st.append({"at":{"i":i},"vars":{"left":left,"amount":x,"right":right},"note":f"The left sum is {left} and the right sum is {right}, which differ, so add {x} to the left sum and move on."}); left+=x
-assert i==3 and left==9 and len(st)==4
-fill(CH,F,block([str(x) for x in a],["i"],st),"@@TRACE2@@")
+def build(a,ph):
+    pre=[0]; st=[{"at":{"i":-1},"vars":{"prefix":"[0]"},"note":"Start with the sentinel entry prefix[0] = 0, the sum of zero values."}]
+    for i,v in enumerate(a):
+        pre.append(pre[-1]+v)
+        st.append({"at":{"i":i},"vars":{"nums[i]":str(v),"prefix":str(pre)},"note":f"Add {v} to {pre[i]} and store {pre[i+1]} as prefix[{i+1}]."})
+    fill(CH,'01-prefix-construction.md',block(a,["i"],st),ph); return pre
+assert build([3,1,4,1,5],"@@TRACE1@@")==[0,3,4,8,9,14]
+def pivot(a,ph):
+    pre=[0]
+    for v in a: pre.append(pre[-1]+v)
+    tot=pre[-1]; st=[]; res=-1
+    for i,v in enumerate(a):
+        l=pre[i]; r=tot-pre[i+1]
+        if l==r:
+            st.append({"at":{"i":i},"vars":{"left":str(l),"right":str(r)},"note":f"Left side {l} equals right side {r}, so index {i} is the pivot."}); res=i; break
+        st.append({"at":{"i":i},"vars":{"left":str(l),"right":str(r)},"note":f"Left side {l} differs from right side {r}, so the loop moves on."})
+    fill(CH,'01-prefix-construction.md',block(a,["i"],st),ph); return res
+assert pivot([1,7,3,6,5,6],"@@TRACE2@@")==3

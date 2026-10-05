@@ -1,4 +1,4 @@
-# Lesson spec: Two-Dimensional Difference
+# Lesson spec: Add To Rectangles In Constant Time
 
 **Recognition cue.** Many rectangle additions precede one final matrix materialization. **State.** Four signed corner updates encode each rectangle; two-dimensional prefix reconstruction spreads their effects. **False friend.** A 2D prefix-query table reads fixed values; it does not batch writes.
 

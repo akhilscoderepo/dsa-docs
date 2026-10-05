@@ -1,4 +1,4 @@
-# Lesson spec: Remainder Classes
+# Lesson spec: Group Prefixes By Remainder
 
 **Recognition cue.** Divisibility of a range depends on two prefixes having the same normalized remainder. **State.** Store counts or earliest indices by `Math.floorMod(prefix, k)`. **Java hazard.** Java `%` may be negative.
 

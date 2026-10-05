@@ -4,16 +4,16 @@
 
 ## Lesson order
 
-01. Prefix Construction  ->  01-prefix-construction.md
-02. Range Queries  ->  02-range-queries.md
-03. Exclusion State  ->  03-exclusion-state.md
-04. Prefix Counts  ->  04-prefix-counts.md
-05. Earliest Balance  ->  05-earliest-balance.md
-06. Remainder Classes  ->  06-remainder-classes.md
-07. Prefix XOR  ->  07-prefix-xor.md
-08. Difference Arrays  ->  08-difference-arrays.md
-09. Two-Dimensional Prefix  ->  09-two-dimensional-prefix.md
-10. Two-Dimensional Difference  ->  10-two-dimensional-difference.md
+01. Build Running Totals  ->  01-prefix-construction.md
+02. Answer Range Sum Queries  ->  02-range-queries.md
+03. Combine Totals From Both Sides  ->  03-exclusion-state.md
+04. Count Subarrays With A Target Sum  ->  04-prefix-counts.md
+05. Find The Longest Balanced Span  ->  05-earliest-balance.md
+06. Group Prefixes By Remainder  ->  06-remainder-classes.md
+07. Use XOR As A Running Total  ->  07-prefix-xor.md
+08. Add To Ranges In Constant Time  ->  08-difference-arrays.md
+09. Sum A Rectangle In Constant Time  ->  09-two-dimensional-prefix.md
+10. Add To Rectangles In Constant Time  ->  10-two-dimensional-difference.md
 
 # Chapter 07: Prefix sums and difference arrays
 
@@ -46,7 +46,7 @@ State prerequisite knowledge in the finished chapter. Confirm the input/mutation
 
 ## Released Combination Lessons
 
-### Prefix State And Maps
+### Count And Measure Spans With Maps
 
 Prefix state turns every earlier position into a meaningful key; the map supplies either frequency or earliest-index memory. A map alone does not explain what its keys mean.
 

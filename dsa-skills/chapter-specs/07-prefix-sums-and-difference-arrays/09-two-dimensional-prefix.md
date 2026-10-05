@@ -1,4 +1,4 @@
-# Lesson spec: Two-Dimensional Prefix
+# Lesson spec: Sum A Rectangle In Constant Time
 
 **Recognition cue.** Many immutable rectangle-sum queries target a matrix. **State.** `prefix[r+1][c+1]` stores the rectangle from the origin through `(r,c)`; inclusion-exclusion removes two outside strips and restores their overlap.
 

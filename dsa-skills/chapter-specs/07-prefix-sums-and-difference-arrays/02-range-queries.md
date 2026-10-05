@@ -1,4 +1,4 @@
-# Lesson spec: Range Queries
+# Lesson spec: Answer Range Sum Queries
 
 **Recognition cue.** The input is unchanged and many contiguous range sums are requested. **Invariant.** `sum(left..right) = prefix[right+1] - prefix[left]` under the sentinel convention. **False friend.** A sliding window answers one moving family of ranges; it does not provide arbitrary query lookup.
 

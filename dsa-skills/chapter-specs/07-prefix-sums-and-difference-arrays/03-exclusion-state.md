@@ -1,4 +1,4 @@
-# Lesson spec: Exclusion State
+# Lesson spec: Combine Totals From Both Sides
 
 **Recognition cue.** Every output position needs an aggregate of all elements except itself. **State.** A left pass stores the aggregate before `i`; a right pass folds the aggregate after `i`. **False friend.** Division may be forbidden or invalid around zeros.
 

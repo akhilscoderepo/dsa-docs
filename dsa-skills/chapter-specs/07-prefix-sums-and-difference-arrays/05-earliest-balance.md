@@ -1,4 +1,4 @@
-# Lesson spec: Earliest Balance
+# Lesson spec: Find The Longest Balanced Span
 
 **Recognition cue.** The goal is the longest span between two equal balance states. **State.** Store the earliest index for each balance because the earliest occurrence creates the longest later span. **False friend.** Frequency counts answer how many spans; earliest indices answer the longest span.
 

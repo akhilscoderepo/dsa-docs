@@ -1,4 +1,4 @@
-# Lesson spec: Difference Arrays
+# Lesson spec: Add To Ranges In Constant Time
 
 **Recognition cue.** Many range additions are applied, and only the final materialized array is needed. **State.** A delta starts at `left` and is canceled immediately after `right`; one prefix reconstruction applies all updates. **False friend.** Prefix sums preprocess queries; difference arrays batch updates.
 

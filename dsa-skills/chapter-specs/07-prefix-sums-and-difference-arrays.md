@@ -74,7 +74,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Prefix Construction
+### Build Running Totals
 
 **Recognition cue.** Later work repeatedly needs the aggregate of everything before a position. **State.** With a sentinel convention, `prefix[i]` is the sum of the first `i` values. **Java hazard.** Use `long` when the maximum possible total exceeds `int`.
 
@@ -83,7 +83,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Prefix.** Define `prefix[0] = 0`; verify an empty range contributes zero.
 - **Recognize - Author exercise: Prefix Averages.** Reuse cumulative totals while dividing by the correct number of values.
 
-### Range Queries
+### Answer Range Sum Queries
 
 **Recognition cue.** The input is unchanged and many contiguous range sums are requested. **Invariant.** `sum(left..right) = prefix[right+1] - prefix[left]` under the sentinel convention. **False friend.** A sliding window answers one moving family of ranges; it does not provide arbitrary query lookup.
 
@@ -92,7 +92,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Whole Array.** Query `[0,n-1]` without reading before index zero.
 - **Recognize - LC 1310 XOR Queries of a Subarray.** Replace addition/subtraction with XOR cancellation; the dedicated XOR lesson follows.
 
-### Exclusion State
+### Combine Totals From Both Sides
 
 **Recognition cue.** Every output position needs an aggregate of all elements except itself. **State.** A left pass stores the aggregate before `i`; a right pass folds the aggregate after `i`. **False friend.** Division may be forbidden or invalid around zeros.
 
@@ -101,7 +101,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - LC 238 With Zeros.** Verify one zero and multiple zeros without special division cases.
 - **Recognize - Author exercise: Prefix And Suffix Maximums.** Give every index the best value strictly to its left and right.
 
-### Prefix Counts
+### Count Subarrays With A Target Sum
 
 **Recognition cue.** Count subarrays whose additive relation can be written as `currentPrefix - earlierPrefix = target`. **State.** A frequency map records how many earlier prefixes have each value. **Invariant.** Seed prefix zero once so subarrays beginning at index zero are counted.
 
@@ -110,7 +110,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Zero Target.** Repeated equal prefixes create multiple zero-sum subarrays; a set would undercount them.
 - **Recognize - LC 1248 Count Number of Nice Subarrays.** Convert odd values to one and count target-sum subarrays.
 
-### Earliest Balance
+### Find The Longest Balanced Span
 
 **Recognition cue.** The goal is the longest span between two equal balance states. **State.** Store the earliest index for each balance because the earliest occurrence creates the longest later span. **False friend.** Frequency counts answer how many spans; earliest indices answer the longest span.
 
@@ -119,7 +119,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Prefix From Zero.** Seed balance zero at index `-1` so a valid span can start at index zero.
 - **Recognize - LC 1371 Find the Longest Substring Containing Vowels in Even Counts.** The repeated state is a parity mask rather than one integer balance.
 
-### Remainder Classes
+### Group Prefixes By Remainder
 
 **Recognition cue.** Divisibility of a range depends on two prefixes having the same normalized remainder. **State.** Store counts or earliest indices by `Math.floorMod(prefix, k)`. **Java hazard.** Java `%` may be negative.
 
@@ -128,7 +128,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Negative Values.** Normalize negative prefix remainders with `Math.floorMod`.
 - **Recognize - Author exercise: Longest Divisible Span.** Switch map meaning from count to earliest index.
 
-### Prefix XOR
+### Use XOR As A Running Total
 
 **Recognition cue.** A range XOR can be recovered because `x ^ x = 0`. **State.** `prefixXor[i]` summarizes values before `i`, so a range is the XOR of two prefix states.
 
@@ -137,7 +137,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Prefix.** Seed XOR zero for ranges starting at index zero.
 - **Recognize - LC 1442 Count Triplets That Can Form Two Arrays of Equal XOR.** Repeated prefix XOR states identify zero-XOR ranges.
 
-### Difference Arrays
+### Add To Ranges In Constant Time
 
 **Recognition cue.** Many range additions are applied, and only the final materialized array is needed. **State.** A delta starts at `left` and is canceled immediately after `right`; one prefix reconstruction applies all updates. **False friend.** Prefix sums preprocess queries; difference arrays batch updates.
 
@@ -146,7 +146,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Final Endpoint.** Use a sentinel slot or guard `right + 1` when the update reaches the final index.
 - **Recognize - LC 1094 Car Pooling.** Treat passenger changes as ordered coordinate deltas under the bounded-coordinate contract.
 
-### Two-Dimensional Prefix
+### Sum A Rectangle In Constant Time
 
 **Recognition cue.** Many immutable rectangle-sum queries target a matrix. **State.** `prefix[r+1][c+1]` stores the rectangle from the origin through `(r,c)`; inclusion-exclusion removes two outside strips and restores their overlap.
 
@@ -155,7 +155,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Single Cell Rectangle.** Verify inclusion-exclusion returns exactly one cell.
 - **Recognize - Author exercise: Whole Matrix Query.** Confirm sentinel coordinates avoid negative indices.
 
-### Two-Dimensional Difference
+### Add To Rectangles In Constant Time
 
 **Recognition cue.** Many rectangle additions precede one final matrix materialization. **State.** Four signed corner updates encode each rectangle; two-dimensional prefix reconstruction spreads their effects. **False friend.** A 2D prefix-query table reads fixed values; it does not batch writes.
 
@@ -166,7 +166,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Prefix State And Maps
+### Count And Measure Spans With Maps
 
 Prefix state turns every earlier position into a meaningful key; the map supplies either frequency or earliest-index memory. A map alone does not explain what its keys mean.
 

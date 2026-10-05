@@ -1,4 +1,4 @@
-# Lesson spec: Prefix Counts
+# Lesson spec: Count Subarrays With A Target Sum
 
 **Recognition cue.** Count subarrays whose additive relation can be written as `currentPrefix - earlierPrefix = target`. **State.** A frequency map records how many earlier prefixes have each value. **Invariant.** Seed prefix zero once so subarrays beginning at index zero are counted.
 

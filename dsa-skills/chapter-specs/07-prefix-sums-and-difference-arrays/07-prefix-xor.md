@@ -1,4 +1,4 @@
-# Lesson spec: Prefix XOR
+# Lesson spec: Use XOR As A Running Total
 
 **Recognition cue.** A range XOR can be recovered because `x ^ x = 0`. **State.** `prefixXor[i]` summarizes values before `i`, so a range is the XOR of two prefix states.
 

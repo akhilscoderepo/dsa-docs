@@ -1,4 +1,4 @@
-# Lesson spec: Prefix Construction
+# Lesson spec: Build Running Totals
 
 **Recognition cue.** Later work repeatedly needs the aggregate of everything before a position. **State.** With a sentinel convention, `prefix[i]` is the sum of the first `i` values. **Java hazard.** Use `long` when the maximum possible total exceeds `int`.
 
