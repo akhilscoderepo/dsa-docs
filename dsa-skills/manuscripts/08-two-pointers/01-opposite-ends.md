@@ -131,7 +131,7 @@ The elimination needs a monotone relation: a pointer move must change the quanti
 
 **Prerequisites.** The scan of this lesson.
 
-**Problem.** Given an integer array `numbers` sorted in nondecreasing order and an integer `target`, return the 1-based indexes `[i, j]` with `i < j` and `numbers[i] + numbers[j] == target`. The input has exactly one such pair.
+**Problem.** Take an integer array `numbers` in nondecreasing order and an integer `target`. Return the 1-based indexes `[i, j]` with `i < j` and `numbers[i] + numbers[j] == target`. The input has exactly one such pair.
 
 **Constraints.** The limits are:
 - **Length** is `2 <= numbers.length <= 3 * 10^4`.
@@ -152,7 +152,7 @@ The elimination needs a monotone relation: a pointer move must change the quanti
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** Given an integer array `nums` sorted in nondecreasing order and an integer `target`, return the sum of the pair `i < j` whose sum has the smallest absolute difference from `target`. When two sums are equally close, return the smaller sum.
+**Problem.** Take an integer array `nums` in nondecreasing order and an integer `target`. Return the sum of the pair `i < j` whose sum has the smallest absolute difference from `target`. When two sums are equally close, return the smaller sum.
 
 **Constraints.** The limits are:
 - **Length** is `2 <= nums.length <= 10^5`.
@@ -173,7 +173,7 @@ The elimination needs a monotone relation: a pointer move must change the quanti
 
 **Prerequisites.** The first exercise and the false friend of this lesson.
 
-**Problem.** Given a sorted integer array `nums` and a `target`, return `true` when two different indexes hold values that sum to `target`. Two indexes may hold equal values, and a single value never pairs with itself.
+**Problem.** Take a sorted integer array `nums` and a `target`. Return `true` when two different indexes hold values that sum to `target`. Two indexes may hold equal values, and a single value never pairs with itself.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^5`; the empty array is valid.
