@@ -49,7 +49,7 @@ The walk from start 0 first covers the requirement at index 6. Could the walk fr
 No. A cover from start 1 that ended before index 6 would also be a cover from start 0, because start 0 only adds one more value. Then the walk from start 0 would have stopped earlier. So the walk from start 1 ends at index 6 or later.
 ```
 
-If the requirement never holds, every start reads to the end of the text. The total reads are about `n * (n + 1) / 2`, which is O(n^2), and each test with `covers` adds the alphabet size. For `n = 5,000,000` words, the method reads about 12 trillion positions.
+If the requirement never holds, every start reads to the end of the text. The sum of the read lengths is quadratic, O(n^2), and each test with `covers` adds the alphabet size. For `n = 5,000,000` words, the method reads about 12 trillion positions.
 
 The end index of the shortest cover never moves back as the start moves forward. The method only needs to move both ends forward and keep the counts of the current block. The remaining question is how to know that the block covers the requirement without comparing every count each time.
 

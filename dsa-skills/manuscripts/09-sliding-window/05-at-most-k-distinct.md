@@ -41,7 +41,7 @@ The run from start 0 stops at index 7 because a third id appears. Is the block f
 Yes. A block inside a valid block holds a subset of its ids, so it holds at most two different ids. The run from start 1 does not need to reread indexes 1 to 6.
 ```
 
-When the stream uses at most `k` ids, every start reads to the end. The total work is about `n * (n + 1) / 2`, which is O(n^2). Each start also allocates a new set and hashes every id again, so the constant is large. For `n = 10,000,000`, the method performs about 50 trillion set operations.
+When the stream uses at most `k` ids, every start reads to the end. The start at index `i` reads `n - i` ids, so the work grows as O(n^2). Each start also allocates a new set and hashes every id again, so the constant is large. For `n = 10,000,000`, the method performs about 50 trillion set operations.
 
 The sets of neighbouring starts differ by one id at most. The cost should depend on `n` alone. The set must change when one id leaves the front. A plain set cannot do that, because a leaving value may still occur later in the block.
 
@@ -195,7 +195,7 @@ Use `merge` for the entering value and `remove` when a count reaches 0. For a sm
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given an integer array `nums` and an integer `k` with `k >= 0`, return the length of the longest contiguous block with at most `k` different values. For `k = 0`, no non-empty block qualifies, and the answer is 0. The method must not read a count below 0 or move `left` beyond `right + 1`.
+**Problem.** The input is an integer array `nums` and a limit `k >= 0`. Return the length of the longest contiguous block with at most `k` different values. For `k = 0`, no non-empty block qualifies, and the answer is 0. The method must not read a count below 0 or move `left` beyond `right + 1`.
 
 **Constraints.**
 - **Length** satisfies `0 <= nums.length <= 10^5`.

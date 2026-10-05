@@ -166,7 +166,7 @@ Check the contract for `k` before the first loop. A value `k = 0` gives a wrong 
 
 **Prerequisites.** The block sums exercise above.
 
-**Problem.** Given an integer array `nums` and an integer `k`, find the contiguous subarray of length exactly `k` that has the largest average value. Return that average as a `double`. The average of a block is its sum divided by `k`.
+**Problem.** Among the contiguous subarrays of `nums` with length exactly `k`, find the one with the largest average value. Return that average as a `double`. The average of a block is its sum divided by `k`.
 
 **Constraints.**
 - **Length** satisfies `1 <= k <= nums.length <= 10^5`.
@@ -187,7 +187,7 @@ Check the contract for `k` before the first loop. A value `k = 0` gives a wrong 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given an integer array `nums` and an integer `k`, return the largest sum over all contiguous blocks of length exactly `k`. If `k` is not in the range `1` to `nums.length`, throw an `IllegalArgumentException`. The method must give the correct answer when `k == nums.length`, which has exactly one block.
+**Problem.** The input is an integer array `nums` and an integer `k`. Return the largest sum over all contiguous blocks of length exactly `k`. If `k` is not in the range `1` to `nums.length`, throw an `IllegalArgumentException`. The method must give the correct answer when `k == nums.length`, which has exactly one block.
 
 **Constraints.**
 - **Length** satisfies `1 <= nums.length <= 10^5`.
