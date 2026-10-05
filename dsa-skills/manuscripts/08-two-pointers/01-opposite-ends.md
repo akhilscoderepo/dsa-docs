@@ -7,7 +7,7 @@
 
 A shop app keeps its prices in a sorted list. A customer holds a gift card and wants two items whose prices add up to the card balance exactly. The first version of the feature checks every pair of items. With 200 items nobody notices. With 100,000 items the screen freezes, because the list holds five billion pairs.
 
-The list is sorted, and that fact has to be worth something. The question is how a program can use the order of the prices to rule out many pairs with one comparison.
+The list is sorted, so the order should save work. The question is how a program can use the order of the prices to rule out many pairs with one comparison.
 
 <!-- stage: naive -->
 ### Checking Every Pair Of Prices
@@ -25,7 +25,7 @@ static int[] findPairSlow(int[] nums, long target) {
 }
 ```
 
-For `[1, 3, 4, 6, 8, 11]` and target 10, the method tests `1 + 3`, `1 + 4`, and so on, until it reaches `4 + 6`. It never uses the fact that the list is sorted, so the sorted list and a shuffled list cost the same.
+For `[1, 3, 4, 6, 8, 11]` and target 10, the method tests `1 + 3`, `1 + 4`, and so on, until it reaches `4 + 6`. It ignores the order of the list. A sorted list and a shuffled list cost the same.
 
 ```predict
 The list holds 100,000 prices and no pair matches the target. How many pair sums does `findPairSlow` compute?
@@ -36,7 +36,7 @@ It computes every pair once, which is 100,000 * 99,999 / 2, or about 5 billion s
 <!-- stage: bottleneck -->
 ### One Sum Rules Out No Pairs
 
-Each pair sum is computed alone, and the result of one test never changes the next test. When `1 + 3` is too small, the method still tests `1 + 4`, `1 + 6`, `1 + 8` and `1 + 11` in order. That is the repeated work. The method learns nothing about the pairs it has not tested yet, so it needs O(n^2) sums in the worst case.
+Each pair sum is computed alone. The result of one test never changes the next test. When `1 + 3` is too small, the method still tests `1 + 4`, `1 + 6`, `1 + 8` and `1 + 11` in order. That is the repeated work. The method learns nothing about the pairs it has not tested yet, so it needs O(n^2) sums in the worst case.
 
 The sorted order carries information that the loops ignore. If the first price plus the largest price is already too small, then the first price plus any smaller price is also too small. One test can therefore decide the fate of many pairs at once.
 
