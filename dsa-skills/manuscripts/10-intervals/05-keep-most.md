@@ -75,7 +75,7 @@ A different decision asks which requests lie fully inside another request. Sort 
 
 Each scan needs one running value and one counter.
 
-- **sorted** is a copy of the input in the order that the decision needs, so the caller's array keeps its order.
+- **sorted** is a copy of the input in the order that the decision needs, and the original array stays as given.
 - **lastEnd** is the end of the last kept request in the selection scan.
 - **maxEnd** is the largest end among the earlier requests in the coverage scan.
 - **count** is the number of requests that were kept, or the number that are not covered.

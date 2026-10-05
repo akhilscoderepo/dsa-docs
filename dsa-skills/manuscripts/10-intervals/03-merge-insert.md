@@ -75,7 +75,7 @@ Insert has more structure, because the list is already sorted by start and has n
 
 The merge scan keeps three pieces of state, and the insert scan keeps two.
 
-- **sorted** holds the windows in start order, a copy so the caller's array keeps its order.
+- **sorted** holds the windows in start order, a copy, which leaves the input untouched.
 - **result** is a `List<int[]>` of finalized intervals plus the active interval at its end.
 - **active** is the last entry of `result`, and the next window is tested against its end.
 - **merged** is the new interval during an insert, which grows as the block is absorbed.
