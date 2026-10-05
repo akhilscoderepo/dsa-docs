@@ -1,0 +1,42 @@
+{
+ "lessons": [
+  "event-sweep",
+  "intersect-lists",
+  "keep-most",
+  "merge-insert",
+  "sort-order",
+  "sort-then-scan",
+  "touching-ends"
+ ],
+ "exercises": [
+  "iv-closed-overlap",
+  "iv-comb-arrow-positions",
+  "iv-comb-closed-schedule",
+  "iv-comb-covered-length",
+  "iv-comb-insert-half-open",
+  "iv-count-merged-groups",
+  "iv-events-one-coordinate",
+  "iv-extreme-endpoints",
+  "iv-first-capacity",
+  "iv-group-starts-contract",
+  "iv-half-open-reservations",
+  "iv-insert-interval",
+  "iv-intersect-pair",
+  "iv-interval-list-intersections",
+  "iv-interval-vs-list",
+  "iv-keep-earlier-finish",
+  "iv-merge-intervals",
+  "iv-merge-sorted",
+  "iv-min-arrows",
+  "iv-non-overlapping",
+  "iv-one-covers-many",
+  "iv-order-end-start",
+  "iv-order-start-end",
+  "iv-peak-closed",
+  "iv-peak-half-open",
+  "iv-remove-covered",
+  "iv-touching-intersections",
+  "iv-zero-length-range"
+ ],
+ "retired": []
+}
