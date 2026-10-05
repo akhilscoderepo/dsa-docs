@@ -69,7 +69,7 @@ The test needs three values and one choice.
 
 #### Both Ends Included
 
-Take `A = [1,3]` and `B = [3,5]` as closed intervals. In the trace below, the cells are the coordinates 0 to 6, and the pointer `x` marks the coordinate under test. At each coordinate the trace records whether `A` holds it and whether `B` holds it.
+Take `A = [1,3]` and `B = [3,5]` as closed intervals. The trace uses the coordinates 0 to 6 as its cells, and the pointer `x` marks the coordinate under test. At each coordinate the trace records whether `A` holds it and whether `B` holds it.
 
 Coordinates 1 and 2 belong to `A` only, and coordinates 4 and 5 belong to `B` only. Coordinate 3 belongs to both, so the intervals share one coordinate. The comparison agrees: `lo = 3`, `hi = 3`, and `3 <= 3` holds.
 

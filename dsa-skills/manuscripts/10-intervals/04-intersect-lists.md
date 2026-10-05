@@ -77,7 +77,7 @@ The pass keeps four values.
 
 #### Six Shared Windows
 
-Take `A = [1,4], [6,9], [12,15], [18,20]` and `B = [3,7], [8,13], [14,19]`. In the trace below, the cells are the positions 0 to 3. The pointer `i` is the cursor in `A`, and the pointer `j` is the cursor in `B`.
+Take `A = [1,4], [6,9], [12,15], [18,20]` and `B = [3,7], [8,13], [14,19]`. The cells of the trace are the positions 0 to 3. The pointer `i` is the cursor in `A`, and the pointer `j` is the cursor in `B`.
 
 At the first step the pair `[1,4]` and `[3,7]` shares `[3,4]`, and `A[i]` ends first, so `i` advances. The second step pairs `[6,9]` with `[3,7]` and shares `[6,7]`, and now `B[j]` ends first, so `j` advances. The cursors alternate in this way until `B` is exhausted.
 

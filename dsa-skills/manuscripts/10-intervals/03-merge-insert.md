@@ -86,7 +86,7 @@ The merge scan keeps three pieces of state, and the insert scan keeps two.
 
 #### Merging Five Windows
 
-Take the windows `[8,10]`, `[1,3]`, `[2,6]`, `[6,7]`, `[15,18]`. After sorting by start they read `[1,3]`, `[2,6]`, `[6,7]`, `[8,10]`, `[15,18]`. In the trace below, the cells are the sorted starts and the pointer `i` marks the window under test.
+Take the windows `[8,10]`, `[1,3]`, `[2,6]`, `[6,7]`, `[15,18]`. After sorting by start they read `[1,3]`, `[2,6]`, `[6,7]`, `[8,10]`, `[15,18]`. The trace lists the sorted starts as cells, and the pointer `i` marks the window under test.
 
 The window `[2,6]` starts at 2, which is at most the active end 3, so it joins and the end becomes 6. The window `[6,7]` starts at 6, which equals the active end, so it joins under the closed model and the end becomes 7. The window `[8,10]` starts after 7, so it opens a new active interval.
 
