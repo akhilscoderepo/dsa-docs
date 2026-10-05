@@ -152,7 +152,7 @@ The method needs a divisor that stays fixed for all queries. A different `k` nee
 
 **Example 2.** Input `nums = [5]` and `k = 9`, output 0.
 
-**Hint.** Replace the lookup key `cur - k` of the previous lesson by the class of `cur`. Which operator keeps the class in `0..k-1`?
+**Hint.** Replace the lookup key `cur - k` of the lesson on counting sums by the class of `cur`. Which operator keeps the class in `0..k-1`?
 
 **Changed decision.** Basic case: the key is the normalized remainder, so equal keys mean a difference divisible by `k`.
 

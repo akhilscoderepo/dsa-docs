@@ -65,7 +65,7 @@ The same idea works for the count of ranges with XOR equal to a target `k`. The 
 <!-- stage: variables -->
 ### Five Names And Their Roles
 
-The construction and the counting loop use five names, and the query uses a sixth, `end`.
+Five entries below name the values of the construction, the query and the counting loop.
 
 - **px** is the array of length `n + 1` where entry `i` is the XOR of the first `i` values.
 - **left** and **right** are the first and last index of a query range, and **end** is `right + 1`.
@@ -183,7 +183,7 @@ The operation must have an inverse for the stored-prefix method. A bitwise AND a
 
 **Changed decision.** The lookup key changes from a difference to an XOR, while the structure of the counting loop stays.
 
-#### [Boundary] Longest Zero XOR Span (Author exercise)
+#### [Boundary] Empty Prefix (Author exercise)
 <!-- id: ps-xor-empty-prefix -->
 
 **Prerequisites.** The first exercise and the earliest-index map of the lesson on balanced spans.

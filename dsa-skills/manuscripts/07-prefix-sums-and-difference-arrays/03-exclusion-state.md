@@ -60,7 +60,7 @@ The values after index `i` form a **suffix** of the array, which is a run of val
 
 #### The Cost Of Two Passes
 
-Each pass costs n multiplications, so the method costs O(n) time. The result array is the output itself, so the extra memory beyond it is one `suffix` variable, O(1). The same two passes work for any combining operation that has a neutral value, such as a sum or a product.
+Each pass costs n multiplications, so the method costs O(n) time. The result array is the output itself, so the extra memory beyond it is one `suffix` variable, O(1). The same two passes work for any combining operation whose grouping does not matter and that has a neutral value, such as a sum or a product.
 
 <!-- stage: variables -->
 ### Four Names And Their Roles
@@ -214,6 +214,6 @@ The operation must be associative, so the grouping of the factors may not change
 
 **Example 2.** Input `nums = [7]`, output `[[-1],[-1]]`.
 
-**Hint.** Replace the product by `Math.max`. What value plays the role of the neutral 1 for a maximum over non-negative numbers?
+**Hint.** Replace the product by `Math.max`. Which value is below every allowed number, so that it leaves a maximum unchanged?
 
 **Changed decision.** The combining operation is a maximum, which has no inverse, so only the two passes work.

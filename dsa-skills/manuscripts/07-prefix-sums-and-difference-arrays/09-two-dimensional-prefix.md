@@ -61,7 +61,7 @@ The entry `P[r + 1][c + 1]` combines the entry above, the entry to the left and 
 <!-- stage: variables -->
 ### Seven Names And Their Roles
 
-The query reads four entries of the matrix, and the code writes the matrix as `p`.
+The query reads four entries of the matrix. The code writes the matrix as `p`, and this list names the four reads `whole`, `above`, `left` and `corner` for explanation only.
 
 - **P** is the `long` matrix with `m + 1` rows and `n + 1` columns, built once and never changed.
 - **r1** and **c1** are the top row and the left column of the rectangle.
@@ -193,7 +193,7 @@ The grid must not change between queries, since one change alters every entry to
 
 **Changed decision.** The rectangle shrinks to one cell, so the inclusion-exclusion formula must return exactly that cell.
 
-#### [Recognize] Best Rectangle At The Origin (Author exercise)
+#### [Recognize] Whole Matrix Query (Author exercise)
 <!-- id: ps-origin-rectangle -->
 
 **Prerequisites.** All exercises above.

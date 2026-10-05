@@ -61,7 +61,7 @@ An update that reaches the last index writes to `diff[right + 1]`, which is `dif
 <!-- stage: variables -->
 ### Five Names And Their Roles
 
-The method keeps five names, and the code reads `left`, `right` and `value` from the update triple.
+Five entries describe the method. The code reads `left`, `right` and `value` as `u[0]`, `u[1]` and `u[2]` of each update triple.
 
 - **diff** is the `long` array of length `n + 1` that holds the deltas, and its last slot absorbs writes past the end.
 - **left** and **right** are the first and last index of an update, and both belong to the range.

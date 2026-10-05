@@ -117,7 +117,7 @@ public final class CountXorK {
 }
 ```
 
-#### Solution: [Boundary] Longest Zero XOR Span (Author exercise)
+#### Solution: [Boundary] Empty Prefix (Author exercise)
 <!-- id: ps-xor-empty-prefix -->
 
 **Approach.**

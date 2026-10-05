@@ -73,7 +73,7 @@ The one-pass loop keeps five values.
 - **first** is the map from a balance to the earliest index where it appeared.
 - **best** is the length of the longest span found so far.
 - **i** is the index of the current value.
-- **seen** is `first.get(bal)`, the earliest index with the same balance. The span begins right after that index.
+- **before** is `first.get(bal)`, the earliest index with the same balance. The span begins right after that index.
 
 Before the first step, `first` holds only the pair balance 0 at index -1. A lookup that finds a balance gives a span of length `i - first.get(bal)`. A lookup that misses stores the pair `bal` at `i`.
 
@@ -107,9 +107,9 @@ static int longestEqual(int[] nums) {
     int best = 0;
     for (int i = 0; i < nums.length; i++) {
         bal += nums[i] == 1 ? 1 : -1;
-        Integer seen = first.get(bal);
-        if (seen == null) first.put(bal, i);
-        else best = Math.max(best, i - seen);
+        Integer before = first.get(bal);
+        if (before == null) first.put(bal, i);
+        else best = Math.max(best, i - before);
     }
     return best;
 }
@@ -117,7 +117,7 @@ static int longestEqual(int[] nums) {
 
 The method returns 0 when no span exists, because `best` starts at 0. The balance stays between `-n` and `n`, so an `int` is enough. The `put` runs only for a new balance, so the stored index is always the earliest.
 
-The type of `seen` is `Integer` and not `int`, because `get` returns `null` for a missing key. An unboxing of `null` would throw a `NullPointerException`.
+The type of `before` is `Integer` and not `int`, because `get` returns `null` for a missing key. An unboxing of `null` would throw a `NullPointerException`.
 
 <!-- stage: applicability -->
 ### When The First Position Is Enough
@@ -179,7 +179,7 @@ The condition for a span must reduce to an equal state at two boundaries. A requ
 
 **Changed decision.** The step has three values, so some positions repeat the previous balance and extend a span for free.
 
-#### [Boundary] Balanced Span With Start (Author exercise)
+#### [Boundary] Prefix From Zero (Author exercise)
 <!-- id: ps-balanced-start -->
 
 **Prerequisites.** The first exercise and the second trace of this lesson.
@@ -203,7 +203,7 @@ The condition for a span must reduce to an equal state at two boundaries. A requ
 #### [Recognize] Longest Substring With Even Vowel Counts (LeetCode 1371)
 <!-- id: ps-even-vowels-1371 -->
 
-**Prerequisites.** All exercises above. The expression `mask ^= 1 << j` flips bit `j` of the integer `mask`, and flipping twice restores the bit.
+**Prerequisites.** All exercises above. The expression `1 << j` is the integer whose only set bit is bit `j`. The statement `mask ^= 1 << j` flips bit `j` of the integer `mask`, and flipping twice restores the bit.
 
 **Problem.** Given a lowercase string `s`, return the length of the longest substring in which each of the vowels `a`, `e`, `i`, `o` and `u` occurs an even number of times. Zero is even.
 

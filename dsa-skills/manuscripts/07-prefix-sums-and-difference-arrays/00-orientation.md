@@ -24,7 +24,7 @@ Each lesson fixes one stored quantity and one question that the quantity answers
 
 ### The Combination Lesson
 
-One lesson joins the stored totals with the maps of Chapter 04. **Count And Measure Spans With Maps** opens with three reports that share one map and give three kinds of wrong answer. It then separates the two choices that every such solution makes, the meaning of the key and the meaning of the value.
+One lesson joins the stored totals with the maps of Chapter 04. **Count And Measure Spans With Maps** opens with three reports that share one map and give two kinds of wrong answer. It then separates the two choices that every such solution makes, the meaning of the key and the meaning of the value.
 
 ### How To Work Through Each Lesson
 

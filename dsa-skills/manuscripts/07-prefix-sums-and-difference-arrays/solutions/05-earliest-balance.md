@@ -125,7 +125,7 @@ public final class EqualAAndB {
 }
 ```
 
-#### Solution: [Boundary] Balanced Span With Start (Author exercise)
+#### Solution: [Boundary] Prefix From Zero (Author exercise)
 <!-- id: ps-balanced-start -->
 
 **Approach.**

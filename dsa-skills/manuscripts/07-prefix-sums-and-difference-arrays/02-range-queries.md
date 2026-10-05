@@ -193,7 +193,7 @@ The array must stay unchanged. One update to `nums[i]` changes every entry after
 #### [Recognize] XOR Queries Of A Subarray (LeetCode 1310)
 <!-- id: ps-xor-queries -->
 
-**Prerequisites.** All exercises above. The operator `^` is the exclusive or of two integers. This exercise needs only two facts, `x ^ x` equals 0 and `x ^ 0` equals `x`, and the next lessons repeat them.
+**Prerequisites.** All exercises above. The operator `^` is the exclusive or of two integers. This exercise needs only two facts, `x ^ x` equals 0 and `x ^ 0` equals `x`, and the lesson on XOR explains them in full.
 
 **Problem.** Given an integer array `arr` and a list of queries `[left, right]`, return for each query the XOR of `arr[left]` through `arr[right]`. Subtraction cannot undo XOR, but XOR undoes itself, so a stored prefix state answers each query.
 
