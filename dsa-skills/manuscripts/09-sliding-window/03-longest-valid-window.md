@@ -58,7 +58,7 @@ A **shrink loop** moves `left` forward, one index per step, while the window is 
 
 #### Why Moving left Forward Is Safe
 
-Validity here holds under removal: every block inside a valid block is also valid. After the shrink loop, `left` is therefore the smallest start that gives a valid window ending at `right`. Every start before `left` is unusable for this `right`. It stays unusable for every later `right`, because a longer block that contains an invalid block is also invalid. The invariant is that, after the loop, the window is valid and `left` never moves back. Both indexes only move forward, so the cost is O(n).
+Validity here holds under removal: every block inside a valid block is also valid. After the shrink loop, `left` is therefore the smallest start that gives a valid window ending at `right`. Every start before `left` is unusable for this `right`. It stays unusable for every later `right`, because a longer block that contains an invalid block is also invalid. The invariant says that, once the loop ends, the window is valid and `left` never moves back. Both indexes only move forward, so the cost is O(n).
 
 <!-- names: expand, violation count, shrink loop -->
 
