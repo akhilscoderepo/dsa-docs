@@ -72,7 +72,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Fixed-Size Aggregate Windows
+### Slide A Window Of Fixed Size
 
 **Recognition cue.** The problem asks for every contiguous block of exactly `k` elements and the block can be updated when one value leaves and one enters. **Invariant.** Before recording a result, the maintained aggregate equals the contents of `nums[left..right]`, whose length is `k`. **False friend.** A prefix sum is often better when many unrelated range queries follow; a window is natural for one left-to-right pass.
 
@@ -81,7 +81,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Whole-Array Window.** Handle `k == nums.length` and state the contract for illegal `k` rather than silently inventing a result.
 - **Recognize - LC 1456 Maximum Number of Vowels in a Substring of Given Length.** Replace numeric sum with a Boolean contribution per character.
 
-### Fixed Frequency Windows
+### Match Counts In A Fixed Window
 
 **Recognition cue.** Every candidate has a fixed length, but validity depends on its multiset rather than its aggregate. **Invariant.** The frequency state describes exactly the current length-`k` window. **False friend.** Sorting every window destroys linear time. **Java hazard.** A small count array is valid only when the character domain is stated.
 
@@ -90,7 +90,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Repeated Required Character.** Test a pattern such as `aab`; set membership cannot represent multiplicity.
 - **Recognize - LC 567 Permutation in String.** Return whether any fixed window has the pattern's frequency signature.
 
-### Longest-Valid Windows
+### Find The Longest Valid Window
 
 **Recognition cue.** The answer is the longest contiguous range satisfying a condition that can be restored by moving `left` forward. **Invariant.** After the shrink loop, the current window is valid; every discarded start is known to be unusable for the current `right`. **False friend.** A minimum-cover problem shrinks while valid and records before validity is lost.
 
@@ -99,7 +99,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Violation At Both Ends.** Trace repeated violations and verify the loop may remove several elements for one `right`.
 - **Recognize - LC 1004 Max Consecutive Ones III.** Treat zeroes as violations with a budget of `k`.
 
-### Minimum-Cover And Deficit Windows
+### Find The Shortest Covering Window
 
 **Recognition cue.** The range must cover required values or counts, and the objective is the shortest valid range. **Invariant.** A deficit ledger says whether every requirement is met; while valid, removing the leftmost item tests whether the range can be improved. **False friend.** Equality with a fixed signature is not coverage: a cover may contain surplus characters.
 
@@ -108,7 +108,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: No Cover Exists.** Return the specified empty result without constructing invalid substrings.
 - **Recognize - LC 76 Minimum Window Substring.** Maintain deficits, remember the best boundaries, and create the substring once.
 
-### At-Most-K Distinct Windows
+### Limit A Window To K Distinct Values
 
 **Recognition cue.** Validity is monotone under removing elements and is expressed as no more than `k` distinct values. **Invariant.** The map contains positive counts for exactly the values in the current window. **Java hazard.** Remove a key when its count reaches zero or `map.size()` stops representing distinct values.
 
@@ -117,7 +117,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: K Is Zero.** Return zero without allowing a negative count or an invalid left boundary.
 - **Recognize - Author exercise: Longest Substring With At Most K Distinct Characters.** Transfer the same invariant from integers to characters.
 
-### Exactly-K By Subtraction
+### Count Exactly K By Subtraction
 
 **Recognition cue.** The task counts subarrays with exactly `k` occurrences or categories, while an at-most condition is monotone and easy to count. **Invariant.** `exactly(k) = atMost(k) - atMost(k - 1)` partitions all subarrays by property count. **False friend.** A direct exactly-`k` window does not usually give one stable boundary because removing a redundant left value can preserve exactness.
 
@@ -126,7 +126,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty At-Most Budget.** Define `atMost(-1)` as zero so the subtraction remains safe.
 - **Recognize - LC 992 Subarrays with K Different Integers.** Apply the identity to distinct-value counts maintained by a map.
 
-### Replacement-Budget Windows
+### Allow K Replacements In A Window
 
 **Recognition cue.** A range can be made uniform by changing at most `k` values. **Invariant.** The required replacements are `windowLength - maxFrequency`; the window is usable when that value is at most `k`. **False friend.** Recomputing the maximum frequency on every move is unnecessary for the standard longest-length formulation.
 
@@ -135,7 +135,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Stale Maximum Trace.** Show why a historical `maxFrequency` may remain high without causing an impossible best length to be reported.
 - **Recognize - LC 424 Longest Repeating Character Replacement.** Use the replacement budget to maintain the best achievable length.
 
-### Count-All-Valid-Subarrays Windows
+### Count Every Valid Subarray
 
 **Recognition cue.** The problem asks for the number of contiguous ranges and, once the left boundary is restored, every suffix ending at `right` is valid. **Invariant.** After shrinking, starts `left..right` produce exactly `right - left + 1` valid subarrays ending at `right`. **False friend.** This addition is invalid when validity is not monotone under removing a prefix. **Java hazard.** Use `long` when the number of subarrays can exceed `int`.
 
@@ -144,7 +144,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: K At The Minimum.** Verify that a window may shrink to empty and contributes zero.
 - **Recognize - LC 713 Subarray Product Less Than K.** Maintain a positive-product window and count all valid suffixes.
 
-### Repeated-Shrink Versus Non-Shrinking Policy
+### Shrink Fully Or Shrink Once
 
 **Recognition cue.** A normal window must restore validity before its state is used; a one-removal formulation is safe only when a separate proof shows that retaining a window of the current best length cannot hide a better answer. **Invariant.** State explicitly whether the maintained window is valid or merely represents a candidate length. **False friend.** Replacing every `while` with `if` is not an optimization rule.
 
@@ -155,7 +155,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Window Frequency State
+### Track Counts Inside A Window
 
 Window boundaries identify the active contiguous range; frequency state records the multiset, deficits, or violations inside it. Neither component is sufficient by itself. The combined invariant must say both which indices are active and what every stored count means.
 

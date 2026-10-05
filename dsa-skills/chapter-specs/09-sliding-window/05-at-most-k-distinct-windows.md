@@ -1,4 +1,4 @@
-# Lesson spec: At-Most-K Distinct Windows
+# Lesson spec: Limit A Window To K Distinct Values
 
 **Recognition cue.** Validity is monotone under removing elements and is expressed as no more than `k` distinct values. **Invariant.** The map contains positive counts for exactly the values in the current window. **Java hazard.** Remove a key when its count reaches zero or `map.size()` stops representing distinct values.
 

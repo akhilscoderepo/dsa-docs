@@ -1,4 +1,4 @@
-# Lesson spec: Longest-Valid Windows
+# Lesson spec: Find The Longest Valid Window
 
 **Recognition cue.** The answer is the longest contiguous range satisfying a condition that can be restored by moving `left` forward. **Invariant.** After the shrink loop, the current window is valid; every discarded start is known to be unusable for the current `right`. **False friend.** A minimum-cover problem shrinks while valid and records before validity is lost.
 

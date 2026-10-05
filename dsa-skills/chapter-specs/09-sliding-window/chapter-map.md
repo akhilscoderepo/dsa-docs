@@ -4,15 +4,15 @@
 
 ## Lesson order
 
-01. Fixed-Size Aggregate Windows  ->  01-fixed-size-aggregate-windows.md
-02. Fixed Frequency Windows  ->  02-fixed-frequency-windows.md
-03. Longest-Valid Windows  ->  03-longest-valid-windows.md
-04. Minimum-Cover And Deficit Windows  ->  04-minimum-cover-and-deficit-windows.md
-05. At-Most-K Distinct Windows  ->  05-at-most-k-distinct-windows.md
-06. Exactly-K By Subtraction  ->  06-exactly-k-by-subtraction.md
-07. Replacement-Budget Windows  ->  07-replacement-budget-windows.md
-08. Count-All-Valid-Subarrays Windows  ->  08-count-all-valid-subarrays-windows.md
-09. Repeated-Shrink Versus Non-Shrinking Policy  ->  09-repeated-shrink-versus-non-shrinking-policy.md
+01. Slide A Window Of Fixed Size  ->  01-fixed-size-aggregate-windows.md
+02. Match Counts In A Fixed Window  ->  02-fixed-frequency-windows.md
+03. Find The Longest Valid Window  ->  03-longest-valid-windows.md
+04. Find The Shortest Covering Window  ->  04-minimum-cover-and-deficit-windows.md
+05. Limit A Window To K Distinct Values  ->  05-at-most-k-distinct-windows.md
+06. Count Exactly K By Subtraction  ->  06-exactly-k-by-subtraction.md
+07. Allow K Replacements In A Window  ->  07-replacement-budget-windows.md
+08. Count Every Valid Subarray  ->  08-count-all-valid-subarrays-windows.md
+09. Shrink Fully Or Shrink Once  ->  09-repeated-shrink-versus-non-shrinking-policy.md
 
 # Chapter 09: Sliding window
 
@@ -44,7 +44,7 @@ State prerequisite knowledge in the finished chapter. Confirm the input/mutation
 
 ## Released Combination Lessons
 
-### Window Frequency State
+### Track Counts Inside A Window
 
 Window boundaries identify the active contiguous range; frequency state records the multiset, deficits, or violations inside it. Neither component is sufficient by itself. The combined invariant must say both which indices are active and what every stored count means.
 

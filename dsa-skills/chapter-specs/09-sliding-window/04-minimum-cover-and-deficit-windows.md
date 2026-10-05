@@ -1,4 +1,4 @@
-# Lesson spec: Minimum-Cover And Deficit Windows
+# Lesson spec: Find The Shortest Covering Window
 
 **Recognition cue.** The range must cover required values or counts, and the objective is the shortest valid range. **Invariant.** A deficit ledger says whether every requirement is met; while valid, removing the leftmost item tests whether the range can be improved. **False friend.** Equality with a fixed signature is not coverage: a cover may contain surplus characters.
 

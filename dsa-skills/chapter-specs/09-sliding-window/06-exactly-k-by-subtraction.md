@@ -1,4 +1,4 @@
-# Lesson spec: Exactly-K By Subtraction
+# Lesson spec: Count Exactly K By Subtraction
 
 **Recognition cue.** The task counts subarrays with exactly `k` occurrences or categories, while an at-most condition is monotone and easy to count. **Invariant.** `exactly(k) = atMost(k) - atMost(k - 1)` partitions all subarrays by property count. **False friend.** A direct exactly-`k` window does not usually give one stable boundary because removing a redundant left value can preserve exactness.
 

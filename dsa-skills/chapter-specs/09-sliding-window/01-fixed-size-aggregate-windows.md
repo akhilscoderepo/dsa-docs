@@ -1,4 +1,4 @@
-# Lesson spec: Fixed-Size Aggregate Windows
+# Lesson spec: Slide A Window Of Fixed Size
 
 **Recognition cue.** The problem asks for every contiguous block of exactly `k` elements and the block can be updated when one value leaves and one enters. **Invariant.** Before recording a result, the maintained aggregate equals the contents of `nums[left..right]`, whose length is `k`. **False friend.** A prefix sum is often better when many unrelated range queries follow; a window is natural for one left-to-right pass.
 

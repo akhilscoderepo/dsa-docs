@@ -1,4 +1,4 @@
-# Lesson spec: Fixed Frequency Windows
+# Lesson spec: Match Counts In A Fixed Window
 
 **Recognition cue.** Every candidate has a fixed length, but validity depends on its multiset rather than its aggregate. **Invariant.** The frequency state describes exactly the current length-`k` window. **False friend.** Sorting every window destroys linear time. **Java hazard.** A small count array is valid only when the character domain is stated.
 

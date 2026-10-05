@@ -1,4 +1,4 @@
-# Lesson spec: Repeated-Shrink Versus Non-Shrinking Policy
+# Lesson spec: Shrink Fully Or Shrink Once
 
 **Recognition cue.** A normal window must restore validity before its state is used; a one-removal formulation is safe only when a separate proof shows that retaining a window of the current best length cannot hide a better answer. **Invariant.** State explicitly whether the maintained window is valid or merely represents a candidate length. **False friend.** Replacing every `while` with `if` is not an optimization rule.
 

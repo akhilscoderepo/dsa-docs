@@ -1,4 +1,4 @@
-# Lesson spec: Count-All-Valid-Subarrays Windows
+# Lesson spec: Count Every Valid Subarray
 
 **Recognition cue.** The problem asks for the number of contiguous ranges and, once the left boundary is restored, every suffix ending at `right` is valid. **Invariant.** After shrinking, starts `left..right` produce exactly `right - left + 1` valid subarrays ending at `right`. **False friend.** This addition is invalid when validity is not monotone under removing a prefix. **Java hazard.** Use `long` when the number of subarrays can exceed `int`.
 

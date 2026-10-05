@@ -1,37 +1,25 @@
 from common import *
-CH='09-sliding-window'
-F='01-fixed-size-aggregate-windows.md'
-
-def sums(a,k):
-    total=sum(a[:k]); best=total; st=[]
-    st.append({"at":{"left":0,"right":k-1},"vars":{"total":total,"best":best},
-               "note":f"Build the first block by adding {k} values: the total is {total}, and it is the best so far."})
-    for right in range(k,len(a)):
-        out=a[right-k]; inn=a[right]
-        total+=inn-out; best=max(best,total)
-        st.append({"at":{"left":right-k+1,"right":right},"vars":{"total":total,"best":best},
-                   "note":f"The value {out} leaves and the value {inn} enters, so the total becomes {total}. The best total so far is {best}."})
-    return st,best
-
-def vowels(s,k):
-    isv=lambda c:1 if c in "aeiou" else 0
-    cnt=sum(isv(c) for c in s[:k]); best=cnt; st=[]
-    st.append({"at":{"left":0,"right":k-1},"vars":{"vowels":cnt,"best":best},
-               "note":f"Count the vowels among the first {k} letters: {cnt}, which is the best so far."})
-    for right in range(k,len(s)):
-        out=s[right-k]; inn=s[right]
-        cnt+=isv(inn)-isv(out); best=max(best,cnt)
-        kind=lambda c:"a vowel" if isv(c) else "a consonant"
-        st.append({"at":{"left":right-k+1,"right":right},"vars":{"vowels":cnt,"best":best},
-                   "note":f"{out} leaves ({kind(out)}) and {inn} enters ({kind(inn)}), so the count is {cnt}. The best count so far is {best}."})
-    return st,best
-
-a=[4,2,-1,6,3,5,1]
-s1,b=sums(a,3)
-assert b==max(sum(a[i:i+3]) for i in range(len(a)-2)) and s1[1]["vars"]["total"]==7 and len(s1)==5
-fill(CH,F,block(a,["left","right"],s1),"@@TRACE1@@")
-w="sequoiaxyz"
-s2,b=vowels(w,4)
-assert b==4 and len(s2)==7 and s2[3]["vars"]["best"]==4
-assert any(s2[i]["vars"]["vowels"]<s2[i-1]["vars"]["vowels"] for i in range(1,len(s2)))
-fill(CH,F,block(list(w),["left","right"],s2),"@@TRACE2@@")
+CH='09-sliding-window'; F='01-fixed-size-window.md'
+def t1():
+    a=[4,2,7,1,3,5]; k=3; s=0; st=[]
+    for r in range(k):
+        s+=a[r]
+        n=f"The value {a[r]} enters, so the sum is {s}."
+        if r==k-1: n+=f" The window is full and the first total is {s}."
+        st.append({"at":{"left":0,"right":r},"vars":{"sum":str(s)},"note":n})
+    out=[s]
+    for r in range(k,len(a)):
+        s+=a[r]-a[r-k]; out.append(s)
+        st.append({"at":{"left":r-k+1,"right":r},"vars":{"sum":str(s)},"note":f"The value {a[r]} enters and the value {a[r-k]} leaves, so the sum becomes {s}."})
+    assert out==[sum(a[i:i+k]) for i in range(len(a)-k+1)]==[13,10,11,9]
+    return block(a,["left","right"],st)
+def t2():
+    a=[-9,-1,-6,-2,-3]; k=2; s=a[0]+a[1]; best=s; st=[{"at":{"left":0,"right":1},"vars":{"sum":str(s),"best":str(best)},"note":f"The first window gives {s}, and best starts at {s}, not at 0."}]
+    for r in range(k,len(a)):
+        s+=a[r]-a[r-k]; old=best; best=max(best,s)
+        n=f"The value {a[r]} enters and the value {a[r-k]} leaves, so the sum is {s}. "
+        n+=f"The sum beats {old}, so best becomes {best}." if best!=old else f"The sum does not beat {best}, so best stays."
+        st.append({"at":{"left":r-k+1,"right":r},"vars":{"sum":str(s),"best":str(best)},"note":n})
+    assert best==max(a[i]+a[i+1] for i in range(4))==-5
+    return block(a,["left","right"],st)
+fill(CH,F,t1(),"@@TRACE1@@"); fill(CH,F,t2(),"@@TRACE2@@")

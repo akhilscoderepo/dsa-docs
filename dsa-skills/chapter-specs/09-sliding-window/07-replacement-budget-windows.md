@@ -1,4 +1,4 @@
-# Lesson spec: Replacement-Budget Windows
+# Lesson spec: Allow K Replacements In A Window
 
 **Recognition cue.** A range can be made uniform by changing at most `k` values. **Invariant.** The required replacements are `windowLength - maxFrequency`; the window is usable when that value is at most `k`. **False friend.** Recomputing the maximum frequency on every move is unnecessary for the standard longest-length formulation.
 
