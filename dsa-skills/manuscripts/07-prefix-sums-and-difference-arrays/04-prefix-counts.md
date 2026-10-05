@@ -121,7 +121,7 @@ The keys have type `Long`, because a prefix can exceed the `int` range, and a `L
 
 #### The Invariant
 
-The invariant is that before the lookup at boundary `b`, the map holds the frequency of each of `prefix[0]` through `prefix[b - 1]`. The lookup then counts exactly the earlier boundaries with `prefix[a] = prefix[b] - k`. Each valid pair `(a, b)` is counted once, at its later boundary.
+The invariant is that on arrival at boundary `b`, the map holds the frequency of each of `prefix[0]` through `prefix[b - 1]`. The lookup then counts exactly the earlier boundaries with `prefix[a] = prefix[b] - k`. Each valid pair `(a, b)` is counted once, at its later boundary.
 
 #### The False Friend
 
