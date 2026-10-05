@@ -131,7 +131,7 @@ The comparison `have[c] < need[c]` runs before the increment, so it tests whethe
 
 #### Cost Of The Scan
 
-The time is O(n + m), where `m = t.length()`, because `right` advances `n` times and `left` advances at most `n` times. The extra memory is two arrays of 26 entries. The method creates no substring. If the problem asks for the text, the method stores `bestStart` and `bestLength` and builds one substring at the end.
+The time is O(n + m), where `m = t.length()`, because `right` advances `n` times and `left` advances at most `n` times. The memory is two arrays with one entry per letter. The method creates no substring. If the problem asks for the text, the method stores `bestStart` and `bestLength` and builds one substring at the end.
 
 <!-- stage: applicability -->
 ### When The Trimming Scan Applies
