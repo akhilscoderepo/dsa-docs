@@ -32,7 +32,7 @@ static boolean containsByScan(int[][] matrix, int target) {
 }
 ```
 
-For the grid `[[2,4,6,8],[11,13,15,17],[20,22,24,26]]` and the target 22, the method reads eight cells and returns true. For the target 12, it reads all twelve cells and returns false.
+For the grid `[[2,4,6,8],[11,13,15,17],[20,22,24,26]]` and the target 22, the method reads ten cells and returns true. For the target 12, it reads all twelve cells and returns false.
 
 ```predict
 The same grid is read row after row as 2, 4, 6, 8, 11, 13, and so on. Is this long sequence ascending, and how many comparisons could a method use to find a value in a sequence of 4 million ascending numbers?
@@ -84,7 +84,7 @@ A matrix with no rows has no `matrix[0]`, so `cols` cannot be read. A guard for 
 The grid is `[[2,4,6,8],[11,13,15,17],[20,22,24,26]]`, and the target is 15. The cells below are the twelve values in row-major order. The search starts with `lo = 0` and `hi = 11`. The first midpoint is index 5, the cell in row 1 and column 1 with value 13, which is below 15, so `lo` becomes 6. The next midpoint is index 8, the cell in row 2 and column 0 with value 20, which is above 15, so `hi` becomes 7. The midpoint at index 6 holds 15 in row 1 and column 2, and the search returns true.
 
 ```trace
-{"cells":[2,4,6,8,11,13,15,17,20,22,24,26],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":11,"mid":-1},"vars":{"target":"15"},"note":"Start with the virtual indexes 0 to 11."},{"at":{"lo":6,"hi":11,"mid":5},"vars":{"row":"1","col":"1","value":"13"},"note":"Index 5 is row 1, column 1, and holds 13, which is below 15, so lo becomes 6."},{"at":{"lo":6,"hi":7,"mid":8},"vars":{"row":"2","col":"0","value":"20"},"note":"Index 8 is row 2, column 0, and holds 20, which is above 15, so hi becomes 7."},{"at":{"lo":6,"hi":7,"mid":6},"vars":{"row":"1","col":"2","value":"15"},"note":"Index 6 is row 1, column 2, and holds 15, which equals the target, so the search returns true."}]}
+{"cells":[2,4,6,8,11,13,15,17,20,22,24,26],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":11,"mid":-1},"vars":{"target":"15"},"note":"Start with the virtual indexes 0 to 11."},{"at":{"lo":0,"hi":11,"mid":5},"vars":{"row":"1","col":"1","value":"13"},"note":"Index 5 is row 1, column 1, and holds 13, which is below 15, so lo becomes 6."},{"at":{"lo":6,"hi":11,"mid":8},"vars":{"row":"2","col":"0","value":"20"},"note":"Index 8 is row 2, column 0, and holds 20, which is above 15, so hi becomes 7."},{"at":{"lo":6,"hi":7,"mid":6},"vars":{"row":"1","col":"2","value":"15"},"note":"Index 6 is row 1, column 2, and holds 15, which equals the target, so the search returns true."}]}
 ```
 
 #### A Walk Along The Staircase
@@ -149,7 +149,7 @@ Look for the sentence that states how the first value of a row relates to the la
 #### [Build] Search A 2D Matrix (LeetCode 74)
 <!-- id: bs-matrix-contains -->
 
-**Prerequisites.** The exact search of the first lesson and the virtual index of this lesson.
+**Prerequisites.** The lesson Find A Value In Sorted Data and the virtual index of this lesson.
 
 **Problem.** An `m` by `n` matrix of integers has ascending rows, and the first value of each row is larger than the last value of the previous row. Given the matrix and an integer `target`, return `true` when `target` occurs in the matrix and `false` otherwise.
 
@@ -170,7 +170,7 @@ Look for the sentence that states how the first value of a row relates to the la
 #### [Vary] First Matrix Position (Author exercise)
 <!-- id: bs-matrix-first-position -->
 
-**Prerequisites.** The previous exercise and the first-and-last lesson.
+**Prerequisites.** The previous exercise and the lesson Find The First Or Last Match.
 
 **Problem.** An `m` by `n` matrix of integers is sorted in non-decreasing order when read row after row, and values may repeat. Given the matrix and an integer `target`, return `[row, col]` of the first occurrence of `target` in row-major order, or `[-1, -1]` when it does not occur.
 

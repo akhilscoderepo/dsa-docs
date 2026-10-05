@@ -28,7 +28,7 @@ On `[5, 7, 7, 7, 7, 9]` with target 7, the first match is index 2. The walk then
 ```predict
 The array holds 1,000,000 entries that all equal the target. The search returns index 499,999. How many steps does the walk take, and how does that compare with the search itself?
 
-The walk takes 499,999 steps, which is O(n). The search takes about 20 comparisons, so the walk costs far more than the search it follows.
+The walk takes 499,999 steps, which is O(n). A search that keeps a candidate and halves the range takes about 20 comparisons, so the walk costs far more than the search it follows.
 ```
 
 <!-- stage: bottleneck -->
@@ -130,7 +130,7 @@ Stopping at the first match is the false friend. It looks like exact search and 
 
 #### Reading A Group Boundary As A Count
 
-The two boundaries give the size of a group. The count of entries equal to the target is `last - first + 1`, computed in O(log n). A `-1` result means the count is zero. The same shape reappears when a yes-or-no question replaces the equality test, which the lesson on the first true value covers.
+The two boundaries give the size of a group. The count of entries equal to the target is `last - first + 1`, computed in O(log n). When the first boundary is `-1`, the count is zero, so test for `-1` before the subtraction. The same shape reappears when a yes-or-no question replaces the equality test, which the lesson on the first true value covers.
 
 <!-- stage: exercises -->
 ### Exercises

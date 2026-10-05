@@ -36,7 +36,7 @@ public final class SqrtBisection {
     public static void main(String[] args) {
         // The statement examples as intervals.
         double r = root(2);
-        if (r < 1.414212 || r > 1.414215) throw new AssertionError("example 1 " + r);
+        if (r < 1.414213 || r > 1.414215) throw new AssertionError("example 1 " + r);
         r = root(0.25);
         if (r < 0.499999 || r > 0.500001) throw new AssertionError("example 2 " + r);
         // Zero returns a value within the tolerance of 0.

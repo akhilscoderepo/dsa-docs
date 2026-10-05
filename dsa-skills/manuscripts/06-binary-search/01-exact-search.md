@@ -107,7 +107,7 @@ static int binarySearch(int[] nums, int target) {
 
 Every branch either returns or moves a bound past `mid`, so the interval loses at least one index per step. The loop cannot run forever. An empty array gives `hi = -1`, the loop body never runs, and the method returns `-1`.
 
-The library method `Arrays.binarySearch(int[], int)` follows the same loop. It returns `-(insertionPoint) - 1` for a missing target and not `-1`. With duplicate values it may return any matching index.
+The library method `Arrays.binarySearch(int[], int)` follows the same loop. It returns `-(position where the target would be inserted) - 1` for a missing target and not `-1`. With duplicate values it may return any matching index.
 
 <!-- stage: applicability -->
 ### When Halving Is Safe

@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Choosing A Speed Without Testing Every Speed
 
-A warehouse robot must move four stacks of crates with 5, 9, 14 and 20 crates. It lifts at a fixed speed of `k` crates per hour from one stack at a time, and it finishes a stack before it starts the next. The shift lasts 9 hours. A lower speed wears the motor less, so the planner wants the smallest whole speed that still finishes in time.
+A warehouse robot must move four stacks of crates with 5, 9, 14 and 20 crates. It lifts at a fixed speed of `k` crates per hour from one stack at a time, and it finishes a stack before it starts the next. The shift lasts 9 hours. In each hour the robot works on one stack only, so unused lifting capacity in that hour is lost. A lower speed wears the motor less, so the planner wants the smallest whole speed that still finishes in time.
 
 There is no sorted array of answers to look at. The planner could try speed 1, then 2, then 3, and keep going until a speed works. With stacks of millions of crates, that is millions of full simulations. The question is whether the speeds themselves can be searched, even though no array holds them.
 
@@ -33,7 +33,7 @@ For `{5, 9, 14, 20}` and 9 hours, speed 6 needs 1 + 2 + 3 + 4 = 10 hours and fai
 ```predict
 Speed 7 finishes in time. Without simulating, can speed 8 finish in time, and can speed 6 be proved to fail from the result for speed 7 alone?
 
-Speed 8 finishes in time, because a higher speed never needs more hours for any stack. The result for speed 7 says nothing about speed 6, so the question is which direction the failures lie in. They lie below 7, and the successes lie at 7 and above.
+Speed 8 finishes in time, because a higher speed never needs more hours for any stack. The result for speed 7 does not decide speed 6 by itself. The successes form one block of higher speeds, so any failures lie below the block.
 ```
 
 <!-- stage: bottleneck -->
@@ -41,7 +41,7 @@ Speed 8 finishes in time, because a higher speed never needs more hours for any 
 
 A scan tries up to `m` speeds, where `m` is the largest stack. Each try reads all `n` stacks, so the total cost is O(n * m). For `m` near 10^9 the loop cannot finish.
 
-The prediction shows where the waste lies. After one speed passes, every higher speed also passes, and the scan still tests them one by one. After one speed fails, every lower speed also fails. The scan discards at most one speed per simulation, although each simulation proves facts about a whole side of the number line.
+The prediction shows where the waste lies. After one speed fails, every lower speed also fails, yet the scan simulates each lower speed on its own. After one speed passes, every higher speed also passes. The scan discards one speed per simulation, although each simulation proves a fact about a whole side of the number line.
 
 <!-- stage: insight -->
 ### Binary Search Over The Answer Range
@@ -56,7 +56,7 @@ A **feasibility check** is a function that takes one candidate value and answers
 
 #### The Answer Range
 
-The **answer range** is the closed interval `[lo, hi]` of candidates that may still be the answer. Its first value is the lowest speed that could ever work, here 1. Its last value is a candidate that is certain to pass, here the largest stack, because that speed finishes every stack in one hour and uses `n` hours. The problem guarantees that `n` is at most the limit. The search never reads an array of candidates. It computes `mid = lo + (hi - lo) / 2` and calls the check.
+The **answer range** is the closed interval `[lo, hi]` of candidates that may still be the answer. Its first value is the lowest speed that could ever work, here 1. Its last value is a candidate that is certain to pass, here the largest stack, because that speed finishes every stack in one hour and uses `n` hours. The number of stacks `n` is at most the hour budget `h`. The search never reads an array of candidates. It computes `mid = lo + (hi - lo) / 2` and calls the check.
 
 #### The Smallest Feasible Value
 
@@ -82,7 +82,7 @@ The two limits are chosen once, before the loop, and the proof that `hi` passes 
 The stacks are `{5, 9, 14, 20}` and the shift is 9 hours. The cells below are the candidate speeds 1 to 20, so index `i` holds the speed `i + 1`. The first midpoint is speed 10, which needs 1 + 1 + 2 + 2 = 6 hours and passes, so `hi` becomes speed 10. The next midpoint is speed 5, which needs 1 + 2 + 3 + 4 = 10 hours and fails, so `lo` becomes speed 6. Speed 8 passes, speed 7 passes and speed 6 fails, and the range closes on speed 7.
 
 ```trace
-{"cells":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":19,"mid":-1},"vars":{},"note":"Start with every candidate, speeds 1 to 20."},{"at":{"lo":0,"hi":9,"mid":9},"vars":{"candidate":"10","passes":"yes"},"note":"Speed 10 needs 6 hours and passes, so hi moves to 10."},{"at":{"lo":5,"hi":9,"mid":4},"vars":{"candidate":"5","passes":"no"},"note":"Speed 5 needs 10 hours and fails, so lo moves to 6."},{"at":{"lo":5,"hi":7,"mid":7},"vars":{"candidate":"8","passes":"yes"},"note":"Speed 8 needs 8 hours and passes, so hi moves to 8."},{"at":{"lo":5,"hi":6,"mid":6},"vars":{"candidate":"7","passes":"yes"},"note":"Speed 7 needs 8 hours and passes, so hi moves to 7."},{"at":{"lo":6,"hi":6,"mid":5},"vars":{"candidate":"6","passes":"no"},"note":"Speed 6 needs 10 hours and fails, so lo moves to 7."},{"at":{"lo":6,"hi":6,"mid":6},"vars":{"answer":"7"},"note":"The range holds one candidate, 7, so the search returns it."}]}
+{"cells":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":19,"mid":-1},"vars":{},"note":"Start with every candidate, speeds 1 to 20."},{"at":{"lo":0,"hi":19,"mid":9},"vars":{"candidate":"10","passes":"yes"},"note":"Speed 10 needs 6 hours and passes, so hi moves to 10."},{"at":{"lo":0,"hi":9,"mid":4},"vars":{"candidate":"5","passes":"no"},"note":"Speed 5 needs 10 hours and fails, so lo moves to 6."},{"at":{"lo":5,"hi":9,"mid":7},"vars":{"candidate":"8","passes":"yes"},"note":"Speed 8 needs 8 hours and passes, so hi moves to 8."},{"at":{"lo":5,"hi":7,"mid":6},"vars":{"candidate":"7","passes":"yes"},"note":"Speed 7 needs 8 hours and passes, so hi moves to 7."},{"at":{"lo":5,"hi":6,"mid":5},"vars":{"candidate":"6","passes":"no"},"note":"Speed 6 needs 10 hours and fails, so lo moves to 7."},{"at":{"lo":6,"hi":6,"mid":6},"vars":{"answer":"7"},"note":"The range holds one candidate, 7, so the search returns it."}]}
 ```
 
 #### Capacities For Six Packages
@@ -90,7 +90,7 @@ The stacks are `{5, 9, 14, 20}` and the shift is 9 hours. The cells below are th
 The package weights are `{4, 2, 7, 1, 5, 3}` and the limit is 3 loading days, with packages loaded in order. The cells are the capacities 7 to 26, because a capacity below the heaviest package 7 cannot carry it, and a capacity of 22 carries all packages in one day. Capacity 16 needs 2 days and passes, and capacities 11, 9 and 8 each need 3 days and pass. Capacity 7 needs 4 days and fails, so the range closes on capacity 8.
 
 ```trace
-{"cells":[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":19,"mid":-1},"vars":{},"note":"Start with every candidate, capacities 7 to 26."},{"at":{"lo":0,"hi":9,"mid":9},"vars":{"candidate":"16","passes":"yes"},"note":"Capacity 16 needs 2 days and passes, so hi moves to 16."},{"at":{"lo":0,"hi":4,"mid":4},"vars":{"candidate":"11","passes":"yes"},"note":"Capacity 11 needs 3 days and passes, so hi moves to 11."},{"at":{"lo":0,"hi":2,"mid":2},"vars":{"candidate":"9","passes":"yes"},"note":"Capacity 9 needs 3 days and passes, so hi moves to 9."},{"at":{"lo":0,"hi":1,"mid":1},"vars":{"candidate":"8","passes":"yes"},"note":"Capacity 8 needs 3 days and passes, so hi moves to 8."},{"at":{"lo":1,"hi":1,"mid":0},"vars":{"candidate":"7","passes":"no"},"note":"Capacity 7 needs 4 days and fails, so lo moves to 8."},{"at":{"lo":1,"hi":1,"mid":1},"vars":{"answer":"8"},"note":"The range holds one candidate, 8, so the search returns it."}]}
+{"cells":[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":19,"mid":-1},"vars":{},"note":"Start with every candidate, capacities 7 to 26."},{"at":{"lo":0,"hi":19,"mid":9},"vars":{"candidate":"16","passes":"yes"},"note":"Capacity 16 needs 2 days and passes, so hi moves to 16."},{"at":{"lo":0,"hi":9,"mid":4},"vars":{"candidate":"11","passes":"yes"},"note":"Capacity 11 needs 3 days and passes, so hi moves to 11."},{"at":{"lo":0,"hi":4,"mid":2},"vars":{"candidate":"9","passes":"yes"},"note":"Capacity 9 needs 3 days and passes, so hi moves to 9."},{"at":{"lo":0,"hi":2,"mid":1},"vars":{"candidate":"8","passes":"yes"},"note":"Capacity 8 needs 3 days and passes, so hi moves to 8."},{"at":{"lo":0,"hi":1,"mid":0},"vars":{"candidate":"7","passes":"no"},"note":"Capacity 7 needs 4 days and fails, so lo moves to 8."},{"at":{"lo":1,"hi":1,"mid":1},"vars":{"answer":"8"},"note":"The range holds one candidate, 8, so the search returns it."}]}
 ```
 
 <!-- stage: code -->
@@ -138,7 +138,7 @@ If a larger candidate can fail after a smaller one passes, the search discards a
 #### [Build] Eating Speed For All Piles (LeetCode 875)
 <!-- id: bs-int-eating-speed -->
 
-**Prerequisites.** The first-true lesson and the answer range of this lesson.
+**Prerequisites.** The lesson Find The First True Value and the answer range of this lesson.
 
 **Problem.** An array `piles` holds the number of items in each pile, and an integer `h` is the number of available hours. In each hour, a worker chooses one pile and removes `min(k, remaining)` items from it, where `k` is a fixed integer speed. Return the smallest integer `k` such that all piles are emptied within `h` hours.
 

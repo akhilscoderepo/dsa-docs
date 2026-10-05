@@ -24,7 +24,7 @@ static int indexOfSmallest(int[] nums) {
 }
 ```
 
-For `[6, 7, 9, 1, 2, 3, 4]` the method returns index 3. A slightly faster version stops at the first slot where a value is smaller than its predecessor. Both versions are correct, and both work without any assumption about the order.
+For `[6, 7, 9, 1, 2, 3, 4]` the method returns index 3. A slightly faster version stops at the first slot where a value is smaller than its predecessor. The full scan is correct for any order. The faster version is correct only because the array is a rotated sorted array.
 
 ```predict
 The buffer holds 1,000,000 slots, and the oldest entry sits in slot 999,990. How many slots does the loop read, and which fact about the data does the loop ignore?

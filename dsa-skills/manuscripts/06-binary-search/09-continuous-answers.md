@@ -117,7 +117,7 @@ A loop of the form `while (hi - lo > eps)` looks safer than a fixed count, and i
 
 #### Absolute And Relative Error
 
-An absolute tolerance of 0.000001 is generous for a root near 1000000 and meaningless for a root near 0.000001, where the answer 0 passes. A relative tolerance scales with the answer. Choose the kind of error before choosing the count, and derive the count from the starting width and that tolerance.
+An absolute tolerance of 0.000001 is very strict for a root near 1000000 and meaningless for a root near 0.000001, where the answer 0 passes. A relative tolerance scales with the answer. Choose the kind of error before choosing the count, and derive the count from the starting width and that tolerance.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -135,7 +135,7 @@ An absolute tolerance of 0.000001 is generous for a root near 1000000 and meanin
 - **Operations** exclude square root and power calls.
 - **Zero** must return a value within the tolerance of 0.
 
-**Example 1.** Input `x = 2`, output any value in `[1.414212, 1.414215]`.
+**Example 1.** Input `x = 2`, output any value in `[1.414213, 1.414215]`.
 
 **Example 2.** Input `x = 0.25`, output any value in `[0.499999, 0.500001]`.
 

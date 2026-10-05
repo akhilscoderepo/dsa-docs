@@ -112,14 +112,14 @@ static int upperBound(int[] nums, int target) {
 }
 ```
 
-The results lie in `0` to `nums.length`, and both methods return 0 for an empty array. A target below every value gives 0, and a target above every value gives `nums.length`. The closed-interval style of the earlier lessons cannot use `hi = mid`, because the loop then never ends. The half-open form and its loop test `lo < hi` belong together.
+The results lie in `0` to `nums.length`, and both methods return 0 for an empty array. A target below every value gives 0, and a target above every value gives `nums.length`. A closed interval with the loop test `lo <= hi` cannot use `hi = mid`, because the loop then never ends. The half-open form and its loop test `lo < hi` belong together.
 
 <!-- stage: applicability -->
 ### When The Edge Is The Answer
 
 #### The Invariant
 
-The invariant is that every index below `lo` fails the keep test and every index from `hi` on passes it. Initially both sets are empty. Each step moves one bound across `mid` after the test classifies it, so the invariant holds. When the interval is empty, `lo` is the first index that passes.
+The invariant is that every index below `lo` has a value that passes the test `nums[i] < target` and every index from `hi` on fails it. Initially both sets are empty. Each step moves one bound across `mid` after the test classifies it, so the invariant holds. When the interval is empty, `lo` is the first index that passes.
 
 #### The False Friend
 
@@ -191,7 +191,7 @@ Search Insert Position, counts of a value, and ranges of values all read bounds.
 
 **Example 2.** Input `nums = [2,4,4,7]` and `target = 9`, output `[4,4]`.
 
-**Hint.** What does each search return when the keep test passes at index 0, and what when it fails at every index?
+**Hint.** What does each search return when `nums[0] < target` is false, and what when it is true at every index?
 
 **Changed decision.** The outputs sit at the ends of the legal range, so the sentinel `nums.length` must be reachable.
 
