@@ -1,4 +1,4 @@
-# Lesson spec: Duplicate Skipping
+# Lesson spec: Skip Repeated Values
 
 **Recognition cue.** Sorted candidates can produce the same value combination repeatedly. **Invariant.** Skip equal choices only after one representative branch or pair has been fully processed. **False friend.** Skipping before evaluating the first representative can discard a valid answer.
 

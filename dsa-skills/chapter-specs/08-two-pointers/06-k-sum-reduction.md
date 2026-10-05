@@ -1,4 +1,4 @@
-# Lesson spec: K-Sum Reduction
+# Lesson spec: Fix Values Then Scan A Pair
 
 **Recognition cue.** The array can be sorted, several leading values can be fixed, and the remaining two-value target is monotone. **State.** Each fixed choice reduces both `k` and the remaining target. **Java hazard.** Use `long` for sums when several integers can overflow.
 

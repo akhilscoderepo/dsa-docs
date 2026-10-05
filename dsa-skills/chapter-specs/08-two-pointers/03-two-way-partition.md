@@ -1,4 +1,4 @@
-# Lesson spec: Two-Way Partition
+# Lesson spec: Split An Array In Two
 
 **Recognition cue.** Output needs two regions and relative order is not required. **Invariant.** Values before the boundary satisfy one category; unresolved values remain outside final regions. **False friend.** Stable compaction preserves order and may perform more writes.
 

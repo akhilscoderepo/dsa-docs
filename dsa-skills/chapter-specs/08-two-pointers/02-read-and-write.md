@@ -1,4 +1,4 @@
-# Lesson spec: Read And Write
+# Lesson spec: Read Ahead And Write Behind
 
 **Recognition cue.** One pointer reads unresolved input while another marks the next output position or retained boundary. **Invariant.** The written prefix already satisfies the final contract. **False friend.** A sliding window’s left boundary removes state from a range; a write pointer constructs output.
 

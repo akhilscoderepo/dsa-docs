@@ -1,4 +1,4 @@
-# Lesson spec: Array Cycle State
+# Lesson spec: Follow Values As Indexes
 
 **Recognition cue.** Every array value is a legal next index, producing a functional graph, and the contract implies a cycle whose entry represents the duplicate. **Invariant.** Floyd’s fast/slow phase finds a meeting inside the cycle; resetting one pointer and moving both one step finds the entry. **False friend.** Sign marking and cyclic placement mutate the array; this method follows links without modification.
 

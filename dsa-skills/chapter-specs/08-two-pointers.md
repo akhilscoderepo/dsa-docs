@@ -72,7 +72,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Opposite Ends
+### Scan From Both Ends
 
 **Recognition cue.** Ordered input lets one comparison eliminate every pair using one endpoint. **Invariant.** Any valid pair not yet ruled out lies between `left` and `right`. **False friend.** Without order or another monotone property, moving an endpoint is a guess.
 
@@ -81,7 +81,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Two Values.** Trace one comparison with equal values and an absent target.
 - **Recognize - LC 11 Container With Most Water.** Move the shorter wall because moving the taller wall cannot improve the limiting height.
 
-### Read And Write
+### Read Ahead And Write Behind
 
 **Recognition cue.** One pointer reads unresolved input while another marks the next output position or retained boundary. **Invariant.** The written prefix already satisfies the final contract. **False friend.** A sliding window’s left boundary removes state from a range; a write pointer constructs output.
 
@@ -90,7 +90,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - LC 26 Remove Duplicates from Sorted Array.** Handle empty input and one-element runs.
 - **Recognize - LC 80 Remove Duplicates from Sorted Array II.** The read pointer advances normally; the admission rule consults the kept prefix.
 
-### Two-Way Partition
+### Split An Array In Two
 
 **Recognition cue.** Output needs two regions and relative order is not required. **Invariant.** Values before the boundary satisfy one category; unresolved values remain outside final regions. **False friend.** Stable compaction preserves order and may perform more writes.
 
@@ -99,7 +99,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: One Empty Region.** Test all-even and all-odd arrays.
 - **Recognize - LC 922 Sort Array By Parity II.** Pointer positions encode even and odd destination classes.
 
-### Three-Way Partition
+### Split An Array In Three
 
 **Recognition cue.** Values belong to low, middle, or high regions. **Invariant.** `[0,low)` is low, `[low,mid)` is middle, `[mid,high]` unresolved, and `(high,n)` high. This is the Dutch national flag partition.
 
@@ -108,7 +108,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Reinspect Swapped High.** After swapping with `high`, do not advance `mid`; the incoming value is unresolved.
 - **Recognize - Author exercise: Three-Way Pivot Partition.** Replace colors with `< pivot`, `== pivot`, and `> pivot`.
 
-### Duplicate Skipping
+### Skip Repeated Values
 
 **Recognition cue.** Sorted candidates can produce the same value combination repeatedly. **Invariant.** Skip equal choices only after one representative branch or pair has been fully processed. **False friend.** Skipping before evaluating the first representative can discard a valid answer.
 
@@ -117,7 +117,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: All Equal.** `[0,0,0,0]` produces exactly one triplet.
 - **Recognize - LC 18 4Sum.** Duplicate policy applies at every fixed recursion/loop depth and at the final pair scan.
 
-### K-Sum Reduction
+### Fix Values Then Scan A Pair
 
 **Recognition cue.** The array can be sorted, several leading values can be fixed, and the remaining two-value target is monotone. **State.** Each fixed choice reduces both `k` and the remaining target. **Java hazard.** Use `long` for sums when several integers can overflow.
 
@@ -126,7 +126,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Overflowing Sum.** Evaluate extreme integer inputs using `long` arithmetic.
 - **Recognize - LC 18 4Sum.** Fix two values, then reuse the pair invariant and duplicate policy.
 
-### Array Cycle State
+### Follow Values As Indexes
 
 **Recognition cue.** Every array value is a legal next index, producing a functional graph, and the contract implies a cycle whose entry represents the duplicate. **Invariant.** Floyd’s fast/slow phase finds a meeting inside the cycle; resetting one pointer and moving both one step finds the entry. **False friend.** Sign marking and cyclic placement mutate the array; this method follows links without modification.
 
@@ -137,7 +137,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Sorting And Two Pointers
+### Find Sums In Sorted Arrays
 
 Sorting creates the monotone sum relation; pointer movement exploits it. Sorting alone still scans too many pairs, while pointers on unsorted data have no safe movement proof.
 
@@ -146,7 +146,7 @@ Sorting creates the monotone sum relation; pointer movement exploits it. Sorting
 - **Boundary - LC 16 3Sum Closest.** Preserve a best candidate when no exact target exists.
 - **Recognize - LC 18 4Sum.** Add another fixed dimension with `long` sums and duplicate control.
 
-### Strings And Two Pointers
+### Check Strings From Both Ends
 
 String normalization/indexing supplies comparable characters; pointers supply symmetric or same-direction movement.
 
@@ -155,7 +155,7 @@ String normalization/indexing supplies comparable characters; pointers supply sy
 - **Boundary - LC 680 Valid Palindrome II.** At the first mismatch, test exactly one skipped endpoint.
 - **Recognize - LC 392 Is Subsequence.** Both pointers now move left-to-right at different rates; this is not palindrome movement.
 
-### Index State And Floyd
+### Find A Duplicate With Two Speeds
 
 The array’s bounded values create next links; Floyd’s algorithm supplies cycle entry detection. Neither prerequisite alone explains LC 287.
 

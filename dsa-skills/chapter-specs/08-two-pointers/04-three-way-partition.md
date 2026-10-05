@@ -1,4 +1,4 @@
-# Lesson spec: Three-Way Partition
+# Lesson spec: Split An Array In Three
 
 **Recognition cue.** Values belong to low, middle, or high regions. **Invariant.** `[0,low)` is low, `[low,mid)` is middle, `[mid,high]` unresolved, and `(high,n)` high. This is the Dutch national flag partition.
 

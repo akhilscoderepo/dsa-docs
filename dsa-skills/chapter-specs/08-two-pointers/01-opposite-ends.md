@@ -1,4 +1,4 @@
-# Lesson spec: Opposite Ends
+# Lesson spec: Scan From Both Ends
 
 **Recognition cue.** Ordered input lets one comparison eliminate every pair using one endpoint. **Invariant.** Any valid pair not yet ruled out lies between `left` and `right`. **False friend.** Without order or another monotone property, moving an endpoint is a guess.
 
