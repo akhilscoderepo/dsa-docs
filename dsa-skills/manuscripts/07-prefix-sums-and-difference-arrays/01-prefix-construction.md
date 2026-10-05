@@ -173,7 +173,7 @@ An `int` accumulator fails when the sum can pass 2,147,483,647, and it wraps wit
 
 **Prerequisites.** The sentinel entry of this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `c` with `0 <= c <= nums.length`, return the sum of the first `c` values of `nums`. The sum of zero values is 0. Build the array of this lesson and read one entry.
+**Problem.** Take an integer array `nums` and a count `c` with `0 <= c <= nums.length`. Return the sum of the first `c` values of `nums`. The sum of zero values is 0. Build the array of this lesson and read one entry.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 1000`; the empty array is valid.

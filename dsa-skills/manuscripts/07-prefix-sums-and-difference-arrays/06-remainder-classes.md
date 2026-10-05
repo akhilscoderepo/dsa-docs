@@ -182,7 +182,7 @@ The method needs a divisor that stays fixed for all queries. A different `k` nee
 
 **Prerequisites.** The first exercise above and the second trace of this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `k`, return the array of length `nums.length + 1` whose entry `i` is the class number of the sum of the first `i` values. The class number is the remainder in the range 0 to `k - 1`.
+**Problem.** Given `nums` and a divisor `k`, return the array of length `nums.length + 1` whose entry `i` is the class number of the sum of the first `i` values. The class number is the remainder in the range 0 to `k - 1`.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^5`.
@@ -203,7 +203,7 @@ The method needs a divisor that stays fixed for all queries. A different `k` nee
 
 **Prerequisites.** All exercises above.
 
-**Problem.** Given an integer array `nums` and an integer `k`, return the length of the longest non-empty contiguous subarray whose sum is divisible by `k`. Return 0 when no subarray qualifies.
+**Problem.** Given `nums` and a divisor `k`, return the length of the longest non-empty contiguous subarray whose sum is divisible by `k`. Return 0 when no subarray qualifies.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.

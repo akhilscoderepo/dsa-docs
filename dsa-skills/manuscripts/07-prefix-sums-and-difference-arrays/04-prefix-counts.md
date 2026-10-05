@@ -139,7 +139,7 @@ The relation must be a difference of two stored values, so a target on a product
 
 **Prerequisites.** The frequency map and the seed of this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `k`, return the number of non-empty contiguous subarrays whose sum equals `k`.
+**Problem.** For an integer array `nums` and an integer `k`, return the number of non-empty contiguous subarrays whose sum equals `k`.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 2 * 10^4`.
@@ -160,7 +160,7 @@ The relation must be a difference of two stored values, so a target on a product
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** Given a binary array `nums`, where every value is 0 or 1, and an integer `goal`, return the number of non-empty contiguous subarrays whose sum equals `goal`.
+**Problem.** Given a binary array `nums`, where every value is 0 or 1, and an integer `goal`, count the non-empty contiguous subarrays whose sum equals `goal`.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 3 * 10^4`.
@@ -181,7 +181,7 @@ The relation must be a difference of two stored values, so a target on a product
 
 **Prerequisites.** The first exercise and the second trace of this lesson.
 
-**Problem.** Given an integer array `nums`, return the number of non-empty contiguous subarrays whose sum is 0. The count can exceed the `int` range, so the return type is `long`.
+**Problem.** Given an integer array `nums`, count the non-empty contiguous subarrays whose sum is 0. The count can exceed the `int` range, so the return type is `long`.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.

@@ -167,7 +167,7 @@ The operation must have an inverse for the stored-prefix method. A bitwise AND a
 
 **Prerequisites.** The first exercise above and the frequency map of the lesson on counting sums.
 
-**Problem.** Given an integer array `arr` and an integer `k`, return the number of non-empty contiguous subarrays whose XOR equals `k`.
+**Problem.** Given an integer array `arr` and an integer `k`, count the non-empty contiguous subarrays whose XOR equals `k`.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= arr.length <= 10^5`.
