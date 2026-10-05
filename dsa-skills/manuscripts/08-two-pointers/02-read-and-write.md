@@ -56,7 +56,7 @@ Use two indexes that move in the same direction. The **read index** `read` visit
 
 The slots from index 0 up to but not including `write` form the **kept prefix**. The kept prefix always equals the final answer for the values read so far. When `nums[read]` passes the test, the scan copies it to `nums[write]` and increases `write`. When it fails the test, the scan does nothing, and only `read` advances. The copy never overwrites an unread value, because `write <= read`.
 
-This scan is a **compaction**, which means a pass that moves the kept values to the front and keeps their relative order. After the loop, `write` equals the number of kept values, so the answer is `write`. Each step costs O(1), the loop runs `n` times, and the method uses O(1) extra space.
+This scan is a **compaction**, which means a pass that moves the kept values to the front and keeps their relative order. After the loop, `write` equals the number of kept values, so the answer is `write`. Each step costs constant time, the loop runs `n` times, and the method needs no second array.
 
 <!-- names: read index, write index, kept prefix, compaction -->
 

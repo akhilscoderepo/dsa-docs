@@ -1,27 +1,19 @@
 from common import *
-CH='08-two-pointers'
-F='04-three-way-partition.md'
-def run(src):
-    a=list(src); low,mid,high=0,0,len(a)-1; st=[]
-    def rec(note):
-        st.append({"at":{"low":low,"mid":mid,"high":high},"vars":{"row":",".join(map(str,a)),"value":a[mid] if mid<=high else "none"},"note":note})
-    while mid<=high:
-        v=a[mid]
-        if v==0:
-            if low==mid: rec(f"Position {mid} holds 0 and the middle region is empty, so it trades with itself. Both low and mid move on to {mid+1}.")
-            else: rec(f"Position {mid} holds 0. It trades with position {low}, which holds a 1 from the middle region, so low becomes {low+1} and mid becomes {mid+1}.")
-            a[low],a[mid]=a[mid],a[low]; low+=1; mid+=1
-        elif v==1:
-            rec(f"Position {mid} holds 1, which already belongs in the middle region, so mid moves to {mid+1}.")
-            mid+=1
+CH='08-two-pointers'; F='04-three-way-partition.md'
+def go(a0,grp,labels,ph):
+    a=list(a0); lo=mid=0; hi=len(a)-1; st=[]
+    while mid<=hi:
+        g=grp(a[mid]); v={"array":str(a)}
+        at={"low":lo,"mid":mid,"high":hi}
+        if g==0:
+            x=a[mid]; a[lo],a[mid]=a[mid],a[lo]
+            st.append({"at":at,"vars":{"array":str(a)},"note":f"The value {x} belongs to the {labels[0]}, so it swaps with the slot at low, and low and mid both advance."}); lo+=1; mid+=1
+        elif g==1:
+            st.append({"at":at,"vars":v,"note":f"The value {a[mid]} belongs to the {labels[1]}, so only mid advances."}); mid+=1
         else:
-            if mid==high: rec(f"Position {mid} holds 2 and is also the last unresolved position, so it trades with itself and high becomes {high-1}.")
-            else: rec(f"Position {mid} holds 2. It trades with position {high}, high becomes {high-1}, and mid stays at {mid} because the value that arrived from position {high} has not been looked at yet.")
-            a[mid],a[high]=a[high],a[mid]; high-=1
-    rec(f"The unresolved region is empty. Zeros fill the first {low} positions, ones fill the next {mid-low}, and twos fill the last {len(a)-mid}.")
-    assert a==sorted(src)
-    return a,low,mid,st
-a,l,m,st=run([2,0,2,1,1,0]); assert (l,m)==(2,4)
-fill(CH,F,block([2,0,2,1,1,0],["low","mid","high"],st),"@@TRACE1@@")
-a,l,m,st=run([1,0,2,1,0]); assert (l,m)==(2,4)
-fill(CH,F,block([1,0,2,1,0],["low","mid","high"],st),"@@TRACE2@@")
+            x=a[mid]; a[mid],a[hi]=a[hi],a[mid]
+            st.append({"at":at,"vars":{"array":str(a)},"note":f"The value {x} belongs to the {labels[2]}, so it swaps with the slot at high and high moves back. The value now at mid is unread, so mid stays."}); hi-=1
+    st.append({"at":{"low":lo,"mid":mid,"high":hi},"vars":{"array":str(a)},"note":"The pointer mid has passed high, so no slot is unresolved."})
+    fill(CH,F,block(list(a0),["low","mid","high"],st),ph); return a
+r=go([2,0,2,1,1,0],lambda x:x,["first group","middle region","third group"],"@@TRACE1@@"); assert r==[0,0,1,1,2,2]
+r=go([7,5,2,9,5,1],lambda x:0 if x<5 else (1 if x==5 else 2),["values below the pivot","values equal to the pivot","values above the pivot"],"@@TRACE2@@"); assert sorted(r[:2])==[1,2] and r[2:4]==[5,5] and sorted(r[4:])==[7,9]
