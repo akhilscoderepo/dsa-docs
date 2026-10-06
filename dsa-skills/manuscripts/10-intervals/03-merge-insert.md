@@ -73,13 +73,13 @@ Insert has more structure, because the list is already sorted by start and has n
 <!-- stage: variables -->
 ### What Merge And Insert Each Keep
 
-The merge scan keeps three pieces of state, and the insert scan keeps two.
+The two scans use five pieces of state between them.
 
-- **sorted** holds the windows in start order, a copy, which leaves the input untouched.
+- **sorted** holds the windows in start order in the merge scan, a copy that leaves the input untouched.
 - **result** is a `List<int[]>` of finalized intervals plus the active interval at its end.
 - **active** is the last entry of `result`, and the next window is tested against its end.
-- **merged** is the new interval during an insert, which grows as the block is absorbed.
-- **i** is the index of the next unprocessed window in both scans.
+- **start** and **end** are the bounds of the new interval during an insert, and they grow as the block is absorbed.
+- **i** is the index of the next unprocessed list entry in the insert scan, and the merge scan needs no index.
 
 <!-- stage: trace -->
 ### Tracing A Merge And An Insert
@@ -156,7 +156,7 @@ The merge spends O(n log n) time sorting and holds O(n) entries in its result. T
 
 #### State What Stays True
 
-The invariant of both scans is that every entry before the active interval is finalized and disjoint from everything after it. Use the merge scan when the goal is a union of ranges. Busy bars, covered address blocks and minutes with an outage are examples. Use the insert scan when the input is already sorted by start and has no overlaps. The two conditions are a contract of the input, and the code can check neither one cheaply.
+The invariant of both scans is that every entry before the active interval is finalized and disjoint from everything after it. Use the merge scan when the goal is a union of ranges. Busy bars, covered address blocks and minutes with an outage are examples. Use the insert scan when the input is already sorted by start and has no overlaps. The two conditions are a contract of the input, and the scans rely on both without checking them.
 
 #### Appending Then Merging Is A False Friend
 

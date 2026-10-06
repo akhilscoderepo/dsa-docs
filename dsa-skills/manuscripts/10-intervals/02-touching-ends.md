@@ -135,7 +135,7 @@ Remembering "use `<=`" or "use `<`" without the model is a false friend. Each ru
 
 #### Zero-Length Intervals
 
-Keep the zero-length case in mind. `[x, x]` is a closed interval with one coordinate, so it overlaps any closed interval that contains `x`. `[x, x)` is empty under the half-open model, so it overlaps nothing, and a scan may skip it. A test that never asks whether an interval is empty can report an overlap with a range that holds no coordinate.
+Keep the zero-length case in mind. `[x, x]` is a closed interval with one coordinate, so it overlaps any closed interval that contains `x`. `[x, x)` is empty under the half-open model, so it overlaps nothing, and a scan may skip it. The strict half-open test already returns false for `[x, x)`. The closed test `lo <= hi` applied to half-open data would report an overlap with that empty range.
 
 <!-- stage: exercises -->
 ### Exercises

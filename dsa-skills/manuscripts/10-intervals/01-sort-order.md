@@ -180,7 +180,7 @@ Do not sort when the input contract already promises order. Sorting costs O(n lo
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Each interval is a pair `[start, end]`, and its end is never below its start. Given an array of intervals, return a new array ordered by `end` ascending, and by `start` ascending when two ends are equal. Then state which decision the first interval of that order makes possible. The goal is to choose as many intervals as possible with no shared point.
+**Problem.** Each interval is a pair `[start, end]`, and its end is never below its start. Given an array of intervals, return a new array ordered by `end` ascending, and by `start` ascending when two ends are equal. Then state which decision the first interval of that order makes possible. The goal, which a later lesson develops, is to choose as many intervals as possible with no shared point.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= intervals.length <= 10^5`.

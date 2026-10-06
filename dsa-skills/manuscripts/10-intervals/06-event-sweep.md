@@ -61,7 +61,7 @@ The peak is the largest running count after a start event. Under the half-open p
 
 #### Empty Intervals Need A Guard
 
-A half-open interval with `start == end` holds no coordinate. Its end event runs before its start event under the half-open policy, so the running count would dip below zero. The pass must skip such intervals, which is the same decision as treating `[x, x)` as empty in the second lesson.
+A half-open interval with `start == end` holds no coordinate. Its end event runs before its start event under the half-open policy, so the running count could dip below zero when it is already 0. The pass must skip such intervals, which is the same decision as treating `[x, x)` as empty in the second lesson.
 
 <!-- stage: variables -->
 ### What The Sweep Keeps
@@ -70,8 +70,8 @@ The sweep keeps four pieces of state.
 
 - **events** is an array of pairs `{coordinate, change}` with `2n` entries, sorted by coordinate and then by the tie policy.
 - **active** is the running count, which equals the number of intervals that hold the current coordinate.
-- **best** is the largest value of `active` seen after any start event.
-- **e** is the index of the next event to process.
+- **best** is the largest value of `active` seen so far.
+- **e** is the event being processed, one `{coordinate, change}` pair.
 
 <!-- stage: trace -->
 ### Sweeping Under Two Tie Policies

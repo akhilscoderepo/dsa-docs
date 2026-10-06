@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-An interval is only a pair of numbers until a rule says how two pairs relate and an order says which pair to look at next. This chapter used one pairing that its prerequisites already allow, and it names a second pairing that needs a later chapter.
+An interval is only a pair of numbers until a rule says how two pairs relate and an order says which pair to look at next. This chapter used one pairing that its prerequisites already allow, and it names two pairings that need later chapters.
 
 ### Pairing Taught In This Chapter
 

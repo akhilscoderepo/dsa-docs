@@ -78,7 +78,7 @@ Each scan needs one running value and one counter.
 - **sorted** is a copy of the input in the order that the decision needs, and the original array stays as given.
 - **lastEnd** is the end of the last kept request in the selection scan.
 - **maxEnd** is the largest end among the earlier requests in the coverage scan.
-- **count** is the number of requests that were kept, or the number that are not covered.
+- **kept** counts the kept requests in the selection scan, and **notCovered** counts the uncovered requests in the coverage scan.
 
 <!-- stage: trace -->
 ### Tracing Selection And Coverage
@@ -161,7 +161,7 @@ The rule "keep the request that starts first" is a false friend, and the opening
 
 #### Limits Of The Method
 
-The greedy rule maximizes the count only. When requests carry weights, such as profit, keeping the earliest end can lose value, and a later chapter on dynamic programming solves that case. When the question is how many rooms are needed at once, the answer is a different quantity, and Chapter 17 teaches it with a heap.
+The greedy rule maximizes the count only. When requests carry weights, such as profit, keeping the earliest end can lose value, and a later chapter on dynamic programming solves that case. When the question is which room each request uses, the answer needs more than a count, and Chapter 17 teaches it with a heap.
 
 <!-- stage: exercises -->
 ### Exercises

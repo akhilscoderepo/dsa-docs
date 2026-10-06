@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### One List, Four Different Reports
 
-A maintenance team keeps one list of closed work windows, such as `[5,7]`, `[1,4]`, `[3,6]` and `[9,9]`. Management asks four questions about it. How many hours does at least one window cover? What does the list look like after one more window is added? How many windows can run without any two sharing an hour? How few inspection visits reach every window? A developer sorts the list by start for the first question and gets it right. The same sort for the third question can keep one long window and reject several short windows that would have fit.
+A maintenance team keeps one list of closed work windows, such as `[5,7]`, `[1,4]`, `[3,6]` and `[9,9]`. Management asks four questions about it. How many hours does at least one window cover? What does the list look like after one more window is added? How many windows can run without any two sharing an hour? How few inspection visits reach every window? Each visit is an arrow shot at one hour, and it reaches every window that holds that hour. A developer sorts the list by start for the first question and gets it right. The same sort for the third question can keep one long window and reject several short windows that would have fit.
 
 The list is the same in all four questions, and the sort order that works changes with the question. The task here is to answer one question. How do you pick the order, and the one value to carry through the scan, for each of the four questions?
 
@@ -65,7 +65,7 @@ For selection, the sort key is the end. The local state is the end of the last k
 
 #### The Safe Move In Each Scan
 
-The **safe move** is the step that never loses an optimal answer. For the union it is to extend the active end to the larger end. For selection and for arrows it is to commit to the smallest end among the unresolved intervals. In both cases the committed value is final, because every later interval starts at or after the order's current position.
+The **safe move** is the step that never loses an optimal answer. For the union it is to extend the active end to the larger end. For selection and for arrows it is to commit to the smallest end among the unresolved intervals. In both cases the committed value is final, because no later interval in the chosen order can improve it.
 
 #### Sorted Input Removes The Sort
 
@@ -74,13 +74,13 @@ When the input is already ordered and disjoint, as for an insert, the sort key i
 <!-- stage: variables -->
 ### What Each Scan Carries
 
-All four scans share one shape, and only the carried value differs.
+The two scans in the code below share one shape, and only the carried value differs. A selection scan, as in the fifth lesson, keeps `lastEnd` in the same place.
 
 - **sorted** is the clone ordered by the sort key, so the input stays as given.
-- **activeEnd** is the largest end of the growing interval in a union scan.
-- **lastKept** is the end of the last kept interval in a selection scan.
-- **arrow** is the coordinate of the current arrow in a shared-point scan.
-- **answer** is the running total, count or output list.
+- **from** and **to** bound the growing interval in the union scan, and `to` is its largest end.
+- **lastEnd** is the end of the last kept interval in a selection scan.
+- **arrow** is the coordinate of the current arrow in the shared-point scan.
+- **out** and **k** hold the recorded arrow positions and their count.
 
 <!-- stage: trace -->
 ### Tracing A Union And An Arrow Scan
@@ -160,7 +160,7 @@ In both scans the sort sets the cost at O(n log n) time, and the clone takes O(n
 
 #### Read The Decision And The Test
 
-The invariant of every scan in this lesson is that the carried value summarises all processed intervals under the sort key. Read the question and name its decision: union, replace, keep or place. Then name the test that the interval rule gives. A union and a count of kept intervals can both be answered from the same list, and the two questions use different keys.
+The invariant of every scan in this lesson is that the carried value summarises all processed intervals under the sort key. Read the question and name its decision: union, insert, keep or shoot. Then name the test that the interval rule gives. A union and a count of kept intervals can both be answered from the same list, and the two questions use different keys.
 
 #### Wrong Key Pairings Fail
 
@@ -168,7 +168,7 @@ Pairing a decision with the wrong key is a false friend, and it fails on small i
 
 #### When The Pairing Stops Working
 
-The pairing needs one carried value. A question that needs several active intervals at once cannot be summarised by one end. The number of rooms in use is an example, and Chapter 17 adds a heap for that case. A question that attaches weights to intervals needs dynamic programming, because a greedy commitment can lose weight. State the interval rule before writing any comparison, because the closed and half-open models give different counts on touching input.
+The pairing needs one carried value. A question that needs several active intervals at once cannot be summarised by one end. Assigning each interval to a room is an example, and Chapter 17 adds a heap for that case. A question that attaches weights to intervals needs dynamic programming, because a greedy commitment can lose weight. State the interval rule before writing any comparison, because the closed and half-open models give different counts on touching input.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -213,7 +213,7 @@ The pairing needs one carried value. A question that needs several active interv
 
 **Hint.** Which comparison separates the intervals before the new one from the ones it absorbs? Does a touching end belong to the block?
 
-**Changed decision.** The three-part pass uses `<` and `>` where the closed rule used `<=`.
+**Changed decision.** The three-part pass tests `<=` for the copied part and `<` for the absorbed part, where the closed rule used `<` and `<=`.
 
 #### [Boundary] Closed Schedule Size (LeetCode 435)
 <!-- id: iv-comb-closed-schedule -->

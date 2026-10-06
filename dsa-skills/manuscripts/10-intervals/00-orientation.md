@@ -26,7 +26,7 @@ One lesson joins the order from sorting with the test from the interval rule.
 
 ### How To Work Through Each Lesson
 
-Each lesson opens with a program that works but is slow or wrong, and it asks you to predict the cause before the answer appears. Two traces follow, with the data drawn above a moving pointer. Four exercises close the lesson, from the basic case to a problem you must recognize from its wording, with a hint hidden until you ask. Write down the closed or half-open rule before you open a hint.
+Each lesson opens with a short failing case and then shows a program that works but is slow or wrong. A prediction question follows, and you answer it before the explanation appears. Two traces follow, with the data drawn above a moving pointer. Four exercises close the lesson, from the basic case to a problem you must recognize from its wording, with a hint hidden until you ask. Write down the closed or half-open rule before you open a hint.
 
 ### What You Can Do After This Chapter
 

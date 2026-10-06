@@ -34,7 +34,7 @@ For the two lists above, the method returns six windows in the order of the firs
 ### Counting The Pairs
 
 ```predict
-Two cursors point at one window in each list, and the method has just recorded their shared window. Which of the two windows can the method discard, and why is it safe?
+Two indexes, one in each list, point at one window each, and the method has just recorded their shared window. Which of the two windows can the method discard, and why is it safe?
 
 The one that ends first. Every later window in the other list starts after that other window ends, so it starts after the first window ends too. The discarded window can meet nothing else.
 ```
