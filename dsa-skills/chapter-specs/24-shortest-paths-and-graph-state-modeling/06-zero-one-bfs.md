@@ -1,4 +1,4 @@
-# Lesson spec: Zero-One BFS
+# Lesson spec: Search With Zero And One Costs
 
 **Recognition cue.** Every edge weight is exactly zero or one. **Invariant.** The deque processes tentative distances in nondecreasing order by pushing zero-cost improvements to the front and one-cost improvements to the back. **False friend.** Ordinary BFS counts edges, while Dijkstra works but pays an unnecessary heap cost.
 

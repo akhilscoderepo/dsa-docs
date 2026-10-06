@@ -1,4 +1,4 @@
-# Lesson spec: Dijkstra
+# Lesson spec: Find Cheapest Routes With Dijkstra
 
 **Recognition cue.** Edges have nonnegative weights and the task asks for minimum total cost from a source. **Invariant.** When the smallest nonstale tentative distance is removed from the heap, no later path can improve it; relaxing an edge proposes `dist[u] + weight`. **False friend.** Ordinary BFS is correct only when transition costs are equal.
 

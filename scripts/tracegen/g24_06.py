@@ -1,67 +1,33 @@
-from common import *
+import sys
 from collections import deque
+from common import *
 CH='24-shortest-paths-and-graph-state-modeling'
-F='06-zero-one-bfs.md'
-# trace 1: 3x3 wind grid, steps in pop order (stale pops included)
-g=[[3,1,3],[3,1,3],[1,3,3]]
-R=C=3; HEAD={1:(0,1),2:(0,-1),3:(1,0),4:(-1,0)}
-letter={1:'R',2:'L',3:'D',4:'U'}
 INF=10**9
-dist=[INF]*9; dist[0]=0; dq=deque([(0,0)]); steps=[]; stale_seen=0
-while dq:
-    pad,d=dq.popleft(); r,c=divmod(pad,C)
-    if d>dist[pad]:
-        stale_seen+=1
-        steps.append({"at":{"cur":pad},"vars":{"cost":d,"stale":1,"front":0,"back":0,"waiting":len(dq)},
-          "note":f"The entry for pad {pad} carries cost {d}, but the table already holds {dist[pad]}, so it is skipped."})
-        continue
-    fr=bk=0
-    for k,(dr,dc) in HEAD.items():
-        nr,nc=r+dr,c+dc
-        if not(0<=nr<R and 0<=nc<C): continue
-        t=0 if g[r][c]==k else 1; nx=nr*C+nc
-        if d+t<dist[nx]:
-            dist[nx]=d+t
-            if t==0: dq.appendleft((nx,d+t)); fr+=1
-            else: dq.append((nx,d+t)); bk+=1
-    steps.append({"at":{"cur":pad},"vars":{"cost":d,"stale":0,"front":fr,"back":bk,"waiting":len(dq)},
-      "note":f"Pad {pad} is expanded at cost {d}; {fr} entr{'y' if fr==1 else 'ies'} went to the front and {bk} to the back."})
-assert dist[8]==1, dist
-# independent check by Bellman-Ford fixpoint
-bf=[INF]*9; bf[0]=0; ch=True
-while ch:
-    ch=False
-    for p in range(9):
-        r,c=divmod(p,C)
-        for k,(dr,dc) in HEAD.items():
-            nr,nc=r+dr,c+dc
-            if 0<=nr<R and 0<=nc<C and bf[p]+(g[r][c]!=k)<bf[nr*C+nc]: bf[nr*C+nc]=bf[p]+(g[r][c]!=k); ch=True
-assert bf==dist
-cells=[letter[x] for row in g for x in row]
-fill(CH,F,block(cells,["cur"],steps),"@@TRACE1@@")
-# trace 2: explicit graph with zero cycles and a stale duplicate
-edges=[(0,3,1),(0,1,0),(1,3,0),(3,1,0),(1,2,1),(2,4,0),(4,2,0)]
-n=5; adj=[[] for _ in range(n)]
-for a,b,w in edges: adj[a].append((b,w))
-dist=[INF]*n; dist[0]=0; dq=deque([(0,0)]); steps=[]; stale_hit=0
-def span(): return (dq[-1][1]-dq[0][1]) if dq else 0
-while dq:
-    v,d=dq.popleft()
-    if d>dist[v]:
-        stale_hit+=1
-        steps.append({"at":{"cur":v},"vars":{"cost":d,"stale":1,"span":span(),"waiting":len(dq)},
-          "note":f"The entry for junction {v} carries cost {d} but the table holds {dist[v]}, so it is skipped."})
-        continue
-    msgs=[]
-    for b,w in adj[v]:
-        if d+w<dist[b]:
-            dist[b]=d+w
-            (dq.appendleft if w==0 else dq.append)((b,d+w))
-            msgs.append(f"{b} at {d+w} to the {'front' if w==0 else 'back'}")
-        assert not dq or dq[-1][1]-dq[0][1]<=1
-        assert all(dq[i][1]<=dq[i+1][1] for i in range(len(dq)-1))
-    note=f"Junction {v} is expanded at cost {d}; "+("it queues "+", ".join(msgs)+"." if msgs else "no edge lowers a stored cost.")
-    steps.append({"at":{"cur":v},"vars":{"cost":d,"stale":0,"span":span(),"waiting":len(dq)},"note":note})
-assert stale_hit==1 and dist==[0,0,1,0,1], dist
-fill(CH,F,block([0,1,2,3,4],["cur"],steps),"@@TRACE2@@")
-print(dist)
+def run(n,edges,ph,dry=False):
+    adj=[[] for _ in range(n)]
+    for a,b,w in edges: adj[a].append((b,w))
+    dist=[INF]*n; dist[0]=0
+    dq=deque([(0,0)]); st=[]
+    D=lambda: " ".join("inf" if x==INF else str(x) for x in dist)
+    Q=lambda: " ".join(f"{v}:{d}" for v,d in dq) if dq else "empty"
+    def snap(cur,note): st.append({"at":{"cur":cur},"vars":{"dist":D(),"deque":Q()},"note":note})
+    snap(0,"The deque holds the start vertex 0 with distance 0.")
+    while dq:
+        u,d=dq.popleft()
+        if d>dist[u]:
+            snap(u,f"The entry for vertex {u} carries distance {d}, but the best known distance is {dist[u]}, so the search skips it."); continue
+        snap(u,f"The search takes vertex {u} with distance {d} from the front and scans its edges.")
+        for v,w in adj[u]:
+            nd=d+w
+            if nd<dist[v]:
+                dist[v]=nd
+                if w==0: dq.appendleft((v,nd)); where="front"
+                else: dq.append((v,nd)); where="back"
+                snap(u,f"The edge from {u} to {v} costs {w} and gives distance {nd}, which is an improvement, so the search pushes vertex {v} at the {where}.")
+            else:
+                snap(u,f"The edge from {u} to {v} costs {w} and gives distance {nd}, which does not beat {dist[v]}, so the search discards it.")
+    fill(CH,'06-zero-one-bfs.md',block(list(range(n)),["cur"],st),ph) if not dry else print(len(st),[ (i+1,s['note']) for i,s in enumerate(st)])
+    return dist
+dry = len(sys.argv)>1
+d=run(5,[(0,1,1),(0,2,0),(2,3,0),(3,1,0),(1,4,1)],"@@TRACE1@@",dry); assert d==[0,0,0,0,1]
+d=run(4,[(0,1,1),(0,2,1),(1,2,0),(2,1,0),(2,3,1)],"@@TRACE2@@",dry); assert d==[0,1,1,2]

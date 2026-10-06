@@ -1,4 +1,4 @@
-# Lesson spec: Node-State Search
+# Lesson spec: Search Over Place And State
 
 **Recognition cue.** Future transitions depend on both location and another fact such as stops used, keys held, or last edge color. **Invariant.** Distance and visited state are indexed by the complete pair `(node, state)`; two states at one node are distinct unless dominance is proved. **False friend.** One distance per node discards potentially necessary routes.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Constrained Flights
+# Lesson spec: Limit A Route By Stops
 
 **Recognition cue.** A cheapest route is limited by stops or edges, so cost alone does not dominate every arrival. **Invariant.** State includes node and edges used; relaxations never exceed the allowed count. **False friend.** Plain Dijkstra with one `dist[node]` can discard a more expensive arrival that uses fewer stops.
 

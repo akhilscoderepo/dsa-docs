@@ -56,7 +56,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Dijkstra
+### Find Cheapest Routes With Dijkstra
 
 **Recognition cue.** Edges have nonnegative weights and the task asks for minimum total cost from a source. **Invariant.** When the smallest nonstale tentative distance is removed from the heap, no later path can improve it; relaxing an edge proposes `dist[u] + weight`. **False friend.** Ordinary BFS is correct only when transition costs are equal.
 
@@ -65,7 +65,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Unreachable Vertex And Large Sum.** Preserve infinity and use `long` when path sums may overflow.
 - **Recognize - LC 743 Network Delay Time.** Run Dijkstra from the source and return the largest finite finalized distance.
 
-### Stale Heap Entries
+### Skip Outdated Heap Entries
 
 **Recognition cue.** Java's heap has no decrease-key operation, so a vertex may have several queued distances. **Invariant.** `dist[node]` is the best known value; discard a popped entry when its stored distance differs from that value. **False friend.** Removing the old heap object with `remove(Object)` is linear.
 
@@ -74,7 +74,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Equal-Cost Alternatives.** Keep the distance contract consistent when a proposal ties the current best.
 - **Recognize - LC 743 Network Delay Time.** Use duplicate insertion plus stale rejection instead of decrease-key.
 
-### Node-State Search
+### Search Over Place And State
 
 **Recognition cue.** Future transitions depend on both location and another fact such as stops used, keys held, or last edge color. **Invariant.** Distance and visited state are indexed by the complete pair `(node, state)`; two states at one node are distinct unless dominance is proved. **False friend.** One distance per node discards potentially necessary routes.
 
@@ -83,7 +83,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Same Node, Different Future.** Show why a costlier arrival with an unused resource may remain useful.
 - **Recognize - LC 1129 Shortest Path with Alternating Colors.** Include the last edge color in BFS state.
 
-### Constrained Flights
+### Limit A Route By Stops
 
 **Recognition cue.** A cheapest route is limited by stops or edges, so cost alone does not dominate every arrival. **Invariant.** State includes node and edges used; relaxations never exceed the allowed count. **False friend.** Plain Dijkstra with one `dist[node]` can discard a more expensive arrival that uses fewer stops.
 
@@ -92,7 +92,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Direct Flight And K Zero.** Translate `k` intermediate stops into at most `k + 1` edges.
 - **Recognize - LC 787 Cheapest Flights Within K Stops.** Use bounded Bellman-Ford layers or an explicit heap state with correct dominance.
 
-### Alternating Colors
+### Alternate Edge Colors
 
 **Recognition cue.** Edge type constrains which edge type may be used next. **Invariant.** Visited is indexed by node and last color; neighbors must use the opposite color. **False friend.** Marking the node once can suppress a necessary arrival with the other last color.
 
@@ -101,7 +101,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Self-Loop And Parallel Colors.** Treat color-state pairs independently.
 - **Recognize - LC 1129 Shortest Path with Alternating Colors.** BFS over `(node, lastColor)` and take the smaller state distance.
 
-### Zero-One BFS
+### Search With Zero And One Costs
 
 **Recognition cue.** Every edge weight is exactly zero or one. **Invariant.** The deque processes tentative distances in nondecreasing order by pushing zero-cost improvements to the front and one-cost improvements to the back. **False friend.** Ordinary BFS counts edges, while Dijkstra works but pays an unnecessary heap cost.
 
@@ -112,7 +112,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Graph And Heap
+### Shortest Paths With A Heap
 
 Graph relaxation creates improved tentative distances; the heap exposes the smallest candidate, and stale-entry rejection replaces decrease-key.
 
@@ -121,7 +121,7 @@ Graph relaxation creates improved tentative distances; the heap exposes the smal
 - **Boundary - LC 787 Cheapest Flights Within K Stops.** Add stop count to state so one node distance is not over-pruned.
 - **Recognize - LC 1514 Path with Maximum Probability.** Reverse heap priority and maximize multiplicative path score.
 
-### Graph And Deque
+### Shortest Paths With A Deque
 
 The graph supplies zero/one weighted transitions; the deque preserves distance order without a heap by choosing the insertion end from edge weight.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Alternating Colors
+# Lesson spec: Alternate Edge Colors
 
 **Recognition cue.** Edge type constrains which edge type may be used next. **Invariant.** Visited is indexed by node and last color; neighbors must use the opposite color. **False friend.** Marking the node once can suppress a necessary arrival with the other last color.
 

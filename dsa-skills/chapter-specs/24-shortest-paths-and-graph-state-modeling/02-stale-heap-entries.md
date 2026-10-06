@@ -1,4 +1,4 @@
-# Lesson spec: Stale Heap Entries
+# Lesson spec: Skip Outdated Heap Entries
 
 **Recognition cue.** Java's heap has no decrease-key operation, so a vertex may have several queued distances. **Invariant.** `dist[node]` is the best known value; discard a popped entry when its stored distance differs from that value. **False friend.** Removing the old heap object with `remove(Object)` is linear.
 
