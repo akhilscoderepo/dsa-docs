@@ -93,7 +93,7 @@ A position is **settled** when its smallest entry leaves the heap. At that momen
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search reads `n`, `edges`, `src` and `dst` and changes none of them. It builds `out`, a list of `{target, price}` pairs for each airport, in the order of `edges`. Two structures and two working values hold the search state.
+The search reads `n`, `edges`, `src` and `dst` and changes none of them. It builds `out`, a list of `{target, price}` pairs for each airport, in the order of `edges`. Two structures and one removed entry hold the search state.
 
 - **dist** is a `long[]` of length `2 * n`; the slot `2 * v + s` holds the lowest known cost of reaching airport `v` with coupon flag `s`.
 - **heap** is a `PriorityQueue<long[]>` of `{cost, stateIndex}` entries ordered by cost.

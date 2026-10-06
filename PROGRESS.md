@@ -28,7 +28,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 21-graph-traversal-models-dfs-and-ordinary-bfs | done |
 | 22-bfs-variations | done |
 | 23-directed-graphs-and-union-find | done |
-| 24-shortest-paths-and-graph-state-modeling | todo |
+| 24-shortest-paths-and-graph-state-modeling | done |
 | 25-advanced-graph-optimization | todo |
 | 26-dynamic-programming-foundations | todo |
 | 27-dynamic-programming-capacity-and-partition-patterns | todo |
