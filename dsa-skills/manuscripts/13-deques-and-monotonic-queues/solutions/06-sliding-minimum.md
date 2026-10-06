@@ -66,7 +66,7 @@ The maximum candidates and the minimum candidates are different positions, so th
 
 **Complexity.**
 
-- **Time** is O(n), because each position enters each deque once and leaves it at most one time.
+- **Time** is O(n), because both deques receive each position one time and release it at most one time.
 - **Space** is O(k) for the two deques, plus n - k + 1 output entries.
 
 ```java run

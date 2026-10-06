@@ -125,7 +125,7 @@ static int longestWithinSpread(int[] a, int limit) {
 
 The inner loop moves the left pointer by one position per pass, so it expires at most one position from each deque per pass, and an `if` is enough. The loop ends before the deques empty, because a range of one value has spread zero and the limit is not negative. The subtraction of two values can overflow `int` when the values are near the type limits, so the exercises keep the values small.
 
-- **Time** is O(n) for both methods, because each position enters each deque once and the left pointer never moves backward.
+- **Time** is O(n) for both methods. Each deque takes a position once, and the left pointer never moves backward.
 - **Space** is O(k) for the first method and O(n) in the worst case for the second.
 
 <!-- stage: applicability -->

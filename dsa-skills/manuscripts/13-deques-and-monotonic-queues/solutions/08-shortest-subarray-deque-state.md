@@ -61,7 +61,7 @@ A later position with a prefix sum that is not larger beats every earlier positi
 
 **Complexity.**
 
-- **Time** is O(n), because every position takes one append and at most one pop.
+- **Time** is O(n), because pops never outnumber appends over the whole run.
 - **Space** is O(n), since a strictly increasing array keeps every position.
 
 ```java run
