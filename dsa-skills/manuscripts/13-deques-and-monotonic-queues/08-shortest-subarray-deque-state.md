@@ -54,13 +54,13 @@ Write `P[i]` for the prefix sum at position `i`. A run from position `a` to posi
 
 #### Dropping Starts From The Back
 
-A start candidate `a1` is useless when a later position `a2` has `P[a2] <= P[a1]`. For every end `b` after `a2`, the run from `a2` has a total at least as large and a length at least one shorter. The back of the deque therefore removes every start whose prefix sum is not smaller than the new prefix sum. The stored prefix sums then strictly increase from the front to the back.
+A start candidate `a1` is useless when a later position `a2` has `P[a2] <= P[a1]`. For every end `b` after `a2`, the run from `a2` has a total at least as large and a length at least one shorter. The back of the deque therefore removes every **dominated start**, which is a start whose prefix sum is not smaller than the new prefix sum. The stored prefix sums then strictly increase from the front to the back.
 
 #### Dropping Starts From The Front
 
 The front start is the earliest, so it gives the longest run among the stored starts. When `P[b] - P[front] >= target`, the run from the front reaches the target at length `b - front`. Every later end gives a longer run from the same start, so that start is **used up** and leaves the front for good. The loop tests the next front, because it may reach the target as well. The invariant is that the deque holds start candidates with strictly increasing prefix sums, and no stored start has reached the target yet. Every position is appended in one step and popped in at most one later step, so the total cost is O(n).
 
-<!-- names: prefix sum, start candidate, used up -->
+<!-- names: start candidate, used up, dominated start -->
 
 <!-- stage: variables -->
 ### What The Method Keeps
