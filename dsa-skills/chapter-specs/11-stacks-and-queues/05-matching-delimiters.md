@@ -1,4 +1,4 @@
-# Lesson spec: Matching Delimiters
+# Lesson spec: Check That Brackets Match In Order
 
 **Recognition cue.** Every closing symbol must match the most recent unresolved compatible opening symbol. **Invariant.** The stack stores exactly the openings not yet matched, in nesting order. **False friend.** Equal counts do not prove correct order.
 

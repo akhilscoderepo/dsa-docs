@@ -99,7 +99,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Start Is Target.** Return distance zero before generating successors and mark states at enqueue time.
 - **Recognize - Author exercise: Shortest Word Transform From Supplied Neighbors.** Use the queue invariant without requiring graph construction techniques not yet taught.
 
-### Matching Delimiters
+### Check That Brackets Match In Order
 
 **Recognition cue.** Every closing symbol must match the most recent unresolved compatible opening symbol. **Invariant.** The stack stores exactly the openings not yet matched, in nesting order. **False friend.** Equal counts do not prove correct order.
 
@@ -108,7 +108,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Premature Close And Leftover Open.** Reject both an empty-stack close and a nonempty stack after the scan.
 - **Recognize - LC 1021 Remove Outermost Parentheses.** Use nesting depth to omit the first opening and final closing of each primitive group.
 
-### Nested Structure
+### Save State For Each Nesting Level
 
 **Recognition cue.** Inner structures must finish before their enclosing structures can be finalized. **Invariant.** Each stack frame contains the unresolved state of one nesting level. **False friend.** A single global accumulator loses the parent state when nesting begins.
 

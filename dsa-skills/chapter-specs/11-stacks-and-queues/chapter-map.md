@@ -8,8 +8,8 @@
 02. Process Items In Arrival Order  ->  02-fifo-simulation.md
 03. Build A Queue From Two Stacks  ->  03-two-stack-queue.md
 04. Find Shortest Steps With A Queue  ->  04-bfs-queue-state.md
-05. Matching Delimiters  ->  05-matching-delimiters.md
-06. Nested Structure  ->  06-nested-structure.md
+05. Check That Brackets Match In Order  ->  05-matching-delimiters.md
+06. Save State For Each Nesting Level  ->  06-nested-structure.md
 07. Min Stack  ->  07-min-stack.md
 08. Queue-Based Level Processing  ->  08-queue-based-level-processing.md
 09. Nested Decoding  ->  09-nested-decoding.md

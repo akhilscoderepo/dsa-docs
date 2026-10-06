@@ -1,4 +1,4 @@
-# Lesson spec: Nested Structure
+# Lesson spec: Save State For Each Nesting Level
 
 **Recognition cue.** Inner structures must finish before their enclosing structures can be finalized. **Invariant.** Each stack frame contains the unresolved state of one nesting level. **False friend.** A single global accumulator loses the parent state when nesting begins.
 
