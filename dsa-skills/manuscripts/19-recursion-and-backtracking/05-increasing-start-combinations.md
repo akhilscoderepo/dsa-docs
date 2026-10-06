@@ -68,7 +68,7 @@ The **last useful index** at a call is the highest index that can still lead to 
 
 Four pieces of state describe a call.
 
-- **Start** is the lowest index that the loop of the call may choose.
+- **Start** is the smallest index that the next choice may take.
 - **Path** is the shared list of chosen values, in increasing index order.
 - **Size** is the number of values on the path, and it grows by one per call.
 - **Last** is the highest index that the loop may choose, equal to `n - (k - size)`.
