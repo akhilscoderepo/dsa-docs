@@ -1,29 +1,28 @@
 from common import *
 CH='19-recursion-and-backtracking'; F='09-partition-generation.md'
-def run(s, rule, label):
-    path=[]; res=[]; steps=[]
-    def cut(start):
-        if start==len(s):
-            res.append(list(path))
-            steps.append({"at":{"start":start,"end":-1},"vars":{"path":str(path),"recorded":len(res)},"note":f"The start has reached {len(s)}, so nothing is left uncut and a copy of {path} is recorded as partition {len(res)}."})
-            return
-        fit=False
-        for end in range(start+1,len(s)+1):
-            bow=s[start:end]
-            if not rule(bow): continue
-            fit=True
-            path.append(bow)
-            steps.append({"at":{"start":start,"end":end},"vars":{"path":str(path),"recorded":len(res)},"note":f"The bow {bow} runs from {start} to {end} and is accepted, so the path is {path} and the next call starts at {end}."})
-            cut(end)
-            path.pop()
-            steps.append({"at":{"start":start,"end":end},"vars":{"path":str(path) if path else "empty","recorded":len(res)},"note":f"The bow {bow} is taken off again, so the path is {path if path else 'empty'}."})
-        if not fit:
-            steps.append({"at":{"start":start,"end":-1},"vars":{"path":str(path),"recorded":len(res)},"note":f"The start is {start} with {len(s)-start} letters left and no acceptable bow can be cut from them, so the call returns without recording anything."})
-    cut(0)
-    return res,steps
-res,steps=run("abc",lambda b:True,"all")
-assert res==[["a","b","c"],["a","bc"],["ab","c"],["abc"]]
-fill(CH,F,block(list("abc"),["start","end"],steps),"@@TRACE1@@")
-res,steps=run("abcde",lambda b:len(b) in (2,3),"len")
-assert res==[["ab","cde"],["abc","de"]]
-fill(CH,F,block(list("abcde"),["start","end"],steps),"@@TRACE2@@")
+s="aba"; st=[]; path=[]; out=[]
+def pal(l,h):
+    while l<h:
+        if s[l]!=s[h]: return False
+        l+=1;h-=1
+    return True
+def go(start):
+    if start==len(s):
+        out.append(list(path)); return
+    for end in range(start+1,len(s)+1):
+        f=s[start:end]; p=",".join(path) or "empty"
+        if not pal(start,end-1):
+            st.append({"at":{"start":start,"end":end},"vars":{"path":p,"stored":len(out)},"note":f"The field {f} does not read the same in both directions, so the call skips this piece end."}); continue
+        path.append(f)
+        will=(end==len(s))
+        note=f"The call at start {start} tests the piece end {end}. The field {f} passes, so the path becomes [{','.join(path)}]."
+        if will: note+=" The new start position equals the length, which is the empty suffix, so the search stores a copy."
+        st.append({"at":{"start":start,"end":end},"vars":{"path":",".join(path),"stored":len(out)+(1 if will else 0)},"note":note})
+        go(end); path.pop()
+go(0)
+assert out==[["a","b","a"],["aba"]]
+fill(CH,F,block(list(s),["start","end"],st),"@@TRACE1@@"); print(len(st))
+st=[{"at":{"i":0},"vars":{"kept":"a","covered":1},"note":"The subset search includes a, so the path holds the letter a."},
+    {"at":{"i":1},"vars":{"kept":"a","covered":1},"note":"The search excludes b, so no field covers the letter at position 1."},
+    {"at":{"i":2},"vars":{"kept":"ac","covered":2},"note":"The search includes c and stores the list a, c. Only 2 of 3 positions are covered, so it is not a cut."}]
+fill(CH,F,block(["a","b","c"],["i"],st),"@@TRACE2@@")
