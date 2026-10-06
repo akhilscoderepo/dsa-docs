@@ -65,7 +65,7 @@ The search can **short-circuit**. As soon as one child call returns true, the pa
 <!-- stage: variables -->
 ### The Pieces Of State
 
-One recursive call carries three values, and the tree stays unchanged.
+One recursive call carries four pieces of state, and the tree stays unchanged.
 
 - **Node** is the position in the tree that represents the first `i` characters of the pattern.
 - **Position i** is the index of the next pattern character to match.

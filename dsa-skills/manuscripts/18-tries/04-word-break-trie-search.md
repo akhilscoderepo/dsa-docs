@@ -61,7 +61,7 @@ To cut the string, the program recurses from each cut point. A call at `from` tr
 <!-- stage: variables -->
 ### The Pieces Of State
 
-The walk and the recursion share one tree and two numbers.
+The walk and the recursion share one tree and four pieces of state.
 
 - **From** is the start index where the current search begins.
 - **Node** is the tree node that represents the letters read since `from`.

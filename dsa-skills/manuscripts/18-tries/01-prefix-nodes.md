@@ -177,7 +177,7 @@ The tree does not fit when the program asks only whole-word membership, because 
 
 **Prerequisites.** The previous exercise.
 
-**Problem.** Given an array `words` of lowercase strings and an array `prefixes`, return an array where position `j` holds the number of entries of `words` that start with `prefixes[j]`. An entry that appears twice counts twice. The empty prefix counts every entry.
+**Problem.** Given an array `words` of lowercase strings and an array `prefixes`, produce an array whose entry at position `j` is the number of entries of `words` that start with `prefixes[j]`. An entry that appears twice counts twice. The empty prefix counts every entry.
 
 **Constraints.** The limits are:
 - **Count** is `0 <= words.length, prefixes.length <= 10^4`.

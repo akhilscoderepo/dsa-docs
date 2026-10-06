@@ -1,0 +1,37 @@
+{
+ "lessons": [
+  "binary-tries",
+  "insert-and-search",
+  "look-up-prefixes",
+  "prefix-nodes",
+  "wildcard-branching",
+  "word-break-trie-search"
+ ],
+ "exercises": [
+  "tr-add-search-words",
+  "tr-best-xor-partner",
+  "tr-combo-longest-built-word",
+  "tr-combo-longest-stored-prefix",
+  "tr-combo-replace-words",
+  "tr-combo-smallest-match",
+  "tr-dictionary-ends-from-index",
+  "tr-empty-word-prefix-only",
+  "tr-equal-values-sign-policy",
+  "tr-implement-trie-array",
+  "tr-implement-trie-map",
+  "tr-insert-fixed-width-bits",
+  "tr-insert-lowercase-words",
+  "tr-maximum-xor-pair",
+  "tr-multiple-wildcards",
+  "tr-one-final-wildcard",
+  "tr-one-valid-segmentation",
+  "tr-prefix-count",
+  "tr-prefix-exists-no-word",
+  "tr-search-versus-starts-with",
+  "tr-store-shared-prefixes",
+  "tr-wildcard-root-length",
+  "tr-word-break-state-count",
+  "tr-word-is-prefix-of-another"
+ ],
+ "retired": []
+}

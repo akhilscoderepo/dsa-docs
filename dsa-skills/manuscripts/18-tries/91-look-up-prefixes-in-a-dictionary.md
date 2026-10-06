@@ -66,7 +66,7 @@ If the next letter has no edge, the candidate set becomes empty. No root can mat
 <!-- stage: variables -->
 ### The Pieces Of State
 
-The combined state fits in three values and one structure.
+The combined state fits in four pieces.
 
 - **Tree** holds all roots, built once before any word is read.
 - **Position i** is the number of letters of the word that the walk has consumed.

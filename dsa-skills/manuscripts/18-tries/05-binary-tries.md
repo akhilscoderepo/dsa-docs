@@ -186,7 +186,7 @@ The tree does not fit when the objective is a sum, a difference or a minimum XOR
 
 **Prerequisites.** The previous exercise.
 
-**Problem.** Given a nonempty array `stored` and an array `queries` of nonnegative integers, return an array where position `j` holds the largest value of `queries[j] ^ s` over all entries `s` of `stored`.
+**Problem.** Given a nonempty array `stored` and an array `queries` of nonnegative integers, produce an array whose entry at position `j` is the largest value of `queries[j] ^ s` over all entries `s` of `stored`.
 
 **Constraints.** The limits are:
 - **Count** is `1 <= stored.length <= 10^4` and `0 <= queries.length <= 10^4`.
