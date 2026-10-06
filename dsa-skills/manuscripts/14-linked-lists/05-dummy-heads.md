@@ -82,7 +82,7 @@ If the head never changes, the extra node adds nothing. Counting nodes, searchin
 <!-- stage: trace -->
 ### One Rule At Every Position
 
-A pointer drawn outside the cells stands for `null`. In both traces the first cell is the dummy node, and its value 0 is never read.
+In both traces, a pointer outside the cells is `null`. The first cell is the dummy node, and its value 0 is never read.
 
 #### Removing Every 7
 

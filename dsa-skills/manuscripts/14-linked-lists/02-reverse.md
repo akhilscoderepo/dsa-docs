@@ -141,7 +141,7 @@ Every statement in the loop preserves one fact. The nodes before `curr` form the
 
 #### Spotting The Order Mistake
 
-The false friend of this pattern is the statement that looks harmless in isolation, `curr.next = prev`. It is correct only after `saved` has taken `curr.next`. A reviewer can check any pointer rewrite with one question: where does the old value of the field go before it is overwritten?
+The statement `curr.next = prev` looks harmless in isolation, and it is the false friend of this lesson. It is correct only after `saved` has taken `curr.next`. A reviewer can check any pointer rewrite with one question: where does the old value of the field go before it is overwritten?
 
 #### Recursion Costs Stack Space
 
