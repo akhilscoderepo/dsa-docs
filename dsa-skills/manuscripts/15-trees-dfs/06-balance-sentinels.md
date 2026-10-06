@@ -145,7 +145,7 @@ The invariant is that a call returns the exact height of its subtree when every 
 
 #### Finding The False Friend
 
-Calling `height` at every node looks harmless, because each call is correct, and it is the false friend of this lesson. The answer is right and the cost grows to O(n log n) or more, because each node is measured once per ancestor. A second false friend is a sentinel that overlaps a real value. If heights count edges, the empty tree has height -1, and `-1` can no longer serve as the failure marker.
+Calling `height` at every node looks harmless, because each call is correct. It is the false friend here. The answer is right and the cost grows to O(n log n) or more, because each node is measured once per ancestor. A second false friend is a sentinel that overlaps a real value. If heights count edges, the empty tree has height -1, and `-1` can no longer serve as the failure marker.
 
 #### No-Go Conditions
 

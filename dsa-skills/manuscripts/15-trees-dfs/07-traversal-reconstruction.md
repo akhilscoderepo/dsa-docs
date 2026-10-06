@@ -154,7 +154,7 @@ The invariant is that each call receives windows that hold the same set of value
 
 #### Finding The False Friend
 
-One list looks like enough information, and it is the false friend of this lesson. The preorder list `1, 2` fits two different trees, as the opening showed. Two lists in different orders can still fail. Preorder and postorder together do not fix a tree with one-child nodes, because a lone child could sit on either side. Inorder is the list that separates left from right.
+One list looks like enough information. That belief is the false friend of this topic. The preorder list `1, 2` fits two different trees, as the opening showed. Two lists in different orders can still fail. Preorder and postorder together do not fix a tree with one-child nodes, because a lone child could sit on either side. Inorder is the list that separates left from right.
 
 #### No-Go Conditions
 

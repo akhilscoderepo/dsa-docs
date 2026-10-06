@@ -144,7 +144,7 @@ The invariant is that the return value describes a single branch that starts at 
 
 #### Finding The False Friend
 
-Returning `through` to the parent looks like a shortcut, and it is the false friend of this lesson. Suppose node 2 on the first trace tree returned its complete path 4, 2, 5, which has 3 nodes. The root would see a left side of 3 nodes and report 3 + 1 = 4 edges. No such path exists, because the tree has only 5 nodes and the longest path has 3 edges. The unit also needs a decision: edges count one fewer than nodes on the same path.
+Returning `through` to the parent looks like a shortcut, but it is the trap that this lesson warns about. Suppose node 2 on the first trace tree returned its complete path 4, 2, 5, which has 3 nodes. The root would see a left side of 3 nodes and report 3 + 1 = 4 edges. No such path exists, because the tree has only 5 nodes and the longest path has 3 edges. The unit also needs a decision: edges count one fewer than nodes on the same path.
 
 #### No-Go Conditions
 

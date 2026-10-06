@@ -1,31 +1,36 @@
 from common import *
 from tr import *
-CH='15-trees-dfs'
-F='08-morris-traversal.md'
-def run(arr,ph):
-    L,R=parse(arr); R=dict(R)
-    cur=0; sheet=[]; ropes={}; st=[]
-    def snap(i,note):
-        st.append({"at":{"cur":i},"vars":{"sheet":" ".join(map(str,sheet)),"ropes":len(ropes)},"note":note})
+CH='15-trees-dfs'; F='08-morris-traversal.md'
+def run(arr,expect):
+    L,R=parse(arr); n=len(arr)
+    # mutable right links: R copy
+    right=dict(R); left=dict(L); steps=[]; out=[]
+    def thr():
+        t=[f"{arr[a]} to {arr[b]}" for a,b in right.items() if b is not None and R[a]!=b]
+        return ", ".join(t) or "none"
+    def o(): return " ".join(map(str,out)) or "empty"
+    cur=0
     while cur is not None:
-        if L[cur] is None:
-            sheet.append(arr[cur])
-            nxt=R[cur]
-            snap(cur,f"The bench {arr[cur]} has no left path, so it is recorded at once and the keeper moves right.")
-            cur=nxt; continue
-        pred=L[cur]
-        while R[pred] is not None and R[pred]!=cur: pred=R[pred]
-        if R[pred] is None:
-            R[pred]=cur; ropes[pred]=cur
-            snap(cur,f"The bench {arr[cur]} has a left path whose last bench {arr[pred]} has a free right link, so a rope is tied from {arr[pred]} to {arr[cur]} and the keeper goes left.")
-            cur=L[cur]
+        if left[cur] is None:
+            out.append(arr[cur])
+            nxt=right[cur]
+            how="a thread back to an ancestor" if (nxt is not None and R[cur]!=nxt) else "its right child"
+            steps.append({"at":{"cur":cur,"pred":-1},"vars":{"out":o(),"threads":thr()},"note":f"The node {arr[cur]} has no left child, so the walk writes it and moves right, along {how}." if nxt is not None else f"The node {arr[cur]} has no left child and no right link, so the walk writes it and ends."})
+            cur=nxt
         else:
-            R[pred]=None; del ropes[pred]
-            sheet.append(arr[cur])
-            snap(cur,f"The keeper returned to {arr[cur]} along its rope from {arr[pred]}, so the rope is cut, the bench is recorded, and he moves right.")
-            cur=R[cur]
-    assert not ropes
-    fill(CH,F,block(cells(arr),["cur"],st),ph)
-    return sheet
-assert run([4,2,7,1,3],"@@TRACE1@@")==[1,2,3,4,7]
-assert run([3,2,None,1],"@@TRACE2@@")==[1,2,3]
+            p=left[cur]
+            while right[p] is not None and right[p]!=cur: p=right[p]
+            if right[p] is None:
+                right[p]=cur
+                steps.append({"at":{"cur":cur,"pred":p},"vars":{"out":o(),"threads":thr()},"note":f"The predecessor of the node {arr[cur]} is the node {arr[p]}, and its right reference is empty. The walk stores a thread to {arr[cur]} and moves to the left child."})
+                cur=left[cur]
+            else:
+                right[p]=R[p]
+                out.append(arr[cur])
+                steps.append({"at":{"cur":cur,"pred":p},"vars":{"out":o(),"threads":thr()},"note":f"The predecessor {arr[p]} already links to the node {arr[cur]}, so this is the second arrival. The walk removes the thread, writes {arr[cur]} and moves right."})
+                cur=right[cur]
+    assert out==expect,(out,expect)
+    assert all(right[k]==R[k] for k in R)
+    return steps
+a=[4,2,6,1,3]; fill(CH,F,block(cells(a),["cur","pred"],run(a,[1,2,3,4,6])),"@@TRACE1@@")
+a=[3,1,None,None,2]; fill(CH,F,block(cells(a),["cur","pred"],run(a,[1,2,3])),"@@TRACE2@@")
