@@ -148,7 +148,7 @@ Do not use this removal when a window can skip positions, because the argument n
 #### [Vary] Insert Minimum Candidate (Author exercise)
 <!-- id: dq-insert-min -->
 
-**Prerequisites.** The build exercise above.
+**Prerequisites.** The first exercise above.
 
 **Problem.** Repeat the process of the previous exercise with the opposite comparison. At position `i`, pop every stored position `j` that has `a[j] > a[i]` from the back, and then append `i`. Report what the deque holds after the last arrival, front first.
 

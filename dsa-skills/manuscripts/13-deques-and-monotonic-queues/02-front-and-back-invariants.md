@@ -54,7 +54,7 @@ The stored values follow one rule, called **non-increasing order**. Going from t
 
 #### Giving Each End One Job
 
-Each end of the deque has one job. The back admits a new reading. Before the new reading enters, the method removes every strictly smaller value at the back. Those values can never win again. Then the new reading is appended. The front answers the query, and the method only reads it. The invariant is that the stored values stay in non-increasing order from front to back, and the largest stored value sits at the front. Each reading is appended once and removed at most once, so the total cost is O(n).
+Each end of the deque has one job. The back admits a new reading. Before the new reading enters, the method removes every strictly smaller value at the back. Those values can never win again. Then the new reading is appended. The front answers the query, and the method only reads it. The invariant is that the stored values stay in non-increasing order from front to back, and the largest stored value sits at the front. A reading enters one time and leaves at most one time, so the total cost is O(n).
 
 <!-- names: candidate, monotonic deque, non-increasing order -->
 

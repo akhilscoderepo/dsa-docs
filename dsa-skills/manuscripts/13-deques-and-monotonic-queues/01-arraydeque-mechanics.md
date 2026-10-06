@@ -106,7 +106,7 @@ The calls come in pairs. Each end has an adding call, a removing call and a read
 - **getFirst and getLast** read the named end and throw when the deque is empty.
 - **peekFirst and peekLast** read the named end and return `null` when the deque is empty.
 
-The method calls `pollFirst`, because the size test already guarantees an item. Time is O(n) for a stream of n items, since each item is added once and removed at most once. Space is O(1) beyond the output, because the deque never holds more than four items.
+The method calls `pollFirst`, because the size test already guarantees an item. Time is O(n) for a stream of n items, since one add and at most one removal happen per item. Space is O(1) beyond the output, because the deque never holds more than four items.
 
 <!-- stage: applicability -->
 ### Deciding When A Deque Fits
