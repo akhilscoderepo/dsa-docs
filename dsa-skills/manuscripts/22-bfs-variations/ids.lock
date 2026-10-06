@@ -1,0 +1,37 @@
+{
+ "lessons": [
+  "count-by-layers",
+  "keep-best-resource",
+  "model-state-before-search",
+  "multi-source-start",
+  "search-from-both-ends",
+  "search-generated-states"
+ ],
+ "exercises": [
+  "bv1-nearest-source-distances",
+  "bv1-no-source-all-sources",
+  "bv1-rotting-oranges",
+  "bv1-zero-one-matrix",
+  "bv2-first-target-layer",
+  "bv2-initially-complete",
+  "bv2-label-layers",
+  "bv2-rotting-counts",
+  "bv3-crossing-neighbor",
+  "bv3-start-equals-target",
+  "bv3-two-ended-integer",
+  "bv3-word-ladder",
+  "bv4-forbidden-endpoints",
+  "bv4-lock-neighbors",
+  "bv4-open-the-lock",
+  "bv4-shortest-path-binary-matrix",
+  "bv5-best-resource-per-cell",
+  "bv5-grid-obstacles-elimination",
+  "bv5-longer-path-more-resource",
+  "bv5-position-remaining-breaks",
+  "bv9-nearest-zero-walls",
+  "bv9-rot-last-cell",
+  "bv9-smallest-shortest-path",
+  "bv9-word-sequence"
+ ],
+ "retired": []
+}
