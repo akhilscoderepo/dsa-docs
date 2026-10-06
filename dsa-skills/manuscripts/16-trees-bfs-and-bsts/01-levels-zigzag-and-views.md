@@ -85,24 +85,24 @@ The size must be read before the first removal. A removal shrinks the queue and 
 <!-- stage: trace -->
 ### Two Levels Of A Small Tree
 
-The cells show the nodes in the order the queue discovers them. The pointer `front` marks the next node to remove, and the pointer `stop` marks the level boundary, which is `front` plus the stored size.
+The cells show the nodes in the order the queue discovers them. The pointer `removed` marks the last node taken out of the queue, and the pointer `queued` marks the last node put into it. The nodes between the two pointers are the ones still waiting.
 
 #### Reading The Tree With Five Nodes
 
 The root is 3. Its children are 9 and 20, and the node 20 has the children 15 and 7. The cells hold `3, 9, 20, 15, 7`.
 
 ```trace
-{"cells":[3,9,20,15,7],"pointers":["front","stop"],"steps":[{"at":{"front":1,"stop":1},"vars":{"size":1,"result":"[[3]]"},"note":"Level 0 ends. The loop stored size 1, removed exactly 1 node(s) and collected [3]."},{"at":{"front":3,"stop":3},"vars":{"size":2,"result":"[[3], [9, 20]]"},"note":"Level 1 ends. The loop stored size 2, removed exactly 2 node(s) and collected [9, 20]."},{"at":{"front":5,"stop":5},"vars":{"size":2,"result":"[[3], [9, 20], [15, 7]]"},"note":"Level 2 ends. The loop stored size 2, removed exactly 2 node(s) and collected [15, 7]."}]}
+{"cells":[3,9,20,15,7],"pointers":["removed","queued"],"steps":[{"at":{"removed":-1,"queued":0},"vars":{"result":"[]"},"note":"Start: the queue holds only the root 3. Nothing has been removed."},{"at":{"removed":0,"queued":2},"vars":{"size":1,"result":"[[3]]"},"note":"Level 0 ends. The loop stored size 1, removed exactly 1 node(s) and collected [3]."},{"at":{"removed":2,"queued":4},"vars":{"size":2,"result":"[[3], [9, 20]]"},"note":"Level 1 ends. The loop stored size 2, removed exactly 2 node(s) and collected [9, 20]."},{"at":{"removed":4,"queued":4},"vars":{"size":2,"result":"[[3], [9, 20], [15, 7]]"},"note":"Level 2 ends. The loop stored size 2, removed exactly 2 node(s) and collected [15, 7]."}]}
 ```
 
-Each step shows one finished level. The stored size is 1, then 2, then 2, and the boundary `stop` moves to the end of each level before the loop starts removing. The result after the last step is `[[3], [9, 20], [15, 7]]`.
+Each step shows one finished level. The stored size is 1, then 2, then 2. Between two steps, `removed` moves forward by exactly the stored size, and `queued` moves forward by the number of children found. The result after the last step is `[[3], [9, 20], [15, 7]]`.
 
 #### Reading The Size Inside The Loop
 
 Take a tree with the root 1, the children 2 and 3, and one grandchild 4 under the node 2. A loop that tests `i < queue.size()` on every pass reads a size that keeps changing.
 
 ```trace
-{"cells":[1,2,3,4],"pointers":["front","stop"],"steps":[{"at":{"front":0,"stop":1},"vars":{"i":0,"queue size":1,"level":"[]"},"note":"Start: the queue holds the node 1, and the first test reads the queue size 1."},{"at":{"front":1,"stop":3},"vars":{"i":1,"queue size":2,"level":"[1]"},"note":"The node 1 leaves and its children join, so the test now reads 2 and compares it with i = 1. The test passes, so the loop removes another node of depth 1 in this level."},{"at":{"front":2,"stop":4},"vars":{"i":2,"queue size":2,"level":"[1, 2]"},"note":"The node 2 leaves and its children join, so the test now reads 2 and compares it with i = 2. The test fails and the loop stops."}]}
+{"cells":[1,2,3,4],"pointers":["removed","queued"],"steps":[{"at":{"removed":-1,"queued":0},"vars":{"i":0,"queue size":1,"level":"[]"},"note":"Start: the queue holds the node 1, and the first test reads the queue size 1."},{"at":{"removed":0,"queued":2},"vars":{"i":1,"queue size":2,"level":"[1]"},"note":"The node 1 leaves and its children join, so the test now reads 2 and compares it with i = 1. The test passes, so the loop removes another node of depth 1 in this level."},{"at":{"removed":1,"queued":3},"vars":{"i":2,"queue size":2,"level":"[1, 2]"},"note":"The node 2 leaves and its children join, so the test now reads 2 and compares it with i = 2. The test fails and the loop stops."}]}
 ```
 
 The first level should hold only the node 1. The queue shrinks by one removal and grows by two additions, so the test reads 2 on the second pass, and the loop removes the node 2 as well. The wrong reading puts a depth-1 node into the depth-0 list.
