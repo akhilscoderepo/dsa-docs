@@ -27,7 +27,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 20-greedy | done |
 | 21-graph-traversal-models-dfs-and-ordinary-bfs | done |
 | 22-bfs-variations | done |
-| 23-directed-graphs-and-union-find | todo |
+| 23-directed-graphs-and-union-find | claimed 23 2026-10-06T20:38Z |
 | 24-shortest-paths-and-graph-state-modeling | todo |
 | 25-advanced-graph-optimization | todo |
 | 26-dynamic-programming-foundations | todo |
@@ -91,3 +91,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 - claimed 22 2026-10-06T16:38Z
 - claimed 22 2026-10-06T19:38Z (resumed: earlier claim 16:38Z, last push 16:47Z, all files built, no status row or reader review)
 - 22 (2026-10-06): content complete, human review pending. Built in an earlier run (lessons 01 to 05, combination 91, orientation, review); this run added the final reader review (RUNBOOK section 10) with 2 passes by an independent reader subagent each time; pass 1 found 38 points and pass 2 24 (factual errors in 91 code claims, trace/prose mismatches, count and name mismatches, undefined terms), all fixed. A third pass has NOT run, so a clean pass is not confirmed. Interpretation recorded: the role-order audit forbids reordering exercises, so in 91 the role labels were swapped (word sequence is Boundary, smallest path is Recognize), giving two spec-role warnings; the LC 994 tag stays in 02 because the audit requires it; 91 method renamed searchFromSet. Not run: voice_lint after the last edits. JDK 21 only; JDK 25, Windows, phones, printing and teaching quality are unverified.
+- claimed 23 2026-10-06T20:38Z
