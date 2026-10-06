@@ -165,7 +165,7 @@ The invariant says that entries stay in cost order and that only two neighboring
 
 #### Avoiding The False Friend
 
-The false friend is ordinary BFS with a visited flag. It gives the right answer only when every edge costs 1, and the disguised cases are those with free moves. A second false friend is early exit at the first removal of the goal in code that skips the stale test. Stopping when the goal leaves the deque with its final cost is safe, but stopping when it enters the deque is not.
+The false friend is ordinary BFS with a visited flag. It gives the right answer only when every edge costs 1, and the disguised cases are those with free moves. A second false friend is stopping when the goal enters the deque, because its cost may still drop. Stopping when the goal leaves the deque with its final cost is safe.
 
 <!-- stage: exercises -->
 ### Exercises

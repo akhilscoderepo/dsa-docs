@@ -59,7 +59,7 @@ It returns [0, 1, -1], and the correct answer is [0, 1, 2]. The search scans red
 
 #### What The Mark Loses
 
-The method scans each edge a bounded number of times, so its cost is O(V + E) and speed is not the problem. The answer is the problem. One alternating walk can end at a node with a red edge, and another can end there with a blue edge. These two arrivals look the same to a boolean mark, but they allow different next edges. After a red arrival only blue edges may follow, and after a blue arrival only red edges may follow.
+The method scans both edge lists once for each dequeued node, so its cost is O(V * E), and the cost is not the main problem. The answer is the problem. One alternating walk can end at a node with a red edge, and another can end there with a blue edge. These two arrivals look the same to a boolean mark, but they allow different next edges. After a red arrival only blue edges may follow, and after a blue arrival only red edges may follow.
 
 #### Why Order Matters
 
@@ -82,7 +82,7 @@ A **state pair** `(v, c)` stands for an alternating walk that ends at node `v` w
 
 #### Moving To The Opposite Color
 
-From the pair `(v, c)` the search may follow only edges of the **opposite** color `1 - c`. An edge of color `1 - c` from `v` to `w` leads to the pair `(w, 1 - c)`. No other transition exists. Only the pair `(v, 1 - k)` reads an edge of color `k` from `v`. Every edge is therefore read at most once, and the pair graph has at most `E` transitions.
+From the pair `(v, c)` the search may follow only edges of the **opposite** color `1 - c`. An edge of color `1 - c` from `v` to `w` leads to the pair `(w, 1 - c)`. No other transition exists. Only the pair `(v, 1 - c)` reads an edge of color `c` from `v`. Every edge is therefore read at most once, and the pair graph has at most `E` transitions.
 
 #### Choosing The Seed
 
@@ -95,7 +95,7 @@ Every transition adds one edge, so all weights in the pair graph equal 1. The qu
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The method reads the node count `n` and the two edge lists, and it changes none of them. It builds one list of target lists, indexed by `color * n + node`, so the entry for color `c` and node `v` holds the targets of the edges of that color from `v`. Three structures hold the search state.
+The method reads the node count `n` and the two edge lists, and it changes none of them. It builds one list of target lists, indexed by `color * n + node`, so the entry for color `c` and node `v` holds the targets of the edges of that color from `v`. Two structures and one working value hold the search state.
 
 - **dist** is an `int[n][2]` table, where `dist[v][c]` is the edge count of the shortest walk that ends at `v` with color `c`, or -1.
 - **queue** is an `ArrayDeque<Integer>` that holds the encoded pair `2 * v + c`, so the queue needs no wrapper object.

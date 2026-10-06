@@ -55,7 +55,7 @@ It examines up to 50000 entries, and the heap order does not help. The method re
 <!-- stage: bottleneck -->
 ### Removal Costs A Full Scan
 
-A relaxation that succeeds triggers one `remove`. A heap with `h` entries needs O(h) time to find the entry, and the repair afterwards needs O(log h) time. The graph has up to E successful relaxations, and the heap can grow toward V entries. The total reaches O(E * V) in the worst case. A dense graph with 5000 vertices and 20 million edges turns this into a shortage of time, while a method with O(E log V) cost finishes in a moment.
+A relaxation that succeeds triggers one `remove`. A heap with `h` entries needs O(h) time to find the entry, and the repair afterwards needs O(log h) time. The graph has up to E successful relaxations, and the heap can grow toward V entries. The total reaches O(E * V) in the worst case. A dense graph with 5000 vertices and 20 million edges turns this into about 10^11 steps, while a method with O(E log V) cost finishes in a moment.
 
 The cost has nothing to do with the shortest path logic. It comes entirely from the attempt to keep the heap free of wrong numbers. The attempt is also unnecessary. The method reads a distance from the heap only at the moment of a `poll`, and at that moment it can compare the polled number with `dist[v]` in constant time. A wrong number that waits inside the heap does no harm until someone takes it.
 
@@ -87,7 +87,7 @@ The invariant is that `dist[v]` is the smallest candidate ever offered for `v`, 
 <!-- stage: variables -->
 ### What The Method Keeps
 
-The method reads the vertex count `n`, the weighted edge lists and the source `src`. It changes none of them. Three structures and four local values carry the state.
+The method reads the vertex count `n`, the weighted edge lists and the source `src`. It changes none of them. Two structures and four local values carry the state.
 
 - **dist** is a `long[]` of length `n` that holds the best known distance, with `Long.MAX_VALUE` for a vertex that has no route yet.
 - **heap** is a `PriorityQueue<long[]>` whose entries are pairs `{distance, vertex}`, ordered by the first element.

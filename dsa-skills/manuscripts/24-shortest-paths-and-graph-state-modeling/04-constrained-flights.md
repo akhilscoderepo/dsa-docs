@@ -75,7 +75,7 @@ One arrival at a city beats another by **dominance** when it costs no more and u
 
 #### One Row For Each Flight Count
 
-A **layer** is an array `best` of length `n`, where `best[v]` is the lowest cost to reach city `v` with at most `j` flights. Layer 0 holds 0 for `src` and infinity elsewhere. Layer `j + 1` follows from layer `j`. A route with at most `j + 1` flights either has at most `j` flights, or it ends with one more flight from a city that layer `j` reaches. So each flight offers `best[from] + price` to `to`, and each city also keeps its own value from layer `j`. After `k + 1` layers, the entry for `dst` is the answer.
+A **layer** is an array `best` of length `n`, where `best[v]` is the lowest cost to reach city `v` with at most `j` flights. Layer 0 holds 0 for `src` and infinity elsewhere. Layer `j + 1` follows from layer `j`. A route with at most `j + 1` flights either has at most `j` flights, or it ends with one more flight from a city that layer `j` reaches. So each flight offers `best[from] + price` to `to`, and each city also keeps its own value from layer `j`. After `k + 1` passes (layer `k + 1`), the entry for `dst` is the answer.
 
 #### Why A Copy Of The Row Is Needed
 
@@ -95,7 +95,7 @@ The method reads `n`, `flights`, `src`, `dst` and `k`, and it changes none of th
 - **INF** is `Long.MAX_VALUE / 4`, a value that survives the addition of a price.
 - **pass** numbers the running pass and runs from 1 to `k + 1`, which gives `k + 1` passes in total.
 
-The array `best` is read-only during a pass, and `next` is write-only apart from its comparison.
+The array `best` is read-only during a pass, and `next` is read only to compare an offer with its current value.
 
 <!-- stage: trace -->
 ### Passes Over The Flight List

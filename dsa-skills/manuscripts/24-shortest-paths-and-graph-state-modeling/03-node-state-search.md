@@ -7,7 +7,7 @@
 
 #### A Wrong Answer Without A Crash
 
-A fare planner stores airports and flights. Each flight has an integer price, and each traveler owns one coupon that halves the price of a single flight, rounded down. The traveler wants the lowest total price from a start airport to a destination. The planner runs the nearest-first search from the earlier lessons of this chapter, which keeps one `long` distance per airport and a heap of candidate routes. On a small test network it reports 106. A person who adds the prices by hand finds a route that costs 60. The planner is not slow and it does not crash. It returns a wrong number with full confidence.
+A fare planner stores airports and flights. Each flight has an integer price, and each traveler owns one coupon that halves the price of a single flight, rounded down. The traveler wants the lowest total price from a start airport to a destination. The planner runs Dijkstra's search, which keeps one `long` distance per airport and a heap of candidate routes. On a small test network it reports 106. A person who adds the prices by hand finds a route that costs 60. The planner is not slow and it does not crash. It returns a wrong number with full confidence.
 
 #### What A Route Costs
 
@@ -51,7 +51,7 @@ The code looks like a correct nearest-first search with one extra check. The fla
 ```predict
 Take four flights: 0 to 1 costs 8, 1 to 2 costs 2, 2 to 3 costs 100, and 0 to 2 costs 30. What does oneDistance return from airport 0 to airport 3, and what is the true lowest price?
 
-It returns 106, and the true lowest price is 60. The code first reaches airport 1 by spending the coupon on the first flight, which costs 4. The later route with price 8 and an unused coupon is not below 4, so the code drops it. The price 60 comes from paying 8 and 2 in full and spending the coupon on the flight that costs 100, which halves it to 50. That route needs the dropped entry.
+It returns 106, and the true lowest price is 60. The code first reaches airport 1 by spending the coupon on the first flight, which costs 4. The entry with price 8 and an unused coupon becomes outdated once `dist[1]` is 4, so the code drops it when it is removed. The price 60 comes from paying 8 and 2 in full and spending the coupon on the flight that costs 100, which halves it to 50. That route needs the dropped entry.
 ```
 
 <!-- stage: bottleneck -->
@@ -93,7 +93,7 @@ A position is **settled** when its smallest entry leaves the heap. At that momen
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search reads `n`, `edges`, `src` and `dst` and changes none of them. It builds `out`, a list of `{target, price}` pairs for each airport, in the order of `edges`. Three structures hold the search state.
+The search reads `n`, `edges`, `src` and `dst` and changes none of them. It builds `out`, a list of `{target, price}` pairs for each airport, in the order of `edges`. Two structures and two working values hold the search state.
 
 - **dist** is a `long[]` of length `2 * n`; the slot `2 * v + s` holds the lowest known cost of reaching airport `v` with coupon flag `s`.
 - **heap** is a `PriorityQueue<long[]>` of `{cost, stateIndex}` entries ordered by cost.
@@ -106,7 +106,7 @@ The flag `s` equals 0 while the coupon is unspent. The unreached marker is `Long
 
 #### The Fare Network With One Coupon
 
-The network has four airports and the flights 0 to 1 at 8, 1 to 2 at 2, 2 to 3 at 100 and 0 to 2 at 30. The pointer `cur` marks the airport of the removed entry. The variable `dist` lists each airport as `unspent/spent`, where a dash means unreached, and `pop` names the removed entry. Three moments matter. At step 2 the search removes the cheap entry of airport 1 with the coupon spent. It makes airport 2 reachable at 6 with a spent coupon, and step 3 then sends the price 106 to airport 3. At step 4 the entry of airport 1 with price 8 and an unspent coupon is still in the heap, because it has its own slot. It lowers the unspent slot of airport 2 from 30 to 10. At step 5 the entry of airport 2 with price 10 and an unspent coupon spends the coupon on the flight to airport 3, which gives price 60, the answer.
+The network has four airports and the flights 0 to 1 at 8, 1 to 2 at 2, 2 to 3 at 100 and 0 to 2 at 30. The pointer `cur` marks the airport of the removed entry. The variable `dist` lists each airport as `unspent/spent`, where a dash means unreached, and `pop` names the removed entry. Four moments matter. At step 2 the search removes the cheap entry of airport 1 with the coupon spent. It makes airport 2 reachable at 6 with a spent coupon, and step 3 then sends the price 106 to airport 3. At step 4 the entry of airport 1 with price 8 and an unspent coupon is still in the heap, because it has its own slot. It lowers the unspent slot of airport 2 from 30 to 10. At step 5 the entry of airport 2 with price 10 and an unspent coupon spends the coupon on the flight to airport 3, which gives price 60, the answer.
 
 ```trace
 {"cells":[0,1,2,3],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"pop":"node 0, coupon unused, cost 0","dist":"0:0/- 1:8/4 2:30/15 3:-/-"},"note":"The search removes the entry of node 0 with the coupon unused at cost 0 and relaxes its edges."},{"at":{"cur":1},"vars":{"pop":"node 1, coupon used, cost 4","dist":"0:0/- 1:8/4 2:30/6 3:-/-"},"note":"The search removes the entry of node 1 with the coupon used at cost 4 and relaxes its edges."},{"at":{"cur":2},"vars":{"pop":"node 2, coupon used, cost 6","dist":"0:0/- 1:8/4 2:30/6 3:-/106"},"note":"The search removes the entry of node 2 with the coupon used at cost 6 and relaxes its edges."},{"at":{"cur":1},"vars":{"pop":"node 1, coupon unused, cost 8","dist":"0:0/- 1:8/4 2:10/6 3:-/106"},"note":"The search removes the entry of node 1 with the coupon unused at cost 8 and relaxes its edges."},{"at":{"cur":2},"vars":{"pop":"node 2, coupon unused, cost 10","dist":"0:0/- 1:8/4 2:10/6 3:110/60"},"note":"The search removes the entry of node 2 with the coupon unused at cost 10 and relaxes its edges."},{"at":{"cur":3},"vars":{"pop":"node 3, coupon used, cost 60","dist":"0:0/- 1:8/4 2:10/6 3:110/60"},"note":"The search removes the entry of node 3 with the coupon used at cost 60 and relaxes its edges."},{"at":{"cur":3},"vars":{"pop":"node 3, coupon unused, cost 110","dist":"0:0/- 1:8/4 2:10/6 3:110/60"},"note":"The search removes the entry of node 3 with the coupon unused at cost 110 and relaxes its edges."}]}
@@ -234,7 +234,7 @@ The false friend is the array with one distance for each node. It is correct for
 
 **Prerequisites.** The exercise above.
 
-**Problem.** The graph and the edge prices are as in the previous exercise, but the traveler owns `k` coupons. Each coupon halves the price of one edge (integer division), and a route may spend a coupon on an edge only while it has one left. Return a `long[][]` named `table` with `n` rows and `k + 1` columns. The entry `table[v][j]` is the lowest price of a route from `src` to `v` that spends exactly `j` coupons, or `-1` when no such route exists. The empty route gives `table[src][0] = 0`.
+**Problem.** The graph and the edge prices are as in the previous exercise, a route is a walk in which nodes may repeat, and the traveler owns `k` coupons. Each coupon halves the price of one edge (integer division), and a route may spend a coupon on an edge only while it has one left. Return a `long[][]` named `table` with `n` rows and `k + 1` columns. The entry `table[v][j]` is the lowest price of a route from `src` to `v` that spends exactly `j` coupons, or `-1` when no such route exists. The empty route gives `table[src][0] = 0`.
 
 **Constraints.** The limits are:
 - **Nodes** satisfy `1 <= n <= 500`.
@@ -255,7 +255,7 @@ The false friend is the array with one distance for each node. It is correct for
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** The graph and the one coupon are as in the first exercise. Return a `long[]` of length 2 that holds two answers for the pair `src`, `dst`. The first entry is the lowest price of a route, as in the first exercise. The second entry comes from a pruned search that keeps one state for each node. The pruned search removes triples `(cost, node, spent)` in ascending order of cost, then node, then spent. It skips a triple whose node was removed before. For each edge it pushes the full-price triple. When `spent` is 0, it also pushes the halved triple with `spent` set to 1. The second entry is the cost of the first triple removed at `dst`, or `-1` when none is.
+**Problem.** The graph and the one coupon are as in the first exercise, and a route is a walk in which nodes may repeat. Return a `long[]` of length 2 that holds two answers for the pair `src`, `dst`. The first entry is the lowest price of a route, as in the first exercise. The second entry comes from a pruned search that keeps one state for each node. The pruned search removes triples `(cost, node, spent)` in ascending order of cost, then node, then spent. It skips a triple whose node was removed before. For each edge it pushes the full-price triple. When `spent` is 0, it also pushes the halved triple with `spent` set to 1. The second entry is the cost of the first triple removed at `dst`, or `-1` when none is.
 
 **Constraints.** The limits are:
 - **Nodes** satisfy `1 <= n <= 2000`.

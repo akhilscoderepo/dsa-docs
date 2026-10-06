@@ -25,7 +25,7 @@ Each lesson adds one idea to a shortest-path search.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that returns a wrong answer on a realistic input. It then shows a first version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+A lesson opens with a program that returns a wrong or too slow answer on a realistic input. It then shows a first version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
 
 ### What You Can Do After This Chapter
 
@@ -33,4 +33,4 @@ You can find the cheapest route when every edge cost is nonnegative, and you can
 
 ### What Later Chapters Reuse
 
-Chapter 25 continues with harder graph optimization and reuses the heap search. Chapter 26 treats a table of best values by state as a dynamic programming table.
+Chapter 25 continues with harder graph optimization, including negative edges, and reuses the repeated-round scan idea from the heap lesson. Chapter 26 treats a table of best values by state as a dynamic programming table.

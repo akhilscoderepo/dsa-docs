@@ -38,7 +38,7 @@ def flights_trace(n,fl,src,dst,k,ph):
         for v,p in adj[u]:
             if c+p<best.get((v,e+1),INF):
                 best[(v,e+1)]=c+p; heapq.heappush(heap,(c+p,e+1,v))
-        snap(u,f"Entry ({c},{u},{e}) is current. Each flight from city {u} adds an entry with {e+1} flights used when it beats the stored price.")
+        snap(u,f"Entry ({c},{u},{e}) is current. Each flight from city {u} adds an entry with flights used = {e+1} when it beats the stored price.")
     fill(CH,'91-shortest-paths-with-a-heap.md',block(list(range(n)),["city"],st),ph)
     return ans
 d=delay_trace(4,[(0,1,4),(0,2,1),(2,1,2),(1,3,1)],0,"@@TRACE1@@"); assert d==[0,3,1,4]

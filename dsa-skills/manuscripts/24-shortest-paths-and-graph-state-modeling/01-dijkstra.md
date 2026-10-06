@@ -86,7 +86,7 @@ The argument above uses the sentence "the remaining roads add zero or more". A n
 <!-- stage: variables -->
 ### Distances And The Heap
 
-The search reads `n`, the list `roads` of triples `[from, to, weight]`, and the source `src`. It changes none of them. It builds an adjacency list from `roads` and keeps three structures.
+The search reads `n`, the list `roads` of triples `[from, to, weight]`, and the source `src`. It changes none of them. It builds an adjacency list from `roads` and keeps two structures and one working value.
 
 - **dist** is a `long[]` of length `n`; `Long.MAX_VALUE` marks a town with no known route.
 - **heap** is a `PriorityQueue<long[]>` whose entries are `{cost, town}`, ordered by `cost` with `Long.compare`.
@@ -107,7 +107,7 @@ The first map has eight roads. Town 0 reaches town 1 for 7 and town 2 for 2. Tow
 
 #### A Negative Road Breaks The Rule
 
-The second map has five roads. Town 0 reaches town 1 for 4 and town 2 for 5. Town 2 reaches town 1 for minus 5. Town 1 reaches town 3 for 2, and town 3 reaches town 4 for 1. The run here finalizes each town at its first removal, exactly as the method does. The variable `truth` is the cheapest real cost, and `wrong` is 1 when the claimed cost differs from it. Town 1 leaves the heap at cost 4, but the route 0, 2, 1 costs 0. By the time the entry for town 2 arrives, town 1 is closed, and the negative road cannot lower it. Towns 3 and 4 inherit the error, so three of the five claims are wrong.
+The second map has five roads. Town 0 reaches town 1 for 4 and town 2 for 5. Town 2 reaches town 1 for minus 5. Town 1 reaches town 3 for 2, and town 3 reaches town 4 for 1. This run is a variant that closes each town at its first removal. The code in the code stage does not close towns, so with a negative road it would expand towns again and lose its bound on the work. The variable `truth` is the cheapest real cost, and `wrong` is 1 when the claimed cost differs from it. Town 1 leaves the heap at cost 4, but the route 0, 2, 1 costs 0. By the time the entry for town 2 arrives, town 1 is closed, and the negative road cannot lower it. Towns 3 and 4 inherit the error, so three of the five claims are wrong.
 
 ```trace
 {"cells":["0@0","1@4","2@5","3@6","4@7"],"pointers":["pop"],"steps":[{"at":{"pop":0},"vars":{"cost":0,"truth":0,"wrong":0},"note":"Town 0 is taken at cost 0, which is correct."},{"at":{"pop":1},"vars":{"cost":4,"truth":0,"wrong":1},"note":"Town 1 is taken at cost 4, but the cheapest real cost is 0, so this claim is wrong."},{"at":{"pop":2},"vars":{"cost":5,"truth":5,"wrong":0},"note":"Town 2 is taken at cost 5, which is correct. Its toll toward 1, already taken, is ignored."},{"at":{"pop":3},"vars":{"cost":6,"truth":2,"wrong":1},"note":"Town 3 is taken at cost 6, but the cheapest real cost is 2, so this claim is wrong."},{"at":{"pop":4},"vars":{"cost":7,"truth":3,"wrong":1},"note":"Town 4 is taken at cost 7, but the cheapest real cost is 3, so this claim is wrong."}]}
@@ -145,7 +145,7 @@ static long[] cheapest(int n, int[][] roads, int src) {
 }
 ```
 
-The test `cost > dist[u]` must come before the loop, so that a stale entry costs nothing. Each nonstale removal relaxes each road of its town once. Each successful relaxation adds one heap entry, so the heap holds at most E entries. The method runs in O(E log E) time, which equals O(E log V). It uses O(V + E) memory for the adjacency list, the array and the heap.
+The test `cost > dist[u]` must come before the loop, so that a stale entry costs nothing. Each nonstale removal relaxes each road of its town once. Each successful relaxation adds one heap entry, so the heap holds at most E + 1 entries, counting the entry of the source. The method runs in O(E log E) time, which equals O(E log V). It uses O(V + E) memory for the adjacency list, the array and the heap.
 
 <!-- stage: applicability -->
 ### Recognizing Cheapest Route Problems

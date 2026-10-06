@@ -11,4 +11,4 @@ The lesson Shortest Paths With A Deque joins the graph with the deque. The edge 
 
 ### Pairing That Waits For A Later Chapter
 
-Negative edge costs break both searches, because a cheaper path can appear after a vertex is finished. A method that relaxes every edge in repeated rounds handles them, and this chapter assigns no exercises for it. Chapter 25 covers negative edges, and the repeated-round scan in the heap lesson is the idea that it uses.
+Negative edge costs break both searches, because a cheaper path can appear after a vertex is finished. A method that relaxes every edge in repeated rounds handles them, and this chapter assigns no exercises for it. Chapter 25 handles negative edges, among other harder graph optimization problems, with the repeated-round scan idea from the heap lesson.

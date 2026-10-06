@@ -30,7 +30,7 @@ A route finder reports a cost that a cheaper road beats, and a flight search ign
 ```
 
 ```quiz
-{"id": "sp-rev-heap-score", "q": "A search must find the route whose largest single edge is smallest. What changes in the heap method?", "options": ["Nothing changes", "The proposed cost becomes the larger of the stored cost and the edge, and the rest stays", "The heap becomes a stack", "Every edge cost becomes 1"], "answer": 1, "explain": "Extending a path never lowers its largest edge, so the finishing rule still holds. Only the combining step changes."}
+{"id": "sp-rev-heap-score", "q": "A search must find the route whose largest single edge is smallest. What changes in the heap method?", "options": ["Nothing changes", "The proposed cost becomes the larger of the route's cost so far and the edge, and the rest stays", "The heap becomes a stack", "Every edge cost becomes 1"], "answer": 1, "explain": "Extending a path never lowers its largest edge, so the finishing rule still holds. Only the combining step changes, from the sum of the route's cost and the edge to their maximum."}
 ```
 
 ```quiz
