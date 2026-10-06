@@ -61,7 +61,7 @@ The deque already stores positions, so the answer for a range is the front itsel
 
 **Complexity.**
 
-- **Time** is O(n), because each position is appended once and removed at most one time.
+- **Time** is O(n), as each position goes in one time and comes out at most one time.
 - **Space** is O(k) for the deque, plus the output array.
 
 ```java run
