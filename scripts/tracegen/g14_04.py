@@ -1,33 +1,30 @@
 from common import *
-CH='14-linked-lists'
-F='04-merge.md'
-A=[2,5,9];B=[1,5,7,8]
-cells=A+B
-out=[];i=0;j=0
-def idx_a(i): return i if i<len(A) else -1
-def idx_b(j): return len(A)+j if j<len(B) else -1
-steps=[]
-while i<len(A) and j<len(B):
-    if B[j]<A[i]:
-        v=B[j];src="second";j+=1
-    else:
-        v=A[i];src="first";i+=1
-    out.append(v)
-    steps.append({"at":{"a":idx_a(i),"b":idx_b(j)},"vars":{"result":"["+",".join(map(str,out))+"]"},"note":f"The node holding {v} from the {src} list is attached to the result tail, and that list's head moves forward."})
-rest=A[i:] if i<len(A) else B[j:]
-out+=rest
-steps.append({"at":{"a":idx_a(i),"b":-1},"vars":{"result":"["+",".join(map(str,out))+"]"},"note":"The second list is exhausted, so the whole remaining first list, a single node holding 9, is attached in one assignment."})
-assert out==[1,2,5,5,7,8,9]
-fill(CH,F,block(cells,["a","b"],steps),"@@TRACE1@@")
-A2=[1,2];B2=[5,6];c2=A2+B2
-i=j=0;out=[];s2=[];comp=0
-while i<2 and j<2:
-    comp+=1
-    if B2[j]<A2[i]: v=B2[j];j+=1;src="second"
-    else: v=A2[i];i+=1;src="first"
-    out.append(v)
-    s2.append({"at":{"a":i if i<2 else -1,"b":2+j if j<2 else -1},"vars":{"result":"["+",".join(map(str,out))+"]","comparisons":comp},"note":f"The node holding {v} from the {src} list is attached after one comparison."})
-out+=B2[j:]
-s2.append({"at":{"a":-1,"b":2},"vars":{"result":"["+",".join(map(str,out))+"]","comparisons":comp},"note":"The first list is exhausted after two comparisons, and the second list, still headed by the node holding 5, is attached as a whole without any further comparison."})
-assert out==[1,2,5,6] and comp==2
-fill(CH,F,block(c2,["a","b"],s2),"@@TRACE2@@")
+CH='14-linked-lists'; F='04-merge.md'
+def run(A,B,ph):
+    cells=A+B; na=len(A)
+    a=0 if A else -1; b=na if B else -1
+    nxtA=lambda i: i+1 if i+1<na else -1
+    nxtB=lambda i: i+1 if i+1<len(cells) else -1
+    out=[]; st=[]; tail=-1
+    def snap(note): st.append({"at":{"a":a,"b":b,"tail":tail},"vars":{"merged":",".join(map(str,out)) or "empty"},"note":note})
+    snap("Start: both lists have unplaced nodes, and the finalized prefix is empty.")
+    first=True
+    while a!=-1 and b!=-1:
+        if cells[b]<cells[a]:
+            v=cells[b]; out.append(v); tail=b; b=nxtB(b); src="second"
+        else:
+            v=cells[a]; out.append(v); tail=a; a=nxtA(a); src="first"
+        cmp=f"Compare {cells[tail] if False else ''}".strip()
+        snap(f"The smaller head is the node {v} of the {src} list, so it joins the finalized prefix and that list advances.")
+    rest=[]
+    while a!=-1: rest.append(cells[a]); tail_=a; a=nxtA(a)
+    while b!=-1: rest.append(cells[b]); b=nxtB(b)
+    out.extend(rest); 
+    snap(f"One list is empty. One write attaches the remainder {','.join(map(str,rest))}, and no comparison is made with it.")
+    return st,out
+A,B=[1,4,6],[2,3,7]
+s,o=run(A,B,1); assert o==sorted(A+B)
+fill(CH,F,block(A+B,["a","b","tail"],s),"@@TRACE1@@")
+A,B=[1,2],[5,6,7]
+s,o=run(A,B,2); assert o==sorted(A+B)
+fill(CH,F,block(A+B,["a","b","tail"],s),"@@TRACE2@@")

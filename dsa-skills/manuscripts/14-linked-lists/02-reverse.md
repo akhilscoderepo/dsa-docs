@@ -84,7 +84,7 @@ The method returns `prev`, because the caller must replace its stored head with 
 
 #### Turning Links Around In The Right Order
 
-Take the list `1, 2, 3`. The pointers `prev` and `curr` mark the boundary between the reversed prefix and the untouched suffix. The variable `prefix` shows the reversed prefix from `prev`, and `suffix` shows the untouched suffix from `curr`.
+A pointer that sits outside the cells means `null`. Take the list `1, 2, 3`. The pointers `prev` and `curr` mark the boundary between the reversed prefix and the untouched suffix. The variable `prefix` shows the reversed prefix from `prev`, and `suffix` shows the untouched suffix from `curr`.
 
 ```trace
 {"cells":[1,2,3],"pointers":["prev","curr"],"steps":[{"at":{"prev":-1,"curr":0},"vars":{"prefix":"empty","suffix":"1,2,3"},"note":"Start: the reversed prefix is empty and the untouched suffix is the whole list."},{"at":{"prev":0,"curr":1},"vars":{"prefix":"1","suffix":"2,3"},"note":"saved keeps the rest, then the node 1 is redirected at the old prefix. The prefix now starts at the node 1."},{"at":{"prev":1,"curr":2},"vars":{"prefix":"2,1","suffix":"3"},"note":"saved keeps the rest, then the node 2 is redirected at the old prefix. The prefix now starts at the node 2."},{"at":{"prev":2,"curr":3},"vars":{"prefix":"3,2,1","suffix":"empty"},"note":"saved keeps the rest, then the node 3 is redirected at the old prefix. The prefix now starts at the node 3."}]}
