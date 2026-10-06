@@ -73,7 +73,7 @@ The method sorts the deadlines in increasing order and counts the accepted tasks
 After each deadline, `count` is the largest feasible number among the tasks read so far.
 
 **Complexity.**
-- **Time** is O(n log n) for the sort, and the scan adds O(n).
+- **Time** is O(n log n), since the sort costs more than the one-pass scan that follows.
 - **Space** is O(1) extra beyond the sort.
 
 ```java run

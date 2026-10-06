@@ -142,7 +142,7 @@ The greedy proof permits removing a worse earlier choice while removals remain; 
 - **Boundary - LC 1081 Smallest Subsequence of Distinct Characters.** Preserve uniqueness, future availability, and leading-order decisions together.
 - **Recognize - LC 1673 Find the Most Competitive Subsequence.** Use the remaining-length requirement as the pop budget.
 
-### Greedy And Two Pointers
+### Pair Items From Both Ends
 
 Sorting creates monotone candidate order; two pointers expose the cheapest feasible pairing, and greedy reasoning proves which endpoint can be committed. Pointer motion without that proof is guesswork.
 

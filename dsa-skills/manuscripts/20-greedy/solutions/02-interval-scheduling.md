@@ -217,7 +217,7 @@ The method sorts the balloons by end. The first balloon in that order has the sm
 After each step, `arrowAt` is the coordinate of the current arrow, and `size` counts the balloons it has burst so far.
 
 **Complexity.**
-- **Time** is O(n log n) for the sort, and the scan adds O(n).
+- **Time** is O(n log n), because the sort outweighs the single pass.
 - **Space** is O(n) for the sorted copy and the output list.
 
 ```java run

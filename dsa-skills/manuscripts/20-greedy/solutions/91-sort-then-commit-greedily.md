@@ -161,7 +161,7 @@ The method sorts the balloons by end. The first arrow of a group goes at the las
 After each balloon, `arrow` is the coordinate of the current group's arrow, and `arrows` counts the groups opened so far.
 
 **Complexity.**
-- **Time** is O(n log n) for the sort, and the scan adds O(n).
+- **Time** is O(n log n), because sorting the ends dominates the scan.
 - **Space** is O(n) for the sorted copy.
 
 ```java run
