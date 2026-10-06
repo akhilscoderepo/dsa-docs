@@ -76,7 +76,7 @@ The loop skips index `i` when the left neighbour equals `a[i]` and `i > start`. 
 
 #### Listing The Subsets Of One And Two Twos
 
-The first trace lists the subsets of `[1, 2, 2]`. The pointer `start` marks the start of the current call, and the variable `path` shows its path. Each step is either the entry of a call or a skip. The variable `stored` counts the lists in the output.
+The first trace lists the subsets of `[1, 2, 2]`. The pointer `start` shows the start index of the current call, and the variable `path` shows its path. Each step is either the entry of a call or a skip. The variable `stored` counts the lists in the output.
 
 The root stores `[]` and chooses 1, so the call for `[1]` stores its list and chooses the first 2. The call for `[1, 2]` has start 2, so its choice of index 2 has `i == start`. It makes the call that stores `[1, 2, 2]`. Back in the call for `[1]`, the loop reaches index 2 with `i > start` and an equal left neighbour, so it skips. The root then chooses the first 2, stores `[2]` and `[2, 2]`, and skips index 2 at its own loop. The trace stores 6 lists.
 
