@@ -1,4 +1,4 @@
-# Lesson spec: Insert And Search
+# Lesson spec: Insert And Look Up Words
 
 **Recognition cue.** Operations consume one character at a time and either create a missing edge or fail when an edge is absent. **Invariant.** After processing `i` characters, the current node represents `word[0..i]`. **Java hazard.** A 26-slot array is valid only for a lowercase-English contract; otherwise use a map.
 

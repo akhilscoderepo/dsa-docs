@@ -1,4 +1,4 @@
-# Lesson spec: Prefix Nodes
+# Lesson spec: Store Words By Shared Prefix
 
 **Recognition cue.** Many stored strings share prefixes and queries repeatedly ask whether a prefix exists. **Invariant.** The path from the root spells exactly one prefix; terminal state is separate from path existence. **False friend.** A hash set answers whole-word membership but cannot directly represent all prefixes.
 

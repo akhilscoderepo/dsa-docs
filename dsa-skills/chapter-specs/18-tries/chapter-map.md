@@ -4,11 +4,11 @@
 
 ## Lesson order
 
-01. Prefix Nodes  ->  01-prefix-nodes.md
-02. Insert And Search  ->  02-insert-and-search.md
-03. Wildcard Branching  ->  03-wildcard-branching.md
-04. Word-Break Trie Search  ->  04-word-break-trie-search.md
-05. Binary Tries  ->  05-binary-tries.md
+01. Store Words By Shared Prefix  ->  01-prefix-nodes.md
+02. Insert And Look Up Words  ->  02-insert-and-search.md
+03. Match Words With Wildcards  ->  03-wildcard-branching.md
+04. Cut A String Into Dictionary Words  ->  04-word-break-trie-search.md
+05. Pick The Best XOR Partner  ->  05-binary-tries.md
 
 # Chapter 18: Tries
 

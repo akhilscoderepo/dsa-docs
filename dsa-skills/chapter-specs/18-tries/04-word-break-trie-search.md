@@ -1,4 +1,4 @@
-# Lesson spec: Word-Break Trie Search
+# Lesson spec: Cut A String Into Dictionary Words
 
 **Recognition cue.** A string must be segmented into dictionary words, and trie traversal can test every word beginning at a position without constructing substrings. **Invariant.** From a start index, advancing the trie enumerates exactly the dictionary prefixes of the remaining suffix. **False friend.** Plain recursion repeats the same suffix states exponentially; memoization/DP ownership is deferred to Chapter 26.
 

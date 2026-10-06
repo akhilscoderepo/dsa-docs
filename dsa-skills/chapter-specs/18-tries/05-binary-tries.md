@@ -1,4 +1,4 @@
-# Lesson spec: Binary Tries
+# Lesson spec: Pick The Best XOR Partner
 
 **Recognition cue.** The objective is to maximize XOR, so the highest differing bit dominates all lower bits. **Invariant.** At each bit, prefer the opposite branch when present; the chosen path is lexicographically best in XOR-bit order. **False friend.** A character trie and a binary trie share structure but not edge meaning.
 

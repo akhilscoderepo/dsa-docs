@@ -63,7 +63,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Prefix Nodes
+### Store Words By Shared Prefix
 
 **Recognition cue.** Many stored strings share prefixes and queries repeatedly ask whether a prefix exists. **Invariant.** The path from the root spells exactly one prefix; terminal state is separate from path existence. **False friend.** A hash set answers whole-word membership but cannot directly represent all prefixes.
 
@@ -72,7 +72,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Word And Prefix-Only Node.** Distinguish the root terminal flag from a node that merely has children.
 - **Recognize - LC 208 Implement Trie.** Support exact word and prefix queries from the same paths.
 
-### Insert And Search
+### Insert And Look Up Words
 
 **Recognition cue.** Operations consume one character at a time and either create a missing edge or fail when an edge is absent. **Invariant.** After processing `i` characters, the current node represents `word[0..i]`. **Java hazard.** A 26-slot array is valid only for a lowercase-English contract; otherwise use a map.
 
@@ -81,7 +81,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Word Is Prefix Of Another.** Store `app` and `apple` without confusing their terminal states.
 - **Recognize - LC 208 Implement Trie.** Implement the complete API under an explicit character-domain contract.
 
-### Wildcard Branching
+### Match Words With Wildcards
 
 **Recognition cue.** Most query characters select one trie edge, but a wildcard may match any child. **Invariant.** A recursive call represents all dictionary words consistent with the query prefix consumed so far. **False friend.** Branching at ordinary characters turns a narrow search into unnecessary exhaustive traversal.
 
@@ -90,7 +90,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Wildcard At Root And Missing Length.** Match exactly the query length and require terminal state at the end.
 - **Recognize - LC 211 Design Add and Search Words Data Structure.** Combine trie insertion with selective wildcard DFS.
 
-### Word-Break Trie Search
+### Cut A String Into Dictionary Words
 
 **Recognition cue.** A string must be segmented into dictionary words, and trie traversal can test every word beginning at a position without constructing substrings. **Invariant.** From a start index, advancing the trie enumerates exactly the dictionary prefixes of the remaining suffix. **False friend.** Plain recursion repeats the same suffix states exponentially; memoization/DP ownership is deferred to Chapter 26.
 
@@ -99,7 +99,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Prefix Exists But Word Does Not.** Branch only at terminal nodes, not every reachable prefix.
 - **Recognize - Author exercise: Explain Trie-Based Word Break State.** Define the start-index state and identify why memoization is needed for scale, without introducing DP prematurely.
 
-### Binary Tries
+### Pick The Best XOR Partner
 
 **Recognition cue.** The objective is to maximize XOR, so the highest differing bit dominates all lower bits. **Invariant.** At each bit, prefer the opposite branch when present; the chosen path is lexicographically best in XOR-bit order. **False friend.** A character trie and a binary trie share structure but not edge meaning.
 
@@ -110,7 +110,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Trie And String Search
+### Look Up Prefixes In A Dictionary
 
 String indexing supplies the next symbol; trie nodes preserve all dictionary candidates sharing the consumed prefix. The combination avoids rescanning unrelated words after the prefix has already ruled them out.
 

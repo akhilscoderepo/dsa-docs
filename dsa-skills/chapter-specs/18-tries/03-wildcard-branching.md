@@ -1,4 +1,4 @@
-# Lesson spec: Wildcard Branching
+# Lesson spec: Match Words With Wildcards
 
 **Recognition cue.** Most query characters select one trie edge, but a wildcard may match any child. **Invariant.** A recursive call represents all dictionary words consistent with the query prefix consumed so far. **False friend.** Branching at ordinary characters turns a narrow search into unnecessary exhaustive traversal.
 
