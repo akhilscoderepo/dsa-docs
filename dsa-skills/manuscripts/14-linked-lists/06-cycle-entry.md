@@ -147,7 +147,7 @@ final class CycleEntry {
 The loop condition tests `fast != null` first and `fast.next != null` second, so `fast.next.next` never dereferences `null`. The comparisons use `==`, which compares node identity, and never use `equals` or the values.
 
 - **Time** is O(n), because the first phase takes at most `a + L` steps and the second takes `a` steps.
-- **Space** is O(1), because the code stores a few references.
+- **Space** is O(1), because the walk needs no collection of visited nodes.
 
 <!-- stage: applicability -->
 ### Using The Two-Speed Rule

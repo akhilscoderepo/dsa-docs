@@ -138,7 +138,7 @@ final class ListMerge {
 The method allocates no node and changes only `next` fields. The strict comparison `b.val < a.val` sends ties to the first list, so the merge is stable.
 
 - **Time** is O(m + n), because each loop turn places one node and the remainder costs one write.
-- **Space** is O(1), because the method stores four references.
+- **Space** is O(1), because the merge relinks existing nodes and keeps four references.
 
 <!-- stage: applicability -->
 ### Using The Sorted Prefix Rule

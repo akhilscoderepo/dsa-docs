@@ -77,7 +77,7 @@ The loop test `fast != null && fast.next != null` lets the fast reference take a
 <!-- stage: trace -->
 ### Reading The Center In One Pass
 
-Below, a pointer at the left of the cells or past their right end is `null`.
+Below, `null` appears as a pointer that is not above any cell.
 
 #### Odd Length With Five Nodes
 

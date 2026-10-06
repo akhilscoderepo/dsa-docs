@@ -1,53 +1,59 @@
 from common import *
-CH='14-linked-lists'
-F='10-multilevel-flattening.md'
-def fwd(vals,nxt,head):
-    out=[];i=head
-    while i is not None: out.append(str(vals[i])); i=nxt[i]
-    return ",".join(out)
-def bwd(vals,prv,tail):
-    out=[];i=tail
-    while i is not None: out.append(str(vals[i])); i=prv[i]
-    return ",".join(out)
-vals=[1,2,3,4,5,7,6]
-nxt={0:1,1:2,2:None,3:4,4:5,5:None,6:None}
-prv={0:None,1:0,2:1,3:None,4:3,5:4,6:None}
-child={1:3,4:6}
-stack=[];cur=0;steps=[]
-def stk(): return "["+",".join(str(vals[i]) for i in stack)+"]"
-while cur is not None:
-    note=f"The walker is on the node holding {vals[cur]}."
-    if cur in child and child[cur] is not None:
-        c=child[cur]
-        if nxt[cur] is not None:
-            stack.append(nxt[cur]);note+=f" It has a child chain, so its successor, holding {vals[nxt[cur]]}, is pushed onto the stack of deferred successors."
-        else: note+=" It has a child chain and no successor, so nothing is pushed."
-        nxt[cur]=c;prv[c]=cur;child[cur]=None
-        note+=f" The child head, holding {vals[c]}, now follows it, and the child reference is cleared."
-        nxtcur=c
-    elif nxt[cur] is None and stack:
-        s=stack.pop();nxt[cur]=s;prv[s]=cur
-        note+=f" This chain has ended, so the deferred successor holding {vals[s]} is popped and linked after it."
-        nxtcur=s
-    else:
-        nxtcur=nxt[cur]
-        if nxtcur is None: note+=" There is no child, no successor and nothing deferred, so the walk is complete."
-        else: note+=" There is no child, so the walker follows the next link."
-    steps.append({"at":{"cur":cur},"vars":{"stack":stk(),"flat_so_far":fwd(vals,nxt,0)},"note":note})
-    cur=nxtcur
-assert fwd(vals,nxt,0)=="1,2,4,5,6,7,3"
-fill(CH,F,block(vals,["cur"],steps),"@@TRACE1@@")
-# trace 2: splice one chain: main [1,2,3,4], p=1, child [7,8]
-v2=[1,2,3,4,7,8]
-n2={0:1,1:2,2:3,3:None,4:5,5:None}
-p2={0:None,1:0,2:1,3:2,4:None,5:4}
-parent=1;ch=4;ct=5;sv=2
-st=[{"at":{"parent":1,"childHead":4,"childTail":5,"saved":-1},"vars":{"forward":fwd(v2,n2,0),"backward":bwd(v2,p2,3)},"note":"The parent holds 2 and has a child chain 7, 8. The main chain reads 1, 2, 3, 4 in both directions."}]
-sv=n2[parent]
-st.append({"at":{"parent":1,"childHead":4,"childTail":5,"saved":sv},"vars":{"forward":fwd(v2,n2,0),"backward":bwd(v2,p2,3)},"note":"The parent's old successor, the node holding 3, is saved before any link changes."})
-n2[ct]=sv;p2[sv]=ct
-st.append({"at":{"parent":1,"childHead":4,"childTail":5,"saved":sv},"vars":{"forward":fwd(v2,n2,0),"backward":bwd(v2,p2,3)},"note":"The child tail is linked forward to the saved node and the saved node is linked back to the child tail. The main chain does not show the child yet, but the saved node's back link already reads 8."})
-n2[parent]=ch;p2[ch]=parent
-st.append({"at":{"parent":1,"childHead":4,"childTail":5,"saved":sv},"vars":{"forward":fwd(v2,n2,0),"backward":bwd(v2,p2,3)},"note":"The parent is linked forward to the child head and the child head back to the parent, and the child reference is cleared. Forward the list reads 1, 2, 7, 8, 3, 4, and backward from the end it reads 4, 3, 8, 7, 2, 1."})
-assert fwd(v2,n2,0)=="1,2,7,8,3,4" and bwd(v2,p2,3)=="4,3,8,7,2,1"
-fill(CH,F,block(v2,["parent","childHead","childTail","saved"],st),"@@TRACE2@@")
+CH='14-linked-lists'; F='10-multilevel-flattening.md'
+def mk(cells,nxt,prv):
+    def fwd(h):
+        out=[];i=h
+        while i!=-1 and len(out)<20: out.append(str(cells[i])); i=nxt[i]
+        return ",".join(out)
+    def bwd(t):
+        out=[];i=t
+        while i!=-1 and len(out)<20: out.append(str(cells[i])); i=prv[i]
+        return ",".join(out)
+    return fwd,bwd
+# Trace 1: cells 1,2,3 | 7,8 ; indexes 0,1,2,3,4
+cells=[1,2,3,7,8]
+nxt={0:1,1:2,2:-1,3:4,4:-1}; prv={0:-1,1:0,2:1,3:-1,4:3}
+fwd,bwd=mk(cells,nxt,prv)
+parent=1; tail=-1; succ=-1; st=[]
+def snap(note,show=True):
+    st.append({"at":{"parent":parent,"tail":tail,"succ":succ},"vars":{"forward":fwd(0),"backward":bwd(2)},"note":note})
+snap("Start: the main list reads 1,2,3. The node 2 has the child chain 7,8, whose links are kept apart from the main list.")
+succ=nxt[parent]
+snap("succ copies parent.next, which is the node 3. This happens before any write.")
+tail=3
+while nxt[tail]!=-1: tail=nxt[tail]
+snap("The walk along the child chain stops on the node 8, the child tail.")
+child=3
+nxt[parent]=child; prv[child]=parent
+snap("parent.next now points at the node 7, and the node 7 points back at the node 2. The main list is cut after the node 8: forward reads 1,2,7,8 and the node 3 is held only by succ.")
+nxt[tail]=succ; prv[succ]=tail
+snap("tail.next points at the node 3, and the node 3 points back at the node 8. Both directions now agree.")
+assert fwd(0)=="1,2,7,8,3" and bwd(2)=="3,8,7,2,1"
+fill(CH,F,block(cells,["parent","tail","succ"],st),"@@TRACE1@@")
+# Trace 2: main 1,2,3 ; child of 2: 7,8,9 ; child of 8: 11,12. idx: 0,1,2 | 3,4,5 | 6,7
+cells=[1,2,3,7,8,9,11,12]
+nxt={0:1,1:2,2:-1,3:4,4:5,5:-1,6:7,7:-1}; prv={0:-1,1:0,2:1,3:-1,4:3,5:4,6:-1,7:6}
+fwd,bwd=mk(cells,nxt,prv)
+st=[]
+def snap2(curr,note,last):
+    st.append({"at":{"curr":curr,"tail":-1 if False else last},"vars":{"forward":fwd(0)},"note":note})
+def splice(p):
+    child=cells.index(0) if False else None
+    return None
+children={1:3,4:6}
+curr=0
+st.append({"at":{"curr":0,"tail":-1},"vars":{"forward":fwd(0)},"note":"Start: the main list reads 1,2,3. The nodes 2 and 8 each have a child chain."})
+order=[]
+while curr!=-1:
+    if curr in children:
+        child=children.pop(curr); succ=nxt[curr]
+        tail=child
+        while nxt[tail]!=-1: tail=nxt[tail]
+        nxt[curr]=child; prv[child]=curr
+        nxt[tail]=succ
+        if succ!=-1: prv[succ]=tail
+        st.append({"at":{"curr":curr,"tail":tail},"vars":{"forward":fwd(0)},"note":f"The node {cells[curr]} has a child chain, so it is spliced in front of the node {cells[succ] if succ!=-1 else 'null'}. The child tail is the node {cells[tail]}."})
+    curr=nxt[curr]
+assert fwd(0)=="1,2,7,8,11,12,9,3", fwd(0)
+st.append({"at":{"curr":-1,"tail":7},"vars":{"forward":fwd(0)},"note":"The walk ends at null. Every child chain is spliced, and the list reads 1,2,7,8,11,12,9,3."})
+fill(CH,F,block(cells,["curr","tail"],st),"@@TRACE2@@")

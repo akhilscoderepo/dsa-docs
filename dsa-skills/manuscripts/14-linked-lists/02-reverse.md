@@ -130,7 +130,7 @@ final class ListReverse {
 The loop body has no branch, so the empty list and the one-node list need no special case. For the empty list the body never runs and the method returns `null`. For a one-node list the body runs once and returns the same node, now redirected to `null`.
 
 - **Time** is O(n), because each node moves across the boundary once.
-- **Space** is O(1), because the method stores three references.
+- **Space** is O(1), because `prev`, `curr` and `saved` are the only extra storage.
 
 <!-- stage: applicability -->
 ### Using The Boundary Rule
