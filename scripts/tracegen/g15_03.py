@@ -1,31 +1,34 @@
 from common import *
 from tr import *
-CH='15-trees-dfs'
-F='03-iterative-dfs.md'
-arr=[4,2,7,1,3]
-L,R=parse(arr)
-pend=[0];out=[];st=[]
-while pend:
-    i=pend.pop()
-    out.append(arr[i])
-    pushed=[]
-    if R[i] is not None: pend.append(R[i]); pushed.append(f"right {arr[R[i]]}")
-    if L[i] is not None: pend.append(L[i]); pushed.append(f"left {arr[L[i]]}")
-    note=f"The room {arr[i]} came off the top of the pile and is written down. " + (("It leaves " + " then ".join(pushed) + " on the pile.") if pushed else "It has no sub-rooms, so nothing is added to the pile.")
-    st.append({"at":{"node":i},"vars":{"pile":" ".join(str(arr[p]) for p in pend) or "empty","sheet":" ".join(map(str,out))},"note":note})
-assert out==[4,2,1,3,7]
-fill(CH,F,block(cells(arr),["node"],st),"@@TRACE1@@")
-arr=[6,2,9,1,4]
-L,R=parse(arr)
-pend=[];out=[];st=[];cur=0
-while cur is not None or pend:
+CH='15-trees-dfs'; F='03-iterative-dfs.md'
+def sv(st,arr): return " ".join(str(arr[i]) for i in reversed(st)) or "empty"
+# trace 1: iterative preorder on [7,3,9,1,5]
+arr=[7,3,9,1,5]; L,R=parse(arr); st=[0]; out=[]; steps=[]
+while st:
+    i=st.pop(); out.append(arr[i])
+    if R[i] is not None: st.append(R[i])
+    if L[i] is not None: st.append(L[i])
+    pushed=[arr[c] for c in (R[i],L[i]) if c is not None]
+    nt=("Its children go in as "+" then ".join(map(str,pushed))+", so the left child ends on top.") if pushed else "It has no children, so nothing is pushed."
+    steps.append({"at":{"node":i},"vars":{"stack":sv(st,arr),"out":" ".join(map(str,out))},"note":f"The loop pops the node {arr[i]} and writes it. {nt}"})
+assert out==[7,3,1,5,9]
+fill(CH,F,block(cells(arr),["node"],steps),"@@TRACE1@@")
+# trace 2: iterative postorder with last visited on [4,2,None,1,3]
+arr=[4,2,None,1,3]; L,R=parse(arr); assert L[0]==1 and R[0] is None and L[1]==3 and R[1]==4
+st=[];out=[];steps=[];cur=0;last=None
+def vs(): return " ".join(map(str,out)) or "empty"
+while cur is not None or st:
     while cur is not None:
-        pend.append(cur)
-        st.append({"at":{"node":cur},"vars":{"pile":" ".join(str(arr[p]) for p in pend),"sheet":" ".join(map(str,out))},"note":f"The cursor reaches the room {arr[cur]}, which is put on the pile before the cursor goes to its left."})
+        st.append(cur)
+        steps.append({"at":{"node":cur},"vars":{"stack":sv(st,arr),"out":vs()},"note":f"The loop pushes the node {arr[cur]} and moves to its left child."})
         cur=L[cur]
-    cur=pend.pop()
-    out.append(arr[cur])
-    st.append({"at":{"node":cur},"vars":{"pile":" ".join(str(arr[p]) for p in pend) or "empty","sheet":" ".join(map(str,out))},"note":f"The left side is finished, so the room {arr[cur]} is taken off the pile and written down, and the cursor moves to its right."})
-    cur=R[cur]
-assert out==[1,2,4,6,9]
-fill(CH,F,block(cells(arr),["node"],st),"@@TRACE2@@")
+    top=st[-1]
+    if R[top] is not None and R[top]!=last:
+        cur=R[top]
+        steps.append({"at":{"node":top},"vars":{"stack":sv(st,arr),"out":vs()},"note":f"The node {arr[top]} is on top and its right child {arr[R[top]]} is not the last node written, so the loop enters the right side."})
+    else:
+        out.append(arr[top]); last=st.pop()
+        why="it has no right child" if R[top] is None else f"its right child {arr[R[top]]} was just written"
+        steps.append({"at":{"node":top},"vars":{"stack":sv(st,arr),"out":vs()},"note":f"The node {arr[top]} is on top and {why}, so the loop writes and pops it."})
+assert out==[1,3,2,4]
+fill(CH,F,block(cells(arr),["node"],steps),"@@TRACE2@@")
