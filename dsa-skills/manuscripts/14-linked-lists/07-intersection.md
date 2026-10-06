@@ -141,9 +141,9 @@ final class ListMeet {
 }
 ```
 
-In `alignByLength`, both loops can run, but only one of them runs for any input, because one of `la - lb` and `lb - la` is not positive. In `headSwitch`, a walker that reaches `null` takes one step to leave `null` and move to the other head, and that step counts toward the walk.
+In `alignByLength`, only one of the two advance loops runs for any input, because one of `la - lb` and `lb - la` is not positive. In `headSwitch`, a walker that reaches `null` takes one step to leave `null` and move to the other head, and that step counts toward the walk.
 
-- **Time** is O(m + n) for both methods, because each reference makes at most `m + n` steps.
+- **Time** is O(m + n) for both methods, because each reference makes at most `m + n + 1` steps.
 - **Space** is O(1), because both methods store a few references and counters.
 
 <!-- stage: applicability -->

@@ -46,7 +46,7 @@ The copy method visits each node three times. What does it cost in time and in e
 Three walks cost O(n) time, and the array costs O(n) extra memory. A caller that holds the last node still finds the old last node at the old end, now holding the first value, so the node did not move.
 ```
 
-The array doubles the memory for the list, and a list of one million nodes needs a four-megabyte array of `int` values. The second cost is harder to see. The method moves values between nodes and moves no node. Code that keeps a reference to a particular node, such as a cursor or an entry in a map, sees a different value after the call.
+The array adds memory on top of the list, and a list of one million nodes needs a four-megabyte array of `int` values. The second cost is harder to see. The method moves values between nodes and moves no node. Code that keeps a reference to a particular node, such as a cursor or an entry in a map, sees a different value after the call.
 
 When each node carries a large object or a reference that other structures share, copying the values is wrong in both ways. A method that rewires the links keeps each node with its value and needs no array.
 

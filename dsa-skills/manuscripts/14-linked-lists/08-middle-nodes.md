@@ -40,7 +40,7 @@ On `1, 2, 3, 4, 5` the method counts 5 and then takes 2 hops, so it returns the 
 ```predict
 For a list of n nodes, how many next hops does the count-then-walk method follow in total, and how many hops would a method need that finds the split point while it walks the list once?
 
-The method follows n hops to count and about n / 2 hops to walk, so about 3n / 2 hops in total, which is still O(n). A single pass that stops at the end needs only n hops.
+The method follows n hops to count and about n / 2 hops to walk, so about 3n / 2 hops in total, which is still O(n). A method with two references reads each node once with the leading reference, and the trailing reference only revisits nodes that are already loaded, so the source is traversed once.
 ```
 
 The big-O class does not change, and the constant does. When each hop is a disk read or a network call, the extra half is half a pass of real cost. The method also needs a second traversal that starts from the head, which a read-once source cannot offer.
@@ -132,7 +132,7 @@ final class MiddleNodes {
 
 The method `secondMiddle` accepts an empty list and returns `null`. The method `firstMiddle` reads `fast.next` immediately, so it needs a non-empty list, and a caller with an empty list must test `head` first. In both methods the order of the two tests matters, because `&&` stops at the first false test and never evaluates the second.
 
-- **Time** is O(n), because the fast reference makes at most `n` hops and the slow reference makes at most `n / 2`.
+- **Time** is O(n), because the fast reference makes at most `n` hops and the slow reference makes at most `n / 2` hops over nodes the fast reference already loaded.
 - **Space** is O(1), because the methods store two references.
 
 <!-- stage: applicability -->

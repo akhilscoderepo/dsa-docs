@@ -12,7 +12,7 @@ A snapshot must share nothing with the live outline. Each link of the snapshot m
 <!-- stage: contributions -->
 ### What Each Earlier Idea Adds
 
-Two earlier ideas combine in this lesson, and each supplies one half. The linked list lessons of this chapter supply the order and the identity of the nodes. A walk along `next` reaches every node exactly once, and a node reference names one particular node even when another node holds the same value. The list alone cannot answer a question about an arbitrary link, because the only way to reach a node from a random link is a walk from the head.
+Two earlier ideas combine in this lesson, and each supplies one half. The linked list lessons of this chapter supply the order and the identity of the nodes. A walk along `next` reaches every node exactly once, and a node reference names one particular node even when another node holds the same value. The list alone cannot answer a question about an arbitrary link, because the only way to find the copy of the node that a random link reaches is a walk from the head.
 
 The hash map lessons of Chapter 04 supply the lookup. A map answers "what is stored for this key" in constant time on average. If the key is the original node, the stored value can be the copy of that node. The map alone cannot say in which order to build the copies or how many nodes exist, and the list supplies exactly that. Together they give a copy in which every link lands on the right node, and neither idea needs the other half's work done by a slower method.
 

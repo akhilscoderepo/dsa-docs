@@ -159,7 +159,7 @@ The invariant of every splice is that for each pair of neighbors, `a.next == b` 
 
 The false friend of a flattening method is the list that looks right when read forward. A test that only reads along `next` passes while the `prev` links are wrong. A good check reads the list in both directions, and compares the two readings.
 
-#### Using A Stack When The Order Changes
+#### Using A Stack Instead Of A Tail Search
 
 The splice needs the child tail, which costs one walk. A method that holds the old successors on an explicit stack avoids the tail search. The Vary exercise below uses the stack. A recursive method that returns the tail of each chain is the third form, and the Recognize exercise uses it.
 

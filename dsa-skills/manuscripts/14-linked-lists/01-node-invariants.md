@@ -102,7 +102,7 @@ Now insert a new node holding 5 after the node 7. The cells list the nodes in cr
 {"cells":[4,7,9,5],"pointers":["node","new"],"steps":[{"at":{"node":1,"new":-1},"vars":{"chain":"4,7,9","saved":"-"},"note":"Start: the list reads 4,7,9. The pointer node marks the node 7, and no new node exists yet."},{"at":{"node":1,"new":-1},"vars":{"chain":"4,7,9","saved":9},"note":"saved copies node.next, which is the node 9. The node 9 now has two references, node.next and saved."},{"at":{"node":1,"new":3},"vars":{"chain":"4,7,9","saved":9},"note":"The new node 5 is built with its next field set to saved. The list still reads 4,7,9 from the head, and the node 5 is not linked yet."},{"at":{"node":1,"new":3},"vars":{"chain":"4,7,5,9","saved":9},"note":"node.next now points to the new node. The list reads 4,7,5,9, and every old node is still reachable."}]}
 ```
 
-The trace shows why the order matters. After `saved` copies the old successor, the node 9 has two references, one from `node.next` and one from `saved`. Only then does `node.next` change, and the final step links the new node to `saved`, so no node is lost.
+The trace shows why the order matters. After `saved` copies the old successor, the node 9 has two references, one from `node.next` and one from `saved`. Only then does `node.next` change, and the final step writes `node.next`, because the new node already holds `saved`, so no node is lost.
 
 <!-- stage: code -->
 ### Walking And Inserting In Code
@@ -145,7 +145,7 @@ The rule that every kept node stays reachable after each statement is the invari
 
 #### Separating Lists From Arrays
 
-Arrays and lists look alike on paper. A false friend is a feature that looks the same in two structures and behaves differently, and each feature of one has such a partner in the other. An array answers "what is at index `i`" in O(1). A list answers it in O(i), because the answer needs `i` hops. The false friend here is index access. A statement that asks for the position `i` of a list does not get the array's speed.
+Arrays and lists look alike on paper. A false friend is a habit that is right in a nearby setting and wrong in this one, and array indexing is the habit that fails here. An array answers "what is at index `i`" in O(1). A list answers it in O(i), because the answer needs `i` hops. The false friend here is index access. A statement that asks for the position `i` of a list does not get the array's speed.
 
 #### Watching For Null
 
