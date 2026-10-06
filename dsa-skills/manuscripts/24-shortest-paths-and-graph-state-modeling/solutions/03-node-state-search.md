@@ -87,6 +87,17 @@ public final class CouponFlag {
         return b >= inf ? -1 : b;
     }
 
+    /** Summary of a distance array: count of finite entries and the largest one. */
+    static int[] summary(int[] d) {
+        int count = 0;
+        int max = 0;
+        // Each node with a nonnegative distance is reached.
+        for (int x : d) {
+            if (x >= 0) { count++; max = Math.max(max, x); }
+        }
+        return new int[] {count, max};
+    }
+
     public static void main(String[] args) {
         // The two examples of the exercise.
         if (cheapest(4, new int[][] {{0, 1, 8}, {1, 2, 2}, {2, 3, 100}, {0, 2, 30}}, 0, 3) != 60) throw new AssertionError("ex1");
@@ -199,6 +210,17 @@ public final class DistanceByState {
         }
         for (long[] r : d) for (int j = 0; j <= k; j++) if (r[j] >= inf) r[j] = -1;
         return d;
+    }
+
+    /** Summary of a distance array: count of finite entries and the largest one. */
+    static int[] summary(int[] d) {
+        int count = 0;
+        int max = 0;
+        // Each node with a nonnegative distance is reached.
+        for (int x : d) {
+            if (x >= 0) { count++; max = Math.max(max, x); }
+        }
+        return new int[] {count, max};
     }
 
     public static void main(String[] args) {
@@ -371,7 +393,7 @@ public final class SameNodeFuture {
 <!-- id: sp-alternating-colors -->
 
 **Approach.**
-The method runs a breadth-first search over positions `(node, last)`, where `last` is 0 for a red arrival, 1 for a blue arrival and 2 for the start. A position with `last == 0` may take only blue edges, a position with `last == 1` only red edges, and the start position takes both. Each position is visited once, and the first visit gives its distance because every edge has length one. The answer for a node is the smaller distance of its red and blue positions, and `0` for node 0.
+The method runs a breadth-first search over positions `(node, last)`, where `last` is 0 for a red arrival, 1 for a blue arrival and 2 for the start. A position with `last == 0` may take only blue edges, a position with `last == 1` only red edges, and the start position takes both. Each position is visited once, and the first visit gives its distance because every edge has length one. The distance of a node is the smaller distance of its red and blue positions, and `0` for node 0. A final pass counts the finite distances and takes their maximum.
 
 The invariant is that the queue holds positions in nondecreasing distance, so a position marked visited already has its shortest alternating distance. One visited flag per node would discard a red arrival when a blue arrival came first, and then the red-only continuation could never run.
 
@@ -464,10 +486,21 @@ public final class AlternatingColors {
         return ans;
     }
 
+    /** Summary of a distance array: count of finite entries and the largest one. */
+    static int[] summary(int[] d) {
+        int count = 0;
+        int max = 0;
+        // Each node with a nonnegative distance is reached.
+        for (int x : d) {
+            if (x >= 0) { count++; max = Math.max(max, x); }
+        }
+        return new int[] {count, max};
+    }
+
     public static void main(String[] args) {
         // The two examples of the exercise.
-        if (!Arrays.equals(shortest(3, new int[][] {{0, 1}, {1, 2}}, new int[][] {}), new int[] {0, 1, -1})) throw new AssertionError("ex1");
-        if (!Arrays.equals(shortest(5, new int[][] {{0, 1}, {2, 3}, {3, 4}}, new int[][] {{1, 2}, {1, 3}, {0, 0}, {4, 4}}), new int[] {0, 1, 2, 2, 3})) throw new AssertionError("ex2");
+        if (!Arrays.equals(summary(shortest(3, new int[][] {{0, 1}, {1, 2}}, new int[][] {})), new int[] {2, 1})) throw new AssertionError("ex1");
+        if (!Arrays.equals(summary(shortest(5, new int[][] {{0, 1}, {2, 3}, {3, 4}}, new int[][] {{1, 2}, {1, 3}, {0, 0}, {4, 4}})), new int[] {5, 3})) throw new AssertionError("ex2");
         // The trace graph: node 2 is reached at distance 1 by red, but node 3 needs the blue arrival at distance 2.
         if (!Arrays.equals(shortest(4, new int[][] {{0, 1}, {0, 2}, {2, 3}}, new int[][] {{1, 2}, {1, 0}}), new int[] {0, 1, 1, 3})) throw new AssertionError("trace graph");
         // Random multigraphs with self loops against the relaxation oracle.

@@ -276,17 +276,17 @@ The false friend is the array with one distance for each node. It is correct for
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Consider `n` nodes numbered from `0`. The list `red` holds the red edges `[a, b]` from `a` to `b`, and the list `blue` holds the blue edges in the same form. A walk alternates colors when no two consecutive edges of the walk have the same color. Return an `int[]` named `answer` of length `n`, where `answer[x]` is the fewest edges in an alternating walk from node `0` to node `x`, or `-1` when none exists. The empty walk gives `answer[0] = 0`.
+**Problem.** Consider `n` nodes numbered from `0`. The list `red` holds the red edges `[a, b]` from `a` to `b`, and the list `blue` holds the blue edges in the same form. A walk alternates colors when no two consecutive edges of the walk have the same color. For each node `x`, let `d(x)` be the fewest edges in an alternating walk from node `0` to `x`, where the empty walk gives `d(0) = 0`. Return an `int[]` of length 2: entry 0 is the number of nodes with a finite `d`, and entry 1 is the largest finite `d`.
 
 **Constraints.** The limits are:
 - **Nodes** satisfy `1 <= n <= 100`.
 - **Red and blue lists** each have length in `0..400`, and repeats and self loops may occur.
 - **Start** has no previous color, so the walk may begin with either color.
-- **Result** has length `n`, and `answer[0]` is always 0.
+- **Result** has length 2, and node 0 always counts as reached.
 
-**Example 1.** Input `n = 3`, `red = [[0,1],[1,2]]`, `blue = []`, output `[0,1,-1]`.
+**Example 1.** Input `n = 3`, `red = [[0,1],[1,2]]`, `blue = []`, output `[2,1]`.
 
-**Example 2.** Input `n = 5`, `red = [[0,1],[2,3],[3,4]]`, `blue = [[1,2],[1,3],[0,0],[4,4]]`, output `[0,1,2,2,3]`.
+**Example 2.** Input `n = 5`, `red = [[0,1],[2,3],[3,4]]`, `blue = [[1,2],[1,3],[0,0],[4,4]]`, output `[5,3]`.
 
 **Hint.** If a node is reached first by a red edge, which edges can its walk take next, and what happens to a later blue arrival at the same node?
 
