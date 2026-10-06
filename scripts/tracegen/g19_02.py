@@ -1,37 +1,33 @@
 from common import *
 CH='19-recursion-and-backtracking'; F='02-choose-explore-unchoose.md'
-# trace 1: options ab, c, de with one shared path
-options=["ab","c","de"]; path=[]; res=[]; steps=[]
-def rec(d):
-    if d==len(options):
-        res.append("".join(path))
-        steps.append({"at":{"depth":d},"vars":{"path":"".join(path),"stored":len(res)},"note":f"Every course is decided, so a copy of the path is stored as menu {len(res)}, reading {''.join(path)}."})
-        return
-    for ch in options[d]:
-        path.append(ch)
-        steps.append({"at":{"depth":d},"vars":{"path":"".join(path),"stored":len(res)},"note":f"The course at depth {d} puts {ch} on the path, which now reads {''.join(path)}."})
-        rec(d+1)
-        path.pop()
-        steps.append({"at":{"depth":d},"vars":{"path":"".join(path) or "empty","stored":len(res)},"note":f"Everything below {ch} is finished, so {ch} is lifted and the path reads {''.join(path) or 'nothing'} again."})
-rec(0)
-assert res==["acd","ace","bcd","bce"]
-fill(CH,F,block(options,["depth"],steps),"@@TRACE1@@")
-# trace 2: climbing 3 stairs, stored by reference (aliasing bug)
-cells=["1","2"]; path=[]; res=[]; steps=[]
-def snap(): return str([list(r) for r in res])
-def climb(left):
-    if left==0:
-        res.append(path)  # aliasing on purpose
-        steps.append({"at":{"pick":-1},"vars":{"path":str(path),"stored":snap()},"note":"The stairs are used up, and the working list itself is stored, with no copy, as result "+str(len(res))+"."})
-        return
-    for k,s in enumerate((1,2)):
-        if s>left: continue
-        path.append(s)
-        steps.append({"at":{"pick":k},"vars":{"path":str(path),"stored":snap()},"note":f"A step of {s} goes on the path, leaving {left-s} stairs."})
-        climb(left-s)
-        path.pop()
-        steps.append({"at":{"pick":k},"vars":{"path":str(path),"stored":snap()},"note":f"The step of {s} is lifted, and every stored result that is this same list changes with it."})
-climb(3)
-assert all(r==[] for r in res) and len(res)==3
-steps.append({"at":{"pick":-1},"vars":{"path":str(path),"stored":snap()},"note":"The search is over and the path is empty, so all three stored results are the same empty list."})
-fill(CH,F,block(cells,["pick"],steps),"@@TRACE2@@")
+cells=["flag 0","flag 1"]
+def run(undo):
+    st=[]; path=[]; out=[]
+    def show(): return ",".join(map(str,path)) or "empty"
+    def rec(d,limit):
+        if d==2:
+            out.append(list(path))
+            st.append({"at":{"d":d},"vars":{"path":show(),"stored":len(out)},"note":f"The depth equals 2, so the leaf stores the snapshot [{show()}]."}); return
+        for v in (0,1):
+            if not undo and len(st)>=8: return
+            path.append(v)
+            st.append({"at":{"d":d},"vars":{"path":show(),"stored":len(out)},"note":f"The call at depth {d} adds {v}, so the working path is [{show()}]."})
+            rec(d+1,limit)
+            if undo:
+                path.pop()
+                st.append({"at":{"d":d},"vars":{"path":show(),"stored":len(out)},"note":f"The undo step removes the {v} from depth {d}, so the working path is [{show()}]."})
+    rec(0,0); return st,out
+st,out=run(True)
+assert out==[[0,0],[0,1],[1,0],[1,1]] and len(st)==16
+fill(CH,F,block(cells,["d"],st),"@@TRACE1@@")
+# no undo: hand simulation of the first 5 steps
+path=[];st=[];out=[]
+def add(d,v,note):
+    path.append(v); st.append({"at":{"d":d},"vars":{"path":",".join(map(str,path)),"stored":len(out)},"note":note})
+add(0,0,"The call at depth 0 adds 0, so the working path is [0].")
+add(1,0,"The call at depth 1 adds 0, so the working path is [0,0].")
+out.append(list(path)); st.append({"at":{"d":2},"vars":{"path":"0,0","stored":1},"note":"The depth equals 2, so the leaf stores the snapshot [0,0]. No undo step follows."})
+add(1,1,"The loop at depth 1 adds 1 to a path that still holds two entries, so the path is [0,0,1], longer than the two decisions.")
+out.append(list(path)); st.append({"at":{"d":2},"vars":{"path":"0,0,1","stored":2},"note":"The leaf stores the snapshot [0,0,1], a third entry for two flags. The output is already wrong."})
+assert len(path)==3
+fill(CH,F,block(cells,["d"],st),"@@TRACE2@@")
