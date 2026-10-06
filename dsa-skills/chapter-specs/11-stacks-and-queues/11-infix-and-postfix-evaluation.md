@@ -1,4 +1,4 @@
-# Lesson spec: Infix And Postfix Evaluation
+# Lesson spec: Evaluate Postfix And Convert Infix
 
 **Recognition cue.** Operators must be applied either from explicit postfix order or after infix precedence has been made explicit. **Invariant.** In postfix evaluation, the value stack contains completed operands; for a binary operator, pop right before left. **False friend.** Reversing operand order is invisible for addition but breaks subtraction and division.
 

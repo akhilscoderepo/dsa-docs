@@ -14,7 +14,7 @@
 08. Group Queue Items By Level  ->  08-queue-based-level-processing.md
 09. Decode Nested Repeat Groups  ->  09-nested-decoding.md
 10. Evaluate Expressions Written As Text  ->  10-calculator-and-string-parsing.md
-11. Infix And Postfix Evaluation  ->  11-infix-and-postfix-evaluation.md
+11. Evaluate Postfix And Convert Infix  ->  11-infix-and-postfix-evaluation.md
 
 # Chapter 11: Stacks and queues
 

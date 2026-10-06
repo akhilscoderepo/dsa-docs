@@ -153,7 +153,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Spaces And Unary Sign.** Distinguish a binary operator from a leading or post-parenthesis unary sign under the chosen grammar.
 - **Recognize - LC 224 Basic Calculator.** Save the outer result and sign at `(`, then fold the completed inner expression at `)`.
 
-### Infix And Postfix Evaluation
+### Evaluate Postfix And Convert Infix
 
 **Recognition cue.** Operators must be applied either from explicit postfix order or after infix precedence has been made explicit. **Invariant.** In postfix evaluation, the value stack contains completed operands; for a binary operator, pop right before left. **False friend.** Reversing operand order is invisible for addition but breaks subtraction and division.
 
