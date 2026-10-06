@@ -168,7 +168,7 @@ The false friend is the restart from the root. It looks simple and returns corre
 
 **Prerequisites.** The left spine and the stack from this lesson.
 
-**Problem.** Given the root of a binary search tree, push the left spine of the root onto a stack and return the keys on the stack, listed from the bottom of the stack to the top. A null root gives an empty list. The top of the stack holds the smallest key of the tree.
+**Problem.** Take the root of a binary search tree, push its left spine onto a stack, and return the keys on the stack, listed from the bottom of the stack to the top. A null root gives an empty list. The top of the stack holds the smallest key of the tree.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4, and all keys are distinct.
@@ -189,7 +189,7 @@ The false friend is the restart from the root. It looks simple and returns corre
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given the root of a binary search tree and an integer `j`, create the stack with the left spine of the root and then perform `j` pops. After each pop, push the left spine of the right child of the popped node. Return the keys on the stack after the jth pop, from the bottom of the stack to the top.
+**Problem.** A search tree and an integer `j` are supplied. Create the stack with the left spine of the root and then perform `j` pops. After each pop, push the left spine of the right child of the popped node. Return the keys on the stack after the jth pop, from the bottom of the stack to the top.
 
 **Constraints.** The limits are:
 - **Nodes** number between 1 and 10^4, and all keys are distinct.
@@ -210,7 +210,7 @@ The false friend is the restart from the root. It looks simple and returns corre
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the root of a binary search tree, create the stack as before and call a pop while the stack is not empty, which is the test `hasNext`. Return a two-element array holding the number of keys returned and the largest size the stack reached. A null root gives zero keys and a largest size of zero.
+**Problem.** For a search tree, create the stack as before and call a pop while the stack is not empty, which is the test `hasNext`. Return a two-element array holding the number of keys returned and the largest size the stack reached. A null root gives zero keys and a largest size of zero.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4, and all keys are distinct.
