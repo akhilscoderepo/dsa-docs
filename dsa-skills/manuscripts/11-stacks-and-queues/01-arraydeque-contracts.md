@@ -82,13 +82,13 @@ Both traces use the input values 4, 7 and 9. The cells are the input, and the po
 The stack trace adds all three values at the last end. It then removes three times at the last end, so the output is 9, 7, 4. The deque never holds an element between the two ends that is out of place, because only one end changes after the additions.
 
 ```trace
-{"cells":[4,7,9],"pointers":["in"],"steps":[{"at":{"in":0},"vars":{"deque":"[4]","out":"[]"},"note":"addLast(4) puts 4 at the last end."},{"at":{"in":1},"vars":{"deque":"[4, 7]","out":"[]"},"note":"addLast(7) puts 7 at the last end."},{"at":{"in":2},"vars":{"deque":"[4, 7, 9]","out":"[]"},"note":"addLast(9) puts 9 at the last end."},{"at":{"in":3},"vars":{"deque":"[4, 7]","out":"[9]"},"note":"removeLast() returns 9."},{"at":{"in":3},"vars":{"deque":"[4]","out":"[9, 7]"},"note":"removeLast() returns 7."},{"at":{"in":3},"vars":{"deque":"[]","out":"[9, 7, 4]"},"note":"removeLast() returns 4."}]}
+{"cells":[4,7,9],"pointers":["in"],"steps":[{"at":{"in":0},"vars":{"deque":"[4]","out":"[]"},"note":"addLast(4) puts 4 at the last end."},{"at":{"in":1},"vars":{"deque":"[4, 7]","out":"[]"},"note":"addLast(7) puts 7 at the last end."},{"at":{"in":2},"vars":{"deque":"[4, 7, 9]","out":"[]"},"note":"addLast(9) puts 9 at the last end."},{"at":{"in":2},"vars":{"deque":"[4, 7]","out":"[9]"},"note":"removeLast() returns 9."},{"at":{"in":1},"vars":{"deque":"[4]","out":"[9, 7]"},"note":"removeLast() returns 7."},{"at":{"in":0},"vars":{"deque":"[]","out":"[9, 7, 4]"},"note":"removeLast() returns 4."}]}
 ```
 
 The queue trace adds the same values at the last end in the same order. It removes at the first end, so the output is 4, 7, 9. The only change from the first trace is which end supplies removals, and that one change turns reversal into preserved order.
 
 ```trace
-{"cells":[4,7,9],"pointers":["in"],"steps":[{"at":{"in":0},"vars":{"deque":"[4]","out":"[]"},"note":"addLast(4) puts 4 at the last end."},{"at":{"in":1},"vars":{"deque":"[4, 7]","out":"[]"},"note":"addLast(7) puts 7 at the last end."},{"at":{"in":2},"vars":{"deque":"[4, 7, 9]","out":"[]"},"note":"addLast(9) puts 9 at the last end."},{"at":{"in":3},"vars":{"deque":"[7, 9]","out":"[4]"},"note":"removeFirst() returns 4."},{"at":{"in":3},"vars":{"deque":"[9]","out":"[4, 7]"},"note":"removeFirst() returns 7."},{"at":{"in":3},"vars":{"deque":"[]","out":"[4, 7, 9]"},"note":"removeFirst() returns 9."}]}
+{"cells":[4,7,9],"pointers":["in"],"steps":[{"at":{"in":0},"vars":{"deque":"[4]","out":"[]"},"note":"addLast(4) puts 4 at the last end."},{"at":{"in":1},"vars":{"deque":"[4, 7]","out":"[]"},"note":"addLast(7) puts 7 at the last end."},{"at":{"in":2},"vars":{"deque":"[4, 7, 9]","out":"[]"},"note":"addLast(9) puts 9 at the last end."},{"at":{"in":0},"vars":{"deque":"[7, 9]","out":"[4]"},"note":"removeFirst() returns 4."},{"at":{"in":1},"vars":{"deque":"[9]","out":"[4, 7]"},"note":"removeFirst() returns 7."},{"at":{"in":2},"vars":{"deque":"[]","out":"[4, 7, 9]"},"note":"removeFirst() returns 9."}]}
 ```
 
 <!-- stage: code -->

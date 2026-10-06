@@ -61,7 +61,7 @@ A **frame** is a pair that the decoder saves on a stack when it reads `[`. The p
 
 #### Resolve At The Bracket, Not At The Digit
 
-To **resolve** a group is to replace it by its repeated text. The decoder resolves a group only at its `]`, because only then the body is complete. It pops the top frame, appends the body to the parent text as many times as the frame says, and continues with the parent text as the current text. Digits only build the number: each digit changes it to `count * 10 + digit`. The number gets used at the next `[` and never earlier. The invariant is that the current text holds the decoded part of the innermost open group, and the stack holds one frame for each open group around it.
+To **resolve** a group is to replace it by its repeated text. The decoder resolves a group only at its `]`, because only then the body is complete. It pops the top frame, appends the body to the parent text as many times as the frame says, and continues with the parent text as the current text. Digits only build the number: each digit changes it to `count * 10 + digit`. The number gets used at the next `[` and never earlier. The invariant is that the current text holds the decoded part of the open group nearest the cursor, and the stack holds one frame for each open group around it.
 
 <!-- stage: variables -->
 ### What The Single Pass Keeps

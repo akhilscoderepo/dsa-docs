@@ -70,7 +70,7 @@ The scan keeps four pieces of state.
 
 #### A Valid Nested Text
 
-The first text is `([]{})`. The cells are its six characters, and the pointer `i` marks the character under test. The scan pushes `(` and then `[`. The `]` pops `[`, which is its partner, so one pending opening leaves. The scan pushes `{`, and `}` pops it. The final `)` pops `(`, and the stack is empty at the end. The text is valid.
+The first text is `([]{})`. The cells are its six characters, and the pointer `i` sits on the symbol being tested. The scan pushes `(` and then `[`. The `]` pops `[`, which is its partner, so one pending opening leaves. The scan pushes `{`, and `}` pops it. The final `)` pops `(`, and the stack is empty at the end. The text is valid.
 
 ```trace
 {"cells":["(","[","]","{","}",")"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[(]","char":"("},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"[(, []","char":"["},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"[(]","char":"]","popped":"["},"note":"] pops [, which is its partner."},{"at":{"i":3},"vars":{"stack":"[(, {]","char":"{"},"note":"{ is an opening, so the scan pushes it."},{"at":{"i":4},"vars":{"stack":"[(]","char":"}","popped":"{"},"note":"} pops {, which is its partner."},{"at":{"i":5},"vars":{"stack":"[]","char":")","popped":"("},"note":") pops (, which is its partner."},{"at":{"i":6},"vars":{"stack":"[]","result":"true"},"note":"The text ends with an empty stack, so the result is true."}]}

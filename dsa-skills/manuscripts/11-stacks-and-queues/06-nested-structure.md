@@ -10,7 +10,7 @@ A report tool reads the JSON array `[1, [2, 9], 4]` and prints the sum of the nu
 <!-- stage: naive -->
 ### Find Each Group And Add Its Numbers
 
-A direct method takes each opening symbol in turn. It scans forward to find the matching closing symbol, then adds the digits between them. When it meets an inner group on the way, it jumps to that group's closing symbol so the inner digits are skipped. The input here uses single digits and parentheses, so `[1, [2, 9], 4]` is written `(1(29)4)`.
+A direct method takes each opening symbol in turn. It scans forward to find the matching closing symbol, then adds the digits between them. When it meets an inner group on the way, it jumps to that group's closing symbol so the inner digits are skipped. The input here uses single digits and round brackets, so `[1, [2, 9], 4]` is written `(1(29)4)`.
 
 ```java
 static int[] directSumsByRescan(String s) {

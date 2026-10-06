@@ -5,7 +5,7 @@
 <!-- id: sq-one-bracket-type -->
 
 **Approach.**
-The method pushes a marker for each `(` and pops one marker for each `)`. A `)` that finds the stack empty has no opening to close, so the method returns false at once. After the last character, any marker left on the stack is an opening without a closing, so the method returns whether the stack is empty. The invariant is that the stack size equals the number of openings read and not yet closed. The harness also confirms that `pop()` on an empty `ArrayDeque` throws `NoSuchElementException`, which is why the emptiness test comes first.
+The method pushes a marker for each `(` and pops one marker for each `)`. A `)` that finds the stack empty has no opening to close, so the method returns false at once. After the last character, any marker left on the stack is an opening without a closing, so the method answers true only when the stack is empty. At every step, the stack size equals the number of openings read and not yet closed. The harness also confirms that `pop()` on an empty `ArrayDeque` throws `NoSuchElementException`, which is why the emptiness test comes first.
 
 **Complexity.**
 - **Time** is O(n), because each character causes one push or one pop of constant cost.
@@ -187,7 +187,7 @@ public final class ThreeDelimiterTypes {
 <!-- id: sq-premature-close-leftover -->
 
 **Approach.**
-The stack stores the index of each opening, so a failure can report a position. A closing symbol at index `i` fails when the stack is empty or when the character at the popped index is not its partner, and the method returns `i` at the first such failure. A failure before the end of the text is always the first closing that cannot be matched, because all earlier characters were consistent. When the scan ends without failure, the stack top is the newest pending opening, and the method returns its index. An empty stack means the text is valid, so the method returns -1. The invariant is that the stack holds the indices of the pending openings, increasing from bottom to top.
+The stack stores the index of each opening, so a failure can report a position. A closing symbol at index `i` fails when the stack is empty or when the character at the popped index is not its partner, and the method returns `i` at the first such failure. A failure before the end of the text is always the first closing that cannot be matched, because all earlier characters were consistent. When the scan ends without failure, the stack top is the newest pending opening, and the method returns its index. An empty stack means the text is valid, so the method gives -1 as the sentinel. Throughout the scan, the stack holds the indices of the pending openings, increasing from bottom to top.
 
 **Complexity.**
 - **Time** is O(n), because each character causes at most one push or pop.
