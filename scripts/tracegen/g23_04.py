@@ -1,43 +1,32 @@
 from common import *
-CH='23-directed-graphs-and-union-find'
-F='04-find-compression.md'
-def run(parent, queries, cells):
-    steps=[]
-    for q in queries:
-        x=q; root=x; hops=0
-        # climb
-        path=[]
-        while True:
-            steps.append({"at":{"x":x},"vars":{"hops":hops,"rewrites":0},
-              "note":f"Query {q}: card {x} is read; "+("it names itself, so it is the root." if parent[x]==x else f"it names {parent[x]}, one more hop.")})
-            if parent[x]==x: break
-            x=parent[x]; hops+=1
-        root=x
-        rewrites=0; x=q
-        if parent[x]==root:
-            steps[-1]["note"]+=f" Member {q} already follows the root, so nothing is rewritten."
-        while parent[x]!=root:
-            nxt=parent[x]; parent[x]=root; rewrites+=1
-            steps.append({"at":{"x":x},"vars":{"hops":hops,"rewrites":rewrites},
-              "note":f"Query {q}: card {x} now names the root {root} instead of {nxt}."})
-            x=nxt
-        yield_ = (q,hops,rewrites,root)
-        run.res.append(yield_)
-    return steps
-run.res=[]
-# trace 1
-p1=[0]+list(range(0,7))
-assert p1==[0,0,1,2,3,4,5,6]
-s1=run(p1,[7],list(range(8)))
-assert run.res[-1]==(7,7,6,0), run.res[-1]
-assert p1==[0,0,0,0,0,0,0,0]
-assert len(s1)==14
-fill(CH,F,block(list(range(8)),["x"],s1),"@@TRACE1@@")
-# trace 2
-run.res=[]
-p2=[0,0,0,1,1,3,4,2,7]
-s2=run(p2,[8,6,8],list(range(9)))
-assert run.res==[(8,3,2,0),(6,3,2,0),(8,1,0,0)], run.res
-print(run.res, p2)
-assert p2==[0,0,0,1,0,3,0,0,0], p2
-fill(CH,F,block(list(range(9)),["x"],s2),"@@TRACE2@@")
+CH = '23-directed-graphs-and-union-find'; F = '04-find-compression.md'
+
+def run(parent, queries):
+    parent = list(parent); steps = []
+    ps = lambda: "-".join(map(str, parent))
+    for x in queries:
+        root = x; walked = 0
+        steps.append({"at": {"cur": x}, "vars": {"parents": ps(), "phase": "walk", "root": "unknown"}, "note": f"The call find({x}) starts its first pass at machine {x}."})
+        while parent[root] != root:
+            nxt = parent[root]
+            walked += 1
+            steps.append({"at": {"cur": nxt}, "vars": {"parents": ps(), "phase": "walk", "root": "unknown"}, "note": f"Machine {root} links to machine {nxt}, so the walk moves there. Links followed so far: {walked}."})
+            root = nxt
+        steps[-1]["vars"]["root"] = root
+        steps[-1]["note"] += f" Machine {root} links to itself, so it is the root."
+        cur = x
+        while parent[cur] != root:
+            nxt = parent[cur]
+            parent[cur] = root
+            steps.append({"at": {"cur": cur}, "vars": {"parents": ps(), "phase": "rewrite", "root": root}, "note": f"The second pass sets the link of machine {cur} to root {root} and then moves to machine {nxt}."})
+            cur = nxt
+        steps.append({"at": {"cur": cur}, "vars": {"parents": ps(), "phase": "rewrite", "root": root}, "note": f"Machine {cur} already links to root {root}, so the second pass stops. The call returns {root} after {walked} links."})
+    return parent, steps
+
+p1, s1 = run([0,0,1,2,3], [4])
+assert p1 == [0,0,0,0,0]
+fill(CH, F, block(list(range(5)), ["cur"], s1), "@@TRACE1@@")
+p2, s2 = run([0,0,1,2,3,3,4], [6, 5])
+assert p2 == [0,0,0,0,0,0,0] or True
+assert p2 == [0,0,0,0,0,0,0]
+fill(CH, F, block(list(range(7)), ["cur"], s2), "@@TRACE2@@")

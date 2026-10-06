@@ -1,40 +1,28 @@
+import sys
 from common import *
 CH='23-directed-graphs-and-union-find'
-F='02-dfs-topological-state.md'
-def adj(n,edges):
-    a=[[] for _ in range(n)]
-    for u,v in edges: a[u].append(v)
-    for r in a: r.sort()
-    return a
-def walk(n,edges):
-    a=adj(n,edges); col=[0]*n; steps=[]; post=[]; st={'loop':False}
-    def snap(room,note):
-        steps.append({"at":{"room":room},"vars":{"open":col.count(1),"listed":len(post)},"note":note})
+def run(n,edges,ph):
+    adj=[[] for _ in range(n)]
+    for a,b in edges: adj[a].append(b)
+    color=[0]*n; post=[]; st=[]; found=[None]
+    sys.setrecursionlimit(10000)
+    C=lambda: "".join("WGB"[c] for c in color)
+    P=lambda: "-".join(map(str,post)) if post else "empty"
+    def snap(cur,note): st.append({"at":{"cur":cur},"vars":{"colors":C(),"post":P()},"note":note})
     def visit(u):
-        col[u]=1; snap(u,f"Room {u} turns gray: the walk enters it.")
-        for v in a[u]:
-            if col[v]==1:
-                st['loop']=True
-                snap(u,f"The door from {u} to {v} leads to gray room {v}, so the gray corridor plus this door is a circle; no order exists.")
-                return
-            if col[v]==2:
-                snap(u,f"The door from {u} to {v} leads to black room {v}, already finished by another branch; it is accepted and ignored.")
-            else:
-                visit(v)
-                if st['loop']: return
-        col[u]=2; post.append(u)
-        snap(u,f"Room {u} turns black and is listed in slot {n-len(post)}.")
-    for r in range(n):
-        if col[r]==0 and not st['loop']: visit(r)
-    return steps,post,st['loop']
-s1,p1,l1=walk(6,[[0,1],[0,2],[1,3],[2,3],[2,4],[3,5],[4,3]])
-assert not l1 and p1==[5,3,1,4,2,0], p1
-order=p1[::-1]; pos={v:i for i,v in enumerate(order)}
-for u,v in [[0,1],[0,2],[1,3],[2,3],[2,4],[3,5],[4,3]]: assert pos[u]<pos[v]
-s1[-1]['note']+=f" The tour is {order}."
-fill(CH,F,block(list(range(6)),["room"],s1),"@@TRACE1@@")
-s2,p2,l2=walk(5,[[0,1],[1,2],[2,3],[3,1],[0,4]])
-assert l2 and p2==[] and len(s2)==5, (l2,p2,len(s2))
-s2[-1]['note']+=" The answer is the empty list."
-fill(CH,F,block(list(range(5)),["room"],s2),"@@TRACE2@@")
-print(order,len(s1),len(s2))
+        color[u]=1; snap(u,f"The search enters vertex {u} and turns it gray.")
+        for v in adj[u]:
+            if color[v]==1:
+                snap(u,f"The edge from {u} to {v} reaches a gray vertex, so it closes a cycle and the method reports the pair {u} and {v}."); found[0]=(u,v); return True
+            if color[v]==2:
+                snap(u,f"The edge from {u} to {v} reaches a black vertex, so the search skips it."); continue
+            if visit(v): return True
+        color[u]=2; post.append(u); snap(u,f"All edges of vertex {u} are scanned, so it turns black and joins the postorder.")
+        return False
+    cyc=False
+    for v in range(n):
+        if color[v]==0 and visit(v): cyc=True; break
+    fill(CH,'02-dfs-topological-state.md',block(list(range(n)),["cur"],st),ph)
+    return cyc,list(reversed(post)),found[0]
+c,o,f=run(5,[(0,1),(0,2),(1,3),(2,3),(4,2)],"@@TRACE1@@"); assert not c and o==[4,0,2,1,3]
+c,o,f=run(4,[(0,1),(1,2),(2,3),(3,1)],"@@TRACE2@@"); assert c and f==(3,1)

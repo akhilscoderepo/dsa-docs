@@ -40,7 +40,7 @@ State prerequisite knowledge in the finished chapter. Confirm the input/mutation
 
 ## Released Combination Lessons
 
-### Graph And Union-Find
+### Merge Groups As Edges Arrive
 
 Graph edges define connectivity events; union-find compresses each evolving component to one representative.
 
