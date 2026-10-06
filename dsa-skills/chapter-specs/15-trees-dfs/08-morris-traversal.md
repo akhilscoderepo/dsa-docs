@@ -1,4 +1,4 @@
-# Lesson spec: Morris Traversal
+# Lesson spec: Walk A Tree Without A Stack
 
 **Recognition cue.** Inorder or preorder traversal is required with `O(1)` auxiliary space and temporary reversible threading is allowed. **Invariant.** A predecessor's null right link temporarily points back to the current node and is restored on the second encounter. **False friend.** Forgetting restoration corrupts the input tree and can create a cycle.
 

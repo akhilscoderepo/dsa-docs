@@ -1,4 +1,4 @@
-# Lesson spec: Iterative DFS
+# Lesson spec: Walk A Tree With Your Own Stack
 
 **Recognition cue.** Depth-first order is required without relying on the language call stack. **Invariant.** The explicit stack contains subtrees or frames still to be processed. **False friend.** Pushing left before right produces right-first preorder because the stack is LIFO.
 

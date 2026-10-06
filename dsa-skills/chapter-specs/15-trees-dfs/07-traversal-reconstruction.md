@@ -1,4 +1,4 @@
-# Lesson spec: Traversal Reconstruction
+# Lesson spec: Rebuild A Tree From Two Orders
 
 **Recognition cue.** Two traversal orders describe one tree with unique values, and one order identifies the root while the other partitions subtrees. **Invariant.** Each recursive call owns matching traversal ranges for exactly one subtree. **False friend.** Preorder alone does not uniquely determine an arbitrary binary tree. **Java hazard.** Map inorder values to indices to avoid repeated linear searches.
 

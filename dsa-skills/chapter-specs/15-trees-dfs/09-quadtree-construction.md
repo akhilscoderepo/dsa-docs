@@ -1,4 +1,4 @@
-# Lesson spec: Quadtree Construction
+# Lesson spec: Split A Grid Into Four Parts
 
 **Recognition cue.** A square grid region becomes one leaf when uniform; otherwise it divides into four equal quadrants. **Invariant.** Each call owns a precise row/column region and returns the node representing exactly that region. **False friend.** Creating four children before testing uniformity produces unnecessary structure.
 

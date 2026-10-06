@@ -4,15 +4,15 @@
 
 ## Lesson order
 
-01. Tree Representation  ->  01-tree-representation.md
-02. Recursive Traversal Orders  ->  02-recursive-traversal-orders.md
-03. Iterative DFS  ->  03-iterative-dfs.md
-04. Depth And Path State  ->  04-depth-and-path-state.md
-05. Diameter And Subtree Returns  ->  05-diameter-and-subtree-returns.md
-06. Balance Sentinels  ->  06-balance-sentinels.md
-07. Traversal Reconstruction  ->  07-traversal-reconstruction.md
-08. Morris Traversal  ->  08-morris-traversal.md
-09. Quadtree Construction  ->  09-quadtree-construction.md
+01. Store A Tree In Node Objects  ->  01-tree-representation.md
+02. Visit Nodes In Three Orders  ->  02-recursive-traversal-orders.md
+03. Walk A Tree With Your Own Stack  ->  03-iterative-dfs.md
+04. Track Depth And Paths Down A Tree  ->  04-depth-and-path-state.md
+05. Find The Longest Path In A Tree  ->  05-diameter-and-subtree-returns.md
+06. Check Balance In One Pass  ->  06-balance-sentinels.md
+07. Rebuild A Tree From Two Orders  ->  07-traversal-reconstruction.md
+08. Walk A Tree Without A Stack  ->  08-morris-traversal.md
+09. Split A Grid Into Four Parts  ->  09-quadtree-construction.md
 
 # Chapter 15: Trees: DFS
 

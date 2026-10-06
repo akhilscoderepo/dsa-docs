@@ -78,7 +78,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Tree Representation
+### Store A Tree In Node Objects
 
 **Recognition cue.** Data has one root and recursively nested children rather than one linear successor. **Invariant.** Each recursive call owns one node's subtree; `null` represents an empty binary subtree, while an N-ary node owns a child collection. **False friend.** A general graph may contain cycles or multiple parents; a tree traversal does not need visited state under the tree contract.
 
@@ -87,7 +87,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty And Single-Node Trees.** Define the result of each operation at `null` before writing recursion.
 - **Recognize - LC 559 Maximum Depth of N-ary Tree.** Generalize the child-to-parent depth recurrence.
 
-### Recursive Traversal Orders
+### Visit Nodes In Three Orders
 
 **Recognition cue.** Every node must be processed once, and the relative position of the node action and child calls determines meaning. **Invariant.** Preorder acts before children, inorder between binary children, and postorder after children. **False friend.** These are not interchangeable labels; reconstruction and sorted BST traversal depend on order.
 
@@ -96,7 +96,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty And One-Sided Trees.** Preserve order when one child is null.
 - **Recognize - LC 145 Binary Tree Postorder Traversal.** Delay the node action until both subtree calls return.
 
-### Iterative DFS
+### Walk A Tree With Your Own Stack
 
 **Recognition cue.** Depth-first order is required without relying on the language call stack. **Invariant.** The explicit stack contains subtrees or frames still to be processed. **False friend.** Pushing left before right produces right-first preorder because the stack is LIFO.
 
@@ -105,7 +105,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Deep Skewed Tree.** Avoid recursive stack overflow and handle an initially null root.
 - **Recognize - LC 145 Binary Tree Postorder Traversal.** Use explicit visit state or a controlled reverse-preorder construction.
 
-### Depth And Path State
+### Track Depth And Paths Down A Tree
 
 **Recognition cue.** A result depends on distance from the root, height below a node, or the values along the current root-to-node path. **Invariant.** Downward state is extended before a child call and restored afterward; upward state summarizes a completed subtree. **False friend.** A path list shared across recursion requires backtracking, while an integer depth passed by value does not.
 
@@ -114,7 +114,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Leaf Versus Internal Match.** Accept a target sum only where the problem requires a leaf.
 - **Recognize - LC 113 Path Sum II.** Maintain a mutable path and remove the current node after both child calls.
 
-### Diameter And Subtree Returns
+### Find The Longest Path In A Tree
 
 **Recognition cue.** The best answer may pass through a node using both children, but the parent can continue through only one child. **Invariant.** Each call returns the best single branch usable by its parent and separately updates the best complete path seen. **False friend.** Returning the full two-branch path upward would fork and cease to be a path.
 
@@ -123,7 +123,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Nodes Versus Edges.** State which unit the return value and final diameter use.
 - **Recognize - LC 124 Binary Tree Maximum Path Sum.** Return one nonnegative downward gain while allowing the complete answer to use both sides.
 
-### Balance Sentinels
+### Check Balance In One Pass
 
 **Recognition cue.** Every subtree needs a normal summary unless a failure below should terminate or propagate immediately. **Invariant.** The helper returns height for a balanced subtree and a distinguished sentinel for an unbalanced one. **False friend.** Recomputing height separately at every node turns a linear solution into quadratic time on a skewed tree.
 
@@ -132,7 +132,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Tree Height.** Choose a base height consistent with the balance difference formula.
 - **Recognize - LC 110 Balanced Binary Tree.** Combine detection and height calculation in one postorder pass.
 
-### Traversal Reconstruction
+### Rebuild A Tree From Two Orders
 
 **Recognition cue.** Two traversal orders describe one tree with unique values, and one order identifies the root while the other partitions subtrees. **Invariant.** Each recursive call owns matching traversal ranges for exactly one subtree. **False friend.** Preorder alone does not uniquely determine an arbitrary binary tree. **Java hazard.** Map inorder values to indices to avoid repeated linear searches.
 
@@ -141,7 +141,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Range And Skewed Tree.** Stop exactly when the owned range is empty.
 - **Recognize - LC 105 Construct Binary Tree from Preorder and Inorder Traversal.** Combine the index map with a moving preorder position.
 
-### Morris Traversal
+### Walk A Tree Without A Stack
 
 **Recognition cue.** Inorder or preorder traversal is required with `O(1)` auxiliary space and temporary reversible threading is allowed. **Invariant.** A predecessor's null right link temporarily points back to the current node and is restored on the second encounter. **False friend.** Forgetting restoration corrupts the input tree and can create a cycle.
 
@@ -150,7 +150,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: No Left Child And Existing Thread.** Visit directly in the first case and restore in the second.
 - **Recognize - LC 94 Binary Tree Inorder Traversal.** Implement Morris inorder and verify the tree is unchanged afterward.
 
-### Quadtree Construction
+### Split A Grid Into Four Parts
 
 **Recognition cue.** A square grid region becomes one leaf when uniform; otherwise it divides into four equal quadrants. **Invariant.** Each call owns a precise row/column region and returns the node representing exactly that region. **False friend.** Creating four children before testing uniformity produces unnecessary structure.
 
@@ -161,7 +161,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Tree DFS Returns
+### Return Results From Subtrees
 
 The tree supplies recursive subproblems; DFS return state compresses each completed subtree into the fact its parent needs. The central design decision is separating the value returned upward from any complete answer formed at the current node.
 

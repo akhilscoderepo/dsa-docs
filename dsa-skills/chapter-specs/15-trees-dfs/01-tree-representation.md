@@ -1,4 +1,4 @@
-# Lesson spec: Tree Representation
+# Lesson spec: Store A Tree In Node Objects
 
 **Recognition cue.** Data has one root and recursively nested children rather than one linear successor. **Invariant.** Each recursive call owns one node's subtree; `null` represents an empty binary subtree, while an N-ary node owns a child collection. **False friend.** A general graph may contain cycles or multiple parents; a tree traversal does not need visited state under the tree contract.
 

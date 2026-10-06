@@ -1,4 +1,4 @@
-# Lesson spec: Diameter And Subtree Returns
+# Lesson spec: Find The Longest Path In A Tree
 
 **Recognition cue.** The best answer may pass through a node using both children, but the parent can continue through only one child. **Invariant.** Each call returns the best single branch usable by its parent and separately updates the best complete path seen. **False friend.** Returning the full two-branch path upward would fork and cease to be a path.
 

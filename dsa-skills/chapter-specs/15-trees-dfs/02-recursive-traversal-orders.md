@@ -1,4 +1,4 @@
-# Lesson spec: Recursive Traversal Orders
+# Lesson spec: Visit Nodes In Three Orders
 
 **Recognition cue.** Every node must be processed once, and the relative position of the node action and child calls determines meaning. **Invariant.** Preorder acts before children, inorder between binary children, and postorder after children. **False friend.** These are not interchangeable labels; reconstruction and sorted BST traversal depend on order.
 

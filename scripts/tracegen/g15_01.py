@@ -1,27 +1,33 @@
 from common import *
 from tr import *
-CH='15-trees-dfs'
-F='01-tree-representation.md'
-arr=[4,2,7,1,3]
-L,R=parse(arr)
-st=[]
-def go(i):
-    if i is None: return 0
-    a=go(L[i]); b=go(R[i]); c=1+a+b
-    la=arr[L[i]] if L[i] is not None else None
-    note=(f"The node {arr[i]} has " + (f"the left subtree of size {a}" if L[i] is not None else "an empty left subtree") + " and " + (f"the right subtree of size {b}" if R[i] is not None else "an empty right subtree") + f", so its count is 1 + {a} + {b} = {c}.")
-    st.append({"at":{"node":i},"vars":{"count":c},"note":note})
-    return c
-assert go(0)==5
-fill(CH,F,block(cells(arr),["node"],st),"@@TRACE1@@")
-ch=[[1,2,3],[4],[],[5],[],[]]
-st=[]
-def depth(i):
-    d=0
-    for c in ch[i]: d=max(d,depth(c))
-    d+=1
-    note=(f"The node {i} is a leaf with an empty child list, so its depth is 1." if not ch[i] else f"The node {i} takes the largest child depth {d-1} and adds one, so its depth is {d}.")
-    st.append({"at":{"node":i},"vars":{"depth":d},"note":note})
-    return d
-assert depth(0)==3
-fill(CH,F,block([str(i) for i in range(6)],["node"],st),"@@TRACE2@@")
+CH='15-trees-dfs'; F='01-tree-representation.md'
+def run(arr):
+    L,R=parse(arr); n=len(arr); steps=[]
+    def go(i,label):
+        if i is None:
+            steps.append({"at":{"node":n},"vars":{"result":0},"note":f"The call receives null, which is an empty subtree, and returns 0."})
+            return 0
+        steps.append({"at":{"node":i},"vars":{"result":"?"},"note":f"The call receives the node {arr[i]} and asks the {label}."} if False else {"at":{"node":i},"vars":{"result":"?"},"note":f"The call receives the node {arr[i]} and counts its left side first."})
+        a=go(L[i],"left"); b=go(R[i],"right")
+        r=1+a+b
+        steps.append({"at":{"node":i},"vars":{"result":r},"note":f"Both sides of the node {arr[i]} are counted as {a} and {b}, so the call returns 1 + {a} + {b} = {r}."})
+        return r
+    t=go(0,"root"); return steps,t
+arr=[2,1,3]; s,t=run(arr); assert t==3
+fill(CH,F,block(cells(arr),["node"],s),"@@TRACE1@@")
+# second tree: missing left child, chain on the right; null cell at index 1
+arr=[7,None,8,None,9]
+L,R=parse(arr); assert L[0] is None and R[0]==2 and R[2]==4
+steps=[]
+def go2(i,side):
+    if i is None:
+        pos={"rootleft":1,"l2":3}.get(side,len(arr))
+        steps.append({"at":{"node":pos},"vars":{"result":0},"note":"The call receives null, so it returns 0 without reading any field."})
+        return 0
+    steps.append({"at":{"node":i},"vars":{"result":"?"},"note":f"The call receives the node {arr[i]} and counts its left side first."})
+    a=go2(L[i],"rootleft" if i==0 else ("l2" if i==2 else "x")); b=go2(R[i],"x")
+    r=1+a+b
+    steps.append({"at":{"node":i},"vars":{"result":r},"note":f"The sides of the node {arr[i]} return {a} and {b}, so the call returns {r}."})
+    return r
+assert go2(0,"root")==3
+fill(CH,F,block(cells(arr),["node"],steps),"@@TRACE2@@")

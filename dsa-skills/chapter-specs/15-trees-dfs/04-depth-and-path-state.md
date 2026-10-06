@@ -1,4 +1,4 @@
-# Lesson spec: Depth And Path State
+# Lesson spec: Track Depth And Paths Down A Tree
 
 **Recognition cue.** A result depends on distance from the root, height below a node, or the values along the current root-to-node path. **Invariant.** Downward state is extended before a child call and restored afterward; upward state summarizes a completed subtree. **False friend.** A path list shared across recursion requires backtracking, while an integer depth passed by value does not.
 

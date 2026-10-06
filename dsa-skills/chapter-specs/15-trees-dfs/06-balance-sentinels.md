@@ -1,4 +1,4 @@
-# Lesson spec: Balance Sentinels
+# Lesson spec: Check Balance In One Pass
 
 **Recognition cue.** Every subtree needs a normal summary unless a failure below should terminate or propagate immediately. **Invariant.** The helper returns height for a balanced subtree and a distinguished sentinel for an unbalanced one. **False friend.** Recomputing height separately at every node turns a linear solution into quadratic time on a skewed tree.
 
