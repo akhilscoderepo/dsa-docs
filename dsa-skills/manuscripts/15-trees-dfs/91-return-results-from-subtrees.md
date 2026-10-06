@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### One Report That Needs Three Walks
 
-An organization chart is stored as a binary tree, where each manager has up to two direct reports. A reporting tool must print three facts about the whole chart. The first is the longest chain of managers. The second is the largest difference between the depths of the two sides of any manager. The third is the longest chain between any two people. The first version runs one walk per fact. Each walk asks for the height of both sides at every manager, so the heights are measured again and again.
+An organization chart is stored as a binary tree, where each manager has up to two direct reports. A reporting tool must print three facts about the whole chart. The first is the longest chain of managers. The second is the largest difference between the depths of the two sides of any manager. The third is the longest chain between any two people. The first version measures each fact separately at every manager. Each walk asks for the height of both sides at every manager, so the heights are measured again and again.
 
 On a chart of 100,000 people arranged as a long chain of managers, the report takes far longer than the size of the chart suggests. The facts overlap, because each one is built from the heights of the same subtrees. The question is how one walk can hand each manager the numbers that all three facts need.
 
@@ -29,7 +29,7 @@ final class RepeatedHeights {
         Node(int val, Node left, Node right) { this.val = val; this.left = left; this.right = right; }
     }
 
-    static final class Report { int longestChain; int worstGap; }
+    static final class Report { int longestPath; int worstGap; }
 
     static int height(Node node) {
         if (node == null) return 0;                              // an empty side has no managers
@@ -40,7 +40,7 @@ final class RepeatedHeights {
         if (node == null) return;
         int lh = height(node.left);                              // measure the left side from scratch
         int rh = height(node.right);                             // measure the right side from scratch
-        rep.longestChain = Math.max(rep.longestChain, lh + rh);  // the best chain with this manager on top
+        rep.longestPath = Math.max(rep.longestPath, lh + rh);  // the best chain with this manager on top
         rep.worstGap = Math.max(rep.worstGap, Math.abs(lh - rh)); // the largest lopsided pair so far
         visit(node.left, rep);
         visit(node.right, rep);
@@ -48,7 +48,7 @@ final class RepeatedHeights {
 }
 ```
 
-Take the chart with root 6 and right child 8. The left child 4 has a left child 2, which has a left child 1. The method sets `longestChain` to 4 and `worstGap` to 2. The answers are correct for every chart.
+Take the chart with root 6 and right child 8. The left child 4 has a left child 2, which has a left child 1. The method sets `longestPath` to 4 and `worstGap` to 2. The answers are correct for every chart.
 
 <!-- stage: bottleneck -->
 ### Adding Up The Repeated Measuring
@@ -103,7 +103,7 @@ The local numbers `left height + right height` and `|left height - right height|
 The chart has root 5. The root's left child is 3, which has children 1 and 4, and the node 1 has a left child 0. The root's right child is 8, which has a right child 9. A step shows a call that finishes. The variables show the record that it returns.
 
 ```trace
-{"cells":["5","3","8","1","4","null","9","0"],"pointers":["node"],"steps":[{"at":{"node":7},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 0 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":3},"vars":{"height":2,"gap":1,"path":1},"note":"The call on the node 1 finishes. The children report heights 1 and 0, so the local gap is 1 and the local path is 1 edges. The record is height 2, gap 1, path 1."},{"at":{"node":4},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 4 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":1},"vars":{"height":3,"gap":1,"path":3},"note":"The call on the node 3 finishes. The children report heights 2 and 1, so the local gap is 1 and the local path is 3 edges. The record is height 3, gap 1, path 3."},{"at":{"node":6},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 9 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":2},"vars":{"height":2,"gap":1,"path":1},"note":"The call on the node 8 finishes. The children report heights 0 and 1, so the local gap is 1 and the local path is 1 edges. The record is height 2, gap 1, path 1."},{"at":{"node":0},"vars":{"height":4,"gap":1,"path":5},"note":"The call on the node 5 finishes. The children report heights 3 and 2, so the local gap is 1 and the local path is 5 edges. The record is height 4, gap 1, path 5."}]}
+{"cells":["5","3","8","1","4","null","9","0"],"pointers":["node"],"steps":[{"at":{"node":7},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 0 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":3},"vars":{"height":2,"gap":1,"path":1},"note":"The call on the node 1 finishes. The children report heights 1 and 0, so the local gap is 1 and the local path is 1 edge. The record is height 2, gap 1, path 1."},{"at":{"node":4},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 4 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":1},"vars":{"height":3,"gap":1,"path":3},"note":"The call on the node 3 finishes. The children report heights 2 and 1, so the local gap is 1 and the local path is 3 edges. The record is height 3, gap 1, path 3."},{"at":{"node":6},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 9 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":2},"vars":{"height":2,"gap":1,"path":1},"note":"The call on the node 8 finishes. The children report heights 0 and 1, so the local gap is 1 and the local path is 1 edge. The record is height 2, gap 1, path 1."},{"at":{"node":0},"vars":{"height":4,"gap":1,"path":5},"note":"The call on the node 5 finishes. The children report heights 3 and 2, so the local gap is 1 and the local path is 5 edges. The record is height 4, gap 1, path 5."}]}
 ```
 
 The root merges the records of 3 and 8. The left side has height 3 and the right side height 2, so the local gap is 1, and the local path is 5 edges. The record of the root reports the largest gap 1 and the longest path 5.
@@ -113,7 +113,7 @@ The root merges the records of 3 and 8. The left side has height 3 and the right
 The second chart is a chain: each manager has only a left report, and the chain has four managers.
 
 ```trace
-{"cells":["1","2","null","3","null","4"],"pointers":["node"],"steps":[{"at":{"node":5},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 4 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":3},"vars":{"height":2,"gap":1,"path":1},"note":"The call on the node 3 finishes. The children report heights 1 and 0, so the local gap is 1 and the local path is 1 edges. The record is height 2, gap 1, path 1."},{"at":{"node":1},"vars":{"height":3,"gap":2,"path":2},"note":"The call on the node 2 finishes. The children report heights 2 and 0, so the local gap is 2 and the local path is 2 edges. The record is height 3, gap 2, path 2."},{"at":{"node":0},"vars":{"height":4,"gap":3,"path":3},"note":"The call on the node 1 finishes. The children report heights 3 and 0, so the local gap is 3 and the local path is 3 edges. The record is height 4, gap 3, path 3."}]}
+{"cells":["1","2","null","3","null","4"],"pointers":["node"],"steps":[{"at":{"node":5},"vars":{"height":1,"gap":0,"path":0},"note":"The call on the node 4 finishes. The children report heights 0 and 0, so the local gap is 0 and the local path is 0 edges. The record is height 1, gap 0, path 0."},{"at":{"node":3},"vars":{"height":2,"gap":1,"path":1},"note":"The call on the node 3 finishes. The children report heights 1 and 0, so the local gap is 1 and the local path is 1 edge. The record is height 2, gap 1, path 1."},{"at":{"node":1},"vars":{"height":3,"gap":2,"path":2},"note":"The call on the node 2 finishes. The children report heights 2 and 0, so the local gap is 2 and the local path is 2 edges. The record is height 3, gap 2, path 2."},{"at":{"node":0},"vars":{"height":4,"gap":3,"path":3},"note":"The call on the node 1 finishes. The children report heights 3 and 0, so the local gap is 3 and the local path is 3 edges. The record is height 4, gap 3, path 3."}]}
 ```
 
 Each call merges a record with an empty right record. The gap grows with the chain, and the path equals the height minus one at each step. The root reports a gap of 3 and a path of 3 edges after one visit per manager.
@@ -159,7 +159,7 @@ The invariant is that every field of the record describes exactly the finished s
 
 #### Finding The False Friend
 
-Returning the local answer instead of the branch looks like it saves a field, and it is the false friend of this lesson. The parent would extend a path that already uses both sides. The reverse mistake is as common. A sentinel looks like the same tool, but it fits only a yes or no answer. A report of numbers needs the full record.
+Returning the local answer instead of the branch looks like it saves a field, and it is the false friend of this lesson. The parent would extend a path that already uses both sides. Using a sentinel here is the opposite mistake. A sentinel fits only a yes or no answer. A report of numbers needs the full record.
 
 #### No-Go Conditions
 

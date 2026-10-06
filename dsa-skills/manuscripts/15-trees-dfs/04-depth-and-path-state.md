@@ -49,7 +49,7 @@ The tree is a chain of n nodes, and no route reaches the target. How many values
 The call at depth k copies a list of k - 1 values, so the copies cost 0 + 1 + ... + (n - 1) values in total, which is O(n^2). The leaf adds up all n values once.
 ```
 
-The time is O(n^2) on a chain, and the extra memory is O(n^2) in total, although only one route is live at a time. The method repeats work in two ways. Every call rebuilds a list that its parent already held, and the leaf adds up values that the calls above it had already seen.
+The time is O(n^2) on a chain, and the extra memory is O(n^2) in total, because every open call keeps its own copy. The method repeats work in two ways. Every call rebuilds a list that its parent already held, and the leaf adds up values that the calls above it had already seen.
 
 Both costs come from the same choice. The method stores the whole route and recomputes facts from it. If each call received the fact it needs, such as how much of the target is still missing, it would need no list at all. If the walk does need the list, as when the answer must print the route, one shared list could be extended and then shortened again.
 

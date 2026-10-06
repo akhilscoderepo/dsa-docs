@@ -73,7 +73,7 @@ The **early exit** is the immediate return of the sentinel. Once a child fails, 
 ### The Values That A Call Handles
 
 - **l** and **r** hold the results of the two child calls, and each is a valid height or the sentinel.
-- **sentinel** is `-1`, which no valid height can equal.
+- **FAIL** is the sentinel `-1`, which no valid height can equal.
 - **diff** is the absolute difference of two valid heights, and it exists only after both checks pass.
 - **result** is the sentinel or the height of the node, which is one plus the larger child height.
 

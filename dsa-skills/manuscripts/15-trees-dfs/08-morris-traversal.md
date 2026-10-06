@@ -5,14 +5,14 @@
 <!-- stage: context -->
 ### A Routine With No Spare Memory
 
-A firmware routine must read every value of a binary tree that lives in a fixed memory region, in sorted position order from the left side to the right side. The routine runs inside an interrupt handler, where the program may not allocate and the call stack holds only a few hundred bytes. The tree can have 50,000 nodes in a long chain. A recursive walk overflows the call stack, and the explicit stack of the previous lesson needs one entry per pending node, which is also too much memory.
+A firmware routine must read every value of a binary tree that lives in a fixed memory region, in inorder, with the left side first. The routine runs inside an interrupt handler, where the program may not allocate and the call stack holds only a few hundred bytes. The tree can have 50,000 nodes in a long chain. A recursive walk overflows the call stack, and the explicit stack from the lesson on walking with your own stack needs one entry per pending node, which is also too much memory.
 
 The walk must remember where to continue after it finishes the left side of a node. The routine has no place to store that information outside the tree. The question is whether the tree itself can hold it for a short time.
 
 <!-- stage: naive -->
 ### Keeping Pending Nodes In A Deque
 
-The method from the previous lesson stores every node that waits for its turn in a `Deque`. It pushes the left spine, pops a node, writes the value, and moves to the right child.
+The stack method stores every node that waits for its turn in a `Deque`. It pushes the left spine, pops a node, and moves to the right child. This version only measures the largest number of waiting nodes.
 
 ```java
 import java.util.*;
@@ -38,7 +38,7 @@ final class StackedInorder {
 }
 ```
 
-Take the tree with root 4 and right child 6, where the left child 2 has children 1 and 3. The method reaches a peak of 3 waiting nodes, which are 4, 2 and 1. The walk visits the values in the right order.
+Take the tree with root 4 and right child 6, where the left child 2 has children 1 and 3. The method reaches a peak of 3 waiting nodes, which are 4, 2 and 1. The stack never holds more than one path of the tree.
 
 <!-- stage: bottleneck -->
 ### Counting The Waiting Nodes
@@ -74,7 +74,7 @@ The **second arrival** at a node happens when the walk reaches the node again th
 
 #### Why The Cost Stays Linear
 
-Each edge that goes to a right child lies on the predecessor search of exactly one node. The walk runs that search twice at most, once to create the thread and once to remove it. The total work is O(n), and the extra memory is O(1), because the method keeps only two references.
+Each edge that goes to a right child lies on the predecessor search of at most one node. The walk runs that search twice at most, once to create the thread and once to remove it. The total work is O(n), and the extra memory is O(1), because the method keeps only two references.
 
 <!-- stage: variables -->
 ### The References And The Cases
@@ -91,7 +91,7 @@ The walk has three cases at each node. No left child means write the node and mo
 
 #### Walking A Five-Node Tree
 
-The tree has root 4 and right child 6. The root's left child is 2, which has children 1 and 3. The pointer `cur` marks the node where the walk stands, and `pred` marks the predecessor when a search runs. The variable `threads` lists the links that exist now, written as the node that holds the link and its target.
+The tree has root 4 and right child 6. The root's left child is 2, which has children 1 and 3. The pointer `cur` marks the node where the walk stands, and `pred` marks the predecessor when a search runs. A `pred` value of -1 means that no search ran at that step. The variable `threads` lists the links that exist now, written as the node that holds the link and its target.
 
 ```trace
 {"cells":["4","2","6","1","3"],"pointers":["cur","pred"],"steps":[{"at":{"cur":0,"pred":4},"vars":{"out":"empty","threads":"3 to 4"},"note":"The predecessor of the node 4 is the node 3, and its right reference is empty. The walk stores a thread to 4 and moves to the left child."},{"at":{"cur":1,"pred":3},"vars":{"out":"empty","threads":"1 to 2, 3 to 4"},"note":"The predecessor of the node 2 is the node 1, and its right reference is empty. The walk stores a thread to 2 and moves to the left child."},{"at":{"cur":3,"pred":-1},"vars":{"out":"1","threads":"1 to 2, 3 to 4"},"note":"The node 1 has no left child, so the walk writes it and moves right, along a thread back to an ancestor."},{"at":{"cur":1,"pred":3},"vars":{"out":"1 2","threads":"3 to 4"},"note":"The predecessor 1 already links to the node 2, so this is the second arrival. The walk removes the thread, writes 2 and moves right."},{"at":{"cur":4,"pred":-1},"vars":{"out":"1 2 3","threads":"3 to 4"},"note":"The node 3 has no left child, so the walk writes it and moves right, along a thread back to an ancestor."},{"at":{"cur":0,"pred":4},"vars":{"out":"1 2 3 4","threads":"none"},"note":"The predecessor 3 already links to the node 4, so this is the second arrival. The walk removes the thread, writes 4 and moves right."},{"at":{"cur":2,"pred":-1},"vars":{"out":"1 2 3 4 6","threads":"none"},"note":"The node 6 has no left child and no right link, so the walk writes it and ends."}]}

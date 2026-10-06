@@ -23,6 +23,6 @@ Each lesson adds one rule about what a call on a node owns and what it hands bac
 
 ### The Combination Lesson
 
-One lesson joins the depth, diameter and balance lessons into a single design.
+One lesson joins four earlier lessons into a single design.
 
 - **Return Results From Subtrees** has each call return a small record that its parent merges, so three facts come out of one walk.

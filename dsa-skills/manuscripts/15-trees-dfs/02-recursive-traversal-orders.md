@@ -218,7 +218,7 @@ These walks give depth-first orders only. If the answer needs the nodes grouped 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 100.
 - **Values** are integers between -100 and 100.
-- **Answer** has `n + 1` entries for `n` nodes, and `x` alone for an empty tree.
+- **Answer** has `2n + 1` entries, which are `n` values and `n + 1` markers `x`, and `x` alone for an empty tree.
 - **Mutation** is not allowed.
 
 **Example 1.** Input `root = null`, output `x`.

@@ -74,7 +74,7 @@ Each node enters the stack once and leaves once, so the walk costs O(n) time. Th
 
 - **stack** holds the nodes that still wait for work, and the top of the stack is the next node to resume.
 - **cur** holds the node that the loop is about to enter, or `null` when the loop must pop.
-- **last visited** holds the node written most recently, and it is `null` before the first write.
+- **last** holds the node written most recently, which the text calls the last visited node, and it is `null` before the first write.
 - **out** receives one value per node, in the order of the chosen walk.
 
 The preorder loop needs only `stack` and `out`. The inorder loop adds `cur`. The postorder loop adds `last visited`.
@@ -94,7 +94,7 @@ The root is popped first. Its right child 9 goes in before its left child 3, so 
 
 #### Postorder With A Missing Right Child
 
-The second tree has root 4 and left child 2, and the node 2 has children 1 and 3. The root has no right child. A step shows the node that was pushed, or the node that was written and popped.
+The second tree has root 4 and left child 2, and the node 2 has children 1 and 3. The root has no right child. A step shows the node that was pushed, the node whose right side is entered, or the node that was written and popped.
 
 ```trace
 {"cells":["4","2","null","1","3"],"pointers":["node"],"steps":[{"at":{"node":0},"vars":{"stack":"4","out":"empty"},"note":"The loop pushes the node 4 and moves to its left child."},{"at":{"node":1},"vars":{"stack":"2 4","out":"empty"},"note":"The loop pushes the node 2 and moves to its left child."},{"at":{"node":3},"vars":{"stack":"1 2 4","out":"empty"},"note":"The loop pushes the node 1 and moves to its left child."},{"at":{"node":3},"vars":{"stack":"2 4","out":"1"},"note":"The node 1 is on top and it has no right child, so the loop writes and pops it."},{"at":{"node":1},"vars":{"stack":"2 4","out":"1"},"note":"The node 2 is on top and its right child 3 is not the last node written, so the loop enters the right side."},{"at":{"node":4},"vars":{"stack":"3 2 4","out":"1"},"note":"The loop pushes the node 3 and moves to its left child."},{"at":{"node":4},"vars":{"stack":"2 4","out":"1 3"},"note":"The node 3 is on top and it has no right child, so the loop writes and pops it."},{"at":{"node":1},"vars":{"stack":"4","out":"1 3 2"},"note":"The node 2 is on top and its right child 3 was just written, so the loop writes and pops it."},{"at":{"node":0},"vars":{"stack":"empty","out":"1 3 2 4"},"note":"The node 4 is on top and it has no right child, so the loop writes and pops it."}]}
@@ -178,7 +178,7 @@ Pushing `left` before `right` looks natural, because the recursive method calls 
 
 #### No-Go Conditions
 
-If the tree is small and shallow, the recursive method is shorter and easier to check, so keep it. Suppose each node needs a value that its children computed, such as a height. The loop would then have to store partial results beside the nodes. Lessons 4 and 5 show that case with recursion first. The loop here does not make a tree safe to share. It reads the tree and never writes to it.
+If the tree is small and shallow, the recursive method is shorter and easier to check, so keep it. Suppose each node needs a value that its children computed, such as a height. The loop would then have to store partial results beside the nodes. Lessons 4 and 5 show that case with recursion first.
 
 <!-- stage: exercises -->
 ### Exercises

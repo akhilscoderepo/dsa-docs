@@ -42,5 +42,9 @@ Come back to this page after the lessons and again a few days later. Each questi
 ```
 
 ```quiz
+{"id": "tr-rev-last-written", "q": "An iterative postorder walk finds a node on top of the stack whose right child is the node it wrote most recently. What does it do with the top node?", "options": ["Writes it and pops it", "Enters the right child again", "Pushes its left spine", "Skips it"], "answer": 0, "explain": "The right side is already written, and the left side was written before it. Both sides are done, so the node is written next."}
+```
+
+```quiz
 {"id": "tr-rev-fork-return", "q": "A call returns the best path that uses both of its sides to its parent, and not the best single branch. What does the parent do wrong?", "options": ["It reads the wrong child", "It extends a path that already uses both sides", "It counts a leaf twice", "It skips the failure marker"], "answer": 1, "explain": "A path that uses two branches at a node cannot continue upward without forking. The parent would join one more branch to a shape that is no longer a single path."}
 ```
