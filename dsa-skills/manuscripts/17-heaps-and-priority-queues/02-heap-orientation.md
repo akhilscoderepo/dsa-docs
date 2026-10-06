@@ -37,7 +37,7 @@ The expression evaluates to Integer.MIN_VALUE, because +2^31 does not fit in an 
 
 The `int` range is asymmetric. The value `Integer.MIN_VALUE` is -2,147,483,648, and `Integer.MAX_VALUE` is 2,147,483,647. Negating the minimum wraps around to itself. Any trick that does arithmetic on priorities, such as `a - b`, wraps in the same way when the difference exceeds 2^31 - 1.
 
-Ties cause the second failure. Equal priorities have no required order in a heap, so the leaving order depends on array layout. Repairing this by polling every equal item and re-sorting the group costs O(k log k) per poll for a group of size k. The repair also needs each item to carry more than a number. The program needs a rule that compares whole items and never does arithmetic on the keys.
+Ties cause the second failure. Equal priorities have no required order in a heap, so the leaving order depends on array layout. Repairing this by polling every equal item and re-sorting the group costs O(g log g) per poll for a group of size g. The repair also needs each item to carry more than a number. The program needs a rule that compares whole items and never does arithmetic on the keys.
 
 <!-- stage: insight -->
 ### Letting A Comparator Define The Order
@@ -46,7 +46,7 @@ A **comparator** is an object with one method, `compare(a, b)`. It returns a neg
 
 #### Reversing The Direction
 
-A max-first queue needs the reverse rule. `Comparator.reverseOrder()` provides it for natural orders. For a custom rule, the program swaps the two arguments, as in `(a, b) -> Integer.compare(b, a)`. No stored value changes, so no value can overflow.
+A max-first queue needs the reverse rule. `Comparator.reverseOrder()` provides it for natural orders, and `Collections.reverseOrder()` from the previous lesson is the same rule. For a custom rule, the program swaps the two arguments, as in `(a, b) -> Integer.compare(b, a)`. No stored value changes, so no value can overflow.
 
 #### Comparing Without Arithmetic
 
@@ -86,7 +86,7 @@ The second trace compares `a = Integer.MAX_VALUE` with `b = -1`. The pointers `a
 #### Stepping Through Both Runs
 
 ```trace
-{"cells":[3,1,3,1],"pointers":["pick"],"steps":[{"at":{"pick":-1},"vars":{"left":"[1, 3, 0, 2]","order":"[]"},"note":"Four tasks wait. The rule is the smaller duration first and, for a tie, the smaller index."},{"at":{"pick":1},"vars":{"left":"[0, 2, 3]","order":"[1]"},"note":"The task 1 with duration 1 leaves. Task 3 has the same duration, and the tie-break picks the smaller index 1."},{"at":{"pick":3},"vars":{"left":"[0, 2]","order":"[1, 3]"},"note":"The task 3 with duration 1 leaves."},{"at":{"pick":0},"vars":{"left":"[2]","order":"[1, 3, 0]"},"note":"The task 0 with duration 3 leaves. Task 2 has the same duration, and the tie-break picks the smaller index 0."},{"at":{"pick":2},"vars":{"left":"[]","order":"[1, 3, 0, 2]"},"note":"The task 2 with duration 3 leaves."}]}
+{"cells":[3,1,3,1],"pointers":["pick"],"steps":[{"at":{"pick":-1},"vars":{"left":"[0, 1, 2, 3]","order":"[]"},"note":"Four tasks wait. The rule is the smaller duration first and, for a tie, the smaller index."},{"at":{"pick":1},"vars":{"left":"[0, 2, 3]","order":"[1]"},"note":"The task 1 with duration 1 leaves. Task 3 has the same duration, and the tie-break picks the smaller index 1."},{"at":{"pick":3},"vars":{"left":"[0, 2]","order":"[1, 3]"},"note":"The task 3 with duration 1 leaves."},{"at":{"pick":0},"vars":{"left":"[2]","order":"[1, 3, 0]"},"note":"The task 0 with duration 3 leaves. Task 2 has the same duration, and the tie-break picks the smaller index 0."},{"at":{"pick":2},"vars":{"left":"[]","order":"[1, 3, 0, 2]"},"note":"The task 2 with duration 3 leaves."}]}
 ```
 
 ```trace

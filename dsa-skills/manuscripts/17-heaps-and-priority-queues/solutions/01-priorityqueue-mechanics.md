@@ -131,7 +131,7 @@ The loop runs while two conditions hold. The count of finished polls is below `m
 The invariant is that the queue holds the original values minus the smallest `done` values, where `done` counts completed polls.
 
 **Complexity.**
-- **Time** is O(n log n), because the build makes n offers and the loop makes at most n polls, and each call costs O(log n).
+- **Time** is O(n log n), because the first loop makes n offers and the loop makes at most n polls, and each call costs O(log n).
 - **Space** is O(n), because the queue holds all values at first.
 
 ```java run

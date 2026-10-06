@@ -62,14 +62,14 @@ With an odd count, the lower half holds one extra value, and its root is the med
 
 #### Rebalancing After An Insertion
 
-A new value goes into the lower half when it is at most the lower root, and into the upper half otherwise. This placement keeps the order rule. The size rule may break by one. If the lower half now holds two more values than the upper half, the program moves the lower root to the upper half. If the upper half holds more than the lower half, it moves the upper root to the lower half. This step is the **rebalance**. Moving a root keeps the order rule, because that root is the nearest value to the boundary. Each insertion costs O(log n).
+The first value goes into the lower half. Later, a new value goes into the lower half when it is at most the lower root, and into the upper half otherwise. This placement keeps the order rule. The size rule may break by one. If the lower half now holds two more values than the upper half, the program moves the lower root to the upper half. If the upper half holds more than the lower half, it moves the upper root to the lower half. This step is the **rebalance**. Moving a root keeps the order rule, because that root is the nearest value to the boundary. Each insertion costs O(log n).
 
 <!-- names: lower half, upper half, rebalance -->
 
 <!-- stage: variables -->
 ### The State Of The Two Queues
 
-The tracker keeps two queues and relies on two facts about them.
+The tracker keeps two queues and relies on four pieces of state about them.
 
 - **Lower half** is a queue with the largest value at the root, and it holds `ceil(n / 2)` values.
 - **Upper half** is a queue with the smallest value at the root, and it holds `floor(n / 2)` values.

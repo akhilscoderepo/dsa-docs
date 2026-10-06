@@ -63,7 +63,7 @@ Heap order is a partial order. A parent is no larger than its children. Two sibl
 <!-- stage: variables -->
 ### The State Behind One Queue
 
-A queue is one array and one count, and the count is the only number the rules need.
+A queue is one array and one count, and these two are all of its state.
 
 - **Array position i** holds one item. Its parent sits at `(i - 1) / 2`, and its children sit at `2 * i + 1` and `2 * i + 2`.
 - **Size n** counts the stored items. Positions at or beyond `n` hold no item.
@@ -147,7 +147,7 @@ A second false friend is `contains` and `remove(Object)`. Both scan the array, s
 
 #### Recognizing The No-Go Cases
 
-A priority queue does not fit when the program needs the third smallest item without removing two others. It also does not fit when the program needs sorted order many times or access by rank. A single scan also beats the queue when the program reads the smallest value only once, because the scan and the build both cost O(n).
+A priority queue does not fit when the program needs the third smallest item without removing two others. It also does not fit when the program needs sorted order many times or access by rank. A single scan also beats the queue when the program reads the smallest value only once, because the scan costs O(n) while building the queue with n offers costs O(n log n).
 
 <!-- stage: exercises -->
 ### Exercises

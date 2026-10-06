@@ -173,6 +173,12 @@ final class LazyValues {
         return queue.peek();
     }
 
+    Integer poll() {
+        Integer m = min();                                           // cleans first, so m is live
+        if (m != null) { queue.poll(); live--; }
+        return m;
+    }
+
     int size() { return live; }
 }
 ```

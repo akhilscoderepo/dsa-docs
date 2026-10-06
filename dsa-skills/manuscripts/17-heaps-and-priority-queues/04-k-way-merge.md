@@ -67,9 +67,9 @@ Each output value costs one `poll` and at most one `offer` on a queue of at most
 <!-- names: frontier, source index, successor -->
 
 <!-- stage: variables -->
-### Three Numbers In Every Entry
+### The Fields Of Every Entry
 
-The queue stores small arrays, and each array has three fields that change at different times.
+The queue stores small arrays with three fields. One further counter belongs to the merge itself.
 
 - **Value** is the number that the queue orders by, and it never changes after the entry is created.
 - **Source index** says which input file the value came from, and it stays fixed for the life of the entry.

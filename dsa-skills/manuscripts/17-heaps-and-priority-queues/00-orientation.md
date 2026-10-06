@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A support tool serves tickets in the wrong order after an edit. A build farm starts a job before anyone requested it. A dashboard chart of the median response time slows down every hour. A timer loop spends most of its processor time looking for the earliest expiry. Each program keeps a changing set of items and needs the smallest, the largest or the middle one again and again. This chapter shows how a priority queue answers that question in O(log n) time per change, and how to keep it correct when ties, extreme integers, release times and deletions enter the picture.
+A support tool serves tickets in the wrong order after an edit. A build farm starts a job before anyone requested it. A dashboard chart of the median response time slows down every hour. A timer loop spends most of its processor time looking for the earliest expiry. Each program keeps a changing set of items and needs the smallest, the largest or the middle one again and again. This chapter shows how a priority queue answers that question in O(log n) time per change, and how to keep it correct when equal priorities, very large and very small ints, items that arrive later and items that must be removed enter the picture.
 
 ### Prerequisites
 
@@ -27,7 +27,7 @@ One lesson joins this chapter with an earlier one.
 
 ### How To Work Through Each Lesson
 
-Each lesson begins with a program that fails or slows down on a real input, and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to an interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize. Each exercise also lists a Changed decision, which names the one choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
+Each lesson begins with a program that fails or slows down on a real input, and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to an interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize. Each exercise also lists a Changed decision, which names the main choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
 
 ### What You Can Do After This Chapter
 

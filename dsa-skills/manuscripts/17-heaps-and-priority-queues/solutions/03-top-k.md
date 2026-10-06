@@ -7,7 +7,7 @@
 **Approach.**
 The method keeps a natural-order queue of at most `k` values. The first `k` values enter without a test. Each later value is compared once with the root. A value that is not larger than the root is discarded, because `k` kept values are already at least as large. A larger value removes the root and takes its place. At the end the queue holds the `k` largest values. Polling returns them in ascending order, so the method fills the result array from the back.
 
-After every value, the queue holds the `min(k, seen)` largest values among those seen.
+Among the values seen, the queue always keeps the `min(k, seen)` largest.
 
 **Complexity.**
 - **Time** is O(n log k), because each value costs one root comparison and at most one removal and one insertion in a queue of size `k`.
@@ -179,7 +179,7 @@ public final class KOneOrN {
 **Approach.**
 A hash map counts how often each value occurs. The method then scans the distinct values with a size-`k` queue ordered by frequency, smallest at the root. This is the same retention rule as before, with frequency as the key. A value enters while the queue holds fewer than `k` entries, and later it replaces the root only when its frequency is larger. After the scan, the queue holds the `k` most frequent values. The uniqueness guarantee means no tie at the boundary can change the answer set.
 
-The invariant is that the queue holds the `min(k, seen)` most frequent values among the distinct values seen.
+Among the distinct values seen, the queue always keeps the `min(k, seen)` most frequent ones.
 
 **Complexity.**
 - **Time** is O(n + d log k), where `d` is the number of distinct values, because counting costs O(n) and each distinct value costs O(log k).

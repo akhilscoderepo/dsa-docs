@@ -38,5 +38,9 @@ Come back to this page after the lessons and again a few days later. Each questi
 ```
 
 ```quiz
+{"id": "hp-rev-stale-root", "q": "A queue holds an old entry for a task whose priority was edited. The old entry reaches the root. What does the program do before it uses the root?", "options": ["Return it, because it is the smallest", "Compare its version with the newest version and discard it when they differ", "Rebuild the whole queue", "Call contains on the queue"], "answer": 1, "explain": "A root with an out-of-date version describes a state that no longer holds. The program polls and discards it, then checks the next root."}
+```
+
+```quiz
 {"id": "hp-rev-equal-priority", "q": "A comparator orders tasks by duration only, and two tasks have equal durations. What does the queue promise about their removal order?", "options": ["The earlier input comes first", "The smaller index comes first", "The one inserted last comes first", "Nothing, the order depends on the array layout"], "answer": 3, "explain": "A heap gives no rule for ties. A tie-break on a unique field such as the index makes the order the same on every run."}
 ```

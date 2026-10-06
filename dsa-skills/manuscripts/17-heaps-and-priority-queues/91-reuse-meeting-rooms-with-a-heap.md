@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why The Booking Tool Counts Extra Rooms
 
-A booking tool for an office receives a day of meeting requests and must report how many rooms the office needs. The first version counts every pair of requests whose times overlap and adds one room for each overlapping pair. Take the requests 1 to 10, 2 to 3 and 4 to 5. Two pairs overlap, so the tool reports three rooms. The office can host all three meetings in two rooms, because the short meetings share the second room one after the other.
+A booking tool for an office receives a day of meeting requests and must report how many rooms the office needs. The first version counts every pair of requests whose times overlap and starts with one room and adds one more for each overlapping pair. Take the requests 1 to 10, 2 to 3 and 4 to 5. Two pairs overlap, so the tool reports three rooms, one plus two. The office can host all three meetings in two rooms, because the short meetings share the second room one after the other.
 
 The tool also treats a meeting that ends at 3 and a meeting that starts at 3 inconsistently. Some reports call them a conflict, and others do not. This lesson asks how a program decides which room each meeting uses, and how it settles what a shared endpoint means.
 

@@ -39,7 +39,7 @@ The sort does about n log2(n), roughly 1.3 billion comparisons, and holds all n 
 
 Sorting costs O(n log n) time and O(n) memory. A value that is far below the tenth best never matters, yet the sort compares it with its neighbors many times. The work is spent on the order among the losers.
 
-A queue that holds every value, with the largest at the root, has the same problem. Building it costs O(n) and it still needs O(n) memory. The queue must hold only the candidates that can still affect the answer, and the program must discard the others at once.
+A queue that holds every value, with the largest at the root, has the same problem. Building it with n offers costs O(n log n) and it still needs O(n) memory. The queue must hold only the candidates that can still affect the answer, and the program must discard the others at once.
 
 <!-- stage: insight -->
 ### Guarding The Boundary With A Small Queue
@@ -61,7 +61,7 @@ After the scan, the queue holds the `k` largest values and the root is the kth l
 <!-- names: size-k min-heap, retention boundary, replace the root -->
 
 <!-- stage: variables -->
-### The Three Pieces Of State
+### The Four Pieces Of State
 
 The scan needs one queue and one rule, and the queue never grows past a fixed size.
 
@@ -70,7 +70,7 @@ The scan needs one queue and one rule, and the queue never grows past a fixed si
 - **Candidate v** is the next value from the input, compared once with the root.
 - **Kept count** equals the queue size, and it is below `k` only during the first `k` values.
 
-The root changes only when a candidate beats it, and then it moves up to the next smallest kept value.
+The root changes only when a candidate beats it, and then the new root is the smaller of the next kept value and the candidate.
 
 <!-- stage: trace -->
 ### Following The Queue Through A Stream
