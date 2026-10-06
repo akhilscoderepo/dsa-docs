@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A support tool serves tickets in the wrong order after an edit. A build farm starts a job before anyone requested it. A dashboard chart of the median response time slows down every hour. A timer loop spends most of its processor time looking for the earliest expiry. Each program keeps a changing set of items and needs the smallest, the largest or the middle one again and again. This chapter shows how a priority queue answers that question in O(log n) time per change, and how to keep it correct when equal priorities, very large and very small ints, items that arrive later and items that must be removed enter the picture.
+A support tool slows down with every ticket edit. A build farm starts a job before anyone requested it. A dashboard chart of the median response time slows down every hour. A timer loop spends most of its processor time looking for the earliest expiry. Each program keeps a changing set of items and needs the smallest, the largest or the middle one again and again. This chapter shows how a priority queue answers that question in O(log n) time per change, and how to keep it correct when equal priorities, very large and very small ints, items that arrive later and items that must be removed enter the picture.
 
 ### Prerequisites
 

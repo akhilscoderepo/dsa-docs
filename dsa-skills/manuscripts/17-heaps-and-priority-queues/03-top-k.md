@@ -132,7 +132,7 @@ The cue is a question that asks for only the best `k` items of a large or growin
 
 #### Finding The False Friend
 
-The false friend is a max-heap that holds every item. It answers the question, because `k` polls return the `k` largest values. It keeps O(n) memory when `k` is small, and it adds O(n) build time before the first poll.
+The false friend is a max-heap that holds every item. It answers the question, because `k` polls return the `k` largest values. It keeps O(n) memory when `k` is small, and it adds build time before the first poll, O(n log n) when built by n offers.
 
 A second false friend is the opposite direction. A max-oriented queue that is trimmed to `k` values keeps the `k` smallest values.
 

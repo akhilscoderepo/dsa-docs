@@ -74,7 +74,7 @@ The queue stores small arrays with three fields. One further counter belongs to 
 - **Value** is the number that the queue orders by, and it never changes after the entry is created.
 - **Source index** says which input file the value came from, and it stays fixed for the life of the entry.
 - **Position** says where the value sits in its file, and the successor entry uses position plus one.
-- **Output count** counts values written so far, and the merge stops when it equals the total length.
+- **Output count** counts values written so far, and it is the write position in the output; the loop ends when the frontier is empty.
 
 The queue holds exactly one entry for each file that still has unread values.
 

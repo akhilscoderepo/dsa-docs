@@ -56,7 +56,7 @@ The program needs the smallest end time among the rooms in use, and it needs to 
 <!-- stage: insight -->
 ### Keeping The Earliest Finish At The Root
 
-The program sorts the meetings by start time. It keeps a `PriorityQueue<Integer>` of end times, one for each **active meeting**, which is a meeting that holds a room at the current start time. The root holds the **earliest finish**, the smallest end time among the rooms in use.
+The program sorts the meetings by start time. It keeps a `PriorityQueue<Integer>` of end times, one for each room opened so far, namely the end of its last meeting. A room whose last meeting runs at the current start time holds an **active meeting**. The root holds the **earliest finish**, the smallest end time among the rooms in use.
 
 #### Deciding Between Reuse And A New Room
 

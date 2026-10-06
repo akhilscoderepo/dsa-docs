@@ -9,4 +9,4 @@ Sorted intervals and a priority queue form the lesson Reuse Meeting Rooms With A
 
 ### One Pairing Waits For A Later Chapter
 
-A shortest path search also takes the smallest entry from a queue. Its correctness depends on relaxing edges and on discarding an entry when a shorter distance is already known. That stale-entry rule needs the graph model and the relaxation step, which Chapter 24 teaches. Chapter 24 owns the problems of that pairing, and this chapter assigns none of them.
+A shortest path search also takes the smallest entry from a queue. Its correctness depends on discarding an entry when a shorter distance is already known. That rule needs the graph model that Chapter 24 teaches. Chapter 24 owns the problems of that pairing, and this chapter assigns none of them.

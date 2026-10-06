@@ -63,7 +63,7 @@ Heap order is a partial order. A parent is no larger than its children. Two sibl
 <!-- stage: variables -->
 ### The State Behind One Queue
 
-A queue is one array and one count, and these two are all of its state.
+A queue is one array and one count. The list below adds two helper names.
 
 - **Array position i** holds one item. Its parent sits at `(i - 1) / 2`, and its children sit at `2 * i + 1` and `2 * i + 2`.
 - **Size n** counts the stored items. Positions at or beyond `n` hold no item.
@@ -118,7 +118,7 @@ static int[] sortWithQueue(int[] values) {
 
 #### Taking The Largest First
 
-The default order puts the smallest item first. To take the largest item first, pass `Collections.reverseOrder()` to the constructor.
+The default order puts the smallest item first. To take the largest item first, pass `Collections.reverseOrder()` to the constructor. It is a comparator, and the next lesson explains comparators.
 
 ```java
 static List<Integer> drainLargestFirst(int[] values) {

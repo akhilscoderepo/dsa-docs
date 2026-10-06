@@ -7,7 +7,7 @@
 
 A job scheduler stores each job's priority as an `int` and runs the highest priority first. The team's queue returns the smallest value first, so a developer stores the negative of each priority. The scheduler passes every test with priorities from 1 to 100.
 
-In production, a job with priority `Integer.MIN_VALUE`, which is meant to run last, runs first. At the same time, jobs with equal priority run in a different order after each restart, and support cannot reproduce the complaints. This lesson asks how a program states exactly which item leaves the queue first, including ties and extreme values.
+In production, a job with priority `Integer.MIN_VALUE`, which is meant to run last, runs first. At the same time, jobs with equal priority run in a different order whenever they arrive in a different order, and support cannot reproduce the complaints. This lesson asks how a program states exactly which item leaves the queue first, including ties and extreme values.
 
 <!-- stage: naive -->
 ### Storing The Negative Of Each Priority
