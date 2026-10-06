@@ -7,7 +7,7 @@
 
 A log viewer stores entries from oldest to newest in a list, and the user asks to see the newest entry first. A developer writes a loop that walks the list and sets each node's `next` to the node before it. The test list has five entries. After the loop the viewer shows one entry and nothing else. The other four entries are still in memory, but no variable leads to them any more.
 
-The loop did the right kind of work in the wrong order. Reversing a list means changing every `next` field, and each change cuts the only link to the rest of the list. The question for this lesson is how to turn every link around while keeping the rest of the list in reach.
+The loop did the right kind of work in the wrong order. Reversing a list means changing every `next` field, and each change cuts the only link to the rest of the list. The method needs a way to turn every link around while the rest of the list stays in reach.
 
 <!-- stage: naive -->
 ### Copying The Values Into An Array
