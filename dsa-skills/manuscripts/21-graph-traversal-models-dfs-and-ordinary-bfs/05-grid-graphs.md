@@ -78,20 +78,20 @@ The search keeps a few named values, listed here with the roles they play in the
 
 #### Filling A Seven Cell Patch
 
-The first trace uses a table with three rows and three columns, flattened row by row into nine cells, so cell 4 is row 1, column 1. The source is cell 0, whose color is 1. The pointer `cur` marks the cell that leaves the frontier. The variable `frontier` shows the cell ids still waiting, and `reached` counts the marked cells.
+The first trace uses a table with three rows and three columns, flattened row by row into nine cells, so cell 4 is row 1, column 1. The source is cell 0, whose color is 1. The pointer `cur` marks the cell that leaves the frontier. The variable `frontier` shows the cell ids still waiting, and `reached` counts the cells that have joined the patch.
 
-Cell 4 and cell 2 hold the color 0, so they block the patch. The patch still wraps around cell 4 through cells 3, 6, 7 and 8, and then reaches cell 5. The search stops after seven cells, and the frontier is empty.
+Cells 2 and 4 hold the color 0, so they block the patch. The patch still wraps around cell 4 through cells 3, 6, 7 and 8, and then reaches cell 5. The search stops after seven cells, and the frontier is empty.
 
 ```trace
-{"cells":[1,1,0,0,1,0,1,0,1],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"recoloured":1,"queue":"1"},"note":"Tile 0 at row 0, column 0 is recoloured, and it queues 1 new neighbor tile (1)."},{"at":{"cur":1},"vars":{"recoloured":2,"queue":"4"},"note":"Tile 1 at row 0, column 1 is recoloured, and it queues 1 new neighbor tile (4)."},{"at":{"cur":4},"vars":{"recoloured":3,"queue":"empty"},"note":"Tile 4 at row 1, column 1 is recoloured, and it queues nothing, since every neighbor is out of bounds, another colour or already seen."}]}
+{"cells":[1,1,0,1,0,1,1,1,1],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"reached":1,"frontier":"3,1"},"note":"Cell 0 at row 0, column 0 leaves the frontier and joins the patch, and it adds 2 new neighbors (3,1)."},{"at":{"cur":3},"vars":{"reached":2,"frontier":"1,6"},"note":"Cell 3 at row 1, column 0 leaves the frontier and joins the patch, and it adds 1 new neighbor (6)."},{"at":{"cur":1},"vars":{"reached":3,"frontier":"6"},"note":"Cell 1 at row 0, column 1 leaves the frontier and joins the patch, and it adds nothing, because every neighbor is out of bounds, has another color or is already marked."},{"at":{"cur":6},"vars":{"reached":4,"frontier":"7"},"note":"Cell 6 at row 2, column 0 leaves the frontier and joins the patch, and it adds 1 new neighbor (7)."},{"at":{"cur":7},"vars":{"reached":5,"frontier":"8"},"note":"Cell 7 at row 2, column 1 leaves the frontier and joins the patch, and it adds 1 new neighbor (8)."},{"at":{"cur":8},"vars":{"reached":6,"frontier":"5"},"note":"Cell 8 at row 2, column 2 leaves the frontier and joins the patch, and it adds 1 new neighbor (5)."},{"at":{"cur":5},"vars":{"reached":7,"frontier":"empty"},"note":"Cell 5 at row 1, column 2 leaves the frontier and joins the patch, and it adds nothing, because every neighbor is out of bounds, has another color or is already marked."}]}
 ```
 
 #### Stopping At A Corner
 
-The second trace uses a table with three rows and three columns whose patch holds only the cells 0, 3 and 4. Cell 8 holds the same color but touches cell 4 only at a corner. Cell 2 holds it too and sits behind a different color. The search never tests the corner of cell 8, because none of the four directions in the direction table is diagonal.
+The second trace uses a table with three rows and three columns whose patch holds only the cells 0, 3 and 4. The source is cell 0. Cell 8 holds the same color but touches cell 4 only at a corner. Cell 2 holds it too and sits behind a different color. The search never tests cell 8 from cell 4, because none of the four directions in the direction table is diagonal.
 
 ```trace
-{"cells":["1","1","0","0","0","0","1","0","0","0","0","1"],"pointers":["scan"],"steps":[{"at":{"scan":0},"vars":{"islands":1,"last_size":2},"note":"Index 0 is unseen land, so island 1 starts and its traversal claims 2 tiles."},{"at":{"scan":1},"vars":{"islands":1,"last_size":2},"note":"Index 1 is land but already seen, so no new traversal starts."},{"at":{"scan":6},"vars":{"islands":2,"last_size":1},"note":"Index 6 is unseen land, so island 2 starts and its traversal claims 1 tile."},{"at":{"scan":11},"vars":{"islands":3,"last_size":1},"note":"Index 11 is unseen land, so island 3 starts and its traversal claims 1 tile."},{"at":{"scan":12},"vars":{"islands":3,"last_size":1},"note":"The scan has passed all twelve cells and the answer is 3 islands."}]}
+{"cells":[1,0,1,1,1,0,0,0,1],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"reached":1,"frontier":"3"},"note":"Cell 0 at row 0, column 0 leaves the frontier and joins the patch, and it adds 1 new neighbor (3)."},{"at":{"cur":3},"vars":{"reached":2,"frontier":"4"},"note":"Cell 3 at row 1, column 0 leaves the frontier and joins the patch, and it adds 1 new neighbor (4)."},{"at":{"cur":4},"vars":{"reached":3,"frontier":"empty"},"note":"Cell 4 at row 1, column 1 leaves the frontier and joins the patch, and it adds nothing, because every neighbor is out of bounds, has another color or is already marked."}]}
 ```
 
 <!-- stage: code -->
@@ -132,6 +132,8 @@ static int patchSize(int[][] grid, int sr, int sc) {
 
 - **Time** is O(rows * cols), because each cell enters the frontier at most once and each expansion tests four candidates.
 - **Space** is O(rows * cols), because `visited` has one slot per cell and the frontier can hold a large part of the table.
+
+Two small changes turn this method into the first two exercises. To recolor, write the new color into `grid[nr][nc]` when a cell is marked, and skip the `visited` array only when the new color differs from `want`. To count patches, run the same search from every unmarked cell that matches, and add one to a counter for each search that starts.
 
 A recursive version has the same time but nests as deep as the patch is long. A patch of one million cells would overflow the Java call stack, so the lesson uses the frontier.
 
@@ -180,7 +182,7 @@ A two-dimensional array stores cells in rows and columns, and that layout is a f
 
 **Prerequisites.** The Flood Fill exercise above.
 
-**Problem.** A map is a rectangular array `grid` whose cells hold `'1'` for land or `'0'` for water. An island is a maximal set of land cells in which any two cells connect through neighbors that share a side. Return the number of islands in the map.
+**Problem.** A map is a rectangular `char[][]` array `grid` whose cells hold `'1'` for land or `'0'` for water. An island is a maximal set of land cells in which any two cells connect through neighbors that share a side. Return the number of islands in the map.
 
 **Constraints.** The limits are:
 - **Size** is `1 <= rows, cols <= 300`, and every row has the same length.
@@ -189,7 +191,7 @@ A two-dimensional array stores cells in rows and columns, and that layout is a f
 - **Answer** is an `int`, and it is 0 when the map has no land.
 - **Mutation** does not occur; the method must leave `grid` unchanged.
 
-**Example 1.** Input `grid = ["11000","11000","00100","00011"]` as four rows of text, output 3.
+**Example 1.** Input `grid = ["11000","11000","00100","00011"]` with each row written as a string of characters, output 3.
 
 **Example 2.** Input `grid = ["101","010","101"]`, output 5, because corner contact does not join land cells.
 

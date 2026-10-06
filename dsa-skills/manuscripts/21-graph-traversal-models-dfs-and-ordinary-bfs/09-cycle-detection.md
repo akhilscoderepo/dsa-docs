@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Build Finds False Cycles
 
-A build tool compiles four modules. Module 0 uses modules 1 and 2, and both of those use module 3. The tool runs a search over these dependencies and stops with the message "circular dependency". No module depends on itself, directly or through others. The message is wrong, and the project cannot compile until someone finds out why.
+A build tool compiles four modules. Module 0 uses modules 1 and 2, and both of those use module 3. The tool runs a search over these dependencies and stops with the message "circular dependency". No module depends on itself, directly or through others. A **route** follows edges from vertex to vertex, and a **cycle** is a route that returns to its first vertex without using any listed edge twice. The four modules contain no cycle, so the message is wrong, and the project cannot compile until someone finds out why.
 
 A second tool checks a network of switches joined by cables. A loop of cables can flood the network with endless copies of a packet, so the tool must find any loop. The tool reports a loop on a network that consists of one cable between two switches.
 
@@ -40,7 +40,7 @@ For the switches, the marked vertex is the one the search just came from, reache
 
 A marked vertex has three possible relations to the current search. It can be the vertex that the search just left. It can be a vertex whose whole search is already complete. It can be a vertex on the route that is still open. Only the third relation closes a cycle. The naive method treats all three alike, so it is wrong on every graph that has a cable shared by two directions or a vertex reachable by two routes.
 
-Trying every route to separate the cases would cost O(2^n) on a graph with many diamonds. A search that keeps a little more information about each vertex stays at O(n + m) for `n` vertices and `m` edges, because every edge is still examined a constant number of times.
+A **diamond** is a vertex that two different routes reach, as module 3 is in the first example. Trying every route to separate the cases would cost O(2^n) on a graph with many diamonds. A search that keeps a little more information about each vertex stays at O(n + m) for `n` vertices and `m` edges, because every edge is still examined a constant number of times.
 
 <!-- stage: insight -->
 ### Giving Each Vertex A Search State
@@ -49,7 +49,7 @@ The two false alarms need two different fixes, because an undirected edge and a 
 
 #### Undirected Edges Return To The Parent
 
-An undirected edge between `u` and `v` appears in both neighbor lists. When the search moves from `u` to `v`, the list of `v` contains `u` again. That sight is the edge just used, not a cycle. The **parent** of a vertex is the vertex from which the search reached it. The rule is that a marked neighbor other than the parent proves a cycle. The parent is skipped exactly once, and the search passes the parent as an argument of each call.
+An undirected edge between `u` and `v` appears in both neighbor lists. When the search moves from `u` to `v`, the list of `v` contains `u` again. That sight is the edge just used, not a cycle. The **parent** of a vertex is the vertex from which the search reached it. The rule is that a marked neighbor other than the parent proves a cycle. The search passes the parent as an argument of each call and skips a neighbor equal to it. For example, on the triangle with edges 0-1, 1-2 and 2-0, the call at vertex 2 has parent 1. It skips 1, then reads 0, which is marked and not the parent, so it reports the cycle. This lesson assumes a simple graph, one with no two edges between the same pair of vertices, because skipping by vertex number would also skip a second edge to the parent. The Boundary exercise removes that assumption.
 
 <!-- names: parent, visiting, finished -->
 
@@ -57,11 +57,11 @@ An undirected edge between `u` and `v` appears in both neighbor lists. When the 
 
 A directed edge `u` to `v` appears only in the list of `u`, so no edge is used twice. A marked neighbor can still be harmless, as the module `3` is. The search therefore gives each vertex one of three states. A vertex is unvisited before the search reaches it. It is **visiting** while its call is still open, which means it lies on the current route. It is **finished** after all of its neighbors are processed and its call returns.
 
-An edge to a visiting vertex proves a cycle, because the route from that vertex down to the current vertex plus the new edge returns to the start. An edge to a finished vertex proves nothing. Every vertex that the finished vertex can reach was explored before it finished, and none of them leads back to a visiting vertex on the open route, or the search would already have reported it.
+An edge to a visiting vertex proves a cycle, because the route from that vertex down to the current vertex plus the new edge returns to the start. On the edges 0 to 1, 1 to 2 and 2 to 0, the call at vertex 2 reads the edge to vertex 0, which is visiting, and the route 0, 1, 2, 0 is a cycle. An edge to a finished vertex proves nothing. Every vertex that the finished vertex can reach was explored before it finished, and none of them leads back to a visiting vertex on the open route, or the search would already have reported it. In the module example, module 3 finishes under module 1 without reaching module 0, so the later edge from module 2 to module 3 closes no route.
 
 #### Why The Rules Are Complete
 
-Both rules also work in the other direction. Every cycle contains a first vertex that the search enters, and the cycle then forces the search to reach an edge that returns to an open route. So the search misses no cycle, and it reports none that does not exist.
+Both rules also work in the other direction. Every cycle contains a first vertex that the search enters, and the cycle then forces the search to reach an edge that returns to an open route. So the search misses no cycle, and it reports none that does not exist. On the triangle above, vertex 0 is the first vertex entered, and the edge from vertex 2 back to vertex 0 is the edge that the search reaches while vertex 0 is still open.
 
 <!-- stage: variables -->
 ### What Each Search Keeps
@@ -176,7 +176,20 @@ Treating any marked neighbor as a cycle is the false friend of both rules. In an
 
 #### Java Hazards
 
-Compare the parent by vertex number only when no two edges join the same pair of vertices. A repeated edge is a real cycle of length two, so a graph with repeated edges needs the parent edge identified by its index in the input. Set the finished state after the loop and not before it, because an early set makes the visiting test blind.
+Compare the parent by vertex number only when no two edges join the same pair of vertices. A repeated edge is a real cycle of two vertices, so a graph with repeated edges needs the parent edge identified by its index in the input. The method below stores each neighbor together with the index of its edge and skips only the one index it arrived by.
+
+```java
+static boolean fromEdgeIndex(List<List<int[]>> adj, boolean[] visited, int u, int parentEdge) {
+    visited[u] = true;
+    for (int[] arc : adj.get(u)) {            // arc[0] is the neighbor, arc[1] the edge index
+        if (arc[1] == parentEdge) continue;   // skip the one edge used to arrive
+        if (visited[arc[0]] || fromEdgeIndex(adj, visited, arc[0], arc[1])) return true;
+    }
+    return false;
+}
+```
+
+Set the finished state after the loop and not before it, because an early set makes the visiting test blind.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -186,13 +199,13 @@ Compare the parent by vertex number only when no two edges join the same pair of
 
 **Prerequisites.** The parent rule of this lesson and the restart loop of Bipartite Coloring.
 
-**Problem.** An undirected graph has vertices `0..n-1` and edges in `edges`, where `edges[i] = [a, b]` joins `a` and `b`. A cycle is a closed route that uses at least three distinct vertices and no edge twice. Return true if the graph contains a cycle, and false otherwise. Use a DFS that passes the parent of each vertex, and report a cycle when a marked neighbor differs from the parent.
+**Problem.** An undirected graph has vertices `0..n-1` and edges in `edges`, where `edges[i] = [a, b]` joins `a` and `b`. A cycle is a route that returns to its first vertex without using any listed edge twice. Return true if the graph contains a cycle, and false otherwise. Use a DFS that passes the parent of each vertex, and report a cycle when a marked neighbor differs from the parent.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
 - **Edges** satisfy `0 <= edges.length <= 5000`.
 - **Self-loops** do not occur.
-- **Parallel edges** do not occur.
+- **Parallel edges** do not occur, so every cycle uses at least three distinct vertices.
 - **Return** is a boolean.
 
 **Example 1.** Input `n = 5` and `edges = [[0,1],[1,2],[2,3],[3,1],[3,4]]`, output true.
@@ -230,7 +243,7 @@ Compare the parent by vertex number only when no two edges join the same pair of
 
 **Prerequisites.** The Undirected Parent Check exercise.
 
-**Problem.** An undirected graph has vertices `0..n-1` and a list `edges` that may contain the same pair of vertices more than once. A single edge appears in both neighbor lists, and the search must not mistake that return for a cycle. Two listed edges between the same two vertices form a cycle of length two. Return true if the graph contains a cycle, counting two parallel edges as a cycle, and false otherwise.
+**Problem.** An undirected graph has vertices `0..n-1` and a list `edges` that may contain the same pair of vertices more than once. A single edge appears in both neighbor lists, and the search must not mistake that return for a cycle. Two listed edges between the same two vertices form a cycle of two vertices, which follows the cycle definition of the lesson. Return true if the graph contains a cycle, counting two parallel edges as a cycle, and false otherwise.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.

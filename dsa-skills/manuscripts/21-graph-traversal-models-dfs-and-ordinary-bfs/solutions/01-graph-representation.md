@@ -124,7 +124,7 @@ public final class DirectedAdjacency {
         if (!build(2, new int[][] {{1, 0}}).toString().equals("[[], [0]]")) throw new AssertionError("ex2");
         // The directed build records one direction, so vertex 0 gets no neighbor from the edge [1,0].
         if (!build(2, new int[][] {{1, 0}}).get(0).isEmpty()) throw new AssertionError("no reverse entry");
-        // Random edge sets without repeats or self edges must match the oracle and hold m entries.
+        // Random edge sets without repeats or self-loops must match the oracle and hold m entries.
         Random rnd = new Random(2102);
         for (int t = 0; t < 400; t++) {
             int n = 1 + rnd.nextInt(7);
@@ -146,9 +146,9 @@ public final class DirectedAdjacency {
 <!-- id: gt-parallel-self-edges -->
 
 **Approach.**
-The contract permits repeated and self edges, so the build must remove them before reporting neighbors. The method keeps one `TreeSet` per vertex. A `TreeSet` ignores a value it already holds and iterates in ascending order, so repeats vanish and the output order is fixed without a later sort.
+The contract permits repeated and self-loops, so the build must remove them before reporting neighbors. The method keeps one `TreeSet` per vertex. A `TreeSet` ignores a value it already holds and iterates in ascending order, so repeats vanish and the output order is fixed without a later sort.
 
-For each edge, the method skips a self edge, which would make a vertex its own neighbor. Otherwise it inserts each endpoint into the set of the other. The invariant is that each set holds the distinct neighbors, other than itself, from the edges read so far.
+For each edge, the method skips a self-loop, which would make a vertex its own neighbor. Otherwise it inserts each endpoint into the set of the other. The invariant is that each set holds the distinct neighbors, other than itself, from the edges read so far.
 
 **Complexity.**
 - **Time** is O(n + m log m), because each of the up to `2 * m` insertions costs O(log m) in a balanced tree.
@@ -159,7 +159,7 @@ import java.util.*;
 
 public final class ParallelAndSelfEdges {
     /**
-     * Returns sorted distinct neighbor lists, ignoring repeated and self edges.
+     * Returns sorted distinct neighbor lists, ignoring repeated and self-loops.
      * Time: O(n + m log m). Space: O(n + m).
      * Invariant: sets[v] holds the distinct neighbors of v, other than v, from the edges read so far.
      */
@@ -167,7 +167,7 @@ public final class ParallelAndSelfEdges {
         List<TreeSet<Integer>> sets = new ArrayList<>();             // one ordered set per vertex
         for (int v = 0; v < n; v++) sets.add(new TreeSet<>());       // n separate sets, O(n) work
         for (int[] e : edges) {                                      // one pass over the m edges
-            if (e[0] == e[1]) continue;                              // a self edge adds no neighbor
+            if (e[0] == e[1]) continue;                              // a self-loop adds no neighbor
             sets.get(e[0]).add(e[1]);                                // the set drops a value it already holds
             sets.get(e[1]).add(e[0]);                                // the edge works in both directions
         }
@@ -196,7 +196,7 @@ public final class ParallelAndSelfEdges {
         // The prose claim about TreeSet: repeats are ignored and iteration is ascending.
         TreeSet<Integer> t = new TreeSet<>(List.of(5, 2));
         if (t.add(2) || !t.toString().equals("[2, 5]")) throw new AssertionError("TreeSet ignores repeats and sorts");
-        // Random multigraphs with repeats and self edges must match the matrix oracle.
+        // Random multigraphs with repeats and self-loops must match the matrix oracle.
         Random rnd = new Random(2103);
         for (int r = 0; r < 400; r++) {
             int n = 1 + rnd.nextInt(6);

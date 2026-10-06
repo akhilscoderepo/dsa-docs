@@ -12,7 +12,7 @@ The duplicate must hold three new shapes with the same labels. Each new shape mu
 <!-- stage: naive -->
 ### Copying Each Reference Recursively
 
-Each shape is a `Node` object with an `int val` and a list `neighbors` of references to other `Node` objects. The direct approach copies a node by creating a new object with the same value. It then copies every node in `neighbors` the same way and adds the results to the new list.
+Each shape is a `Node` object, and the rest of the lesson calls a shape a node. A node has an `int val` and a list `neighbors` of references to other `Node` objects. The direct approach copies a node by creating a new object with the same value. It then copies every node in `neighbors` the same way and adds the results to the new list.
 
 ```java
 static Node copy(Node n) {
@@ -42,7 +42,7 @@ The method needs to remember which original shape it has already copied. It must
 <!-- stage: insight -->
 ### Keeping One Clone Per Original
 
-The fix is a lookup table from each original node to the new node made for it. With it, every original is copied exactly once, and every reference to that original is rewired to the same copy.
+The fix is a lookup table from each original node to the new node made for it. With it, every original is copied exactly once, and every reference to that original is rewired to the same copy. A copy built this way is a **deep copy**: it duplicates every node reachable from the start, so no node of the copy is also a node of the original.
 
 #### Naming The Parts
 
@@ -132,7 +132,7 @@ final class CloneCode {
 #### Cost Of The Copy
 
 - **Time** is O(n + m), because each node is entered once and each reference is read once, with O(1) map work per step.
-- **Space** is O(n), because the map holds one entry per node, and the clones themselves hold O(n + m) in total.
+- **Space** is O(n) of auxiliary memory, because the map holds one entry per node and the recursion stack holds at most n calls. The returned clones are output and occupy O(n + m) in total.
 
 The recursion depth can reach `n` on a long chain, so the method suits graphs of moderate size.
 

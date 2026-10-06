@@ -14,21 +14,21 @@ The question of this lesson is how a depth-first search can output every path fr
 <!-- stage: naive -->
 ### Reusing One Visited Array
 
-The earlier lessons of this chapter taught the standard depth-first search with a `visited` array that is set once and never cleared. That rule guarantees that every vertex is expanded once. The first attempt at listing paths keeps the rule and records the current chain whenever the search reaches the target.
+The earlier lessons of this chapter taught the standard depth-first search with a `visited` array that is set once and never cleared. That rule guarantees that every vertex is expanded once. The first attempt at listing paths keeps the rule and records the current `path` whenever the search reaches the target.
 
 ```java
 static void listPaths(List<List<Integer>> adj, int cur, int target,
-                      boolean[] visited, List<Integer> chain, List<List<Integer>> found) {
+                      boolean[] visited, List<Integer> path, List<List<Integer>> found) {
     visited[cur] = true;
-    chain.add(cur);
+    path.add(cur);
     if (cur == target) {
-        found.add(new ArrayList<>(chain));
+        found.add(new ArrayList<>(path));
     } else {
         for (int next : adj.get(cur)) {
-            if (!visited[next]) listPaths(adj, next, target, visited, chain, found);
+            if (!visited[next]) listPaths(adj, next, target, visited, path, found);
         }
     }
-    chain.remove(chain.size() - 1);
+    path.remove(path.size() - 1);
 }
 ```
 
@@ -71,9 +71,10 @@ A path that repeats a vertex needs a cycle. A DAG has none, so a call can never 
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search needs four items, and one of them changes on every call.
+The search needs five items, and two of them change on every call.
 
 - **adj** is the adjacency list; `adj.get(v)` holds the neighbors of `v` in the order of the edges.
+- **cur** is the vertex of the active call, and each call receives its own value.
 - **path** is the working path, a list that grows on entry and shrinks on exit.
 - **found** is the list of snapshots, one per path that reaches the target.
 - **target** is the vertex that ends a path; reaching it records a snapshot.
@@ -115,7 +116,7 @@ static void enumerate(List<List<Integer>> adj, int cur, int target,
 }
 ```
 
-The call `path.remove(path.size() - 1)` passes an `int`, so Java removes the element at that index. The call `path.remove(cur)` with an `int` variable would also remove by index and would delete the wrong element or throw an exception. The time is O(P * n + V + E) in the worst case for a DAG with `P` paths, because each snapshot copies up to `n` vertices. The extra space is O(n) for the working path and the recursion depth, plus the output.
+The call `path.remove(path.size() - 1)` passes an `int`, so Java removes the element at that index. The call `path.remove(cur)` with an `int` variable would also remove by index and would delete the wrong element or throw an exception. The time is O(P * n) for the snapshots, because each snapshot copies up to `n` vertices, plus the work of dead-end branches that the search repeats. Without a visited array, the search can enter the same dead end once for each chain that reaches it, so the total has no tighter bound than the number of chains times `n`. The extra space is O(n) for the working path and the recursion depth, plus the output.
 
 <!-- stage: applicability -->
 ### Recognizing Path Listing Tasks
@@ -130,7 +131,19 @@ The invariant of the lesson is that the working path contains exactly the curren
 
 #### Avoiding The False Friend
 
-The global visited array is the false friend of this task. It is correct for reachability and components, because there each vertex needs one visit. It is wrong here, because one vertex may belong to many valid paths. When the graph may contain cycles, the DAG argument fails, and the search needs a visited flag that is set on entry and cleared on exit, so that it describes the working path only. The last exercise of this lesson uses that flag.
+The global visited array is the false friend of this task. It is correct for reachability and components, because there each vertex needs one visit. It is wrong here, because one vertex may belong to many valid paths. When the graph may contain cycles, the DAG argument fails, and the search needs a visited flag that is set on entry and cleared on exit, so that it describes the working path only. The method below shows the flag, which the last exercise of this lesson uses.
+
+```java
+static void visit(List<List<Integer>> adj, int cur, int target, boolean[] onPath,
+                  List<Integer> path, List<List<Integer>> found) {
+    onPath[cur] = true;                       // set on entry: cur joins the working path
+    path.add(cur);
+    if (cur == target) found.add(new ArrayList<>(path));
+    else for (int next : adj.get(cur)) if (!onPath[next]) visit(adj, next, target, onPath, path, found);
+    onPath[cur] = false;                      // clear on exit: cur leaves the working path
+    path.remove(path.size() - 1);
+}
+```
 
 <!-- stage: exercises -->
 ### Exercises
@@ -162,21 +175,21 @@ The global visited array is the false friend of this task. It is correct for rea
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** This version takes the graph as `n` and `edges`, and it returns paths as independent lists. A directed acyclic graph has vertices `0` to `n - 1`. Return every path from vertex `0` to vertex `n - 1` in the order in which a depth-first search finds them, with neighbors in the order of `edges`. Changing one returned list must not change any other returned list.
+**Problem.** This changes LeetCode 797, which lists every path from vertex `0` to vertex `n - 1`, by adding a required vertex. A directed acyclic graph has vertices `0` to `n - 1` and the directed edges in `edges`. A vertex `m` with `0 < m < n - 1` is required. Return every path from vertex `0` to vertex `n - 1` that contains `m`. List the paths in the order in which a depth-first search finds them, with neighbors in the order of `edges`.
 
 **Constraints.** The limits are:
-- **Vertices** satisfy `2 <= n <= 15`.
+- **Vertices** satisfy `3 <= n <= 12`.
+- **Required** vertex satisfies `0 < m < n - 1`.
 - **Edges** contain no duplicate pair and no self loop.
 - **Acyclic** holds for every input.
-- **Result** lists are separate objects that share no storage.
 
-**Example 1.** Input `n = 6`, `edges = [[0,1],[0,2],[1,3],[2,3],[3,4],[3,5],[4,5]]`, output `[[0,1,3,4,5],[0,1,3,5],[0,2,3,4,5],[0,2,3,5]]`.
+**Example 1.** Input `n = 4`, `edges = [[0,1],[0,2],[1,3],[2,3]]`, `m = 1`, output `[[0,1,3]]`.
 
-**Example 2.** Input `n = 5`, `edges = [[0,1],[0,2],[1,4],[2,3],[0,4]]`, output `[[0,1,4],[0,4]]`.
+**Example 2.** Input `n = 5`, `edges = [[0,1],[0,2],[1,2],[2,4],[1,4]]`, `m = 2`, output `[[0,1,2,4],[0,2,4]]`.
 
-**Hint.** Which moment decides whether a stored answer stays correct after the search continues?
+**Hint.** What must a call know about the vertices above it when it reaches the target, and how can the call receive that fact?
 
-**Changed decision.** The method copies the working path at the target, because the same storage is reused afterwards.
+**Changed decision.** Each call passes down a boolean that records whether the chain already contains `m`, and the method stores a snapshot only when the boolean is true.
 
 #### [Boundary] Dead End And Direct Edge (Author exercise)
 <!-- id: gt-dead-end-direct-edge -->

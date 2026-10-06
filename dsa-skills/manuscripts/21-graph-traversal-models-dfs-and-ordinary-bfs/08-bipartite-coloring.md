@@ -59,7 +59,7 @@ The fix has two parts. A restart loop covers every component. A single rule deci
 
 #### What The Words Mean
 
-A graph is **bipartite** when its vertices can be split into two groups so that every edge joins a vertex of one group to a vertex of the other. Giving each vertex color 0 or 1 is the same split, and the two groups are the two colors. An **odd cycle** is a cycle with an odd number of edges, such as the ring of three pairs in the suite. A **conflict** is an edge whose two endpoints hold the same color.
+A graph is **bipartite** when its vertices can be split into two groups so that every edge joins a vertex of one group to a vertex of the other. Giving each vertex color 0 or 1 is the same split, and the two groups are the two colors. A **cycle** is a chain of edges that leads from a vertex back to itself without reusing an edge. An **odd cycle** is a cycle with an odd number of edges, such as the ring of three pairs in the suite. A **conflict** is an edge whose two endpoints hold the same color.
 
 <!-- names: bipartite, odd cycle, conflict -->
 
@@ -67,7 +67,7 @@ A graph is **bipartite** when its vertices can be split into two groups so that 
 
 After the source receives color 0, every other vertex of its component is forced. Each neighbor of a colored vertex must hold the opposite color, and a neighbor of that neighbor must hold the first color again. No choice remains, so a component has exactly one valid coloring up to swapping the two colors. The search therefore never needs to guess. It colors by the forced rule and watches for a conflict.
 
-A conflict proves the answer is no. The two endpoints are joined by two routes of the forced colors, and one of those routes has an odd length. Together with the edge between them, the route forms an odd cycle. The converse also holds. A graph without any odd cycle never produces a conflict, so the forced coloring succeeds. A graph is bipartite exactly when it has no odd cycle.
+A conflict proves the answer is no. A path is a chain of edges from one vertex to another, and colors alternate along every path the search follows. A path between two vertices of the same color therefore has an even number of edges. The conflicting edge joins those two vertices and adds one more edge, so the path and the edge form a cycle with an odd number of edges. The converse also holds. A graph without any odd cycle never produces a conflict, so the forced coloring succeeds. A graph is bipartite exactly when it has no odd cycle.
 
 #### One Restart Rule Across Components
 
@@ -94,17 +94,17 @@ The first graph has 6 vertices and the edges 0-1, 0-2, 1-3, 2-3 and 3-4. Vertex 
 The search starts at vertex 0 with color 0 and colors vertices 1 and 2 with color 1. Vertex 1 colors vertex 3 with 0, and vertex 2 finds vertex 3 already holding 0, which differs from its own color 1. Vertex 3 then colors vertex 4 with 1. The restart loop reaches vertex 5, which is uncolored, and starts a second component there. That component has no edges, so it passes at once.
 
 ```trace
-{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"colors":"0.....","queue":"[0]"},"note":"Vertex 0 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":0},"vars":{"colors":"011...","queue":"[1, 2]"},"note":"Vertex 0 leaves the queue and gives color 1 to neighbors [1, 2]."},{"at":{"cur":1},"vars":{"colors":"0110..","queue":"[2, 3]"},"note":"Vertex 1 leaves the queue and gives color 0 to neighbors [3]."},{"at":{"cur":2},"vars":{"colors":"0110..","queue":"[3]"},"note":"Vertex 2 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":3},"vars":{"colors":"01101.","queue":"[4]"},"note":"Vertex 3 leaves the queue and gives color 1 to neighbors [4]."},{"at":{"cur":4},"vars":{"colors":"01101.","queue":"[]"},"note":"Vertex 4 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":5},"vars":{"colors":"011010","queue":"[5]"},"note":"Vertex 5 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":5},"vars":{"colors":"011010","queue":"[]"},"note":"Vertex 5 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":-1},"vars":{"colors":"011010","queue":"[]"},"note":"The loop passes vertex 5 and finds every vertex colored, so the graph passes."}]}
+{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"color":"0.....","queue":"[0]"},"note":"Vertex 0 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":0},"vars":{"color":"011...","queue":"[1, 2]"},"note":"Vertex 0 leaves the queue and gives color 1 to neighbors [1, 2]."},{"at":{"cur":1},"vars":{"color":"0110..","queue":"[2, 3]"},"note":"Vertex 1 leaves the queue and gives color 0 to neighbors [3]."},{"at":{"cur":2},"vars":{"color":"0110..","queue":"[3]"},"note":"Vertex 2 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":3},"vars":{"color":"01101.","queue":"[4]"},"note":"Vertex 3 leaves the queue and gives color 1 to neighbors [4]."},{"at":{"cur":4},"vars":{"color":"01101.","queue":"[]"},"note":"Vertex 4 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":5},"vars":{"color":"011010","queue":"[5]"},"note":"Vertex 5 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":5},"vars":{"color":"011010","queue":"[]"},"note":"Vertex 5 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":-1},"vars":{"color":"011010","queue":"[]"},"note":"The loop passes vertex 5 and finds every vertex colored, so the graph passes."}]}
 ```
 
 #### A Graph That Fails In Its Second Component
 
 The second graph has 6 vertices and the edges 0-1, 2-3, 3-4, 4-2 and 4-5. Vertices 2, 3 and 4 form a ring of three edges.
 
-The first component, vertices 0 and 1, passes in two steps. The restart loop then starts at vertex 2. Vertex 2 colors vertices 3 and 4 with color 1. When the search takes vertex 3 from the queue, it finds vertex 4 with the same color 1. That is a conflict, and the method stops with the answer false. Vertex 5 is never reached, and the method does not need it.
+The first component, vertices 0 and 1, passes in three steps. The restart loop then starts at vertex 2. Vertex 2 colors vertices 3 and 4 with color 1. When the search takes vertex 3 from the queue, it finds vertex 4 with the same color 1. That is a conflict, and the method stops with the answer false. Vertex 5 is never reached, and the method does not need it.
 
 ```trace
-{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"colors":"0.....","queue":"[0]"},"note":"Vertex 0 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":0},"vars":{"colors":"01....","queue":"[1]"},"note":"Vertex 0 leaves the queue and gives color 1 to neighbors [1]."},{"at":{"cur":1},"vars":{"colors":"01....","queue":"[]"},"note":"Vertex 1 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":2},"vars":{"colors":"010...","queue":"[2]"},"note":"Vertex 2 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":2},"vars":{"colors":"01011.","queue":"[3, 4]"},"note":"Vertex 2 leaves the queue and gives color 1 to neighbors [3, 4]."},{"at":{"cur":3},"vars":{"colors":"01011.","queue":"[4]"},"note":"Vertex 3 meets neighbor 4, and both hold color 1. The edge is a conflict, so the answer is false."}]}
+{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"color":"0.....","queue":"[0]"},"note":"Vertex 0 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":0},"vars":{"color":"01....","queue":"[1]"},"note":"Vertex 0 leaves the queue and gives color 1 to neighbors [1]."},{"at":{"cur":1},"vars":{"color":"01....","queue":"[]"},"note":"Vertex 1 leaves the queue, and every neighbor already holds the opposite color."},{"at":{"cur":2},"vars":{"color":"010...","queue":"[2]"},"note":"Vertex 2 is uncolored, so it becomes a new source and receives color 0."},{"at":{"cur":2},"vars":{"color":"01011.","queue":"[3, 4]"},"note":"Vertex 2 leaves the queue and gives color 1 to neighbors [3, 4]."},{"at":{"cur":3},"vars":{"color":"01011.","queue":"[4]"},"note":"Vertex 3 meets neighbor 4, and both hold color 1. The edge is a conflict, so the answer is false."}]}
 ```
 
 <!-- stage: code -->
@@ -128,14 +128,14 @@ static boolean canSplitInTwo(int n, int[][] edges) {
 }
 
 static boolean paint(List<List<Integer>> adj, int[] color, int source) {
-    ArrayDeque<Integer> frontier = new ArrayDeque<>();
+    ArrayDeque<Integer> queue = new ArrayDeque<>();
     color[source] = 0;
-    frontier.add(source);
-    while (!frontier.isEmpty()) {
-        int u = frontier.poll();
+    queue.add(source);
+    while (!queue.isEmpty()) {
+        int u = queue.poll();
         for (int v : adj.get(u)) {
             if (color[v] == color[u]) return false;
-            if (color[v] == -1) { color[v] = 1 - color[u]; frontier.add(v); }
+            if (color[v] == -1) { color[v] = 1 - color[u]; queue.add(v); }
         }
     }
     return true;
@@ -147,7 +147,7 @@ The conflict test runs before the coloring step. A neighbor that is still uncolo
 #### Cost Of The Two Methods
 
 - **Time** is O(n + m), because each vertex is colored once and each edge is examined twice.
-- **Space** is O(n + m), because of the adjacency list, the color array and the frontier.
+- **Space** is O(n + m), because of the adjacency list, the color array and the queue.
 
 The queue is not required. A depth-first search with the same coloring rule gives the same answer, because the rule depends on the edge and not on the visiting order.
 
@@ -160,7 +160,7 @@ Look for a statement that asks to split items into two groups so that every list
 
 #### The Invariant To Keep
 
-The invariant is that every edge examined so far joins two different colors, and every vertex in the frontier already holds its final color. A new color is assigned only through an edge from a colored vertex. The restart loop keeps the invariant true across components, because each component begins with a fresh source.
+The invariant is that every edge examined so far joins two different colors, and every vertex in the queue already holds its final color. A new color is assigned only through an edge from a colored vertex. The restart loop keeps the invariant true across components, because each component begins with a fresh source.
 
 #### The False Friend
 
@@ -168,7 +168,7 @@ Checking only the component of vertex 0 is the false friend of this pattern. It 
 
 #### Java Hazards
 
-Initialize `color` with -1, not 0, because the default 0 would mean a vertex already holds the first color. Compare colors for equality only after the neighbor is known to be colored. A self-loop is a legal edge in some statements, and it must return false.
+Initialize `color` with -1, not 0, because the default 0 would mean a vertex already holds the first color. Keep the equality test in front of the coloring step. An uncolored neighbor holds -1, which never equals 0 or 1, so the test cannot fire for it. A self-loop is a legal edge in some statements, and it must return false.
 
 <!-- stage: exercises -->
 ### Exercises

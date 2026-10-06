@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Return to this page after the lessons, and again after a few days. Each question describes a situation and hides the lesson name. Choose an answer before you read the explanation.
+A course scheduler accepts two courses that wait for each other, and a map counter reports three islands for one connected landmass. Each failure matches a question below. Return to this page after the lessons, and again after a few days. Each question describes a situation and hides the lesson name. Choose an answer before you read the explanation.
 
 ### Recognition Questions
 
@@ -18,7 +18,7 @@ Return to this page after the lessons, and again after a few days. Each question
 ```
 
 ```quiz
-{"id": "gt-rev-components", "q": "A walk from vertex 0 reaches 4 of 9 vertices. What does the count of walks need?", "options": ["One more walk from each unvisited vertex, and the number of starts is the component count", "Nothing, the graph has one component", "A second walk from vertex 0", "A sort of the vertices"], "answer": 0, "explain": "Every start on an unvisited vertex reaches one whole new component. Counting the starts counts the components."}
+{"id": "gt-rev-components", "q": "A program reports 1 cluster after one search from vertex 0, but that search reached only 4 of the 9 vertices. How does the program get the true cluster count?", "options": ["Nothing changes, because the graph has one component", "A second search from vertex 0", "Start a new search from each vertex still unvisited, and count the starts", "A sort of the vertices"], "answer": 2, "explain": "Every start on an unvisited vertex reaches one whole new component. Counting the starts counts the components."}
 ```
 
 ```quiz
@@ -43,4 +43,12 @@ Return to this page after the lessons, and again after a few days. Each question
 
 ```quiz
 {"id": "gt-rev-directed-finished", "q": "A directed walk reaches a neighbor that is already finished. What does it conclude?", "options": ["A cycle exists", "No cycle passes through that edge", "The graph is undirected", "The walk must restart"], "answer": 1, "explain": "A finished vertex has no route back to the active chain. Only an edge to an active vertex closes a directed cycle."}
+```
+
+```quiz
+{"id": "gt-rev-clone-shared-vertex", "q": "A cloned graph has a vertex whose neighbor list holds an original vertex and not a copy. Which step caused it?", "options": ["The clone sorted the neighbor list", "The clone added a neighbor without looking up its copy in the map", "The clone used a queue", "The clone copied the label twice"], "answer": 1, "explain": "Every neighbor of a copy must be the copy of the original neighbor. The map from originals to copies supplies it, and a direct add leaves a pointer into the original graph."}
+```
+
+```quiz
+{"id": "gt-rev-grid-walk-answer", "q": "A flood over a grid uses the same neighbors and the same marking rule for two tasks, counting islands and measuring the largest island. What differs between the two?", "options": ["The grid neighbors", "The moment of marking", "The value the walk returns for each start", "The number of directions"], "answer": 2, "explain": "The grid supplies the vertices and edges, and the marking rule keeps each cell scheduled once. Only the question asked of each walk changes, a count of starts or the size of one walk."}
 ```

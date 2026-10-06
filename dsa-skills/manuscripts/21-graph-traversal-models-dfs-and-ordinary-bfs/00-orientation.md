@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A route planner reports that a city is unreachable, but a friend drives there every week. A photo editor recolors one patch of sky and leaves a patch that touches it at a corner. A copy of a social network ends up with every user pointing back at the original accounts. A prerequisite checker accepts a course plan in which two courses wait for each other. Each program treats a set of connected things as a plain list, and each failure comes from forgetting which things were already seen. This chapter teaches how to store connections, walk them once, and answer questions about the walk.
+A route planner reports that a city is unreachable, but a friend drives there every week. A photo editor recolors a patch that is not connected to the one the user clicked. A copy of a social network ends up with every user pointing back at the original accounts. A prerequisite checker accepts a course plan in which two courses wait for each other. Each program treats a set of connected things as a plain list, and each failure comes from forgetting which things were already seen. This chapter teaches how to store connections, walk them once, and answer questions about the walk.
 
 ### Prerequisites
 
@@ -18,7 +18,7 @@ Each lesson adds one piece of state to a graph walk.
 - **Grid Graphs** treats cells as vertices and the four moves as edges.
 - **Path Enumeration** lists every route and removes the last vertex after each branch.
 - **Unweighted Shortest Paths** uses a queue so the first discovery of a vertex is the shortest.
-- **Bipartite Coloring** gives each edge two different colors and reports the first conflict.
+- **Bipartite Coloring** gives each vertex one of two colors so that the ends of every edge differ, and reports the first conflict.
 - **Cycle Detection** separates the edge back to the parent from a real cycle, and a finished vertex from an active one.
 
 ### The Combination Lesson

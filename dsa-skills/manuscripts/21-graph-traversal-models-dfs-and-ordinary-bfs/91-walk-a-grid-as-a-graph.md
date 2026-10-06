@@ -5,9 +5,9 @@
 <!-- stage: context -->
 ### Why A Region Count Runs Too High
 
-A level editor for a tile game shows a map of land and water tiles. The designer asks for two things. The first is the number of separate land regions. The second is a saved copy of one region as a graph of tile objects, so that an undo step can restore it. The first version of the region counter reported 11 regions on a map that held 4. The undo copy also shared tile objects with the live map, so editing the copy changed the map.
+A level editor for a game shows a map of land and water cells. The designer asks for two things. The first is the number of separate land regions. The second is a saved copy of one region as a graph of cell objects, so that an undo step can restore it. The first version of the region counter reported 11 regions on a map that held 4. The undo copy also shared cell objects with the live map, so editing the copy changed the map.
 
-Both defects come from the same mistake. The code has no clear owner for the question of which tile or object it has already reached. This lesson asks how one traversal serves a table of tiles and a graph of objects, and what changes when the rules of a problem change.
+Both defects come from the same mistake. The code has no clear owner for the question of which cell or object it has already reached. This lesson asks how one traversal serves a table of cells and a graph of objects, and what changes when the rules of a problem change.
 
 <!-- stage: contributions -->
 ### What Each Earlier Lesson Adds
@@ -19,9 +19,9 @@ The Graph Cloning lesson contributes the identity map. It pairs each original ob
 Neither lesson answers the whole editor problem alone. Grid Graphs has no object copies, and Graph Cloning never generates neighbors from coordinates. The combination decides how a changed rule enters the code, which is the subject of the lesson.
 
 <!-- stage: naive -->
-### Searching Again From Every Land Tile
+### Searching Again From Every Land Cell
 
-The direct plan treats each land tile as a possible start. For each land tile, the plan floods its region with a new `visited` array and finds the smallest tile id in that region. The tile counts as a region start only when its own id is that smallest id.
+The direct plan treats each land cell as a possible start. For each land cell, the plan floods its region with a new `visited` array and finds the smallest cell id in that region. The cell counts as a region start only when its own id is that smallest id.
 
 ```java
 static int countRegionsSlow(int[][] grid) {
@@ -51,19 +51,19 @@ static int countRegionsSlow(int[][] grid) {
 ```
 
 ```predict
-A map has 3 rows and 3 columns, and every tile is land. The method returns the right count of 1 region. How many tiles does it take off the stack in total?
+A map has 3 rows and 3 columns, and every cell is land. The method returns the right count of 1 region. How many cells does it take off the stack in total?
 
-It takes 81 tiles off the stack. Each of the 9 start tiles floods the whole map of 9 tiles. A single shared search would take each tile off once, which is 9 pops.
+It takes 81 cells off the stack. Each of the 9 start cells floods the whole map of 9 cells. A single shared search would take each cell off once, which is 9 pops.
 ```
 
 <!-- stage: bottleneck -->
 ### Counting Repeated Floods
 
-The method returns correct counts, but it throws away what each flood learned. The method floods a region of `k` tiles `k` times, once from each of its tiles. Each flood costs O(k), so the region costs O(k^2). On a map of `rows * cols` land tiles the total is O((rows * cols)^2). A map of 1,000 by 1,000 tiles needs about 10^12 pops.
+The method returns correct counts, but it throws away what each flood learned. The method floods a region of `k` cells `k` times, once from each of its cells. Each flood costs O(k), so the region costs O(k^2). On a map of `rows * cols` land cells the total is O((rows * cols)^2). A map of 1,000 by 1,000 cells needs about 10^12 pops.
 
-The allocation adds to the cost. Each start allocates a new array of `rows * cols` flags, so even water-heavy maps pay for the arrays. The method also hides a second problem. It cannot report a region's size, first tile or copy without running another flood, because the knowledge of which tiles belong together dies with each `seen` array.
+The allocation adds to the cost. Each start allocates a new array of `rows * cols` flags, so each land start pays O(rows * cols) for its fresh array, whatever the size of its region. The method also hides a second problem. It cannot report a region's size, first cell or copy without running another flood, because the knowledge of which cells belong together dies with each `seen` array.
 
-The editor needs one record of reached tiles that lives across all starts. The program then finds each region once, and the same record can carry data about the region.
+The editor needs one record of reached cells that lives across all starts. The program then finds each region once, and the same record can carry data about the region.
 
 <!-- stage: insight -->
 ### One Traversal For Many Rules
@@ -107,7 +107,7 @@ The first trace counts regions on a table with three rows and four columns, flat
 The first land cell, cell 0, starts region 1. The search walks the diagonal through cells 5 and 10 and then reaches cell 11. Cell 3 sits in the top right corner and touches none of them, so the scan reaches it next and starts region 2. The scan also meets cells 5, 10 and 11 again, and each time it skips them, because `visited` already holds them.
 
 ```trace
-{"cells":[1,0,0,1,0,1,0,0,0,0,1,1],"pointers":["scan","cur"],"steps":[{"at":{"scan":0,"cur":-1},"vars":{"count":"1","frontier":"[0]"},"note":"Cell 0 is land and no search has reached it. It begins region 1 and enters the frontier."},{"at":{"scan":0,"cur":0},"vars":{"count":"1","frontier":"[5]"},"note":"Cell 0 leaves the frontier. Of its eight candidates, cells 5 join the frontier, and the corner contact brings in 5."},{"at":{"scan":0,"cur":5},"vars":{"count":"1","frontier":"[10]"},"note":"The search expands cell 5. Of its eight candidates, cells 10 join the frontier, and the corner contact brings in 10."},{"at":{"scan":0,"cur":10},"vars":{"count":"1","frontier":"[11]"},"note":"Next the search takes cell 10. Of its eight candidates, cells 11 join the frontier."},{"at":{"scan":0,"cur":11},"vars":{"count":"1","frontier":"[]"},"note":"Cell 11 leaves the frontier. Of its eight candidates, no new cell qualifies."},{"at":{"scan":3,"cur":-1},"vars":{"count":"2","frontier":"[3]"},"note":"Cell 3 is land and no search has reached it. It begins region 2 and enters the frontier."},{"at":{"scan":3,"cur":3},"vars":{"count":"2","frontier":"[]"},"note":"Cell 3 leaves the frontier. Of its eight candidates, no new cell qualifies."},{"at":{"scan":5,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan reaches cell 5. It holds land, but visited already marks it, so no new search starts."},{"at":{"scan":10,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan reaches cell 10. It holds land, but visited already marks it, so no new search starts."},{"at":{"scan":11,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan reaches cell 11. It holds land, but visited already marks it, so no new search starts."},{"at":{"scan":12,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan passes the last cell. The map holds 2 regions."}]}
+{"cells":[1,0,0,1,0,1,0,0,0,0,1,1],"pointers":["scan","cur"],"steps":[{"at":{"scan":0,"cur":-1},"vars":{"count":"1","frontier":"[0]"},"note":"Cell 0 is land and no search has reached it. It begins region 1 and enters the frontier."},{"at":{"scan":0,"cur":0},"vars":{"count":"1","frontier":"[5]"},"note":"Cell 0 leaves the frontier. Of its eight candidates, only cell 5 joins the frontier, by corner contact."},{"at":{"scan":0,"cur":5},"vars":{"count":"1","frontier":"[10]"},"note":"The search expands cell 5. Of its eight candidates, only cell 10 joins the frontier, by corner contact."},{"at":{"scan":0,"cur":10},"vars":{"count":"1","frontier":"[11]"},"note":"Next the search takes cell 10. Of its eight candidates, only cell 11 joins the frontier."},{"at":{"scan":0,"cur":11},"vars":{"count":"1","frontier":"[]"},"note":"Cell 11 leaves the frontier. Of its eight candidates, no new cell qualifies."},{"at":{"scan":3,"cur":-1},"vars":{"count":"2","frontier":"[3]"},"note":"Cell 3 is land and no search has reached it. It begins region 2 and enters the frontier."},{"at":{"scan":3,"cur":3},"vars":{"count":"2","frontier":"[]"},"note":"Cell 3 leaves the frontier. Of its eight candidates, no new cell qualifies."},{"at":{"scan":5,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan reaches cell 5. It holds land, but visited already marks it, so no new search starts."},{"at":{"scan":10,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan reaches cell 10. It holds land, but visited already marks it, so no new search starts."},{"at":{"scan":11,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan reaches cell 11. It holds land, but visited already marks it, so no new search starts."},{"at":{"scan":12,"cur":-1},"vars":{"count":"2","frontier":"[]"},"note":"The scan passes the last cell. The map holds 2 regions."}]}
 ```
 
 #### Cloning One Region
@@ -117,7 +117,7 @@ The second trace copies the region of the first land cell in a table with three 
 Cell 0 starts the walk and receives its copy first. Cell 1 then links back to the copy of cell 0, and the walk does not create a second copy. Cells 6 and 8 never appear, because they belong to other regions.
 
 ```trace
-{"cells":[1,1,0,0,1,0,1,0,1],"pointers":["cur"],"steps":[{"at":{"cur":-1},"vars":{"copies":"1","frontier":"[0]"},"note":"The first land cell is 0. Its copy is created at once and the cell enters the frontier."},{"at":{"cur":0},"vars":{"copies":"2","frontier":"[1]"},"note":"Cell 0 leaves the frontier. Its copy now lists [1]; cells 1 get new copies and enter the frontier."},{"at":{"cur":1},"vars":{"copies":"3","frontier":"[4]"},"note":"The walk expands cell 1. Its copy now lists [0, 4]; cells 4 get new copies and enter the frontier; the copies of cells 0 exist already, so the walk only links to them."},{"at":{"cur":4},"vars":{"copies":"3","frontier":"[]"},"note":"Cell 4 leaves the frontier. Its copy now lists [1]; the copies of cells 1 exist already, so the walk only links to them."}]}
+{"cells":[1,1,0,0,1,0,1,0,1],"pointers":["cur"],"steps":[{"at":{"cur":-1},"vars":{"copies":"1","frontier":"[0]"},"note":"The first land cell is 0. Its copy is created at once and the cell enters the frontier."},{"at":{"cur":0},"vars":{"copies":"2","frontier":"[1]"},"note":"Cell 0 leaves the frontier. Its copy now lists [1], and cell 1 gets a new copy and enters the frontier."},{"at":{"cur":1},"vars":{"copies":"3","frontier":"[4]"},"note":"The walk expands cell 1. Its copy now lists [0, 4]. Cell 4 gets a new copy and enters the frontier, and the copy of cell 0 exists already, so the walk only links to it."},{"at":{"cur":4},"vars":{"copies":"3","frontier":"[]"},"note":"Cell 4 leaves the frontier. Its copy now lists [1]. The copy of cell 1 exists already, so the walk only links to it."}]}
 ```
 
 <!-- stage: code -->
@@ -125,21 +125,21 @@ Cell 0 starts the walk and receives its copy first. Cell 1 then links back to th
 
 #### Counting Regions With A Chosen Direction Table
 
-The method below takes the direction table as a parameter. A caller passes four steps or eight and gets the matching regions.
+The method below takes the direction table as a parameter. A caller passes four steps or eight and gets the matching regions. The outer loop is the start loop, the loop over `dirs` with its two tests is the neighbor function written inline, and the lines that set `visited` apply the discovery rule.
 
 ```java
 static int regionCount(int[][] grid, int[][] dirs) {
-    int rows = grid.length, cols = grid[0].length, regions = 0;
+    int rows = grid.length, cols = grid[0].length, count = 0;
     boolean[] visited = new boolean[rows * cols];          // one array shared by every search
-    for (int start = 0; start < rows * cols; start++) {    // the start loop
-        if (grid[start / cols][start % cols] != 1 || visited[start]) continue;
-        regions++;                                         // an unreached land cell begins a region
+    for (int scan = 0; scan < rows * cols; scan++) {       // the start loop
+        if (grid[scan / cols][scan % cols] != 1 || visited[scan]) continue;
+        count++;                                           // an unreached land cell begins a region
         ArrayDeque<Integer> frontier = new ArrayDeque<>();
-        visited[start] = true;
-        frontier.add(start);
+        visited[scan] = true;
+        frontier.add(scan);
         while (!frontier.isEmpty()) {
             int cur = frontier.poll();
-            for (int[] d : dirs) {
+            for (int[] d : dirs) {                         // the neighbor function, written inline
                 int nr = cur / cols + d[0], nc = cur % cols + d[1];
                 if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
                 int id = nr * cols + nc;
@@ -147,41 +147,63 @@ static int regionCount(int[][] grid, int[][] dirs) {
             }
         }
     }
-    return regions;
+    return count;
 }
 ```
 
 #### Copying Objects With An Identity Map
 
-The second method copies a graph of objects. The class wraps both the node type and the method so that the block compiles on its own.
+The second method copies a graph of objects. The class wraps the node type and both methods so that the block compiles on its own. The method `buildNodes` makes one `Node` for each land cell and lists the neighbors in the order up, left, right, down.
 
 ```java
 final class RegionCopy {
-    static final class Tile {
+    static final class Node {
         final int id;
-        final java.util.List<Tile> neighbors = new java.util.ArrayList<>();
-        Tile(int id) { this.id = id; }
+        final List<Node> neighbors = new ArrayList<>();
+        Node(int id) { this.id = id; }
     }
 
-    static Tile copyRegion(Tile first) {
-        java.util.HashMap<Tile, Tile> copies = new java.util.HashMap<>();   // original to copy
-        java.util.ArrayDeque<Tile> frontier = new java.util.ArrayDeque<>();
-        copies.put(first, new Tile(first.id));                            // mark when found
+    static Node copyRegion(Node first) {
+        HashMap<Node, Node> copies = new HashMap<>();             // original to copy
+        ArrayDeque<Node> frontier = new ArrayDeque<>();
+        copies.put(first, new Node(first.id));                    // mark when found
         frontier.add(first);
         while (!frontier.isEmpty()) {
-            Tile cur = frontier.poll();
-            for (Tile nb : cur.neighbors) {
-                if (!copies.containsKey(nb)) {                            // not found before
-                    copies.put(nb, new Tile(nb.id));
+            Node cur = frontier.poll();
+            for (Node nb : cur.neighbors) {
+                if (!copies.containsKey(nb)) {                    // not found before
+                    copies.put(nb, new Node(nb.id));
                     frontier.add(nb);
                 }
-                copies.get(cur).neighbors.add(copies.get(nb));                 // link copy to copy
+                copies.get(cur).neighbors.add(copies.get(nb));    // link copy to copy
             }
         }
         return copies.get(first);
     }
+
+    static Node[] buildNodes(int[][] grid) {
+        int rows = grid.length, cols = grid[0].length;
+        Node[] nodes = new Node[rows * cols];                     // null marks a water cell
+        for (int id = 0; id < rows * cols; id++) {
+            if (grid[id / cols][id % cols] == 1) nodes[id] = new Node(id);
+        }
+        int[][] order = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}};       // up, left, right, down
+        for (int id = 0; id < rows * cols; id++) {
+            if (nodes[id] == null) continue;
+            for (int[] d : order) {
+                int nr = id / cols + d[0], nc = id % cols + d[1];
+                if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+                if (nodes[nr * cols + nc] != null) nodes[id].neighbors.add(nodes[nr * cols + nc]);
+            }
+        }
+        return nodes;
+    }
 }
 ```
+
+#### Building Then Copying One Region
+
+Take the map `[[1,1],[0,1]]`. The cells 0, 1 and 3 are land, and cell 2 is water. The method `buildNodes` gives node 0 the list `[1]`, because its cell has water below it. Node 1 receives `[0, 3]`, and node 3 receives `[1]`. The call `copyRegion(nodes[0])` then copies node 0, finds node 1 through it and copies node 1, and finds node 3 through node 1. Each copy lists the same values as its original, and no copy is an original. The Recognize exercise changes the Clone Graph contract in exactly this way. The objects come from coordinates first, and the copy step stays the same.
 
 #### Cost Of Both Forms
 
@@ -194,7 +216,7 @@ final class RegionCopy {
 
 #### Mapping A Changed Rule To One Part
 
-Read a changed contract and ask which of the three parts it touches. A new set of moves belongs to the direction table. A new eligibility rule belongs to the neighbor function. A new quantity to report belongs to the start loop. A new kind of vertex belongs to the discovery rule. Changing one part leaves the other two unchanged.
+Read a changed contract and ask which of the three parts it touches. A new set of moves or a new eligibility rule belongs to the neighbor function, and the moves sit in its direction table. A new quantity to report belongs to the start loop. A new kind of vertex belongs to the discovery rule. Changing one part leaves the other two unchanged.
 
 #### Keeping The Invariant Across Contracts
 

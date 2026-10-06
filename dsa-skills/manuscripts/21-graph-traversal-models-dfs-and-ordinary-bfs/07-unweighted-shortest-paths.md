@@ -57,9 +57,13 @@ The **distance** of a vertex is the length of the shortest path from the source 
 
 <!-- names: distance, level, predecessor -->
 
-#### Why First Discovery Is Shortest
+#### How The Queue Assigns Distances
 
-The search keeps a queue of discovered vertices that wait for expansion. It removes the front vertex `current`. Every unvisited neighbor `next` of that vertex is marked visited, receives `distance[next] = distance[current] + 1` and joins the back of the queue. At any moment the queue contains the rest of one level, then a part of the following level, and nothing else. Therefore removals never return to a smaller distance. A vertex is first discovered by an expanded vertex of the smallest possible level, so that first assigned value is its true distance. The invariant is that BFS dequeues vertices in nondecreasing distance.
+The search keeps a queue of discovered vertices that wait for expansion. It removes the front vertex `current`. Every unvisited neighbor `next` of that vertex is marked visited, receives `distance[next] = distance[current] + 1` and joins the back of the queue. On the chain 0, 1, 2, vertex 1 has distance 1, so it gives vertex 2 the distance 2.
+
+#### Why The First Value Is Final
+
+At any moment the queue contains the rest of one level, then a part of the following level, and nothing else. Therefore removals never return to a smaller distance. A vertex is first discovered by an expanded vertex of the smallest possible level, so that first assigned value is its true distance. The invariant is that BFS dequeues vertices in nondecreasing distance.
 
 #### Remembering Where A Vertex Came From
 
@@ -68,7 +72,7 @@ The discovering vertex of `next` is its **predecessor**. Storing `predecessor[ne
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search keeps four arrays and one queue, and each has a fixed starting value.
+The search keeps the list `adj`, three arrays and one queue. The code below uses `adj`, `visited`, `distance` and `queue`. The array `predecessor` is not in that code, and the exercise Restore One Shortest Path adds it. Each name has a fixed starting value.
 
 - **adj** is the adjacency list; `adj.get(v)` holds the neighbors of `v`.
 - **visited** is a boolean array; `true` means the vertex was already discovered.
@@ -84,7 +88,7 @@ The search keeps four arrays and one queue, and each has a fixed starting value.
 The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3, 3 to 4 and 4 to 5, with source 0. Here the cells are the vertex ids, and the pointer `cur` shows the vertex that was just taken from the queue. The search takes 0 and discovers 1 and 2 at distance 1. It then takes 1 and discovers 3 at distance 2. When it takes 2, the vertex 3 is already visited, so the second route to 3 changes nothing. The distances grow by one at each level, up to 4 for vertex 5.
 
 ```trace
-{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"distance":"0,1,1,-1,-1,-1","queue":"1-2"},"note":"The search takes vertex 0 from the queue and discovers 1, 2, each at distance 1."},{"at":{"cur":1},"vars":{"distance":"0,1,1,2,-1,-1","queue":"2-3"},"note":"The search takes vertex 1 from the queue and discovers 3, each at distance 2."},{"at":{"cur":2},"vars":{"distance":"0,1,1,2,-1,-1","queue":"3"},"note":"After taking vertex 2, the search finds nothing new to enqueue."},{"at":{"cur":3},"vars":{"distance":"0,1,1,2,3,-1","queue":"4"},"note":"The search takes vertex 3 from the queue and discovers 4, each at distance 3."},{"at":{"cur":4},"vars":{"distance":"0,1,1,2,3,4","queue":"5"},"note":"The search takes vertex 4 from the queue and discovers 5, each at distance 4."},{"at":{"cur":5},"vars":{"distance":"0,1,1,2,3,4","queue":"empty"},"note":"After taking vertex 5, the search finds nothing new to enqueue."}]}
+{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"distance":"0,1,1,-1,-1,-1","queue":"1-2"},"note":"The search takes vertex 0 from the queue and discovers vertices 1 and 2, each at distance 1."},{"at":{"cur":1},"vars":{"distance":"0,1,1,2,-1,-1","queue":"2-3"},"note":"The search takes vertex 1 from the queue and discovers vertex 3 at distance 2."},{"at":{"cur":2},"vars":{"distance":"0,1,1,2,-1,-1","queue":"3"},"note":"After taking vertex 2, the search finds nothing new to enqueue."},{"at":{"cur":3},"vars":{"distance":"0,1,1,2,3,-1","queue":"4"},"note":"The search takes vertex 3 from the queue and discovers vertex 4 at distance 3."},{"at":{"cur":4},"vars":{"distance":"0,1,1,2,3,4","queue":"5"},"note":"The search takes vertex 4 from the queue and discovers vertex 5 at distance 4."},{"at":{"cur":5},"vars":{"distance":"0,1,1,2,3,4","queue":"empty"},"note":"After taking vertex 5, the search finds nothing new to enqueue."}]}
 ```
 
 #### A Graph With Unreachable Vertices
@@ -92,7 +96,7 @@ The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3, 3 to 4 and 4 to 5,
 The second graph has the edges 0 to 1, 1 to 2, 0 to 2, 2 to 3 and 4 to 5. Vertices 4 and 5 form a separate piece. The queue becomes empty after vertex 3, so the loop ends, and vertices 4 and 5 keep distance -1. That value is the answer for an unreachable target.
 
 ```trace
-{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"distance":"0,1,1,-1,-1,-1","queue":"1-2"},"note":"The search takes vertex 0 from the queue and discovers 1, 2, each at distance 1."},{"at":{"cur":1},"vars":{"distance":"0,1,1,-1,-1,-1","queue":"2"},"note":"The queue gives vertex 1, and it has no undiscovered neighbor to add."},{"at":{"cur":2},"vars":{"distance":"0,1,1,2,-1,-1","queue":"3"},"note":"The search takes vertex 2 from the queue and discovers 3, each at distance 2."},{"at":{"cur":3},"vars":{"distance":"0,1,1,2,-1,-1","queue":"empty"},"note":"Vertex 3 comes off the queue, but all its neighbors are visited already, so nothing changes."}]}
+{"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"distance":"0,1,1,-1,-1,-1","queue":"1-2"},"note":"The search takes vertex 0 from the queue and discovers vertices 1 and 2, each at distance 1."},{"at":{"cur":1},"vars":{"distance":"0,1,1,-1,-1,-1","queue":"2"},"note":"The queue gives vertex 1, and it has no undiscovered neighbor to add."},{"at":{"cur":2},"vars":{"distance":"0,1,1,2,-1,-1","queue":"3"},"note":"The search takes vertex 2 from the queue and discovers vertex 3 at distance 2."},{"at":{"cur":3},"vars":{"distance":"0,1,1,2,-1,-1","queue":"empty"},"note":"Vertex 3 comes off the queue, but all its neighbors are visited already, so nothing changes."}]}
 ```
 
 <!-- stage: code -->

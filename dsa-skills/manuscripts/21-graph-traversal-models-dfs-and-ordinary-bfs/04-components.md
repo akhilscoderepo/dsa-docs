@@ -36,7 +36,7 @@ static void markReachable(List<List<Integer>> adj, boolean[] visited, int v) {
 The method visits each vertex and edge at most once, so it is fast. It returns 4 for this graph. The correct answer is 3, because the vertices 3 and 4 share an edge and belong to one group.
 
 <!-- stage: bottleneck -->
-### Counting Groups Of Unreached Vertices
+### Why Counting Unreached Vertices Fails
 
 ```predict
 The method returns 4 and the correct count is 3. Which step of the method causes the error, and does a faster search fix it?
@@ -53,7 +53,7 @@ The repair is simple to state. The unreached vertices form a graph of their own,
 
 #### Defining A Component
 
-A **component** of an undirected graph is a maximal set of vertices in which every pair is joined by a path. Maximal means that the set cannot grow, because no edge leaves it. Every vertex belongs to exactly one component. A graph with more than one component is **disconnected**. A vertex with no edge is an **isolated vertex**, and it forms a component of size 1.
+A **component** of an undirected graph is a maximal set of vertices in which every pair is joined by a path, which is a chain of edges. Maximal means that the set cannot grow, because no edge leaves it. Every vertex belongs to exactly one component. A graph with more than one component is **disconnected**. A vertex with no edge is an **isolated vertex**, and it forms a component of size 1.
 
 <!-- names: component, disconnected, isolated vertex -->
 
@@ -65,10 +65,14 @@ The algorithm keeps `visited` for the whole run and loops over every vertex numb
 
 The invariant is that every outer-loop start on an unmarked vertex discovers exactly one new component. The vertex is unmarked, so no earlier search reached it, and its component is new. The search reaches all of that component, because the component is closed under edges. The search reaches nothing outside it, because no edge leaves it. After the search, the whole component is marked, so no later start can find it again. The counter therefore equals the number of components. The size of the search, meaning the number of vertices it marks, equals the size of the component.
 
+#### Joining Components With Edges
+
+An added edge between two different components merges them into one, and an edge inside a component changes nothing. One edge therefore lowers the component count by at most 1. A graph with `c` components needs exactly `c - 1` added edges to become connected.
+
 <!-- stage: variables -->
 ### State For Counting Components
 
-The loop needs four values, and `visited` is the only one that survives from one start to the next.
+The loop needs four values. The values `visited` and `count` persist across all starts, and `size` starts again for each search.
 
 - **visited** is a `boolean[n]` that lives for the whole loop and is never reset between starts.
 - **start** is the loop index, and it is a new source whenever `visited[start]` is false.
@@ -87,7 +91,7 @@ The first trace uses the graph from the naive stage, with the edges 0-1, 1-2 and
 The loop starts a search at vertex 0 and finds three vertices. It skips vertices 1 and 2, which are marked. It starts a second search at vertex 3 and finds two vertices. Vertex 4 is skipped, and vertex 5 starts a third search that finds one vertex.
 
 ```trace
-{"cells":[0,1,2,3,4,5],"pointers":["start"],"steps":[{"at":{"start":0},"vars":{"count":1,"size":3,"marked":"[0,1,2]"},"note":"The loop finds vertex 0 unmarked and opens component 1, and the search reaches 3 vertices."},{"at":{"start":1},"vars":{"count":1,"size":"-","marked":"[0,1,2]"},"note":"The loop reaches vertex 1, finds it marked and skips it."},{"at":{"start":2},"vars":{"count":1,"size":"-","marked":"[0,1,2]"},"note":"Vertex 2 belongs to an earlier component, so no new search starts."},{"at":{"start":3},"vars":{"count":2,"size":2,"marked":"[0,1,2,3,4]"},"note":"Vertex 3 has no mark, so component 2 begins here and the search marks 2 vertices."},{"at":{"start":4},"vars":{"count":2,"size":"-","marked":"[0,1,2,3,4]"},"note":"The loop reaches vertex 4, finds it marked and skips it."},{"at":{"start":5},"vars":{"count":3,"size":1,"marked":"[0,1,2,3,4,5]"},"note":"Vertex 5 is unmarked, so the loop starts a search and counts component 3. The search marks 1 vertices."}]}
+{"cells":[0,1,2,3,4,5],"pointers":["start"],"steps":[{"at":{"start":0},"vars":{"count":1,"size":3,"marked":"[0,1,2]"},"note":"The loop finds vertex 0 unmarked and opens component 1, and the search reaches 3 vertices."},{"at":{"start":1},"vars":{"count":1,"size":"-","marked":"[0,1,2]"},"note":"The loop reaches vertex 1, finds it marked and skips it."},{"at":{"start":2},"vars":{"count":1,"size":"-","marked":"[0,1,2]"},"note":"Vertex 2 belongs to an earlier component, so no new search starts."},{"at":{"start":3},"vars":{"count":2,"size":2,"marked":"[0,1,2,3,4]"},"note":"Vertex 3 has no mark, so component 2 begins here and the search marks 2 vertices."},{"at":{"start":4},"vars":{"count":2,"size":"-","marked":"[0,1,2,3,4]"},"note":"The loop reaches vertex 4, finds it marked and skips it."},{"at":{"start":5},"vars":{"count":3,"size":1,"marked":"[0,1,2,3,4,5]"},"note":"Vertex 5 is unmarked, so the loop starts a search and counts component 3. The search marks 1 vertex."}]}
 ```
 
 #### A Cycle And A Single Vertex
@@ -97,7 +101,7 @@ The second trace uses seven vertices and the edges 0-6, 2-6, 1-4, 4-5 and 5-1. T
 The search from vertex 0 reaches vertices 6 and 2 as well, so the loop skips vertex 2. The search from vertex 1 goes around the cycle and stops when it meets marked vertices.
 
 ```trace
-{"cells":[0,1,2,3,4,5,6],"pointers":["start"],"steps":[{"at":{"start":0},"vars":{"count":1,"size":3,"marked":"[0,2,6]"},"note":"The loop reaches unmarked vertex 0, so it counts component 1, and the search marks 3 vertices."},{"at":{"start":1},"vars":{"count":2,"size":3,"marked":"[0,1,2,4,5,6]"},"note":"The loop reaches unmarked vertex 1, so it counts component 2, and the search marks 3 vertices."},{"at":{"start":2},"vars":{"count":2,"size":"-","marked":"[0,1,2,4,5,6]"},"note":"Vertex 2 already carries a mark from an earlier search, so the loop does not start another."},{"at":{"start":3},"vars":{"count":3,"size":1,"marked":"[0,1,2,3,4,5,6]"},"note":"The loop reaches unmarked vertex 3, so it counts component 3, and the search marks 1 vertices."},{"at":{"start":4},"vars":{"count":3,"size":"-","marked":"[0,1,2,3,4,5,6]"},"note":"Vertex 4 already carries a mark from an earlier search, so the loop does not start another."},{"at":{"start":5},"vars":{"count":3,"size":"-","marked":"[0,1,2,3,4,5,6]"},"note":"Vertex 5 already carries a mark from an earlier search, so the loop does not start another."},{"at":{"start":6},"vars":{"count":3,"size":"-","marked":"[0,1,2,3,4,5,6]"},"note":"Vertex 6 already carries a mark from an earlier search, so the loop does not start another."}]}
+{"cells":[0,1,2,3,4,5,6],"pointers":["start"],"steps":[{"at":{"start":0},"vars":{"count":1,"size":3,"marked":"[0,2,6]"},"note":"The loop reaches unmarked vertex 0, so it counts component 1, and the search marks 3 vertices."},{"at":{"start":1},"vars":{"count":2,"size":3,"marked":"[0,1,2,4,5,6]"},"note":"The loop reaches unmarked vertex 1, so it counts component 2, and the search marks 3 vertices."},{"at":{"start":2},"vars":{"count":2,"size":"-","marked":"[0,1,2,4,5,6]"},"note":"Vertex 2 already carries a mark from an earlier search, so the loop does not start another."},{"at":{"start":3},"vars":{"count":3,"size":1,"marked":"[0,1,2,3,4,5,6]"},"note":"The loop reaches unmarked vertex 3, so it counts component 3, and the search marks 1 vertex."},{"at":{"start":4},"vars":{"count":3,"size":"-","marked":"[0,1,2,3,4,5,6]"},"note":"Vertex 4 already carries a mark from an earlier search, so the loop does not start another."},{"at":{"start":5},"vars":{"count":3,"size":"-","marked":"[0,1,2,3,4,5,6]"},"note":"Vertex 5 already carries a mark from an earlier search, so the loop does not start another."},{"at":{"start":6},"vars":{"count":3,"size":"-","marked":"[0,1,2,3,4,5,6]"},"note":"Vertex 6 already carries a mark from an earlier search, so the loop does not start another."}]}
 ```
 
 <!-- stage: code -->
@@ -172,7 +176,7 @@ Create `visited` once before the loop and not inside it. Count at the call site 
 
 **Hint.** What does the outer loop do when it reaches a vertex that an earlier search already marked?
 
-**Changed decision.** Basic case: the program starts a search from every unmarked vertex and not only from vertex 0.
+**Changed decision.** The program starts a search from every unmarked vertex and not only from vertex 0.
 
 #### [Vary] Component Sizes (Author exercise)
 <!-- id: gt-component-sizes -->

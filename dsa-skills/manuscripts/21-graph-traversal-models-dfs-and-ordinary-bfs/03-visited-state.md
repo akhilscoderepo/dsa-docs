@@ -12,7 +12,7 @@ Both failures come from one question: at which moment does the program record th
 <!-- stage: naive -->
 ### Marking When A Vertex Leaves The Queue
 
-Take a graph with five vertices numbered 0 to 4 and the undirected edges 0-1, 0-2, 1-3, 2-3 and 3-4. Vertex 3 has two paths from vertex 0, one through vertex 1 and one through vertex 2. The adjacency list is `adj`, and the vertex where the search starts is the source.
+Take a graph with five vertices numbered 0 to 4 and the undirected edges 0-1, 0-2, 1-3, 2-3 and 3-4. A path is a chain of edges that leads from one vertex to another. Vertex 3 has two paths from vertex 0, one through vertex 1 and one through vertex 2. The adjacency list is `adj`, and the vertex where the search starts is the source.
 
 The natural first version of BFS keeps a boolean array `visited` and sets `visited[v]` when it takes `v` from the queue. It adds a neighbor to the queue only when `visited[w]` is still false.
 
@@ -56,51 +56,50 @@ The fix moves the mark to the moment the traversal decides to process a vertex. 
 
 #### Marking In Breadth-First Search
 
-BFS schedules a vertex when it adds the vertex to the queue. The queue is also called the frontier, because it holds vertices that the search has discovered and not yet expanded. The rule is to set `visited[w] = true` in the same step that adds `w`. The word enqueue names that addition. After that step, no later neighbor passes the test `!visited[w]`. Each vertex enters the frontier at most once, so the frontier never holds more than `n` entries in total.
+BFS schedules a vertex when it adds the vertex to the queue. The queue is also called the frontier, because it holds vertices that the search has discovered and not yet expanded. The rule is to set `visited[w] = true` in the same step that adds `w`, and to enqueue means to make that addition. After that step, no later neighbor passes the test `!visited[w]`. Each vertex enters the frontier at most once, so the frontier never holds more than `n` entries in total.
 
 <!-- names: frontier, enqueue, stack -->
 
 #### Marking In Depth-First Search
 
-DFS schedules a vertex when it enters the vertex. In the recursive form, entering means the start of the call, so the first statement of the call sets the mark. The call stack then holds the vertices on the current path. An iterative form uses an explicit stack, which is last in and first out. The stack can hold the same vertex twice if the mark is set only at entry. Section "Choosing The Mark Point" below explains when that is harmless.
+DFS schedules a vertex when it enters the vertex. In the recursive form, entering means the start of the call, so the first statement of the call sets the mark. The call stack then holds the vertices on the current path. An iterative form uses an explicit stack, which is last in and first out. It enters a vertex when it pops the vertex, and it sets the mark there. The stack can hold the same vertex twice, because a neighbor is pushed before it is marked. The code stage shows the one test that makes this harmless.
 
 #### Choosing The Mark Point
 
-The mark point is a choice with two sound answers. Marking when pushing keeps every container free of duplicates, and it suits BFS, where the order of discovery already fixes the visit order. Marking at entry suits DFS when the exact depth-first order matters. A stale copy that reaches the top of the stack is then skipped by one test. A stale copy is harmless only because that test exists. Marking at dequeue in BFS has no such repair in the naive code above, so the copies expand.
+The mark point is a choice with two sound answers. Marking when pushing keeps every container free of duplicates, and it suits BFS, where the order of discovery already fixes the visit order. Marking at entry, which is the pop, suits iterative DFS when the exact depth-first order matters. A stale copy that reaches the top of the stack is then skipped by one test. A stale copy is harmless only because that test exists. Marking at dequeue in BFS has no such repair in the naive code above, so the copies expand.
 
 <!-- stage: variables -->
 ### State Kept By A Traversal
 
-A traversal needs four pieces of state, and each one has one job.
+A traversal needs three pieces of state, and each one has one job.
 
 - **visited** is a `boolean[n]` where `visited[v]` is true once `v` is scheduled.
 - **source** is the vertex where the search starts, and the traversal marks it before the loop.
 - **frontier** is an `ArrayDeque<Integer>` that holds scheduled vertices that are not yet expanded.
-- **count** is the number of marked vertices, and it equals the number of vertices reachable from the source.
 
-A new `boolean[n]` holds `false` in every slot, so a traversal needs no filling loop. Every vertex that is never marked is not reachable from the source.
+A new `boolean[n]` holds `false` in every slot, so a traversal needs no filling loop. The number of true entries in `visited` equals the number of vertices reachable from the source, and every vertex that is never marked is not reachable.
 
 <!-- stage: trace -->
 ### Two Searches With Marks At Scheduling
 
 #### Two Paths To The Same Vertex
 
-The first trace uses the graph from the naive stage, with five vertices and the source 0. The cells are the vertex numbers, and the pointer `cur` marks the vertex that has just left the frontier. The variable `frontier` lists the vertices waiting after each step.
+The first trace uses the graph from the naive stage, with five vertices and the source 0. The cells are the vertex numbers, and the pointer `cur` marks the vertex that has just left the frontier. The variable `frontier` lists the vertices waiting after each step, and `visited` lists the vertices marked so far.
 
 Vertex 0 schedules vertices 1 and 2. Vertex 1 schedules vertex 3. When vertex 2 expands, vertex 3 is already marked, so vertex 2 schedules nothing. That step removes the repeated entry that the naive method creates. Vertex 3 then schedules vertex 4, and the search ends with each vertex scheduled once.
 
 ```trace
-{"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"frontier":"[1,2]","marked":"[0,1,2]"},"note":"Vertex 0 leaves the frontier and marks its neighbors 1 and 2 as it adds them."},{"at":{"cur":1},"vars":{"frontier":"[2,3]","marked":"[0,1,2,3]"},"note":"Vertex 1 finds vertex 0 already marked and adds only vertex 3."},{"at":{"cur":2},"vars":{"frontier":"[3]","marked":"[0,1,2,3]"},"note":"Vertex 2 sees vertex 3 already marked, so it adds nothing and no repeated entry forms."},{"at":{"cur":3},"vars":{"frontier":"[4]","marked":"[0,1,2,3,4]"},"note":"Vertex 3 skips the marked vertices 1 and 2 and adds vertex 4."},{"at":{"cur":4},"vars":{"frontier":"[]","marked":"[0,1,2,3,4]"},"note":"Vertex 4 has no unmarked neighbor, so the frontier becomes empty."},{"at":{"cur":-1},"vars":{"frontier":"[]","marked":"[0,1,2,3,4]"},"note":"The frontier is empty and every vertex is marked, so each vertex was scheduled once."}]}
+{"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"frontier":"[1,2]","visited":"[0,1,2]"},"note":"Vertex 0 leaves the frontier and marks its neighbors 1 and 2 as it adds them."},{"at":{"cur":1},"vars":{"frontier":"[2,3]","visited":"[0,1,2,3]"},"note":"Vertex 1 finds vertex 0 already marked and adds only vertex 3."},{"at":{"cur":2},"vars":{"frontier":"[3]","visited":"[0,1,2,3]"},"note":"Vertex 2 sees vertex 3 already marked, so it adds nothing and no repeated entry forms."},{"at":{"cur":3},"vars":{"frontier":"[4]","visited":"[0,1,2,3,4]"},"note":"Vertex 3 skips the marked vertices 1 and 2 and adds vertex 4."},{"at":{"cur":4},"vars":{"frontier":"[]","visited":"[0,1,2,3,4]"},"note":"Vertex 4 has no unmarked neighbor, so the frontier becomes empty."},{"at":{"cur":-1},"vars":{"frontier":"[]","visited":"[0,1,2,3,4]"},"note":"The frontier is empty and every vertex is marked, so each vertex was scheduled once."}]}
 ```
 
 #### A Cycle And An Unreachable Vertex
 
 The second trace uses five vertices and the directed edges 0 to 1, 1 to 2, 2 to 0 and 2 to 3, with the source 0. Vertex 4 has no edge that leads to it.
 
-The edge from vertex 2 back to vertex 0 meets a marked vertex, so the cycle ends there. The trace finishes with an empty frontier, and vertex 4 was never marked. The unmarked cell is the correct answer, because no path from the source reaches vertex 4.
+A cycle is a chain of edges that leads from a vertex back to itself. The edge from vertex 2 back to vertex 0 meets a marked vertex, so the cycle ends there. The trace finishes with an empty frontier, and vertex 4 was never marked. The unmarked cell is the correct answer, because no path from the source reaches vertex 4.
 
 ```trace
-{"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"frontier":"[1]","marked":"[0,1]"},"note":"Vertex 0 marks vertex 1 and adds it to the frontier."},{"at":{"cur":1},"vars":{"frontier":"[2]","marked":"[0,1,2]"},"note":"Vertex 1 reaches and marks vertex 2 and adds it to the frontier."},{"at":{"cur":2},"vars":{"frontier":"[3]","marked":"[0,1,2,3]"},"note":"Vertex 2 has an edge back to marked vertex 0, so the cycle stops there, and it adds vertex 3."},{"at":{"cur":3},"vars":{"frontier":"[]","marked":"[0,1,2,3]"},"note":"Vertex 3 has no outgoing edge, so nothing joins the frontier."},{"at":{"cur":-1},"vars":{"frontier":"[]","marked":"[0,1,2,3]"},"note":"The frontier is empty. Vertex 4 was never marked, because no edge leads to it from a marked vertex."}]}
+{"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"frontier":"[1]","visited":"[0,1]"},"note":"Vertex 0 marks vertex 1 and adds it to the frontier."},{"at":{"cur":1},"vars":{"frontier":"[2]","visited":"[0,1,2]"},"note":"Vertex 1 reaches and marks vertex 2 and adds it to the frontier."},{"at":{"cur":2},"vars":{"frontier":"[3]","visited":"[0,1,2,3]"},"note":"Vertex 2 has an edge back to marked vertex 0, so the cycle stops there, and it adds vertex 3."},{"at":{"cur":3},"vars":{"frontier":"[]","visited":"[0,1,2,3]"},"note":"Vertex 3 has no outgoing edge, so nothing joins the frontier."},{"at":{"cur":-1},"vars":{"frontier":"[]","visited":"[0,1,2,3]"},"note":"The frontier is empty. Vertex 4 was never marked, because no edge leads to it from a marked vertex."}]}
 ```
 
 <!-- stage: code -->
@@ -111,27 +110,51 @@ The edge from vertex 2 back to vertex 0 meets a marked vertex, so the cycle ends
 ```java
 static boolean[] reach(List<List<Integer>> adj, int source) {
     boolean[] visited = new boolean[adj.size()];
-    ArrayDeque<Integer> queue = new ArrayDeque<>();
+    ArrayDeque<Integer> frontier = new ArrayDeque<>();
     visited[source] = true;                     // the source is scheduled first
-    queue.add(source);
-    while (!queue.isEmpty()) {
-        int v = queue.poll();                   // oldest scheduled vertex
+    frontier.add(source);
+    while (!frontier.isEmpty()) {
+        int v = frontier.poll();                // oldest scheduled vertex
         for (int w : adj.get(v)) {
             if (visited[w]) continue;           // already scheduled, skip
             visited[w] = true;                  // mark before the vertex waits
-            queue.add(w);
+            frontier.add(w);
         }
     }
     return visited;
 }
 ```
 
-The method returns the `visited` array, so the caller reads reachability from it. `ArrayDeque.add` appends at the tail and `poll` removes from the head, so the queue is first in and first out.
+The method returns the `visited` array, so the caller reads reachability from it. `ArrayDeque.add` appends at the tail and `poll` removes from the head, so the frontier is first in and first out.
+
+#### Depth-First Search With Marks At Entry
+
+The iterative form pushes neighbors in reverse order, so the smallest neighbor is popped first. It marks a vertex at the pop and skips a stale copy with the first test after the pop.
+
+```java
+static List<Integer> dfsOrder(List<List<Integer>> adj, int source) {
+    boolean[] visited = new boolean[adj.size()];
+    ArrayDeque<Integer> stack = new ArrayDeque<>();
+    List<Integer> order = new ArrayList<>();
+    stack.push(source);                         // the source waits on the stack first
+    while (!stack.isEmpty()) {
+        int v = stack.pop();                    // most recently pushed vertex
+        if (visited[v]) continue;               // stale copy, already entered
+        visited[v] = true;                      // mark at entry, which is the pop
+        order.add(v);
+        List<Integer> next = adj.get(v);
+        for (int i = next.size() - 1; i >= 0; i--) {
+            if (!visited[next.get(i)]) stack.push(next.get(i));
+        }
+    }
+    return order;
+}
+```
 
 #### Cost Of The Traversal
 
 - **Time** is O(V + E), because each vertex is scheduled once and each adjacency entry is read once.
-- **Space** is O(V), because `visited` and the queue each hold at most V entries.
+- **Space** is O(V), because `visited` and the frontier each hold at most V entries.
 
 <!-- stage: applicability -->
 ### Deciding Where To Mark
@@ -172,7 +195,7 @@ Test `visited[w]` before the push and not after the pop, unless the code also sk
 
 **Hint.** Which array tells you, after the search ends, whether a vertex was reached?
 
-**Changed decision.** Basic case: the result is read from `visited` and not from the order of discovery.
+**Changed decision.** The result is read from `visited` and not from the order of discovery.
 
 #### [Vary] Iterative DFS (Author exercise)
 <!-- id: gt-iterative-dfs -->

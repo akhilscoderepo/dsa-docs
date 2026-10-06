@@ -103,102 +103,89 @@ public final class TinyDagPaths {
 <!-- id: gt-all-paths-source-target -->
 
 **Approach.**
-This method keeps the working path in a plain `int[]` buffer with a depth counter, and it takes a snapshot with `Arrays.copyOf(buffer, depth)` when the call reaches the target. The buffer holds the chain at indexes `0` to `depth - 1`, and a call writes its vertex at index `depth`. Leaving a call needs no removal, because the next write overwrites the slot, and the depth counter alone marks the end of the chain.
+The search is the working-path search of the first exercise with one extra argument. Each call receives `hit`, a boolean that is true when the chain above the call already contains `m`. The call computes its own value as `hit || cur == m` and passes that value to every neighbor. Because a boolean is passed by value, a call never has to undo the argument, and the caller keeps its own value for the next neighbor.
 
-The reason for the copy is the changed decision of the exercise. The buffer is reused by every later call, so a stored reference to the buffer would show the last contents. The invariant is that the first `depth` slots equal the current chain. The code asserts that two returned lists share no storage.
+When the call reaches the target, it stores a snapshot only if its value is true. Chains that avoid `m` end at the target and add nothing. The invariant is that the argument of a call is true exactly when `m` is in the working path at that call. The code asserts that the result differs from the unfiltered list on the examples.
 
 **Complexity.**
-- **Time** is O(P * n + V + E) for `P` paths, because each copy costs at most `n` and each edge is crossed once per chain that reaches it.
-- **Space** is O(n) beyond the output, because the buffer and the call stack are bounded by the vertex count.
+- **Time** is O(P * n) for the snapshots of the `P` paths that pass through `m`, plus the work of every chain that ends without a snapshot, which is at most the number of all source-to-target chains times `n`.
+- **Space** is O(n) beyond the output, because the working path and the call stack hold at most `n` entries.
 
 ```java run
 import java.util.*;
 
-public final class AllPathsSourceTarget {
+public final class RequiredVertexPaths {
     /**
-     * Returns every path from 0 to n - 1 as independent lists, in DFS order.
-     * Time: O(P * n + V + E). Space: O(n) beyond the output.
-     * Invariant: buffer[0..depth-1] equals the chain of active calls.
+     * Returns every path from 0 to n - 1 that contains m, in DFS order.
+     * Time: O(P * n) plus the chains without a snapshot. Space: O(n) beyond the output.
+     * Invariant: the hit argument is true exactly when m is on the working path.
      */
-    static List<List<Integer>> paths(int n, int[][] edges) {
-        // Arrays of neighbor lists give O(1) access per vertex; edge order is kept.
-        List<Integer>[] adj = new List[n];
-        for (int v = 0; v < n; v++) adj[v] = new ArrayList<>();
-        // Every directed edge is stored once at its tail.
-        for (int[] e : edges) adj[e[0]].add(e[1]);
-        // The buffer never needs more than n slots, because a path has at most n vertices.
-        int[] buffer = new int[n];
-        List<List<Integer>> out = new ArrayList<>();
-        dfs(adj, 0, n - 1, buffer, 0, out);
-        return out;
+    static List<List<Integer>> through(int n, int[][] edges, int m) {
+        // One neighbor list per vertex, filled in edge order.
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int v = 0; v < n; v++) adj.add(new ArrayList<>());
+        for (int[] e : edges) adj.get(e[0]).add(e[1]);
+        List<List<Integer>> found = new ArrayList<>();
+        walk(adj, 0, n - 1, m, false, new ArrayList<>(), found);
+        return found;
     }
 
-    private static void dfs(List<Integer>[] adj, int cur, int target, int[] buffer, int depth, List<List<Integer>> out) {
-        // Write the vertex at the next free slot; no append call and no removal is needed.
-        buffer[depth] = cur;
-        if (cur == target) {
-            // Copy exactly depth + 1 slots, because later calls overwrite the buffer.
-            List<Integer> snap = new ArrayList<>();
-            for (int i = 0; i <= depth; i++) snap.add(buffer[i]);
-            out.add(snap);
-            return;
-        }
-        // Each neighbor gets depth + 1, so returning to this loop restores the chain by itself.
-        for (int next : adj[cur]) dfs(adj, next, target, buffer, depth + 1, out);
+    private static void walk(List<List<Integer>> adj, int cur, int target, int m, boolean hit,
+                             List<Integer> path, List<List<Integer>> found) {
+        // Append on entry, so the list ends with the vertex being expanded.
+        path.add(cur);
+        // The flag of this call covers the chain above it and the vertex itself.
+        boolean now = hit || cur == m;
+        // Reaching the target stores a snapshot only when m was on the chain.
+        if (cur == target) { if (now) found.add(new ArrayList<>(path)); }
+        // Otherwise every neighbor receives this call's value; a boolean is copied, so nothing needs undoing.
+        else for (int next : adj.get(cur)) walk(adj, next, target, m, now, path, found);
+        // Remove the last element by index, which restores the working path of the caller.
+        path.remove(path.size() - 1);
     }
 
-    /** Brute force: grow partial paths in a queue until every one ends at the target or at a dead end. */
-    static List<String> brute(int n, int[][] edges) {
+    /** Brute force: each ascending subset of middle vertices is a candidate; keep those with existing edges and m inside. */
+    static List<String> brute(int n, boolean[][] has, int m) {
         List<String> out = new ArrayList<>();
-        ArrayDeque<List<Integer>> queue = new ArrayDeque<>();
-        queue.add(List.of(0));
-        // Each partial path is extended by every edge leaving its last vertex.
-        while (!queue.isEmpty()) {
-            List<Integer> p = queue.poll();
-            int last = p.get(p.size() - 1);
-            if (last == n - 1) { out.add(p.toString()); continue; }
-            for (int[] e : edges) if (e[0] == last) { List<Integer> q = new ArrayList<>(p); q.add(e[1]); queue.add(q); }
+        // Mask bit b stands for the middle vertex b + 1.
+        for (int mask = 0; mask < (1 << (n - 2)); mask++) {
+            List<Integer> seq = new ArrayList<>(List.of(0));
+            for (int b = 0; b < n - 2; b++) if ((mask >> b & 1) == 1) seq.add(b + 1);
+            seq.add(n - 1);
+            boolean ok = seq.contains(m);
+            for (int i = 0; i + 1 < seq.size(); i++) if (!has[seq.get(i)][seq.get(i + 1)]) ok = false;
+            if (ok) out.add(seq.toString());
         }
         Collections.sort(out);
         return out;
     }
 
     public static void main(String[] args) {
-        // Example 1 of the exercise.
-        List<List<Integer>> r1 = paths(6, new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}, {3, 4}, {3, 5}, {4, 5}});
-        if (!r1.toString().equals("[[0, 1, 3, 4, 5], [0, 1, 3, 5], [0, 2, 3, 4, 5], [0, 2, 3, 5]]")) throw new AssertionError("ex1 " + r1);
-        // Example 2 of the exercise.
-        List<List<Integer>> r2 = paths(5, new int[][] {{0, 1}, {0, 2}, {1, 4}, {2, 3}, {0, 4}});
-        if (!r2.toString().equals("[[0, 1, 4], [0, 4]]")) throw new AssertionError("ex2 " + r2);
-        // Independence: changing one list leaves the other unchanged.
-        r1.get(0).set(0, 99);
-        if (r1.get(1).get(0) != 0) throw new AssertionError("lists must not share storage");
-        // Aliasing fact: adding one reused list object stores the same object twice.
-        List<List<Integer>> alias = new ArrayList<>();
-        List<Integer> shared = new ArrayList<>(List.of(1));
-        alias.add(shared);
-        shared.add(2);
-        alias.add(shared);
-        shared.clear();
-        if (!alias.get(0).isEmpty() || alias.get(0) != alias.get(1)) throw new AssertionError("a stored reference sees later changes");
-        // Random DAGs with shuffled labels must match the queue brute force.
+        // Example 1 of the exercise: only the branch through vertex 1 qualifies.
+        List<List<Integer>> r1 = through(4, new int[][] {{0, 1}, {0, 2}, {1, 3}, {2, 3}}, 1);
+        if (!r1.toString().equals("[[0, 1, 3]]")) throw new AssertionError("ex1 " + r1);
+        // Example 2 of the exercise: the path 0, 1, 4 avoids vertex 2 and is dropped.
+        int[][] e2 = {{0, 1}, {0, 2}, {1, 2}, {2, 4}, {1, 4}};
+        List<List<Integer>> r2 = through(5, e2, 2);
+        if (!r2.toString().equals("[[0, 1, 2, 4], [0, 2, 4]]")) throw new AssertionError("ex2 " + r2);
+        // Another required vertex on the same graph selects a different subset.
+        if (!through(5, e2, 1).toString().equals("[[0, 1, 2, 4], [0, 1, 4]]")) throw new AssertionError("m = 1");
+        // Independence: changing one stored list leaves the other unchanged.
+        r2.get(0).set(0, 99);
+        if (r2.get(1).get(0) != 0) throw new AssertionError("lists must not share storage");
+        // Random DAGs with forward edges and a random required vertex must match the subset brute force.
         Random rnd = new Random(2107);
         for (int t = 0; t < 400; t++) {
-            int n = 2 + rnd.nextInt(7);
-            // Relabel vertices by a random permutation that keeps 0 as source and n - 1 as target.
-            List<Integer> perm = new ArrayList<>();
-            for (int v = 1; v < n - 1; v++) perm.add(v);
-            Collections.shuffle(perm, rnd);
-            perm.add(0, 0);
-            perm.add(n - 1);
+            int n = 3 + rnd.nextInt(5);
+            boolean[][] has = new boolean[n][n];
             List<int[]> es = new ArrayList<>();
-            for (int a = 0; a < n; a++) for (int b = a + 1; b < n; b++) if (rnd.nextInt(3) > 0) es.add(new int[] {perm.get(a), perm.get(b)});
+            for (int a = 0; a < n; a++) for (int b = a + 1; b < n; b++) if (rnd.nextInt(3) > 0) { has[a][b] = true; es.add(new int[] {a, b}); }
             Collections.shuffle(es, rnd);
-            int[][] arr = es.toArray(new int[0][]);
+            int m = 1 + rnd.nextInt(n - 2);
             List<String> got = new ArrayList<>();
-            for (List<Integer> p : paths(n, arr)) got.add(p.toString());
+            for (List<Integer> p : through(n, es.toArray(new int[0][]), m)) got.add(p.toString());
             Collections.sort(got);
-            if (!got.equals(brute(n, arr))) throw new AssertionError("random " + t);
+            if (!got.equals(brute(n, has, m))) throw new AssertionError("random " + t);
         }
     }
 }

@@ -51,7 +51,7 @@ A **graph** is a collection of vertices and edges. A **vertex** is one item, her
 
 #### Choosing A Direction
 
-An undirected edge works both ways, so `[a, b]` makes `b` a neighbor of `a` and `a` a neighbor of `b`. A directed edge works one way, so `[a, b]` makes `b` a neighbor of `a` only. A statement must say which kind it uses. Two edges with the same endpoints are parallel edges. An edge `[a, a]` is a self edge. A statement must also say whether the input contains them.
+An undirected edge works both ways, so `[a, b]` makes `b` a neighbor of `a` and `a` a neighbor of `b`. A directed edge works one way, so `[a, b]` makes `b` a neighbor of `a` only. A statement must say which kind it uses. Two edges with the same endpoints are parallel edges. A **self-loop** is an edge `[a, a]`. A statement must also say whether the input contains them.
 
 #### Two Storage Layouts
 
@@ -62,7 +62,7 @@ An **adjacency matrix** is an `n` by `n` grid of booleans, where cell `[a][b]` i
 <!-- names: graph, vertex, edge, neighbor, adjacency list, adjacency matrix -->
 
 <!-- stage: variables -->
-### Four Names Used In Every Conversion
+### The Names Used In The Code
 
 The conversion uses four names, and the rest of the chapter reuses them.
 
@@ -70,6 +70,8 @@ The conversion uses four names, and the rest of the chapter reuses them.
 - **edges** is the `int[][]` input, where each row `[a, b]` is one edge.
 - **adj** is the adjacency list, one list of neighbors per vertex.
 - **matrix** is the adjacency matrix, a boolean grid of side `n`.
+
+The number of edges is `m`. Later lessons write V for the vertex count `n` and E for the edge count `m`, and each lesson keeps one pair.
 
 <!-- stage: trace -->
 ### Building The Lists Edge By Edge
@@ -155,7 +157,7 @@ The invariant of the adjacency list is that `adj[v]` holds exactly the neighbors
 
 #### Checking The Input Contract
 
-Read the contract before writing any code. Does an edge work in both directions, or only one? Can the input repeat an edge or contain a self edge? Are all vertices numbered, including those that appear in no edge? A conversion that answers one of these questions wrongly produces lists that look right on a small example and fail elsewhere.
+Read the contract before writing any code. Does an edge work in both directions, or only one? Can the input repeat an edge or contain a self-loop? Are all vertices numbered, including those that appear in no edge? A conversion that answers one of these questions wrongly produces lists that look right on a small example and fail elsewhere.
 
 #### Matrix As False Friend
 
@@ -175,8 +177,8 @@ The matrix looks simpler, because one lookup answers an edge question. It is a f
 - **Vertices** satisfy `1 <= n <= 10^5`.
 - **Edges** satisfy `0 <= edges.length <= 2 * 10^5`.
 - **Endpoints** are integers in the range 0 to n-1.
-- **Duplicates** do not occur; no edge repeats and no edge joins a vertex to itself.
-- **Mutation** does not occur; `edges` does not change.
+- **Edge list** has no repeated edge and no self-loop.
+- **Input** is not modified, so `edges` keeps its contents.
 
 **Example 1.** Input `n = 4` and `edges = [[0,1],[0,2],[2,3]]`, output `[[1,2],[0],[0,3],[2]]`.
 
@@ -197,7 +199,7 @@ The matrix looks simpler, because one lookup answers an edge question. It is a f
 - **Vertices** satisfy `1 <= n <= 10^5`.
 - **Edges** satisfy `0 <= edges.length <= 2 * 10^5`.
 - **Endpoints** are integers in the range 0 to n-1.
-- **Duplicates** do not occur; the pair `[a, b]` does not repeat, and `a != b`.
+- **Edge list** has no repeated pair `[a, b]`, and `a != b`.
 - **Reverse pairs** may occur; `[a, b]` and `[b, a]` are two different edges.
 
 **Example 1.** Input `n = 4` and `edges = [[2,0],[0,1],[2,1]]`, output `[[1],[],[0,1],[]]`.
@@ -213,22 +215,22 @@ The matrix looks simpler, because one lookup answers an edge question. It is a f
 
 **Prerequisites.** The undirected exercise.
 
-**Problem.** Given an integer `n` and an array `edges` of undirected edges, return `List<List<Integer>>` where entry `v` lists the distinct neighbors of `v` in ascending order. The input may contain the same edge several times, in either order of endpoints, and may contain self edges `[v, v]`. A vertex is never its own neighbor in the output, and a repeated edge counts once.
+**Problem.** Given an integer `n` and an array `edges` of undirected edges, return `List<List<Integer>>` where entry `v` lists the distinct neighbors of `v` in ascending order. The input may contain the same edge several times, in either order of endpoints, and may contain self-loops `[v, v]`. A vertex is never its own neighbor in the output, and a repeated edge counts once.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 10^5`.
 - **Edges** satisfy `0 <= edges.length <= 2 * 10^5`.
 - **Endpoints** are integers in the range 0 to n-1.
 - **Repeats** are allowed; `[a, b]` and `[b, a]` name the same undirected edge.
-- **Self edges** are allowed and are ignored.
+- **Self-loops** are allowed and are ignored.
 
 **Example 1.** Input `n = 3` and `edges = [[0,1],[1,0],[1,1],[1,2]]`, output `[[1],[0,2],[1]]`.
 
 **Example 2.** Input `n = 2` and `edges = [[0,0],[1,1]]`, output `[[],[]]`.
 
-**Hint.** What must the input contract say before a repeated pair can be dropped?
+**Hint.** For the input `[[0,1],[1,0]]`, does vertex 0 list vertex 1 once or twice, and which sentence of the contract decides it?
 
-**Changed decision.** The contract now permits repeats and self edges, so the method deduplicates and skips them.
+**Changed decision.** The contract now permits repeats and self-loops, so the method deduplicates and skips them.
 
 #### [Recognize] Find Center of Star Graph (LeetCode 1791)
 <!-- id: gt-star-center -->
@@ -241,7 +243,7 @@ The matrix looks simpler, because one lookup answers an edge question. It is a f
 - **Vertices** satisfy `3 <= n <= 10^5`.
 - **Edges** satisfy `edges.length == n - 1`, and each row has two distinct endpoints.
 - **Shape** is guaranteed to be a valid star graph, so the center is unique.
-- **Mutation** does not occur; `edges` does not change.
+- **Input** is not modified, so `edges` keeps its contents.
 
 **Example 1.** Input `edges = [[0,1],[2,0],[0,3]]`, output 0.
 
@@ -249,4 +251,4 @@ The matrix looks simpler, because one lookup answers an edge question. It is a f
 
 **Hint.** Which vertex must appear in every edge, and how few edges show it?
 
-**Changed decision.** The graph contract replaces any list construction, because the shared endpoint of two edges is the center.
+**Changed decision.** No lists are built. The first two edges share exactly one endpoint, and that endpoint is the center.
