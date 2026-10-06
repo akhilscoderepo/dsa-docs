@@ -157,7 +157,7 @@ The rule is unnecessary when all values are distinct, because no ties occur. It 
 
 **Prerequisites.** The rightmost-minimum rule in this lesson.
 
-**Problem.** Let `nums` be an array of integers. A window is a range of consecutive indices from `l` to `r` with `l <= r`. The owner of a window is the largest index in the window that holds the window's minimum value. Return an array whose entry `i` is the number of windows that index `i` owns. List the windows directly.
+**Problem.** Take an integer array `nums`. A window is a range of consecutive indices from `l` to `r` with `l <= r`. The owner of a window is the largest index in the window that holds the window's minimum value. Return an array whose entry `i` is the number of windows that index `i` owns. List the windows directly.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 2000`.

@@ -165,7 +165,7 @@ A boundary defined by a condition other than a comparison with the element itsel
 
 **Prerequisites.** The left scan in this lesson.
 
-**Problem.** Let `nums` be an array of integers. For each index `i`, return the largest index `j < i` with `nums[j] < nums[i]`, or `-1` when no such index exists.
+**Problem.** Consider an integer array `nums`. For each index `i`, return the largest index `j < i` with `nums[j] < nums[i]`, or `-1` when no such index exists.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.
@@ -186,7 +186,7 @@ A boundary defined by a condition other than a comparison with the element itsel
 
 **Prerequisites.** The exercise above and the right scan in this lesson.
 
-**Problem.** Let `nums` be an array of integers. For each index `i`, return the smallest index `j > i` with `nums[j] < nums[i]`, or `-1` when no such index exists.
+**Problem.** Take an integer array `nums`. For each index `i`, return the smallest index `j > i` with `nums[j] < nums[i]`, or `-1` when no such index exists.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.
@@ -207,7 +207,7 @@ A boundary defined by a condition other than a comparison with the element itsel
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Let `nums` be an array of integers of length `n`. For each index `i`, return the pair `{left, right}`, where `left` is the previous smaller index or `-1`, and `right` is the next smaller index or `n`. Use the sentinels even when both sides are missing.
+**Problem.** An integer array `nums` has length `n`. For each index `i`, return the pair `{left, right}`, where `left` is the previous smaller index or `-1`, and `right` is the next smaller index or `n`. Use the sentinels even when both sides are missing.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.
@@ -228,7 +228,7 @@ A boundary defined by a condition other than a comparison with the element itsel
 
 **Prerequisites.** The three exercises above.
 
-**Problem.** Let `nums` be an array of integers. For each index `i`, let the region of `i` be the longest range of consecutive indices that contains `i` and in which every value is at least `nums[i]`. Return the length of the region of every index.
+**Problem.** An integer array `nums` holds the values to scan. For each index `i`, let the region of `i` be the longest range of consecutive indices that contains `i` and in which every value is at least `nums[i]`. Return the length of the region of every index.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.
