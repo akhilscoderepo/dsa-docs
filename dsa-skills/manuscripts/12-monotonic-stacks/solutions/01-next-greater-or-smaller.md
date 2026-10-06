@@ -5,7 +5,7 @@
 <!-- id: ms-next-greater-value -->
 
 **Approach.**
-The scan keeps a stack of indices whose answers are still missing. Reading `nums[i]`, the loop pops every top index whose value is smaller. It writes `nums[i]` as the answer of each popped index, because `i` is the first position after that index with a larger value. The loop stops at the first top that is not smaller. The invariant is that the values behind the stack indices never increase from bottom to top, so no index below the stopping point can be smaller than `nums[i]`. The loop then pushes index `i`, and the indices left at the end keep `-1`.
+The scan keeps a stack of indices whose answers are still missing. Reading `nums[i]`, the loop pops every top index whose value is smaller. It writes `nums[i]` as the answer of each popped index, because `i` is the first position after that index with a larger value. The loop stops once a top is not smaller. The invariant is that the values behind the stack indices never increase from bottom to top, so no index below the stopping point can be smaller than `nums[i]`. The loop then pushes index `i`, and the indices left at the end keep `-1`.
 
 **Complexity.**
 - **Time** is O(n), because the loop pushes each index once and pops it at most once.
