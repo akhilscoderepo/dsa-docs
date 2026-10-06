@@ -188,7 +188,7 @@ The false friend is the level order of the previous lessons. A queue reads nodes
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given the root of a binary search tree and an integer `k`, return the kth smallest key, where the smallest key has rank 1. Use an iterative inorder walk and return the key of the kth popped node.
+**Problem.** For a search tree and an integer `k`, return the kth smallest key, where the smallest key has rank 1. Use an iterative inorder walk and return the key of the kth popped node.
 
 **Constraints.** The limits are:
 - **Nodes** number between 1 and 10^4, and `1 <= k <= n`.
@@ -209,7 +209,7 @@ The false friend is the level order of the previous lessons. A queue reads nodes
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the root of a binary search tree with `n` keys and an integer `k`, return a two-element array. The first entry is the kth smallest key and the second entry is the kth largest key. The kth largest key has rank 1 for the largest key. Use the smallest valid rank 1 and the largest valid rank `n` as test cases.
+**Problem.** A search tree holds `n` keys, and an integer `k` is supplied. Return a two-element array. The first entry is the kth smallest key and the second entry is the kth largest key. The kth largest key has rank 1 for the largest key. Use the smallest valid rank 1 and the largest valid rank `n` as test cases.
 
 **Constraints.** The limits are:
 - **Nodes** number between 1 and 10^4, and all keys are distinct.
@@ -230,7 +230,7 @@ The false friend is the level order of the previous lessons. A queue reads nodes
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the root of a binary search tree and two integers `low` and `high`, return the sum of the keys that lie in the closed range from `low` to `high`. Skip a subtree whenever one comparison shows that it cannot hold a key in the range.
+**Problem.** The input is a search tree and two integers `low` and `high`. Return the sum of the keys that lie in the closed range from `low` to `high`. Skip a subtree whenever one comparison shows that it cannot hold a key in the range.
 
 **Constraints.** The limits are:
 - **Nodes** number between 1 and 2 * 10^4, and all keys are distinct.

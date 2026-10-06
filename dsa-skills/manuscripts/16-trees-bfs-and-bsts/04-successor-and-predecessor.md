@@ -181,7 +181,7 @@ The false friend is the parent. For the key 7 in the example tree, the parent is
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given the root of a binary search tree and an integer `key`, return the smallest key in the tree that is strictly greater than `key`, or `null` if no key is greater. The key does not have to appear in the tree. Remember the last node larger than the key during the walk from the root.
+**Problem.** A binary search tree and an integer `key` are supplied. Return the smallest key in the tree that is strictly greater than `key`, or `null` if no key is greater. The key does not have to appear in the tree. Remember the last node larger than the key during the walk from the root.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4, and all keys are distinct.
@@ -202,7 +202,7 @@ The false friend is the parent. For the key 7 in the example tree, the parent is
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the root of a binary search tree and an integer `key`, return a two-element array holding the predecessor and the successor of the key. The predecessor is the largest key strictly smaller than `key`, and the successor is the smallest key strictly larger. Use `null` for a neighbor that does not exist.
+**Problem.** For a binary search tree and an integer `key`, return a two-element array holding the predecessor and the successor of the key. The predecessor is the largest key strictly smaller than `key`, and the successor is the smallest key strictly larger. Use `null` for a neighbor that does not exist.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4, and all keys are distinct.
@@ -223,7 +223,7 @@ The false friend is the parent. For the key 7 in the example tree, the parent is
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the root of a binary search tree with distinct keys and a node `p` that belongs to the tree, return the node that follows `p` in sorted order, or `null` if `p` holds the largest key. The result may be the leftmost node of the right subtree of `p`, or the nearest ancestor from which the search path turned left.
+**Problem.** The input is a search tree with distinct keys and a node `p` that belongs to the tree, return the node that follows `p` in sorted order, or `null` if `p` holds the largest key. The result may be the leftmost node of the right subtree of `p`, or the nearest ancestor from which the search path turned left.
 
 **Constraints.** The limits are:
 - **Nodes** number between 1 and 10^4, and all keys are distinct.

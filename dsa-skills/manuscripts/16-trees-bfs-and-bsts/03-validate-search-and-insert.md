@@ -223,7 +223,7 @@ The false friend is the validation task of the previous lesson. A search needs o
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the root of a binary search tree and a key, remove the node with that key if it exists, and return the root of the resulting tree. A leaf is removed, a node with one child is replaced by that child, and a node with two children takes the smallest key of its right subtree, after which that smallest node is removed from the right subtree.
+**Problem.** A binary search tree is stored by its root, and a key is supplied. Remove the node with that key if it exists, and return the root of the resulting tree. A leaf is removed, a node with one child is replaced by that child, and a node with two children takes the smallest key of its right subtree, after which that smallest node is removed from the right subtree.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4.
