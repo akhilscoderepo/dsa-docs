@@ -147,7 +147,7 @@ final class WordCutter {
 
 #### Cutting The Whole String
 
-The method `cut` returns one cutting, or null when none exists. It tries each cut point in increasing order, so the first word of the answer is the shortest possible.
+The method `cut` returns one cutting, or null when none exists. It tries each cut point in increasing order, so the first word of the answer is the shortest one that still leads to the end of the string.
 
 #### Cost Of The Search
 
@@ -162,7 +162,7 @@ The cue is a string that must be divided into dictionary words, where a walk can
 
 #### Finding The False Friend
 
-The false friend is plain recursion that repeats the same suffix. It looks like a finished solution, and its cost doubles when a string adds a letter. Memoization and dynamic programming fix it, and Chapter 26 owns that topic. Until then, the recursion in this lesson is limited to short inputs.
+The false friend is plain recursion that repeats the same suffix. It looks like a finished solution, and its cost grows exponentially with each added letter. Memoization and dynamic programming fix it, and Chapter 26 owns that topic. Until then, the recursion in this lesson is limited to short inputs.
 
 A second false friend is a recursion that branches at every reachable prefix node and not only at terminal nodes. A prefix that is not a word is not a cut point, and the string may also end in the middle of a word.
 
@@ -188,7 +188,7 @@ The search does not fit when the program needs to count every cutting of a long 
 
 **Example 1.** Input `dict = ["cat","cats","and","sand"]`, `s = "catsand"` and `from = 0`, output `[3,4]`.
 
-**Example 2.** Input the same dictionary and `s`, with `from = 5`, output `[]`.
+**Example 2.** Input the same dictionary and `s`, with `from = 4`, output `[7]`.
 
 **Hint.** When does the walk record a position? What makes the walk stop before the end of the string?
 

@@ -65,7 +65,7 @@ The structure and the walk need five pieces of state.
 - **Child 0 and child 1** are the two links of a node, and either link may be null.
 - **Current node** is the node reached after the bits above the current bit have been consumed.
 - **Result** accumulates the XOR value, and bit `b` of it is set when the walk takes the opposite branch at bit `b`.
-- **Partner prefix** is the bit pattern of the chosen stored number so far, which the walk follows implicitly.
+- **Partner prefix** is the bit pattern of the chosen stored number so far, shown only in the trace.
 
 The insert changes only the children. The walk changes the current node and the result at each bit.
 
@@ -155,7 +155,7 @@ Binary search on a sorted copy of the numbers is another false friend. Sorting o
 
 #### Recognizing The No-Go Cases
 
-The tree does not fit when the objective is a sum, a difference or a minimum XOR, because other rules decide those. It does not fit when inputs may be negative unless the program states how it treats the sign bit, since a width of 31 bits drops it. A short list of numbers also does not justify the tree, because the pair loop is simpler.
+The tree does not fit when the objective is a sum or a difference, because other rules decide those, and a minimum XOR needs the same edge preferred instead of the opposite one. It does not fit when inputs may be negative unless the program states how it treats the sign bit, since a width of 31 bits drops it. A short list of numbers also does not justify the tree, because the pair loop is simpler.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -163,7 +163,7 @@ The tree does not fit when the objective is a sum, a difference or a minimum XOR
 #### [Build] Insert Fixed-Width Bits (Author exercise)
 <!-- id: tr-insert-fixed-width-bits -->
 
-**Prerequisites.** The prefix tree of the previous lessons and the XOR definition above.
+**Prerequisites.** The prefix tree of the previous lessons.
 
 **Problem.** Given an array `values` of nonnegative integers and an integer `width`, insert each value into an empty binary tree as a path of exactly `width` bits, from bit `width - 1` down to bit 0. Return the number of nodes below the root.
 

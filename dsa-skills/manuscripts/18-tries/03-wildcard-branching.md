@@ -58,7 +58,7 @@ When the pattern holds a dot at position `i`, every child of the node can contin
 
 #### Stopping Early And Ending Exactly
 
-The search can **short-circuit**. As soon as one child call returns true, the parent returns true and skips the remaining children. After the last pattern character the call returns the terminal flag of the node, because a match needs a word that ends exactly there. A pattern shorter than the word reaches a node with a false flag, and a pattern longer than the word runs out of children.
+The search can **short-circuit**. As soon as one child call returns true, the parent returns true and skips the remaining children. After the last pattern character the call returns the terminal flag of the node, because a match needs a word that ends exactly there. A pattern shorter than the word reaches a node whose flag is false unless a shorter stored word ends there, and a pattern longer than the word runs out of children.
 
 <!-- names: single edge, fan out, short-circuit -->
 
@@ -79,7 +79,7 @@ A call to a child differs only in its node and in `i + 1`. The call writes nothi
 
 #### A Blank That Needs Two Tries
 
-The first trace searches `c.t` in a tree that holds `cap` and `cot`. The pointer `i` marks the position in the pattern, `node` shows the prefix of the current node, and `calls` counts the recursive calls so far.
+The first trace searches `c.t` in a tree that holds `cap` and `cot`. The pointer `i` marks the position in the pattern, and `node` shows the prefix of the current node.
 
 The letter `c` has one edge. The dot at position 1 tries the children in alphabetical order. The child `a` leads to the node `ca`, where the letter `t` has no edge, so this branch fails. The search returns to position 1 and tries the child `o`. The node `co` has an edge for `t`, and the last node holds a flag, so the search returns true.
 
@@ -90,11 +90,11 @@ The second trace searches `ca..` in a tree that holds only `cat`. The first dot 
 #### Stepping Through Both Searches
 
 ```trace
-{"cells":["c",".","t"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"node":"c","calls":1},"note":"The letter c has an edge, so the search moves to the node c."},{"at":{"i":1},"vars":{"node":"ca","calls":2},"note":"The dot tries the child a, which leads to the node ca."},{"at":{"i":2},"vars":{"node":"ca","calls":3},"note":"The node ca has no edge for t, so this branch returns false."},{"at":{"i":1},"vars":{"node":"co","calls":3},"note":"The dot tries the child o, which leads to the node co."},{"at":{"i":2},"vars":{"node":"cot","calls":4},"note":"The letter t has an edge, so the search moves to the node cot. The pattern ends on a node with a true flag, so the search returns true."}]}
+{"cells":["c",".","t"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"node":"c"},"note":"The letter c has an edge, so the search moves to the node c."},{"at":{"i":1},"vars":{"node":"ca"},"note":"The dot tries the child a, which leads to the node ca."},{"at":{"i":2},"vars":{"node":"ca"},"note":"The node ca has no edge for t, so this branch returns false."},{"at":{"i":1},"vars":{"node":"co"},"note":"The dot tries the child o, which leads to the node co."},{"at":{"i":2},"vars":{"node":"cot"},"note":"The letter t has an edge, so the search moves to the node cot. The pattern ends on a node with a true flag, so the search returns true."}]}
 ```
 
 ```trace
-{"cells":["c","a",".","."],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"node":"c","calls":1},"note":"The letter c has an edge, so the search moves to the node c."},{"at":{"i":1},"vars":{"node":"ca","calls":2},"note":"The letter a has an edge, so the search moves to the node ca."},{"at":{"i":2},"vars":{"node":"cat","calls":3},"note":"The dot tries the child t, which leads to the node cat."},{"at":{"i":3},"vars":{"node":"cat","calls":4},"note":"The dot needs a child, but the node cat has none, so the search returns false."}]}
+{"cells":["c","a",".","."],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"node":"c"},"note":"The letter c has an edge, so the search moves to the node c."},{"at":{"i":1},"vars":{"node":"ca"},"note":"The letter a has an edge, so the search moves to the node ca."},{"at":{"i":2},"vars":{"node":"cat"},"note":"The dot tries the child t, which leads to the node cat."},{"at":{"i":3},"vars":{"node":"cat"},"note":"The dot needs a child, but the node cat has none, so the search returns false."}]}
 ```
 
 <!-- stage: code -->

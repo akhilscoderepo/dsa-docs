@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Search Index Rereads Every Root
 
-A search index shortens each word of a document to its root before it stores the word. The root list holds 10,000 entries such as `cat`, `bat` and `inter`. The word `cattle` becomes `cat`, and the word `interval` becomes `inter`. A word with no root stays as it is.
+A search index shortens each word of a document to its root before it stores the word. The root list holds 10,000 entries such as `cat`, `bat` and `rat`. The word `cattle` becomes `cat`, and the word `rattled` becomes `rat`. A word with no root stays as it is.
 
 The first version tests every root against every word. A document of 100,000 words then triggers a billion prefix tests, and the index build takes minutes. This lesson asks how a program finds the shortest root of a word after reading only the letters of the word that matter.
 
@@ -159,7 +159,7 @@ The tree does not fit when the dictionary changes rarely and only exact lookups 
 #### [Build] Implement Trie (LeetCode 208)
 <!-- id: tr-combo-longest-stored-prefix -->
 
-**Prerequisites.** All five lessons of this chapter.
+**Prerequisites.** The first two lessons of this chapter.
 
 **Problem.** Design a class with `insert(word)`, `search(word)`, `startsWith(prefix)` and `longestMatch(query)`. The method `longestMatch` returns the largest `k` such that the first `k` characters of `query` form a prefix of some inserted word. A query that shares no first character returns 0.
 

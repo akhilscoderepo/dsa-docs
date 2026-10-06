@@ -51,7 +51,7 @@ public final class DictionaryEnds {
         // The two examples of the exercise.
         String[] d = {"cat", "cats", "and", "sand"};
         if (!Arrays.equals(ends(d, "catsand", 0), new int[] {3, 4})) throw new AssertionError("ex1");
-        if (ends(d, "catsand", 5).length != 0) throw new AssertionError("ex2");
+        if (!Arrays.equals(ends(d, "catsand", 4), new int[] {7}) || ends(d, "catsand", 5).length != 0) throw new AssertionError("ex2");
         // Starting at the string length returns no end.
         if (ends(d, "cat", 3).length != 0) throw new AssertionError("at end");
         // Random inputs must match the substring test against a set.

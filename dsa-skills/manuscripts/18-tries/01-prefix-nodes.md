@@ -60,8 +60,8 @@ A node and a walk need four pieces of state, and only the node pieces survive be
 
 - **Children** map each character to the child node that the character selects.
 - **Terminal flag** is true when a stored word ends at the node.
-- **Pass count** is the number of inserted words whose path goes through the node, and the lesson uses it in the second exercise.
-- **Current node** is the node reached after reading the first `i` characters of the word under test.
+- **Pass count** is the number of inserted words whose path goes through the node, and the second exercise reads it.
+- **Current node** is the node reached after reading the character at index `i` of the word under test.
 
 An insert changes the children and the pass counts along its path and sets the flag on its last node. A query changes nothing.
 

@@ -21,11 +21,11 @@ Each lesson adds one rule that turns a repeated scan of the data into a short wa
 
 One lesson joins this chapter with the string chapter.
 
-- **Look Up Prefixes In A Dictionary** lets a word drive the walk through a tree of roots, so one pass finds the shortest root, the smallest wildcard match or the longest word built from its own prefixes.
+- **Look Up Prefixes In A Dictionary** lets a word drive the walk through a tree of roots, so one pass finds the longest matching prefix, the shortest root, the smallest wildcard match or the longest word built from its own prefixes.
 
 ### How To Work Through Each Lesson
 
-A lesson starts from a program that slows down or fails on a real input, and then shows a plain version that costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a trace, the code and a check of where the method stops fitting. The exercises climb from a basic version to an interview problem. A role in brackets labels each exercise as Build, Vary, Boundary or Recognize. The Changed decision line names what differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Read the hint before you open a solution.
+A lesson starts from a program that slows down or fails on a real input, and then shows a plain version that costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a trace, the code and a check of where the method stops fitting. The exercises climb from a basic version to a recognition problem. A role in brackets labels each exercise. Build implements the new idea, Vary changes one decision, Boundary tests an edge case and Recognize applies the idea to a problem that does not name it. The Changed decision line names what differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Read the hint before you open a solution.
 
 ### What You Can Do After This Chapter
 
