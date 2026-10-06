@@ -10,7 +10,7 @@ Come back to this page after the lessons and again a few days later. Each questi
 ```
 
 ```quiz
-{"id": "sq-rev-fifo-turns", "q": "A task needs three turns. After each turn that is not the last, where does the simulation put it?", "options": ["On top of the stack of waiting tasks", "At the back of the queue", "At the front of the queue", "Nowhere, since the turn finished"], "answer": 1, "explain": "The task joins the back so every task that arrived earlier gets its turn first. Putting it at the front would let one task starve the others."}
+{"id": "sq-rev-fifo-turns", "q": "A task needs three turns. After each turn that is not the last, where does the simulation put it?", "options": ["On top of the stack of waiting tasks", "At the back of the queue", "At the front of the queue", "Nowhere, since the turn finished"], "answer": 1, "explain": "The task joins the back so every task that arrived earlier gets its turn first. Putting it at the front would let one task take every turn while the others wait."}
 ```
 
 ```quiz
@@ -42,7 +42,7 @@ Come back to this page after the lessons and again a few days later. Each questi
 ```
 
 ```quiz
-{"id": "sq-rev-calc-delay", "q": "A calculator reads `7 + 12 * 3` from left to right. When does it apply the `+`?", "options": ["Right after the 7 is read", "Right after the 12 is read", "When the whole text ends, as a single combined step", "When the sign after the operand is also read and has lower priority"], "answer": 3, "explain": "The `*` has higher priority than `+`, so the 12 belongs to the product first. The scan keeps the `+` pending until the number that follows is complete and the next sign cannot take it."}
+{"id": "sq-rev-calc-delay", "q": "A calculator keeps a pending operator and reads `7 + 12 * 3` from left to right. When does it apply the `+` that sits before the 12?", "options": ["Right after the 7 is read", "When the 12 is complete, at the `*`", "When the whole text ends", "After the 3 is read, together with the `*`"], "answer": 1, "explain": "A pending operator applies as soon as the number after it is complete. The `+` pushes 12 as a new term when the scan reaches the `*`. The `*` then becomes pending, and when the 3 is complete it multiplies the top term 12 into 36."}
 ```
 
 ```quiz

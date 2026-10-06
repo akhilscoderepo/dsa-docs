@@ -168,7 +168,7 @@ static List<String> toPostfix(String[] infix) {
 Both methods run in O(n) time and use O(n) space, because each token is pushed once and popped at most once.
 
 <!-- stage: applicability -->
-### When The Two Stacks Apply
+### When These Two Methods Apply
 
 #### Postfix Input Is Safe To Trust
 
@@ -254,18 +254,18 @@ The conversion above has no parentheses, no unary minus and no right-associative
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given infix tokens that alternate between integers and operators from `+`, `-`, `*`, `/`, return the value of the expression. Multiplication and division bind tighter than addition and subtraction. Operators of equal precedence apply from left to right. Division truncates toward zero.
+**Problem.** Given infix tokens that alternate between integers and operators from `+`, `-`, `*`, `/`, return the equivalent postfix expression as a list of tokens. Multiplication and division bind tighter than addition and subtraction. Operators of equal precedence apply from left to right, so they keep that order in the postfix list.
 
 **Constraints.** The limits are:
 - **Length** is an odd number from 1 to 999 tokens.
-- **Numbers** are non-zero decimal `int` values, and a negative number keeps its minus sign.
+- **Numbers** are decimal `int` values, and a negative number keeps its minus sign.
 - **Parentheses** do not appear.
-- **Results** and all intermediate values fit in an `int`.
+- **Return** is a `List<String>` with the same number of tokens as the input.
 
-**Example 1.** Input `["9","/","2","*","4","-","7"]`, output 9, because 9 / 2 is 4, then 4 * 4 is 16, then 16 - 7 is 9.
+**Example 1.** Input `["9","/","2","*","4","-","7"]`, output `["9","2","/","4","*","7","-"]`, because the `/` leaves before the `*` and both leave before the `-`.
 
-**Example 2.** Input `["6","-","2","-","3"]`, output 1.
+**Example 2.** Input `["6","-","2","-","3"]`, output `["6","2","-","3","-"]`.
 
-**Hint.** Convert to postfix first, then reuse the value stack. When a new operator arrives, which waiting operators must leave first?
+**Hint.** Numbers go straight to the output. When a new operator arrives, which waiting operators must leave first?
 
 **Changed decision.** The input has precedence and no stored order, so an operator stack decides when each operator moves to the output.

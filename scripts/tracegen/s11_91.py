@@ -16,10 +16,10 @@ res,parts,st=path_run("/a/./b/../../c/"); assert res=="/c"
 fill(CH,FILE,block(parts,["i"],st),"@@TRACE1@@")
 def decode_run(s,limit):
     cur="";num=0;frames=[];steps=[]
-    f=lambda: "["+", ".join(f'({k}, "{p}")' for k,p in frames)+"]"
+    f=lambda: "["+", ".join(f'("{p}", {k})' for k,p in frames)+"]"
     for i,c in enumerate(s):
         if c.isdigit(): num=num*10+int(c); note=f"The digit {c} makes num {num}."
-        elif c=='[': frames.append((num,cur)); note=f"[ saves the count {num} and the parent text \"{cur}\", then starts an empty level."; cur="";num=0
+        elif c=='[': frames.append((num,cur)); note=f"[ saves the parent text \"{cur}\" and the count {num}, then starts an empty level."; cur="";num=0
         elif c==']':
             k,p=frames.pop(); new=len(p)+k*len(cur); assert new<=limit
             note=f"] computes the length {len(p)} + {k} * {len(cur)} = {new}, which is within the limit {limit}, then builds the text."

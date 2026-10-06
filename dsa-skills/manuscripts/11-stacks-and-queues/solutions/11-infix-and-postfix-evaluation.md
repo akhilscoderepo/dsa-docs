@@ -286,11 +286,11 @@ public final class OperatorResults {
 <!-- id: sq-infix-to-postfix -->
 
 **Approach.**
-The method converts the infix tokens to postfix with an operator stack and then evaluates the postfix list with a value stack. A number goes to the output. An operator first pops every waiting operator whose precedence is at least its own, because those operators must run before it, and then waits on the stack. The test is `>=` and not `>`, which makes equal operators run from left to right. For `6 - 2 - 3` the second minus pops the first minus, so the result is 1 and not 7. At the end of the tokens the remaining operators leave in stack order. The invariant is that precedence on the operator stack never decreases from bottom to top. The test compares with a separate evaluator that keeps a running term and a running sum and never builds a postfix list.
+The method converts the infix tokens to postfix with one operator stack and an output list, and it returns that list. A number goes to the output. An operator first pops every waiting operator whose precedence is at least its own, because those operators must run before it, and then waits on the stack. The test is `>=` and not `>`, which makes equal operators run from left to right. For `6 - 2 - 3` the second minus pops the first minus, so the output is `6 2 - 3 -` and not `6 2 3 - -`. At the end of the tokens the remaining operators leave in stack order. The invariant is that precedence on the operator stack never decreases from bottom to top. The test checks the returned list against two facts. Evaluating it must give the value that a separate evaluator computes with a running term and a running sum, and the numbers must keep their input order.
 
 **Complexity.**
-- **Time** is O(n), because each token is pushed once and popped once in each of the two passes.
-- **Space** is O(n), because the output list and both stacks hold at most n tokens.
+- **Time** is O(n), because each token is pushed once and popped at most once.
+- **Space** is O(n), because the output list and the operator stack hold at most n tokens.
 
 ```java run
 import java.util.ArrayDeque;
@@ -341,11 +341,6 @@ public final class InfixViaPostfix {
         return values.removeLast();
     }
 
-    /** Solves the exercise by converting and then evaluating. */
-    static int evaluateInfix(String[] infix) {
-        return evalPostfix(toPostfix(infix));
-    }
-
     /** Reference: running sum and running term, no postfix list. */
     static int oracle(String[] t) {
         int sum = 0, term = Integer.parseInt(t[0]), sign = 1;
@@ -360,18 +355,19 @@ public final class InfixViaPostfix {
     }
 
     public static void main(String[] args) {
-        // Example 1: 9 / 2 is 4, 4 * 4 is 16, and 16 - 7 is 9.
-        if (evaluateInfix("9 / 2 * 4 - 7".split(" ")) != 9) throw new AssertionError("example 1");
-        // The postfix form of that example keeps left-to-right order.
-        if (!toPostfix("9 / 2 * 4 - 7".split(" ")).equals(List.of("9", "2", "/", "4", "*", "7", "-"))) throw new AssertionError("postfix 1");
-        // Example 2: left association gives 1; right association would give 7.
-        if (evaluateInfix("6 - 2 - 3".split(" ")) != 1) throw new AssertionError("example 2");
+        // Example 1: equal precedence pops, so the postfix form keeps left-to-right order.
+        if (!toPostfix("9 / 2 * 4 - 7".split(" ")).equals(List.of("9", "2", "/", "4", "*", "7", "-"))) throw new AssertionError("example 1");
+        // Its value is 9: 9 / 2 is 4, 4 * 4 is 16, and 16 - 7 is 9.
+        if (evalPostfix(toPostfix("9 / 2 * 4 - 7".split(" "))) != 9) throw new AssertionError("value 1");
+        // Example 2: left association gives 6 2 - 3 - with value 1; right association would give 7.
+        if (!toPostfix("6 - 2 - 3".split(" ")).equals(List.of("6", "2", "-", "3", "-"))) throw new AssertionError("example 2");
+        if (evalPostfix(toPostfix("6 - 2 - 3".split(" "))) != 1) throw new AssertionError("value 2");
         if (6 - (2 - 3) != 7) throw new AssertionError("right association claim");
         // Precedence: 8 - 3 * 2 + 1 becomes 8 3 2 * - 1 + and equals 3.
         if (!toPostfix("8 - 3 * 2 + 1".split(" ")).equals(List.of("8", "3", "2", "*", "-", "1", "+"))) throw new AssertionError("postfix 2");
         // A single number passes through unchanged.
-        if (evaluateInfix(new String[] {"-12"}) != -12) throw new AssertionError("single");
-        // Random expressions with non-zero numbers agree with the reference.
+        if (!toPostfix(new String[] {"-12"}).equals(List.of("-12"))) throw new AssertionError("single");
+        // Random expressions with non-zero numbers give a list of the same length, the same number order and the reference value.
         Random rnd = new Random(1111);
         for (int t = 0; t < 6000; t++) {
             int terms = 1 + rnd.nextInt(7);
@@ -380,7 +376,13 @@ public final class InfixViaPostfix {
                 if (i % 2 == 0) { int v = rnd.nextInt(9) + 1; tok[i] = String.valueOf(rnd.nextBoolean() ? v : -v); }
                 else tok[i] = String.valueOf("+-*/".charAt(rnd.nextInt(4)));
             }
-            if (evaluateInfix(tok) != oracle(tok)) throw new AssertionError("random " + String.join(" ", tok));
+            List<String> post = toPostfix(tok);
+            if (post.size() != tok.length) throw new AssertionError("length " + String.join(" ", tok));
+            List<String> numsIn = new ArrayList<>(), numsOut = new ArrayList<>();
+            for (int i = 0; i < tok.length; i += 2) numsIn.add(tok[i]);
+            for (String s : post) if (!isOp(s)) numsOut.add(s);
+            if (!numsIn.equals(numsOut)) throw new AssertionError("number order " + String.join(" ", tok));
+            if (evalPostfix(post) != oracle(tok)) throw new AssertionError("random " + String.join(" ", tok));
         }
     }
 }

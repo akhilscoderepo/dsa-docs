@@ -11,7 +11,7 @@ def run(start,ch,ph,live):
         steps.append({"at":{"id":n},"vars":v,"note":f"A level begins. The captured size is {size}."})
         for _ in range(size):
             x=q.popleft(); lv.append(x); q.extend(ch[x])
-            v={"queue":fmt(q),"levelSize":size,"level":fmt(lv)}
+            v={"queue":fmt(q),"levelSize":size,"batch":fmt(lv)}
             if live: v["queue.size()"]=len(q)
             steps.append({"at":{"id":x},"vars":v,"note":f"Poll {x}"+(f" and append {fmt(ch[x])}." if ch[x] else " and append nothing.")})
         levels.append(lv)

@@ -32,15 +32,15 @@ static List<List<Integer>> levelsBySweeping(int[] start, int[][] children) {
     for (int id : order) levelCount = Math.max(levelCount, depth[id] + 1);
     List<List<Integer>> result = new ArrayList<>();
     for (int d = 0; d < levelCount; d++) {
-        List<Integer> level = new ArrayList<>();
-        for (int id : order) if (depth[id] == d) level.add(id);
-        result.add(level);
+        List<Integer> batch = new ArrayList<>();
+        for (int id : order) if (depth[id] == d) batch.add(id);
+        result.add(batch);
     }
     return result;
 }
 ```
 
-The result is correct. The items of each level keep their discovery order, because the final pass reads `order` from front to back.
+The result is correct. The items of each level keep their discovery order, because the final pass reads `order` from front to back. In this lesson `offer` adds at the back, as `addLast` does, and `poll` removes from the front, as `pollFirst` does.
 
 <!-- stage: bottleneck -->
 ### The Regrouping Pass Repeats Whole Scans
@@ -51,7 +51,7 @@ A crawl follows a chain of 100000 pages, where each page links to exactly one ne
 About 10^10 comparisons. The chain has 100000 levels, and the pass reads all 100000 entries of `order` once for every level.
 ```
 
-The queue loop costs O(n) for `n` items. The regrouping pass costs O(n * L) for `L` levels, because it scans the whole `order` list once per level. A chain makes `L` equal to `n`, so the pass costs O(n^2). The loop also needs an array indexed by item id, so the method cannot handle items that have no small integer id.
+The queue loop costs O(n) for `n` items. The regrouping pass costs O(n * L) for `L` levels, because it scans the whole `order` list once per level. A chain makes `L` equal to `n`, so the pass costs O(n^2).
 
 The pass repeats work because the queue already holds the information it needs. The items of one level sit next to each other in the queue at the moment that level begins. The method throws that grouping away by polling everything into one flat list. It then rebuilds the grouping from stored depths with repeated scans.
 
@@ -60,7 +60,7 @@ The pass repeats work because the queue already holds the information it needs. 
 
 The queue itself already separates the levels. The loop only needs to know how many items to take before it stops.
 
-<!-- names: current batch, level size, level number -->
+<!-- names: current batch, level size, inner loop -->
 
 #### The Queue Holds Whole Levels
 
@@ -68,11 +68,11 @@ A queue returns items in the order they entered. Every item of level `d` is disc
 
 #### Capture The Size Before Polling
 
-The **level size** is the value of `queue.size()` read once at the start of the batch. The inner loop polls exactly that many items. Each polled item appends its children to the back of the queue. Those children belong to the next batch, and they sit behind all remaining items of the current batch. The loop must not read `queue.size()` again in the inner loop condition. The size grows with every append, so a second read would pull next-level items into the current batch.
+The **level size** is the value of `queue.size()` read once at the start of the batch. The inner loop polls exactly that many items. Each polled item appends its children to the back of the queue. Those children belong to the next batch, and they sit behind all remaining items of the current batch. The loop must not read `queue.size()` again in the inner loop condition. Each poll shrinks the live size and each append grows it, so a second read would end the batch too early or pull next-level items into it.
 
-#### Count Levels While Draining
+#### The Result Index Is The Level
 
-The outer loop runs once per batch. The **level number** starts at 0 and increases by 1 after each inner loop finishes. A result list needs no stored depth per item, because the position of a batch in the result equals its level number. The total cost is O(n), because each item is polled once and each append happens once.
+The outer loop runs once per batch, and each pass adds one finished batch to `result`. The index of a batch in `result` is its level. The code therefore stores no depth per item and keeps no separate level counter. The total cost is O(n), because each item is polled once and each append happens once.
 
 <!-- stage: variables -->
 ### What The Two Loops Keep
@@ -81,8 +81,8 @@ The method keeps four pieces of state.
 
 - **queue** holds the items that are waiting, and at the start of each batch it holds one whole level.
 - **levelSize** is the number of items in the current batch, read once before the inner loop and never changed during it.
-- **level** is the list of ids polled in the current batch, in the order they left the queue.
-- **result** is the list of finished levels, and its length equals the level number of the batch in progress.
+- **batch** is the list of ids polled in the current batch, in the order they left the queue.
+- **result** is the list of finished batches, and its length equals the level of the batch in progress.
 
 The queue changes on every poll and every append. The `levelSize` value changes once per outer iteration.
 
@@ -96,17 +96,17 @@ The first trace starts with item 0. Item 0 appends the children 1 and 2. Item 1 
 Each outer iteration begins with a step that shows the captured size. The queue lists the items from front to back. In the second iteration the size is 2, so the loop polls 1 and 2 only. By the time item 2 is polled, the queue already holds 3, 4 and 5, but they wait for the next iteration.
 
 ```trace
-{"cells":[0,1,2,3,4,5,6],"pointers":["id"],"steps":[{"at":{"id":7},"vars":{"queue":"[0]","levelSize":1},"note":"A level begins. The captured size is 1."},{"at":{"id":0},"vars":{"queue":"[1, 2]","levelSize":1,"level":"[0]"},"note":"Poll 0 and append [1, 2]."},{"at":{"id":7},"vars":{"queue":"[1, 2]","levelSize":2},"note":"A level begins. The captured size is 2."},{"at":{"id":1},"vars":{"queue":"[2, 3, 4]","levelSize":2,"level":"[1]"},"note":"Poll 1 and append [3, 4]."},{"at":{"id":2},"vars":{"queue":"[3, 4, 5]","levelSize":2,"level":"[1, 2]"},"note":"Poll 2 and append [5]."},{"at":{"id":7},"vars":{"queue":"[3, 4, 5]","levelSize":3},"note":"A level begins. The captured size is 3."},{"at":{"id":3},"vars":{"queue":"[4, 5]","levelSize":3,"level":"[3]"},"note":"Poll 3 and append nothing."},{"at":{"id":4},"vars":{"queue":"[5, 6]","levelSize":3,"level":"[3, 4]"},"note":"Poll 4 and append [6]."},{"at":{"id":5},"vars":{"queue":"[6]","levelSize":3,"level":"[3, 4, 5]"},"note":"Poll 5 and append nothing."},{"at":{"id":7},"vars":{"queue":"[6]","levelSize":1},"note":"A level begins. The captured size is 1."},{"at":{"id":6},"vars":{"queue":"[]","levelSize":1,"level":"[6]"},"note":"Poll 6 and append nothing."}]}
+{"cells":[0,1,2,3,4,5,6],"pointers":["id"],"steps":[{"at":{"id":7},"vars":{"queue":"[0]","levelSize":1},"note":"A level begins. The captured size is 1."},{"at":{"id":0},"vars":{"queue":"[1, 2]","levelSize":1,"batch":"[0]"},"note":"Poll 0 and append [1, 2]."},{"at":{"id":7},"vars":{"queue":"[1, 2]","levelSize":2},"note":"A level begins. The captured size is 2."},{"at":{"id":1},"vars":{"queue":"[2, 3, 4]","levelSize":2,"batch":"[1]"},"note":"Poll 1 and append [3, 4]."},{"at":{"id":2},"vars":{"queue":"[3, 4, 5]","levelSize":2,"batch":"[1, 2]"},"note":"Poll 2 and append [5]."},{"at":{"id":7},"vars":{"queue":"[3, 4, 5]","levelSize":3},"note":"A level begins. The captured size is 3."},{"at":{"id":3},"vars":{"queue":"[4, 5]","levelSize":3,"batch":"[3]"},"note":"Poll 3 and append nothing."},{"at":{"id":4},"vars":{"queue":"[5, 6]","levelSize":3,"batch":"[3, 4]"},"note":"Poll 4 and append [6]."},{"at":{"id":5},"vars":{"queue":"[6]","levelSize":3,"batch":"[3, 4, 5]"},"note":"Poll 5 and append nothing."},{"at":{"id":7},"vars":{"queue":"[6]","levelSize":1},"note":"A level begins. The captured size is 1."},{"at":{"id":6},"vars":{"queue":"[]","levelSize":1,"batch":"[6]"},"note":"Poll 6 and append nothing."}]}
 ```
 
 #### Size Grows While A Level Drains
 
 The second trace uses a larger fan-out. Item 0 appends 1, 2 and 3. Item 1 appends 4, and item 3 appends 5 and 6. The vars show both the captured size and the live value of `queue.size()`.
 
-During the second level, the captured size stays 3. The live size is 3 after polling item 1, because item 4 joined the queue. A loop that compared against the live size would keep running past item 3. The captured size stops the inner loop after exactly three polls.
+During the second level, the captured size stays 3. The live size changes with every poll and every append. After polling item 1 it is 3, because item 4 joined the queue. After polling item 2 it is 2. A loop that compared its count against the live size would stop after two polls and leave item 3 for the wrong batch. In other inputs the live size grows and the loop runs too long. The captured size stops the inner loop after exactly three polls.
 
 ```trace
-{"cells":[0,1,2,3,4,5,6],"pointers":["id"],"steps":[{"at":{"id":7},"vars":{"queue":"[0]","levelSize":1,"queue.size()":1},"note":"A level begins. The captured size is 1."},{"at":{"id":0},"vars":{"queue":"[1, 2, 3]","levelSize":1,"level":"[0]","queue.size()":3},"note":"Poll 0 and append [1, 2, 3]."},{"at":{"id":7},"vars":{"queue":"[1, 2, 3]","levelSize":3,"queue.size()":3},"note":"A level begins. The captured size is 3."},{"at":{"id":1},"vars":{"queue":"[2, 3, 4]","levelSize":3,"level":"[1]","queue.size()":3},"note":"Poll 1 and append [4]."},{"at":{"id":2},"vars":{"queue":"[3, 4]","levelSize":3,"level":"[1, 2]","queue.size()":2},"note":"Poll 2 and append nothing."},{"at":{"id":3},"vars":{"queue":"[4, 5, 6]","levelSize":3,"level":"[1, 2, 3]","queue.size()":3},"note":"Poll 3 and append [5, 6]."},{"at":{"id":7},"vars":{"queue":"[4, 5, 6]","levelSize":3,"queue.size()":3},"note":"A level begins. The captured size is 3."},{"at":{"id":4},"vars":{"queue":"[5, 6]","levelSize":3,"level":"[4]","queue.size()":2},"note":"Poll 4 and append nothing."},{"at":{"id":5},"vars":{"queue":"[6]","levelSize":3,"level":"[4, 5]","queue.size()":1},"note":"Poll 5 and append nothing."},{"at":{"id":6},"vars":{"queue":"[]","levelSize":3,"level":"[4, 5, 6]","queue.size()":0},"note":"Poll 6 and append nothing."}]}
+{"cells":[0,1,2,3,4,5,6],"pointers":["id"],"steps":[{"at":{"id":7},"vars":{"queue":"[0]","levelSize":1,"queue.size()":1},"note":"A level begins. The captured size is 1."},{"at":{"id":0},"vars":{"queue":"[1, 2, 3]","levelSize":1,"batch":"[0]","queue.size()":3},"note":"Poll 0 and append [1, 2, 3]."},{"at":{"id":7},"vars":{"queue":"[1, 2, 3]","levelSize":3,"queue.size()":3},"note":"A level begins. The captured size is 3."},{"at":{"id":1},"vars":{"queue":"[2, 3, 4]","levelSize":3,"batch":"[1]","queue.size()":3},"note":"Poll 1 and append [4]."},{"at":{"id":2},"vars":{"queue":"[3, 4]","levelSize":3,"batch":"[1, 2]","queue.size()":2},"note":"Poll 2 and append nothing."},{"at":{"id":3},"vars":{"queue":"[4, 5, 6]","levelSize":3,"batch":"[1, 2, 3]","queue.size()":3},"note":"Poll 3 and append [5, 6]."},{"at":{"id":7},"vars":{"queue":"[4, 5, 6]","levelSize":3,"queue.size()":3},"note":"A level begins. The captured size is 3."},{"at":{"id":4},"vars":{"queue":"[5, 6]","levelSize":3,"batch":"[4]","queue.size()":2},"note":"Poll 4 and append nothing."},{"at":{"id":5},"vars":{"queue":"[6]","levelSize":3,"batch":"[4, 5]","queue.size()":1},"note":"Poll 5 and append nothing."},{"at":{"id":6},"vars":{"queue":"[]","levelSize":3,"batch":"[4, 5, 6]","queue.size()":0},"note":"Poll 6 and append nothing."}]}
 ```
 
 <!-- stage: code -->
@@ -123,13 +123,13 @@ static List<List<Integer>> levels(int[] start, int[][] children) {
     for (int s : start) queue.offer(s);
     while (!queue.isEmpty()) {
         int levelSize = queue.size();
-        List<Integer> level = new ArrayList<>();
+        List<Integer> batch = new ArrayList<>();
         for (int k = 0; k < levelSize; k++) {
             int id = queue.poll();
-            level.add(id);
+            batch.add(id);
             for (int c : children[id]) queue.offer(c);
         }
-        result.add(level);
+        result.add(batch);
     }
     return result;
 }
@@ -150,7 +150,7 @@ Use the two loops when the answer must separate items by their distance from the
 
 #### Two False Friends
 
-The first false friend is a loop `for (int k = 0; k < queue.size(); k++)`. It reads like the correct loop and gives wrong groups as soon as an item has a child. The second false friend is a level count taken from `queue.size()` at the end of the inner loop. That value includes the next batch.
+The first false friend is a loop `for (int k = 0; k < queue.size(); k++)`. It reads like the correct loop. Each poll shrinks the live size and each append grows it, so the loop ends the batch too early or too late. The second false friend is a batch size taken from `queue.size()` at the end of the inner loop. That value counts the next batch.
 
 #### When It Does Not Apply
 

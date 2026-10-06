@@ -3,9 +3,9 @@
 ## Track The Minimum In A Stack
 
 <!-- stage: context -->
-### A Dashboard That Slows As It Fills
+### A Monitor That Slows As It Fills
 
-A profiler records the duration of every call that is currently open. A call starts, so the profiler pushes its start-up cost onto a stack. A call ends, so the profiler pops it. After every event the dashboard must show the smallest cost among the calls that are still open. With a few dozen open calls, the dashboard feels instant. With a deeply recursive program that keeps 200,000 calls open, the same dashboard freezes after every single event.
+A monitor tracks the open calls of a running program. When a call starts, the monitor pushes the number of bytes that the call allocated onto a stack. When the call ends, the monitor pops that number. After every event the monitor must show the smallest byte count among the calls that are still open. A scan answers that question by reading every open call. A deeply recursive program with many thousands of open calls makes every event cost many thousands of reads.
 
 The stack operations themselves are fast. Pushing and popping at one end costs O(1) each. The slow part is the question about the smallest value. The lesson answers one question. How can a stack return its current minimum in constant time after every push and every pop?
 
@@ -24,7 +24,7 @@ static int minByScan(ArrayDeque<Integer> stack) {
 }
 ```
 
-The method is correct. It always reflects the stack after the latest push or pop, because it reads the stack itself and keeps no copy. A stack holding `5, 3, 7` returns 3. After the 3 is popped, the next call returns 5, because the scan sees only what remains.
+The method is correct. It always reflects the stack after the latest push or pop, because it reads the stack itself and keeps no copy. A stack that holds 5, 3 and 7 from bottom to top returns 3. After the 7 is popped, the call still returns 3. After the 3 is popped as well, the call returns 5, because the scan sees only what remains.
 
 <!-- stage: bottleneck -->
 ### The Scan Rereads Settled Answers

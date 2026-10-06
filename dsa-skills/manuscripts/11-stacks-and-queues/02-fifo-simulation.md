@@ -61,9 +61,9 @@ The loop removes the front task and gives it one turn. It decrements the task's 
 
 #### Detecting That No Progress Is Possible
 
-Some simulations can stall. A **rotation** is a run of consecutive turns where the removed item goes straight back to the queue. When the number of consecutive unproductive turns equals the queue length, every item has been tried against the same state and none made progress. Each further turn would repeat the same outcomes, so the loop stops.
+Some simulations can stall. A **miss** is a turn where the removed item makes no progress and goes straight back to the queue. When the number of consecutive misses equals the queue length, every item has been tried against the same state and none made progress. Each further turn would repeat the same outcomes, so the loop stops.
 
-<!-- names: front, back, rotation -->
+<!-- names: front, back, miss -->
 
 <!-- stage: variables -->
 ### Queue State And Counters
@@ -72,7 +72,7 @@ The simulation keeps three pieces of state.
 
 - **queue** is the `ArrayDeque` of task ids that still need work, in service order, and it changes once per turn.
 - **work** is the array of remaining units per task, and only the removed task's entry changes in a turn.
-- **misses** is the count of consecutive turns without progress; it resets to zero after progress and is compared with `queue.size()`.
+- **misses** is the count of consecutive misses; it resets to zero after progress and is compared with `queue.size()`.
 
 <!-- stage: trace -->
 ### Two Simulations Step By Step
@@ -85,7 +85,7 @@ Task 0 loses one unit and returns to the back. Task 1 finishes on its first turn
 {"cells":[2,1,3],"pointers":["task"],"steps":[{"at":{"task":0},"vars":{"queue":"[1, 2, 0]","finished":"[]"},"note":"Task 0 loses one unit, has 1 left and returns to the back."},{"at":{"task":1},"vars":{"queue":"[2, 0]","finished":"[1]"},"note":"Task 1 loses its last unit and finishes."},{"at":{"task":2},"vars":{"queue":"[0, 2]","finished":"[1]"},"note":"Task 2 loses one unit, has 2 left and returns to the back."},{"at":{"task":0},"vars":{"queue":"[2]","finished":"[1, 0]"},"note":"Task 0 loses its last unit and finishes."},{"at":{"task":2},"vars":{"queue":"[2]","finished":"[1, 0]"},"note":"Task 2 loses one unit, has 1 left and returns to the back."},{"at":{"task":2},"vars":{"queue":"[]","finished":"[1, 0, 2]"},"note":"Task 2 loses its last unit and finishes."}]}
 ```
 
-The second trace uses a lunch-line case. Students hold a preference of 0 or 1 and sandwiches lie in a fixed order. The student at the front eats when the preference equals the top sandwich. Otherwise the student moves to the back. The cells are the sandwiches `[0,0,1,0,1]`, and the pointer `top` marks the top sandwich index. The variable `misses` counts consecutive moves to the back.
+The second trace uses a school lunch case. The students array is `[1,0,0,1,1]` and the sandwiches array is `[0,0,1,0,1]`. Each student prefers sandwich type 0 or 1, and the sandwiches lie in a fixed order. The student at the front eats when the preference equals the top sandwich. Otherwise the student moves to the back. The cells are the sandwiches, and the pointer `top` is the index of the top sandwich, which moves one place right each time a student eats. The variable `misses` counts consecutive moves to the back.
 
 The last two students both want sandwich 1 while the top sandwich is 0. Two consecutive misses equal the queue length, so the loop stops and reports two students left.
 
@@ -117,7 +117,7 @@ static int[] finishOrder(int[] remaining) {
 }
 ```
 
-#### Stopping After A Full Unsuccessful Rotation
+#### Stopping After A Run Of Misses
 
 The second method keeps `misses` and stops when it equals the queue size.
 
@@ -235,4 +235,4 @@ Two Java hazards appear in these loops. Comparing boxed `Integer` values with `=
 
 **Hint.** When does another trip around the queue stop being able to change anything?
 
-**Changed decision.** The loop stops after a full unsuccessful rotation of the queue, and no student returns once the top sandwich has no taker.
+**Changed decision.** The loop stops after as many consecutive misses as the queue length, and no student returns once the top sandwich has no taker.

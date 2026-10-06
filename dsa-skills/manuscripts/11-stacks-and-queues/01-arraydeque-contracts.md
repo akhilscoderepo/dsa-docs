@@ -5,9 +5,9 @@
 <!-- stage: context -->
 ### A Marker That Crashes The Search
 
-A breadth-first search over a graph needs to know where one level ends and the next begins. A programmer adds a `null` element to an `ArrayDeque` as the divider. The program throws `NullPointerException` on the first insertion of that divider. The same programmer keeps an undo log in `java.util.Stack`. That code runs, but any caller can also read or insert at an arbitrary index, so the log can stop behaving like a log.
+A program puts `null` into an `ArrayDeque` to mark the gap between two groups of items. The program throws `NullPointerException` on the first insertion of that marker. The author expected a container that stores any reference, and the container refuses this one value.
 
-Both failures come from the same gap. The programmer did not know which end of the deque holds which element, and did not know what the deque promises. The lesson answers one question. Which exact calls make `ArrayDeque` behave as a stack or as a queue, and what does each call do when the deque is empty or receives `null`?
+The failure comes from a missing contract. The programmer did not know which values the deque accepts, which end each call touches, or what each call returns when the deque is empty. The lesson answers one question. Which exact calls make `ArrayDeque` behave as a stack or as a queue, and what does each call do when the deque is empty or receives `null`?
 
 <!-- stage: naive -->
 ### Use The Collection That Comes To Mind
@@ -32,7 +32,7 @@ static int[] drainWithList(int[] values) {
 }
 ```
 
-Both methods return correct results. The first reverses the input, and the second keeps the input order.
+Both methods return correct results. The first reverses the input, and the second keeps the input order. The `Stack` version also runs without error. Yet any caller can read or insert at an arbitrary index, so an undo log kept in it can stop behaving like a log.
 
 <!-- stage: bottleneck -->
 ### Costs Of The Naive Pair
@@ -50,7 +50,7 @@ The second problem is a missing contract. The code must also say what happens on
 <!-- stage: insight -->
 ### One End Per Meaning
 
-`ArrayDeque` is a resizable circular array that adds and removes at both ends in amortized O(1) time. It has no index access, so the interface offers only end operations. The lesson fixes which end plays which role and keeps that choice for the whole implementation.
+`ArrayDeque` is a resizable circular array that adds and removes at both ends in amortized O(1) time. Amortized means that the average cost per call over a long sequence is constant, even though an occasional resize of the array costs more. It has no index access, so the interface offers only end operations. The lesson fixes which end plays which role and keeps that choice for the whole implementation.
 
 #### Choosing A Stack Or A Queue
 
@@ -62,7 +62,7 @@ Every end operation exists in two forms. `removeFirst`, `removeLast`, `getFirst`
 
 <!-- names: LIFO, FIFO, poll -->
 
-An invariant holds across the code. One end has one meaning, and no method mixes the two ends. The calls `push`, `pop` and `peek` work on the first end, so mixing them with `peekLast` breaks a stack silently.
+An invariant holds across the code. One end has one meaning, and no method mixes the two ends. The calls `push`, `pop` and `peek` act on the first end, and `addLast`, `removeLast` and `peekLast` act on the last end. Either end works for a stack when the code uses one end consistently. This lesson uses the last end. Mixing `push` with `peekLast` breaks a stack silently.
 
 <!-- stage: variables -->
 ### State In A Deque Based Loop
@@ -77,7 +77,7 @@ The state is small, and each piece changes at known moments.
 <!-- stage: trace -->
 ### Same Input, Two Removal Orders
 
-Both traces use the input values 4, 7 and 9. The cells are the input, and the pointer `in` marks the next input index. The variable `deque` shows the contents from first end to last end, and `out` shows the values removed so far.
+Both traces use the input values 4, 7 and 9. The cells are the input, and the pointer `in` marks the input index of the value that the step adds or removes. The variable `deque` shows the contents from first end to last end, and `out` shows the values removed so far.
 
 The stack trace adds all three values at the last end. It then removes three times at the last end, so the output is 9, 7, 4. The deque never holds an element between the two ends that is out of place, because only one end changes after the additions.
 

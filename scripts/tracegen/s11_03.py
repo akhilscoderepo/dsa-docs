@@ -13,7 +13,7 @@ def run(vals, ops, ph):
                 while ins: outs.append(ins.pop()); moves+=1
                 note=f"out is empty, so {n} value(s) move from in to out. "
             x=outs.pop(); got.append(x); note+=f"dequeue() pops {x} from out."
-        st.append({"at":{"next":nxt},"vars":{"in":fmt(ins),"out":fmt(outs),"moves":moves},"note":note})
+        st.append({"at":{"next":nxt},"vars":{"in":fmt(ins),"out":fmt(outs)},"note":note})
     assert moves<=len(vals)
     fill(CH,FILE,block(vals,["next"],st),ph); return got
 assert run([4,7,9],"EEEDDD","@@TRACE1@@")==[4,7,9]

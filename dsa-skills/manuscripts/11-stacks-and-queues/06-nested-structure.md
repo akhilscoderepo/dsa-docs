@@ -210,7 +210,7 @@ Skip the frames when the answer depends only on how deep the scan is, such as th
 - **Return** is an `int`, and -1 marks any string that is not balanced.
 - **Mutation** is not allowed; the string does not change.
 
-**Example 1.** Input `((((()))))`, output 5, a chain of five empty-bodied groups.
+**Example 1.** Input `((((()))))`, output 5, because the string holds five nested groups and the innermost group is empty.
 
 **Example 2.** Input `)(`, output -1, because the first character closes a group that was never opened.
 

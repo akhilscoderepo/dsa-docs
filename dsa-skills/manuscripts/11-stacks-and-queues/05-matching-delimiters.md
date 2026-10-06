@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Line With Equal Counts Fails
 
-A JSON parser reads the text `[1, {2]}` and reports an error. A quick count shows one `[`, one `{`, one `]` and one `}`, so every symbol has a partner somewhere. The parser still stops at the `]`, because the opening that is still unfinished at that point is `{`, and a `]` cannot close it. Compilers, linters and formatters make this same check before they read anything else. The check must work in one pass over the text. How does the code remember which opening a closing symbol has to match?
+A JSON parser reads the text `[1, {2]}` and reports an error. A quick count shows one `[`, one `{`, one `]` and one `}`, so every symbol has a partner somewhere. The parser still stops at the `]`, because the opening that is still unfinished at that point is `{`, and a `]` cannot close it. This lesson looks only at the bracket characters, so the input holds just the six symbols `()[]{}`, and the text above reduces to `[{]}`. Compilers, linters and formatters make this same check before they read anything else. The check must work in one pass over the text. How does the code remember which opening a closing symbol has to match?
 
 <!-- stage: naive -->
 ### Delete Matched Pairs Until Nothing Changes
@@ -23,7 +23,7 @@ static boolean validByDeleting(String s) {
 }
 ```
 
-The text `[1, {2]}` without its digits becomes `[{]}`. No adjacent pair exists, so the method returns false. The method is correct for all inputs made of brackets.
+The bracket characters of `[1, {2]}` form `[{]}`. No adjacent pair exists, so the method returns false. The method is correct for every input made of the six bracket characters.
 
 <!-- stage: bottleneck -->
 ### Why Repeated Deletion Slows Down
@@ -58,22 +58,24 @@ A closing symbol pops the newest pending opening, and the pair must be compatibl
 <!-- stage: variables -->
 ### The State Of The Scan
 
-The scan keeps four pieces of state.
+The scan keeps four pieces of state, named as in the code.
 
 - **stack** holds the pending openings. A push adds an opening, and a pop removes the newest one.
 - **i** is the index of the character under test. It moves forward by one each step.
-- **c** is the character at index `i`. It is either an opening or a closing symbol.
-- **partner** is the opening symbol that belongs to a closing symbol. It is fixed by the pairs `()`, `[]` and `{}`.
+- **c** is the character at index `i`. The input holds only the six bracket characters, so `c` is either an opening or a closing symbol.
+- **open** is the symbol that a pop returns, and the scan compares it with the partner of `c`.
+
+The method `partnerOf(c)` returns the opening symbol that belongs to the closing symbol `c`. The pairs `()`, `[]` and `{}` fix its result.
 
 <!-- stage: trace -->
 ### Two Texts Through The Stack
 
 #### A Valid Nested Text
 
-The first text is `([]{})`. The cells are its six characters, and the pointer `i` sits on the symbol being tested. The scan pushes `(` and then `[`. The `]` pops `[`, which is its partner, so one pending opening leaves. The scan pushes `{`, and `}` pops it. The final `)` pops `(`, and the stack is empty at the end. The text is valid.
+The first text is `([]{})`. The cells are its six characters, and the pointer `i` sits on the symbol being tested. The variable `stack` lists the pending openings, `c` holds the tested character and `open` holds the symbol that a pop returns. The scan pushes `(` and then `[`. The `]` pops `[`, which is its partner, so one pending opening leaves. The scan pushes `{`, and `}` pops it. The final `)` pops `(`, and the stack is empty at the end. The text is valid.
 
 ```trace
-{"cells":["(","[","]","{","}",")"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[(]","char":"("},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"[(, []","char":"["},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"[(]","char":"]","popped":"["},"note":"] pops [, which is its partner."},{"at":{"i":3},"vars":{"stack":"[(, {]","char":"{"},"note":"{ is an opening, so the scan pushes it."},{"at":{"i":4},"vars":{"stack":"[(]","char":"}","popped":"{"},"note":"} pops {, which is its partner."},{"at":{"i":5},"vars":{"stack":"[]","char":")","popped":"("},"note":") pops (, which is its partner."},{"at":{"i":6},"vars":{"stack":"[]","result":"true"},"note":"The text ends with an empty stack, so the result is true."}]}
+{"cells":["(","[","]","{","}",")"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[(]","c":"("},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"[(, []","c":"["},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"[(]","c":"]","open":"["},"note":"] pops [, which is its partner."},{"at":{"i":3},"vars":{"stack":"[(, {]","c":"{"},"note":"{ is an opening, so the scan pushes it."},{"at":{"i":4},"vars":{"stack":"[(]","c":"}","open":"{"},"note":"} pops {, which is its partner."},{"at":{"i":5},"vars":{"stack":"[]","c":")","open":"("},"note":") pops (, which is its partner."},{"at":{"i":6},"vars":{"stack":"[]","result":"true"},"note":"The text ends with an empty stack, so the result is true."}]}
 ```
 
 #### Equal Counts With The Wrong Order
@@ -81,7 +83,7 @@ The first text is `([]{})`. The cells are its six characters, and the pointer `i
 The second text is `([)]`. It holds two openings and two closings, so a count would accept it. The scan pushes `(` and `[`. The `)` arrives and pops `[`, because `[` is on top. The partner of `)` is `(`, so the scan finds a mismatch at index 2 and stops. The stack still holds the older `(`, and the scan returns false without reading the rest of the text.
 
 ```trace
-{"cells":["(","[",")","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[(]","char":"("},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"[(, []","char":"["},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"[(]","char":")","popped":"["},"note":") pops [, and the partner of ) is (. This is a mismatch, so the scan stops with false."}]}
+{"cells":["(","[",")","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[(]","c":"("},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"[(, []","c":"["},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"[(]","c":")","open":"["},"note":") pops [, and the partner of ) is (. This is a mismatch, so the scan stops with false."}]}
 ```
 
 <!-- stage: code -->
@@ -89,7 +91,7 @@ The second text is `([)]`. It holds two openings and two closings, so a count wo
 
 #### The Scan Method
 
-The method uses `ArrayDeque<Character>` as the stack. It checks `isEmpty()` before each `pop()`, because `pop()` on an empty deque throws `NoSuchElementException`. It compares `char` values and not `Character` objects, so the `!=` test compares values.
+The method assumes that the input holds only the six bracket characters, so every character that is not an opening is a closing symbol. It uses `ArrayDeque<Character>` as the stack. It checks `isEmpty()` before each `pop()`, because `pop()` on an empty deque throws `NoSuchElementException`. It compares `char` values and not `Character` objects, so the `!=` test compares values.
 
 ```java
 static boolean isBalanced(String s) {

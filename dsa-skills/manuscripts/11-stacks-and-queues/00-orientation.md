@@ -5,7 +5,7 @@ A formula engine returns -5 for `8 3 -` and passes every test that uses a plus s
 
 ### Prerequisites
 
-You should know arrays, `String` and `char`, loops, and the cost words from Chapter 00. A few lessons use `int[]` and simple grid or graph neighbors. Each lesson defines its own terms the first time they matter, including stack, queue and frame.
+You should know arrays, `String` and `char`, loops, and the cost words from Chapter 00. A few lessons use `int[]` and simple grid or graph neighbors. Each lesson defines its own terms the first time they matter, including stack, queue and frame. Code samples assume `import java.util.*;` and a recent Java version, 17 or later.
 
 ### The Eleven Lessons
 
@@ -21,7 +21,7 @@ Each lesson fixes one rule about which item leaves the container next.
 - **Group Queue Items By Level** counts the items in the queue before each pass, so one loop stops at each level.
 - **Decode Nested Repeat Groups** keeps the text and the count that belong outside the open group.
 - **Evaluate Expressions Written As Text** delays each operator until its number is complete.
-- **Evaluate Postfix And Convert Infix** pops operands in the right order and moves operators between two stacks.
+- **Evaluate Postfix And Convert Infix** evaluates postfix with one stack of operands. It converts infix to postfix with one stack of operators and an output list.
 
 ### The Combination Lesson
 

@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### An Elevator That Takes The Long Way
 
-An elevator controller has two buttons. One moves the car up 3 floors and one moves it down 2 floors. The building has floors 0 to 20, and a button that would leave that range does nothing. A test asks for the fewest presses that take the car from floor 1 to floor 10. The controller search uses a stack, and it reports 8 presses. A short manual check shows that three presses work: up to 4, up to 7, up to 10.
+An elevator controller has two buttons. One moves the car up 3 floors and one moves it down 2 floors. The building has floors 0 to 20, and a button that would leave that range does nothing. A test asks for the fewest presses that take the car from floor 1 to floor 10. The controller search uses a stack, and its reported count is larger than 3. A short manual check shows that three presses work: up to 4, up to 7, up to 10.
 
 The search visits every floor it can reach, so it does find floor 10. It simply does not find the shortest route first. What kind of container makes the first time the search reaches the target also the cheapest time?
 
@@ -31,15 +31,15 @@ static int firstFound(int start, int target, int top) {
 }
 ```
 
-The `seen` array stops the search from revisiting a floor. For start 1, target 10 and top 20, the method returns 8.
+The `seen` array stops the search from revisiting a floor. For start 1, target 10 and top 20, the method returns a press count after it reaches floor 10.
 
 <!-- stage: bottleneck -->
 ### The First Route Is Not Shortest
 
 ```predict
-The stack search above tries the down button first and returns the press count of the first route that reaches floor 10. The shortest route needs 3 presses. Does the stack search return 3, a number slightly larger than 3, or a much larger number?
+The shortest route from floor 1 to floor 10 needs 3 presses. The stack search above tries the down button first and returns the press count of the first route that reaches floor 10. Does the stack search return the shortest count of 3? If not, is its answer slightly larger or much larger?
 
-It returns 8. The stack follows one long route of mixed up and down presses before it backs up, and floor 10 first appears on that long route. The popped entry is the newest one, so a route with 3 presses waits under the entries above it.
+No. It returns 8. The stack follows one long route of mixed up and down presses before it backs up, and floor 10 first appears on that long route. The popped entry is the newest one, so a route with 3 presses waits under the entries above it.
 ```
 
 The stack gives every route one chance in newest-first order. The order has no relation to press count, so the first hit can carry any number up to the size of the board. The search does visit each of the 21 floors at most once, so its work is O(B) for B floors. The answer is still wrong.
@@ -81,7 +81,7 @@ The array `dist` plays two roles. A value other than -1 means the floor is marke
 
 #### From Floor 1 To Floor 10
 
-The first trace starts at floor 1 with target 10 and top 20. The cells are the floors 0 to 20, and the pointer `cur` marks the floor just removed from the queue. Each step lists the queue after the removal and the new floors that the removal adds.
+The first trace starts at floor 1 with target 10 and top 20. The cells are the floors 0 to 20, and the pointer `cur` marks the floor just removed from the queue. Each queue entry reads `floor:count`, so `4:1` is floor 4 with a press count of 1. Each step lists the queue after the removal and after the new floors join it, and the variable `new` names those new floors.
 
 Floor 1 is served first, and only its up button is valid, so floor 4 enters the queue with count 1. Floor 4 adds floors 7 and 2 with count 2. Floor 7 adds floors 10 and 5 with count 3, and floor 2 adds floor 0. Floor 10 then leaves the queue, and the search returns its count.
 
@@ -128,7 +128,7 @@ static int fewestPresses(int start, int target, int top) {
 
 #### The Cost
 
-Each floor enters the queue at most once, because `dist[next] != -1` blocks later entries. Each removed floor tries two buttons. The time is O(B) for B floors, and the space is O(B) for `dist` and the queue. The queue never holds `null`, because it stores `Integer` floors. A null divider between levels would fail in `ArrayDeque`, which is why the code stores counts in `dist` instead.
+Each floor enters the queue at most once, because `dist[next] != -1` blocks later entries. Each removed floor tries two buttons. The time is O(B) for B floors, and the space is O(B) for `dist` and the queue. An `ArrayDeque` rejects `null`, so the queue cannot hold a null divider between levels. The code keeps the counts in `dist` instead.
 
 <!-- stage: applicability -->
 ### Deciding When A Queue Search Applies
@@ -139,7 +139,7 @@ The cue is a start state, moves that each cost one step, and a question about th
 
 #### False Friend And Limits
 
-A stack search is the false friend here. It uses the same loop shape with the container swapped, it visits the same states, and it passes a test that asks only whether the target is reachable. It fails any test that asks for the fewest steps, as the result of 8 against 3 in the opening problem showed. The queue search also assumes every move costs exactly one step. When moves have different costs, the queue order no longer follows total cost, and a different method is needed.
+A stack search is the false friend here. It uses the same loop shape with the container swapped, it visits the same states, and it passes a test that asks only whether the target is reachable. It fails any test that asks for the fewest steps, as the result of 8 against 3 in the earlier prediction showed. The queue search also assumes every move costs exactly one step. When moves have different costs, the queue order no longer follows total cost, and a different method is needed.
 
 Do not use this search when the question is only whether a target is reachable and memory is tight. A stack search needs less memory on long narrow routes. Building the state space from raw input, as in grids and general graphs, is the topic of a later chapter. This lesson takes the moves as given.
 

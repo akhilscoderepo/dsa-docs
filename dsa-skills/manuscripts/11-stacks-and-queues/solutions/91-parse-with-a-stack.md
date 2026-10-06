@@ -150,7 +150,7 @@ public final class CheckedPostfix {
 <!-- id: sq-decode-bounded -->
 
 **Approach.**
-The reader keeps the text of the current level, the repeat count being read, and a stack of saved frames. Each frame holds a count and the parent text. An opening bracket saves the frame and starts an empty level. A closing bracket pops the frame and computes the new length as the parent length plus the count times the current length, in `long`. When that length exceeds the limit, the method returns `null` before it appends anything. Otherwise the method appends the current text `count` times to the parent text. A letter also checks the current length, because the final length is never smaller than the current level. The invariant is that no text held in the method is longer than the limit. A hostile input with five nested counts of 300 therefore returns `null` at the first closing bracket whose product exceeds the limit. The test compares with a full expansion of small random encodings.
+The reader keeps the text of the current level, the repeat count being read, and a stack of saved frames. Each frame holds the parent text and a count. An opening bracket saves the frame and starts an empty level. A closing bracket pops the frame and computes the new length as the parent length plus the count times the current length, in `long`. When that length exceeds the limit, the method returns `null` before it appends anything. Otherwise the method appends the current text `count` times to the parent text. A letter also checks the current length, because the final length is never smaller than the current level. The invariant is that no text held in the method is longer than the limit. A hostile input with five nested counts of 300 therefore returns `null` at the first closing bracket whose product exceeds the limit. The test compares with a full expansion of small random encodings.
 
 **Complexity.**
 - **Time** is O(n + limit), because the reader visits each character once and every append is within the limit.
@@ -183,7 +183,7 @@ public final class BoundedDecode {
                 // A digit extends the count; counts have several digits.
                 num = num * 10 + (c - '0');
             } else if (c == '[') {
-                // Save the count and the parent text, then start a new level.
+                // Save the parent text and the count, then start a new level.
                 counts.addLast(num);
                 parents.addLast(cur);
                 cur = new StringBuilder();
@@ -271,7 +271,7 @@ public final class BoundedDecode {
 <!-- id: sq-simplify-path -->
 
 **Approach.**
-The method splits the path on the slash and treats each piece as a token. Empty pieces come from repeated or trailing slashes, and the piece `.` names the current directory, so both change nothing. The piece `..` pops the most recent name, and it does nothing when the stack is empty, because the root has no parent. Any other piece, including `...`, is a name and is pushed. After the last piece the stack holds the names from the root outward. The answer is a slash before each name, or a single slash for an empty stack. The invariant says that the stack keeps the canonical names of the path read so far. The test compares with the rewriting method from the lesson's opening, which deletes a name together with the next `..` until none are left.
+The method keeps the open names in a `String` array and an `int` named `top` that counts them, and it scans the path with `indexOf` to cut one component at a time. Empty components come from repeated or trailing slashes, and the component `.` names the current directory, so both change nothing. The component `..` lowers `top` only when `top` is above 0, because the root has no parent. Any other component, including `...`, is a name and is stored at index `top`. After the last component the entries below `top` hold the names from the root outward. The answer is a slash before each name, or a single slash when `top` is 0. The invariant says that the entries below `top` are the canonical names of the path read so far. The test compares with the rewriting method from the lesson's opening, which deletes a name together with the next `..` until none are left.
 
 **Complexity.**
 - **Time** is O(n), because each piece is pushed at most once and popped at most once, and the final join visits each kept character once.
@@ -287,30 +287,35 @@ import java.util.Random;
 public final class SimplifyUnixPath {
     /**
      * Returns the canonical form of an absolute path.
-     * Time: O(n), one push and at most one pop per piece.
-     * Space: O(n), the pieces and the stack.
-     * Invariant: the stack holds the names of the canonical path of the pieces read so far.
+     * Time: O(n), each component is stored at most once and removed at most once.
+     * Space: O(n), the name array and the output.
+     * Invariant: names[0..top) are the canonical names of the components read so far.
      */
     static String simplify(String path) {
-        // Open directory names, with the outermost name first.
-        Deque<String> open = new ArrayDeque<>();
-        // Splitting on the slash gives one piece per component, with empty strings for repeated slashes.
-        for (String piece : path.split("/")) {
-            // Empty pieces and the current-directory piece change nothing.
+        // The array is the stack, and top counts the open names.
+        String[] names = new String[path.length() / 2 + 1];
+        int top = 0;
+        // Each pass cuts the component that starts at index from.
+        for (int from = 0; from < path.length(); ) {
+            int slash = path.indexOf('/', from);
+            if (slash < 0) slash = path.length();
+            String piece = path.substring(from, slash);
+            from = slash + 1;
+            // Empty components and the current-directory component change nothing.
             if (piece.isEmpty() || piece.equals(".")) continue;
             if (piece.equals("..")) {
-                // The parent move pops only when a name exists; at the root it is a no-op.
-                if (!open.isEmpty()) open.removeLast();
+                // The parent move lowers top only above the root; at the root it is a no-op.
+                if (top > 0) top--;
             } else {
-                // Everything else, including "...", is a name.
-                open.addLast(piece);
+                // Everything else, including "...", is a name stored at index top.
+                names[top++] = piece;
             }
         }
-        // An empty stack is the root alone.
-        if (open.isEmpty()) return "/";
+        // A count of 0 is the root alone.
+        if (top == 0) return "/";
         // One slash precedes each name, so no trailing slash appears.
         StringBuilder sb = new StringBuilder();
-        for (String name : open) sb.append('/').append(name);
+        for (int i = 0; i < top; i++) sb.append('/').append(names[i]);
         return sb.toString();
     }
 

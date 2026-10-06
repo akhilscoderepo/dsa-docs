@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### One Stack, Four Different Texts
 
-A developer maintains a small tool that reads four kinds of text. The first is a formula written with the operator last, such as `7 2 - 3 *`. The second is a compressed string such as `2[a3[b]]`. The third is a file path such as `/home/user/../docs/./a.txt`. The fourth is an arithmetic line such as `-(x+4)-y` with named variables. The developer writes one stack loop for the formula, and it works. Copying the loop to the other three texts produces four different bugs. The path `/..` crashes on an empty stack. The compressed string loses its repeat count. The formula `7 2 ^` is accepted silently, and `-(x+4)` returns the wrong sign.
+A developer maintains a small tool that reads four kinds of text. The first is a formula written with the operator last, such as `7 2 - 3 *`. The second is a compressed string such as `2[a3[b]]`. The third is a file path such as `/home/user/../docs/./a.txt`. The fourth is an arithmetic line such as `-(x+4)-y` with named variables. The developer writes one stack loop for the formula, and it works on the valid examples. Testing all four texts with that loop, and copies of it, produces four different bugs. The formula `7 2 ^` is accepted silently. The compressed string loses its repeat count. The path `/..` crashes on an empty stack. The arithmetic line `-(x+4)` returns the wrong sign.
 
 The stack loop was the same each time, so the loop is not what differs. The task here is to answer one question. For each of the four texts, what must the reading step decide, and what must the stack remember so that the decision can be finished later?
 
@@ -66,7 +66,7 @@ A **token** is the smallest piece of text that has one meaning. In a postfix for
 
 #### The Stack Holds One Frame Per Open Level
 
-A **frame** is the saved state of one unfinished level, and it contains what the reader needs to continue after the level closes. A postfix formula keeps finished values as frames of size one. A compressed string keeps a pair of the repeat count and the text before the bracket. A path keeps the names that stay open. An arithmetic line keeps a pair of the result before the parenthesis and the sign in front of it. When a level closes, the reader pops one frame and combines it with the finished level.
+A **frame** is the saved state of one unfinished level, and it contains what the reader needs to continue after the level closes. A postfix formula keeps finished values as frames of size one. A compressed string keeps a pair of the text before the bracket and the repeat count. A path keeps the names that stay open. An arithmetic line keeps a pair of the result before the parenthesis and the sign in front of it. When a level closes, the reader pops one frame and combines it with the finished level.
 
 #### The Contract Decides Empty And Bad Cases
 
@@ -98,10 +98,10 @@ The path is `/a/./b/../../c/`. After the slashes are removed, the components are
 
 #### A Bounded Compressed String
 
-The text is `2[a3[b]]` and the limit on the decoded length is 10. The variable `cur` is the text of the level being read, `num` is the repeat count being read, and `frames` holds the saved pairs. A closing bracket checks the new length against the limit before it builds the text.
+The text is `2[a3[b]]` and the limit on the decoded length is 10. The variable `cur` is the text of the level being read, `num` is the repeat count being read, and `frames` holds the saved pairs, each written as the parent text in quotes and the repeat count. A closing bracket checks the new length against the limit before it builds the text.
 
 ```trace
-{"cells":["2","[","a","3","[","b","]","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"cur":"\"\"","num":2,"frames":"[]"},"note":"The digit 2 makes num 2."},{"at":{"i":1},"vars":{"cur":"\"\"","num":0,"frames":"[(2, \"\")]"},"note":"[ saves the count 2 and the parent text \"\", then starts an empty level."},{"at":{"i":2},"vars":{"cur":"\"a\"","num":0,"frames":"[(2, \"\")]"},"note":"The letter a extends cur to \"a\"."},{"at":{"i":3},"vars":{"cur":"\"a\"","num":3,"frames":"[(2, \"\")]"},"note":"The digit 3 makes num 3."},{"at":{"i":4},"vars":{"cur":"\"\"","num":0,"frames":"[(2, \"\"), (3, \"a\")]"},"note":"[ saves the count 3 and the parent text \"a\", then starts an empty level."},{"at":{"i":5},"vars":{"cur":"\"b\"","num":0,"frames":"[(2, \"\"), (3, \"a\")]"},"note":"The letter b extends cur to \"b\"."},{"at":{"i":6},"vars":{"cur":"\"abbb\"","num":0,"frames":"[(2, \"\")]"},"note":"] computes the length 1 + 3 * 1 = 4, which is within the limit 10, then builds the text."},{"at":{"i":7},"vars":{"cur":"\"abbbabbb\"","num":0,"frames":"[]"},"note":"] computes the length 0 + 2 * 4 = 8, which is within the limit 10, then builds the text."}]}
+{"cells":["2","[","a","3","[","b","]","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"cur":"\"\"","num":2,"frames":"[]"},"note":"The digit 2 makes num 2."},{"at":{"i":1},"vars":{"cur":"\"\"","num":0,"frames":"[(\"\", 2)]"},"note":"[ saves the parent text \"\" and the count 2, then starts an empty level."},{"at":{"i":2},"vars":{"cur":"\"a\"","num":0,"frames":"[(\"\", 2)]"},"note":"The letter a extends cur to \"a\"."},{"at":{"i":3},"vars":{"cur":"\"a\"","num":3,"frames":"[(\"\", 2)]"},"note":"The digit 3 makes num 3."},{"at":{"i":4},"vars":{"cur":"\"\"","num":0,"frames":"[(\"\", 2), (\"a\", 3)]"},"note":"[ saves the parent text \"a\" and the count 3, then starts an empty level."},{"at":{"i":5},"vars":{"cur":"\"b\"","num":0,"frames":"[(\"\", 2), (\"a\", 3)]"},"note":"The letter b extends cur to \"b\"."},{"at":{"i":6},"vars":{"cur":"\"abbb\"","num":0,"frames":"[(\"\", 2)]"},"note":"] computes the length 1 + 3 * 1 = 4, which is within the limit 10, then builds the text."},{"at":{"i":7},"vars":{"cur":"\"abbbabbb\"","num":0,"frames":"[]"},"note":"] computes the length 0 + 2 * 4 = 8, which is within the limit 10, then builds the text."}]}
 ```
 
 <!-- stage: code -->
@@ -128,13 +128,14 @@ static String simplifyPath(String path) {
 
 #### A Pop That Reports An Empty Stack
 
-A checked pop returns a flag, so the caller can reject the text and not throw.
+A checked operator step tests the stack size before it pops. It returns false when fewer than two values wait, so the caller can reject the text with an error code and not throw. A postfix reader calls it as `if (!applyOperator(values, tok.charAt(0))) return "ERR";`. This short version handles three operators, and division adds the zero-divisor test of the exercise.
 
 ```java
-static boolean popTwo(Deque<Long> values, long[] pair) {
+static boolean applyOperator(Deque<Long> values, char op) {
     if (values.size() < 2) return false;
-    pair[1] = values.removeLast();
-    pair[0] = values.removeLast();
+    long right = values.removeLast();
+    long left = values.removeLast();
+    values.addLast(op == '+' ? left + right : op == '-' ? left - right : left * right);
     return true;
 }
 ```
@@ -219,9 +220,9 @@ A text that needs a lookup of an earlier unmatched piece by value, or that needs
 
 **Example 2.** Input `"/../...//x/"`, output `"/.../x"`, because `..` at the root changes nothing and `...` is a name.
 
-**Hint.** Split on the slash and treat empty text and `.` as no-ops. What must the code check before it pops for `..`?
+**Hint.** Keep the names in a `String` array and an `int` count of how many are open. Empty text and `.` change nothing. What must the code check before it lowers the count for `..`?
 
-**Changed decision.** A parent move on an empty stack is a no-op, so the stack never pops below its start.
+**Changed decision.** The stack is an array with a top count and no deque, so a parent move at the root is the test that the count is above 0.
 
 #### [Recognize] Calculator With Named Variables (LeetCode 224)
 <!-- id: sq-calc-variables -->

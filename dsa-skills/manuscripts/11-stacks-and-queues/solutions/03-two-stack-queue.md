@@ -91,7 +91,7 @@ public final class InterleavedCalls {
                 // An arrival goes on top of in and leaves out untouched.
                 in.push(op[1]);
             } else {
-                // Refill out only when it is empty, otherwise older values would sit under newer ones.
+                // Transfer out only when it is empty, otherwise older values would sit under newer ones.
                 if (out.isEmpty()) while (!in.isEmpty()) out.push(in.pop());
                 got.add(out.pop());
             }
@@ -111,15 +111,15 @@ public final class InterleavedCalls {
 
     public static void main(String[] args) {
         // Both examples from the exercise text.
-        if (!Arrays.equals(replay(new int[][] {{1, 4}, {1, 7}, {0}, {1, 2}, {0}, {0}}), new int[] {4, 7, 2})) throw new AssertionError("example 1");
-        if (!Arrays.equals(replay(new int[][] {{1, 6}, {0}, {1, 1}, {1, 5}, {0}, {0}}), new int[] {6, 1, 5})) throw new AssertionError("example 2");
+        if (!Arrays.equals(replay(new int[][] {{1, 4}, {1, 7}, {2}, {1, 2}, {2}, {2}}), new int[] {4, 7, 2})) throw new AssertionError("example 1");
+        if (!Arrays.equals(replay(new int[][] {{1, 6}, {2}, {1, 1}, {1, 5}, {2}, {2}}), new int[] {6, 1, 5})) throw new AssertionError("example 2");
         // Random valid call sequences match the reference queue.
         Random rnd = new Random(12);
         for (int t = 0; t < 4000; t++) {
             List<int[]> ops = new ArrayList<>();
             int size = 0;
             for (int i = 0, n = rnd.nextInt(30); i < n; i++) {
-                if (size > 0 && rnd.nextBoolean()) { ops.add(new int[] {0}); size--; }
+                if (size > 0 && rnd.nextBoolean()) { ops.add(new int[] {2}); size--; }
                 else { ops.add(new int[] {1, rnd.nextInt(1000)}); size++; }
             }
             int[][] a = ops.toArray(new int[0][]);
@@ -133,7 +133,7 @@ public final class InterleavedCalls {
 <!-- id: sq-empty-queue-api -->
 
 **Approach.**
-Every row that reads a value first moves `in` onto `out` when `out` is empty. After that step, an empty `out` means the whole queue is empty, so the method appends `-1` and changes nothing. Otherwise a dequeue pops `out` and a peek reads `out` without removing. The check happens after the refill, because testing `out` alone would report an empty queue while `in` still holds values. The invariant is that the queue is empty exactly when both stacks are empty, and after a refill that means `out` is empty. The harness also confirms that `ArrayDeque.peek` returns `null` on an empty stack and `pop` throws, which is why the method tests emptiness explicitly.
+Every row that reads a value first moves `in` onto `out` when `out` is empty. After that step, an empty `out` means the whole queue is empty, so the method appends `-1` and changes nothing. Otherwise a dequeue pops `out` and a peek reads `out` without removing. The check happens after the transfer, because testing `out` alone would report an empty queue while `in` still holds values. The invariant is that the queue is empty exactly when both stacks are empty, and after a transfer that means `out` is empty. The harness also confirms that `ArrayDeque.peek` returns `null` on an empty stack and `pop` throws, which is why the method tests emptiness explicitly.
 
 **Complexity.**
 - **Time** is O(m) for m rows, because each value moves between the stacks at most once.
@@ -152,7 +152,7 @@ public final class EmptyCalls {
      * Serves dequeue and peek rows and answers -1 on an empty queue.
      * Time: O(m) for m rows, each value moves between stacks once.
      * Space: O(m) for the stacks and the result.
-     * Invariant: after a refill, out is empty only if the whole queue is empty.
+     * Invariant: after a transfer, out is empty only if the whole queue is empty.
      */
     static int[] serve(int[][] ops) {
         ArrayDeque<Integer> in = new ArrayDeque<>();
@@ -160,7 +160,7 @@ public final class EmptyCalls {
         List<Integer> res = new ArrayList<>();
         for (int[] op : ops) {
             if (op[0] == 1) { in.push(op[1]); continue; }
-            // Refill first, so an empty out proves the whole queue is empty.
+            // Transfer first, so an empty out proves the whole queue is empty.
             if (out.isEmpty()) while (!in.isEmpty()) out.push(in.pop());
             if (out.isEmpty()) res.add(-1);
             else if (op[0] == 2) res.add(out.pop());
@@ -209,7 +209,7 @@ public final class EmptyCalls {
 <!-- id: sq-implement-queue-stacks -->
 
 **Approach.**
-The class `MyQueue` keeps `in` and `out` and a counter of moves. The call `push` goes onto `in`. The calls `pop` and `peek` call a private refill that moves `in` onto `out` only when `out` is empty. The call `empty` is true when both stacks are empty. A value enters `in` once, leaves `in` once during a refill, and leaves `out` once, because a refill empties `in` completely and values on `out` never return. So the moves counter never exceeds the number of pushes. The invariant is that `out` holds the oldest values in arrival order, with the oldest on top.
+The class `MyQueue` keeps `in` and `out` and a counter of moves. The call `push` goes onto `in`. The calls `pop` and `peek` call a private transfer that moves `in` onto `out` only when `out` is empty. The call `empty` is true when both stacks are empty. A value enters `in` once, leaves `in` once during a transfer, and leaves `out` once, because a transfer empties `in` completely and values on `out` never return. So the moves counter never exceeds the number of pushes. The invariant is that `out` holds the oldest values in arrival order, with the oldest on top.
 
 **Complexity.**
 - **Time** is amortized O(1) per call and O(m) for m calls, because the moves counter is at most the number of pushes.
@@ -231,17 +231,17 @@ public final class MyQueueRun {
         /** Adds x behind every stored value. Time: O(1). Space: O(1). */
         void push(int x) { in.push(x); }
 
-        // Refills out only when it is empty, which keeps the oldest value on top.
-        private void refill() {
+        // Transfers out only when it is empty, which keeps the oldest value on top.
+        private void transfer() {
             if (!out.isEmpty()) return;
             while (!in.isEmpty()) { out.push(in.pop()); moves++; }
         }
 
         /** Removes the oldest value. Time: amortized O(1). Space: O(1). */
-        int pop() { refill(); return out.pop(); }
+        int pop() { transfer(); return out.pop(); }
 
         /** Reads the oldest value. Time: amortized O(1). Space: O(1). */
-        int peek() { refill(); return out.peek(); }
+        int peek() { transfer(); return out.peek(); }
 
         /** True when no value is stored. Time: O(1). Space: O(1). */
         boolean empty() { return in.isEmpty() && out.isEmpty(); }
@@ -253,9 +253,9 @@ public final class MyQueueRun {
         int pushes = 0;
         for (int[] op : ops) {
             switch (op[0]) {
-                case 0 -> { q.push(op[1]); pushes++; }
-                case 1 -> res.add(q.pop());
-                case 2 -> res.add(q.peek());
+                case 1 -> { q.push(op[1]); pushes++; }
+                case 2 -> res.add(q.pop());
+                case 3 -> res.add(q.peek());
                 default -> res.add(q.empty() ? 1 : 0);
             }
             // Each value moves at most once, so the count never passes the pushes so far.
@@ -271,9 +271,9 @@ public final class MyQueueRun {
         List<Integer> res = new ArrayList<>();
         for (int[] op : ops) {
             switch (op[0]) {
-                case 0 -> q.addLast(op[1]);
-                case 1 -> res.add(q.pollFirst());
-                case 2 -> res.add(q.peekFirst());
+                case 1 -> q.addLast(op[1]);
+                case 2 -> res.add(q.pollFirst());
+                case 3 -> res.add(q.peekFirst());
                 default -> res.add(q.isEmpty() ? 1 : 0);
             }
         }
@@ -283,18 +283,18 @@ public final class MyQueueRun {
     public static void main(String[] args) {
         int[] mv = new int[1];
         // Both examples from the exercise text.
-        if (!Arrays.equals(run(new int[][] {{0, 3}, {0, 8}, {2}, {1}, {3}, {1}, {3}}, mv), new int[] {3, 3, 0, 8, 1})) throw new AssertionError("example 1");
-        if (!Arrays.equals(run(new int[][] {{3}, {0, 6}, {0, 2}, {1}, {0, 9}, {1}, {1}, {3}}, mv), new int[] {1, 6, 2, 9, 1})) throw new AssertionError("example 2");
+        if (!Arrays.equals(run(new int[][] {{1, 3}, {1, 8}, {3}, {2}, {4}, {2}, {4}}, mv), new int[] {3, 3, 0, 8, 1})) throw new AssertionError("example 1");
+        if (!Arrays.equals(run(new int[][] {{4}, {1, 6}, {1, 2}, {2}, {1, 9}, {2}, {2}, {4}}, mv), new int[] {1, 6, 2, 9, 1})) throw new AssertionError("example 2");
         // Random valid sequences match the reference and respect the move bound.
         Random rnd = new Random(14);
         for (int t = 0; t < 4000; t++) {
             List<int[]> ops = new ArrayList<>();
             int size = 0;
             for (int i = 0, n = rnd.nextInt(40); i < n; i++) {
-                int k = rnd.nextInt(4);
-                if ((k == 1 || k == 2) && size == 0) k = 0;
-                if (k == 0) { ops.add(new int[] {0, 1 + rnd.nextInt(100)}); size++; }
-                else { ops.add(new int[] {k}); if (k == 1) size--; }
+                int k = 1 + rnd.nextInt(4);
+                if ((k == 2 || k == 3) && size == 0) k = 1;
+                if (k == 1) { ops.add(new int[] {1, 1 + rnd.nextInt(100)}); size++; }
+                else { ops.add(new int[] {k}); if (k == 2) size--; }
             }
             int[][] a = ops.toArray(new int[0][]);
             if (!Arrays.equals(run(a, mv), oracle(a))) throw new AssertionError("random");

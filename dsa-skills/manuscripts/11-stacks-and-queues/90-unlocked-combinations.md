@@ -7,9 +7,9 @@ A path such as `/a/../b` looks like a plain string until a reader gives each pie
 
 A stack and a reading step form the lesson Stack And Parsing State. The reading step turns text into tokens and decides what each token means. The stack keeps one frame for each unfinished level, so the reader can finish levels in reverse order. The lesson adds one idea: the contract decides what an empty pop, an unknown token or a size limit means. Its exercises cover a postfix formula with error codes, a nested decode with a length limit, a Unix path with a parent move at the root, and a calculator with named variables.
 
-### Monotonic Stack Waits For Chapter 12
+### One Stack Idea Comes Later
 
-An ordinary stack keeps unfinished work in the order it started. It does not yet justify removing a stored value because a newer value dominates it. Chapter 12 introduces the ordered-stack invariant, and it owns the next-greater, histogram and contribution-counting exercises. This chapter assigns none of those problems.
+An ordinary stack keeps unfinished work in the order it started. It never removes a stored value because a newer value makes it useless. A later chapter adds that rule and uses it for next-larger-value and histogram problems. This chapter assigns none of those problems.
 
 ### What Later Chapters Reuse
 

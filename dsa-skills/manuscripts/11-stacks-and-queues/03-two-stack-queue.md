@@ -60,19 +60,17 @@ Use a stack named `in` for arrivals and a stack named `out` for departures. The 
 
 When `out` is empty and a call needs a value, the code runs a **transfer**. It pops every value from `in` and pushes it onto `out`. The transfer happens only when `out` is empty. If `out` still held values, pushing more onto it would place newer values above older ones and break the order.
 
-#### Each Value Moves At Most Twice
+#### Each Value Moves Between Stacks Once
 
-A value is pushed onto `in` once, moves to `out` once, and is popped from `out` once. That bounds the work per value by a constant. The cost per call is **amortized** O(1), which means the total cost of any sequence of `m` calls is O(m), even though one `dequeue` that triggers a transfer costs O(n).
+A value is pushed onto `in` when it arrives and moves from `in` to `out` at most once. A move is one pop from `in` and one push onto `out`. Over its lifetime a value takes two pushes and two pops, so the work per value is constant. The cost per call is **amortized** O(1), which means the total cost of any sequence of `m` calls is O(m), even though one `dequeue` that triggers a transfer costs O(n).
 
 <!-- stage: variables -->
 ### What The Two Stacks Hold
 
-The queue keeps two stacks and no other state.
+The queue keeps two stacks and no other state. It is empty exactly when both stacks are empty.
 
 - **in** is the stack that receives every `enqueue`, and its top is the newest value.
 - **out** is the stack that serves `dequeue` and `peek`, and its top is the oldest value in the whole queue.
-- **size** is `in.size() + out.size()`, and it is zero exactly when both stacks are empty.
-- **moves** is a count of values pushed from `in` onto `out`, and it never exceeds the number of `enqueue` calls.
 
 The stack `in` changes on every `enqueue` and empties on every transfer. The stack `out` changes only when a transfer refills it or a `dequeue` pops it.
 
@@ -86,7 +84,7 @@ The first trace enqueues 4, 7 and 9 and then dequeues three times. Stack content
 The three enqueues fill `in` with 4, 7, 9. The first `dequeue` finds `out` empty, so it moves 9, 7 and 4 in that order, and `out` holds 9, 7, 4 with 4 on top. The call returns 4. The next two calls pop 7 and 9 directly, with no further moves.
 
 ```trace
-{"cells":[4,7,9],"pointers":["next"],"steps":[{"at":{"next":1},"vars":{"in":"[4]","out":"[]","moves":0},"note":"enqueue(4) pushes 4 onto in."},{"at":{"next":2},"vars":{"in":"[4, 7]","out":"[]","moves":0},"note":"enqueue(7) pushes 7 onto in."},{"at":{"next":3},"vars":{"in":"[4, 7, 9]","out":"[]","moves":0},"note":"enqueue(9) pushes 9 onto in."},{"at":{"next":3},"vars":{"in":"[]","out":"[9, 7]","moves":3},"note":"out is empty, so 3 value(s) move from in to out. dequeue() pops 4 from out."},{"at":{"next":3},"vars":{"in":"[]","out":"[9]","moves":3},"note":"dequeue() pops 7 from out."},{"at":{"next":3},"vars":{"in":"[]","out":"[]","moves":3},"note":"dequeue() pops 9 from out."}]}
+{"cells":[4,7,9],"pointers":["next"],"steps":[{"at":{"next":1},"vars":{"in":"[4]","out":"[]"},"note":"enqueue(4) pushes 4 onto in."},{"at":{"next":2},"vars":{"in":"[4, 7]","out":"[]"},"note":"enqueue(7) pushes 7 onto in."},{"at":{"next":3},"vars":{"in":"[4, 7, 9]","out":"[]"},"note":"enqueue(9) pushes 9 onto in."},{"at":{"next":3},"vars":{"in":"[]","out":"[9, 7]"},"note":"out is empty, so 3 value(s) move from in to out. dequeue() pops 4 from out."},{"at":{"next":3},"vars":{"in":"[]","out":"[9]"},"note":"dequeue() pops 7 from out."},{"at":{"next":3},"vars":{"in":"[]","out":"[]"},"note":"dequeue() pops 9 from out."}]}
 ```
 
 #### Arrivals Between Removals
@@ -94,7 +92,7 @@ The three enqueues fill `in` with 4, 7, 9. The first `dequeue` finds `out` empty
 The second trace enqueues 4, 7 and 9, calls `dequeue`, enqueues 2, and then calls `dequeue` three more times. The value 2 lands in `in` while `out` still holds 9 and 7. The second and third `dequeue` calls pop 7 and then 9 without a transfer, so 2 stays behind 9. The last `dequeue` finds `out` empty and moves 2 across, and it returns 2 as the newest value.
 
 ```trace
-{"cells":[4,7,9,2],"pointers":["next"],"steps":[{"at":{"next":1},"vars":{"in":"[4]","out":"[]","moves":0},"note":"enqueue(4) pushes 4 onto in."},{"at":{"next":2},"vars":{"in":"[4, 7]","out":"[]","moves":0},"note":"enqueue(7) pushes 7 onto in."},{"at":{"next":3},"vars":{"in":"[4, 7, 9]","out":"[]","moves":0},"note":"enqueue(9) pushes 9 onto in."},{"at":{"next":3},"vars":{"in":"[]","out":"[9, 7]","moves":3},"note":"out is empty, so 3 value(s) move from in to out. dequeue() pops 4 from out."},{"at":{"next":4},"vars":{"in":"[2]","out":"[9, 7]","moves":3},"note":"enqueue(2) pushes 2 onto in."},{"at":{"next":4},"vars":{"in":"[2]","out":"[9]","moves":3},"note":"dequeue() pops 7 from out."},{"at":{"next":4},"vars":{"in":"[2]","out":"[]","moves":3},"note":"dequeue() pops 9 from out."},{"at":{"next":4},"vars":{"in":"[]","out":"[]","moves":4},"note":"out is empty, so 1 value(s) move from in to out. dequeue() pops 2 from out."}]}
+{"cells":[4,7,9,2],"pointers":["next"],"steps":[{"at":{"next":1},"vars":{"in":"[4]","out":"[]"},"note":"enqueue(4) pushes 4 onto in."},{"at":{"next":2},"vars":{"in":"[4, 7]","out":"[]"},"note":"enqueue(7) pushes 7 onto in."},{"at":{"next":3},"vars":{"in":"[4, 7, 9]","out":"[]"},"note":"enqueue(9) pushes 9 onto in."},{"at":{"next":3},"vars":{"in":"[]","out":"[9, 7]"},"note":"out is empty, so 3 value(s) move from in to out. dequeue() pops 4 from out."},{"at":{"next":4},"vars":{"in":"[2]","out":"[9, 7]"},"note":"enqueue(2) pushes 2 onto in."},{"at":{"next":4},"vars":{"in":"[2]","out":"[9]"},"note":"dequeue() pops 7 from out."},{"at":{"next":4},"vars":{"in":"[2]","out":"[]"},"note":"dequeue() pops 9 from out."},{"at":{"next":4},"vars":{"in":"[]","out":"[]"},"note":"out is empty, so 1 value(s) move from in to out. dequeue() pops 2 from out."}]}
 ```
 
 <!-- stage: code -->
@@ -102,7 +100,9 @@ The second trace enqueues 4, 7 and 9, calls `dequeue`, enqueues 2, and then call
 
 #### The Class
 
-The class below keeps `in` and `out` as `ArrayDeque` stacks. The private method `shift` runs the transfer and runs only when `out` is empty. A call on an empty queue throws `NoSuchElementException`, which is the behavior of `ArrayDeque.pop` itself.
+The class below keeps `in` and `out` as `ArrayDeque` stacks. The calls `push`, `pop` and `peek` act on the first end of an `ArrayDeque`, and both stacks use that end. Either end works when the code uses one end consistently. The private method `transfer` runs the transfer and runs only when `out` is empty.
+
+On an empty queue, `dequeue` throws `NoSuchElementException`, because `ArrayDeque.pop` throws it. The method `peek` behaves differently. The call `out.peek()` returns `null` on an empty `out`, and unboxing that `null` into `int` throws `NullPointerException`. A `peek` that must report `NoSuchElementException` checks `out.isEmpty()` first.
 
 ```java
 final class TwoStackQueue {
@@ -111,14 +111,14 @@ final class TwoStackQueue {
 
     void enqueue(int v) { in.push(v); }
 
-    private void shift() {
+    private void transfer() {
         if (!out.isEmpty()) return;
         while (!in.isEmpty()) out.push(in.pop());
     }
 
-    int dequeue() { shift(); return out.pop(); }
+    int dequeue() { transfer(); return out.pop(); }
 
-    int peek() { shift(); return out.peek(); }
+    int peek() { transfer(); return out.peek(); }
 
     boolean isEmpty() { return in.isEmpty() && out.isEmpty(); }
 }
@@ -126,7 +126,7 @@ final class TwoStackQueue {
 
 #### The Cost
 
-Each value is pushed twice and popped twice over its lifetime, once on `in` and once on `out`. A sequence of `m` calls runs in O(m) time. The two stacks together hold at most `n` values, so the space is O(n). In `peek`, the call `out.peek()` returns `null` on empty `out`, and unboxing that value into `int` throws `NullPointerException` instead of `NoSuchElementException`. The exercises state which failure to use.
+Each value is pushed twice and popped twice over its lifetime, once on `in` and once on `out`. A sequence of `m` calls runs in O(m) time. The two stacks together hold at most `n` values, so the space is O(n). The exercises state which result to return on an empty queue.
 
 <!-- stage: applicability -->
 ### Deciding When Two Stacks Are Enough
@@ -137,7 +137,7 @@ The invariant is that `out` holds the oldest values in arrival order and `in` ho
 
 #### False Friend And Limits
 
-Moving everything between the stacks on every call is a false friend. It returns correct values, so tests pass, but each call costs O(n) and a long run costs O(n^2). Another false friend is a monotonic queue, which also holds values in a deque. A monotonic queue discards dominated values, while this queue keeps every value, so it is plain first-in first-out emulation.
+Moving everything between the stacks on every call is a false friend. It returns correct values, so tests pass, but each call costs O(n) and a long run costs O(n^2). Another false friend is a monotonic queue, a deque that drops stored values once newer values make them useless. A later chapter covers it. This queue keeps every value, so it is plain first-in first-out emulation.
 
 Use two stacks when the platform offers only stack operations. Do not use them when a single call must finish within a hard time bound. One `dequeue` still costs O(n) when it triggers a transfer. An `ArrayDeque` used directly as a queue has amortized O(1) calls for each operation without any transfer, and it is the better choice whenever Java is available.
 
@@ -170,7 +170,7 @@ Use two stacks when the platform offers only stack operations. Do not use them w
 
 **Prerequisites.** The exercise above and the rule that a transfer needs an empty `out`.
 
-**Problem.** A queue starts empty. The array `ops` lists calls in order. A row `{1, v}` enqueues the value `v`. A row `{0}` dequeues the oldest value. Return the dequeued values in the order of the calls. Implement the queue with two stacks and transfer only when `out` is empty.
+**Problem.** A queue starts empty. The array `ops` lists calls in order. A row `{1, v}` enqueues the value `v`. A row `{2}` dequeues the oldest value. Return the dequeued values in the order of the calls. Implement the queue with two stacks and transfer only when `out` is empty.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= ops.length <= 10^5`.
@@ -178,9 +178,9 @@ Use two stacks when the platform offers only stack operations. Do not use them w
 - **Validity** means the queue is nonempty at every dequeue row.
 - **Return** is an `int[]` with one entry per dequeue row.
 
-**Example 1.** Input `[[1,4],[1,7],[0],[1,2],[0],[0]]`, output `[4,7,2]`.
+**Example 1.** Input `[[1,4],[1,7],[2],[1,2],[2],[2]]`, output `[4,7,2]`.
 
-**Example 2.** Input `[[1,6],[0],[1,1],[1,5],[0],[0]]`, output `[6,1,5]`.
+**Example 2.** Input `[[1,6],[2],[1,1],[1,5],[2],[2]]`, output `[6,1,5]`.
 
 **Hint.** When `out` is nonempty and a new value arrives, which stack receives it? Which value must stay on top of `out`?
 
@@ -212,7 +212,7 @@ Use two stacks when the platform offers only stack operations. Do not use them w
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Implement a first-in first-out queue that supports `push(x)`, `pop()`, `peek()` and `empty()` using only stack operations on two stacks. The array `ops` lists calls in order: `{0, x}` is `push(x)`, `{1}` is `pop()`, `{2}` is `peek()` and `{3}` is `empty()`. Return one result per row `{1}`, `{2}` or `{3}`. A `pop` or `peek` returns the value, and `empty` returns 1 when the queue is empty and 0 otherwise. Each value must move from `in` to `out` at most once.
+**Problem.** Implement a first-in first-out queue that supports `push(x)`, `pop()`, `peek()` and `empty()` using only stack operations on two stacks. The array `ops` lists calls in order: `{1, x}` is `push(x)`, `{2}` is `pop()`, `{3}` is `peek()` and `{4}` is `empty()`. Return one result per row `{2}`, `{3}` or `{4}`. A `pop` or `peek` returns the value, and `empty` returns 1 when the queue is empty and 0 otherwise. Each value must move from `in` to `out` at most once.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= ops.length <= 10^5`.
@@ -220,10 +220,10 @@ Use two stacks when the platform offers only stack operations. Do not use them w
 - **Validity** means the queue is nonempty at every `pop` and `peek` row.
 - **Return** is an `int[]` with one entry per `pop`, `peek` and `empty` row.
 
-**Example 1.** Input `[[0,3],[0,8],[2],[1],[3],[1],[3]]`, output `[3,3,0,8,1]`.
+**Example 1.** Input `[[1,3],[1,8],[3],[2],[4],[2],[4]]`, output `[3,3,0,8,1]`.
 
-**Example 2.** Input `[[3],[0,6],[0,2],[1],[0,9],[1],[1],[3]]`, output `[1,6,2,9,1]`.
+**Example 2.** Input `[[4],[1,6],[1,2],[2],[1,9],[2],[2],[4]]`, output `[1,6,2,9,1]`.
 
 **Hint.** Count the pushes onto `out` over the whole run. Which call performs them, and when?
 
-**Changed decision.** The full API appears together, and the solution proves the move count stays at most the number of pushes.
+**Changed decision.** The full API appears together, and the solution proves the move count stays at most the number of `push` calls.

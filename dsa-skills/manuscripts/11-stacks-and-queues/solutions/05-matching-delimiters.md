@@ -111,7 +111,7 @@ public final class ThreeDelimiterTypes {
                 // Unboxing to char makes the comparison one of values.
                 char open = stack.pop();
                 // The popped opening must be the partner of this closing.
-                if (open != partner(c)) return false;
+                if (open != partnerOf(c)) return false;
             }
         }
         // The text is valid only when no opening stays pending.
@@ -119,7 +119,7 @@ public final class ThreeDelimiterTypes {
     }
 
     /** Returns the opening symbol for a closing symbol. Time O(1), space O(1). */
-    static char partner(char close) {
+    static char partnerOf(char close) {
         // Each closing has exactly one partner.
         if (close == ')') return '(';
         if (close == ']') return '[';
@@ -221,7 +221,7 @@ public final class FirstBracketError {
                 // The popped index points at the newest pending opening.
                 int open = stack.pop();
                 // A different partner means this closing cannot be matched.
-                if (s.charAt(open) != partner(c)) return i;
+                if (s.charAt(open) != partnerOf(c)) return i;
             }
         }
         // After the scan, the newest pending opening is the stack top; empty means valid.
@@ -229,7 +229,7 @@ public final class FirstBracketError {
     }
 
     /** Returns the opening symbol for a closing symbol. Time O(1), space O(1). */
-    static char partner(char close) {
+    static char partnerOf(char close) {
         // Each closing has exactly one partner.
         return close == ')' ? '(' : close == ']' ? '[' : '{';
     }

@@ -392,7 +392,7 @@ public final class ExpandingQueue {
 <!-- id: sq-alternate-levels -->
 
 **Approach.**
-The method polls each level in plain first-in first-out order into a row, so the queue keeps the true discovery order. After the inner loop finishes, it reverses the finished row when the level number is odd and then stores the row. The reversal acts on the output list only, and the queue never sees it, so the children of the next level still appear in discovery order. The invariant is that the queue order is independent of the order of reported rows.
+The method polls each level in plain first-in first-out order into a row, so the queue keeps the true discovery order. After the inner loop finishes, it reverses the finished row when its index in the result is odd and then stores the row. The reversal acts on the output list only, and the queue never sees it, so the children of the next level still appear in discovery order. The invariant is that the queue order is independent of the order of reported rows.
 
 **Complexity.**
 - **Time** is O(n), because each item is polled once and each odd row is reversed once, which costs its length.
@@ -417,7 +417,6 @@ public final class AlternateLevels {
         List<int[]> result = new ArrayList<>();
         ArrayDeque<Integer> queue = new ArrayDeque<>();
         for (int s : start) queue.offer(s);
-        int levelNumber = 0;
         // The outer loop runs once per level.
         while (!queue.isEmpty()) {
             int levelSize = queue.size();
@@ -429,13 +428,12 @@ public final class AlternateLevels {
                 for (int c : children[id]) queue.offer(c);
             }
             // Only the finished row is reversed, after every child has been appended.
-            if (levelNumber % 2 == 1) {
+            if (result.size() % 2 == 1) {
                 for (int i = 0, j = row.length - 1; i < j; i++, j--) {
                     int tmp = row[i]; row[i] = row[j]; row[j] = tmp;
                 }
             }
             result.add(row);
-            levelNumber++;
         }
         return result.toArray(new int[0][]);
     }

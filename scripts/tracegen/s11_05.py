@@ -7,14 +7,14 @@ def run(text,ph):
     for i,c in enumerate(text):
         if c in "([{":
             stack.append(c)
-            st.append({"at":{"i":i},"vars":{"stack":fmt(stack),"char":c},"note":f"{c} is an opening, so the scan pushes it."})
+            st.append({"at":{"i":i},"vars":{"stack":fmt(stack),"c":c},"note":f"{c} is an opening, so the scan pushes it."})
         else:
             if not stack:
-                ok=False; st.append({"at":{"i":i},"vars":{"stack":"[]","char":c},"note":"The stack is empty, so the scan stops with false."}); break
+                ok=False; st.append({"at":{"i":i},"vars":{"stack":"[]","c":c},"note":"The stack is empty, so the scan stops with false."}); break
             o=stack.pop()
             if o!=PAIR[c]:
-                ok=False; st.append({"at":{"i":i},"vars":{"stack":fmt(stack),"char":c,"popped":o},"note":f"{c} pops {o}, and the partner of {c} is {PAIR[c]}. This is a mismatch, so the scan stops with false."}); break
-            st.append({"at":{"i":i},"vars":{"stack":fmt(stack),"char":c,"popped":o},"note":f"{c} pops {o}, which is its partner."})
+                ok=False; st.append({"at":{"i":i},"vars":{"stack":fmt(stack),"c":c,"open":o},"note":f"{c} pops {o}, and the partner of {c} is {PAIR[c]}. This is a mismatch, so the scan stops with false."}); break
+            st.append({"at":{"i":i},"vars":{"stack":fmt(stack),"c":c,"open":o},"note":f"{c} pops {o}, which is its partner."})
     else:
         ok=not stack
         st.append({"at":{"i":n},"vars":{"stack":fmt(stack),"result":str(ok).lower()},"note":"The text ends with an empty stack, so the result is true."})
