@@ -1,27 +1,21 @@
 from common import *
 from tr import *
-CH='15-trees-dfs'
-F='06-balance-sentinels.md'
-def run(arr,ph):
-    L,R=parse(arr); st=[]
+CH='15-trees-dfs'; F='06-balance-sentinels.md'
+def run(arr,expect):
+    L,R=parse(arr); steps=[]
     def go(i):
         if i is None: return 0
         l=go(L[i])
         if l==-1:
-            st.append({"at":{"node":i},"vars":{"returns":-1},"note":f"The left report of the rod {arr[i]} is the failure value, so it returns failure at once without asking the right side."})
-            return -1
+            steps.append({"at":{"node":i},"vars":{"result":-1},"note":f"The left call of the node {arr[i]} returned -1, so the call returns -1 at once. The right side is not visited."}); return -1
         r=go(R[i])
         if r==-1:
-            st.append({"at":{"node":i},"vars":{"returns":-1},"note":f"The right report of the rod {arr[i]} is the failure value, so the failure is passed up untouched."})
-            return -1
+            steps.append({"at":{"node":i},"vars":{"result":-1},"note":f"The right call of the node {arr[i]} returned -1, so the call returns -1."}); return -1
         if abs(l-r)>1:
-            st.append({"at":{"node":i},"vars":{"returns":-1},"note":f"The rod {arr[i]} has reaches {l} and {r}, which differ by more than one, so it reports failure."})
-            return -1
+            steps.append({"at":{"node":i},"vars":{"result":-1},"note":f"The node {arr[i]} has sides of height {l} and {r}. The difference {abs(l-r)} is more than 1, so the call returns -1."}); return -1
         h=1+max(l,r)
-        st.append({"at":{"node":i},"vars":{"returns":h},"note":f"The rod {arr[i]} has reaches {l} and {r}, a difference within one, so it reports the height {h}."})
-        return h
-    res=go(0)
-    fill(CH,F,block(cells(arr),["node"],st),ph)
-    return res
-assert run([3,9,20,None,None,15,7],"@@TRACE1@@")==3
-assert run([1,2,3,4,None,None,None,5],"@@TRACE2@@")==-1
+        steps.append({"at":{"node":i},"vars":{"result":h},"note":f"The node {arr[i]} has sides of height {l} and {r}. The difference {abs(l-r)} is allowed, so the call returns {h}."}); return h
+    assert go(0)==expect
+    return steps
+a=[5,3,8,1,None,7,9]; fill(CH,F,block(cells(a),["node"],run(a,3)),"@@TRACE1@@")
+a=[6,4,8,2,None,None,None,1]; s=run(a,-1); assert all(x["at"]["node"]!=2 for x in s); fill(CH,F,block(cells(a),["node"],s),"@@TRACE2@@")

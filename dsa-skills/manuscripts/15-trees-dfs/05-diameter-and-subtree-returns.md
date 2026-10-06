@@ -36,7 +36,7 @@ final class MeasureEveryNode {
 }
 ```
 
-For the tree with root 1, left child 2 and right child 3, where node 2 has children 4 and 5, `longestRun` returns 3. The run 4, 2, 1, 3 has three edges. The method is correct for every tree.
+Take a root 1 with a right leaf 3 and a left child 2 that has the leaves 4 and 5. The method `longestRun` returns 3. The run 4, 2, 1, 3 has three edges. The method is correct for every tree.
 
 <!-- stage: bottleneck -->
 ### Measuring The Same Nodes Again

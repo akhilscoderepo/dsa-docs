@@ -31,7 +31,7 @@ final class RecursiveText {
 }
 ```
 
-For the tree with root 1, left child 2 and right child 3, the method writes `1 2 3 `. For a chain of three nodes it opens three calls at once, then closes them in reverse order. The result is correct for every tree that the call stack can hold.
+Take a root 1 that has the leaf children 2 and 3. The method writes `1 2 3 `. For a chain of three nodes it opens three calls at once, then closes them in reverse order. The result is correct for every tree that the call stack can hold.
 
 <!-- stage: bottleneck -->
 ### Counting The Calls That Stay Open
