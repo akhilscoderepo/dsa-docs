@@ -1,33 +1,24 @@
 from common import *
-from tr import *
-CH = '16-trees-bfs-and-bsts'
-F = '03-validate-search-and-insert.md'
-# complete-tree positions: node i has children 2i+1 and 2i+2
-heap = [8, 3, 10, 1, 6, None, 14, None, None, None, None]
-def path(key):
-    i = 0; st = []
-    while i < len(heap) and heap[i] is not None:
-        v = heap[i]
-        if key == v:
-            st.append((i, f"The rack {v} equals the stub {key}, so the coat is found."))
-            return st, True
-        side = 0 if key < v else 1
-        word = "smaller" if key < v else "larger"
-        drop = "right" if key < v else "left"
-        st.append((i, f"The stub {key} is {word} than the rack {v}, so the {drop} side is dropped and the walk goes {'left' if key < v else 'right'}."))
-        i = 2 * i + 1 + side
-    st.append((i, f"The place at position {i} is empty, so the stub {key} would hang here."))
-    return st, False
-st, found = path(6)
-assert found and [i for i, _ in st] == [0, 1, 4]
-steps = [{"at": {"node": i}, "vars": {"stub": 6, "rack": heap[i]}, "note": n} for i, n in st]
-fill(CH, F, block(cells(heap[:7]), ["node"], steps), "@@TRACE1@@")
-st, found = path(5)
-assert not found and [i for i, _ in st] == [0, 1, 4, 9]
-steps = []
-for i, n in st:
-    if heap[i] is None:
-        steps.append({"at": {"node": i}, "vars": {"stub": 5, "rack": "empty"}, "note": f"The place to the left of 6 is empty, so the new coat 5 is attached here and nothing else moves."})
-    else:
-        steps.append({"at": {"node": i}, "vars": {"stub": 5, "rack": heap[i]}, "note": n})
-fill(CH, F, block(cells(heap), ["node"], steps), "@@TRACE2@@")
+CH='16-trees-bfs-and-bsts'; F='03-validate-search-and-insert.md'
+cells=[20,10,30,5,15,25,35]; kids={0:(1,2),1:(3,4),2:(5,6),3:(None,None),4:(None,None),5:(None,None),6:(None,None)}
+key=25; i=0; st=[]
+while True:
+    v=cells[i]
+    if v==key:
+        st.append({"at":{"node":i},"vars":{"key":key},"note":f"The key {key} equals the node key {v}, so the search stops with a match."}); break
+    d=0 if key<v else 1
+    st.append({"at":{"node":i},"vars":{"key":key},"note":f"The key {key} is {'smaller' if d==0 else 'larger'} than {v}, so the search goes {'left' if d==0 else 'right'} and drops the other subtree."})
+    i=kids[i][d]
+assert i==5 and len(st)==3
+fill(CH,F,block(cells,["node"],st),"@@TRACE1@@")
+cells=[20,10,30,5,15,25,35,12]; key=12; i=0; st=[]
+while True:
+    v=cells[i]; d=0 if key<v else 1
+    nxt=kids[i][d]
+    if nxt is None:
+        st.append({"at":{"node":i},"vars":{"key":key},"note":f"The key {key} is {'smaller' if d==0 else 'larger'} than {v}, and the {'left' if d==0 else 'right'} slot is empty, so this slot is the insertion point."}); break
+    st.append({"at":{"node":i},"vars":{"key":key},"note":f"The key {key} is {'smaller' if d==0 else 'larger'} than {v}, so the walk goes {'left' if d==0 else 'right'}."})
+    i=nxt
+assert i==4
+st.append({"at":{"node":7},"vars":{"key":key},"note":"The method writes the new node 12 into the empty left slot of the node 15."})
+fill(CH,F,block(cells,["node"],st),"@@TRACE2@@")
