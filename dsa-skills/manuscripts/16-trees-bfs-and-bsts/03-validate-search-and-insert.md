@@ -74,7 +74,7 @@ A delete searches for the key and then repairs the slot of the removed node. A l
 <!-- stage: trace -->
 ### One Branch Per Comparison
 
-The cells hold the keys in level order, and the pointer `node` marks the node under comparison.
+Each cell is a key listed from the top level down, and the pointer `node` marks the node under comparison.
 
 #### Searching For A Key That Exists
 
