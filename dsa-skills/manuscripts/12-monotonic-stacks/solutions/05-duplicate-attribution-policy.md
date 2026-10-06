@@ -80,7 +80,7 @@ public final class TwoEqualMinima {
 One stack pass finds both boundaries. The stack keeps indices with strictly increasing values. A new value pops every top that is greater than or equal to it, and each popped index receives the new index as its right boundary, the first value that is smaller or equal. After the pops, the surviving top is the nearest strictly smaller value before the new index, so it becomes the left boundary. Indices that remain at the end receive the right sentinel `n`. The count for index `i` is `(i - left) * (right - i)`, computed in `long` because the product can pass the range of `int`.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes each index once and pops it at most once.
+- **Time** is O(n), because each index enters the stack once and leaves it at most once.
 - **Space** is O(n), for the stack and the two boundary arrays.
 
 ```java run
@@ -157,7 +157,7 @@ public final class StrictLeftNonStrictRight {
 The counts come from the same single pass, and the final entry is their sum. In an all-equal array, each new value pops the previous index, so index `i` has right boundary `i + 1` and left boundary `-1`. Its count is `(i + 1) * 1`, which gives 1, 2 up to `n`, and the sum is `n * (n + 1) / 2`. The solution checks the sum against that formula before it returns, so a wrong tie rule fails loudly. The harness also confirms that the strict-both and non-strict-both variants break the sum, which shows why the two sides must differ.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes each index once and pops it at most once.
+- **Time** is O(n), because every index is stacked once and removed at most once.
 - **Space** is O(n), for the stack, the boundaries and the result.
 
 ```java run
@@ -233,7 +233,7 @@ public final class AllEqualCounts {
 Every window has one minimum value and one owner under the rightmost-minimum rule. The value `arr[i]` therefore contributes `arr[i]` once for each window that index `i` owns. The owned count is `(i - left) * (right - i)`, with a strictly smaller left boundary and a smaller-or-equal right boundary. One stack pass produces both boundaries. The sum of `arr[i] * owned[i]` is the answer. All arithmetic uses `long`, because the products reach about 10^4 times 4.5 x 10^8 and the total passes the range of `int`.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes each index once and pops it at most once.
+- **Time** is O(n), because each index is stacked once and removed at most once.
 - **Space** is O(n), for the stack and the boundary arrays.
 
 ```java run

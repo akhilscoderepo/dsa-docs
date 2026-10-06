@@ -126,7 +126,7 @@ static long[] ownedWindows(int[] nums) {
 }
 ```
 
-The cast `(long)` applies to the first factor before the multiplication, so the product is computed in `long`. The pass costs O(n) time because it pushes each index once and pops it at most once. The arrays and the stack use O(n) extra space.
+The cast `(long)` applies to the first factor before the multiplication, so the product is computed in `long`. The pass costs O(n) time because each index enters the stack once and leaves it at most once. The arrays and the stack use O(n) extra space.
 
 #### Checking The Partition
 

@@ -147,7 +147,7 @@ public final class DailyTemperatures {
 An index is open exactly when it is never popped, so the answer is the stack size after the last value. The pop condition must be strictly smaller. With a non-strict comparison, an equal later value would pop the earlier index and report it as closed, which contradicts the definition. The strict comparison also keeps equal values side by side on the stack, and the invariant that values never increase from bottom to top still holds. An empty array skips the loop and returns `0`.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes every index once and pops it at most once.
+- **Time** is O(n), because every index is stacked once and removed at most once.
 - **Space** is O(n), because an all-equal array keeps every index on the stack.
 
 ```java run

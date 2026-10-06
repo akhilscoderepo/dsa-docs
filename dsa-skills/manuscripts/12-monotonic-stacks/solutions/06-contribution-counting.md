@@ -74,7 +74,7 @@ public final class CountOwnedByOneIndex {
 One stack pass finds both boundaries. The stack keeps values that strictly increase from bottom to top. A new value pops every top that is greater than or equal to it, and each popped index receives the new index as its right boundary, the first smaller-or-equal value. The surviving top is the nearest strictly smaller value, so it is the left boundary of the new index. The contribution of index `i` is `nums[i]` times its start choices times its end choices, computed in `long`. The last entry is the sum of the contributions, which equals the sum of all window minimums. The harness also checks the mirror rule for maximums by negating the input.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes each index once and pops it at most once.
+- **Time** is O(n), because each index is stacked once and removed at most once.
 - **Space** is O(n), for the stack, the boundaries and the result.
 
 ```java run
@@ -169,7 +169,7 @@ public final class OwnedMinimumContributions {
 The ownership argument compares values and never uses their sign, so the same boundaries apply: a strictly smaller left boundary and a smaller-or-equal right boundary. Each window then has one owner, and the owner's value is the window's minimum, negative or not. The counts `(i - left) * (right - i)` stay positive, and only the product with a negative value is negative. The `long` total keeps its sign, so no remainder or absolute value is needed. The harness checks the tie behavior on repeated negative values and the sign of the result.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes each index once and pops it at most once.
+- **Time** is O(n), because every index enters the stack once and leaves it at most once.
 - **Space** is O(n), for the stack and the two boundary arrays.
 
 ```java run
@@ -240,7 +240,7 @@ public final class NegativeAndRepeated {
 The cue is a sum over all subarrays that depends only on each subarray's minimum. Under the rightmost-minimum rule, index `i` owns `(i - left) * (right - i)` subarrays, with a strictly smaller left boundary and a smaller-or-equal right boundary. One stack pass finds both. Each contribution is formed in `long`, and the remainder is applied to the two factors before they multiply, so no product exceeds the `long` limit. The running total stays below the modulus after each addition.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes each index once and pops it at most once.
+- **Time** is O(n), because the stack sees each index once and drops it at most once.
 - **Space** is O(n), for the stack and the two boundary arrays.
 
 ```java run

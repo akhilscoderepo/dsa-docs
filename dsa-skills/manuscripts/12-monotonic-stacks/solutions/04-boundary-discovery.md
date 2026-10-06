@@ -8,7 +8,7 @@
 The stack holds indices whose values strictly increase from bottom to top. Each new value pops the tops that are not smaller than it. A popped top can never be the nearest smaller value of the new index or of any later index, because the new index is nearer and its value is at most the popped value. Equal tops must pop, since an equal value is not smaller. After the pops, the top is the nearest earlier index with a strictly smaller value, and an empty stack means none exists.
 
 **Complexity.**
-- **Time** is O(n), because the loop pushes each index once and pops it at most once.
+- **Time** is O(n), because each index enters the stack once and leaves it at most once.
 - **Space** is O(n), because an increasing input keeps every index on the stack.
 
 ```java run
@@ -134,7 +134,7 @@ public final class NextSmaller {
 Two scans produce the two sides. The left scan reads the surviving top after popping greater or equal tops, and it writes `-1` when the stack is empty. The right scan resolves tops at the pop, with the default `n` placed in every entry beforehand, so indices that never resolve already hold the sentinel. The pair for each index is `{left[i], right[i]}`. Each sentinel lies one slot outside the array, so an index with no smaller value on either side gets `{-1, n}`. The invariants are the same as in the two earlier solutions.
 
 **Complexity.**
-- **Time** is O(n), because each scan pushes every index once and pops it at most once.
+- **Time** is O(n), because each scan stacks every index once and removes it at most once.
 - **Space** is O(n), for the stack and the two answer arrays.
 
 ```java run
@@ -210,7 +210,7 @@ public final class NoBoundary {
 The region of index `i` extends until the nearest strictly smaller value on each side, because every value inside must be at least `nums[i]`. Two scans find those boundaries. The width is `right[i] - left[i] - 1`, the number of positions strictly between the boundary indices, and the sentinels `-1` and `n` make the same formula valid at the array ends. Equal values never end a region, which matches the strict boundaries. The invariants are the same as in the earlier solutions.
 
 **Complexity.**
-- **Time** is O(n), because each scan pushes every index once and pops it at most once.
+- **Time** is O(n), because each scan stacks every index once and removes it at most once.
 - **Space** is O(n), for the stack and the two boundary arrays.
 
 ```java run
