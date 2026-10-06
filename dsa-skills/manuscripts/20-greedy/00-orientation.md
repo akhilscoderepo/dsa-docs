@@ -17,11 +17,14 @@ Each lesson adds one reason that a single committed choice is safe.
 - **Exchange Reasoning** states the four parts of a proof and searches for an input that breaks a false rule.
 - **Task Selection** keeps a set of tasks that can shrink, and drops the longest task when a deadline fails.
 
-### The Combination Lesson
+### The Combination Lessons
 
-One lesson joins ordering with the proof.
+Four lessons join the greedy rule with a tool from an earlier chapter.
 
 - **Sort Then Commit Greedily** finds the one number that an exchange step compares, orders the items by it, and applies the same loop to cookies, gapped intervals, balloons and a log stream cut into parts.
+- **Undo The Worst Choice With A Heap** lets a heap hold tentative choices and takes back the smallest one when a resource runs out.
+- **Drop Earlier Items With A Stack** pops a worse earlier item while a budget of deletions remains.
+- **Pair Items From Both Ends** sorts the items and settles the heaviest one first with two pointers.
 
 ### How To Work Through Each Lesson
 

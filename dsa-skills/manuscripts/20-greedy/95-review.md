@@ -32,3 +32,15 @@ Return to this page after the lessons, and again after a few days. Each question
 ```quiz
 {"id": "gr-rev-gap-type", "q": "A scan keeps intervals whose start is at least the previous end plus a gap. Ends reach 2^31 - 1 and the gap reaches 10^9. Which type holds the bound?", "options": ["int", "long", "short", "char"], "answer": 1, "explain": "An end of 2^31 - 1 plus a gap of 10^9 passes the int maximum of 2^31 - 1 and wraps to a negative bound, which would accept intervals that must be rejected. A long holds the sum."}
 ```
+
+```quiz
+{"id": "gr-rev-heap-take-back", "q": "A runner has covered three rises with its three passes, and a fourth rise arrives. The heap holds 2, 5 and 9, and the new rise is 7. Which rise gives up its pass?", "options": ["9, the largest", "7, the new rise", "2, the smallest", "5, the middle one"], "answer": 2, "explain": "After the new rise joins, the heap holds 2, 5, 7 and 9, and only three passes exist. The smallest rise, 2, saves the least downtime, so it gives up its pass and is paid for from the allowance."}
+```
+
+```quiz
+{"id": "gr-rev-stack-budget", "q": "A scan deletes digits to make a small number and has 1 deletion left. The top of the stack is 7, and the next digit is 5. What happens?", "options": ["The scan pops 7 and spends the last deletion", "The scan pushes 5 and keeps 7", "The scan discards 5", "The scan pops 7 and keeps the deletion"], "answer": 0, "explain": "The top 7 is larger than the digit 5 that follows it, and one deletion remains. Deleting 7 moves 5 into an earlier position, which makes the number smaller, so the scan pops it and the budget reaches zero."}
+```
+
+```quiz
+{"id": "gr-rev-both-ends", "q": "Sorted weights are [3,3,4,6] and the limit is 7. The pointers sit at 3 and 6. What does the scan do?", "options": ["Pairs 3 with 6, because 9 passes the limit", "Runs 6 alone, because 3 + 6 = 9 passes 7", "Pairs 3 with 6, because both are in range", "Runs 3 alone"], "answer": 1, "explain": "The sum 3 + 6 is 9, which passes the limit of 7. The heaviest weight cannot share with the lightest, so it cannot share with any weight, and it runs alone. Only the right pointer moves."}
+```
