@@ -162,7 +162,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Grid And Graph Traversal
+### Walk A Grid As A Graph
 
 The matrix supplies implicit vertices and neighbors; graph traversal supplies visited ownership and component discovery.
 

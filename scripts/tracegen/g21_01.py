@@ -1,21 +1,22 @@
 from common import *
-CH='21-graph-traversal-models-dfs-and-ordinary-bfs'
-F='01-graph-representation.md'
-# trace 1: undirected filing
-edges=[(0,1),(1,2),(1,3)]
-adj=[[] for _ in range(4)]; steps=[]; total=0
-for i,(u,v) in enumerate(edges):
-    adj[u].append(v); adj[v].append(u); total+=2
-    steps.append({"at":{"e":i},"vars":{"total":total,"pile_u":",".join(map(str,adj[u])),"pile_v":",".join(map(str,adj[v]))},
-      "note":f"The slip {u}-{v} is filed twice: vertex {v} joins the pile of {u} and vertex {u} joins the pile of {v}, so {total} entries are held in all."})
-assert adj==[[1],[0,2,3],[1],[1]] and total==2*len(edges)
-fill(CH,F,block(["0-1","1-2","1-3"],["e"],steps),"@@TRACE1@@")
-# trace 2: directed matrix
-edges=[(0,1),(2,1),(1,3)]
-has=[[0]*4 for _ in range(4)]; steps=[]; ones=0
-for i,(u,v) in enumerate(edges):
-    has[u][v]=1; ones+=1
-    steps.append({"at":{"e":i},"vars":{"ones":ones,"row_u":"".join(map(str,has[u]))},
-      "note":f"The one-way slip {u}>{v} sets only the cell in row {u} and column {v}, so row {u} now reads {''.join(map(str,has[u]))} and {ones} cells are true."})
-assert sum(map(sum,has))==3 and sum(has[3])==0
-fill(CH,F,block(["0>1","2>1","1>3"],["e"],steps),"@@TRACE2@@")
+CH='21-graph-traversal-models-dfs-and-ordinary-bfs'; F='01-graph-representation.md'
+def show(adj): return " ".join(f"{v}:{adj[v]}".replace(" ","") for v in range(len(adj)))
+def run(n,edges,directed,ph,notes):
+    adj=[[] for _ in range(n)]; st=[]
+    for k,(a,b) in enumerate(edges):
+        adj[a].append(b)
+        if not directed: adj[b].append(a)
+        st.append({"at":{"from":a,"to":b},"vars":{"edge":f"[{a},{b}]","adj":show(adj)},"note":notes[k]})
+    fill(CH,F,block(list(range(n)),["from","to"],st),ph); return adj
+a=run(5,[[0,1],[0,2],[1,3],[3,4]],False,"@@TRACE1@@",[
+ "The edge [0,1] adds 1 to the list of vertex 0 and 0 to the list of vertex 1.",
+ "The edge [0,2] gives vertex 0 a second neighbor and gives vertex 2 its first.",
+ "The edge [1,3] extends the list of vertex 1 and starts the list of vertex 3.",
+ "The edge [3,4] makes vertex 3 hold 1 and 4, which answers the opening question."])
+assert a==[[1,2],[0,3],[0],[1,4],[3]] and sum(map(len,a))==8
+d=run(5,[[2,3],[0,1],[2,1],[3,2]],True,"@@TRACE2@@",[
+ "The directed edge [2,3] writes 3 into the list of vertex 2 only.",
+ "The directed edge [0,1] writes 1 into the list of vertex 0 and leaves vertex 1 untouched.",
+ "The edge [2,1] appends 1 after 3 in the list of vertex 2.",
+ "The edge [3,2] gives vertex 3 a neighbor; vertex 4 still has an empty list because no edge mentions it."])
+assert d==[[1],[],[3,1],[2],[]]
