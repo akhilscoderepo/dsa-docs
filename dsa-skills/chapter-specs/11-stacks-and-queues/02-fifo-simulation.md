@@ -1,4 +1,4 @@
-# Lesson spec: FIFO Simulation
+# Lesson spec: Process Items In Arrival Order
 
 **Recognition cue.** Items must be handled in arrival order while later arrivals wait behind earlier ones. **Invariant.** The front is the next item to process and every enqueued item appears behind all items already present. **False friend.** A stack reverses arrival order.
 

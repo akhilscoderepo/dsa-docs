@@ -1,4 +1,4 @@
-# Lesson spec: ArrayDeque Contracts
+# Lesson spec: Use ArrayDeque For Stack And Queue
 
 **Recognition cue.** The algorithm needs LIFO or FIFO access with no indexed search. **Invariant.** One chosen end has one meaning throughout the implementation. Use `addLast/removeLast/peekLast` for a stack or `addLast/removeFirst/peekFirst` for a queue. **False friend.** Java's legacy `Stack` works but is not the preferred ordinary stack. **Java hazard.** `ArrayDeque` rejects `null`, so `null` cannot be a level delimiter.
 

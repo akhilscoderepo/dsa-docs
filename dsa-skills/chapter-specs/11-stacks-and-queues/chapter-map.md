@@ -4,8 +4,8 @@
 
 ## Lesson order
 
-01. ArrayDeque Contracts  ->  01-arraydeque-contracts.md
-02. FIFO Simulation  ->  02-fifo-simulation.md
+01. Use ArrayDeque For Stack And Queue  ->  01-arraydeque-contracts.md
+02. Process Items In Arrival Order  ->  02-fifo-simulation.md
 03. Two-Stack Queue  ->  03-two-stack-queue.md
 04. BFS Queue State  ->  04-bfs-queue-state.md
 05. Matching Delimiters  ->  05-matching-delimiters.md
