@@ -1,4 +1,4 @@
-# Lesson spec: Balanced-Tree Concepts
+# Lesson spec: Keep A Search Tree Short
 
 **Recognition cue.** Search performance depends on height, and arbitrary insertion order can create a linear chain. **Invariant.** A height-balanced tree keeps left and right subtree heights within the structure's allowed bound; rotations preserve inorder key order while changing shape. **False friend.** A balanced tree is not necessarily complete or perfectly symmetric.
 

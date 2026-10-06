@@ -1,4 +1,4 @@
-# Lesson spec: Serialization And Deserialization
+# Lesson spec: Turn A Tree Into Text And Back
 
 **Recognition cue.** Tree structure must be converted to a reversible sequence, including missing-child positions. **Invariant.** Encoder and decoder follow the same traversal grammar; null markers preserve shape. **False friend.** Recording only values cannot distinguish trees with different missing children. **Java hazard.** Use a moving token index or queue rather than repeatedly removing index zero from an `ArrayList`.
 

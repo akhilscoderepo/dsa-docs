@@ -1,4 +1,4 @@
-# Lesson spec: Validate Search And Insert
+# Lesson spec: Search And Insert With One Path
 
 **Recognition cue.** BST ordering lets one comparison discard an entire subtree. **Invariant.** At each step, if the target exists under the contract, it lies in the one selected child subtree. **False friend.** Validation needs ancestor bounds; a single search path is enough only when locating or inserting one key.
 

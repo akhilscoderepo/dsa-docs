@@ -66,7 +66,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Levels Zigzag And Views
+### Read A Tree Level By Level
 
 **Recognition cue.** The result groups nodes by depth or selects a position from each depth. **Invariant.** Capture the queue size before a level; exactly that many removals belong to the current depth. **False friend.** Reading the changing queue size inside the loop mixes children into their parents' level. **Java hazard.** `ArrayDeque` rejects null sentinels.
 
@@ -75,7 +75,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty And One-Sided Trees.** Return an empty outer list for a null root and preserve one node per level in a chain.
 - **Recognize - LC 199 Binary Tree Right Side View.** Record the last processed node at each level.
 
-### BST Invariant And Bounds
+### Carry Value Limits Down A Search Tree
 
 **Recognition cue.** Every node separates all values in its left and right subtrees according to a declared duplicate policy. **Invariant.** A node must lie inside bounds inherited from every ancestor, not merely compare correctly with its parent. **False friend.** Checking only immediate children misses deep violations. **Java hazard.** Use `long` bounds or nullable bounds when node values span all `int` values.
 
@@ -84,7 +84,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Integer Extremes And Duplicates.** Avoid overflowing sentinels and state whether equality is legal.
 - **Recognize - LC 98 Validate Binary Search Tree.** Validate every node against its complete ancestor-derived range.
 
-### Validate Search And Insert
+### Search And Insert With One Path
 
 **Recognition cue.** BST ordering lets one comparison discard an entire subtree. **Invariant.** At each step, if the target exists under the contract, it lies in the one selected child subtree. **False friend.** Validation needs ancestor bounds; a single search path is enough only when locating or inserting one key.
 
@@ -93,7 +93,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Duplicate-Key Policy.** Reject, count, or consistently place equality according to the stated representation.
 - **Recognize - LC 450 Delete Node in a BST.** Handle zero, one, and two children, replacing a two-child node with a successor or predecessor.
 
-### Successor And Predecessor
+### Find The Next And Previous Key
 
 **Recognition cue.** The task asks for the next or previous key in sorted BST order. **Invariant.** When descending, retain the nearest ancestor that could still be the answer; if the node has the relevant subtree, its extreme node decides the result. **False friend.** A parent is not always the successor.
 
@@ -102,7 +102,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Maximum And Minimum Keys.** Return no successor/predecessor when no valid ancestor or subtree exists.
 - **Recognize - LC 285 Inorder Successor in BST.** Combine subtree and ancestor cases under the unique-key contract.
 
-### Kth And Range Queries
+### Answer Rank And Range Questions
 
 **Recognition cue.** The answer depends on sorted key order or pruning by a numeric interval. **Invariant.** Inorder traversal visits keys in sorted order; range traversal skips any subtree that cannot contain an allowed value. **False friend.** BFS level order has no relationship to key rank.
 
@@ -111,7 +111,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: K At Either End.** Test the smallest and largest valid rank under the stated nonempty contract.
 - **Recognize - LC 938 Range Sum of BST.** Prune left when the key is too small and right when it is too large.
 
-### General And BST LCA
+### Find The Lowest Common Ancestor
 
 **Recognition cue.** The lowest common ancestor is the deepest node whose subtree contains both targets. **Invariant.** In a general tree, child returns report found targets; in a BST, key order proves whether both targets lie on one side or split at the current node. **False friend.** The BST shortcut is invalid for an unordered binary tree.
 
@@ -120,7 +120,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: One Target Is Ancestor.** Return that target when the other appears below it under the existence guarantee.
 - **Recognize - LC 235 Lowest Common Ancestor of a Binary Search Tree.** Use ordering to descend until the target values split or equal the current key.
 
-### Iterator Foundations
+### Walk A Tree One Key At A Time
 
 **Recognition cue.** A client needs the next inorder key on demand without materializing the whole traversal. **Invariant.** The stack stores the unvisited left spine; its top is the next smallest node. After popping, push the left spine of its right subtree. **False friend.** Re-running a root traversal for each call makes iteration quadratic.
 
@@ -129,7 +129,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Iterator And Right Chain.** Define `hasNext` from stack emptiness and avoid invalid pops.
 - **Recognize - LC 173 Binary Search Tree Iterator.** Provide amortized `O(1)` `next` with `O(h)` space.
 
-### Serialization And Deserialization
+### Turn A Tree Into Text And Back
 
 **Recognition cue.** Tree structure must be converted to a reversible sequence, including missing-child positions. **Invariant.** Encoder and decoder follow the same traversal grammar; null markers preserve shape. **False friend.** Recording only values cannot distinguish trees with different missing children. **Java hazard.** Use a moving token index or queue rather than repeatedly removing index zero from an `ArrayList`.
 
@@ -138,7 +138,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty, Negative, And Multi-Digit Values.** Choose an unambiguous delimiter and null token.
 - **Recognize - LC 297 Serialize and Deserialize Binary Tree.** Implement a matched codec and verify round-trip structure.
 
-### Balanced-Tree Concepts
+### Keep A Search Tree Short
 
 **Recognition cue.** Search performance depends on height, and arbitrary insertion order can create a linear chain. **Invariant.** A height-balanced tree keeps left and right subtree heights within the structure's allowed bound; rotations preserve inorder key order while changing shape. **False friend.** A balanced tree is not necessarily complete or perfectly symmetric.
 
@@ -149,7 +149,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Tree And BFS
+### Group Nodes By Depth With A Queue
 
 The tree supplies children; the FIFO queue preserves discovery by depth. Capturing the current queue size turns ordinary queue processing into an exact level boundary.
 
@@ -158,7 +158,7 @@ The tree supplies children; the FIFO queue preserves discovery by depth. Capturi
 - **Boundary - LC 199 Binary Tree Right Side View.** Select exactly the last node of each captured level.
 - **Recognize - LC 429 N-ary Tree Level Order Traversal.** Generalize child expansion from two references to a child collection.
 
-### BST And Bounds
+### Search And Validate A Search Tree
 
 BST ordering narrows the legal range inherited by each descendant. Bounds make the global property explicit; local parent-child checks alone cannot validate the structure.
 

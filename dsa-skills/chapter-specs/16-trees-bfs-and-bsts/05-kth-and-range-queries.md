@@ -1,4 +1,4 @@
-# Lesson spec: Kth And Range Queries
+# Lesson spec: Answer Rank And Range Questions
 
 **Recognition cue.** The answer depends on sorted key order or pruning by a numeric interval. **Invariant.** Inorder traversal visits keys in sorted order; range traversal skips any subtree that cannot contain an allowed value. **False friend.** BFS level order has no relationship to key rank.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Levels Zigzag And Views
+# Lesson spec: Read A Tree Level By Level
 
 **Recognition cue.** The result groups nodes by depth or selects a position from each depth. **Invariant.** Capture the queue size before a level; exactly that many removals belong to the current depth. **False friend.** Reading the changing queue size inside the loop mixes children into their parents' level. **Java hazard.** `ArrayDeque` rejects null sentinels.
 

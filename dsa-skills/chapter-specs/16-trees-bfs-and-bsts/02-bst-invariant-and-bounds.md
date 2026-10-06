@@ -1,4 +1,4 @@
-# Lesson spec: BST Invariant And Bounds
+# Lesson spec: Carry Value Limits Down A Search Tree
 
 **Recognition cue.** Every node separates all values in its left and right subtrees according to a declared duplicate policy. **Invariant.** A node must lie inside bounds inherited from every ancestor, not merely compare correctly with its parent. **False friend.** Checking only immediate children misses deep violations. **Java hazard.** Use `long` bounds or nullable bounds when node values span all `int` values.
 

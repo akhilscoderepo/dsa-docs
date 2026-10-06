@@ -4,15 +4,15 @@
 
 ## Lesson order
 
-01. Levels Zigzag And Views  ->  01-levels-zigzag-and-views.md
-02. BST Invariant And Bounds  ->  02-bst-invariant-and-bounds.md
-03. Validate Search And Insert  ->  03-validate-search-and-insert.md
-04. Successor And Predecessor  ->  04-successor-and-predecessor.md
-05. Kth And Range Queries  ->  05-kth-and-range-queries.md
-06. General And BST LCA  ->  06-general-and-bst-lca.md
-07. Iterator Foundations  ->  07-iterator-foundations.md
-08. Serialization And Deserialization  ->  08-serialization-and-deserialization.md
-09. Balanced-Tree Concepts  ->  09-balanced-tree-concepts.md
+01. Read A Tree Level By Level  ->  01-levels-zigzag-and-views.md
+02. Carry Value Limits Down A Search Tree  ->  02-bst-invariant-and-bounds.md
+03. Search And Insert With One Path  ->  03-validate-search-and-insert.md
+04. Find The Next And Previous Key  ->  04-successor-and-predecessor.md
+05. Answer Rank And Range Questions  ->  05-kth-and-range-queries.md
+06. Find The Lowest Common Ancestor  ->  06-general-and-bst-lca.md
+07. Walk A Tree One Key At A Time  ->  07-iterator-foundations.md
+08. Turn A Tree Into Text And Back  ->  08-serialization-and-deserialization.md
+09. Keep A Search Tree Short  ->  09-balanced-tree-concepts.md
 
 # Chapter 16: Trees: BFS and BSTs
 
@@ -44,7 +44,7 @@ State prerequisite knowledge in the finished chapter. Confirm the input/mutation
 
 ## Released Combination Lessons
 
-### Tree And BFS
+### Group Nodes By Depth With A Queue
 
 The tree supplies children; the FIFO queue preserves discovery by depth. Capturing the current queue size turns ordinary queue processing into an exact level boundary.
 
@@ -53,7 +53,7 @@ The tree supplies children; the FIFO queue preserves discovery by depth. Capturi
 - **Boundary - LC 199 Binary Tree Right Side View.** Select exactly the last node of each captured level.
 - **Recognize - LC 429 N-ary Tree Level Order Traversal.** Generalize child expansion from two references to a child collection.
 
-### BST And Bounds
+### Search And Validate A Search Tree
 
 BST ordering narrows the legal range inherited by each descendant. Bounds make the global property explicit; local parent-child checks alone cannot validate the structure.
 

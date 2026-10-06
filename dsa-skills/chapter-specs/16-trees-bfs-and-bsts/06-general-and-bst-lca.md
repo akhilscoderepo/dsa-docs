@@ -1,4 +1,4 @@
-# Lesson spec: General And BST LCA
+# Lesson spec: Find The Lowest Common Ancestor
 
 **Recognition cue.** The lowest common ancestor is the deepest node whose subtree contains both targets. **Invariant.** In a general tree, child returns report found targets; in a BST, key order proves whether both targets lie on one side or split at the current node. **False friend.** The BST shortcut is invalid for an unordered binary tree.
 

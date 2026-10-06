@@ -1,4 +1,4 @@
-# Lesson spec: Iterator Foundations
+# Lesson spec: Walk A Tree One Key At A Time
 
 **Recognition cue.** A client needs the next inorder key on demand without materializing the whole traversal. **Invariant.** The stack stores the unvisited left spine; its top is the next smallest node. After popping, push the left spine of its right subtree. **False friend.** Re-running a root traversal for each call makes iteration quadratic.
 
