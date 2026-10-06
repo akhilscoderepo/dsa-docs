@@ -166,7 +166,7 @@ Each range of length `k` needs its maximum, and the ranges shift by one position
 
 **Complexity.**
 
-- **Time** is O(n), because the loop gives each position one append and at most one removal.
+- **Time** is O(n), because every position takes one append and at most one removal in the loop.
 - **Space** is O(k) for the deque, plus O(n - k + 1) for the output.
 
 ```java run

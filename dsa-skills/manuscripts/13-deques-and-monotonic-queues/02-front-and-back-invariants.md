@@ -111,7 +111,7 @@ static int answer(Deque<Integer> d) {
 The two push methods differ in one comparison. The method `pushMax` removes strictly smaller values, and `pushMin` removes strictly larger values. The method `answer` only reads. It must run after at least one push, because `peekFirst` returns `null` on an empty deque and the unboxing would fail.
 
 - **Time** is O(1) amortized per push, since the loop removes values that earlier pushes added, and each value is added once.
-- **Space** is O(n) in the worst case, which happens when the readings strictly decrease.
+- **Space** is at most O(n), reached when the readings strictly decrease.
 
 <!-- stage: applicability -->
 ### Deciding When Two Ends Suffice

@@ -113,7 +113,7 @@ static int[] maxOfWindows(int[] a, int k) {
 The age test uses `if` here because each step expires at most one position for a fixed range length. The deque holds consecutive appends, so only position `right - k` can be at the front and expired. The method needs `1 <= k <= a.length`, which the exercises state as a limit.
 
 - **Time** is O(n), because every position takes one append and at most one removal.
-- **Space** is O(k) for the deque, and the output array adds n - k + 1 entries.
+- **Space** is O(k) for the deque plus the output of n - k + 1 entries.
 
 <!-- stage: applicability -->
 ### Choosing This Method
