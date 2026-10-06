@@ -67,7 +67,7 @@ At any moment the queue contains the rest of one level, then a part of the follo
 
 #### Remembering Where A Vertex Came From
 
-The discovering vertex of `next` is its **predecessor**. Storing `predecessor[next] = current` at the same moment records one shortest path. To restore it, follow the predecessors from the target back to the source and reverse the sequence. A vertex is never discovered twice, so each vertex has exactly one predecessor and the chain is a simple path.
+The discovering vertex of `next` is its **predecessor**. Storing `predecessor[next] = current` at the same moment records one shortest path. To restore it, follow the predecessors from the target back to the source and reverse the sequence. The source is never discovered by another vertex, so it has no predecessor of its own. The solution of the exercise stores the source as its own predecessor, and the walk back stops when it reaches the source. A vertex is never discovered twice, so each other reached vertex has exactly one predecessor and the chain is a simple path.
 
 <!-- stage: variables -->
 ### What The Search Keeps
@@ -85,7 +85,7 @@ The search keeps the list `adj`, three arrays and one queue. The code below uses
 
 #### A Graph With Two Equal Routes
 
-The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3, 3 to 4 and 4 to 5, with source 0. Here the cells are the vertex ids, and the pointer `cur` shows the vertex that was just taken from the queue. The search takes 0 and discovers 1 and 2 at distance 1. It then takes 1 and discovers 3 at distance 2. When it takes 2, the vertex 3 is already visited, so the second route to 3 changes nothing. The distances grow by one at each level, up to 4 for vertex 5.
+The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3, 3 to 4 and 4 to 5, with source 0. Here the cells are the vertex ids, and the pointer `cur` shows the vertex that was just taken from the queue. The pointer `cur` is the variable `current` in the code below. The search takes 0 and discovers 1 and 2 at distance 1. It then takes 1 and discovers 3 at distance 2. When it takes 2, the vertex 3 is already visited, so the second route to 3 changes nothing. The distances grow by one at each level, up to 4 for vertex 5.
 
 ```trace
 {"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"distance":"0,1,1,-1,-1,-1","queue":"1-2"},"note":"The search takes vertex 0 from the queue and discovers vertices 1 and 2, each at distance 1."},{"at":{"cur":1},"vars":{"distance":"0,1,1,2,-1,-1","queue":"2-3"},"note":"The search takes vertex 1 from the queue and discovers vertex 3 at distance 2."},{"at":{"cur":2},"vars":{"distance":"0,1,1,2,-1,-1","queue":"3"},"note":"After taking vertex 2, the search finds nothing new to enqueue."},{"at":{"cur":3},"vars":{"distance":"0,1,1,2,3,-1","queue":"4"},"note":"The search takes vertex 3 from the queue and discovers vertex 4 at distance 3."},{"at":{"cur":4},"vars":{"distance":"0,1,1,2,3,4","queue":"5"},"note":"The search takes vertex 4 from the queue and discovers vertex 5 at distance 4."},{"at":{"cur":5},"vars":{"distance":"0,1,1,2,3,4","queue":"empty"},"note":"After taking vertex 5, the search finds nothing new to enqueue."}]}
@@ -179,7 +179,7 @@ Depth-first search is the false friend of this task. It may find a path first, b
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 10^5`.
 - **Edges** satisfy `0 <= edges.length <= 2 * 10^5`, with no duplicate edge and no self loop.
-- **Source and target** are vertices in `0..n-1`; they may be equal.
+- **Source and target** are vertices in `0..n-1`; they may be equal, and then the returned path is `[source]`.
 - **Result** lists the vertices in order, starting with `source`.
 
 **Example 1.** Input `n = 6`, `edges = [[0,1],[0,2],[1,3],[2,3],[3,4],[4,5]]`, `source = 0`, `target = 5`, output `[0,1,3,4,5]`.

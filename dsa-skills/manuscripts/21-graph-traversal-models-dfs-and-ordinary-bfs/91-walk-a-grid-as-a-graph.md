@@ -5,9 +5,9 @@
 <!-- stage: context -->
 ### Why A Region Count Runs Too High
 
-A level editor for a game shows a map of land and water cells. The designer asks for two things. The first is the number of separate land regions. The second is a saved copy of one region as a graph of cell objects, so that an undo step can restore it. The first version of the region counter reported 11 regions on a map that held 4. The undo copy also shared cell objects with the live map, so editing the copy changed the map.
+A level editor for a game shows a map of land and water cells. The designer asks for two things. The first is the number of separate land regions. The second is a saved copy of one region as a graph of cell objects, so that an undo step can restore it, and the copy must not share cell objects with the live map. The first version of the region counter returned the right count but needed minutes on a large map, because every land cell started its own flood of its region.
 
-Both defects come from the same mistake. The code has no clear owner for the question of which cell or object it has already reached. This lesson asks how one traversal serves a table of cells and a graph of objects, and what changes when the rules of a problem change.
+The counter is slow because it forgets which cells earlier floods already reached. The copy needs the same kind of memory, here to know which object it has already copied. This lesson asks how one traversal serves a table of cells and a graph of objects, and what changes when the rules of a problem change.
 
 <!-- stage: contributions -->
 ### What Each Earlier Lesson Adds
@@ -112,7 +112,7 @@ The first land cell, cell 0, starts region 1. The search walks the diagonal thro
 
 #### Cloning One Region
 
-The second trace copies the region of the first land cell in a table with three rows and three columns, flattened into nine cells. The graph has a vertex for each land cell and an edge for each pair of land cells that share a side. The pointer `cur` marks the original cell under expansion. The variable `copies` counts the entries of the identity map.
+The second trace copies the region of the first land cell in a table with three rows and three columns, flattened into nine cells. The graph has a vertex for each land cell and an edge for each pair of land cells that share a side. The pointer `cur` marks the original cell under expansion. The trace variable `copies` shows `copies.size()`, the number of entries of the identity map named `copies` in the code, and `cur` keeps its name there.
 
 Cell 0 starts the walk and receives its copy first. Cell 1 then links back to the copy of cell 0, and the walk does not create a second copy. Cells 6 and 8 never appear, because they belong to other regions.
 

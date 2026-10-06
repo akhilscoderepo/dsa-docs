@@ -42,7 +42,7 @@ A course scheduler accepts two courses that wait for each other, and a map count
 ```
 
 ```quiz
-{"id": "gt-rev-directed-finished", "q": "A directed walk reaches a neighbor that is already finished. What does it conclude?", "options": ["A cycle exists", "No cycle passes through that edge", "The graph is undirected", "The walk must restart"], "answer": 1, "explain": "A finished vertex has no route back to the active chain. Only an edge to an active vertex closes a directed cycle."}
+{"id": "gt-rev-directed-finished", "q": "A directed walk reaches a neighbor that is already finished. What does it conclude?", "options": ["A cycle exists", "No cycle passes through that edge", "The graph is undirected", "The walk must restart"], "answer": 1, "explain": "A finished vertex has no path back to the vertices still being visited. Only an edge to a vertex that is still being visited closes a directed cycle."}
 ```
 
 ```quiz

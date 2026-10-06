@@ -5,14 +5,14 @@
 <!-- stage: context -->
 ### Duplicating Linked Shapes
 
-A diagram editor lets the user select a group of connected shapes and duplicate it. Each shape holds a number label and a list of references to the shapes it connects to. Three shapes labeled 0, 1 and 2 form a loop: shape 0 refers to shape 1, shape 1 refers to shape 2, and shape 2 refers back to shape 0.
+A diagram editor lets the user select a group of connected shapes and duplicate it. Each shape holds a number label and a list of references to the shapes it connects to. Three shapes labeled 0, 1 and 2 form a loop, which is a chain of references that returns to its first shape: shape 0 refers to shape 1, shape 1 refers to shape 2, and shape 2 refers back to shape 0.
 
 The duplicate must hold three new shapes with the same labels. Each new shape must refer only to other new shapes. If one new shape still referred to an original shape, then moving the original would move part of the duplicate. A loop of references also means the editor cannot simply follow references until it reaches the end, because no end exists. The lesson answers one question: how does a program copy a structure of linked objects when references can loop and can point to the same object from several places?
 
 <!-- stage: naive -->
 ### Copying Each Reference Recursively
 
-Each shape is a `Node` object, and the rest of the lesson calls a shape a node. A node has an `int val` and a list `neighbors` of references to other `Node` objects. The direct approach copies a node by creating a new object with the same value. It then copies every node in `neighbors` the same way and adds the results to the new list.
+Each shape is a `Node` object, and from here the lesson calls it a node. A node has an `int val` and a list `neighbors` of references to other `Node` objects. The direct approach copies a node by creating a new object with the same value. It then copies every node in `neighbors` the same way and adds the results to the new list.
 
 ```java
 static Node copy(Node n) {
@@ -22,22 +22,22 @@ static Node copy(Node n) {
 }
 ```
 
-On a chain of shapes with no loops and no shared references, this method works. Every shape is copied once, and the references of the new shapes point to new shapes. The method fails when the structure has a loop or a shared reference.
+On a chain of nodes with no loops and no shared references, this method works. Every node is copied once, and the references of the new nodes point to new nodes. The method fails when the structure has a loop or a shared reference.
 
 <!-- stage: bottleneck -->
 ### Counting Calls On Shared References
 
 ```predict
-Shape 0 refers to shape 1, shape 1 to shape 2, and shape 2 back to shape 0. What does copy(shape 0) do?
+Node 0 refers to node 1, node 1 to node 2, and node 2 back to node 0. What does copy(node 0) do?
 
-The call copies shape 0, then copies shape 1, then shape 2, then shape 0 again, and the chain of calls never ends. The method stops only when the call stack overflows with a StackOverflowError.
+The call copies node 0, then copies node 1, then node 2, then node 0 again, and the chain of calls never ends. The method stops only when the call stack overflows with a StackOverflowError.
 ```
 
-A loop is one failure. Shared references are a second failure, and it affects even structures without loops. Suppose shape `i` refers to shapes `i + 1` and `i + 2`. Shape 3 is then reachable from shape 1 and from shape 2. The method copies shape 3 once for each way of reaching it, so it creates several different copies of one original shape.
+A loop is one failure. Shared references are a second failure, and it affects even structures without loops. Suppose node `i` refers to nodes `i + 1` and `i + 2`. Node 3 is then reachable from node 1 and from node 2. The method copies node 3 once for each way of reaching it, so it creates several different copies of one original node.
 
-The number of copies grows exponentially in the number of shapes, which is O(2^n) in the worst case. For 40 shapes the method creates more than 10^8 copies, although the structure holds only 40 shapes. The result is also wrong, because the duplicate has many shapes where the original has one.
+The number of copies grows exponentially in the number of nodes, which is O(2^n) in the worst case. For 40 nodes the method creates more than 10^8 copies, although the structure holds only 40 nodes. The result is also wrong, because the duplicate has many nodes where the original has one.
 
-The method needs to remember which original shape it has already copied. It must find that earlier copy again instead of making a new one.
+The method needs to remember which original node it has already copied. It must find that earlier copy again instead of making a new one.
 
 <!-- stage: insight -->
 ### Keeping One Clone Per Original
@@ -52,7 +52,7 @@ A **node** is the object that stands for one vertex, and its `neighbors` list ho
 
 #### Why The Entry Comes First
 
-For each original node, the method creates the clone and stores the entry before it looks at any neighbor. When a neighbor is already discovered, the method does not copy it again. It reads the existing clone from the map and adds that clone to the new list. This order is what ends a loop, because the second arrival at shape 0 finds its entry already present. Storing the entry after the loop would repeat the endless chain of the naive method.
+For each original node, the method creates the clone and stores the entry before it looks at any neighbor. When a neighbor is already discovered, the method does not copy it again. It reads the existing clone from the map and adds that clone to the new list. This order is what ends a loop, because the second arrival at node 0 finds its entry already present. Storing the entry after the loop would repeat the endless chain of the naive method.
 
 #### What The Map Guarantees
 
@@ -73,7 +73,7 @@ The copy uses four names.
 
 #### A Loop With A Branch
 
-Take four nodes with directed references: node 0 refers to 1, node 1 refers to 2, node 2 refers to 0 and 3, and node 3 refers to nothing. The pointer `cur` in each trace marks the original in hand, and `next` marks the neighbor under inspection.
+Take four nodes with directed references: node 0 refers to 1, node 1 refers to 2, node 2 refers to 0 and 3, and node 3 refers to nothing. The pointer `cur` in each trace marks the original in hand, and `next` marks the neighbor under inspection. In the code below, `cur` is the variable `original`, `next` is the variable `next`, `clones` lists the keys of the map `clones`, and `count` equals `clones.size()`.
 
 The method enters node 0, stores its clone, then follows the reference to node 1 and then to node 2. The first neighbor of node 2 is node 0, which is already in the map. The method reuses the existing clone of node 0, and the loop closes without a new call. The second neighbor, node 3, is new, so the method enters it and stores a fourth entry.
 
@@ -151,7 +151,9 @@ The invariant ties the map to the discovery order: one clone per discovered orig
 
 A map keyed by label is a false friend of the identity map. It looks like the same table, but two different nodes can carry equal labels. A value key merges those nodes into one clone and silently removes a node from the copy. The key must be the original node itself. In Java, a `Node` class without `equals` and `hashCode` gives that behavior by default, and a class that overrides both by label breaks it.
 
-The empty input is a separate case. A `null` start means an empty structure, and the answer is `null`. A node that lists itself as a neighbor is a one-node loop, and the same map rule handles it.
+#### Empty Input And Self-Loops
+
+A `null` start means an empty structure, and the answer is `null`. A node that lists itself as a neighbor is a one-node loop, and the same map rule handles it.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -225,7 +227,7 @@ The empty input is a separate case. A `null` start means an empty structure, and
 
 **Prerequisites.** The three exercises above.
 
-**Problem.** A directed graph has `n` nodes with distinct values 0 to n-1. Node `i` has the neighbors listed in `adjList[i]`, and undirected edges appear in both lists. Given the start value `s`, return a deep copy of the part of the graph reachable from the node with value `s`. This version differs from the LeetCode problem in two ways. The start value is arbitrary, and nodes that the start cannot reach are not copied.
+**Problem.** A directed graph has `n` nodes with distinct values 0 to n-1. The input is the array `adjList` and the start value `s`, and the node objects are built from `adjList`, where node `i` has the neighbors listed in `adjList[i]`. Undirected edges appear in both lists. Return a deep copy of the part of the graph reachable from the node with value `s`. This version differs from the LeetCode problem in two ways. The start value is arbitrary, and nodes that the start cannot reach are not copied.
 
 **Constraints.** The limits are:
 - **Nodes** satisfy `1 <= n <= 100`.

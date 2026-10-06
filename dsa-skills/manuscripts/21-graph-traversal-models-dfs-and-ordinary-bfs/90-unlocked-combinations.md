@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A flood fill that works on a picture can still miscount the islands on a map where land touches at corners. This chapter releases one pairing in full and names several that wait for later chapters.
+A flood fill that works on a picture counts two land cells that touch only at a corner as two islands, while the map maker meant one. The fix is a different list of moves, not a new algorithm. This chapter releases one pairing in full. Later chapters release the rest.
 
 ### Pairing Taught In This Chapter
 
@@ -9,4 +9,4 @@ A grid and a graph walk form the lesson Walk A Grid As A Graph. The grid supplie
 
 ### Pairings That Wait For Later Chapters
 
-Several pairings need a prerequisite that this chapter does not teach. Walks that start from several vertices at once, and walks that grow from both ends, change how the queue starts and when it stops, so chapter 22 owns them. Walks that merge groups as edges arrive need a structure that joins groups, which chapter 23 teaches as union-find. Weighted edges need a different order of removal from the queue and belong to chapter 24.
+Walks from several sources and from both ends belong to chapter 22. Merging groups as edges arrive needs union-find from chapter 23, and weighted edges need the queue order of chapter 24.

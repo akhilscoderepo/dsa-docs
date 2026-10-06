@@ -78,7 +78,7 @@ The search keeps a few named values, listed here with the roles they play in the
 
 #### Filling A Seven Cell Patch
 
-The first trace uses a table with three rows and three columns, flattened row by row into nine cells, so cell 4 is row 1, column 1. The source is cell 0, whose color is 1. The pointer `cur` marks the cell that leaves the frontier. The variable `frontier` shows the cell ids still waiting, and `reached` counts the cells that have joined the patch.
+The first trace uses a table with three rows and three columns, flattened row by row into nine cells, so cell 4 is row 1, column 1. The source is cell 0, whose color is 1. The pointer `cur` marks the cell that leaves the frontier. The variable `frontier` shows the cell ids still waiting, and `reached` counts the cells that have joined the patch. In the code below, `cur` is the variable `cur`, and `reached` equals the variable `size`.
 
 Cells 2 and 4 hold the color 0, so they block the patch. The patch still wraps around cell 4 through cells 3, 6, 7 and 8, and then reaches cell 5. The search stops after seven cells, and the frontier is empty.
 

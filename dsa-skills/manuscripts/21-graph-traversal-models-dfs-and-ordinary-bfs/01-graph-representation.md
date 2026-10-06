@@ -55,7 +55,7 @@ An undirected edge works both ways, so `[a, b]` makes `b` a neighbor of `a` and 
 
 #### Two Storage Layouts
 
-An **adjacency list** is an array `adj` of `n` lists, where `adj[v]` holds the neighbors of `v`. Reading the neighbors of one vertex costs the size of that list. The whole structure holds `n` lists and one entry per directed edge, so it takes O(n + m) space.
+An **adjacency list** is an array `adj` of `n` lists, where `adj[v]` holds the neighbors of `v`. Reading the neighbors of one vertex costs the size of that list. An undirected edge adds two entries, one in each endpoint's list, and a directed edge adds one. The whole structure holds `n` lists and one entry per directed edge, so it takes O(n + m) space.
 
 An **adjacency matrix** is an `n` by `n` grid of booleans, where cell `[a][b]` is true exactly when an edge leads from `a` to `b`. Asking whether one edge exists costs O(1). The grid takes O(n^2) space regardless of how many edges exist.
 
@@ -131,6 +131,8 @@ static List<List<Integer>> directed(int n, int[][] edges) {
 The loop creates one new list per vertex. A shortcut such as `Collections.nCopies(n, new ArrayList<Integer>())` fills the outer list with `n` references to one single list, so every vertex would share the same neighbors.
 
 #### Matrix Version And Costs
+
+The method `matrixOf` handles undirected edges only, because it sets both cells of each edge. A directed version would set `matrix[e[0]][e[1]]` alone.
 
 ```java
 static boolean[][] matrixOf(int n, int[][] edges) {
@@ -240,8 +242,8 @@ The matrix looks simpler, because one lookup answers an edge question. It is a f
 **Problem.** A star graph is an undirected graph with `n - 1` edges on vertices labeled 0 to n-1, where one vertex, the center, shares an edge with every other vertex, and no other edges exist. Given `edges`, return the center. This version numbers vertices from 0, not from 1.
 
 **Constraints.** The limits are:
-- **Vertices** satisfy `3 <= n <= 10^5`.
-- **Edges** satisfy `edges.length == n - 1`, and each row has two distinct endpoints.
+- **Vertices** number `n = edges.length + 1`, and `n` is not part of the input.
+- **Edges** satisfy `2 <= edges.length <= 10^5 - 1`, and each row has two distinct endpoints.
 - **Shape** is guaranteed to be a valid star graph, so the center is unique.
 - **Input** is not modified, so `edges` keeps its contents.
 

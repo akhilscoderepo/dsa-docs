@@ -5,9 +5,9 @@
 <!-- stage: context -->
 ### Why Some Pairs Must Be Separated
 
-A test suite has six test cases, numbered 0 to 5. Some pairs of tests write to the same database table, so the two tests in a pair must never run on the same machine. The suite has two machines. The pairs are `(0,1)`, `(2,3)`, `(3,4)` and `(4,2)`. A script starts at test 0, puts it on machine A, puts test 1 on machine B, and reports that the split works.
+A test suite has six test cases, numbered 0 to 5. Some pairs of tests write to the same database table, so the two tests in a pair must never run on the same machine. The suite has two machines. The pairs are `(0,1)`, `(2,3)`, `(3,4)` and `(4,2)`, and each pair is an edge between two tests. A script starts at test 0, puts it on machine A, puts test 1 on machine B, and reports that the split works.
 
-The report is wrong. Tests 2, 3 and 4 form a ring of three pairs, and no assignment of two machines separates every pair of a ring of three. The script never looked at them, because test 0 never reaches them through any pair.
+The report is wrong. Tests 2, 3 and 4 form a ring of three edges, and no assignment of two machines separates every edge of a ring of three. The script never looked at them, because test 0 never reaches them through any pair.
 
 The question of this lesson is how to decide, for a whole graph, whether every vertex can receive one of two colors so that each edge joins two different colors, and how to avoid the silent miss above.
 
@@ -59,7 +59,7 @@ The fix has two parts. A restart loop covers every component. A single rule deci
 
 #### What The Words Mean
 
-A graph is **bipartite** when its vertices can be split into two groups so that every edge joins a vertex of one group to a vertex of the other. Giving each vertex color 0 or 1 is the same split, and the two groups are the two colors. A **cycle** is a chain of edges that leads from a vertex back to itself without reusing an edge. An **odd cycle** is a cycle with an odd number of edges, such as the ring of three pairs in the suite. A **conflict** is an edge whose two endpoints hold the same color.
+A graph is **bipartite** when its vertices can be split into two groups so that every edge joins a vertex of one group to a vertex of the other. Giving each vertex color 0 or 1 is the same split, and the two groups are the two colors. A **cycle** is the closed path that the lesson Visited State defined. An **odd cycle** is a cycle with an odd number of edges, such as the ring of three edges in the suite. A **conflict** is an edge whose two endpoints hold the same color.
 
 <!-- names: bipartite, odd cycle, conflict -->
 
@@ -67,7 +67,7 @@ A graph is **bipartite** when its vertices can be split into two groups so that 
 
 After the source receives color 0, every other vertex of its component is forced. Each neighbor of a colored vertex must hold the opposite color, and a neighbor of that neighbor must hold the first color again. No choice remains, so a component has exactly one valid coloring up to swapping the two colors. The search therefore never needs to guess. It colors by the forced rule and watches for a conflict.
 
-A conflict proves the answer is no. A path is a chain of edges from one vertex to another, and colors alternate along every path the search follows. A path between two vertices of the same color therefore has an even number of edges. The conflicting edge joins those two vertices and adds one more edge, so the path and the edge form a cycle with an odd number of edges. The converse also holds. A graph without any odd cycle never produces a conflict, so the forced coloring succeeds. A graph is bipartite exactly when it has no odd cycle.
+A conflict proves the answer is no. Colors alternate along every path the search follows. A path between two vertices of the same color therefore has an even number of edges. The conflicting edge joins those two vertices and adds one more edge, so the path and the edge form a cycle with an odd number of edges. The converse also holds. A graph without any odd cycle never produces a conflict, so the forced coloring succeeds. A graph is bipartite exactly when it has no odd cycle.
 
 #### One Restart Rule Across Components
 
@@ -76,7 +76,7 @@ The components do not influence one another, because no edge joins them. The res
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search needs one array of colors, one queue and the names of the current pair of vertices.
+The search keeps five names.
 
 - **color** holds -1 for an uncolored vertex, and 0 or 1 once the vertex has a color.
 - **queue** holds colored vertices whose neighbors the search has not yet examined.
@@ -89,7 +89,7 @@ The search needs one array of colors, one queue and the names of the current pai
 
 #### A Graph That Passes
 
-The first graph has 6 vertices and the edges 0-1, 0-2, 1-3, 2-3 and 3-4. Vertex 5 has no edges. In the trace below, the pointer `cur` marks the vertex that the search takes from the queue.
+The first graph has 6 vertices and the edges 0-1, 0-2, 1-3, 2-3 and 3-4. Vertex 5 has no edges. In the trace below, the pointer `cur` marks the vertex that the search takes from the queue, which is the variable `u` in the code. The variable `color` in the trace is a string whose character `i` is the color of vertex `i`, and a dot means that the vertex is still uncolored.
 
 The search starts at vertex 0 with color 0 and colors vertices 1 and 2 with color 1. Vertex 1 colors vertex 3 with 0, and vertex 2 finds vertex 3 already holding 0, which differs from its own color 1. Vertex 3 then colors vertex 4 with 1. The restart loop reaches vertex 5, which is uncolored, and starts a second component there. That component has no edges, so it passes at once.
 
@@ -99,7 +99,7 @@ The search starts at vertex 0 with color 0 and colors vertices 1 and 2 with colo
 
 #### A Graph That Fails In Its Second Component
 
-The second graph has 6 vertices and the edges 0-1, 2-3, 3-4, 4-2 and 4-5. Vertices 2, 3 and 4 form a ring of three edges.
+The second graph has 6 vertices and the edges 0-1, 2-3, 3-4, 4-2 and 4-5. Vertices 2, 3 and 4 form a ring of three edges, the odd cycle of the opening example.
 
 The first component, vertices 0 and 1, passes in three steps. The restart loop then starts at vertex 2. Vertex 2 colors vertices 3 and 4 with color 1. When the search takes vertex 3 from the queue, it finds vertex 4 with the same color 1. That is a conflict, and the method stops with the answer false. Vertex 5 is never reached, and the method does not need it.
 
@@ -168,7 +168,7 @@ Checking only the component of vertex 0 is the false friend of this pattern. It 
 
 #### Java Hazards
 
-Initialize `color` with -1, not 0, because the default 0 would mean a vertex already holds the first color. Keep the equality test in front of the coloring step. An uncolored neighbor holds -1, which never equals 0 or 1, so the test cannot fire for it. A self-loop is a legal edge in some statements, and it must return false.
+Initialize `color` with -1, not 0, because the default 0 would mean a vertex already holds the first color. Keep the equality test in front of the coloring step, for the reason given after the code. A self-loop is a legal edge in some statements, and it must return false.
 
 <!-- stage: exercises -->
 ### Exercises

@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Build Finds False Cycles
 
-A build tool compiles four modules. Module 0 uses modules 1 and 2, and both of those use module 3. The tool runs a search over these dependencies and stops with the message "circular dependency". No module depends on itself, directly or through others. A **route** follows edges from vertex to vertex, and a **cycle** is a route that returns to its first vertex without using any listed edge twice. The four modules contain no cycle, so the message is wrong, and the project cannot compile until someone finds out why.
+A build tool compiles four modules. Module 0 uses modules 1 and 2, and both of those use module 3. The tool runs a search over these dependencies and stops with the message "circular dependency". No module depends on itself, directly or through others. Recall that a cycle is a path that returns to its first vertex without reusing an edge. The four modules contain no cycle, so the message is wrong, and the project cannot compile until someone finds out why.
 
 A second tool checks a network of switches joined by cables. A loop of cables can flood the network with endless copies of a packet, so the tool must find any loop. The tool reports a loop on a network that consists of one cable between two switches.
 
@@ -35,12 +35,12 @@ On the four modules, the search goes 0 to 1 to 3, backs up to 0, goes to 2 and f
 ```predict
 The method returns true for the four modules and for the two switches, and neither graph has a cycle. In each case, what is the marked vertex that the search sees again, and how is it related to the current vertex?
 
-For the switches, the marked vertex is the one the search just came from, reached over the same cable. For the modules, it is a vertex that the search completed earlier on another route. Neither returns to a route that is still open.
+For the switches, the marked vertex is the one the search just came from, reached over the same cable. For the modules, it is a vertex that the search finished earlier on another path. Neither is a vertex that is still being visited.
 ```
 
-A marked vertex has three possible relations to the current search. It can be the vertex that the search just left. It can be a vertex whose whole search is already complete. It can be a vertex on the route that is still open. Only the third relation closes a cycle. The naive method treats all three alike, so it is wrong on every graph that has a cable shared by two directions or a vertex reachable by two routes.
+A marked vertex has three possible relations to the current search. It can be the parent, the vertex that the search just left. It can be a finished vertex, whose search is complete. It can be a visiting vertex, whose call is still running on the current path. Only the third relation closes a cycle. The naive method treats all three alike, so it reports a cycle on a graph without one whenever the search sees a parent or a finished vertex.
 
-A **diamond** is a vertex that two different routes reach, as module 3 is in the first example. Trying every route to separate the cases would cost O(2^n) on a graph with many diamonds. A search that keeps a little more information about each vertex stays at O(n + m) for `n` vertices and `m` edges, because every edge is still examined a constant number of times.
+Module 3 in the first example is a finished vertex that two different paths reach. Trying every path to separate the cases would cost O(2^n) on a graph with many such vertices. A search that keeps a little more information about each vertex stays at O(n + m) for `n` vertices and `m` edges, because every edge is still examined a constant number of times.
 
 <!-- stage: insight -->
 ### Giving Each Vertex A Search State
@@ -55,13 +55,13 @@ An undirected edge between `u` and `v` appears in both neighbor lists. When the 
 
 #### Directed Edges Need Three States
 
-A directed edge `u` to `v` appears only in the list of `u`, so no edge is used twice. A marked neighbor can still be harmless, as the module `3` is. The search therefore gives each vertex one of three states. A vertex is unvisited before the search reaches it. It is **visiting** while its call is still open, which means it lies on the current route. It is **finished** after all of its neighbors are processed and its call returns.
+A directed edge `u` to `v` appears only in the list of `u`, so no edge is used twice. A marked neighbor can still be harmless, as the module `3` is. The search therefore gives each vertex one of three states. A vertex is unvisited before the search reaches it. It is **visiting** while its call has not returned, which means it lies on the current path. It is **finished** after all of its neighbors are processed and its call returns.
 
-An edge to a visiting vertex proves a cycle, because the route from that vertex down to the current vertex plus the new edge returns to the start. On the edges 0 to 1, 1 to 2 and 2 to 0, the call at vertex 2 reads the edge to vertex 0, which is visiting, and the route 0, 1, 2, 0 is a cycle. An edge to a finished vertex proves nothing. Every vertex that the finished vertex can reach was explored before it finished, and none of them leads back to a visiting vertex on the open route, or the search would already have reported it. In the module example, module 3 finishes under module 1 without reaching module 0, so the later edge from module 2 to module 3 closes no route.
+An edge to a visiting vertex proves a cycle, because the path from that vertex down to the current vertex plus the new edge returns to the start. On the edges 0 to 1, 1 to 2 and 2 to 0, the call at vertex 2 reads the edge to vertex 0, which is visiting, and the path 0, 1, 2, 0 is a cycle. An edge to a finished vertex proves nothing. Every vertex that the finished vertex can reach was explored before it finished, and none of them leads back to a visiting vertex, or the search would already have reported it. In the module example, module 3 finishes under module 1 without reaching module 0, so the later edge from module 2 to module 3 closes no cycle.
 
 #### Why The Rules Are Complete
 
-Both rules also work in the other direction. Every cycle contains a first vertex that the search enters, and the cycle then forces the search to reach an edge that returns to an open route. So the search misses no cycle, and it reports none that does not exist. On the triangle above, vertex 0 is the first vertex entered, and the edge from vertex 2 back to vertex 0 is the edge that the search reaches while vertex 0 is still open.
+Both rules also work in the other direction. Every cycle contains a first vertex that the search enters, and the cycle then forces the search to reach an edge that returns to a visiting vertex. So the search misses no cycle, and it reports none that does not exist. On the triangle above, vertex 0 is the first vertex entered, and the edge from vertex 2 back to vertex 0 is the edge that the search reaches while vertex 0 is still visiting.
 
 <!-- stage: variables -->
 ### What Each Search Keeps
@@ -78,7 +78,7 @@ The two searches keep different small records.
 
 #### A Cycle In An Undirected Graph
 
-The first graph has 5 vertices and the edges 0-1, 1-2, 2-3, 3-1 and 3-4. The trace below shows the DFS from vertex 0. The pointer `cur` marks the vertex whose neighbor list the search is reading.
+The first graph has 5 vertices and the edges 0-1, 1-2, 2-3, 3-1 and 3-4. The trace below shows the DFS from vertex 0. The pointer `cur` marks the vertex whose neighbor list the search is reading, which is the variable `u` in the code below. The strings `visited` and `state` hold one character per vertex, in vertex order.
 
 The search enters vertex 1 from vertex 0, and the list of vertex 1 begins with 0, the parent, so the search skips it. The search enters vertex 2 and then vertex 3. The list of vertex 3 holds vertex 2, which is the parent, and then vertex 1. Vertex 1 is marked and is not the parent of 3, so the search reports a cycle through 1, 2 and 3.
 
@@ -90,10 +90,10 @@ The search enters vertex 1 from vertex 0, and the list of vertex 1 begins with 0
 
 The second graph has 5 vertices and the directed edges 0 to 1, 1 to 2, 0 to 2, 0 to 3, 3 to 4 and 4 to 3.
 
-The search enters vertex 1 and then vertex 2. Vertex 2 has no outgoing edge, so it finishes, and vertex 1 finishes after it. Back at vertex 0, the edge to vertex 2 meets a finished vertex and is ignored. This case is the diamond that fooled the naive method. The search then enters 3 and 4. The edge from 4 returns to vertex 3, which is visiting, and the search reports the cycle.
+The search enters vertex 1 and then vertex 2. Vertex 2 has no outgoing edge, so it finishes, and vertex 1 finishes after it. Back at vertex 0, the edge to vertex 2 meets a finished vertex and is ignored. Vertex 2 is reached by two paths, which is the case that fooled the naive method. The search then enters 3 and 4. The edge from 4 returns to vertex 3, which is visiting, and the search reports the cycle.
 
 ```trace
-{"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"state":"10000"},"note":"Vertex 0 becomes visiting because its call is now open."},{"at":{"cur":1},"vars":{"state":"11000"},"note":"Vertex 1 becomes visiting because its call is now open."},{"at":{"cur":2},"vars":{"state":"11100"},"note":"Vertex 2 becomes visiting because its call is now open."},{"at":{"cur":2},"vars":{"state":"11200"},"note":"Every neighbor of vertex 2 is processed, so the vertex becomes finished."},{"at":{"cur":1},"vars":{"state":"12200"},"note":"Every neighbor of vertex 1 is processed, so the vertex becomes finished."},{"at":{"cur":0},"vars":{"state":"12200"},"note":"The edge from 0 reaches vertex 2, which is finished, so the search ignores it."},{"at":{"cur":3},"vars":{"state":"12210"},"note":"Vertex 3 becomes visiting because its call is now open."},{"at":{"cur":4},"vars":{"state":"12211"},"note":"Vertex 4 becomes visiting because its call is now open."},{"at":{"cur":4},"vars":{"state":"12211"},"note":"The edge from 4 reaches vertex 3, which is visiting, so the route returns to itself and a cycle exists."}]}
+{"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"state":"10000"},"note":"Vertex 0 becomes visiting because its call has started."},{"at":{"cur":1},"vars":{"state":"11000"},"note":"Vertex 1 becomes visiting because its call has started."},{"at":{"cur":2},"vars":{"state":"11100"},"note":"Vertex 2 becomes visiting because its call has started."},{"at":{"cur":2},"vars":{"state":"11200"},"note":"Every neighbor of vertex 2 is processed, so the vertex becomes finished."},{"at":{"cur":1},"vars":{"state":"12200"},"note":"Every neighbor of vertex 1 is processed, so the vertex becomes finished."},{"at":{"cur":0},"vars":{"state":"12200"},"note":"The edge from 0 reaches vertex 2, which is finished, so the search ignores it."},{"at":{"cur":3},"vars":{"state":"12210"},"note":"Vertex 3 becomes visiting because its call has started."},{"at":{"cur":4},"vars":{"state":"12211"},"note":"Vertex 4 becomes visiting because its call has started."},{"at":{"cur":4},"vars":{"state":"12211"},"note":"The edge from 4 reaches vertex 3, which is visiting, so the path returns to itself and a cycle exists."}]}
 ```
 
 <!-- stage: code -->
@@ -164,21 +164,31 @@ A recursive search on a path of 100000 vertices can overflow the Java call stack
 
 #### Recognizing The Cue
 
-Look for a statement that asks whether following edges can lead back to a place already on the route. Prerequisite lists, dependency graphs, ownership links and redundant cables all carry that cue. Decide first whether the edges are directed, because that choice selects the rule.
+Look for a statement that asks whether following edges can lead back to a vertex that is still being visited. Prerequisite lists, dependency graphs, ownership links and redundant cables all carry that cue. Decide first whether the edges are directed, because that choice selects the rule.
 
 #### The Invariant To Keep
 
-The invariant for the undirected rule is that every marked vertex other than the parent is a real cycle partner. The invariant for the directed rule is that the vertices in the visiting state form exactly the current route from the source. Each rule holds only while the state of a vertex changes at the right moment, on entry and on return.
+The invariant for the undirected rule is that every marked vertex other than the parent is a real cycle partner. The invariant for the directed rule is that the vertices in the visiting state form exactly the current path from the source. Each rule holds only while the state of a vertex changes at the right moment, on entry and on return.
 
 #### The False Friend
 
-Treating any marked neighbor as a cycle is the false friend of both rules. In an undirected graph, it fires on the edge to the parent. In a directed graph, it fires on a finished vertex, as in the diamond. A second near miss is to use the undirected rule on a directed graph, which loses cycles that use edge directions, or the directed rule on an undirected graph, which reports every edge as a cycle of two.
+Treating any marked neighbor as a cycle is the false friend of both rules. In an undirected graph, it fires on the edge to the parent. In a directed graph, it fires on a finished vertex, such as a vertex that two paths reach. A second near miss is to use the undirected rule on a directed graph, which loses cycles that use edge directions, or the directed rule on an undirected graph, which reports every edge as a cycle of two.
 
 #### Java Hazards
 
-Compare the parent by vertex number only when no two edges join the same pair of vertices. A repeated edge is a real cycle of two vertices, so a graph with repeated edges needs the parent edge identified by its index in the input. The method below stores each neighbor together with the index of its edge and skips only the one index it arrived by.
+Compare the parent by vertex number only when no two edges join the same pair of vertices. A repeated edge is a real cycle of two vertices, so a graph with repeated edges needs the parent edge identified by its index in the input. The method `buildArcs` stores each neighbor together with the index of its edge in a `List<List<int[]>>`, where each `int[]` holds the neighbor and the edge index. The method after it skips only the one index it arrived by.
 
 ```java
+static List<List<int[]>> buildArcs(int n, int[][] edges) {
+    List<List<int[]>> adj = new ArrayList<>();
+    for (int i = 0; i < n; i++) adj.add(new ArrayList<>());
+    for (int i = 0; i < edges.length; i++) {          // i is the edge index
+        adj.get(edges[i][0]).add(new int[] {edges[i][1], i});
+        adj.get(edges[i][1]).add(new int[] {edges[i][0], i});
+    }
+    return adj;
+}
+
 static boolean fromEdgeIndex(List<List<int[]>> adj, boolean[] visited, int u, int parentEdge) {
     visited[u] = true;
     for (int[] arc : adj.get(u)) {            // arc[0] is the neighbor, arc[1] the edge index
@@ -199,7 +209,7 @@ Set the finished state after the loop and not before it, because an early set ma
 
 **Prerequisites.** The parent rule of this lesson and the restart loop of Bipartite Coloring.
 
-**Problem.** An undirected graph has vertices `0..n-1` and edges in `edges`, where `edges[i] = [a, b]` joins `a` and `b`. A cycle is a route that returns to its first vertex without using any listed edge twice. Return true if the graph contains a cycle, and false otherwise. Use a DFS that passes the parent of each vertex, and report a cycle when a marked neighbor differs from the parent.
+**Problem.** An undirected graph has vertices `0..n-1` and edges in `edges`, where `edges[i] = [a, b]` joins `a` and `b`. A cycle is a path that returns to its first vertex without using any listed edge twice. Return true if the graph contains a cycle, and false otherwise. Use a DFS that passes the parent of each vertex, and report a cycle when a marked neighbor differs from the parent.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
@@ -210,7 +220,7 @@ Set the finished state after the loop and not before it, because an early set ma
 
 **Example 1.** Input `n = 5` and `edges = [[0,1],[1,2],[2,3],[3,1],[3,4]]`, output true.
 
-**Example 2.** Input `n = 5` and `edges = [[0,1],[1,2],[3,4]]`, output false, because the graph is a forest.
+**Example 2.** Input `n = 5` and `edges = [[0,1],[1,2],[3,4]]`, output false, because the edges 0-1, 1-2 and 3-4 close no cycle.
 
 **Hint.** When the search stands at `v` and reads the neighbor `u` it came from, which test must skip it?
 
@@ -221,7 +231,7 @@ Set the finished state after the loop and not before it, because an early set ma
 
 **Prerequisites.** The previous exercise and the three states of this lesson.
 
-**Problem.** A directed graph has vertices `0..n-1` and edges in `edges`, where `edges[i] = [a, b]` is an edge from `a` to `b`. A directed cycle is a route that follows edges in their direction and returns to its first vertex. Return true if the graph has a directed cycle, and false otherwise. Give every vertex one of three states during the DFS, and report a cycle on an edge to a vertex in the visiting state.
+**Problem.** A directed graph has vertices `0..n-1` and edges in `edges`, where `edges[i] = [a, b]` is an edge from `a` to `b`. A directed cycle is a path that follows edges in their direction and returns to its first vertex. Return true if the graph has a directed cycle, and false otherwise. Give every vertex one of three states during the DFS, and report a cycle on an edge to a vertex in the visiting state.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
@@ -234,7 +244,7 @@ Set the finished state after the loop and not before it, because an early set ma
 
 **Example 2.** Input `n = 4` and `edges = [[0,1],[1,2],[2,0],[3,0]]`, output true.
 
-**Hint.** Which of the three states means the vertex lies on the route that is still open?
+**Hint.** Which of the three states means the vertex is still being visited?
 
 **Changed decision.** Edges have direction, so one boolean per vertex is no longer enough and the method uses three states.
 

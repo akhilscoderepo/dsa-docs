@@ -12,7 +12,7 @@ Both failures come from one question: at which moment does the program record th
 <!-- stage: naive -->
 ### Marking When A Vertex Leaves The Queue
 
-Take a graph with five vertices numbered 0 to 4 and the undirected edges 0-1, 0-2, 1-3, 2-3 and 3-4. A path is a chain of edges that leads from one vertex to another. Vertex 3 has two paths from vertex 0, one through vertex 1 and one through vertex 2. The adjacency list is `adj`, and the vertex where the search starts is the source.
+Take a graph with five vertices numbered 0 to 4 and the undirected edges 0-1, 0-2, 1-3, 2-3 and 3-4. A path is a sequence of edges in which each edge starts at the vertex where the previous edge ends. Vertex 3 has two paths from vertex 0, one through vertex 1 and one through vertex 2. The adjacency list is `adj`, and the vertex where the search starts is the source.
 
 The natural first version of BFS keeps a boolean array `visited` and sets `visited[v]` when it takes `v` from the queue. It adds a neighbor to the queue only when `visited[w]` is still false.
 
@@ -56,7 +56,7 @@ The fix moves the mark to the moment the traversal decides to process a vertex. 
 
 #### Marking In Breadth-First Search
 
-BFS schedules a vertex when it adds the vertex to the queue. The queue is also called the frontier, because it holds vertices that the search has discovered and not yet expanded. The rule is to set `visited[w] = true` in the same step that adds `w`, and to enqueue means to make that addition. After that step, no later neighbor passes the test `!visited[w]`. Each vertex enters the frontier at most once, so the frontier never holds more than `n` entries in total.
+BFS schedules a vertex when it adds the vertex to the queue. The queue is also called the frontier, because it holds vertices that the search has discovered and not yet expanded. Enqueue means add to the queue. The rule is to set `visited[w] = true` in the same step that enqueues `w`. After that step, no later neighbor passes the test `!visited[w]`. Each vertex enters the frontier at most once, so the frontier never holds more than `n` entries in total.
 
 <!-- names: frontier, enqueue, stack -->
 
@@ -66,7 +66,7 @@ DFS schedules a vertex when it enters the vertex. In the recursive form, enterin
 
 #### Choosing The Mark Point
 
-The mark point is a choice with two sound answers. Marking when pushing keeps every container free of duplicates, and it suits BFS, where the order of discovery already fixes the visit order. Marking at entry, which is the pop, suits iterative DFS when the exact depth-first order matters. A stale copy that reaches the top of the stack is then skipped by one test. A stale copy is harmless only because that test exists. Marking at dequeue in BFS has no such repair in the naive code above, so the copies expand.
+The mark point is a choice with two sound answers. Marking when pushing keeps every container free of duplicates, and it suits BFS, where the order of discovery already fixes the visit order. Marking at entry, which is the pop, suits iterative DFS when the exact depth-first order matters. A stale copy is an entry for a vertex that an earlier entry already marked. When a stale copy reaches the top of the stack, one test skips it, and it is harmless only because that test exists. Marking at dequeue in BFS has no such repair in the naive code above, so the copies expand.
 
 <!-- stage: variables -->
 ### State Kept By A Traversal
@@ -84,7 +84,7 @@ A new `boolean[n]` holds `false` in every slot, so a traversal needs no filling 
 
 #### Two Paths To The Same Vertex
 
-The first trace uses the graph from the naive stage, with five vertices and the source 0. The cells are the vertex numbers, and the pointer `cur` marks the vertex that has just left the frontier. The variable `frontier` lists the vertices waiting after each step, and `visited` lists the vertices marked so far.
+The first trace uses the graph from the naive stage, with five vertices and the source 0. The cells are the vertex numbers, and the pointer `cur` marks the vertex that has just left the frontier. The pointer `cur` is the variable `v` in the code below, and `frontier` and `visited` keep their names there. The variable `frontier` lists the vertices waiting after each step, and `visited` lists the vertices marked so far.
 
 Vertex 0 schedules vertices 1 and 2. Vertex 1 schedules vertex 3. When vertex 2 expands, vertex 3 is already marked, so vertex 2 schedules nothing. That step removes the repeated entry that the naive method creates. Vertex 3 then schedules vertex 4, and the search ends with each vertex scheduled once.
 
@@ -96,7 +96,7 @@ Vertex 0 schedules vertices 1 and 2. Vertex 1 schedules vertex 3. When vertex 2 
 
 The second trace uses five vertices and the directed edges 0 to 1, 1 to 2, 2 to 0 and 2 to 3, with the source 0. Vertex 4 has no edge that leads to it.
 
-A cycle is a chain of edges that leads from a vertex back to itself. The edge from vertex 2 back to vertex 0 meets a marked vertex, so the cycle ends there. The trace finishes with an empty frontier, and vertex 4 was never marked. The unmarked cell is the correct answer, because no path from the source reaches vertex 4.
+A cycle is a path of one or more edges that leads from a vertex back to itself without reusing an edge. The edge from vertex 2 back to vertex 0 meets a marked vertex, so the cycle ends there. The trace finishes with an empty frontier, and vertex 4 was never marked. The unmarked cell is the correct answer, because no path from the source reaches vertex 4.
 
 ```trace
 {"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"frontier":"[1]","visited":"[0,1]"},"note":"Vertex 0 marks vertex 1 and adds it to the frontier."},{"at":{"cur":1},"vars":{"frontier":"[2]","visited":"[0,1,2]"},"note":"Vertex 1 reaches and marks vertex 2 and adds it to the frontier."},{"at":{"cur":2},"vars":{"frontier":"[3]","visited":"[0,1,2,3]"},"note":"Vertex 2 has an edge back to marked vertex 0, so the cycle stops there, and it adds vertex 3."},{"at":{"cur":3},"vars":{"frontier":"[]","visited":"[0,1,2,3]"},"note":"Vertex 3 has no outgoing edge, so nothing joins the frontier."},{"at":{"cur":-1},"vars":{"frontier":"[]","visited":"[0,1,2,3]"},"note":"The frontier is empty. Vertex 4 was never marked, because no edge leads to it from a marked vertex."}]}
@@ -154,7 +154,8 @@ static List<Integer> dfsOrder(List<List<Integer>> adj, int source) {
 #### Cost Of The Traversal
 
 - **Time** is O(V + E), because each vertex is scheduled once and each adjacency entry is read once.
-- **Space** is O(V), because `visited` and the frontier each hold at most V entries.
+- **Space** of `reach` is O(V), because `visited` and the frontier each hold at most V entries, since each vertex enters the frontier once.
+- **Space** of `dfsOrder` is O(V + E), because the stack marks at the pop and may hold one stale copy for each adjacency entry.
 
 <!-- stage: applicability -->
 ### Deciding Where To Mark
@@ -208,6 +209,7 @@ Test `visited[w]` before the push and not after the pop, unless the code also sk
 - **Vertices** satisfy `1 <= n <= 10^5`.
 - **Edges** satisfy `0 <= edges.length <= 2 * 10^5`.
 - **Endpoints** satisfy `0 <= a, b < n` and `a != b`.
+- **Source** satisfies `0 <= source < n`.
 - **Repeats** may occur, so the same edge can appear more than once.
 - **Return** is an `int[]` of recorded vertices, and neither input changes.
 
@@ -230,6 +232,7 @@ Test `visited[w]` before the push and not after the pop, unless the code also sk
 - **Vertices** satisfy `1 <= n <= 10^5`.
 - **Edges** satisfy `0 <= edges.length <= 2 * 10^5`.
 - **Endpoints** satisfy `0 <= from, to < n`.
+- **Source** satisfies `0 <= source < n`.
 - **Self-loops** may occur, so `from` can equal `to`.
 - **Repeats** may occur, so the same edge can appear more than once.
 - **Return** is an `int[]`, empty when every vertex is reachable.

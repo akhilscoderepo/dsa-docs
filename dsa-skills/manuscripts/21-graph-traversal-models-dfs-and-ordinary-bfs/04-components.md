@@ -53,7 +53,7 @@ The repair is simple to state. The unreached vertices form a graph of their own,
 
 #### Defining A Component
 
-A **component** of an undirected graph is a maximal set of vertices in which every pair is joined by a path, which is a chain of edges. Maximal means that the set cannot grow, because no edge leaves it. Every vertex belongs to exactly one component. A graph with more than one component is **disconnected**. A vertex with no edge is an **isolated vertex**, and it forms a component of size 1.
+A **component** of an undirected graph is a maximal set of vertices in which every pair is joined by a path, as the lesson Visited State defined it. Maximal means that the set cannot grow, because no edge leaves it. Every vertex belongs to exactly one component. A graph with more than one component is **disconnected**. A vertex with no edge is an **isolated vertex**, and it forms a component of size 1.
 
 <!-- names: component, disconnected, isolated vertex -->
 
@@ -63,11 +63,11 @@ The algorithm keeps `visited` for the whole run and loops over every vertex numb
 
 #### Why Each Start Finds One New Component
 
-The invariant is that every outer-loop start on an unmarked vertex discovers exactly one new component. The vertex is unmarked, so no earlier search reached it, and its component is new. The search reaches all of that component, because the component is closed under edges. The search reaches nothing outside it, because no edge leaves it. After the search, the whole component is marked, so no later start can find it again. The counter therefore equals the number of components. The size of the search, meaning the number of vertices it marks, equals the size of the component.
+The invariant is that every outer-loop start on an unmarked vertex discovers exactly one new component. The vertex is unmarked, so no earlier search reached it, and its component is new. The search reaches all of that component, because every edge at a vertex of the component leads to another vertex of the component. The search reaches nothing outside it, because no edge leaves it. After the search, the whole component is marked, so no later start can find it again. The counter therefore equals the number of components. The size of the search, meaning the number of vertices it marks, equals the size of the component.
 
-#### Joining Components With Edges
+#### Edges Needed To Connect
 
-An added edge between two different components merges them into one, and an edge inside a component changes nothing. One edge therefore lowers the component count by at most 1. A graph with `c` components needs exactly `c - 1` added edges to become connected.
+An added edge between two different components merges them into one, and an edge inside a component changes nothing. One edge therefore lowers the component count by at most 1. A graph with `c` components needs at least `c - 1` added edges to become connected. Exactly `c - 1` edges suffice, because each edge can join one component to the next in a chain of components.
 
 <!-- stage: variables -->
 ### State For Counting Components
@@ -86,7 +86,7 @@ Resetting `visited` between starts would make every start look new and would cou
 
 #### Three Components In Six Vertices
 
-The first trace uses the graph from the naive stage, with the edges 0-1, 1-2 and 3-4. The cells are the vertices, and the pointer `start` marks the vertex that the outer loop examines. The variable `marked` lists the vertices that are marked after the step.
+The first trace uses the graph from the naive stage, with the edges 0-1, 1-2 and 3-4. The cells are the vertices, and the pointer `start` marks the vertex that the outer loop examines. The variable `marked` lists the vertices that are marked after the step, which are the true entries of `visited` in the code below.
 
 The loop starts a search at vertex 0 and finds three vertices. It skips vertices 1 and 2, which are marked. It starts a second search at vertex 3 and finds two vertices. Vertex 4 is skipped, and vertex 5 starts a third search that finds one vertex.
 

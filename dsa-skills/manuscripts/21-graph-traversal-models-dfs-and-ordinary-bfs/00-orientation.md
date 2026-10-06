@@ -5,7 +5,7 @@ A route planner reports that a city is unreachable, but a friend drives there ev
 
 ### Prerequisites
 
-You should know recursion, queues and hash maps. Chapter 15 taught depth-first search on trees, which lessons 03, 06 and 09 extend to graphs that can contain cycles. Chapter 16 taught breadth-first search by levels, which lessons 07 and 08 reuse. Chapter 19 taught recursion with undo, which lesson 06 needs. Chapter 04 taught `HashMap`, which lesson 02 uses for the identity map. Code samples assume `import java.util.*;` and a recent JDK.
+You should know recursion, queues and hash maps. Chapter 15 taught depth-first search on trees, which lessons 02, 03, 04, 06 and 09 extend to graphs that can contain cycles. Chapter 16 taught breadth-first search by levels, which lessons 03, 05, 07 and 08 reuse. Chapter 19 taught recursion with undo, which lesson 06 needs. Chapter 04 taught `HashMap`, which lesson 02 uses for the identity map. Code samples assume `import java.util.*;` and a recent JDK.
 
 ### The Nine Lessons
 
@@ -19,13 +19,13 @@ Each lesson adds one piece of state to a graph walk.
 - **Path Enumeration** lists every route and removes the last vertex after each branch.
 - **Unweighted Shortest Paths** uses a queue so the first discovery of a vertex is the shortest.
 - **Bipartite Coloring** gives each vertex one of two colors so that the ends of every edge differ, and reports the first conflict.
-- **Cycle Detection** separates the edge back to the parent from a real cycle, and a finished vertex from an active one.
+- **Cycle Detection** separates the edge back to the parent from a real cycle, and a finished vertex from one that is still being visited.
 
 ### The Combination Lesson
 
 One lesson joins two ideas from this chapter.
 
-- **Walk A Grid As A Graph** adds the grid neighbors of lesson 05 to the discovery rules of lessons 02 to 04 and changes the question asked of the walk in four ways.
+- **Walk A Grid As A Graph** joins the grid neighbors of lesson 05 with the map from original to copy of lesson 02, and changes the question asked of the walk in four ways.
 
 ### How To Work Through Each Lesson
 
@@ -41,4 +41,4 @@ Three ideas carry forward.
 
 - **Mark a vertex when it is scheduled** returns in every search with a queue, including the variations of chapter 22.
 - **Treat an implicit structure as a graph** returns whenever a state has legal moves, such as a word, a key set or a board.
-- **Separate active vertices from finished ones** returns in the topological order of chapter 23.
+- **Separate vertices being visited from finished ones** returns in the topological order of chapter 23.
