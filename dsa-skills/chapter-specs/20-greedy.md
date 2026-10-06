@@ -133,7 +133,7 @@ Greedy reasoning identifies which past option should be committed or discarded; 
 - **Boundary - LC 630 Course Schedule III.** Remove the longest retained duration whenever a deadline becomes infeasible.
 - **Recognize - LC 502 IPO.** Add projects as capital makes them eligible and select the largest available profit.
 
-### Greedy And Monotonic Stack
+### Drop Earlier Items With A Stack
 
 The greedy proof permits removing a worse earlier choice while removals remain; the stack exposes the nearest such choice and preserves output order. A normal monotonic stack has no removal budget or final-length contract.
 
