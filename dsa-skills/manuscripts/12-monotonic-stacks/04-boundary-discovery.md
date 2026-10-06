@@ -61,7 +61,7 @@ Equal values must pop. An earlier equal value is not smaller, so it cannot be a 
 
 The **next smaller index** of `i` is the smallest `j > i` with `nums[j] < nums[i]`. Scan from left to right and keep a stack whose values never decrease from bottom to top. A new value pops every top that is strictly greater than it. For each popped top, the new index is the first smaller value after it, so it is that top's next smaller index.
 
-Here equal values must stay. An equal later value is not smaller, so it does not resolve the top. Both sides follow the same rule: a boundary is always strictly smaller.
+Here equal values must stay. An equal later value is not smaller, so it does not resolve the top. This lesson uses a strictly smaller boundary on both sides. The next lesson changes the rule on one side.
 
 #### A Missing Side Needs A Sentinel
 

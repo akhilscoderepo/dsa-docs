@@ -39,7 +39,7 @@ A chart has 100000 bars. How many pairs of end bars does the method try?
 About 5 x 10^9. A chart of n bars has n x (n + 1) / 2 pairs, and 100000 x 100001 / 2 is about 5 x 10^9.
 ```
 
-The method takes O(n^2) time for `n` bars, and a chart with a hundred thousand bars takes minutes. Almost all of those pairs are wasted. In the heights 6, 2, 5, 4, 5, 1, 6, the pair from index 2 to index 3 has height 4. The pair from index 2 to index 4 has the same height 4 and a larger width, so the first pair can never be the best.
+The method takes O(n^2) time for `n` bars, and a chart with a hundred thousand bars takes seconds and grows fourfold when the chart doubles. Almost all of those pairs are wasted. In the heights 6, 2, 5, 4, 5, 1, 6, the pair from index 2 to index 3 has height 4. The pair from index 2 to index 4 has the same height 4 and a larger width, so the first pair can never be the best.
 
 For each height, only the widest banner can matter. The widest banner at the height of bar `i` stretches until the first shorter bar on each side. The previous lessons found nearest smaller values on both sides, so the width is ready to compute.
 

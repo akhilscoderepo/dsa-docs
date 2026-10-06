@@ -5,16 +5,16 @@
 <!-- stage: context -->
 ### Scoring Every Range Of A Latency Log
 
-A monitoring service stores one response time per minute. To score a day, it takes every range of consecutive minutes, finds the fastest response inside the range, and adds all those fastest times. A log of 1,000 minutes has about 500,000 ranges, and the score appears at once. A log of 100,000 minutes has about 5 billion ranges, and the same code runs for minutes.
+A monitoring service stores one response time per minute. To score a day, it takes every range of consecutive minutes, finds the fastest response inside the range, and adds all those fastest times. A log of 1,000 minutes has about 500,000 ranges, and the score appears at once. A log of 100,000 minutes has about 5 billion ranges, and the same code needs several seconds and grows fourfold when the log doubles.
 
-The service needs the same score without visiting every range. This lesson asks how one scan of the log can add up the fastest response of every range, and how the same scan finds the largest rectangle under a bar chart.
+The service needs the same score without visiting every range. This lesson asks how one scan of the log can add up the fastest response of every range, and how the same scan sums the largest value of every range.
 
 <!-- stage: contributions -->
 ### What Each Earlier Idea Adds
 
 Two kinds of earlier work meet here, and each supplies a different half of the answer. The stack lessons of Chapter 11 supply the container. A stack holds the indices that still wait for a decision, and the top is always the newest of them. The first lessons of this chapter add an order to that stack. When an arriving value beats the top, the top leaves, and the arriving index becomes the first value on its right that beats it.
 
-The later lessons of this chapter supply the counting. A leaving index also has a left neighbor, which is the new top of the stack. The two neighbors fence a region in which the leaving value is the extreme, and the tie lesson fixes which of two equal values owns a shared region. The width lesson turns a fenced region into an area. Alone, the ordered stack names neighbors but counts nothing. Alone, the counting formulas need neighbors and have no cheap way to find them. Together they answer both questions at the moment a value leaves.
+The later lessons of this chapter supply the counting. In the array 3, 5, 3, 4, the 5 at index 1 has the smaller neighbors at index 0 and index 2. The two neighbors limit the ranges where 5 is the largest to the ranges that contain index 1 and stay between them. The tie lesson decides which of two equal values owns a range that holds both, and the rectangle lesson turns the distance between neighbors into a width. Alone, the ordered stack names neighbors but counts nothing. Alone, the counting formulas need neighbors and have no cheap way to find them. Together they answer both questions at the moment a value leaves.
 
 <!-- stage: naive -->
 ### Take The Minimum Of Every Range
@@ -41,12 +41,12 @@ The method is correct for any log. It visits every pair `(from, to)` with `from 
 ### Most Of The Work Repeats One Answer
 
 ```predict
-The log is 2, 5, 3, 5. It has 10 ranges. Which index is the minimum of the most ranges, and how many ranges does each index win?
+The log is 2, 5, 3, 5. It has 10 ranges. An index owns a range when its value is the minimum of that range. How many ranges does each index own?
 
-Index 0 and index 2 each win 4 ranges, and index 1 and index 3 each win 1. Index 0 wins every range that starts at 0. Index 2 wins the four ranges inside indices 1 to 3 that contain index 2. The four counts add up to 10.
+Index 0 and index 2 each own 4 ranges, and index 1 and index 3 each own 1. Index 0 owns every range that starts at 0. Index 2 owns the four ranges inside indices 1 to 3 that contain index 2. The four counts add up to 10.
 ```
 
-The method visits `n * (n + 1) / 2` ranges, so its cost is O(n^2). Most of that work repeats one answer. The ranges that start at index 0 and end at index 3 all report the value 2, and the method rediscovers 2 as their minimum every time. A faster method must count how many ranges report each value, then multiply by the value, so that each index is handled once.
+The method visits `n * (n + 1) / 2` ranges, so its cost is O(n^2). Most of that work repeats one answer. The four ranges that start at index 0 all report the value 2, and the method rediscovers 2 as their minimum every time. A faster method must count how many ranges report each value, then multiply by the value, so that each index is handled once.
 
 <!-- stage: insight -->
 ### Count A Value As It Leaves
@@ -88,11 +88,9 @@ The second trace runs the same log by maximums. The method changes one compariso
 ```trace
 {"cells":[3,5,3,4],"pointers":["j"],"steps":[{"at":{"j":0},"vars":{"stack":"[0]","owned":"[0,0,0,0]"},"note":"The reading 3 arrives. Nothing leaves the stack."},{"at":{"j":1},"vars":{"stack":"[0,1]","owned":"[0,0,0,0]"},"note":"The reading 5 arrives. Nothing leaves the stack."},{"at":{"j":2},"vars":{"stack":"[2]","owned":"[2,1,0,0]"},"note":"The reading 3 arrives. Index 1 leaves with left boundary 0 and right boundary 2, so it owns 1. Index 0 leaves with left boundary -1 and right boundary 2, so it owns 2."},{"at":{"j":3},"vars":{"stack":"[2,3]","owned":"[2,1,0,0]"},"note":"The reading 4 arrives. Nothing leaves the stack."},{"at":{"j":4},"vars":{"stack":"[]","owned":"[2,1,6,1]"},"note":"The closing step arrives. Index 3 leaves with left boundary 2 and right boundary 4, so it owns 1. Index 2 leaves with left boundary -1 and right boundary 4, so it owns 6."}]}
 ```
-```
 
 ```trace
 {"cells":[3,5,3,4],"pointers":["j"],"steps":[{"at":{"j":0},"vars":{"stack":"[0]","owned":"[0,0,0,0]"},"note":"The reading 3 arrives. Nothing leaves the stack."},{"at":{"j":1},"vars":{"stack":"[1]","owned":"[1,0,0,0]"},"note":"The reading 5 arrives. Index 0 leaves with left boundary -1 and right boundary 1, so it owns 1."},{"at":{"j":2},"vars":{"stack":"[1,2]","owned":"[1,0,0,0]"},"note":"The reading 3 arrives. Nothing leaves the stack."},{"at":{"j":3},"vars":{"stack":"[1,3]","owned":"[1,0,1,0]"},"note":"The reading 4 arrives. Index 2 leaves with left boundary 1 and right boundary 3, so it owns 1."},{"at":{"j":4},"vars":{"stack":"[]","owned":"[1,6,1,2]"},"note":"The closing step arrives. Index 3 leaves with left boundary 1 and right boundary 4, so it owns 2. Index 1 leaves with left boundary -1 and right boundary 4, so it owns 6."}]}
-```
 ```
 
 <!-- stage: code -->

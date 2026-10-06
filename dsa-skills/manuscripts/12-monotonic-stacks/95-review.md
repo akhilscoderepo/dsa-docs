@@ -6,7 +6,7 @@ Come back to this page after the lessons and again a few days later. Each questi
 ### Recognition Questions
 
 ```quiz
-{"id": "ms-rev-first-larger", "q": "The values 2, 7, 4, 9 arrive in order, and the stack removes every top value smaller than the arriving value. Which indices does the value 9 resolve?", "options": ["Indices 0, 1 and 2", "Indices 1 and 2", "Index 2 only", "Index 3 itself"], "answer": 1, "explain": "The value 7 already removed index 0 when it arrived. At that point the stack holds indices 1 and 2. The value 9 removes both of them, and index 3 stays because nothing larger follows."}
+{"id": "ms-rev-first-larger", "q": "The values 2, 7, 4, 9 arrive in order, and the stack removes every top value smaller than the arriving value. Which indices does the value 9 resolve?", "options": ["Indices 1 and 2", "Indices 0, 1 and 2", "Index 2 only", "Index 3 itself"], "answer": 0, "explain": "The value 7 already removed index 0 when it arrived. At that point the stack holds indices 1 and 2. The value 9 removes both of them, and index 3 stays because nothing larger follows."}
 ```
 
 ```quiz

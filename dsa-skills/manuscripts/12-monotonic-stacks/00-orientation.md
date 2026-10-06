@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A weather report lists a temperature for every day and asks how many days pass until a warmer one. A loop that scans forward from each day answers a year of data at once and takes minutes on ten years of hourly readings. A price chart asks for the widest stretch of days that stays above a given low, and the same loop fails the same way. This chapter shows how one scan with a stack answers both questions, and why each value is looked at only a constant number of times.
+A weather report lists a temperature for every day and asks how many days pass until a warmer one. A loop that scans forward from each day answers a year of data at once and slows down sharply as the data grows. A bar chart asks for the largest rectangle that fits under its bars, and the same loop fails the same way. This chapter shows how one scan with a stack answers both questions, and why each value is looked at only a constant number of times.
 
 ### Prerequisites
 
@@ -23,7 +23,7 @@ Each lesson adds one decision about when an index leaves the stack and what the 
 
 One lesson joins the stack with the counting lessons.
 
-- **Count Subarrays From Stack Boundaries** computes the count and the contribution of each index at the moment it leaves, and it uses one loop for minimums, maximums and rectangles.
+- **Count Subarrays From Stack Boundaries** computes the count and the contribution of each index at the moment it leaves, and it uses one loop for sums of minimums and of maximums, and its exercises add the rectangle.
 
 ### How To Work Through Each Lesson
 

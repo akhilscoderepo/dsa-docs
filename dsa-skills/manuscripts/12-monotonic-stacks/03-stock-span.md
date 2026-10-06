@@ -28,7 +28,7 @@ static int[] spansByWalking(int[] prices) {
 }
 ```
 
-For the prices 30, 25, 20, 22, the walk for the 22 covers the 20 and stops at the 25, so the span is 2. The method is correct for a day with a nearby larger price.
+For the prices 30, 25, 20, 22, the walk for the 22 covers the 20 and stops at the 25, so the span is 2.
 
 <!-- stage: bottleneck -->
 ### A Rising Feed Rereads Everything
@@ -79,7 +79,7 @@ In the index version, `span` equals `i` minus the index left on top. In the pair
 
 The first trace reads 30, 25, 20, 22, 22, 28, 40, 10. The stack lists day indices. A price pops every earlier day with a price at most its own. The span is the current index minus the top that survives, or `i + 1` when the stack becomes empty.
 
-The 22 at index 3 pops the 20 and stops at the 25, so its span is 2. The next 22 pops the equal 22 at index 3 and stops at the 25, so its span is 3. The 28 pops both 22 days and the 25, then stops at the 30, so its span is 5.
+The 22 at index 3 pops the 20 and stops at the 25, so its span is 2. The next 22 pops the equal 22 at index 3 and stops at the 25, so its span is 3. The 28 pops the 22 at index 4 and the 25, then stops at the 30, so its span is 5.
 
 ```trace
 {"cells":[30,25,20,22,22,28,40,10],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[0]","span":1},"note":"The boundary is -1, so the span is 0 - (-1) = 1, and index 0 goes on the stack."},{"at":{"i":1},"vars":{"stack":"[0, 1]","span":1},"note":"The boundary is 0, so the span is 1 - (0) = 1, and index 1 goes on the stack."},{"at":{"i":2},"vars":{"stack":"[0, 1, 2]","span":1},"note":"The boundary is 1, so the span is 2 - (1) = 1, and index 2 goes on the stack."},{"at":{"i":3},"vars":{"stack":"[0, 1]","span":"-"},"note":"Price 22 is at least prices[2] = 20, so index 2 leaves the stack."},{"at":{"i":3},"vars":{"stack":"[0, 1, 3]","span":2},"note":"The boundary is 1, so the span is 3 - (1) = 2, and index 3 goes on the stack."},{"at":{"i":4},"vars":{"stack":"[0, 1]","span":"-"},"note":"Price 22 is at least prices[3] = 22, so index 3 leaves the stack."},{"at":{"i":4},"vars":{"stack":"[0, 1, 4]","span":3},"note":"The boundary is 1, so the span is 4 - (1) = 3, and index 4 goes on the stack."},{"at":{"i":5},"vars":{"stack":"[0, 1]","span":"-"},"note":"Price 28 is at least prices[4] = 22, so index 4 leaves the stack."},{"at":{"i":5},"vars":{"stack":"[0]","span":"-"},"note":"Price 28 is at least prices[1] = 25, so index 1 leaves the stack."},{"at":{"i":5},"vars":{"stack":"[0, 5]","span":5},"note":"The boundary is 0, so the span is 5 - (0) = 5, and index 5 goes on the stack."},{"at":{"i":6},"vars":{"stack":"[0]","span":"-"},"note":"Price 40 is at least prices[5] = 28, so index 5 leaves the stack."},{"at":{"i":6},"vars":{"stack":"[]","span":"-"},"note":"Price 40 is at least prices[0] = 30, so index 0 leaves the stack."},{"at":{"i":6},"vars":{"stack":"[6]","span":7},"note":"The boundary is -1, so the span is 6 - (-1) = 7, and index 6 goes on the stack."},{"at":{"i":7},"vars":{"stack":"[6, 7]","span":1},"note":"The boundary is 6, so the span is 7 - (6) = 1, and index 7 goes on the stack."}]}
