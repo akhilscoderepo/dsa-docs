@@ -123,7 +123,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Stack And Contribution Counting
+### Count Subarrays From Stack Boundaries
 
 An ordinary stack preserves unresolved positions. Monotonic ordering proves that dominated positions can be resolved, while boundary distances convert the result into widths or numbers of subarrays. Contribution counting additionally needs an explicit equality ownership rule.
 

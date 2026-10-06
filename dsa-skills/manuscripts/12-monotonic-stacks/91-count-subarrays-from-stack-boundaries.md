@@ -134,7 +134,7 @@ Use this method when the answer is a sum or a maximum over regions, and each reg
 
 #### Finding The False Friend
 
-The false friend is the wrong tie rule. If both sides stop at equal values, two equal values each claim the ranges that hold both, and the total grows too large. If neither side stops at equal values, no index owns those ranges, and the total shrinks. The tie rule must treat one side strictly and the other side non-strictly. A second false friend is a sum of values inside the range. A range sum needs prefix sums, and no boundary pair determines it.
+The false friend is the wrong tie rule. If both sides stop at equal values, no index owns the ranges that hold both, and the total shrinks. If neither side stops at equal values, two equal values each claim those ranges, and the total grows too large. The tie rule must treat one side strictly and the other side non-strictly. A second false friend is a sum of values inside the range. A range sum needs prefix sums, and no boundary pair determines it.
 
 #### No-Go Conditions
 
