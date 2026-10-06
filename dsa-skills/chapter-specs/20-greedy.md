@@ -115,7 +115,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Greedy And Ordering
+### Sort Then Commit Greedily
 
 Ordering makes the next locally dominant choice visible; the greedy proof explains why committing to it preserves an optimal completion. Sorting without the proof is only a heuristic.
 
