@@ -211,7 +211,7 @@ The rule is unnecessary when all values are distinct, because no ties occur. It 
 
 **Example 2.** Input `[5,1,5,1,5]`, output `[1,4,1,8,1,15]`.
 
-**Hint.** An all-equal array is the extreme tie case. Which side of each index stops at its neighbor, and which side runs to the array end?
+**Hint.** An all-equal array is the extreme tie case. Which side of each index stops at its neighbor, and which side runs to the array start?
 
 **Changed decision.** The output adds a checked total, so a wrong tie rule shows up as a wrong sum.
 

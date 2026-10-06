@@ -53,7 +53,7 @@ The method visits `n * (n + 1) / 2` ranges, so its cost is O(n^2). Most of that 
 
 #### One Pop Gives Both Neighbors
 
-The method scans the log with a stack of indices whose values never decrease from bottom to top. When the value at index `j` is less than or equal to the value at the top, the top leaves. The index `j` is then the right boundary of the leaving index `t`, which is the first value on its right that is not larger. The index below `t` on the stack is its left boundary, which is the last strictly smaller value on its left, or `-1` for an empty stack. Every range that contains `t` and stays strictly between the two boundaries has the value at `t` as its minimum.
+The method scans the log with a stack of indices with strictly rising values from bottom to top, because an equal value removes the top. When the value at index `j` is less than or equal to the value at the top, the top leaves. The index `j` is then the right boundary of the leaving index `t`, which is the first value on its right that is not larger. The index below `t` on the stack is its left boundary, which is the last strictly smaller value on its left, or `-1` for an empty stack. Every range that contains `t` and stays strictly between the two boundaries has the value at `t` as its minimum.
 
 #### The Owned Count Is A Product
 
@@ -70,13 +70,13 @@ Two equal values must not both claim a range that contains them. The **tie rule*
 
 The scan keeps five pieces of state.
 
-- **stack** holds indices whose values never decrease from bottom to top, and the top is the newest.
+- **stack** holds indices with strictly rising values from bottom to top, and the top is the newest.
 - **j** is the index of the arriving value, and it runs from 0 to `n`, where `n` marks the closing step.
 - **t** is the index that just left the stack, and the pass reads its value once.
 - **left** is the index now on top of the stack after `t` leaves, or `-1` when the stack is empty.
 - **total** is the running score, held in a `long`, because a sum over billions of ranges overflows `int`.
 
-The owned count of `t` is computed from `left`, `t` and `j`, and the method does not store it.
+The owned count of `t` is computed from `left`, `t` and `j`. The traces keep an `owned` array only to display it.
 
 <!-- stage: trace -->
 ### Following Pops And Owned Counts
@@ -136,7 +136,7 @@ The false friend is the wrong tie rule. If both sides stop at equal values, no i
 
 #### No-Go Conditions
 
-Do not use the method when a range does not have one limiting value, such as a count of distinct values or a median. Do not use it when a removal must stay within a fixed budget, because the stack alone never proves that a removal is safe. A later chapter on greedy proofs covers that case.
+Do not use the method when a range does not have one limiting value, such as a count of distinct values or a median. Do not use it when a removal must stay within a fixed budget, because the stack alone never proves that a removal is safe. Chapter 20 on greedy proofs covers that case.
 
 <!-- stage: exercises -->
 ### Exercises

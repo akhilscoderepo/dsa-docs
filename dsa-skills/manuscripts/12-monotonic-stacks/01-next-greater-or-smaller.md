@@ -44,7 +44,7 @@ About 5 x 10^9. No value has a greater value after it, so the walk from index i 
 
 The worst case is O(n^2) comparisons for an array of length `n`. A decreasing array triggers it, because no walk ever stops early. Doubling the log quadruples the time.
 
-Most of that work repeats. In the readings 6, 2, 4, 3, 9, the walk from index 0 reads the 2, the 4 and the 3. The walk from index 1 reads the 4 and the 3 again. The walk from index 2 reads the 3 again. Each walk learns something about the values it passes, and then the next walk throws that knowledge away.
+Most of that work repeats. In the readings 6, 2, 4, 3, 9, the walk from index 0 reads the 2, the 4 and the 3. The walk from index 1 reads the 4 again. The walk from index 2 reads the 3 again. Each walk learns something about the values it passes, and then the next walk throws that knowledge away.
 
 <!-- stage: insight -->
 ### Keep The Waiting Positions In A Stack

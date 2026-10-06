@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A log with one hundred thousand readings makes a loop over every range impractical, and a stack removes the loop once the boundaries are known. This chapter releases one pairing that its prerequisites allow, and it names one pairing that waits for a later proof.
+A log with one hundred thousand readings makes a loop over every range impractical, and a stack that finds boundaries plus a count removes the loop. This chapter releases one pairing that its prerequisites allow, and it names one pairing that waits for a later proof.
 
 ### Pairing Taught In This Chapter
 

@@ -202,7 +202,7 @@ A sum that depends on more than the minimum, such as the sum of window averages,
 
 **Prerequisites.** The exercise above and the minimum version in this lesson.
 
-**Problem.** An array `nums` of positive integers is given. For each index `i`, let `left` be the largest smaller index with a strictly smaller value, or `-1`. Let `right` be the smallest later index with a value smaller than or equal to `nums[i]`, or `n`. Return an array whose entry `i` equals `nums[i] * (i - left) * (right - i)`, followed by one last entry with the sum of all those contributions.
+**Problem.** An array `nums` of positive integers is given. For each index `i`, let `left` be the largest earlier index with a strictly smaller value, or `-1`. Let `right` be the smallest later index with a value smaller than or equal to `nums[i]`, or `n`. Return an array whose entry `i` equals `nums[i] * (i - left) * (right - i)`, followed by one last entry with the sum of all those contributions.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.

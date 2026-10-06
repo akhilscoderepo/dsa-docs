@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A weather report lists a temperature for every day and asks how many days pass until a warmer one. A loop that scans forward from each day answers a year of data at once and slows down sharply as the data grows. A bar chart asks for the largest rectangle that fits under its bars, and the same loop fails the same way. This chapter shows how one scan with a stack answers both questions, and why each value is looked at only a constant number of times.
+A weather report lists a temperature for every day and asks how many days pass until a warmer one. A loop that scans forward from each day answers a year of data at once, but its cost grows with the square of the log length, so a decade of hourly readings is already slow. A bar chart asks for the largest rectangle that fits under its bars, and the same loop fails the same way. This chapter shows how one scan with a stack answers both questions, and why each value is looked at only a constant number of times.
 
 ### Prerequisites
 
@@ -14,7 +14,7 @@ Each lesson adds one decision about when an index leaves the stack and what the 
 - **Find The Next Greater Value** keeps indices whose answer is still unknown and removes the top when a larger value arrives.
 - **Find The Next Greater In A Circle** scans the array twice by index arithmetic, so the last values can find answers at the front.
 - **Compute The Stock Span** reads the same stack from the other side and measures how far back a price stays the largest.
-- **Find Both Boundaries Of A Value** gets the nearest smaller index on each side from one scan, with a marker for a missing side.
+- **Find Both Boundaries Of A Value** gets the nearest smaller index on each side from two scans, with a marker for a missing side.
 - **Break Ties Between Equal Values** decides which of two equal values owns a shared range, so no range is counted twice or lost.
 - **Count Subarrays By Their Minimum** turns the two boundaries into a count of ranges and adds up the minimum of every range.
 - **Find The Largest Rectangle** turns the same boundaries into a width, and it adds a closing bar that empties the stack.
