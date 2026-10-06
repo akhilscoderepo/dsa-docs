@@ -1,4 +1,4 @@
-# Lesson spec: Fixed-Gap Kth From End
+# Lesson spec: Find The Kth Node From The End
 
 **Recognition cue.** A node's position is defined relative to the end, but only one traversal is desired. **Invariant.** After advancing `fast` by the prescribed gap, moving both pointers preserves that distance until fast reaches the terminal position. **False friend.** Fast/slow ratio finds a fraction such as the middle; a fixed gap finds an offset from the end.
 

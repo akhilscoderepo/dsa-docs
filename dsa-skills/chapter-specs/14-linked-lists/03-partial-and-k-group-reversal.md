@@ -1,4 +1,4 @@
-# Lesson spec: Partial And K-Group Reversal
+# Lesson spec: Reverse Blocks Inside A List
 
 **Recognition cue.** Only complete blocks or a bounded sublist should have their edges reversed. **Invariant.** Before reversing, identify the block predecessor, first node, successor after the block, and whether a full block exists. **False friend.** Reversing first and discovering a short final group later makes restoration unnecessarily difficult.
 

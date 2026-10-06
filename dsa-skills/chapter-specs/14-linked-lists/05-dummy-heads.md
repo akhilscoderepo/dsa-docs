@@ -1,4 +1,4 @@
-# Lesson spec: Dummy Heads
+# Lesson spec: Use A Dummy Node At The Head
 
 **Recognition cue.** The real head may be inserted, removed, or replaced, creating a special first-node case. **Invariant.** `dummy.next` always identifies the current result head while `tail` or `prev` owns the last finalized link. **False friend.** A dummy node is not automatically useful when the head never changes.
 

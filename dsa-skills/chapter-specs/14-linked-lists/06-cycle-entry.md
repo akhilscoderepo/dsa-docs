@@ -1,4 +1,4 @@
-# Lesson spec: Cycle Entry
+# Lesson spec: Find Where A Cycle Starts
 
 **Recognition cue.** Following `next` may revisit nodes, and the task asks whether a cycle exists or where it begins. **Invariant.** Floyd's slow and fast pointers collide inside a cycle; after resetting one pointer to the head, equal-speed movement meets at the entry. **False friend.** A value duplicate does not imply a node cycle—identity matters.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Merge
+# Lesson spec: Merge Two Sorted Lists
 
 **Recognition cue.** Two sorted linked chains must become one sorted chain without allocating replacement nodes. **Invariant.** The result tail ends a sorted finalized prefix; both remaining heads begin sorted suffixes. **False friend.** Copying values into an array avoids the pointer problem but violates the intended space and node-reuse contract.
 

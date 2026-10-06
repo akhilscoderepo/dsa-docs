@@ -1,4 +1,4 @@
-# Lesson spec: Multilevel Flattening
+# Lesson spec: Flatten Child Lists Into One List
 
 **Recognition cue.** Nodes form a main doubly linked chain plus child chains that must be spliced into depth-first order. **Invariant.** Each splice preserves `prev`/`next` symmetry and retains the old successor so traversal can resume after the child chain. **False friend.** Updating only forward links creates a list that looks correct in one direction but is structurally broken.
 

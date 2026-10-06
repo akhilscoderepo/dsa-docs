@@ -1,4 +1,4 @@
-# Lesson spec: Middle Nodes
+# Lesson spec: Find The Middle Node
 
 **Recognition cue.** A one-pass algorithm needs the midpoint without knowing length first. **Invariant.** Fast advances twice for each slow step; when fast reaches the end, slow has crossed half the nodes. **False friend.** Even-length lists have two middles, so the loop condition must match the requested one.
 

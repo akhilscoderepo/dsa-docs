@@ -72,7 +72,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Node Invariants
+### Follow References Through A List
 
 **Recognition cue.** The structure is defined by references rather than contiguous indices, so mutation changes reachability. **Invariant.** Every unreached node remains reachable from a saved reference, and the returned head owns the intended chain. **False friend.** Array-style random access does not exist; reaching position `i` costs a traversal.
 
@@ -81,7 +81,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty And Singleton Lists.** State which references may be null under each operation.
 - **Recognize - LC 203 Remove Linked List Elements.** Maintain a valid retained chain while removing matching nodes.
 
-### Reverse
+### Reverse A List In One Pass
 
 **Recognition cue.** Every `next` edge must point to the previous node. **Invariant.** `prev` heads the fully reversed prefix, `curr` heads the untouched suffix, and no node is lost between them. **False friend.** Reassigning `curr.next` before saving its old successor disconnects the remaining list.
 
@@ -90,7 +90,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty And One Node.** Return the correct head without special pointer rewiring.
 - **Recognize - LC 92 Reverse Linked List II.** Reverse only a specified segment and reconnect both boundaries.
 
-### Partial And K-Group Reversal
+### Reverse Blocks Inside A List
 
 **Recognition cue.** Only complete blocks or a bounded sublist should have their edges reversed. **Invariant.** Before reversing, identify the block predecessor, first node, successor after the block, and whether a full block exists. **False friend.** Reversing first and discovering a short final group later makes restoration unnecessarily difficult.
 
@@ -99,7 +99,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Incomplete Final Group.** Look ahead `k` nodes and leave a short suffix unchanged.
 - **Recognize - LC 25 Reverse Nodes in k-Group.** Repeat the bounded reversal while full groups remain.
 
-### Merge
+### Merge Two Sorted Lists
 
 **Recognition cue.** Two sorted linked chains must become one sorted chain without allocating replacement nodes. **Invariant.** The result tail ends a sorted finalized prefix; both remaining heads begin sorted suffixes. **False friend.** Copying values into an array avoids the pointer problem but violates the intended space and node-reuse contract.
 
@@ -108,7 +108,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: One Empty Or Exhausted List.** Attach the entire remaining suffix in one step.
 - **Recognize - LC 148 Sort List.** Split, recursively sort, and reuse the merge invariant in linked-list merge sort.
 
-### Dummy Heads
+### Use A Dummy Node At The Head
 
 **Recognition cue.** The real head may be inserted, removed, or replaced, creating a special first-node case. **Invariant.** `dummy.next` always identifies the current result head while `tail` or `prev` owns the last finalized link. **False friend.** A dummy node is not automatically useful when the head never changes.
 
@@ -117,7 +117,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - LC 203 Remove Linked List Elements.** Remove one or many matching original head nodes uniformly.
 - **Recognize - LC 19 Remove Nth Node From End of List.** Let a dummy predecessor make deletion of the original head ordinary.
 
-### Cycle Entry
+### Find Where A Cycle Starts
 
 **Recognition cue.** Following `next` may revisit nodes, and the task asks whether a cycle exists or where it begins. **Invariant.** Floyd's slow and fast pointers collide inside a cycle; after resetting one pointer to the head, equal-speed movement meets at the entry. **False friend.** A value duplicate does not imply a node cycle—identity matters.
 
@@ -126,7 +126,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Self-Loop And Two-Node Cycle.** Guard fast-pointer dereferences correctly.
 - **Recognize - LC 142 Linked List Cycle II.** Reset one pointer and locate the cycle entry without extra storage.
 
-### Intersection
+### Find Where Two Lists Meet
 
 **Recognition cue.** Two acyclic lists may share the same tail nodes by reference. **Invariant.** Switching each pointer to the other head makes both traverse equal total distance before meeting or reaching null. **False friend.** Equal node values are not an intersection.
 
@@ -135,7 +135,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: No Intersection And Shared Head.** Verify both null meeting and immediate identity.
 - **Recognize - LC 160 Intersection of Two Linked Lists.** Use head switching for constant-space alignment.
 
-### Middle Nodes
+### Find The Middle Node
 
 **Recognition cue.** A one-pass algorithm needs the midpoint without knowing length first. **Invariant.** Fast advances twice for each slow step; when fast reaches the end, slow has crossed half the nodes. **False friend.** Even-length lists have two middles, so the loop condition must match the requested one.
 
@@ -144,7 +144,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: First Middle Contract.** Change the stopping condition to return the first of two middles.
 - **Recognize - LC 234 Palindrome Linked List.** Find the midpoint before reversing and comparing the second half.
 
-### Fixed-Gap Kth From End
+### Find The Kth Node From The End
 
 **Recognition cue.** A node's position is defined relative to the end, but only one traversal is desired. **Invariant.** After advancing `fast` by the prescribed gap, moving both pointers preserves that distance until fast reaches the terminal position. **False friend.** Fast/slow ratio finds a fraction such as the middle; a fixed gap finds an offset from the end.
 
@@ -153,7 +153,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: K Equals Length.** Confirm the target is the original head and validate the input contract.
 - **Recognize - LC 19 Remove Nth Node From End of List.** Preserve the gap, then bypass the target through its predecessor.
 
-### Multilevel Flattening
+### Flatten Child Lists Into One List
 
 **Recognition cue.** Nodes form a main doubly linked chain plus child chains that must be spliced into depth-first order. **Invariant.** Each splice preserves `prev`/`next` symmetry and retains the old successor so traversal can resume after the child chain. **False friend.** Updating only forward links creates a list that looks correct in one direction but is structurally broken.
 
@@ -164,7 +164,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Linked List Map
+### Copy A List With Random Links
 
 The linked list supplies node identity and outgoing references; the map records which clone corresponds to each original node. Values alone cannot reconstruct arbitrary `random` edges, and pointer traversal alone cannot find a clone by original identity in constant time.
 

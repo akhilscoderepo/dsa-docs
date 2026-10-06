@@ -1,4 +1,4 @@
-# Lesson spec: Intersection
+# Lesson spec: Find Where Two Lists Meet
 
 **Recognition cue.** Two acyclic lists may share the same tail nodes by reference. **Invariant.** Switching each pointer to the other head makes both traverse equal total distance before meeting or reaching null. **False friend.** Equal node values are not an intersection.
 

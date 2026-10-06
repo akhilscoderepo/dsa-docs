@@ -1,4 +1,4 @@
-# Lesson spec: Reverse
+# Lesson spec: Reverse A List In One Pass
 
 **Recognition cue.** Every `next` edge must point to the previous node. **Invariant.** `prev` heads the fully reversed prefix, `curr` heads the untouched suffix, and no node is lost between them. **False friend.** Reassigning `curr.next` before saving its old successor disconnects the remaining list.
 

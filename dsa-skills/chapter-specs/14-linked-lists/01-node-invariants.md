@@ -1,4 +1,4 @@
-# Lesson spec: Node Invariants
+# Lesson spec: Follow References Through A List
 
 **Recognition cue.** The structure is defined by references rather than contiguous indices, so mutation changes reachability. **Invariant.** Every unreached node remains reachable from a saved reference, and the returned head owns the intended chain. **False friend.** Array-style random access does not exist; reaching position `i` costs a traversal.
 
