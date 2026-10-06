@@ -120,7 +120,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: One Target Is Ancestor.** Return that target when the other appears below it under the existence guarantee.
 - **Recognize - LC 235 Lowest Common Ancestor of a Binary Search Tree.** Use ordering to descend until the target values split or equal the current key.
 
-### Walk A Tree One Key At A Time
+### Hand Out Tree Keys On Demand
 
 **Recognition cue.** A client needs the next inorder key on demand without materializing the whole traversal. **Invariant.** The stack stores the unvisited left spine; its top is the next smallest node. After popping, push the left spine of its right subtree. **False friend.** Re-running a root traversal for each call makes iteration quadratic.
 

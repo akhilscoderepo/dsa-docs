@@ -10,7 +10,7 @@
 04. Find The Next And Previous Key  ->  04-successor-and-predecessor.md
 05. Answer Rank And Range Questions  ->  05-kth-and-range-queries.md
 06. Find The Lowest Common Ancestor  ->  06-general-and-bst-lca.md
-07. Walk A Tree One Key At A Time  ->  07-iterator-foundations.md
+07. Hand Out Tree Keys On Demand  ->  07-iterator-foundations.md
 08. Turn A Tree Into Text And Back  ->  08-serialization-and-deserialization.md
 09. Keep A Search Tree Short  ->  09-balanced-tree-concepts.md
 
