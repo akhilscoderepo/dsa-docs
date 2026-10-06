@@ -149,7 +149,7 @@ In `kthFromEnd`, a list with exactly `k` nodes leaves `lead` at `null` after the
 
 #### Stating The Gap As The Invariant
 
-The invariant of the method is that the number of nodes between the trailing reference and the leading reference stays `k` after every double move. State the number, and the stopping position follows. When the leading reference is `null`, the trailing reference has `k` nodes from itself to the end.
+The invariant of the method is that the number of nodes between the trailing reference and the leading reference stays `k` after every move of both references. State the number, and the stopping position follows. When the leading reference is `null`, the trailing reference has `k` nodes from itself to the end.
 
 #### Separating A Gap From A Ratio
 

@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why The Last Group Comes Back Reversed
 
-A job queue stores tasks in a list. A rule says that every three consecutive tasks run in reverse order, and a final group with fewer than three tasks keeps its order. A developer reverses each group as the loop reaches it. The list has eight tasks, so the last group has two tasks. The loop reverses that short group too, and the output breaks the rule. The developer adds code to reverse the short group back and finds that the loop has already overwritten the links that the repair needs.
+A job queue stores tasks in a list. A rule says that every three consecutive tasks run in reverse order, and a final group with fewer than three tasks keeps its order. A developer reverses each group as the loop reaches it. The list has eight tasks, so the last group has two tasks. The loop reverses that short group too, and the output breaks the rule. The developer adds code to reverse the short group back, and the list stays wrong until that repair has run.
 
 A whole-list reversal never faces this problem, because it always touches every node. A reversal of a group touches only some nodes, and it must join the reversed group to the nodes on both sides. This lesson answers one question: how does the method learn that a group is complete before it changes any link?
 
@@ -64,12 +64,12 @@ On `1, 2, 3, 4, 5` with `k = 2` the method reverses `1, 2` and `3, 4`, then reve
 ### Counting The Wasted Writes
 
 ```predict
-A list has n nodes and the last group has m nodes, with m smaller than k. How many extra next writes does the repair cost, and what information does it need that the loop already overwrote?
+A list has n nodes and the last group has m nodes, with m smaller than k. How many extra next writes does the repair cost, and what is wrong with the list while the repair has not run?
 
-The repair costs about m extra writes, which is O(k) in the worst case, so the total stays O(n). The repair needs the first node of the short group and the node before it, and the first reversal has already changed the links that led to both.
+The repair costs about m extra writes, which is O(k) in the worst case, so the total stays O(n). Until the repair runs, the short group is in reversed order, and any reader of the list sees a wrong order.
 ```
 
-The time cost is small. The cost that matters is correctness. After the first reversal, the old first node of the group is the group's last node, and the group's original neighbors have been rewritten. The repair must hold the right references to undo the change, and one wrong reference loses the nodes of the short group. For a group of `m` nodes the repair performs `m` extra writes, so the total number of writes stays proportional to `n`.
+The time cost is small. The cost that matters is correctness. The method writes every node of the short group twice, and the list is wrong between the two writes. The repair is also easy to get wrong, because it must restart from the right node after the first reversal changed the links.
 
 The fix does not need the repair at all. A walk that only reads `next` fields can count the group first. A count that reaches `k` proves the group is complete, and a count that stops early proves it is short. The reading walk changes no link, so a short group needs no undo.
 
@@ -106,7 +106,7 @@ After a group is reversed, its tail is the predecessor of the next group, and `c
 
 #### Reversing The Middle Three Nodes
 
-Take the list `1, 2, 3, 4, 5` and reverse the three nodes `2, 3, 4`. The pointer `pred` marks the node before the group. The pointer `prev` marks the first node of the reversed part, and `curr` marks the first node not yet moved. The variable `chain` shows the list read from the head. While the reversal runs, the chain is cut short, because `pred` still points at the old group head, and that node now points backward.
+Take the list `1, 2, 3, 4, 5` and reverse the three nodes `2, 3, 4`. The pointer `pred` marks the node before the group. The pointer `prev` marks the first node of the reversed part, and `curr` marks the first node not yet moved. The variable `chain` shows the list read from the head. While the reversal runs, the chain is cut short, because `pred` still points at the old group head, and the first move already changed that node's `next`.
 
 ```trace
 {"cells":[1,2,3,4,5],"pointers":["pred","prev","curr"],"steps":[{"at":{"pred":0,"prev":-1,"curr":1},"vars":{"chain":"1,2,3,4,5"},"note":"Start: pred is the node 1, and the group is the nodes 2, 3 and 4. The look-ahead found three nodes, so the reversal may begin."},{"at":{"pred":0,"prev":1,"curr":2},"vars":{"chain":"1,2"},"note":"The node 2 moves across: saved keeps the rest, the node is redirected at the reversed part, and prev takes the node 2."},{"at":{"pred":0,"prev":2,"curr":3},"vars":{"chain":"1,2"},"note":"The node 3 moves across: saved keeps the rest, the node is redirected at the reversed part, and prev takes the node 3."},{"at":{"pred":0,"prev":3,"curr":4},"vars":{"chain":"1,2"},"note":"The node 4 moves across: saved keeps the rest, the node is redirected at the reversed part, and prev takes the node 4."},{"at":{"pred":0,"prev":3,"curr":4},"vars":{"chain":"1,2,5"},"note":"first.next = curr links the old group head, the node 2, to the node 5."},{"at":{"pred":0,"prev":3,"curr":4},"vars":{"chain":"1,4,3,2,5"},"note":"pred.next = prev links the node 1 to the node 4. The list reads 1,4,3,2,5."}]}

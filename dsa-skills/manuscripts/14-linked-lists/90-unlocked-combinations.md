@@ -9,4 +9,4 @@ A linked list and a hash map form the lesson Copy A List With Random Links. The 
 
 ### One Pairing Waits For The Design Chapters
 
-A hash map joined with a doubly linked list of recent use makes a cache that evicts the oldest entry. That design needs a public interface and strict rules about which structure owns each node. Chapter 33 teaches the interface and owns the problems of that pairing, and this chapter assigns none of them.
+A hash map joined with a doubly linked list of recent use makes a cache that evicts the least recently used entry. That design needs a public interface and strict rules about which structure owns each node. Chapter 33 teaches the interface and owns the problems of that pairing, and this chapter assigns none of them.

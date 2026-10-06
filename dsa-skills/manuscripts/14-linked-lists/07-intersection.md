@@ -61,7 +61,7 @@ The nodes at the same distance from the end are the same object inside the share
 
 #### Removing The Length Count With Head Switching
 
-**Head switching** reaches the same alignment without counting. Each reference walks its own list to the end. When it falls off the end, it jumps to the head of the other list and keeps walking. The first reference walks `x + s` nodes and then `y` nodes of the second list, so it has walked `x + y` nodes before the shared tail begins. The second reference walks `y + s` nodes and then `x` nodes of the first list, which is also `x + y` nodes before the shared tail. Both references stand on the first shared node after the same number of steps.
+**Head switching** reaches the same alignment without counting. Each reference walks its own list to the end. When it falls off the end, it jumps to the head of the other list and keeps walking. The first reference walks `x + s` nodes and then `y` nodes of the second list, so it has walked `x + y` nodes of unshared prefix before the shared tail begins, plus one step to leave `null`. The second reference walks `y + s` nodes and then `x` nodes of the first list, which is also `x + y` nodes of unshared prefix, plus one step to leave `null`. Both references stand on the first shared node after the same number of steps.
 
 #### Why No Shared Node Still Ends
 
@@ -151,7 +151,7 @@ In `alignByLength`, both loops can run, but only one of them runs for any input,
 
 #### Stating The Alignment Fact
 
-The invariant of both methods is that the two references are the same distance from the end of their lists whenever they are compared, so the first equal pair is the first shared node. State the distance rule before coding. For head switching, say that both references walk `x + y + s` nodes to the end of the combined walk.
+The invariant of both methods is that the two references are the same distance from the end of their lists whenever they are compared, so the first equal pair is the first shared node. State the distance rule before coding. For head switching, say that both references take the same number of steps, counting the one step that leaves `null`.
 
 #### Keeping Identity Apart From Value
 

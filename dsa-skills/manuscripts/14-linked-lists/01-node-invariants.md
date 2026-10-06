@@ -47,7 +47,7 @@ Position 0 costs 0 hops, position 1 costs 1 hop, and position n-1 costs n-1 hops
 
 The cost comes from restarting. For `n = 1,000` the method follows 499,500 references, while a single walk follows 999. For `n = 100,000` the gap is about five billion hops against one hundred thousand.
 
-The array habit also hides a worse problem for any program that edits the list. The method never names which reference to keep before another reference changes. The lesson on insertion needs that rule, and the rule has a name.
+The array habit also hides a worse problem for any program that edits the list. The method never names which reference to keep before another reference changes. The insertion in this lesson needs a rule about the order of reference changes, and the next section states it.
 
 <!-- stage: insight -->
 ### Keeping Every Node Reachable
@@ -62,7 +62,7 @@ A node is **reachable** when some chain of `next` references, starting from a va
 
 #### Saving The Successor Before Changing A Link
 
-The **successor** of a node is the node its `next` field points to. Changing `node.next` overwrites the only stored reference to the successor, unless another variable also holds it. So the safe order has two parts. First copy the successor into a local variable. Then overwrite the field. The editor in the context broke this order, and the nodes after the new line lost their last reference.
+The **successor** of a node is the node its `next` field points to. Changing `node.next` overwrites the only stored reference to the successor, unless another variable also holds it. So the safe order has two parts. First copy the successor into a local variable. Then overwrite the field. The editor in the opening story broke this order, and the nodes after the new line lost their last reference.
 
 #### Walking Without Restarting
 
@@ -145,7 +145,7 @@ The rule that every kept node stays reachable after each statement is the invari
 
 #### Separating Lists From Arrays
 
-Arrays and lists look alike on paper, so each feature has a false friend in the other. An array answers "what is at index `i`" in O(1). A list answers it in O(i), because the answer needs `i` hops. The false friend here is index access. A statement that asks for the position `i` of a list does not get the array's speed.
+Arrays and lists look alike on paper. A false friend is a feature that looks the same in two structures and behaves differently, and each feature of one has such a partner in the other. An array answers "what is at index `i`" in O(1). A list answers it in O(i), because the answer needs `i` hops. The false friend here is index access. A statement that asks for the position `i` of a list does not get the array's speed.
 
 #### Watching For Null
 

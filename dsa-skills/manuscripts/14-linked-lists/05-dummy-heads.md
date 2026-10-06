@@ -200,7 +200,7 @@ A common bug is `return head` after the method removed the original head. The ol
 
 **Example 2.** Input `2, 2, 2` and the empty list, output `2`.
 
-**Hint.** When a node is about to attach, what must you compare it with? What is `tail.val` when `tail` is the dummy node?
+**Hint.** When a node is about to attach, what must you compare it with? Which test tells you that `tail` is still the dummy node?
 
 **Changed decision.** The attach step skips a node when its value equals the last kept value.
 

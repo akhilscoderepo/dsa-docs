@@ -3,7 +3,7 @@
 ## Find The Middle Node
 
 <!-- stage: context -->
-### Why Counting First Doubles The Disk Reads
+### Why Counting First Costs Extra Reads
 
 A log archive stores a long sequence of records as a linked list, and each `next` call reads one page from disk. A worker must split the list into two halves so that two threads can process them. The first version counts the records with one walk, then walks half of the count to find the split point. The archive has two million records, and the disk reads show that the worker touches 3 million pages before it starts any real work.
 
@@ -219,7 +219,7 @@ A palindrome check, a merge sort and a balanced tree built from a sorted list al
 #### [Recognize] Palindrome Linked List (LeetCode 234)
 <!-- id: ll-palindrome -->
 
-**Prerequisites.** All three exercises above and the reversal from the previous chapter lessons.
+**Prerequisites.** All three exercises above and the reversal from lesson 02.
 
 **Problem.** Given the head of a list, return `true` if the sequence of values reads the same from the front and from the back, and `false` otherwise. Use constant extra memory. Find the first middle, reverse the second half in place, compare the two halves, and then reverse the second half again. The list must have its original order when the method returns.
 

@@ -30,7 +30,7 @@ One lesson joins the list lessons with the hash map lessons of Chapter 04.
 
 ### How To Work Through Each Lesson
 
-Each lesson begins with a program that fails or slows down on a real input and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to a full interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize, and the list of exercises names the role first. Try the hint before you read a solution.
+Each lesson begins with a program that fails or slows down on a real input and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to a full interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize, and the list of exercises names the role first. Each exercise also lists a Changed decision, which names the one choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
 
 ### What You Can Do After This Chapter
 

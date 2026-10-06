@@ -162,7 +162,7 @@ The false friend here is the node value, which says nothing about identity. A ch
 
 #### Guarding The Pointers
 
-A self-loop is a single node whose `next` is that same node, and a two-node cycle has two nodes pointing at each other. Both cycles are caught by the same loop, as the exercises show. Each read of `fast.next.next` needs `fast` and `fast.next` to be non-null, and the loop condition checks them in that order.
+A self-loop is a single node whose `next` is that same node, and a two-node cycle has two nodes pointing at each other. The same loop catches both cycles, and the boundary exercise below checks them. Each read of `fast.next.next` needs `fast` and `fast.next` to be non-null, and the loop condition checks them in that order.
 
 <!-- stage: exercises -->
 ### Exercises
