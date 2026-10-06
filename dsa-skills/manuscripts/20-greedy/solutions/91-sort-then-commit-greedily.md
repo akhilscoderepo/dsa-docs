@@ -84,7 +84,7 @@ public final class SortSatisfiedChildren {
 <!-- id: gr-intervals-with-gap -->
 
 **Approach.**
-The method sorts the intervals by end and keeps an interval when its start is at least the previous kept end plus `gap`. The sum uses `long`, because an end near 10^9 plus a gap near 10^9 passes the `int` range. The exchange argument still holds. An interval with an earlier end leaves a bound `end + gap` that is no larger, so every later interval that fits after the later end also fits after the earlier end. The method returns the number of intervals that it does not keep.
+The method sorts the intervals by end and keeps an interval when its start is at least the previous kept end plus `gap`. The sum uses `long`, because an end near 2^31 plus a gap near 10^9 passes the `int` range. The exchange argument still holds. An interval with an earlier end leaves a bound `end + gap` that is no larger, so every later interval that fits after the later end also fits after the earlier end. The method returns the number of intervals that it does not keep.
 
 After each interval, `bound` is the smallest start that a later kept interval may have, for a largest kept set of the intervals read.
 
@@ -138,7 +138,7 @@ public final class IntervalsWithGap {
         if (removals(new int[][] {{1, 3}, {2, 4}, {4, 6}, {5, 8}, {7, 9}}, 1) != 2) throw new AssertionError("ex1");
         if (removals(new int[][] {{1, 3}, {3, 5}, {5, 7}}, 1) != 1) throw new AssertionError("ex2");
         // Large ends plus a large gap pass the int range and stay correct.
-        if (removals(new int[][] {{0, 1_000_000_000}, {1_000_000_000 - 1, 1_000_000_000}}, 1_000_000_000) != 1) throw new AssertionError("overflow");
+        if (removals(new int[][] {{0, Integer.MAX_VALUE}, {Integer.MAX_VALUE - 1, Integer.MAX_VALUE}}, 1_000_000_000) != 1) throw new AssertionError("overflow");
         if (removals(new int[0][], 5) != 0) throw new AssertionError("empty");
         // Random inputs must match exhaustive search with a pairwise gap test.
         Random rnd = new Random(2092);

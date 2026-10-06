@@ -74,7 +74,7 @@ The same three steps solve the four problems of this lesson. Find the key, order
 <!-- stage: variables -->
 ### State For The Stream Scan
 
-The scan over the stream needs an array and three numbers. Five items describe the state.
+The scan over the stream needs an array, a list and a few indexes. Five items describe the state.
 
 - **last** is an array of 26 entries, and `last[c]` is the largest index of code `c` in the stream.
 - **start** is the index where the current chunk began.
@@ -178,7 +178,7 @@ Index the 26-entry array with `ch - 'a'` and state that the input holds lowercas
 
 **Constraints.** The limits are:
 - **Count** is `0 <= intervals.length <= 10^5`.
-- **Values** are integers in `0 <= start < end <= 10^9`.
+- **Values** are integers in `0 <= start < end <= 2^31 - 1`.
 - **Gap** is an integer in `0 <= gap <= 10^9`.
 - **Sum** of `end + gap` can pass the `int` range.
 

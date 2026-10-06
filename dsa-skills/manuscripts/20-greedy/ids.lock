@@ -1,0 +1,37 @@
+{
+ "lessons": [
+  "exchange-reasoning",
+  "farthest-frontier",
+  "interval-scheduling",
+  "local-choice",
+  "sort-then-commit",
+  "task-selection"
+ ],
+ "exercises": [
+  "gr-assign-cookies",
+  "gr-balloon-group-sizes",
+  "gr-choose-compatible-meetings",
+  "gr-course-schedule-iii",
+  "gr-deadline-unit-tasks",
+  "gr-equal-reward-capacity",
+  "gr-exchange-two-assignments",
+  "gr-find-a-counterexample",
+  "gr-half-open-balloons",
+  "gr-intervals-with-gap",
+  "gr-jump-game",
+  "gr-jump-game-ii",
+  "gr-lemonade-change",
+  "gr-maximum-units-truck",
+  "gr-non-overlapping-intervals",
+  "gr-partition-labels",
+  "gr-present-a-greedy-proof",
+  "gr-smallest-sufficient-match",
+  "gr-sort-satisfied-children",
+  "gr-swap-to-earlier-finish",
+  "gr-touching-endpoint-contract",
+  "gr-unusable-resources",
+  "gr-update-reachable-prefix",
+  "gr-zero-before-the-frontier"
+ ],
+ "retired": []
+}
