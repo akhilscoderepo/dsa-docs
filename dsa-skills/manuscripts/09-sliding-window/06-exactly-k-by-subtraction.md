@@ -7,7 +7,7 @@
 
 A fraud team flags some transactions in a ledger. An analyst needs the number of ranges of consecutive transactions that hold exactly three flagged ones, because such a range triggers a manual review. The ledger has 100,000 entries. A developer tries the shrinking window from the last lessons and gets wrong counts. Whenever a new flagged entry arrives, the window shrinks until it holds three flagged entries. The window then names one range, but many ranges ending at the same entry also hold exactly three.
 
-The earlier lessons asked for a longest or shortest range, so one boundary was enough. This lesson counts ranges. It asks how a count of "exactly three" can be built from counts that a single shrinking boundary does produce correctly.
+The earlier lessons asked for a longest or shortest range, so one boundary was enough. This lesson counts ranges. It asks how a count of "exactly three" can be built from counts that a single shrinking boundary does produce correctly. The slow program below reads a `boolean` array, where `true` marks a flagged entry. The fast method reads an `int` array and treats an odd number as the flagged entry, so one test, `nums[i] % 2 != 0`, replaces the stored flag.
 
 <!-- stage: naive -->
 ### Test Every Range
@@ -48,7 +48,7 @@ The condition "at most `k`" behaves differently. A block with at most `k` flagge
 
 #### The At-Most Count With One Boundary
 
-The **at-most count** for a limit `x` is the number of ranges that hold at most `x` flagged entries. For each `right`, the shrinking window gives the smallest valid `left`. Every start from `left` to `right` also gives a valid range ending at `right`, because removing entries keeps the range valid. The number of valid ranges that end at `right` is therefore `right - left + 1`. The total is the sum of these numbers over all `right`.
+The earlier `boolean` flag becomes an odd test on an `int` input here, and the window counts odd numbers where the slow program counted `true` values. The **at-most count** for a limit `x` is the number of ranges that hold at most `x` flagged entries. For each `right`, the shrinking window gives the smallest valid `left`. Every start from `left` to `right` also gives a valid range ending at `right`, because removing entries keeps the range valid. The number of valid ranges that end at `right` is therefore `right - left + 1`. The total is the sum of these numbers over all `right`.
 
 #### Why The Subtraction Is Exact
 

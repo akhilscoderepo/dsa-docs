@@ -7,7 +7,7 @@
 
 A scanner looks for rearrangements of a short signature inside a data stream. Its author keeps the two boundaries correct, with a left index and a right index that always bound the last few characters. The scanner updates its character counts when a character enters, and it forgets to update them when a character leaves. After a few thousand characters, the counts describe the whole stream and not the window. The scanner then reports matches that do not exist, and it misses real ones.
 
-The boundaries alone cannot answer a question about the contents of the window, and the counts alone do not know which characters are inside. This lesson asks what must stay true about both together, so that one small test per step answers questions of four different kinds.
+The boundaries alone cannot answer a question about the contents of the window, and the counts alone do not know which characters are inside. This lesson asks what must stay true about both together, so that one small test per step answers questions of four different kinds. Three of the kinds use one status counter, and the budget case is the exception that needs more.
 
 <!-- stage: contributions -->
 ### What Boundaries And Counts Each Add
@@ -61,7 +61,7 @@ A **status counter** is one integer that says how many letters currently break t
 
 #### Earlier Counters Are Status Counters
 
-You already used two status counters. The missing count of lesson 04 and the distinct count of lesson 05 each summarise a rule over the counts in one integer.
+You already used two integers similar to status counters. The missing count of lesson 04 counts required copies that are still absent, and the distinct count of lesson 05 counts the keys in a map. Each summarises a rule over the counts in one integer, and neither counts the letters that break a rule.
 
 #### The Entering And Leaving Updates
 

@@ -34,9 +34,9 @@ The method is correct for any values, because it tests each span on its own.
 ### Counting Pairs One By One
 
 ```predict
-For the end index 5, the span from start 2 to index 5 has a sum below the quota, and all daily values are positive. Do the spans from start 3, start 4 and start 5 to index 5 also stay below the quota?
+Take one end index, and suppose the span from some start `s` to that end has a sum below the quota. All daily values are positive. Do the spans from start `s + 1` up to the end index itself also stay below the quota?
 
-Yes. A span inside a valid span drops some positive values, so its sum is smaller. All three spans pass the check, and the method can count them without testing each.
+Yes. A span inside a valid span drops some positive values, so its sum is smaller. Every one of those spans passes the check, and the method can count them without testing each.
 ```
 
 The pair loop runs about `n^2 / 2` tests, so it costs O(n^2). For a year of per-second usage, `n` is about 31 million, and the loop runs about 5 * 10^14 tests. The shrinking window runs in O(n), but it records one position per end index. The count needs more than a position. It needs the number of valid starts for that end index.

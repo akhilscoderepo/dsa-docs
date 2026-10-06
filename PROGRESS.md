@@ -13,7 +13,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 06-binary-search | done |
 | 07-prefix-sums-and-difference-arrays | done |
 | 08-two-pointers | done |
-| 09-sliding-window | todo |
+| 09-sliding-window | done |
 | 10-intervals | done |
 | 11-stacks-and-queues | done |
 | 12-monotonic-stacks | todo |
@@ -65,3 +65,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 - 11 (2026-10-06): content complete, human review pending. Built unattended in one run: eleven lessons plus the combination lesson Parse With A Stack (Stack And Parsing State), pushed lesson by lesson. Final reader review (RUNBOOK section 10) ran 2 passes with an independent reader subagent each time; pass 1 found 25 points and pass 2 20, most fixed. A third pass has not run, so a clean pass is not confirmed. Interpretation recorded: LC 150, 394 and 224 repeat in the combination lesson with changed contracts (error codes for bad postfix, output length limit, named variables). Open or accepted: lesson 10 is dense (term stack plus saved parents); Recognize exercises show their method in titles or hints in places; "False Friend" and "Changed decision" labels are fixed by the format; exercise role names. Remaining WARNs: none. JDK 21 only; JDK 25, Windows, phones and printing are unverified. Lesson titles were retitled in plain wording in the working specs (dsa-skills/chapter-specs), not in inputs/.
 - claimed 11 2026-10-06T00:38Z
 - claimed 09 2026-10-06T01:40Z (stale claim; chapter built, gates and reader review pending)
+- 09 (2026-10-06): content complete, human review pending. Lessons were built in an earlier run (claim from 2026-10-05T22:38Z went stale before the review ran); this run rebuilt, passed the gates and ran the final reader review (RUNBOOK section 10): 2 passes with an independent reader subagent each time; pass 1 found 35 points and pass 2 25, factual errors, name mismatches and most undefined terms fixed. A third pass has not run, so a clean pass is not confirmed. Open or accepted: exercise role tags do not all match their definitions (several Boundary exercises are not edge inputs); LC 424, 567, 3 and 76 repeat in lesson 91 with changed contracts; lesson numbers are cited in prose while 00 lists titles; 'invariant', 'monotone under removal' and 'budget' are not fully defined in plain words; 'Counting The Rereads' and 'Tracing Two Scans' headings repeat across lessons; trace steps in 04 and 07 pack a whole shrink loop into one note; lessons 07, 09 and 91 are long. Remaining WARN: template phrase in 03. JDK 21 only; JDK 25, Windows, phones and printing are unverified.

@@ -36,9 +36,9 @@ Each start creates a new set and fills it from scratch.
 ### Counting The Rereads Once More
 
 ```predict
-The run from start 0 stops at index 7 because a third id appears. Is the block from index 1 to index 6 valid for a cache of two ids?
+Take a cache of two ids. Suppose the run from start 0 stops at an index `e` because a third id appears there. Is the block from index 1 to index `e - 1` valid?
 
-Yes. A block inside a valid block holds a subset of its ids, so it holds at most two different ids. The run from start 1 does not need to reread indexes 1 to 6.
+Yes. A block inside a valid block holds a subset of its ids, so it holds at most two different ids. The run from start 1 does not need to reread indexes 1 to `e - 1`.
 ```
 
 When the stream uses at most `k` ids, every start reads to the end. The start at index `i` reads `n - i` ids, so the work grows as O(n^2). Each start also allocates a new set and hashes every id again, so the constant is large. For `n = 10,000,000`, the method performs about 50 trillion set operations.
@@ -124,7 +124,7 @@ The `merge` call adds the entering value with count 1 or raises its count. The l
 
 #### Cost Of The Scan
 
-Each index enters the map once and leaves it at most once, and each map operation costs O(1) on average. The time is O(n). The map holds at most `k + 1` keys, so the extra memory is O(min(n, k)).
+Each index enters the map once and leaves it at most once, and each map operation costs O(1) on average. The time is O(n). The map holds at most `k + 1` keys, so the extra memory is O(min(n, k + 1)).
 
 <!-- stage: applicability -->
 ### When The Count Map Applies
@@ -153,7 +153,7 @@ Use `merge` for the entering value and `remove` when a count reaches 0. For a sm
 
 **Prerequisites.** The count map and the key removal of this lesson.
 
-**Problem.** Given an integer array `nums`, return the length of the longest contiguous block in which all values are equal. The method keeps one active value and its count. When a different value enters, the shrink loop removes the block's values until the count is 0.
+**Problem.** Given an integer array `nums`, return the length of the longest contiguous block in which all values are equal. The method keeps the count map of the window, and the map holds one key after each step. When a different value enters and the map briefly holds two keys, the shrink loop removes the block's values until the count is 0.
 
 **Constraints.**
 - **Length** satisfies `0 <= nums.length <= 10^5`.
@@ -167,7 +167,7 @@ Use `merge` for the entering value and `remove` when a count reaches 0. For a sm
 
 **Hint.** When a different value enters, how many values must leave before the window holds one distinct value again?
 
-**Changed decision.** The limit is one distinct value, and the map shrinks to a single key and its count.
+**Changed decision.** The limit is one distinct value, so the map holds a single key and its count after each step, and two keys for a moment when a different value enters.
 
 #### [Vary] Fruit Into Baskets (LeetCode 904)
 <!-- id: sw-fruit-baskets -->

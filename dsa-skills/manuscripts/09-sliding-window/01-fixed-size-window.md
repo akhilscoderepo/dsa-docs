@@ -130,7 +130,7 @@ Before the method uses the aggregate, the aggregate describes exactly `nums[left
 
 #### When A Prefix Sum Fits Better
 
-A prefix sum array answers a sum for any range in O(1) after an O(n) build. A prefix sum is the better tool when many unrelated range queries follow. A window is the natural tool for one left-to-right pass, and it needs no extra array. A prefix sum is a false friend here, because it looks like the right tool and wastes memory. The false friend shows up when the problem names no ranges beyond the fixed size, and the prefix array then costs memory without any benefit.
+A prefix sum array stores, at each index, the sum of all values before it, so the sum of any range is one subtraction of two stored values, in O(1) after an O(n) build. A prefix sum is the better tool when many unrelated range queries follow. A window is the natural tool for one left-to-right pass, and it needs no extra array. A prefix sum is a false friend here, because it looks like the right tool and wastes memory. The false friend shows up when the problem names no ranges beyond the fixed size, and the prefix array then costs memory without any benefit.
 
 #### Java Hazards
 
@@ -200,7 +200,7 @@ Check the contract for `k` before the first loop. A value `k = 0` gives a wrong 
 
 **Example 2.** Input `nums = [2,-7,4]`, `k = 4`. Output: the method throws `IllegalArgumentException`.
 
-**Hint.** How many times does the slide loop run when `k == nums.length`? What does the output array contain?
+**Hint.** How many times does the slide loop run when `k == nums.length`? What does the single `long` result hold?
 
 **Changed decision.** A contract check replaces a silent guess for an illegal `k`.
 

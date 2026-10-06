@@ -31,7 +31,7 @@ One lesson joins the boundaries of a window with a count of its contents.
 
 Each lesson opens with a slow program and asks you to predict its cost before the answer appears. Two traces follow, with the window drawn above the data. Four exercises close the lesson, from the basic case to a problem that you must recognize from its wording, with a hint hidden until you ask. Try the hint only after you have written the state that the window keeps.
 
-Each exercise carries one of four tags. Build asks you to write the basic loop of the lesson. Vary changes one rule of that loop and asks for the new loop. Boundary feeds the loop an input at its edge, such as an empty array or a limit of zero. Recognize hides the method behind the wording of a real problem. Each exercise also names a changed decision, which is the one choice that differs from the lesson loop. Some lessons name a false friend, which is a method that looks like the right tool but gives wrong answers on some inputs.
+Each exercise carries one of four tags. Build asks you to write the basic loop of the lesson. Vary changes one rule of that loop and asks for the new loop. Boundary feeds the loop an input at its edge, such as an empty array or a limit of zero. Recognize hides the method behind the wording of a real problem. Each exercise also names a changed decision, which is the one choice that differs from the lesson loop. Lessons also call the window a block, a span, a range or a run. A false friend is a tempting method that fails or wastes effort, and every lesson names one in a heading of its own.
 
 ### What You Can Do After This Chapter
 

@@ -10,7 +10,7 @@ Return to this page after the lessons and again after a few days. Each question 
 ```
 
 ```quiz
-{"id": "sw-rev-count-test", "q": "A scan must decide whether a window holds the same letters as `aab` in any order. Which test is correct?", "options": ["Every letter of `aab` occurs at least once in the window", "The window and the pattern contain the same set of letters", "The count of each letter in the window equals its count in the pattern", "The window sorted equals `aab` unsorted"], "answer": 2, "explain": "The pattern needs two copies of `a`, and a test of membership ignores that. Only equal counts, which count each letter, represent multiplicity. Sorting works but costs more than the count test."}
+{"id": "sw-rev-count-test", "q": "A scan must decide whether a window holds the same letters as `aab` in any order. Which test is correct?", "options": ["Every letter of `aab` occurs at least once in the window", "The window and the pattern contain the same set of letters", "The count of each letter in the window equals its count in the pattern", "The window read from left to right equals `aab`"], "answer": 2, "explain": "The pattern needs two copies of `a`, and a test of membership ignores that. Only equal counts, which count each letter, represent multiplicity. Reading the window in order fails, because `aba` and `baa` hold the same letters as `aab` and still differ from it."}
 ```
 
 ```quiz

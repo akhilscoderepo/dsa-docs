@@ -36,9 +36,9 @@ The method stops a walk exactly when the next minute would add a second outage. 
 ### Counting The Rereads
 
 ```predict
-The walk from start 0 stops before index 5, so the stretch from index 0 to index 4 is valid. What does that tell you about the stretch from index 1 to index 4?
+Suppose the walk from start 0 stops before an index `e`, because a second outage would appear there. The stretch from index 0 to index `e - 1` is then valid. What does that tell you about the stretch from index 1 to index `e - 1`?
 
-It is valid too. Removing the first minute from a valid stretch cannot add an outage. So the walk from start 1 can begin at index 5 and does not need to reread indexes 1 to 4.
+It is valid too. Removing the first minute from a valid stretch cannot add an outage. So the walk from start 1 can begin at index `e` and does not need to reread indexes 1 to `e - 1`.
 ```
 
 If the array has no outage at all, every walk runs to the end of the array. The start at index `i` then reads `n - i` values, and the total is about `n * (n + 1) / 2`, which is O(n^2). For `n = 1,000,000` per-second flags, that is about 500 billion reads.

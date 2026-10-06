@@ -44,9 +44,9 @@ The helper `covers` returns true when no letter of `need` is short in `have`. It
 ### Counting The Rereads Again
 
 ```predict
-The walk from start 0 first covers the requirement at index 6. Could the walk from start 1 find a cover that ends before index 6?
+Suppose the walk from start 0 first covers the requirement at an index `e`. Could the walk from start 1 find a cover that ends before index `e`?
 
-No. A cover from start 1 that ended before index 6 would also be a cover from start 0, because start 0 only adds one more value. Then the walk from start 0 would have stopped earlier. So the walk from start 1 ends at index 6 or later.
+No. A cover from start 1 that ended before index 6 would also be a cover from start 0, because start 0 only adds one more value. Then the walk from start 0 would have stopped earlier. So the walk from start 1 ends at index `e` or later.
 ```
 
 If the requirement never holds, every start reads to the end of the text. The sum of the read lengths is quadratic, O(n^2), and each test with `covers` adds the alphabet size. For `n = 5,000,000` words, the method reads about 12 trillion positions.
@@ -85,7 +85,7 @@ The method keeps the two indexes, the requirement and a ledger of what the block
 
 #### Trimming Surplus From A Cover
 
-Take `s = "bccbbacc"` and a requirement of one `a` and one `b`. The trace below shows `missing` and the best length. The block first covers the requirement at index 5, but it holds three `b` characters and two `c` characters that the requirement does not need. The method records each cover and then removes the leftmost character while the cover holds.
+Take `s = "bccbbacc"` and a requirement of one `a` and one `b`. The trace below shows `missing` and the best length. The block first covers the requirement at index 5, but it holds two surplus `b` characters, because the requirement needs only one `b`, and two `c` characters that the requirement does not need at all. The method records each cover and then removes the leftmost character while the cover holds.
 
 ```trace
 {"cells":["b","c","c","b","b","a","c","c"],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":0},"vars":{"missing":"1","best":"none"},"note":"The character 'b' enters. It fills a required copy."},{"at":{"left":0,"right":1},"vars":{"missing":"1","best":"none"},"note":"The character 'c' enters. It is a surplus."},{"at":{"left":0,"right":2},"vars":{"missing":"1","best":"none"},"note":"The character 'c' enters. It is a surplus."},{"at":{"left":0,"right":3},"vars":{"missing":"1","best":"none"},"note":"The character 'b' enters. It is a surplus."},{"at":{"left":0,"right":4},"vars":{"missing":"1","best":"none"},"note":"The character 'b' enters. It is a surplus."},{"at":{"left":5,"right":5},"vars":{"missing":"1","best":"2"},"note":"The character 'a' enters. It fills a required copy. The block 'bccbba' covers the requirement and is the shortest so far, with length 6. The surplus 'b' leaves, and the cover holds. The block 'ccbba' covers the requirement and is the shortest so far, with length 5. The surplus 'c' leaves, and the cover holds. The block 'cbba' covers the requirement and is the shortest so far, with length 4. The surplus 'c' leaves, and the cover holds. The block 'bba' covers the requirement and is the shortest so far, with length 3. The surplus 'b' leaves, and the cover holds. The block 'ba' covers the requirement and is the shortest so far, with length 2. The character 'b' leaves and breaks the cover."},{"at":{"left":5,"right":6},"vars":{"missing":"1","best":"2"},"note":"The character 'c' enters. It is a surplus."},{"at":{"left":5,"right":7},"vars":{"missing":"1","best":"2"},"note":"The character 'c' enters. It is a surplus."}]}
