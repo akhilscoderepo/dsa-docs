@@ -46,7 +46,7 @@ st = [{"at": {"key": -1}, "vars": {"queue": "[lead]", "parent": "{}"},
        "note": "The begin word lead has id 0. It is marked as reached and enters the queue."}]
 def show(ids): return "[" + ", ".join(words[i] for i in ids) + "]"
 done = False
-while q and not done:
+while q:
     cur = q.popleft(); found = []
     for p in range(len(words[cur])):
         for ch in "abcdefghijklmnopqrstuvwxyz":
@@ -54,10 +54,8 @@ while q and not done:
             w = words[cur][:p] + ch + words[cur][p + 1:]
             if w not in idx or idx[w] in parent: continue
             j = idx[w]; parent[j] = cur; q.append(j); found.append(j)
-            if w == end: done = True
     note = (f"{words[cur]} leaves the queue and generates {show(found)}, each with parent {words[cur]}." if found
             else f"{words[cur]} leaves the queue and generates no new word.")
-    if done: note += " The end word is reached, so the search stops."
     st.append({"at": {"key": cur}, "vars": {"queue": show(q), "parent": "{" + ", ".join(f"{words[k]}:{words[v]}" for k, v in parent.items() if k != v) + "}"}, "note": note})
 path = []; i = idx[end]
 while True:
@@ -66,6 +64,6 @@ while True:
     i = parent[i]
 path.reverse()
 st.append({"at": {"key": idx[end]}, "vars": {"queue": show(q), "parent": "followed"},
-           "note": "Following the parents from gold back to lead and reversing gives " + ", ".join(path) + "."})
+           "note": "The search ran until the queue emptied. The caller then follows the parents from gold back to lead, and the reversed list is " + ", ".join(path) + "."})
 assert path == ["lead", "load", "goad", "gold"]
 fill(CH, F, block(list(range(len(words))), ["key"], st), "@@TRACE2@@")

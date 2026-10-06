@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A fire-spread simulator reports ten minutes for a forest that burns out in four. A word-game solver needs seconds to connect two short words. A lock solver answers that a reachable code has no route. A maze solver with limited wall breaks answers "no path" on a maze that has one. Each program runs an ordinary breadth-first search, and each failure comes from what the search treats as one vertex, one step or one minute. This chapter changes those three decisions one at a time.
+A distance labeler that runs one search per depot needs minutes on a city with five hundred depots. A fire-spread simulator reports ten minutes for a forest that burns out in four. A word-game solver needs seconds to connect two short words. A door-and-key maze solver answers that a reachable room has no route. A maze solver with limited wall breaks answers "no path" on a maze that has one. Each of the five programs runs an ordinary breadth-first search, and each is wrong or too slow because of one decision the plain search fixes in advance: where it starts, what one minute counts, how many ends it grows from, what one vertex holds, and which state it may discard. This chapter changes those decisions one at a time.
 
 ### Prerequisites
 

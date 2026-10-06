@@ -73,7 +73,7 @@ Think of one extra vertex, called the **super-source**, joined by an edge to eve
 
 #### What A Layer Is
 
-A **layer** is the set of vertices with the same distance to their nearest source. Layer 0 holds all sources. Layer 1 holds the vertices that are one edge away from a source and not in layer 0. Each later layer follows the same rule.
+A **layer** is the set of vertices with the same distance to their nearest source. The frontier, defined below, is the part of a layer that still waits for expansion, so at the start of a pass it is the whole layer. Layer 0 holds all sources. Layer 1 holds the vertices that are one edge away from a source and not in layer 0. Each later layer follows the same rule.
 
 #### How One Queue Serves All Sources
 
@@ -92,7 +92,6 @@ The search needs the adjacency list `adj`, one array for discovery, one for dist
 - **visited** is a boolean array; `true` means the vertex is a source or was discovered from an earlier vertex.
 - **distance** is an int array; every source holds 0 and a vertex that is never reached keeps -1.
 - **queue** is an `ArrayDeque` that starts with all distinct sources and then holds the discovered vertices in order.
-- **minutes** is an int that counts completed layers in the exercises that ask for a spread time. Neither trace shows it.
 
 <!-- stage: trace -->
 ### Following Many Sources Together
@@ -223,7 +222,7 @@ Running one search per source is the false friend. It returns correct values and
 
 **Example 2.** Input `n = 7`, `edges = [[0,1],[1,2],[2,3],[3,4],[4,5]]`, `sources = [0,5]`, output `2`.
 
-**Hint.** A round is one pass over the queue contents as they stand at its start. The next lesson, Count By Whole Layers, teaches this loop in detail. When the queue is empty after a round, did that round add a vertex?
+**Hint.** A round is one pass over the queue contents as they stand at its start. Write `int size = queue.size();` before the pass, remove exactly `size` vertices in a `for` loop, and count the round after that loop ends. The next lesson, Count By Whole Layers, teaches this loop in detail. When the queue is empty after a round, did that round add a vertex?
 
 **Changed decision.** The method adds one to the count only when a round discovers a new vertex, so the last round of the loop does not count.
 
@@ -244,6 +243,6 @@ Running one search per source is the false friend. It returns correct values and
 
 **Example 2.** Input `grid = [[2,1,1],[0,1,1],[1,0,1]]`, output `-1`.
 
-**Hint.** A pass over the queue contents as they stand at its start is a layer, which the next lesson, Count By Whole Layers, teaches in detail. What does one such pass represent?
+**Hint.** A pass over the queue contents as they stand at its start is a layer. Write `int size = queue.size();` before the pass, remove exactly `size` cells in a `for` loop, and count the minute after that loop ends. The next lesson, Count By Whole Layers, teaches this in detail. What does one such pass represent?
 
 **Changed decision.** The method processes the queue one layer at a time, and each completed layer that rots a fresh orange is one minute.

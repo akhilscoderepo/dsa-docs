@@ -66,7 +66,7 @@ Take two queue entries at the same room. Entry A has `a` charges left and entry 
 
 #### Why Distance Must Be Compared
 
-The relation above ignores how many moves each entry has already used. A **layer** is the set of entries with the same move count. Breadth-first search dequeues and discovers entries in nondecreasing layer order. When it considers a new entry B, every entry already enqueued at that room belongs to the same layer as B or an earlier one.
+The relation above ignores how many moves each entry has already used. A **layer** is the set of entries with the same move count, which is the same layer as in the earlier lessons with the move count as the distance. The frontier at the start of a pass is that whole layer. Breadth-first search dequeues and discovers entries in nondecreasing layer order. When it considers a new entry B, every entry already enqueued at that room belongs to the same layer as B or an earlier one.
 
 Suppose A was discovered earlier, so its move count is at most B's, and `a >= b`. Any route that continues from B finishes no sooner than the same route continues from A. Entry B is **dominated** and can be discarded. The invariant is that the search keeps, per room, the largest charge count among its enqueued entries, and it enqueues a new entry only when its charge count is strictly larger.
 
@@ -90,7 +90,7 @@ The search keeps the adjacency list `adj`, one integer array `best` and one queu
 
 #### A Map Where Fewer Moves Lose
 
-The first map is the five-room map of the naive stage with `k = 1`. The cells are room ids and the pointer `cur` marks the room of the entry just taken from the queue. The search enqueues room 1 with zero charges at move 1 and room 2 with one charge. Later it reaches room 1 again with one charge. The comparison `1 > 0` holds, so that entry joins the queue and `best[1]` becomes 1. Room 4 then comes through the blocked edge at move 4.
+The first map is the five-room map of the naive stage with `k = 1`. The cells are room ids and the pointer `cur` marks the room of the entry just taken from the queue. The `queue` column writes each entry as `node:remaining`, so `1:0` is room 1 with 0 charges left. The search enqueues room 1 with zero charges at move 1 and room 2 with one charge. Later it reaches room 1 again with one charge. The comparison `1 > 0` holds, so that entry joins the queue and `best[1]` becomes 1. Room 4 then comes through the blocked edge at move 4.
 
 ```trace
 {"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"best":"1,0,1,-1,-1","queue":"1:0 2:1"},"note":"The search takes room 0 with 1 charge after 0 moves. It enqueues room 1 with 0 charges and room 2 with 1 charge."},{"at":{"cur":1},"vars":{"best":"1,0,1,-1,-1","queue":"2:1"},"note":"The search takes room 1 with 0 charges after 1 move. It discards room 4, which costs more than the 0 charges left."},{"at":{"cur":2},"vars":{"best":"1,0,1,1,-1","queue":"3:1"},"note":"The search takes room 2 with 1 charge after 1 move. It enqueues room 3 with 1 charge."},{"at":{"cur":3},"vars":{"best":"1,1,1,1,-1","queue":"1:1"},"note":"The search takes room 3 with 1 charge after 2 moves. It enqueues room 1 with 1 charge."},{"at":{"cur":1},"vars":{"best":"1,1,1,1,0","queue":"4:0"},"note":"The search takes room 1 with 1 charge after 3 moves. It enqueues room 4 with 0 charges."},{"at":{"cur":4},"vars":{"best":"1,1,1,1,0","queue":"empty"},"note":"The search takes room 4 with 0 charges after 4 moves. This is the target, so it returns 4."}]}
@@ -138,7 +138,7 @@ Two Java details matter. The array `best` is filled with -1, because the default
 
 #### Reading The Cue
 
-Use this method when a fewest-moves search carries a consumable amount, such as wall breaks, fuel, stops or skips, and this lesson calls the remaining count charges, and the same position can be reached with different amounts left. Statements say "at most k obstacles" or "with at most k stops". If the charges only go down and more is always better, the comparison on `best` applies.
+Use this method when a fewest-moves search carries a consumable amount, such as wall breaks, fuel, stops or skips. This lesson calls the amount left the charges. The same position can be reached with different charges left. Statements say "at most k obstacles" or "with at most k stops". If the charges only go down and more is always better, the comparison on `best` applies.
 
 #### Checking The Invariant
 
@@ -168,7 +168,7 @@ The false friend is the Boolean visited array by room or cell. It looks the same
 
 **Example 2.** Input `n = 5`, `edges = [[0,1,1],[0,2,0],[2,3,0],[3,1,0],[1,4,1]]`, `k = 1`, output `4`.
 
-**Hint.** What two values identify a queue entry so that two equal entries are really the same situation?
+**Hint.** What two values identify a queue entry so that two equal entries are really the same situation? Keep a `boolean[n][k + 1]` array named `visited`, where `visited[v][c]` is true once the pair of vertex `v` and `c` charges has entered the queue.
 
 **Changed decision.** The visited array is indexed by the pair of vertex and remaining charges and not by the vertex alone.
 

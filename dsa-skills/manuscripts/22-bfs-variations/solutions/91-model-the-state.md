@@ -254,9 +254,9 @@ import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 
 public final class WordSequence {
-    /** The shared search of the lesson: layers, a table move rule and a word move rule. */
+    /** The shared search of the lesson: searchFromSet, a table move rule and a word move rule. */
     static final class StateWalk {
-        static int[] layers(int keyCount, int[] startSet, IntFunction<int[]> moves, int[] parent) {
+        static int[] searchFromSet(int keyCount, int[] startSet, IntFunction<int[]> moves, int[] parent) {
             int[] dist = new int[keyCount];
             Arrays.fill(dist, -1);
             Arrays.fill(parent, -1);
@@ -319,18 +319,23 @@ public final class WordSequence {
         int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         // The rotting trace table: two sources, largest distance 2, and every fresh cell reached.
         int[][] grid = {{2, 1, 1, 0}, {1, 0, 1, 1}, {0, 1, 1, 2}};
-        int[] dist = StateWalk.layers(12, new int[] {0, 11}, StateWalk.gridMoves(grid, dirs, v -> v == 1), new int[12]);
+        int[] dist = StateWalk.searchFromSet(12, new int[] {0, 11}, StateWalk.gridMoves(grid, dirs, v -> v == 1), new int[12]);
         if (!Arrays.equals(dist, new int[] {0, 1, 2, -1, 1, -1, 2, 1, -1, 2, 1, 0})) throw new AssertionError("rot dist " + Arrays.toString(dist));
         int top = 0;
         for (int d : dist) top = Math.max(top, d);
         if (top != 2) throw new AssertionError("minutes");
+        // The four-way rule gives 2 moves at a corner, and the eight-way rule gives 8 moves at the center of an open 3 by 3 table.
+        int[][] open3 = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
+        int[][] eight = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+        if (StateWalk.gridMoves(open3, dirs, v -> v == 1).apply(0).length != 2) throw new AssertionError("four-way corner");
+        if (StateWalk.gridMoves(open3, eight, v -> v == 1).apply(4).length != 8) throw new AssertionError("eight-way center");
         // A fresh cell behind a wall keeps -1, and a duplicate source does not queue twice.
-        int[] cut = StateWalk.layers(3, new int[] {0, 0}, StateWalk.gridMoves(new int[][] {{2, 0, 1}}, dirs, v -> v == 1), new int[3]);
+        int[] cut = StateWalk.searchFromSet(3, new int[] {0, 0}, StateWalk.gridMoves(new int[][] {{2, 0, 1}}, dirs, v -> v == 1), new int[3]);
         if (!Arrays.equals(cut, new int[] {0, -1, -1})) throw new AssertionError("cut " + Arrays.toString(cut));
         // The word chain from the trace: parents lead to the begin word, and the chain has dist + 1 entries.
         String[] ws = {"lead", "load", "goad", "gold", "lend", "mend", "loan"};
         int[] parent = new int[ws.length];
-        int[] wd = StateWalk.layers(ws.length, new int[] {0}, StateWalk.wordMoves(ws), parent);
+        int[] wd = StateWalk.searchFromSet(ws.length, new int[] {0}, StateWalk.wordMoves(ws), parent);
         int len = 0;
         for (int at = 3; at != -1; at = parent[at]) len++;
         if (wd[3] != 3 || len != 4 || parent[0] != -1) throw new AssertionError("chain");

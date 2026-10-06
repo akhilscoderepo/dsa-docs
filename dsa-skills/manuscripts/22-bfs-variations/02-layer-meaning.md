@@ -66,7 +66,7 @@ A **layer** is the set of all vertices at the same distance from the source. Lay
 
 #### Reading The Frontier Size
 
-The **frontier** is the content of the queue at the moment a pass begins. Because vertices leave the queue in nondecreasing distance, that content is exactly one layer and nothing else. The search reads `size = queue.size()` before it removes anything. This value is the **snapshot** of the frontier, and it stays fixed while the queue grows.
+The **frontier** is the content of the queue at the moment a pass begins. Because vertices leave the queue in nondecreasing distance, that content is exactly one layer and nothing else. The search reads `size = queue.size()` before it removes anything. This value is the **snapshot** of the frontier, and it stays fixed while the queue grows. The first lesson called the unexpanded part of a layer the frontier, and the two meanings agree, because at the start of a pass the unexpanded part is the whole layer.
 
 #### Expanding Exactly One Layer
 

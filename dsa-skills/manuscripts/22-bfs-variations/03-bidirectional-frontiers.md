@@ -54,13 +54,13 @@ The start is not the only fixed point. The target is known as well, and every mo
 <!-- stage: insight -->
 ### Growing Two Searches Toward Each Other
 
-One search starts at the start state, and a second search starts at the target and uses the same moves backward. Each search stops long before it reaches the far end. The answer is the sum of the two distances at the state where they connect.
+One search starts at the start state, and a second search starts at the target and uses the same moves backward. Each search stops long before it reaches the far end. The answer is the sum of the two distances across the edge where they connect.
 
 #### Two Searches With Two Maps
 
 Each search keeps its own map from a state to the distance from its own origin. The map `distStart` holds distances from the start and the map `distTarget` holds distances from the target. The two maps stay separate, because a state can appear in both with different values.
 
-The **frontier** of a search is the list of its newest states, all at the largest distance the search has reached and not yet expanded. Initially `frontierStart` holds the start and `frontierTarget` holds the target.
+The **frontier** of a search is the list of its newest states, all at the largest distance the search has reached and not yet expanded. Initially `frontierStart` holds the start and `frontierTarget` holds the target. This agrees with the earlier lessons, where the frontier is the unexpanded part of a layer, because each round here expands a whole layer.
 
 <!-- names: frontier, layer, crossing -->
 
@@ -74,15 +74,15 @@ The search tests a state at the moment a move generates it. For each generated `
 
 The test must happen here and not later. Suppose the start is 0 and the target is 1, with one move between them. Before the first expansion, `distStart` holds only 0 and `distTarget` holds only 1, so no state sits in both maps.
 
+The generated neighbor of 0 is 1, which the opposite map already holds, so the generation test returns 0 + 1 + 0 = 1 at once. Every odd distance has such a crossing edge between a state of one map and a state of the other.
+
 A test that waits for one state in both maps still answers correctly. The first expansion writes state 1 into `distStart`, and the test then sees it. That answer comes one expansion later than the generation test, so it does extra work.
 
-A test that compares queue fronts fails. When each side removes one state per turn, the start side removes 0 and queues 1, while the target side removes 1 and queues 0. The two queues never hold the same state at the same time.
-
-The generated neighbor of 0 is 1, which the opposite map already holds, so the generation test returns 0 + 1 + 0 = 1 at once. Every odd distance has such a crossing edge between a state of one map and a state of the other.
+A test that compares the two frontiers after each side expands fails on the same example. After the start side expands 0, its frontier holds 1. After the target side expands 1, its frontier holds 0. The frontiers never hold the same state, because the connection is the edge between 0 and 1.
 
 #### Why Whole Layers Keep Sums Exact
 
-The invariant is that before a round starts with depths `dS` and `dT`, no path of length `dS + dT` or less exists between the start and the target. The opposite map holds complete layers up to depth `dT`.
+The invariant is that before a round starts, no path of length `dS + dT` or less exists between the start and the target. Here `dS` is the depth of the start-side map, which is its largest distance, and `dT` is the depth of the target-side map. The opposite map holds complete layers up to depth `dT`.
 
 A match at a smaller depth would give a path of length `dS + dT` or less, which the invariant excludes, so every match has depth `dT`. A match found while expanding side `S` therefore gives the length `dS + 1 + dT`, and the first match is the answer.
 

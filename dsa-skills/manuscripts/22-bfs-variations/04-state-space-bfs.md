@@ -33,9 +33,9 @@ static List<List<Integer>> buildGraph() {
 ```
 
 ```predict
-A device has eight wheels and the target is two commands away from the start. How many codes does the method above build, and how many codes does a search need to read?
+A device has eight wheels and the target is two commands away from the start. The same method, written with eight wheels in place of four, builds the list first. How many codes does it build, and how many codes does a search need to read?
 
-The method builds 10^8 codes with 16 neighbors each, about 1.6 billion list entries, which does not fit in memory. A search that stops two commands from the start reads fewer than 300 codes: the start, its 16 neighbors, and at most 16 times 16 codes after that.
+The same method with eight wheels builds 10^8 codes with 16 neighbors each, about 1.6 billion list entries, which does not fit in memory. A search that stops two commands from the start reads fewer than 300 codes: the start, its 16 neighbors, and at most 16 times 16 codes after that.
 ```
 
 <!-- stage: bottleneck -->
@@ -64,15 +64,23 @@ The **encoding** is the Java value that stands for a state, such as a `String`, 
 
 #### Including Every Fact That Matters
 
-The encoding must contain every fact that changes which moves are legal later. Take a grid with two rows. Row 0 reads S, a free cell, a door D and the target T. Row 1 has a wall below S, a key K below the free cell, and walls below the door and the target. The door opens only for a walker who holds the key. A search that marks only the cell as visited reaches the free cell without the key and marks it. It then walks down to the key, but the free cell is already visited, so it never returns. That search reports -1. The true answer is 5 moves, found when the encoding is the triple of row, column and whether the key is held. The same cell with and without the key are two different states.
+The encoding must contain every fact that changes which moves are legal later. Take a grid with two rows. Row 0 reads S, a free cell, a door D and the target T. Row 1 has a wall below S, a key K below the free cell, and walls below the door and the target. The door opens only for a walker who holds the key. The drawing below labels each cell with its row and column.
+
+```text
+         col 0   col 1   col 2   col 3
+row 0     S       .       D       T
+row 1     #       K       #       #
+```
+
+The start S is at (0,0), the free cell at (0,1), the door D at (0,2) and the target T at (0,3). The key K is at (1,1), and # marks a wall. A search that marks only the cell as visited reaches the free cell without the key and marks it. It then walks down to the key, but the free cell is already visited, so it never returns. That search reports -1. The true answer is 5 moves, found when the encoding is the triple of row, column and whether the key is held. The same cell with and without the key are two different states.
 
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search keeps a queue, a set of seen states and a counter. The code below uses these names, and each one has a fixed starting value. The traces also show `queued`, which is the value of `queue.size()` after the step shown.
+The search keeps a queue, a set of seen states, the two counters `turns` and `count`, and the two code names `current` and `next`. The code below uses these names, and the first four have a fixed starting value. The traces also show `queued`, which is the value of `queue.size()` after the step shown.
 
 - **queue** is an `ArrayDeque<String>` that holds generated codes waiting to be expanded; it starts with the start code.
-- **seen** is a `HashSet<String>` that holds every code that is blocked or already generated; it starts with the blocked codes.
+- **seen** is a `HashSet<String>` that holds every code that is blocked or already generated; it starts with the blocked codes, and the start code 0000 joins it before the loop.
 - **turns** is an `int` that counts moves from the start, which are commands in the lock; it is 0 for the start code and grows by one for each pass over the queue.
 - **count** is an `int` that starts as `queue.size()` at the beginning of a pass and falls to 0 as the pass removes codes.
 - **current** is the code that the search just took from the queue.
@@ -150,7 +158,7 @@ The invariant of the lesson is that the encoding holds every fact that affects f
 
 #### Avoiding The False Friend
 
-The false friend is marking only the visible location. It looks like the ordinary grid search from the earlier chapter, and it gives the wrong answer as soon as a key, a mask or a mode changes the moves available from a cell. The door and key grid in the insight stage shows -1 where the true answer is 5. The opposite mistake also costs: an encoding with unused facts makes the search visit duplicates of the same situation.
+The false friend is marking only the visible location. It looks like the ordinary grid search from the earlier chapter, and it gives the wrong answer as soon as a key, a fuel level or a mode changes the moves available from a cell. The door and key grid in the insight stage shows -1 where the true answer is 5. The opposite mistake also costs: an encoding with unused facts makes the search visit duplicates of the same situation.
 
 <!-- stage: exercises -->
 ### Exercises

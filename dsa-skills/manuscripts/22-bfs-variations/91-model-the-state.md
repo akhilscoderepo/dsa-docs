@@ -14,9 +14,9 @@ This lesson asks a different question. Before any loop is written, which things 
 <!-- stage: contributions -->
 ### What Each Earlier Lesson Adds
 
-Five earlier lessons in this chapter supply the pieces. Start From Many Sources contributes the seeding step: every source enters the queue at distance 0 before the first removal. Count By Whole Layers contributes the rule that a layer is the group of vertices at one distance, and that the program reads `queue.size()` before it processes a layer. Search From Both Ends contributes the habit of searching from the end that has the smaller frontier, or from the target when the target is the only fixed point. The Smallest Shortest Path exercise uses that second habit.
+Five earlier lessons in this chapter supply the pieces. Start From Many Sources contributes the seeding step: every source enters the queue at distance 0 before the first removal. Count By Whole Layers contributes the rule that a layer is the group of vertices at one distance, and that the program reads `queue.size()` before it processes a layer. Search From Both Ends contributes the habit of searching from the end that has the smaller frontier, or from the target when the target is the only fixed point.
 
-Search States You Generate contributes the complete encoding of a state and the generation of neighbors from rules instead of from a stored table. Keep The Best Resource Left contributes the test for when one state dominates another, which decides what the encoding must include. No exercise below spends a resource, so this contribution applies when a new contract adds one.
+Search States You Generate contributes the rule that a state must be encoded completely, which this lesson calls the state key, and the generation of neighbors from rules instead of from a stored table. Keep The Best Resource Left contributes the test for when one state dominates another, which decides what the encoding must include. No exercise below spends a resource, so this contribution applies when a new contract adds one.
 
 The combination adds one order of work. The program decides four things first and writes the loop second. The invariant is that every state key enters the queue once, marked before it enters, and the key holds everything that later moves depend on. The nearest false friend is the single-source grid search of the previous chapter. It passes every sample that has one source, no walls and no generated states.
 
@@ -121,10 +121,10 @@ Cells 0 and 11 form the start set, and both enter the queue at once as layer 0. 
 
 The second trace searches for a shortest sequence from lead to gold. The list of seven words has these ids, from 0 to 6, and the cells of the trace are these ids. The id 0 is lead, 1 is load, 2 is goad, 3 is gold, 4 is lend, 5 is mend and 6 is loan. The pointer `key` marks the word that left the queue. No table exists, so the move rule generates each next word by replacing one letter and looking the result up. The variable `parent` records which word discovered each reached word.
 
-The word lead generates load and lend. Load then generates goad and loan, and lend generates mend. Loan and mend open no new route, but the search still marks them, because it cannot know that in advance. Goad generates gold, and the search stops. Following the parents from gold gives a sequence of four words.
+The word lead generates load and lend. Load then generates goad and loan, and lend generates mend. Loan and mend open no new route, but the search still marks them, because it cannot know that in advance. Goad generates gold. The search has no target, so it keeps running until the queue is empty. Afterward the caller reads `parent` and follows it from gold back to lead, which gives a sequence of four words.
 
 ```trace
-{"cells":[0,1,2,3,4,5,6],"pointers":["key"],"steps":[{"at":{"key":-1},"vars":{"queue":"[lead]","parent":"{}"},"note":"The begin word lead has id 0. It is marked as reached and enters the queue."},{"at":{"key":0},"vars":{"queue":"[load, lend]","parent":"{load:lead, lend:lead}"},"note":"lead leaves the queue and generates [load, lend], each with parent lead."},{"at":{"key":1},"vars":{"queue":"[lend, goad, loan]","parent":"{load:lead, lend:lead, goad:load, loan:load}"},"note":"load leaves the queue and generates [goad, loan], each with parent load."},{"at":{"key":4},"vars":{"queue":"[goad, loan, mend]","parent":"{load:lead, lend:lead, goad:load, loan:load, mend:lend}"},"note":"lend leaves the queue and generates [mend], each with parent lend."},{"at":{"key":2},"vars":{"queue":"[loan, mend, gold]","parent":"{load:lead, lend:lead, goad:load, loan:load, mend:lend, gold:goad}"},"note":"goad leaves the queue and generates [gold], each with parent goad. The end word is reached, so the search stops."},{"at":{"key":3},"vars":{"queue":"[loan, mend, gold]","parent":"followed"},"note":"Following the parents from gold back to lead and reversing gives lead, load, goad, gold."}]}
+{"cells":[0,1,2,3,4,5,6],"pointers":["key"],"steps":[{"at":{"key":-1},"vars":{"queue":"[lead]","parent":"{}"},"note":"The begin word lead has id 0. It is marked as reached and enters the queue."},{"at":{"key":0},"vars":{"queue":"[load, lend]","parent":"{load:lead, lend:lead}"},"note":"lead leaves the queue and generates [load, lend], each with parent lead."},{"at":{"key":1},"vars":{"queue":"[lend, goad, loan]","parent":"{load:lead, lend:lead, goad:load, loan:load}"},"note":"load leaves the queue and generates [goad, loan], each with parent load."},{"at":{"key":4},"vars":{"queue":"[goad, loan, mend]","parent":"{load:lead, lend:lead, goad:load, loan:load, mend:lend}"},"note":"lend leaves the queue and generates [mend], each with parent lend."},{"at":{"key":2},"vars":{"queue":"[loan, mend, gold]","parent":"{load:lead, lend:lead, goad:load, loan:load, mend:lend, gold:goad}"},"note":"goad leaves the queue and generates [gold], each with parent goad."},{"at":{"key":6},"vars":{"queue":"[mend, gold]","parent":"{load:lead, lend:lead, goad:load, loan:load, mend:lend, gold:goad}"},"note":"loan leaves the queue and generates no new word."},{"at":{"key":5},"vars":{"queue":"[gold]","parent":"{load:lead, lend:lead, goad:load, loan:load, mend:lend, gold:goad}"},"note":"mend leaves the queue and generates no new word."},{"at":{"key":3},"vars":{"queue":"[]","parent":"{load:lead, lend:lead, goad:load, loan:load, mend:lend, gold:goad}"},"note":"gold leaves the queue and generates no new word."},{"at":{"key":3},"vars":{"queue":"[]","parent":"followed"},"note":"The search ran until the queue emptied. The caller then follows the parents from gold back to lead, and the reversed list is lead, load, goad, gold."}]}
 ```
 
 <!-- stage: code -->
@@ -132,7 +132,7 @@ The word lead generates load and lend. Load then generates goad and loan, and le
 
 #### Writing The Search Once
 
-The method `layers` takes the number of keys, the start set, a move rule and a `parent` array. The move rule is an `IntFunction<int[]>` that maps a key to the keys one step away. The method fills `parent` and returns `dist`, where -1 marks a key that the search never reached. The same array serves as the `visited` record, so no second structure exists. The final pass expands the last layer and finds nothing, so `layer` ends one higher than the largest distance. Callers read the largest value in `dist`. The imports and the wrapper class make the block compile on its own.
+The method `searchFromSet` takes the number of keys, the start set, a move rule and a `parent` array. The move rule is an `IntFunction<int[]>` that maps a key to the keys one step away. The method fills `parent` and returns `dist`, where -1 marks a key that the search never reached. The same array serves as the `visited` record, so no second structure exists. The final pass expands the last layer and finds nothing, so `layer` ends one higher than the largest distance. Callers read the largest value in `dist`. The imports and the wrapper class make the block compile on its own.
 
 ```java
 import java.util.ArrayDeque;
@@ -143,7 +143,7 @@ import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 
 final class StateWalk {
-    static int[] layers(int keyCount, int[] startSet, IntFunction<int[]> moves, int[] parent) {
+    static int[] searchFromSet(int keyCount, int[] startSet, IntFunction<int[]> moves, int[] parent) {
         int[] dist = new int[keyCount];
         Arrays.fill(dist, -1);                               // -1 means not reached yet
         Arrays.fill(parent, -1);                             // -1 means no discoverer yet
@@ -208,9 +208,11 @@ static IntFunction<int[]> wordMoves(String[] words) {
 }
 ```
 
+The array `dirs` lists the allowed steps as row and column changes. For four-way movement, pass `{{1,0},{-1,0},{0,1},{0,-1}}`. For eight-way movement, add the four diagonals, so `dirs` becomes `{{1,0},{-1,0},{0,1},{0,-1},{1,1},{1,-1},{-1,1},{-1,-1}}`. The predicate `open` receives the value of a candidate cell and returns true when a route may enter it.
+
 #### Calling It For Three Requests
 
-For nearest distance with walls, pass every zero cell as the start set and `gridMoves` with `v -> v == 1`, and use `dist` as the answer table. For rotting, pass every cell holding 2 with the same test and read the largest value in `dist`. A fresh cell that keeps -1 never rots. For the chain of codes, pass the id of the begin word and `wordMoves`, then follow `parent` from the end word id until -1 and reverse the result. The three calls differ only in the start set, the move rule and what the caller reads afterward.
+For nearest distance with walls, pass every zero cell as the start set and `gridMoves` with `v -> v == 1`, and use `dist` as the answer table. For rotting, pass every cell holding 2 with the same test and read the largest value in `dist`. A fresh cell that keeps -1 never rots. For the chain of codes, the caller appends the begin word to the word array when the list lacks it, then passes the id of that entry and `wordMoves` over the array. After the run, follow `parent` from the end word id until -1 and reverse the result. The three calls differ only in the start set, the move rule and what the caller reads afterward.
 
 - **Time** is O(V + E) for the search plus the cost of the move rule calls, where `E` counts the pairs that the rule reports. A table rule costs O(1) per key. The word rule tries 25 letters at each of `L` positions and hashes a word of length `L`, so it costs O(L^2) per key and the whole word search costs O(V * L^2).
 - **Space** is O(V), because `dist`, `parent` and the queue hold at most one entry per key, and the word rule adds a map of V words.
@@ -220,7 +222,7 @@ For nearest distance with walls, pass every zero cell as the start set and `grid
 
 #### Mapping A Changed Contract To One Choice
 
-Read a changed contract and ask which of the four choices it touches. More than one source changes the start set. A new obstacle or a new kind of step changes the move rule. An extra fact that the answer depends on, such as a remaining resource, changes the state key. A different unit of cost, such as minutes in place of steps, changes the layer meaning. A different report, such as the last cell or the whole sequence, changes none of the four. The exercises below change the report in two cases, the move rule in one and the start set in one, and the other choices stay as they were.
+Read a changed contract and ask which of the four choices it touches. More than one source changes the start set. A new obstacle or a new kind of step changes the move rule. An extra fact that the answer depends on, such as a remaining resource, changes the state key. A different unit of cost, such as minutes in place of steps, changes the layer meaning. A different report, such as the last cell or the whole sequence, changes none of the four. The exercises below change the report in three cases and the move rule in one. None of them changes the start set, and the other choices stay as they were.
 
 #### Keeping The Invariant
 
@@ -295,7 +297,7 @@ The single-source grid search is the false friend of this lesson. It passes ever
 
 **Example 2.** Input `begin = "hat"`, `end = "cog"`, `words = [hot, dot, cog]`, output `[]`, because the end word is in the list but no chain of one-letter changes reaches it.
 
-**Hint.** What is one vertex here, and how does the program find its neighbors without a stored table? What must the search store to rebuild a sequence?
+**Hint.** What is one vertex here, and how does the program find its neighbors without a stored table? The begin word may be missing from the list, so the caller appends it to the array and passes its id. What must the search store to rebuild a sequence?
 
 **Changed decision.** The search stores the discovering word for each reached word, and the answer comes from following those parents.
 #### [Recognize] Smallest Shortest Path In A Binary Matrix (LeetCode 1091)
@@ -316,6 +318,6 @@ The single-source grid search is the false friend of this lesson. It passes ever
 
 **Example 2.** Input `grid = [[0,0,0],[0,1,0],[0,0,0]]`, output `[[0,0],[0,1],[1,2],[2,2]]`, because several shortest paths tie and the fixed order prefers the step to the right over the steps down.
 
-**Hint.** A forward search finds the length but does not tell which first step is smallest. From which cell should the distances be measured?
+**Hint.** A forward search finds the length but does not tell which first step is smallest. Search from the bottom right cell instead, so every open cell learns its distance to the target. Then walk forward from the top left cell. At each cell, try the steps in the fixed order and take the first neighbor whose distance is one less. This is the second habit of the Search From Both Ends lesson: begin at the target when it is the only fixed point.
 
 **Changed decision.** The search runs from the target, and a forward walk then chooses the earliest step that lowers the remaining distance.

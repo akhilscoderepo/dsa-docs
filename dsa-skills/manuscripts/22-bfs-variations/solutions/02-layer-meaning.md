@@ -203,7 +203,7 @@ public final class FirstTargetLayer {
 <!-- id: bv2-initially-complete -->
 
 **Approach.**
-The method runs the pass loop and keeps a counter `units`. For each pass it copies the queue size, removes that many vertices and appends their unvisited neighbors. The counter rises by one only when the pass appended at least one vertex. If the source has no neighbor, the first pass appends nothing, so the method returns 0 before any time unit is counted.
+The method runs the pass loop and keeps a counter `units`. Where the lesson code uses a flag, this method reads the queue itself: a pass removes exactly its own layer, so any vertex left in the queue afterward was appended by that pass. The counter rises by one only when the queue is nonempty after the pass. If the source has no neighbor, the first pass leaves the queue empty, so the method returns 0 before any time unit is counted.
 
 The invariant is that `units` equals the number of completed layers after layer 0, and layer 0 costs no time because the source holds the update from the start. The last pass in every run appends nothing, so counting each pass would overcount by one on every input. The vertices outside the component of the source never enter the queue and do not change the result.
 
@@ -231,21 +231,18 @@ public final class InitiallyComplete {
         int units = 0;
         // The loop ends when a pass leaves the queue empty.
         while (!queue.isEmpty()) {
-            // The snapshot separates the current layer from the one being appended.
-            int size = queue.size();
-            boolean grew = false;
-            for (int i = 0; i < size; i++) {
+            // The countdown starts at the size of the current layer and ignores later appends.
+            for (int left = queue.size(); left > 0; left--) {
                 int current = queue.poll();
                 for (int next : adj.get(current)) {
                     // Neighbors in the same or an earlier layer are skipped.
                     if (visited[next]) continue;
                     visited[next] = true;
                     queue.add(next);
-                    grew = true;
                 }
             }
-            // A pass that adds nothing is the last one and costs no time unit.
-            if (grew) units++;
+            // The queue holds only appended vertices now, so an empty queue means the last pass.
+            if (!queue.isEmpty()) units++;
         }
         return units;
     }

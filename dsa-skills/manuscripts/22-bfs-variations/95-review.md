@@ -26,5 +26,5 @@ A spread simulator ages every cell one minute per cell, and a maze solver forget
 ```
 
 ```quiz
-{"id": "bv-rev-model", "q": "A task asks for the shortest word sequence, not only its length. Which part of the model changes?", "options": ["The start set", "What the search records for each state, which now includes a parent", "The meaning of a layer", "Nothing changes"], "answer": 1, "explain": "The state key stays the word, and the program stores each word's parent so the sequence can be rebuilt after the search."}
+{"id": "bv-rev-model", "q": "A task asks for the shortest word sequence, not only its length. Which of the four choices changes: the start set, the state key, the move rule or the layer meaning?", "options": ["The start set", "The state key", "The move rule", "The layer meaning", "None; only what the loop records"], "answer": 4, "explain": "The state key stays the word, the moves and the layers stay as they were, and the program stores each word's parent so the sequence can be rebuilt after the search."}
 ```
