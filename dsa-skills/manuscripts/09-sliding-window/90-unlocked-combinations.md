@@ -5,7 +5,7 @@ A window alone is only a pair of indexes. It becomes a method when something ins
 
 ### Pairing Taught In This Chapter
 
-A window with counts forms the lesson Track Counts Inside A Window. The boundaries say which positions are active, and the counts say what those positions hold. The lesson adds one idea, a status counter that summarises a rule over the counts, so each step answers the rule in constant time. Its exercises use four rules: an exact match, a limit on repeats, a replacement budget and a minimum cover.
+A window with counts forms the lesson Track Counts Inside A Window. The boundaries say which positions are active, and the counts say what those positions hold. The lesson names and generalizes one idea, a status counter that summarises a rule over the counts. The missing count of lesson 04 and the distinct count of lesson 05 are already status counters. Each step answers the rule in constant time, except for the replacement budget, which needs the stale peak of lesson 09. Its exercises use four rules: an exact match, a limit on repeats, a replacement budget and a minimum cover.
 
 ### Pairings That Wait
 

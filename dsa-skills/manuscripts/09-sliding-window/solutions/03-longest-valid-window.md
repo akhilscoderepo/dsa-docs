@@ -137,7 +137,7 @@ public final class LongestNoRepeat {
 }
 ```
 
-#### Solution: [Boundary] Violation At Both Ends (Author exercise)
+#### Solution: [Boundary] Largest Jump Of Left (Author exercise)
 <!-- id: sw-many-removals -->
 
 **Approach.**

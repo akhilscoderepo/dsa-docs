@@ -22,7 +22,7 @@ public final class ExactlyOneOdd {
      * Invariant: after the shrink loop, every start in left..right gives a valid range ending at right.
      */
     static long atMost(int[] nums, int limit) {
-        // A negative budget admits no range, and the loop below would never settle, so return early.
+        // A negative budget admits no range, and the loop below would run left past the array, so return early.
         if (limit < 0) return 0;
         int left = 0, odd = 0;
         // total is a long: it can reach n * (n + 1) / 2.

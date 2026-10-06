@@ -59,13 +59,17 @@ The prediction points to a cheaper test. Each step changes the count of at most 
 
 A **status counter** is one integer that says how many letters currently break the rule. The rule differs by problem. An exact match breaks the rule for a letter whose window count differs from its pattern count. A repeat limit breaks the rule for a letter whose count exceeds the limit. A cover breaks the rule for a letter whose count is below its required count. The window is valid exactly when the status counter is 0.
 
+#### Earlier Counters Are Status Counters
+
+You already used two status counters. The missing count of lesson 04 and the distinct count of lesson 05 each summarise a rule over the counts in one integer.
+
 #### The Entering And Leaving Updates
 
 The **entering update** changes the count of one letter and then checks that letter's status again. If the letter was fine and is now broken, the counter rises by one. If it was broken and is now fine, the counter falls by one. The **leaving update** does the same for the letter at `left`. Both updates cost O(1), and each step makes one of each at most.
 
 #### The Combined Invariant
 
-The invariant has two parts. The counts describe exactly `s[left..right]`, and the status counter equals the number of letters that break the rule for those counts. Every test then reads the counter and never scans an array. The budget problem fits the same plan with one change. Its rule is about the whole window and not about each letter. The counter becomes the expression `length - largest count`, and the same two updates keep the counts correct.
+The invariant has two parts. The counts describe exactly `s[left..right]`, and the status counter equals the number of letters that break the rule for those counts. Every test then reads the counter and never scans an array. The budget problem is an exception to the constant-time counter. Its rule is about the whole window and not about each letter, and it needs the largest count, which one counter cannot hold. It uses the stale peak from lesson 09, and the same two updates keep the counts correct.
 
 <!-- names: status counter, entering update, leaving update -->
 
@@ -167,7 +171,7 @@ Update the counts and the status counter in the same method, so one cannot chang
 
 **Prerequisites.** The status counter, and the fixed windows of the earlier lesson on counts.
 
-**Problem.** Given strings `p` and `s`, return the smallest start index of a substring of `s` that is a permutation of `p`, or -1 if none exists. The method keeps a status counter of the letters whose window count differs from their count in `p`. It does constant work per step and never compares two arrays.
+**Problem.** You met this problem in lesson 02; now a status counter replaces the comparison of two arrays. Given strings `p` and `s`, return the smallest start index of a substring of `s` that is a permutation of `p`, or -1 if none exists. The method keeps a status counter of the letters whose window count differs from their count in `p`. It does constant work per step and never compares two arrays.
 
 **Constraints.**
 - **Lengths** satisfy `1 <= p.length, s.length <= 10^5`.
@@ -188,7 +192,7 @@ Update the counts and the status counter in the same method, so one cannot chang
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given a string `s` and an integer `limit >= 1`, return the length of the longest substring in which every character occurs at most `limit` times. With `limit = 1`, this is the problem of the longest substring without repeating characters. The status counter holds the number of characters whose count exceeds `limit`.
+**Problem.** You met this problem in lesson 03; now the limit on repeats is a parameter. Given a string `s` and an integer `limit >= 1`, return the length of the longest substring in which every character occurs at most `limit` times. With `limit = 1`, this is the problem of the longest substring without repeating characters. The status counter holds the number of characters whose count exceeds `limit`.
 
 **Constraints.**
 - **Length** satisfies `0 <= s.length <= 10^5`.
@@ -210,7 +214,7 @@ Update the counts and the status counter in the same method, so one cannot chang
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given a string `s` of uppercase letters and an integer `k`, return an `int[]` of two entries, `{start, length}`, for the leftmost longest substring that becomes one repeated letter after at most `k` replacements. The start must name a valid substring.
+**Problem.** You met this problem in lessons 07 and 09; now the answer includes the leftmost start, so the window must be valid when it is recorded. Given a string `s` of uppercase letters and an integer `k`, return an `int[]` of two entries, `{start, length}`, for the leftmost longest substring that becomes one repeated letter after at most `k` replacements. The start must name a valid substring.
 
 **Constraints.**
 - **Length** satisfies `1 <= s.length <= 10^5`.
@@ -232,7 +236,7 @@ Update the counts and the status counter in the same method, so one cannot chang
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given lowercase strings `s` and `t`, return an `int[]` of two entries: the length of the shortest substring of `s` that contains every character of `t` with its multiplicity, and the number of substrings of that length that do so. Return `{-1, 0}` when no substring qualifies.
+**Problem.** You met this problem in lesson 04; now the method also counts the shortest windows. Given lowercase strings `s` and `t`, return an `int[]` of two entries: the length of the shortest substring of `s` that contains every character of `t` with its multiplicity, and the number of substrings of that length that do so. Return `{-1, 0}` when no substring qualifies.
 
 **Constraints.**
 - **Lengths** satisfy `1 <= s.length, t.length <= 10^5`.

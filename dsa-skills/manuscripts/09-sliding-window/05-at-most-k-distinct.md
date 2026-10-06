@@ -3,7 +3,7 @@
 ## Limit A Window To K Distinct Values
 
 <!-- stage: context -->
-### A Cache That Keeps Evicting
+### A Cache That Must Not Overflow
 
 A service reads a stream of item ids and keeps recently used items in a small cache that holds `k` different ids. An engineer wants to know the longest run of consecutive requests that the cache serves without ever needing a `k + 1`-th id. The answer tells how large the cache must be to avoid thrashing on a typical burst of traffic. The first version of the analysis starts at each request and collects ids into a set until the set grows too large. On a log of ten million requests, it does not finish.
 
@@ -90,7 +90,7 @@ The best length is 4, reached by the block `3, 3, 2, 2`.
 
 #### A Limit Of Zero
 
-Take `ids = [4, 4, 4]` and `k = 0`. No window may hold any value, so the answer is 0. Each entering value raises the distinct count to 1, and the shrink loop removes values until the count is 0 again. The loop removes the entering value itself, so `left` becomes `right + 1` and the window is empty. The method never lets a count drop below 0, and `left` never passes `right + 1`.
+When the window is empty, `left` sits one past `right`. Take `ids = [4, 4, 4]` and `k = 0`. No window may hold any value, so the answer is 0. Each entering value raises the distinct count to 1, and the shrink loop removes values until the count is 0 again. The loop removes the entering value itself, so `left` becomes `right + 1` and the window is empty. The method never lets a count drop below 0, and `left` never passes `right + 1`.
 
 ```trace
 {"cells":[4,4,4],"pointers":["left","right"],"steps":[{"at":{"left":1,"right":0},"vars":{"distinct":"0","best":"0"},"note":"The id 4 enters, so the distinct count is 1. The id 4 leaves and its key is removed, so the distinct count is 0. The window length is 0, and best is 0."},{"at":{"left":2,"right":1},"vars":{"distinct":"0","best":"0"},"note":"The id 4 enters, so the distinct count is 1. The id 4 leaves and its key is removed, so the distinct count is 0. The window length is 0, and best is 0."},{"at":{"left":3,"right":2},"vars":{"distinct":"0","best":"0"},"note":"The id 4 enters, so the distinct count is 1. The id 4 leaves and its key is removed, so the distinct count is 0. The window length is 0, and best is 0."}]}

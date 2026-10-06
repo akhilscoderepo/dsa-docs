@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Quota Report That Counts Spans
 
-A billing system stores the usage of each day as a positive number of units. A report must count how many spans of consecutive days stay under a quota, because each such span passes a fair-use check. For a year of daily usage, the count has hundreds of thousands of possible spans. A developer writes a window that finds the longest span under the quota. The report needs the count of all spans, so the longest span is not enough.
+A billing system stores the usage of each day as a positive number of units. A report must count how many spans of consecutive days stay under a quota, because each such span passes a fair-use check. For a year of daily usage, 365 values give about 67,000 possible spans. The code calls the array of daily usage `nums` and the bound `quota`. A developer writes a window that finds the longest span under the quota. The report needs the count of all spans, so the longest span is not enough.
 
 Earlier lessons asked for one best length, and a window gave it. Counting every valid span asks for more. One window position stands for many spans, because every span inside a valid span is valid too. This lesson asks how the window can count all of them without listing them.
 
@@ -15,12 +15,12 @@ Earlier lessons asked for one best length, and a window gave it. Counting every 
 The direct method visits every span by its first and last day. A running sum grows as the last day moves, and each sum below the quota adds one to the answer.
 
 ```java
-static long countSpansByPairs(int[] usage, int quota) {
+static long countSpansByPairs(int[] nums, int quota) {
     long answer = 0;
-    for (int start = 0; start < usage.length; start++) {
+    for (int start = 0; start < nums.length; start++) {
         long sum = 0;
-        for (int end = start; end < usage.length; end++) {
-            sum += usage[end];
+        for (int end = start; end < nums.length; end++) {
+            sum += nums[end];
             if (sum < quota) answer++;
         }
     }
@@ -65,6 +65,7 @@ The window may shrink until it holds nothing. The **empty window** has `left = r
 
 The method keeps the usual two indexes, a summary of the window and a running answer.
 
+- **nums** holds the positive daily values, and **quota** is the bound that a span sum must stay under.
 - **left** is the smallest start with a valid span to `right`, and it equals `right + 1` for an empty window.
 - **right** is the end index that the method is counting for.
 - **sum** is the sum of `nums[left..right]`, held in a `long`.
@@ -135,7 +136,7 @@ The addition fails when a range inside a valid range may be invalid. Take `nums 
 
 #### Java Habits For This Pattern
 
-Count in a `long`, and add `right - left + 1` after the shrink loop. Guard the loop with `left <= right`, so an empty window is safe. For a product, use a `long` or a `double` carefully, and divide with integer division only when the values are positive integers. Do not write the count as a sum of window lengths computed from `best`.
+Count in a `long`, and add `right - left + 1` after the shrink loop. Guard the loop with `left <= right`, so an empty window is safe. For a product, use a `long` or a `double` carefully, and divide with integer division only when the values are positive integers.
 
 <!-- stage: exercises -->
 ### Exercises

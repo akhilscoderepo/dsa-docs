@@ -69,7 +69,7 @@ The method keeps the two indexes and one summary of the window.
 
 - **left** is the first index of the window, and it never moves backward.
 - **right** is the index of the value that just entered, and it advances once per iteration.
-- **violation count** is the number of outage values inside `flags[left..right]`.
+- **violation count** is the number of outage values inside `flags[left..right]`. The trace calls it `outages` and the code calls it `zeros`, and all three names mean the same count.
 - **best** is the largest length recorded after a shrink loop, and it starts at 0.
 
 <!-- stage: trace -->
@@ -132,7 +132,7 @@ After the shrink loop, the window is valid, and every discarded start is unusabl
 
 #### A Minimum-Cover Request Is A False Friend
 
-A request for the shortest range that covers some requirement looks similar, because it also uses two indexes. It shrinks while the window is still valid, and it records the length before validity is lost. The longest-valid pattern shrinks only while the window is invalid, and it records after validity returns. Copying one pattern into the other gives a wrong answer that passes small samples.
+A request for the shortest range that covers some requirement looks similar, because it also uses two indexes. The next lesson covers that request. It shrinks while the window is still valid, and it records the length before validity is lost. The longest-valid pattern shrinks only while the window is invalid, and it records after validity returns. Copying one pattern into the other gives a wrong answer that passes small samples.
 
 #### Java Habits For This Pattern
 
@@ -146,7 +146,7 @@ Use `while` for the shrink step. Use a count array or a `HashMap` for the window
 
 **Prerequisites.** The expand and shrink pattern of this lesson.
 
-**Problem.** Given a binary array `bits`, return the length of the longest contiguous block of `bits` that contains at most one value equal to 0. A block of length 0 is not allowed unless `bits` is empty.
+**Problem.** Given a binary array `bits`, return the length of the longest contiguous block of `bits` that contains at most one value equal to 0. An empty array has no block, and the answer is 0.
 
 **Constraints.**
 - **Length** satisfies `0 <= bits.length <= 10^5`.
@@ -183,7 +183,7 @@ Use `while` for the shrink step. Use a count array or a `HashMap` for the window
 
 **Changed decision.** The state changes from one zero count to a count per character, and the check becomes "no count above one".
 
-#### [Boundary] Violation At Both Ends (Author exercise)
+#### [Boundary] Largest Jump Of Left (Author exercise)
 <!-- id: sw-many-removals -->
 
 **Prerequisites.** The two exercises above.

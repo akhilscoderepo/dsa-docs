@@ -96,7 +96,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 - **Build - Author exercise: Longest Binary Run With One Zero.** Maintain the number of zeroes and shrink while it exceeds one.
 - **Vary - LC 3 Longest Substring Without Repeating Characters.** Maintain character multiplicities and remove from the left until the duplicate is gone.
-- **Boundary - Author exercise: Violation At Both Ends.** Trace repeated violations and verify the loop may remove several elements for one `right`.
+- **Boundary - Author exercise: Largest Jump Of Left.** Trace repeated violations and verify the loop may remove several elements for one `right`.
 - **Recognize - LC 1004 Max Consecutive Ones III.** Treat zeroes as violations with a budget of `k`.
 
 ### Find The Shortest Covering Window

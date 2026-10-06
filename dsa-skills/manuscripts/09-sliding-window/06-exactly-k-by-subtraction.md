@@ -52,7 +52,7 @@ The **at-most count** for a limit `x` is the number of ranges that hold at most 
 
 #### Why The Subtraction Is Exact
 
-Every range holds some number `c` of flagged entries. The at-most count for `k` covers the ranges with `c <= k`. The at-most count for `k - 1` covers the ranges with `c <= k - 1`. The second group lies inside the first. The ranges left over have `c == k`. The **subtraction identity** is `exactly(k) = atMost(k) - atMost(k - 1)`, and it holds for any property that has an integer count.
+Every range holds some number `c` of flagged entries. The at-most count for `k` covers the ranges with `c <= k`. The at-most count for `k - 1` covers the ranges with `c <= k - 1`. The second group lies inside the first. The ranges left over have `c == k`. The **subtraction identity** is `exactly(k) = atMost(k) - atMost(k - 1)`, and it is exact as arithmetic for any integer count `k`. It is useful when `atMost` needs only one boundary.
 
 #### The Empty Budget
 
@@ -67,15 +67,16 @@ Each call of the at-most count keeps its own small state.
 
 - **limit** is the largest allowed number of flagged entries, and a negative limit returns 0 at once.
 - **left** and **right** are the first and last index of the current window.
-- **flagged** is the number of flagged entries in the window.
-- **total** is the running sum of `right - left + 1`, held in a `long`, because it can exceed the `int` range.
+- **odd** is the number of flagged entries in the window, and the flagged entries are the odd numbers.
+- **add** is `right - left + 1`, the number of valid ranges that end at `right`. In the code it is written inline.
+- **total** is the running sum of `add`, held in a `long`, because it can exceed the `int` range.
 
 <!-- stage: trace -->
 ### Tracing The Two Counts
 
 #### Counting Ranges With At Most Two Odd Numbers
 
-Take `nums = [2, 1, 3, 4, 1]`. An odd number is a flagged entry, and the target is exactly 2 odd numbers. The trace below runs the at-most count for the limit 2. At each step, the variable `add` is `right - left + 1`, the number of valid ranges that end at `right`.
+Take `nums = [2, 1, 3, 4, 1]`. A flagged entry is an odd number, so the variable `odd` counts the flagged entries in the window. The target is exactly 2 odd numbers. The trace below runs the at-most count for the limit 2. At each step, the variable `add` is `right - left + 1`, the number of valid ranges that end at `right`.
 
 ```trace
 {"cells":[2,1,3,4,1],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":0},"vars":{"odd":"0","add":"1","total":"1"},"note":"The value 2 enters. The starts 0 to 0 are valid, so add is 1 and the total is 1."},{"at":{"left":0,"right":1},"vars":{"odd":"1","add":"2","total":"3"},"note":"The value 1 enters. It is odd, so the odd count is 1. The starts 0 to 1 are valid, so add is 2 and the total is 3."},{"at":{"left":0,"right":2},"vars":{"odd":"2","add":"3","total":"6"},"note":"The value 3 enters. It is odd, so the odd count is 2. The starts 0 to 2 are valid, so add is 3 and the total is 6."},{"at":{"left":0,"right":3},"vars":{"odd":"2","add":"4","total":"10"},"note":"The value 4 enters. The starts 0 to 3 are valid, so add is 4 and the total is 10."},{"at":{"left":2,"right":4},"vars":{"odd":"2","add":"3","total":"13"},"note":"The value 1 enters. It is odd, so the odd count is 3. The even value 2 leaves. The odd value 1 leaves, so the odd count is 2. The starts 2 to 4 are valid, so add is 3 and the total is 13."}]}
@@ -208,9 +209,9 @@ Return 0 for a negative limit at the top of the helper. Count in a `long`. Test 
 
 **Example 2.** Input `nums = [4,6]`, `k = 0`. Output `3`.
 
-**Hint.** What does the shrink loop do with a negative limit? Which line of the helper avoids it?
+**Hint.** What does the shrink loop do with a negative limit, when `left` can run past the end of the array? Which line of the helper avoids it?
 
-**Changed decision.** A guard on the limit replaces a loop that would never end.
+**Changed decision.** A guard on the limit replaces a loop that can run `left` off the array.
 
 #### [Recognize] Subarrays With K Different Integers (LeetCode 992)
 <!-- id: sw-k-different -->

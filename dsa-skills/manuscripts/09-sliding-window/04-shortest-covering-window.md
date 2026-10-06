@@ -7,7 +7,7 @@
 
 A search page shows a snippet of each document: the shortest passage that contains every word of the query. A developer builds it by trying every start word and reading forward until all query words have appeared. On a document of 50,000 words, the snippet takes noticeable time. On a book of five million words, the page times out.
 
-The longest-valid lesson shrank the window only while it was invalid. This lesson asks for the opposite goal. The answer is the shortest block that satisfies a requirement. A block that already satisfies the requirement may still be too long, and the method must trim it without losing the requirement.
+The longest-valid lesson shrank the window only while it was invalid. This lesson asks for the opposite goal. The answer is the shortest block that satisfies a requirement. To keep the code short, the lesson maps each word of the query to one letter, so a document becomes a string of letters. A block that already satisfies the requirement may still be too long, and the method must trim it without losing the requirement.
 
 <!-- stage: naive -->
 ### Read Forward From Every Start
@@ -78,7 +78,7 @@ The method keeps the two indexes, the requirement and a ledger of what the block
 - **need** is the count array of the requirement, and it never changes.
 - **have** is the count array of the block `s[left..right]`.
 - **missing** is the number of required copies the block lacks, and it starts at the total size of the requirement.
-- **bestStart** and **bestLength** hold the position and length of the shortest cover found, and `bestLength` starts above any possible length.
+- **best** is the length of the shortest cover found, and it starts above any possible length. The code of this lesson keeps only this length, and the Boundary exercise adds `bestStart` for the position.
 
 <!-- stage: trace -->
 ### Tracing Two Scans
@@ -150,7 +150,7 @@ A fixed-size window test asks whether the counts of the block equal the counts o
 
 #### Java Habits For This Pattern
 
-Compare the count before the increment on entry and after the decrement on exit, or the missing count drifts by one. Use `Integer.MAX_VALUE` as the initial best length and test for it at the end, so an input with no cover returns the empty result. Create the answer substring once, after the loop.
+Compare the count before the increment on entry and after the decrement on exit, or the missing count drifts by one. Use `Integer.MAX_VALUE` as the initial best length and test for it at the end, so an input with no cover returns -1, or the empty string when the problem asks for text. Create the answer substring once, after the loop.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -224,6 +224,8 @@ Compare the count before the increment on entry and after the decrement on exit,
 **Prerequisites.** All three exercises above.
 
 **Problem.** Given strings `s` and `t`, return the shortest substring of `s` that contains every character of `t`, including duplicates. If no such substring exists, return the empty string. When several substrings share the shortest length, return the leftmost.
+
+The index of a letter in a count array of size 52 is 0 to 25 for `a` to `z` and 26 to 51 for `A` to `Z`.
 
 **Constraints.**
 - **Lengths** satisfy `1 <= s.length, t.length <= 10^5`.

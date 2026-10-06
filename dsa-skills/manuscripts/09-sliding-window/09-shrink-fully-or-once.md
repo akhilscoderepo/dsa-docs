@@ -7,7 +7,7 @@
 
 A text tool must find the longest stretch that becomes one repeated character after at most `k` replacements. The text uses the full range of 16-bit characters, so the alphabet has 65,536 symbols. The tool keeps one count per symbol and scans all 65,536 counts to find the largest one whenever it tests the window. On a text of one million characters, that test alone costs about 65 billion steps.
 
-A colleague suggests keeping the largest count seen so far and never recomputing it. Another colleague suggests a quick fix for slow window code in general: replace each `while` with an `if`. One of these ideas is safe for this problem, and the other breaks a different problem. The question of this lesson is how to tell them apart.
+A colleague suggests keeping the largest count seen so far and never recomputing it. Another colleague suggests a quick fix for slow window code in general: replace each `while` with an `if`. Keeping the largest count so far is safe for this problem. Replacing `while` with `if` breaks the duplicate-free problem. The question of this lesson is how to tell them apart.
 
 <!-- stage: naive -->
 ### Scan All Counts At Every Test
@@ -64,7 +64,11 @@ A **one removal** form lets `left` move at most once for each `right`. The windo
 
 #### When One Removal Is Safe
 
-The one removal form needs a separate proof for each problem. For the replacement budget, three facts give the proof. First, until the first slide, the window only grows, so the largest count seen equals the exact dominant count. Second, after a slide, the length equals the largest count seen plus `k`. The cost test then fails exactly when the length would grow without a larger count. Third, the largest count grows only when the entering letter reaches a count above the old maximum. The current window then has cost exactly `k` and is valid. The invariant is that the window length equals the best valid length of the prefix.
+The one removal form needs a separate proof for each problem. For the replacement budget, three facts give the proof. First, until the first slide, the window only grows, so the largest count seen equals the exact dominant count.
+
+Second, after a slide, the length equals the largest count seen plus `k`. The cost test then fails exactly when the length would grow without a larger count.
+
+Third, the largest count grows only when the entering letter reaches a count above the old maximum. The current window then has cost exactly `k` and is valid. The invariant is that the window length equals the best valid length of the prefix.
 
 The same form is wrong for the duplicate-free problem. There, one removal of a single value may leave the repeated value inside the window, and no counting argument rescues the length.
 
@@ -109,6 +113,7 @@ Take `s = "abcdbea"` and replace the `while` loop of the duplicate-free scan wit
 
 ```java
 static int longestWithBudget(String s, int k) {
+    // 128 entries suffice for ASCII text; 16-bit text needs 65536 entries.
     int[] cnt = new int[128];
     int left = 0, peak = 0;
     for (int right = 0; right < s.length(); right++) {
@@ -128,7 +133,7 @@ The `if` is safe here because of the proof in the insight. The method never scan
 
 #### Cost Of The Form
 
-Each step does a constant amount of work, so the time is O(n), with no factor for the alphabet. The count array has 128 entries for ASCII input. The method does not record a best length, because the length never decreases.
+Each step does a constant amount of work, so the time is O(n), with no factor for the alphabet. The count array has 128 entries, which suffices for ASCII input. Text of 16-bit characters needs 65,536 entries, as in the first method of this lesson. The method does not record a best length, because the length never decreases.
 
 <!-- stage: applicability -->
 ### Choosing The Shrink Policy
@@ -222,7 +227,7 @@ Write the invariant as a comment above the loop. Name the variable `peak` and no
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given a string `s` of arbitrary 16-bit characters and an integer `k`, return the length of the longest substring that becomes one repeated character after at most `k` replacements. The method must run in O(n) time and must not scan the count array inside the loop.
+**Problem.** Given a string `s` of arbitrary 16-bit characters and an integer `k`, return the length of the longest substring that becomes one repeated character after at most `k` replacements. The method must run in O(n) time and must not scan the count array inside the loop. You met this problem in lesson 07; now the alphabet has 65,536 symbols, so a scan of the counts costs too much.
 
 **Constraints.**
 - **Length** satisfies `1 <= s.length <= 10^6`.

@@ -46,7 +46,7 @@ The largest cost comes from the middle sizes of `k`, where the number of blocks 
 
 #### The Window Is A Range Of Indexes
 
-A **window** is the range `nums[left..right]` with both ends included. A window of fixed size `k` has `right = left + k - 1`, so `left` alone fixes the window. The method needs a stored value that describes the window and survives a move to the next window.
+A **window** is a contiguous subarray or substring. In an array it is the range `nums[left..right]` with both ends included. A window of fixed size `k` has `right = left + k - 1`, so `left` alone fixes the window. The method needs a stored value that describes the window and survives a move to the next window.
 
 #### The Running Sum Changes By Two Terms
 
@@ -128,9 +128,9 @@ Look for a request about every contiguous block of exactly `k` elements. The ans
 
 Before the method uses the aggregate, the aggregate describes exactly `nums[left..right]` and the length is `k`. A reader who states this invariant before writing the loop avoids the usual off-by-one error in the leaving index.
 
-#### A Prefix Sum Is A False Friend
+#### When A Prefix Sum Fits Better
 
-A prefix sum array answers a sum for any range in O(1) after an O(n) build. A prefix sum is the better tool when many unrelated range queries follow. A window is the natural tool for one left-to-right pass, and it needs no extra array. The false friend shows up when the problem names no ranges beyond the fixed size, and the prefix array then costs memory without any benefit.
+A prefix sum array answers a sum for any range in O(1) after an O(n) build. A prefix sum is the better tool when many unrelated range queries follow. A window is the natural tool for one left-to-right pass, and it needs no extra array. A prefix sum is a false friend here, because it looks like the right tool and wastes memory. The false friend shows up when the problem names no ranges beyond the fixed size, and the prefix array then costs memory without any benefit.
 
 #### Java Hazards
 
