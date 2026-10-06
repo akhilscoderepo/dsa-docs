@@ -79,7 +79,7 @@ If the lists share no node, `s` is 0. Each reference walks `m + n` nodes and the
 <!-- stage: trace -->
 ### Two Walkers Meeting At The Shared Tail
 
-A pointer drawn outside the cells stands for `null`. The cells list the first list, then the nodes that only the second list holds. The last three cells of the first list are also the last three nodes of the second list.
+On the cells below, a pointer drawn outside them is `null`. The cells list the first list, then the nodes that only the second list holds. The last three cells of the first list are also the last three nodes of the second list.
 
 #### Head Switching With A Shared Tail
 
