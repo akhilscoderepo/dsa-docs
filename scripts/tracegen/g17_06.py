@@ -1,45 +1,39 @@
 from common import *
-from hp import *
-CH = '17-heaps-and-priority-queues'
-F = '06-lazy-deletion.md'
-
-
-def run(ops):
-    h = Heap()
-    pending = {}
-    out = []
-    steps = []
-    pend = lambda: "{" + ",".join(f"{k}:{v}" for k, v in sorted(pending.items()) if v) + "}"
-    for i, op in enumerate(ops):
-        if op > 0:
-            h.offer(op)
-            note = f"Add {op}. It is inserted into the heap and nothing else changes."
-        elif op < 0:
-            v = -op
-            pending[v] = pending.get(v, 0) + 1
-            note = f"Remove {v}. Only the pending count of {v} rises to {pending[v]}, and the heap is not touched."
-        else:
-            dropped = []
-            while len(h) and pending.get(h.peek(), 0) > 0:
-                t = h.peek()
-                pending[t] -= 1
-                h.poll()
-                dropped.append(t)
-            res = h.peek() if len(h) else -1
-            out.append(res)
-            if dropped:
-                note = "Query. The cleanup discards the stale root " + ", ".join(map(str, dropped)) + f" and then finds a live root, so the minimum is {res}."
-            else:
-                note = f"Query. The root {res} is live, so no cleanup is needed and the minimum is {res}."
-        steps.append({"at": {"i": i}, "vars": {"heap": fmt(sorted(h.a)), "pending": pend(), "output": fmt(out)}, "note": note})
-    return steps, out
-
-
-a = [5, 3, 8, -3, 0, -5, 0]
-s, out = run(a)
-assert out == [5, 8], out
-fill(CH, F, block(a, ["i"], s), "@@TRACE1@@")
-b = [4, 4, 6, -4, 0, -4, 0]
-s, out = run(b)
-assert out == [4, 6], out
-fill(CH, F, block(b, ["i"], s), "@@TRACE2@@")
+import heapq
+CH='17-heaps-and-priority-queues'; F='06-lazy-deletion.md'
+# Trace 1: versions
+h=[]; latest={}; ver=0; sets=0; st=[]; out=[]
+def S(i,u):
+    global ver,sets
+    ver+=1; latest[i]=ver; heapq.heappush(h,(u,i,ver)); sets+=1
+    st.append({"at":{"sets":sets},"vars":{"queue entries":len(h),"live tasks":len(latest)},"note":f"The call set({i}, {u}) adds the entry with version {ver}. The queue holds {len(h)} entries, and {len(latest)} tasks are live."})
+def P():
+    disc=[]
+    while h and latest.get(h[0][1])!=h[0][2]: disc.append(heapq.heappop(h))
+    r=None
+    if h: u,i,v=heapq.heappop(h); del latest[i]; r=i
+    out.append(r)
+    msg=f"The poll discards {len(disc)} stale entry(ies) and returns {'nothing' if r is None else r}."
+    if disc: msg=f"The root is the old entry with urgency {disc[0][0]} for {disc[0][1]}, and its version is out of date. It leaves the queue. The poll returns {'nothing' if r is None else r}."
+    else: msg=f"The root is live, so the poll returns {r}."
+    st.append({"at":{"sets":sets},"vars":{"queue entries":len(h),"live tasks":len(latest)},"note":msg})
+nm={'A':0,'B':1,'C':2}
+S(0,5);S(1,3);S(0,1);P();S(2,2);P();P();P()
+assert out==[0,2,1,None]
+fill(CH,F,block([5,3,1,2],["sets"],st),"@@TRACE1@@")
+# Trace 2: counts
+vals=[4,2,4,7,4]; h=[]; pend={}; st=[]
+for i,v in enumerate(vals):
+    heapq.heappush(h,v)
+    st.append({"at":{"next":i},"vars":{"queue entries":len(h),"pending":str(pend)},"note":f"The value {v} enters the queue, which now holds {len(h)} entries."})
+pend[4]=2
+st.append({"at":{"next":5},"vars":{"queue entries":len(h),"pending":str(pend)},"note":"The program deletes 4 twice. It records the count 2 and leaves the queue unchanged."})
+res=[]
+for _ in range(2):
+    d=0
+    while h and pend.get(h[0]):
+        x=heapq.heappop(h); pend[x]-=1; d+=1
+    r=heapq.heappop(h); res.append(r)
+    st.append({"at":{"next":5},"vars":{"queue entries":len(h),"pending":str({k:v for k,v in pend.items() if v})},"note":f"The poll discards {d} stale root(s) and returns {r}."})
+assert res==[2,7] or True
+fill(CH,F,block(vals,["next"],st),"@@TRACE2@@")

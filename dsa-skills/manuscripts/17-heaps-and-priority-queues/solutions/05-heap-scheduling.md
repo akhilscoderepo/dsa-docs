@@ -271,7 +271,7 @@ The method keeps two queues. The free queue orders idle servers by weight and th
 The invariant is that every server is in exactly one queue, and the free queue holds exactly the servers idle at the clock.
 
 **Complexity.**
-- **Time** is O((n + m) log n) for `n` servers and `m` tasks, because every task causes at most one move per server and each move costs O(log n).
+- **Time** is O((n + m) log n) for `n` servers and `m` tasks, because the code makes n initial insertions and at most m moves in each direction, and each move costs O(log n).
 - **Space** is O(n), because the two queues together hold each server once.
 
 ```java run
