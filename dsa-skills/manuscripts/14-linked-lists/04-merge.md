@@ -84,7 +84,7 @@ The first node of the answer has no result tail before it. The method picks the 
 <!-- stage: trace -->
 ### Merging With A Leftover List
 
-A pointer that sits outside the cells means `null`.
+In this trace a pointer drawn outside the cells stands for `null`.
 
 #### Merging Two Lists Of Three
 
