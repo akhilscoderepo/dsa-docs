@@ -12,8 +12,8 @@
 06. Save State For Each Nesting Level  ->  06-nested-structure.md
 07. Track The Minimum In A Stack  ->  07-min-stack.md
 08. Group Queue Items By Level  ->  08-queue-based-level-processing.md
-09. Nested Decoding  ->  09-nested-decoding.md
-10. Calculator And String Parsing  ->  10-calculator-and-string-parsing.md
+09. Decode Nested Repeat Groups  ->  09-nested-decoding.md
+10. Evaluate Expressions Written As Text  ->  10-calculator-and-string-parsing.md
 11. Infix And Postfix Evaluation  ->  11-infix-and-postfix-evaluation.md
 
 # Chapter 11: Stacks and queues

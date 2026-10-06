@@ -1,4 +1,4 @@
-# Lesson spec: Calculator And String Parsing
+# Lesson spec: Evaluate Expressions Written As Text
 
 **Recognition cue.** Characters form multi-digit numbers and operators whose effect may be delayed by precedence or parentheses. **Invariant.** At each token boundary, the parser has a precise meaning for the accumulated number, pending sign/operator, and saved parent context. **False friend.** Splitting on spaces fails when spaces are optional or parentheses are present.
 

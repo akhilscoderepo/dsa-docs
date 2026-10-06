@@ -135,7 +135,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Expanding Queue.** Prove newly enqueued items are excluded from the current batch despite increasing `queue.size()`.
 - **Recognize - Author exercise: Alternate Level Output.** Reverse only the reported order for every other level while preserving FIFO discovery.
 
-### Nested Decoding
+### Decode Nested Repeat Groups
 
 **Recognition cue.** A repetition count applies to a bracketed substring that may itself contain encoded groups. **Invariant.** On `[`, save the parent string state and repeat count; on `]`, resolve the current group into its parent. **False friend.** Repeating immediately at each digit fails for multi-digit counts and nesting.
 
@@ -144,7 +144,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Adjacent And Nested Groups.** Decode an input such as `2[a]3[b2[c]]` without mixing frames.
 - **Recognize - LC 394 Decode String.** Implement the complete nested grammar using saved counts and parent builders.
 
-### Calculator And String Parsing
+### Evaluate Expressions Written As Text
 
 **Recognition cue.** Characters form multi-digit numbers and operators whose effect may be delayed by precedence or parentheses. **Invariant.** At each token boundary, the parser has a precise meaning for the accumulated number, pending sign/operator, and saved parent context. **False friend.** Splitting on spaces fails when spaces are optional or parentheses are present.
 

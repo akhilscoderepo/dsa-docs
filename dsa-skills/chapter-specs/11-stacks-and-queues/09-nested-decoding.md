@@ -1,4 +1,4 @@
-# Lesson spec: Nested Decoding
+# Lesson spec: Decode Nested Repeat Groups
 
 **Recognition cue.** A repetition count applies to a bracketed substring that may itself contain encoded groups. **Invariant.** On `[`, save the parent string state and repeat count; on `]`, resolve the current group into its parent. **False friend.** Repeating immediately at each digit fails for multi-digit counts and nesting.
 
