@@ -1,4 +1,4 @@
-# Lesson spec: State-Space BFS
+# Lesson spec: Search States You Generate
 
 **Recognition cue.** Vertices are not listed explicitly; legal operations generate neighboring states. **Invariant.** The state encoding contains every fact that affects future moves, and visited uses that complete encoding. **False friend.** Marking only a visible location is wrong when inventory, mask, or mode changes future options.
 

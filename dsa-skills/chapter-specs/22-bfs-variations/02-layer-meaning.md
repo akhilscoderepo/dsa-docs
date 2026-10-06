@@ -1,4 +1,4 @@
-# Lesson spec: Layer Meaning
+# Lesson spec: Count By Whole Layers
 
 **Recognition cue.** Distance, time, or operation count advances once per entire frontier. **Invariant.** All states in the captured queue size share one distance; their unseen neighbors belong to the next layer. **False friend.** Incrementing time per node overcounts simultaneous work.
 

@@ -4,11 +4,11 @@
 
 ## Lesson order
 
-01. Multi-Source BFS  ->  01-multi-source-bfs.md
-02. Layer Meaning  ->  02-layer-meaning.md
-03. Bidirectional Frontiers  ->  03-bidirectional-frontiers.md
-04. State-Space BFS  ->  04-state-space-bfs.md
-05. Resource Dominance  ->  05-resource-dominance.md
+01. Start From Many Sources  ->  01-multi-source-bfs.md
+02. Count By Whole Layers  ->  02-layer-meaning.md
+03. Search From Both Ends  ->  03-bidirectional-frontiers.md
+04. Search States You Generate  ->  04-state-space-bfs.md
+05. Keep The Best Resource Left  ->  05-resource-dominance.md
 
 # Chapter 22: BFS variations
 
@@ -36,7 +36,7 @@ State prerequisite knowledge in the finished chapter. Confirm the input/mutation
 
 ## Released Combination Lessons
 
-### BFS State Modeling
+### Model The State Before Searching
 
 Graph BFS supplies shortest-layer processing; state modeling decides what constitutes one distinct vertex and what visited must remember.
 

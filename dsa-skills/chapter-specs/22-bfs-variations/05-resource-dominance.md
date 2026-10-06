@@ -1,4 +1,4 @@
-# Lesson spec: Resource Dominance
+# Lesson spec: Keep The Best Resource Left
 
 **Recognition cue.** Search state includes a consumable resource, but multiple states at the same node may dominate one another. **Invariant.** At equal or smaller distance, reaching a node with more remaining resource dominates a state with less; discard only when that relation is proved. **False friend.** A Boolean visited array by node loses useful resource states.
 

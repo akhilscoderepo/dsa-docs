@@ -1,4 +1,4 @@
-# Lesson spec: Bidirectional Frontiers
+# Lesson spec: Search From Both Ends
 
 **Recognition cue.** One unweighted start and target have reversible transitions and the search space branches heavily. **Invariant.** Two visited-distance maps represent shortest discovery from each side; when a generated state exists in the opposite map, the distances combine. **False friend.** Meeting only when queue fronts are equal can miss crossing edges.
 

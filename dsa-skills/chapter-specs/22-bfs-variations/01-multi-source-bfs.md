@@ -1,4 +1,4 @@
-# Lesson spec: Multi-Source BFS
+# Lesson spec: Start From Many Sources
 
 **Recognition cue.** Several sources spread simultaneously and the answer is distance to the nearest source or total spread time. **Invariant.** Every source begins at distance zero in the same queue; first discovery gives minimum distance to any source. **False friend.** Running one BFS per source repeats most work.
 
