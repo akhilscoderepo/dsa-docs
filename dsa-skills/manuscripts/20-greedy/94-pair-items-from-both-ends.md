@@ -70,7 +70,7 @@ Otherwise, regroup the two machines. Put `h` and `l` on one machine, which is fe
 
 The scan sorts a copy of the array and keeps two pointers and a count. Four items describe the state.
 
-- **weights** is the sorted copy of the memory values.
+- **w** is the sorted copy of the memory values.
 - **lo** is the index of the lightest job that is not placed.
 - **hi** is the index of the heaviest job that is not placed.
 - **machines** is the number of machines opened so far.

@@ -48,7 +48,7 @@ Trying every subset would find the best answer, but it needs O(2^n) time. A midd
 
 #### One Capacity And A Value Per Unit
 
-Start with the simpler case that has no deadlines. A truck holds a fixed number of units, and each box type has a count and a number of units per box. Take the box type with the most units per box first, and continue down the list until the truck is full. Swapping a box of fewer units for a box of more units never lowers the total and never changes the number of boxes, so the sorted order is safe.
+Start with the simpler case that has no deadlines. A truck holds a fixed number of boxes, and each box type has a count and a number of units per box. Take the box type with the most units per box first, and continue down the list until the truck is full. Swapping a box of fewer units for a box of more units never lowers the total and never changes the number of boxes, so the sorted order is safe.
 
 #### Processing By Deadline
 
@@ -123,7 +123,7 @@ The scan adds the new duration before it tests the deadline, so the new job comp
 
 #### Applying The Invariant
 
-Use this method when each task has a cost against a limit, and the goal is to keep as many tasks as possible, or the most valuable ones. The invariant is that the retained tasks are feasible under the constraint processed so far, and no feasible set of the processed tasks has more tasks or a smaller total. State it before you code, and name the replacement rule that keeps it true.
+Use this method when each task has a cost against a limit, and the goal is to keep as many tasks as possible. The invariant is that the retained tasks are feasible under the constraint processed so far, and no feasible set of the processed tasks has more tasks or a smaller total. State it before you code, and name the replacement rule that keeps it true.
 
 #### Finding Cases That Break The Precondition
 

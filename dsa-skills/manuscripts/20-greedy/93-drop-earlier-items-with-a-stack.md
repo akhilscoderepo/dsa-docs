@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Report Tool Keeps Large Digits
 
-A report tool shortens a numeric invoice reference. The tool may delete at most `k` digits, and the remaining digits keep their order. The shorter reference should be as small as possible, because the report sorts by that number.
+A report tool shortens a numeric invoice reference. The tool deletes exactly `k` digits, and the remaining digits keep their order. The shorter reference should be as small as possible, because the report sorts by that number.
 
 One idea is to delete the largest digits. On the reference `1432219` with `k = 3`, that idea deletes the 9, the 4 and the 3 and leaves `1221`. A better deletion leaves `1219`. This lesson asks which digits to delete when the program reads left to right and cannot see the rest at the moment it decides.
 
@@ -38,7 +38,7 @@ static String deleteLargest(String num, int k) {
 ```predict
 Run the method on `"1432219"` with `k = 3`. What does it return, and what is the smallest reference that three deletions can produce?
 
-It returns `1221`. The deletions remove 9, then 4, then 3. The smallest result is `1219`, which deletes 4, 3 and 2. The digit 9 sits last, so removing it changes the least significant position, while removing 4 changes the second position.
+It returns `1221`. The deletions remove 9, then 4, then 3. The smallest result is `1219`, which deletes 4, 3 and 2. The digit 9 sits last, so removing it changes only the last position. Removing 4 puts a smaller digit into the second position, which outweighs everything after it.
 ```
 
 <!-- stage: bottleneck -->
@@ -131,7 +131,7 @@ The string builder serves as the stack, and the pop condition compares character
 
 #### Applying The Invariant
 
-Use this pairing when you must delete at most `k` items, or must keep exactly `k` items, from a sequence while the order of the survivors stays. The invariant is that after each item, the stack holds the best survivors of the prefix that the budget allows. State the pop condition, the budget, and the required final length before you code.
+Use this pairing when you must delete `k` items, or must keep exactly `k` items, from a sequence while the order of the survivors stays. The invariant is that after each item, the stack holds the best survivors of the prefix that the budget allows. State the pop condition, the budget, and the required final length before you code.
 
 #### Finding Cases That Break The Precondition
 

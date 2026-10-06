@@ -7,7 +7,7 @@
 
 A signal travels along a line of relay stations, numbered from 0. Each station has a power value. A station with power `p` can forward the signal to any of the next `p` stations, or to any station closer than that. The signal starts at station 0. The operator needs to know whether the signal can ever reach the last station.
 
-A simulator that tries every forwarding choice finishes quickly on a ten-station line. On a line of thirty stations it runs for minutes, and on a hundred stations it never finishes. The question of this lesson is how a program answers the same yes-or-no question with one pass over the stations.
+A simulator that tries every forwarding choice finishes quickly on a ten-station line. On a line of thirty stations it slows to a crawl, and on a hundred stations it never finishes. The question of this lesson is how a program answers the same yes-or-no question with one pass over the stations.
 
 <!-- stage: naive -->
 ### Trying Every Forwarding Choice

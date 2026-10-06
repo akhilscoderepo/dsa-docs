@@ -156,7 +156,7 @@ public final class IntervalsWithGap {
 <!-- id: gr-half-open-balloons -->
 
 **Approach.**
-The method sorts the balloons by end. The first arrow of a group goes at the last integer inside the first balloon, which is `end - 1`. That arrow bursts a later balloon exactly when the later start is at most `end - 1`, so a balloon that begins at the end of the first one needs a new arrow. The method keeps the arrow coordinate as a `long`, because `end - 1` for the smallest `int` end would overflow. An arrow at the last point of the earliest-ending balloon reaches every later balloon that any earlier arrow could reach.
+The method sorts the balloons by end. The first arrow of a group goes at the last integer inside the first balloon, which is `end - 1`. That arrow bursts a later balloon exactly when the later start is at most `end - 1`, so a balloon that begins at the end of the first one needs a new arrow. The method keeps the arrow coordinate as a `long`, so every comparison with a start uses one wide type. An arrow at the last point of the earliest-ending balloon reaches every later balloon that any earlier arrow could reach.
 
 After each balloon, `arrow` is the coordinate of the current group's arrow, and `arrows` counts the groups opened so far.
 

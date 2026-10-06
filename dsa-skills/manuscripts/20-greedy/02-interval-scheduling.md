@@ -70,7 +70,7 @@ After the sort, the scan needs one number and one count. Four items describe the
 - **meetings** is the array of intervals `[start, end)`, sorted by end time.
 - **lastEnd** is the end of the most recently accepted interval, and it starts below every start.
 - **accepted** is the number of accepted intervals.
-- **m** is the interval under test, and the scan accepts it when `m[0] >= lastEnd`.
+- **i** is the index of the interval under test, and the scan accepts it when its start is at least `lastEnd`.
 
 The comparison uses `>=` because the model is half-open. A different model changes this one operator, and the Boundary exercise below tests that.
 

@@ -63,7 +63,7 @@ A **sort key** is the single number of an item that the exchange step compares. 
 
 #### Cutting At The Earliest Legal Place
 
-For the stream, scan from the left and keep `end`, the largest last occurrence of any code read since the current chunk began. A cut after position `i` is legal exactly when `i == end`, because then every code in the chunk has its last occurrence inside the chunk. The scan cuts at the first such position. This is the **safe commit**. Take any best partition. If its first cut lies after the earliest legal cut, then moving that cut to the earliest legal position keeps all chunks legal and adds a cut, because the part after the new cut can still be cut where the old partition cut it. The partition cannot get worse, so the earliest cut starts some best partition.
+For the stream, scan from the left and keep `end`, the largest last occurrence of any code read since the current chunk began. A cut after position `i` is legal exactly when `i == end`, because then every code in the chunk has its last occurrence inside the chunk. The scan cuts at the first such position. This is the **safe commit**. Take any best partition. If its first cut lies after the earliest legal cut, then moving that cut to the earliest legal position keeps all chunks legal and never lowers the number of chunks, because the part after the new cut can still be cut where the old partition cut it. The partition cannot get worse, so the earliest cut starts some best partition.
 
 #### One Pattern In Four Problems
 
@@ -80,7 +80,7 @@ The scan over the stream needs an array, a list and a few indexes. Five items de
 - **start** is the index where the current chunk began.
 - **end** is the largest `last` value among the codes read since `start`.
 - **i** is the index of the event under test.
-- **sizes** is the list of finished chunk lengths, and the scan adds `i - start + 1` when `i == end`.
+- **sizes** is the list of finished chunk lengths, and the scan adds `i - start + 1` when `i == end`. The trace shows its length as `parts`.
 
 The array `last` is the only structure built before the scan. It replaces the search over cut sets.
 
@@ -94,7 +94,7 @@ The first trace scans `abacbdeffed`. The array `last` holds a at 2, b at 4, c at
 The scan raises `end` to 2 at `a`, then to 4 at `b`. It reaches `i = 4`, which equals `end`, and cuts a chunk of length 5. The next chunk starts at `d`, which raises `end` to 10. The scan reaches index 10 and cuts a chunk of length 6.
 
 ```trace
-{"cells":["a","b","a","c","b","d","e","f","f","e","d"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"end":2,"cuts":0},"note":"The letter a ends at 2, so end is 2."},{"at":{"i":1},"vars":{"end":4,"cuts":0},"note":"The letter b ends at 4, so end is 4."},{"at":{"i":2},"vars":{"end":4,"cuts":0},"note":"The letter a ends at 2, so end is 4."},{"at":{"i":3},"vars":{"end":4,"cuts":0},"note":"The letter c ends at 3, so end is 4."},{"at":{"i":4},"vars":{"end":4,"cuts":1},"note":"The letter b ends at 4, so end is 4. The index equals end, so the scan cuts a part of length 5."},{"at":{"i":5},"vars":{"end":10,"cuts":1},"note":"The letter d ends at 10, so end is 10."},{"at":{"i":6},"vars":{"end":10,"cuts":1},"note":"The letter e ends at 9, so end is 10."},{"at":{"i":7},"vars":{"end":10,"cuts":1},"note":"The letter f ends at 8, so end is 10."},{"at":{"i":8},"vars":{"end":10,"cuts":1},"note":"The letter f ends at 8, so end is 10."},{"at":{"i":9},"vars":{"end":10,"cuts":1},"note":"The letter e ends at 9, so end is 10."},{"at":{"i":10},"vars":{"end":10,"cuts":2},"note":"The letter d ends at 10, so end is 10. The index equals end, so the scan cuts a part of length 6."}]}
+{"cells":["a","b","a","c","b","d","e","f","f","e","d"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"end":2,"parts":0},"note":"The letter a ends at 2, so end is 2."},{"at":{"i":1},"vars":{"end":4,"parts":0},"note":"The letter b ends at 4, so end is 4."},{"at":{"i":2},"vars":{"end":4,"parts":0},"note":"The letter a ends at 2, so end is 4."},{"at":{"i":3},"vars":{"end":4,"parts":0},"note":"The letter c ends at 3, so end is 4."},{"at":{"i":4},"vars":{"end":4,"parts":1},"note":"The letter b ends at 4, so end is 4. The index equals end, so the scan cuts a part of length 5."},{"at":{"i":5},"vars":{"end":10,"parts":1},"note":"The letter d ends at 10, so end is 10."},{"at":{"i":6},"vars":{"end":10,"parts":1},"note":"The letter e ends at 9, so end is 10."},{"at":{"i":7},"vars":{"end":10,"parts":1},"note":"The letter f ends at 8, so end is 10."},{"at":{"i":8},"vars":{"end":10,"parts":1},"note":"The letter f ends at 8, so end is 10."},{"at":{"i":9},"vars":{"end":10,"parts":1},"note":"The letter e ends at 9, so end is 10."},{"at":{"i":10},"vars":{"end":10,"parts":2},"note":"The letter d ends at 10, so end is 10. The index equals end, so the scan cuts a part of length 6."}]}
 ```
 
 #### Scheduling With A Required Gap
@@ -201,7 +201,7 @@ Index the 26-entry array with `ch - 'a'` and state that the input holds lowercas
 - **Count** is `0 <= balloons.length <= 10^5`.
 - **Values** are integers in `-2^31 <= start < end <= 2^31 - 1`.
 - **Touching** ranges need separate arrows.
-- **Overflow** can occur if the method computes `end - 1` or `end - start` in `int`.
+- **Overflow** can occur if the method computes `end - start` in `int`.
 
 **Example 1.** Input `balloons = [[1,3],[3,5],[2,4]]`, output 2.
 

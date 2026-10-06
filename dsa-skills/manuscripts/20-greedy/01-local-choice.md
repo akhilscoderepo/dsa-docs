@@ -68,7 +68,7 @@ The swap works because of **dominance**. One option dominates another when it ca
 <!-- stage: variables -->
 ### Pointers And Counts For One Pass
 
-After both arrays are sorted, the algorithm needs only two positions and a count. Four items describe the state.
+After both arrays are sorted, the algorithm needs only two positions and a count. Five items describe the state.
 
 - **jobs** is the array of memory demands, sorted in increasing order.
 - **servers** is the array of free memory sizes, sorted in increasing order.

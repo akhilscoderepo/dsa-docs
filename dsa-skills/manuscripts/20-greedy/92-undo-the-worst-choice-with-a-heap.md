@@ -184,7 +184,7 @@ Use `Collections.reverseOrder()` for a max-heap and never subtract values in a c
 #### [Boundary] Course Schedule III (LeetCode 630)
 <!-- id: gr-courses-count-and-total -->
 
-**Prerequisites.** Lesson 05 and the ejection step of this lesson.
+**Prerequisites.** Lesson 05 and the heap of this lesson.
 
 **Problem.** Array `courses` holds pairs `{duration, lastDay}`. A student takes one course at a time from day 1, and a course counts only if it finishes by its last day. Return an array `[count, total]`, where `count` is the largest number of courses that can finish on time, and `total` is the smallest sum of durations among the sets of that size.
 

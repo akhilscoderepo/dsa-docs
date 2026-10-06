@@ -38,7 +38,7 @@ static boolean looksCorrect(int[][][] samples, int[] best) {
 ```predict
 The samples are `[[1,2],[3,4]]` with best 2, and `[[1,10],[2,3],[5,6]]` with best 2. Does `looksCorrect` return true? Does the rule also match on `[[0,4],[3,5],[4,8]]`, where the best answer is 2?
 
-It returns true on the two samples. On the third input the rule takes `[3,5]` first, because it is the shortest. That interval overlaps both others, so the rule keeps one interval and the best answer is 2. The samples did not contain such an input.
+It returns true on the two samples, and the rule does not match on the third input. There the rule takes `[3,5]` first, because it is the shortest. That interval overlaps both others, so the rule keeps one interval and the best answer is 2. The samples did not contain such an input.
 ```
 
 <!-- stage: bottleneck -->
@@ -68,7 +68,7 @@ An example fixes numbers, and the proof must hold for all numbers. If any of the
 <!-- stage: variables -->
 ### Parts Of The Argument
 
-Five items appear in every exchange proof. Each is a named object, and the Build and Vary exercises compute them.
+Five items appear in every exchange proof. Each is a named object, and the first two exercises compute them.
 
 - **rule** is the choice the algorithm commits to, such as the earliest end.
 - **choice** is the item that the rule picks from the current input.
@@ -152,7 +152,7 @@ static int maxCompatible(int[][] iv) {
 }
 ```
 
-The method `swapFirst` replays the exchange step on a schedule sorted by start. It returns the changed schedule, or `null` when the swap would break feasibility. The method `findCounterexample` enumerates every small input, and it compares `shortestCount`, the rule with its tie order, with `maxCompatible`, the end-order scan of lesson 02. A returned input is a proof of failure. A `null` result proves nothing about larger inputs.
+The method `swapFirst` replays the exchange step on a schedule sorted by start. It returns the changed schedule, or `null` when the swap would break feasibility. The method `findCounterexample` enumerates every small input, and it compares `shortestCount`, the rule with ties broken by start, with `maxCompatible`, the end-order scan of lesson 02. A returned input is a proof of failure. A `null` result proves nothing about larger inputs.
 
 - **Time** of `swapFirst` is O(n), because it checks each neighboring pair once.
 - **Space** of `swapFirst` is O(n) for the copy, and the search takes O(per^n * n^2) time.
@@ -170,7 +170,7 @@ A false friend is a worked example presented as a proof. A table of passing inpu
 
 #### Avoiding Java Pitfalls
 
-When you search for counterexamples, keep the input space small and enumerate it fully, so a failure is reproducible. Print the failing input, not only a boolean. Fix the tie rule of the rule under test, because a rule with undefined ties gives different results between runs of `Arrays.sort` with different comparators.
+When you search for counterexamples, keep the input space small and enumerate it fully, so a failure is reproducible. Print the failing input, not only a boolean. Fix the tie rule of the rule under test, because equal keys can lead to different accepted intervals under different comparators.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -190,7 +190,7 @@ When you search for counterexamples, keep the input space small and enumerate it
 
 **Example 1.** Input `demands = [3,5]`, `supplies = [4,6,9]` and `plan = [2,1]`, output `[0,1]`.
 
-**Example 2.** Input `demands = [3,5]`, `supplies = [4,6]` and `plan = [-1,0]`, output `[0,-1]`.
+**Example 2.** Input `demands = [3,5]`, `supplies = [5,6]` and `plan = [-1,0]`, output `[0,-1]`.
 
 **Hint.** What happens when the supply `r` is already in use, and what does demand 0 hold before the swap?
 

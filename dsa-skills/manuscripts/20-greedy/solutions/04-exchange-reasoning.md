@@ -50,7 +50,7 @@ public final class ExchangeTwoAssignments {
     public static void main(String[] args) {
         // The two examples of the exercise.
         if (!Arrays.equals(exchange(new int[] {3, 5}, new int[] {4, 6, 9}, new int[] {2, 1}), new int[] {0, 1})) throw new AssertionError("ex1");
-        if (!Arrays.equals(exchange(new int[] {3, 5}, new int[] {4, 6}, new int[] {-1, 0}), new int[] {0, -1})) throw new AssertionError("ex2");
+        if (!Arrays.equals(exchange(new int[] {3, 5}, new int[] {5, 6}, new int[] {-1, 0}), new int[] {0, -1})) throw new AssertionError("ex2");
         // No sufficient supply leaves the plan unchanged.
         if (!Arrays.equals(exchange(new int[] {9}, new int[] {1, 2}, new int[] {-1}), new int[] {-1})) throw new AssertionError("none");
         // Random valid plans must stay valid, serve no fewer demands, and give demand 0 the supply r.
