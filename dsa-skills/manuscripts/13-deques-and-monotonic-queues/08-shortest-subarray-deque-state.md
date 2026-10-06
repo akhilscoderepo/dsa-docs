@@ -58,7 +58,7 @@ A start candidate `a1` is useless when a later position `a2` has `P[a2] <= P[a1]
 
 #### Dropping Starts From The Front
 
-The front start is the earliest, so it gives the longest run among the stored starts. When `P[b] - P[front] >= target`, the run from the front reaches the target at length `b - front`. Every later end gives a longer run from the same start, so that start is **used up** and leaves the front for good. The loop tests the next front, because it may reach the target as well. The invariant is that the deque holds start candidates with strictly increasing prefix sums, and no stored start has reached the target yet. Every position is appended in one step and popped in at most one later step, so the total cost is O(n).
+The front start is the earliest, so it gives the longest run among the stored starts. When `P[b] - P[front] >= target`, the run from the front reaches the target at length `b - front`. Every later end gives a longer run from the same start, so that start is **used up** and leaves the front for good. The loop tests the next front, because it may reach the target as well. Testing the front is enough, because the stored prefix sums increase, so the front gives the largest difference and the other starts cannot succeed when it fails. The invariant is that the deque holds start candidates with strictly increasing prefix sums, and no stored start has reached the target yet. Every position is appended in one step and popped in at most one later step, so the total cost is O(n).
 
 <!-- names: start candidate, used up, dominated start -->
 

@@ -65,10 +65,10 @@ A range may shrink from the left in steps instead of sliding by a fixed length. 
 
 The state differs slightly between the fixed range and the shrinking range.
 
-- **Increasing deque** holds positions with non-decreasing values, and its front is the minimum.
-- **Decreasing deque** holds positions with non-increasing values, and its front is the maximum, which the shrinking-range problem also needs.
+- **Minimum deque** holds positions with non-decreasing values, and its front is the minimum.
+- **Maximum deque** holds positions with non-increasing values, and its front is the maximum, which the shrinking-range problem also needs.
 - **Left pointer** is the first position of the range, and it never moves backward.
-- **Range spread** is the front value of the decreasing deque minus the front value of the increasing deque, and it is zero for a range of one value.
+- **Range spread** is the front value of the maximum deque minus the front value of the minimum deque, and it is zero for a range of one value.
 
 A fixed-range problem uses one deque. A problem that limits the spread uses both, and it moves the left pointer while the spread is too large.
 
@@ -84,7 +84,7 @@ The second trace follows `b = [5, 8, 6, 7, 2, 9, 4]` with a spread limit of 3. B
 ```
 
 ```trace
-{"cells":[5,8,6,7,2,9,4],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":0},"vars":{"max_deque":"[0]","min_deque":"[0]","range":0,"best":1},"note":"Index 0 (value 5) joins both deques. The range is within the limit, so the left pointer stays. The window covers indices 0 to 0 with range 0, and the best length is 1."},{"at":{"left":0,"right":1},"vars":{"max_deque":"[1]","min_deque":"[0,1]","range":3,"best":2},"note":"Index 1 (value 8) joins both deques. The range is within the limit, so the left pointer stays. The window covers indices 0 to 1 with range 3, and the best length is 2."},{"at":{"left":0,"right":2},"vars":{"max_deque":"[1,2]","min_deque":"[0,2]","range":3,"best":3},"note":"Index 2 (value 6) joins both deques. The range is within the limit, so the left pointer stays. The window covers indices 0 to 2 with range 3, and the best length is 3."},{"at":{"left":0,"right":3},"vars":{"max_deque":"[1,3]","min_deque":"[0,2,3]","range":3,"best":4},"note":"Index 3 (value 7) joins both deques. The range is within the limit, so the left pointer stays. The window covers indices 0 to 3 with range 3, and the best length is 4."},{"at":{"left":4,"right":4},"vars":{"max_deque":"[4]","min_deque":"[4]","range":0,"best":4},"note":"Index 4 (value 2) joins both deques. The range was above 3, so the left pointer moves forward 4 step(s) to 4, expiring fronts that fall behind it. The window covers indices 4 to 4 with range 0, and the best length is 4."},{"at":{"left":5,"right":5},"vars":{"max_deque":"[5]","min_deque":"[5]","range":0,"best":4},"note":"Index 5 (value 9) joins both deques. The range was above 3, so the left pointer moves forward 1 step(s) to 5, expiring fronts that fall behind it. The window covers indices 5 to 5 with range 0, and the best length is 4."},{"at":{"left":6,"right":6},"vars":{"max_deque":"[6]","min_deque":"[6]","range":0,"best":4},"note":"Index 6 (value 4) joins both deques. The range was above 3, so the left pointer moves forward 1 step(s) to 6, expiring fronts that fall behind it. The window covers indices 6 to 6 with range 0, and the best length is 4."}]}
+{"cells":[5,8,6,7,2,9,4],"pointers":["left","right"],"steps":[{"at":{"left":0,"right":0},"vars":{"max_deque":"[0]","min_deque":"[0]","spread":0,"best":1},"note":"Index 0 (value 5) joins both deques. The spread is within the limit, so the left pointer stays. The window covers indices 0 to 0 with range 0, and the best length is 1."},{"at":{"left":0,"right":1},"vars":{"max_deque":"[1]","min_deque":"[0,1]","spread":3,"best":2},"note":"Index 1 (value 8) joins both deques. The spread is within the limit, so the left pointer stays. The window covers indices 0 to 1 with range 3, and the best length is 2."},{"at":{"left":0,"right":2},"vars":{"max_deque":"[1,2]","min_deque":"[0,2]","spread":3,"best":3},"note":"Index 2 (value 6) joins both deques. The spread is within the limit, so the left pointer stays. The window covers indices 0 to 2 with range 3, and the best length is 3."},{"at":{"left":0,"right":3},"vars":{"max_deque":"[1,3]","min_deque":"[0,2,3]","spread":3,"best":4},"note":"Index 3 (value 7) joins both deques. The spread is within the limit, so the left pointer stays. The window covers indices 0 to 3 with range 3, and the best length is 4."},{"at":{"left":4,"right":4},"vars":{"max_deque":"[4]","min_deque":"[4]","spread":0,"best":4},"note":"Index 4 (value 2) joins both deques. The spread was above 3, so the left pointer moves forward 4 step(s) to 4, expiring fronts that fall behind it. The window covers indices 4 to 4 with range 0, and the best length is 4."},{"at":{"left":5,"right":5},"vars":{"max_deque":"[5]","min_deque":"[5]","spread":0,"best":4},"note":"Index 5 (value 9) joins both deques. The spread was above 3, so the left pointer moves forward 1 step(s) to 5, expiring fronts that fall behind it. The window covers indices 5 to 5 with range 0, and the best length is 4."},{"at":{"left":6,"right":6},"vars":{"max_deque":"[6]","min_deque":"[6]","spread":0,"best":4},"note":"Index 6 (value 4) joins both deques. The spread was above 3, so the left pointer moves forward 1 step(s) to 6, expiring fronts that fall behind it. The window covers indices 6 to 6 with range 0, and the best length is 4."}]}
 ```
 
 <!-- stage: code -->
@@ -209,7 +209,7 @@ Do not use a left pointer when the range can also move backward, because the deq
 
 **Hint.** Look at the range that contains both copies of the minimum in Example 1. Which copy leaves the range first, and which one should the deque have kept?
 
-**Changed decision.** The tie rule makes the newest equal value replace the older one, so the older copy cannot return when it expires.
+**Changed decision.** The tie rule makes the newest equal value replace the older one, so the older equal copy is never needed, because the newer one outlasts it.
 
 #### [Recognize] LC 1438 Longest Continuous Subarray With Absolute Difference Less Than Or Equal To Limit (LeetCode 1438)
 <!-- id: dq-lc1438 -->

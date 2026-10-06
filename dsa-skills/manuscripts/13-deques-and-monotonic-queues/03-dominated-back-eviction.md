@@ -44,7 +44,7 @@ The method calls `removeIf` on the whole list for each arrival. A stream that de
 
 #### Saying When A Position Is Dominated
 
-A stored position `j` is **dominated** by a newer position `i` when `j < i` and `a[j] <= a[i]`. Take any window of consecutive positions that contains `j` and ends at `i` or later. That window must also contain `i`, because `i` lies between `j` and the end of the window. Its maximum is at least `a[i]`, which is at least `a[j]`, so `j` is never needed to report that maximum. A dominated position can leave for good.
+A stored position `j` is **dominated** by a newer position `i` when `j < i` and `a[j] < a[i]`. A tie, where `a[j] == a[i]`, is a separate choice that the tie rule below settles. Take any window of consecutive positions that contains `j` and ends at `i` or later. That window must also contain `i`, because `i` lies between `j` and the end of the window. Its maximum is at least `a[i]`, which is at least `a[j]`, so `j` is never needed to report that maximum. A dominated position can leave for good.
 
 #### Finding The Dominated Positions Fast
 
@@ -80,7 +80,7 @@ The second trace follows `a = [4, 6, 2, 5, 5, 1]` with the minimum rule. The val
 ```
 
 ```trace
-{"cells":[4,6,2,5,5,1],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"deque":"[0]","front_value":4,"removed":0},"note":"Index 0 (value 4) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":1},"vars":{"deque":"[0,1]","front_value":4,"removed":0},"note":"Index 1 (value 6) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":2},"vars":{"deque":"[2]","front_value":2,"removed":2},"note":"Index 2 (value 2) removes index 1, 0 from the back, since index 2 is newer and has the larger value. Then index 2 is appended."},{"at":{"i":3},"vars":{"deque":"[2,3]","front_value":2,"removed":0},"note":"Index 3 (value 5) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":4},"vars":{"deque":"[2,3,4]","front_value":2,"removed":0},"note":"Index 4 (value 5) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":5},"vars":{"deque":"[5]","front_value":1,"removed":3},"note":"Index 5 (value 1) removes index 4, 3, 2 from the back, since index 5 is newer and has the larger value. Then index 5 is appended."}]}
+{"cells":[4,6,2,5,5,1],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"deque":"[0]","front_value":4,"removed":0},"note":"Index 0 (value 4) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":1},"vars":{"deque":"[0,1]","front_value":4,"removed":0},"note":"Index 1 (value 6) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":2},"vars":{"deque":"[2]","front_value":2,"removed":2},"note":"Index 2 (value 2) removes index 1, 0 from the back, since index 2 is newer and has the smaller value. Then index 2 is appended."},{"at":{"i":3},"vars":{"deque":"[2,3]","front_value":2,"removed":0},"note":"Index 3 (value 5) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":4},"vars":{"deque":"[2,3,4]","front_value":2,"removed":0},"note":"Index 4 (value 5) beats nothing at the back, so it is appended and nothing is removed."},{"at":{"i":5},"vars":{"deque":"[5]","front_value":1,"removed":3},"note":"Index 5 (value 1) removes index 4, 3, 2 from the back, since index 5 is newer and has the smaller value. Then index 5 is appended."}]}
 ```
 
 <!-- stage: code -->
@@ -183,7 +183,7 @@ Do not use this removal when a window can skip positions, because the argument n
 
 **Example 2.** Input `a = [4, 4, 2]` with `keepEqual = false`, output `[0, 1, 1]`.
 
-**Hint.** Both policies report a front with the same value. Which of two equal positions stays in range longer when old positions later expire?
+**Hint.** Both policies report a front with the same value. Which of two equal positions is newer, and which one would stay in range longer once old positions expire?
 
 **Changed decision.** The tie rule changes which position stays at the front, not which value.
 

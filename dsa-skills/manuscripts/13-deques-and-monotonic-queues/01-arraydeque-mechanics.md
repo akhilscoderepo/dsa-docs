@@ -61,9 +61,9 @@ An `ArrayDeque` keeps four pieces of state. A caller sees only the sequence, but
 - **Array** holds the items in slots, and some slots are empty.
 - **Head index** is the slot of the first item, and it changes on every front call.
 - **Tail index** is the next free slot at the back, and it changes on every back call.
-- **Size** is the count of items, and it changes by one on every successful add or remove.
+- **Size** is the count of items, and the class derives it from the two indices.
 
-The head index and the tail index are equal when the sequence is empty. A full array would make them equal again, so the class resizes before that can happen.
+The head index and the tail index are equal when the sequence is empty. A full array would make them equal again, so the class grows the array when it fills.
 
 <!-- stage: trace -->
 ### Following The Indices Through Wrapping
@@ -72,14 +72,14 @@ The two traces use a small array of six slots so every slot is visible. A real `
 
 In the first trace, the call `addFirst(2)` moves the head index from slot 0 back to slot 5. The sequence still reads `2, 4, 7` from front to back. No item moved, because the head index wrapped around the edge.
 
-The second trace keeps the last three items of the stream 5, 6, 7, 8. Each append writes at the tail index. When the size reaches 4, one front removal brings it back to 3. Both indices move forward, and the occupied slots drift around the array. The sequence from front to back stays the three newest items.
+The second trace keeps the three newest items of the stream 5, 6, 7, 8 in the same six-slot array. Each append writes at the tail index. When the size reaches 4, one front removal brings it back to 3. Both indices move forward, and the occupied slots drift around the array. The sequence from front to back stays the three newest items.
 
 ```trace
-{"cells":["-","-","-","-","-","-"],"pointers":["head","tail"],"steps":[{"at":{"head":0,"tail":0},"vars":{"slots":"[-,-,-,-,-,-]","front_to_back":"[]","size":0},"note":"The ring is empty, so head and tail are the same slot, 0."},{"at":{"head":0,"tail":1},"vars":{"slots":"[4,-,-,-,-,-]","front_to_back":"[4]","size":1},"note":"addLast(4) writes 4 in slot 0 and moves the tail to slot 1."},{"at":{"head":0,"tail":2},"vars":{"slots":"[4,7,-,-,-,-]","front_to_back":"[4,7]","size":2},"note":"addLast(7) writes 7 in slot 1 and moves the tail to slot 2."},{"at":{"head":5,"tail":2},"vars":{"slots":"[4,7,-,-,-,2]","front_to_back":"[2,4,7]","size":3},"note":"addFirst(2) moves the head back from slot 0 to slot 5 and writes 2 there. The head wrapped from slot 0 to the last slot, and no item moved."},{"at":{"head":5,"tail":1},"vars":{"slots":"[4,-,-,-,-,2]","front_to_back":"[2,4]","size":2},"note":"removeLast() moves the tail back to slot 1 and takes 7 from it."}]}
+{"cells":["-","-","-","-","-","-"],"pointers":["head","tail"],"steps":[{"at":{"head":0,"tail":0},"vars":{"slots":"[-,-,-,-,-,-]","front_to_back":"[]","size":0},"note":"The array is empty, so head and tail are the same slot, 0."},{"at":{"head":0,"tail":1},"vars":{"slots":"[4,-,-,-,-,-]","front_to_back":"[4]","size":1},"note":"addLast(4) writes 4 in slot 0 and moves the tail to slot 1."},{"at":{"head":0,"tail":2},"vars":{"slots":"[4,7,-,-,-,-]","front_to_back":"[4,7]","size":2},"note":"addLast(7) writes 7 in slot 1 and moves the tail to slot 2."},{"at":{"head":5,"tail":2},"vars":{"slots":"[4,7,-,-,-,2]","front_to_back":"[2,4,7]","size":3},"note":"addFirst(2) moves the head back from slot 0 to slot 5 and writes 2 there. The head wrapped from slot 0 to the last slot, and no item moved."},{"at":{"head":5,"tail":1},"vars":{"slots":"[4,-,-,-,-,2]","front_to_back":"[2,4]","size":2},"note":"removeLast() moves the tail back to slot 1 and takes 7 from it."}]}
 ```
 
 ```trace
-{"cells":["-","-","-","-","-","-"],"pointers":["head","tail"],"steps":[{"at":{"head":0,"tail":0},"vars":{"slots":"[-,-,-,-,-,-]","front_to_back":"[]","size":0},"note":"The history is empty."},{"at":{"head":0,"tail":1},"vars":{"slots":"[5,-,-,-,-,-]","front_to_back":"[5]","size":1},"note":"Append 5 at slot 0. The history holds 1 item."},{"at":{"head":0,"tail":2},"vars":{"slots":"[5,6,-,-,-,-]","front_to_back":"[5,6]","size":2},"note":"Append 6 at slot 1. The history holds 2 items."},{"at":{"head":0,"tail":3},"vars":{"slots":"[5,6,7,-,-,-]","front_to_back":"[5,6,7]","size":3},"note":"Append 7 at slot 2. The history holds 3 items."},{"at":{"head":0,"tail":4},"vars":{"slots":"[5,6,7,8,-,-]","front_to_back":"[5,6,7,8]","size":4},"note":"Append 8 at slot 3. The history holds 4 items."},{"at":{"head":1,"tail":4},"vars":{"slots":"[-,6,7,8,-,-]","front_to_back":"[6,7,8]","size":3},"note":"The size 4 is above the capacity 3, so the oldest item 5 is removed from the front."}]}
+{"cells":["-","-","-","-","-","-"],"pointers":["head","tail"],"steps":[{"at":{"head":0,"tail":0},"vars":{"slots":"[-,-,-,-,-,-]","front_to_back":"[]","size":0},"note":"The history is empty."},{"at":{"head":0,"tail":1},"vars":{"slots":"[5,-,-,-,-,-]","front_to_back":"[5]","size":1},"note":"Append 5 at slot 0. The history holds 1 item."},{"at":{"head":0,"tail":2},"vars":{"slots":"[5,6,-,-,-,-]","front_to_back":"[5,6]","size":2},"note":"Append 6 at slot 1. The history holds 2 items."},{"at":{"head":0,"tail":3},"vars":{"slots":"[5,6,7,-,-,-]","front_to_back":"[5,6,7]","size":3},"note":"Append 7 at slot 2. The history holds 3 items."},{"at":{"head":0,"tail":4},"vars":{"slots":"[5,6,7,8,-,-]","front_to_back":"[5,6,7,8]","size":4},"note":"Append 8 at slot 3. The history holds 4 items."},{"at":{"head":1,"tail":4},"vars":{"slots":"[-,6,7,8,-,-]","front_to_back":"[6,7,8]","size":3},"note":"The size 4 is above the limit 3, so the oldest item 5 is removed from the front."}]}
 ```
 
 <!-- stage: code -->
