@@ -117,7 +117,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Deep Single Chain.** Trace nested empty groups and reject unbalanced input under the stated contract.
 - **Recognize - LC 856 Score of Parentheses.** Resolve each completed nested group into the value expected by its parent.
 
-### Min Stack
+### Track The Minimum In A Stack
 
 **Recognition cue.** Ordinary stack operations must additionally return the current minimum in constant time. **Invariant.** Each depth stores enough information to recover the minimum for exactly that prefix of the stack. **False friend.** Scanning for the minimum on demand violates the operation contract.
 
@@ -126,7 +126,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Duplicate Minima.** Push the same minimum twice and ensure one pop does not lose it.
 - **Recognize - LC 155 Min Stack.** Implement `push`, `pop`, `top`, and `getMin` with constant-time worst-case operations.
 
-### Queue-Based Level Processing
+### Group Queue Items By Level
 
 **Recognition cue.** Work must be grouped by its distance or batch level, and all items currently in the queue belong to the present level. **Invariant.** Capture `levelSize = queue.size()` before the inner loop; exactly those items form the current level. **Java hazard.** Do not use a null sentinel with `ArrayDeque`. Tree level order is applied in Chapter 16.
 

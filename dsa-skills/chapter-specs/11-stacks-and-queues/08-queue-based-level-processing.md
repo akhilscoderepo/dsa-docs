@@ -1,4 +1,4 @@
-# Lesson spec: Queue-Based Level Processing
+# Lesson spec: Group Queue Items By Level
 
 **Recognition cue.** Work must be grouped by its distance or batch level, and all items currently in the queue belong to the present level. **Invariant.** Capture `levelSize = queue.size()` before the inner loop; exactly those items form the current level. **Java hazard.** Do not use a null sentinel with `ArrayDeque`. Tree level order is applied in Chapter 16.
 

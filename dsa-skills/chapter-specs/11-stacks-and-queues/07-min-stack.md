@@ -1,4 +1,4 @@
-# Lesson spec: Min Stack
+# Lesson spec: Track The Minimum In A Stack
 
 **Recognition cue.** Ordinary stack operations must additionally return the current minimum in constant time. **Invariant.** Each depth stores enough information to recover the minimum for exactly that prefix of the stack. **False friend.** Scanning for the minimum on demand violates the operation contract.
 

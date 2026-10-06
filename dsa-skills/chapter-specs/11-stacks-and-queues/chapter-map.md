@@ -10,8 +10,8 @@
 04. Find Shortest Steps With A Queue  ->  04-bfs-queue-state.md
 05. Check That Brackets Match In Order  ->  05-matching-delimiters.md
 06. Save State For Each Nesting Level  ->  06-nested-structure.md
-07. Min Stack  ->  07-min-stack.md
-08. Queue-Based Level Processing  ->  08-queue-based-level-processing.md
+07. Track The Minimum In A Stack  ->  07-min-stack.md
+08. Group Queue Items By Level  ->  08-queue-based-level-processing.md
 09. Nested Decoding  ->  09-nested-decoding.md
 10. Calculator And String Parsing  ->  10-calculator-and-string-parsing.md
 11. Infix And Postfix Evaluation  ->  11-infix-and-postfix-evaluation.md
