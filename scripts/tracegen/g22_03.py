@@ -1,58 +1,34 @@
 from common import *
-CH='22-bfs-variations'
-F='03-bidirectional-frontiers.md'
-
-def run(n, edges, s, t, expect):
-    adj=[[] for _ in range(n)]
-    for a,b in edges: adj[a].append(b); adj[b].append(a)
-    for l in adj: l.sort()
-    fw=[-1]*n; fp=[-1]*n; fw[s]=0; fp[t]=0
-    lw=[s]; lp=[t]; steps=[]; ans=None
-    while lw and lp and ans is None:
-        gw = len(lw) <= len(lp)
-        layer, mine, other = (lw, fw, fp) if gw else (lp, fp, fw)
-        fresh=[]
-        for cur in layer:
+CH='22-bfs-variations'; F='03-bidirectional-frontiers.md'
+EDGES=[(0,1),(0,2),(1,3),(2,3),(3,4),(4,5),(4,6),(5,7),(6,7)]
+N=8
+adj=[[] for _ in range(N)]
+for a,b in EDGES: adj[a].append(b); adj[b].append(a)
+def show(m): return ",".join(str(m.get(v,-1)) for v in range(N))
+def run(s,t):
+    dS={s:0}; dT={t:0}; fS=[s]; fT=[t]; st=[]
+    while fS and fT:
+        fromS=len(fS)<=len(fT)
+        f,own,oth=(fS,dS,dT) if fromS else (fT,dT,dS)
+        side="start side" if fromS else "target side"
+        nf=[]
+        for c in f:
             found=None; added=[]
-            for nx in adj[cur]:
-                if other[nx]>=0:
-                    found=nx; ans=mine[cur]+1+other[nx]; break
-                if mine[nx]>=0: continue
-                mine[nx]=mine[cur]+1; fresh.append(nx); added.append(nx)
-            side='west' if gw else 'pump'
-            reached=lambda a: sum(1 for x in a if x>=0)
+            for x in adj[c]:
+                if x in oth: found=x; break
+                if x in own: continue
+                own[x]=own[c]+1; nf.append(x); added.append(x)
+            vars_={"distStart":show(dS),"distTarget":show(dT)}
             if found is not None:
-                note=(f"Chamber {cur} is expanded for the {side} side, and its neighbour {found} is already in the other table at distance {other[found]}, "
-                      f"so the answer is {mine[cur]} + 1 + {other[found]} = {ans}.")
-            else:
-                note=(f"Chamber {cur} is expanded for the {side} side, and it reaches "+
-                      (f"{len(added)} new chamber"+("s" if len(added)!=1 else "")+f" ({','.join(map(str,added))})." if added else "no new chamber."))
-            steps.append({"at":{"cur":cur},"vars":{"side":"W" if gw else "P","west_reached":reached(fw),"pump_reached":reached(fp),"answer":ans if ans is not None else "none"},"note":note})
-            if found is not None: break
-        if ans is None:
-            if gw: lw=fresh
-            else: lp=fresh
-    assert ans==expect, (ans,expect)
-    return steps
-
-# independent check with plain BFS
-from collections import deque
-def bfs(n,edges,s,t):
-    adj=[[] for _ in range(n)]
-    for a,b in edges: adj[a].append(b); adj[b].append(a)
-    d=[-1]*n; d[s]=0; q=deque([s])
-    while q:
-        u=q.popleft()
-        for v in adj[u]:
-            if d[v]<0: d[v]=d[u]+1; q.append(v)
-    return d[t]
-e1=[(0,1),(0,2),(0,3),(1,4),(2,4),(3,5),(4,6),(5,6),(6,7)]
-e2=[(0,1),(1,2),(2,3),(0,4)]
-assert bfs(8,e1,0,7)==4 and bfs(5,e2,0,3)==3
-s1=run(8,e1,0,7,4)
-assert [x["vars"]["side"] for x in s1]==["W","P","P","P"]
-fill(CH,F,block(list(range(8)),["cur"],s1),"@@TRACE1@@")
-s2=run(5,e2,0,3,3)
-assert [x["vars"]["side"] for x in s2]==['W','P','P']
-print([x["vars"]["side"] for x in s2])
-fill(CH,F,block(list(range(5)),["cur"],s2),"@@TRACE2@@")
+                total=own[c]+1+oth[found]
+                st.append({"at":{"cur":c},"vars":vars_,"note":f"The {side} expands {c}. Its neighbor {found} is already in the opposite map at distance {oth[found]}, so the answer is {own[c]} + 1 + {oth[found]} = {total}."})
+                return st,total
+            txt=("adds "+" and ".join(map(str,added))) if added else "adds nothing new"
+            st.append({"at":{"cur":c},"vars":vars_,"note":f"The {side} expands {c} and {txt}."})
+        if fromS: fS=nf
+        else: fT=nf
+    return st,-1
+st,r=run(0,7); assert r==5 and len(st)==6
+fill(CH,F,block(list(range(N)),["cur"],st),"@@TRACE1@@")
+st,r=run(0,5); assert r==4 and len(st)==5
+fill(CH,F,block(list(range(N)),["cur"],st),"@@TRACE2@@")

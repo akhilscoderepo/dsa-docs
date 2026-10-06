@@ -1,37 +1,32 @@
 from common import *
 from collections import deque
-CH='22-bfs-variations'
-F='01-multi-source-bfs.md'
-# trace 1: graph, stations 0 and 5
-n=8
-edges=[(0,1),(1,2),(2,3),(3,4),(4,5),(1,6),(6,7),(7,5)]
+CH='22-bfs-variations'; F='01-multi-source-bfs.md'
+def qs(q): return "-".join(map(str,q)) if q else "empty"
+# Trace 1: two sources on a graph with a branch.
+n=7; edges=[(0,1),(1,2),(2,3),(3,4),(4,5),(2,6)]; src=[0,5]
 adj=[[] for _ in range(n)]
 for a,b in edges: adj[a].append(b); adj[b].append(a)
-dist=[-1]*n; q=deque(); steps=[]
-for s in (0,5): dist[s]=0; q.append(s)
+dist=[-1]*n; q=deque()
+for s in src: dist[s]=0; q.append(s)
+st=[]
 while q:
-    v=q.popleft(); added=[]
-    for w in adj[v]:
-        if dist[w]==-1: dist[w]=dist[v]+1; q.append(w); added.append(w)
-    steps.append({"at":{"cur":v},"vars":{"dist":dist[v],"queue":",".join(map(str,q)) or "empty"},
-      "note":f"Junction {v} is removed at distance {dist[v]}, and it "+(f"adds {len(added)} junction{'s' if len(added)!=1 else ''} ({','.join(map(str,added))}) at distance {dist[v]+1}." if added else "adds nothing, because every neighbor already has a distance.")})
-assert dist==[0,1,2,2,1,0,2,1] , dist
-fill(CH,F,block(list(range(n)),["cur"],steps),"@@TRACE1@@")
-# trace 2: walled grid 3x4
-rows,cols=3,4
-g=["S.#.",".#..","..S#"]
-flat=[ch for r in g for ch in r]
-dist=[-1]*12; q=deque(); steps=[]; mx=0
-for i,ch in enumerate(flat):
-    if ch=='S': dist[i]=0; q.append(i)
+    cur=q.popleft(); new=[]
+    for nx in adj[cur]:
+        if dist[nx]==-1: dist[nx]=dist[cur]+1; q.append(nx); new.append(nx)
+    note=(f"The search takes vertex {cur} from the queue and discovers "+", ".join(map(str,new))+f" at distance {dist[cur]+1}.") if new else f"The search takes vertex {cur} from the queue and finds no undiscovered neighbor."
+    st.append({"at":{"cur":cur},"vars":{"distance":",".join(map(str,dist)),"queue":qs(list(q))},"note":note})
+assert dist==[0,1,2,2,1,0,3]
+fill(CH,F,block(list(range(n)),["cur"],st),"@@TRACE1@@")
+# Trace 2: grid 3x3 row by row, one rotten source.
+g=[2,1,1,1,1,0,0,1,1]; R=C=3
+dist=[-1]*9; q=deque([0]); dist[0]=0; st=[]
 while q:
-    code=q.popleft(); r,c=divmod(code,cols); added=[]
-    mx=max(mx,dist[code])
-    for dr,dc in((-1,0),(1,0),(0,-1),(0,1)):
-        nr,nc=r+dr,c+dc
-        if 0<=nr<rows and 0<=nc<cols and flat[nr*cols+nc]!='#' and dist[nr*cols+nc]==-1:
-            dist[nr*cols+nc]=dist[code]+1; q.append(nr*cols+nc); added.append(nr*cols+nc)
-    steps.append({"at":{"cur":code},"vars":{"dist":dist[code],"max_dist":mx,"queue":",".join(map(str,q)) or "empty"},
-      "note":f"Square {code} at row {r}, column {c} is removed at distance {dist[code]}, and "+(f"it adds {len(added)} square{'s' if len(added)!=1 else ''} ({','.join(map(str,added))})." if added else "it adds nothing, so no later round begins from here.")})
-assert mx==3 and all((dist[i]==-1)==(flat[i]=='#') for i in range(12)), dist
-fill(CH,F,block(flat,["cur"],steps),"@@TRACE2@@")
+    cur=q.popleft(); r,c=divmod(cur,C); new=[]
+    for dr,dc in((1,0),(-1,0),(0,1),(0,-1)):
+        a,b=r+dr,c+dc
+        if 0<=a<R and 0<=b<C and g[a*C+b]==1 and dist[a*C+b]==-1:
+            dist[a*C+b]=dist[cur]+1; q.append(a*C+b); new.append(a*C+b)
+    note=(f"The search takes cell {cur} from the queue and discovers cell"+("s " if len(new)>1 else " ")+" and ".join(map(str,new))+f" at distance {dist[cur]+1}.") if new else f"The search takes cell {cur} from the queue and finds no fresh neighbor."
+    st.append({"at":{"cur":cur},"vars":{"distance":",".join(map(str,dist)),"queue":qs(list(q))},"note":note})
+assert max(dist)==4 and dist[8]==4 and dist[5]==-1 and dist[6]==-1
+fill(CH,F,block(g,["cur"],st),"@@TRACE2@@")
