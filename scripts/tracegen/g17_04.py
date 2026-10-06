@@ -1,39 +1,18 @@
 from common import *
-from hp import *
-CH = '17-heaps-and-priority-queues'
-F = '04-k-way-merge.md'
-
-
-def merge(sources):
-    off = []
-    t = 0
-    for s in sources:
-        off.append(t)
-        t += len(s)
-    flat = [x for s in sources for x in s]
-    h = Heap(key=lambda e: (e[0], e[1]))
-    for s, src in enumerate(sources):
-        if src:
-            h.offer((src[0], s, 0))
-    out = []
-    steps = []
-    fr = lambda: "[" + ",".join(f"({v},s{s})" for v, s, p in sorted(h.a)) + "]"
-    while len(h):
-        v, s, p = h.poll()[0]
-        out.append(v)
-        note = f"The front {v} of source {s} is polled and written."
-        if p + 1 < len(sources[s]):
-            h.offer((sources[s][p + 1], s, p + 1))
-            note += f" Its successor {sources[s][p + 1]} enters the frontier."
-        else:
-            note += f" Source {s} is exhausted, so nothing is offered."
-        steps.append({"at": {"polled": off[s] + p}, "vars": {"frontier": fr(), "output": fmt(out)}, "note": note})
-    return flat, steps, out
-
-
-flat, steps, out = merge([[1, 4, 7], [2, 4, 9], [3, 8]])
-assert out == [1, 2, 3, 4, 4, 7, 8, 9]
-fill(CH, F, block(flat, ["polled"], steps), "@@TRACE1@@")
-flat, steps, out = merge([[1, 2, 3, 4], [10], [5, 6]])
-assert out == [1, 2, 3, 4, 5, 6, 10]
-fill(CH, F, block(flat, ["polled"], steps), "@@TRACE2@@")
+import heapq
+CH='17-heaps-and-priority-queues'; F='04-k-way-merge.md'
+def run(src):
+    h=[(s[0],i,0) for i,s in enumerate(src) if s]; heapq.heapify(h); out=[]; st=[]
+    fmt=lambda h:"["+", ".join(f"{v} from {i}" for v,i,_ in sorted(h))+"]"
+    st.append({"at":{"out":-1},"vars":{"frontier":fmt(h)},"note":f"The frontier starts with the first value of each non-empty file: {fmt(h)}."})
+    while h:
+        v,i,p=heapq.heappop(h); out.append(v)
+        n=p+1; ex=""
+        if n<len(src[i]): heapq.heappush(h,(src[i][n],i,n)); ex=f" File {i} offers its successor {src[i][n]}."
+        else: ex=f" File {i} has no successor, so the frontier shrinks."
+        st.append({"at":{"out":len(out)-1},"vars":{"frontier":fmt(h)},"note":f"The poll returns {v} from file {i}."+ex})
+    return out,st
+src=[[1,4,7],[2,5],[3,6,9]]; out,st=run(src); assert out==sorted(sum(src,[]))
+fill(CH,F,block(out,["out"],st),"@@TRACE1@@")
+src=[[2,2],[],[2,3]]; out,st=run(src); assert out==[2,2,2,3]
+fill(CH,F,block(out,["out"],st),"@@TRACE2@@")
