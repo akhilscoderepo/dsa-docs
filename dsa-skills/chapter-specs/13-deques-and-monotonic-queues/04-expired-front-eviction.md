@@ -1,4 +1,4 @@
-# Lesson spec: Expired-Front Eviction
+# Lesson spec: Remove Old Indices From The Front
 
 **Recognition cue.** Candidate indices may be optimal by value but no longer lie in the active range. **Invariant.** Before reading the answer for a window ending at `right`, every stored index is greater than `right - k`. **False friend.** Value ordering cannot reveal whether a candidate is stale.
 

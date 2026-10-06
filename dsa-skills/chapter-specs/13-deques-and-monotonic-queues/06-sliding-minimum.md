@@ -1,4 +1,4 @@
-# Lesson spec: Sliding Minimum
+# Lesson spec: Find The Minimum Of Every Window
 
 **Recognition cue.** Every fixed-size range needs its minimum and the same chronological expiry rule applies. **Invariant.** Values increase from front to back, so the front is the minimum among surviving indices. **False friend.** Copying maximum-window code without reversing every domination comparison silently returns maxima.
 

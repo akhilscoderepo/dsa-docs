@@ -1,4 +1,4 @@
-# Lesson spec: ArrayDeque Mechanics
+# Lesson spec: Use ArrayDeque From Both Ends
 
 **Recognition cue.** The algorithm must inspect or remove candidates at both ends in constant time. **Invariant.** The front and back have fixed roles throughout the method. **False friend.** `LinkedList` can implement a deque, but `ArrayDeque` is the ordinary Java choice when null elements and indexed access are unnecessary. **Java hazard.** `ArrayDeque` rejects `null`.
 

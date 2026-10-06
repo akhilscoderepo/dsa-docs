@@ -1,4 +1,4 @@
-# Lesson spec: Shortest-Subarray Deque State
+# Lesson spec: Find The Shortest Subarray With Negatives
 
 **Recognition cue.** Negative values prevent an ordinary sum window, but prefix sums let the task ask for the shortest pair of indices whose difference is at least `k`. **Invariant.** Prefix-sum indices increase from front to back and their prefix values also strictly increase; the front supplies the earliest profitable start. **False friend.** A standard positive-number sliding window fails when extending can decrease the sum.
 

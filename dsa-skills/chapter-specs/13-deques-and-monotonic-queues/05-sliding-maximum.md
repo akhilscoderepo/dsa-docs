@@ -1,4 +1,4 @@
-# Lesson spec: Sliding Maximum
+# Lesson spec: Find The Maximum Of Every Window
 
 **Recognition cue.** Every fixed-size contiguous window needs its maximum in linear total time. **Invariant.** The deque contains in-window indices in chronological order and decreasing value order; its front is the current maximum. **False friend.** A heap can work but needs lazy stale-entry removal and costs `O(n log k)`.
 

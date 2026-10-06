@@ -1,4 +1,4 @@
-# Lesson spec: Front And Back Invariants
+# Lesson spec: Give Each End One Job
 
 **Recognition cue.** One end answers the current query while the other end admits a new candidate and removes weaker ones. **Invariant.** The front is the best surviving candidate; order toward the back follows the stated monotonic rule. **False friend.** Treating both ends as interchangeable destroys the proof.
 

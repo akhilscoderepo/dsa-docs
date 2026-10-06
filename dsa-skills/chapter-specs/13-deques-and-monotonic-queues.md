@@ -56,7 +56,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### ArrayDeque Mechanics
+### Use ArrayDeque From Both Ends
 
 **Recognition cue.** The algorithm must inspect or remove candidates at both ends in constant time. **Invariant.** The front and back have fixed roles throughout the method. **False friend.** `LinkedList` can implement a deque, but `ArrayDeque` is the ordinary Java choice when null elements and indexed access are unnecessary. **Java hazard.** `ArrayDeque` rejects `null`.
 
@@ -65,7 +65,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Deque Contract.** Choose deliberately between exception-throwing and sentinel-returning access methods.
 - **Recognize - Author exercise: Candidate Deque API.** Identify the operations needed for front expiry and back domination without writing the algorithm yet.
 
-### Front And Back Invariants
+### Give Each End One Job
 
 **Recognition cue.** One end answers the current query while the other end admits a new candidate and removes weaker ones. **Invariant.** The front is the best surviving candidate; order toward the back follows the stated monotonic rule. **False friend.** Treating both ends as interchangeable destroys the proof.
 
@@ -74,7 +74,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Equal Candidate Policy.** Decide whether the newer equal value replaces the older one and explain how indices affect expiry.
 - **Recognize - Author exercise: Name Each End.** Given a moving-range trace, identify whether each removal is expiration or domination.
 
-### Dominated-Back Eviction
+### Remove Weaker Values From The Back
 
 **Recognition cue.** A newly arrived value is at least as good as older candidates and will remain eligible longer. **Invariant.** Every stored index can still become the optimum of a future window; anything popped from the back cannot. **False friend.** Removing a smaller value is unsafe when the query asks for a minimum.
 
@@ -83,7 +83,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Repeated Equal Values.** Compare keeping all equals with keeping only the newest and preserve a consistent expiry rule.
 - **Recognize - Author exercise: Online Suffix Maximum Candidates.** Return the front after every insertion when no expiry is required.
 
-### Expired-Front Eviction
+### Remove Old Indices From The Front
 
 **Recognition cue.** Candidate indices may be optimal by value but no longer lie in the active range. **Invariant.** Before reading the answer for a window ending at `right`, every stored index is greater than `right - k`. **False friend.** Value ordering cannot reveal whether a candidate is stale.
 
@@ -92,7 +92,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Exact Expiry Point.** For length `k`, verify that index `right - k` is outside the new window.
 - **Recognize - Author exercise: Chronological Candidate Queue.** Preserve increasing indices while values remain monotonic.
 
-### Sliding Maximum
+### Find The Maximum Of Every Window
 
 **Recognition cue.** Every fixed-size contiguous window needs its maximum in linear total time. **Invariant.** The deque contains in-window indices in chronological order and decreasing value order; its front is the current maximum. **False friend.** A heap can work but needs lazy stale-entry removal and costs `O(n log k)`.
 
@@ -101,7 +101,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Increasing, Decreasing, And Equal Arrays.** Trace the three shapes that stress opposite ends of the deque.
 - **Recognize - LC 239 Sliding Window Maximum.** Produce all maxima in `O(n)` time and `O(k)` space.
 
-### Sliding Minimum
+### Find The Minimum Of Every Window
 
 **Recognition cue.** Every fixed-size range needs its minimum and the same chronological expiry rule applies. **Invariant.** Values increase from front to back, so the front is the minimum among surviving indices. **False friend.** Copying maximum-window code without reversing every domination comparison silently returns maxima.
 
@@ -110,7 +110,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Duplicate Minima Expire.** Ensure a later equal minimum survives after the earlier index leaves.
 - **Recognize - LC 1438 Longest Continuous Subarray With Absolute Difference Less Than or Equal to Limit.** Use both deques while a variable window restores its range constraint.
 
-### Index Expiry
+### Allow Only Recent Positions
 
 **Recognition cue.** Eligibility depends on age, distance, or an index interval as well as candidate quality. **Invariant.** Indices are appended in increasing order and the front is removed as soon as it crosses the legal left boundary. **False friend.** Storing only values loses identity when duplicates expire at different times.
 
@@ -119,7 +119,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Duplicate Values, Different Ages.** Prove expiry removes the correct occurrence.
 - **Recognize - LC 1696 Jump Game VI.** Combine recent-index eligibility with the best previous dynamic-programming score.
 
-### Shortest-Subarray Deque State
+### Find The Shortest Subarray With Negatives
 
 **Recognition cue.** Negative values prevent an ordinary sum window, but prefix sums let the task ask for the shortest pair of indices whose difference is at least `k`. **Invariant.** Prefix-sum indices increase from front to back and their prefix values also strictly increase; the front supplies the earliest profitable start. **False friend.** A standard positive-number sliding window fails when extending can decrease the sum.
 
@@ -130,7 +130,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Deque And Sliding Window
+### Slide A Window With Two Deques
 
 The sliding window supplies changing eligibility boundaries; the monotonic deque keeps only candidates that could still answer an extreme-value query. The combined state must enforce chronology, expiry, and value order.
 

@@ -4,14 +4,14 @@
 
 ## Lesson order
 
-01. ArrayDeque Mechanics  ->  01-arraydeque-mechanics.md
-02. Front And Back Invariants  ->  02-front-and-back-invariants.md
-03. Dominated-Back Eviction  ->  03-dominated-back-eviction.md
-04. Expired-Front Eviction  ->  04-expired-front-eviction.md
-05. Sliding Maximum  ->  05-sliding-maximum.md
-06. Sliding Minimum  ->  06-sliding-minimum.md
-07. Index Expiry  ->  07-index-expiry.md
-08. Shortest-Subarray Deque State  ->  08-shortest-subarray-deque-state.md
+01. Use ArrayDeque From Both Ends  ->  01-arraydeque-mechanics.md
+02. Give Each End One Job  ->  02-front-and-back-invariants.md
+03. Remove Weaker Values From The Back  ->  03-dominated-back-eviction.md
+04. Remove Old Indices From The Front  ->  04-expired-front-eviction.md
+05. Find The Maximum Of Every Window  ->  05-sliding-maximum.md
+06. Find The Minimum Of Every Window  ->  06-sliding-minimum.md
+07. Allow Only Recent Positions  ->  07-index-expiry.md
+08. Find The Shortest Subarray With Negatives  ->  08-shortest-subarray-deque-state.md
 
 # Chapter 13: Deques and monotonic queues
 

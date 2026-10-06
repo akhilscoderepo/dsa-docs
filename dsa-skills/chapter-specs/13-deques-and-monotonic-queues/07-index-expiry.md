@@ -1,4 +1,4 @@
-# Lesson spec: Index Expiry
+# Lesson spec: Allow Only Recent Positions
 
 **Recognition cue.** Eligibility depends on age, distance, or an index interval as well as candidate quality. **Invariant.** Indices are appended in increasing order and the front is removed as soon as it crosses the legal left boundary. **False friend.** Storing only values loses identity when duplicates expire at different times.
 

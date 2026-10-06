@@ -1,4 +1,4 @@
-# Lesson spec: Dominated-Back Eviction
+# Lesson spec: Remove Weaker Values From The Back
 
 **Recognition cue.** A newly arrived value is at least as good as older candidates and will remain eligible longer. **Invariant.** Every stored index can still become the optimum of a future window; anything popped from the back cannot. **False friend.** Removing a smaller value is unsafe when the query asks for a minimum.
 
