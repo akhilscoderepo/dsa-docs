@@ -212,7 +212,7 @@ public final class BestResourcePerCell {
 }
 ```
 
-#### Solution: [Boundary] Longer Path With More Resource (Author exercise)
+#### Solution: [Boundary] Fewest Moves And Most Charges Left (Author exercise)
 <!-- id: bv5-longer-path-more-resource -->
 
 **Approach.**

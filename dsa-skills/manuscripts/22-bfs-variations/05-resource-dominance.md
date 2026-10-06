@@ -62,7 +62,7 @@ The repair is to keep the full pair in the queue entry and to discard a pair onl
 
 #### What Dominance Means
 
-Take two queue entries at the same room. Entry A has `a` charges left and entry B has `b` charges left, with `a >= b`. Entry A **dominates** entry B, and this relation is called **dominance**, because every sequence of edges legal from B is also legal from A. A legal sequence from B needs total cost at most `b`, and `a` is at least `b`. The two entries then reach the same rooms with the same number of further moves.
+Take two queue entries at the same room. Entry A has `a` charges left and entry B has `b` charges left, with `a >= b`. Entry A **dominates** entry B, and this relation is called **dominance**. Every sequence of edges legal from B is also legal from A, because a legal sequence from B costs at most `b`, and `a` is at least `b`. Entry A then reaches every room that entry B reaches, in the same number of further moves.
 
 #### Why Distance Must Be Compared
 
@@ -77,7 +77,7 @@ The rule is one-directional. An entry B discovered later with more charges than 
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search keeps the adjacency list `adj`, one integer array `best` and one queue. Each queue entry is an int array with three fields. The code below uses exactly these names.
+The search keeps the adjacency list `adj`, one integer array `best` and one queue. Each queue entry is an int array with three fields. The code below uses the names in this list, and it adds the locals `entry`, `node`, `next` and `left`, where `left` is the charge count after one edge.
 
 - **adj** is the adjacency list; `adj.get(v)` holds `{next, cost}` pairs with cost 0 or 1.
 - **best** is an int array; `best[v]` is the largest remaining charge count enqueued at room `v`, and -1 means never reached.
@@ -98,7 +98,7 @@ The first map is the five-room map of the naive stage with `k = 1`. The cells ar
 
 #### A Map With A Dominated Revisit
 
-The second map has six rooms and `k = 1`. Its edges lead from 0 to 1 at cost 1, from 0 to 2 at cost 0, from 2 to 3, from 3 to 1, from 3 back to 0 at cost 0, from 1 to 4 at cost 0, and from 4 to 5 at cost 1. The edge from 3 back to 0 offers room 0 with one charge. The source already holds `best[0] = 1`, so `1 > 1` is false and the entry is discarded. The search never loops.
+The second map has six rooms, `k = 1` and the target room 5. Its edges lead from 0 to 1 at cost 1, from 0 to 2 at cost 0, from 2 to 3 at cost 0, from 3 to 1 at cost 0, from 3 back to 0 at cost 0, from 1 to 4 at cost 0, and from 4 to 5 at cost 1. The edge from 3 back to 0 offers room 0 with one charge. The source already holds `best[0] = 1`, so `1 > 1` is false and the entry is discarded. The search never loops.
 
 ```trace
 {"cells":[0,1,2,3,4,5],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"best":"1,0,1,-1,-1,-1","queue":"1:0 2:1"},"note":"The search takes room 0 with 1 charge after 0 moves. It enqueues room 1 with 0 charges and room 2 with 1 charge."},{"at":{"cur":1},"vars":{"best":"1,0,1,-1,0,-1","queue":"2:1 4:0"},"note":"The search takes room 1 with 0 charges after 1 move. It enqueues room 4 with 0 charges."},{"at":{"cur":2},"vars":{"best":"1,0,1,1,0,-1","queue":"4:0 3:1"},"note":"The search takes room 2 with 1 charge after 1 move. It enqueues room 3 with 1 charge."},{"at":{"cur":4},"vars":{"best":"1,0,1,1,0,-1","queue":"3:1"},"note":"The search takes room 4 with 0 charges after 2 moves. It discards room 5, which costs more than the 0 charges left."},{"at":{"cur":3},"vars":{"best":"1,1,1,1,0,-1","queue":"1:1"},"note":"The search takes room 3 with 1 charge after 2 moves. It enqueues room 1 with 1 charge. It discards room 0 with 1 charge, which does not beat best 1."},{"at":{"cur":1},"vars":{"best":"1,1,1,1,1,-1","queue":"4:1"},"note":"The search takes room 1 with 1 charge after 3 moves. It enqueues room 4 with 1 charge."},{"at":{"cur":4},"vars":{"best":"1,1,1,1,1,0","queue":"5:0"},"note":"The search takes room 4 with 1 charge after 4 moves. It enqueues room 5 with 0 charges."},{"at":{"cur":5},"vars":{"best":"1,1,1,1,1,0","queue":"empty"},"note":"The search takes room 5 with 0 charges after 5 moves. This is the target, so it returns 5."}]}
@@ -131,22 +131,22 @@ static int fewestMoves(List<List<int[]>> adj, int k, int target) {
 }
 ```
 
-Two Java details matter. The array `best` is filled with -1, because the default 0 would claim that every room was reached with zero charges and would discard a valid zero-charge arrival. The method returns when it dequeues the target and not when it enqueues it, since the dequeue order is the nondecreasing move order that the proof relies on. Each room enters the queue at most `k + 1` times, because `best` strictly increases, so the time is O((V + E) * k) in the worst case and the space is O(V * k).
+Two Java details matter. The array `best` is filled with -1, because the default 0 would claim that every room was reached with zero charges and would discard a valid zero-charge arrival. The method returns when it dequeues the target. Entries leave the queue in nondecreasing move order, so the first target entry that leaves has the fewest moves, and an enqueue-time check would give the same count. The dequeue-time check lets the Boundary exercise below keep reading entries of the same layer, because a later entry may hold more charges. Each room enters the queue at most `k + 1` times, because `best` strictly increases, so the time is O((V + E) * k) in the worst case and the space is O(V * k).
 
 <!-- stage: applicability -->
-### Recognizing Searches With A Budget
+### Recognizing Searches With Limited Charges
 
 #### Reading The Cue
 
-Use this method when a fewest-moves search carries a consumable amount, such as wall breaks, fuel, stops or skips, and the same position can be reached with different amounts left. Statements say "at most k obstacles" or "with at most k stops". If the amount only goes down and more is always better, the comparison on `best` applies.
+Use this method when a fewest-moves search carries a consumable amount, such as wall breaks, fuel, stops or skips, and this lesson calls the remaining count charges, and the same position can be reached with different amounts left. Statements say "at most k obstacles" or "with at most k stops". If the charges only go down and more is always better, the comparison on `best` applies.
 
 #### Checking The Invariant
 
-The invariant is that `best[v]` holds the largest amount among entries already enqueued at `v`, all of which have a move count no larger than a new entry's. It fails when more of the amount is not always better, for example when a larger count also costs more moves or opens fewer edges, or when edges have different weights so the queue no longer dequeues in nondecreasing move order.
+The invariant is that `best[v]` holds the largest charge count among entries already enqueued at `v`, all of which have a move count no larger than a new entry's. It fails when more charges are not always better, for example when a larger count also costs more moves or opens fewer edges, or when edges have different weights so the queue no longer dequeues in nondecreasing move order.
 
 #### Avoiding The False Friend
 
-The false friend is the Boolean visited array by room or cell. It looks the same as the rule of chapter 21 and passes tests without a budget, but it loses entries with more charges left, as the naive stage showed. The opposite mistake is also wrong: marking every pair (room, amount) visited is correct and slower. Keep the pair, and discard only an entry that has no more charges than an earlier one.
+The false friend is the Boolean visited array by room or cell. It looks the same as the rule of chapter 21 and passes tests without charges, but it loses entries with more charges left, as the naive stage showed. Marking every pair (room, charges) visited is the opposite choice, and it is also correct. Its worst-case time O((V + E) * k) equals that of the dominance rule, so the gain is practical. A room reached first with two charges and again with one charge gives a new pair, which the pair rule queues and the dominance rule drops. Keep the pair in the entry, and discard only an entry that has no more charges than an earlier one.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -156,12 +156,12 @@ The false friend is the Boolean visited array by room or cell. It looks the same
 
 **Prerequisites.** The queue search of this lesson.
 
-**Problem.** A directed graph has vertices `0` to `n - 1`. Each edge `[a, b, w]` goes from `a` to `b` and has cost `w`, which is 0 or 1. A route from vertex `0` to vertex `n - 1` is legal when the sum of its edge costs is at most `k`. Return the minimum number of edges on a legal route, or `-1` when none exists. Mark each pair of vertex and remaining cost budget as visited.
+**Problem.** A directed graph has vertices `0` to `n - 1`. Each edge `[a, b, w]` goes from `a` to `b` and has cost `w`, which is 0 or 1. A route from vertex `0` to vertex `n - 1` is legal when the sum of its edge costs is at most `k`. Return the minimum number of edges on a legal route, or `-1` when none exists. Mark each pair of vertex and remaining charges as visited.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 100`.
 - **Edges** satisfy `0 <= edges.length <= 400`, and a vertex may repeat as a start or end.
-- **Budget** satisfies `0 <= k <= 20`.
+- **Charges** satisfy `0 <= k <= 20`.
 - **Result** is one `int`; it is 0 when `n` is 1.
 
 **Example 1.** Input `n = 5`, `edges = [[0,1,1],[1,2,0],[2,4,1],[0,3,0],[3,4,1]]`, `k = 1`, output `2`.
@@ -170,19 +170,19 @@ The false friend is the Boolean visited array by room or cell. It looks the same
 
 **Hint.** What two values identify a queue entry so that two equal entries are really the same situation?
 
-**Changed decision.** The visited array is indexed by the pair of vertex and remaining budget and not by the vertex alone.
+**Changed decision.** The visited array is indexed by the pair of vertex and remaining charges and not by the vertex alone.
 
 #### [Vary] Best Resource Per Cell (Author exercise)
 <!-- id: bv5-best-resource-per-cell -->
 
 **Prerequisites.** The exercise above.
 
-**Problem.** The graph, the costs and the legal routes are those of the previous exercise. Return the same minimum number of edges, but keep one array `best` with the largest remaining budget enqueued at each vertex. Enqueue an entry only when its remaining budget exceeds the stored value.
+**Problem.** The graph, the costs and the legal routes are those of the previous exercise. Return the same minimum number of edges, but keep one array `best` with the largest remaining charge count enqueued at each vertex. Enqueue an entry only when its remaining charges exceed the stored value.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
 - **Edges** satisfy `0 <= edges.length <= 4000`, with costs 0 or 1.
-- **Budget** satisfies `0 <= k <= 100`.
+- **Charges** satisfy `0 <= k <= 100`.
 - **Result** is one `int`, or `-1` when no legal route exists.
 
 **Example 1.** Input `n = 5`, `edges = [[0,1,1],[0,2,0],[2,3,1],[1,3,0],[3,4,0],[2,4,1],[4,0,0]]`, `k = 1`, output `2`.
@@ -191,19 +191,19 @@ The false friend is the Boolean visited array by room or cell. It looks the same
 
 **Hint.** When may a second arrival at a vertex be dropped, and when must it be kept?
 
-**Changed decision.** One integer per vertex replaces the pair array, and the filter is a strict comparison of remaining budgets.
+**Changed decision.** One integer per vertex replaces the pair array, and the filter is a strict comparison of remaining charges.
 
-#### [Boundary] Longer Path With More Resource (Author exercise)
+#### [Boundary] Fewest Moves And Most Charges Left (Author exercise)
 <!-- id: bv5-longer-path-more-resource -->
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** The graph and the legal routes are those of the previous exercises. Return an array `[moves, remaining]`. Here `moves` is the minimum number of edges on a legal route to vertex `n - 1`, and `remaining` is the largest budget left over all legal routes with that many edges. Return `[-1, -1]` when no legal route exists. Do not discard an entry because a route with fewer edges reached the same vertex earlier.
+**Problem.** The graph and the legal routes are those of the previous exercises. Return an array `[moves, remaining]`. Here `moves` is the minimum number of edges on a legal route to vertex `n - 1`, and `remaining` is the largest charge count left over all legal routes with that many edges. Return `[-1, -1]` when no legal route exists. Do not discard an entry because a route with fewer edges reached the same vertex earlier.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
 - **Edges** satisfy `0 <= edges.length <= 4000`, with costs 0 or 1.
-- **Budget** satisfies `0 <= k <= 100`.
+- **Charges** satisfy `0 <= k <= 100`.
 - **Result** is an `int` array of length 2; for `n = 1` it is `[0, k]`.
 
 **Example 1.** Input `n = 5`, `edges = [[0,1,1],[0,2,0],[2,3,0],[3,1,0],[1,4,1]]`, `k = 1`, output `[4, 0]`.
@@ -212,7 +212,7 @@ The false friend is the Boolean visited array by room or cell. It looks the same
 
 **Hint.** What should the method do with entries that reach the target in the same layer as the first one?
 
-**Changed decision.** The method keeps dequeuing at the first target layer to find the largest remaining budget, and it compares budgets and not distances to discard entries.
+**Changed decision.** The method keeps dequeuing at the first target layer to find the largest remaining charge count, and it compares charges and not distances to discard entries.
 
 #### [Recognize] Shortest Path in a Grid with Obstacles Elimination (LeetCode 1293)
 <!-- id: bv5-grid-obstacles-elimination -->
@@ -224,7 +224,7 @@ The false friend is the Boolean visited array by room or cell. It looks the same
 **Constraints.** The limits are:
 - **Size** satisfies `1 <= m, n <= 40`.
 - **Cells** are 0 or 1, and the start and end cells are 0.
-- **Budget** satisfies `1 <= k <= m * n`.
+- **Charges** satisfy `1 <= k <= m * n`.
 - **Result** is one `int`, and the grid is not modified.
 
 **Example 1.** Input `grid = [[0,0,0],[1,1,0],[0,0,0],[0,1,1],[0,0,0]]`, `k = 1`, output `6`.

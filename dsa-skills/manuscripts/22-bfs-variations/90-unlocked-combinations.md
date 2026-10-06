@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A rotting-orange counter reports six minutes when the grid needs four, because it ran one search per rotten orange. The fix changes what the queue holds at the start, not the search itself. This chapter releases one pairing in full. A second pairing waits for weighted edges.
+A rotting-orange counter reports the right four minutes but needs far too long on a large grid, because it ran one search per rotten orange. The fix changes what the queue holds at the start, not the search itself. This chapter releases one pairing in full. A second pairing waits for weighted edges.
 
 ### Pairing Taught In This Chapter
 

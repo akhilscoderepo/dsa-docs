@@ -94,7 +94,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 - **Build - Author exercise: Position And Remaining Breaks.** Encode both fields in the queue state.
 - **Vary - Author exercise: Best Resource Per Cell.** Keep the greatest remaining budget seen at an equal-or-better layer.
-- **Boundary - Author exercise: Longer Path With More Resource.** Do not apply dominance across distances without checking its proof.
+- **Boundary - Author exercise: Fewest Moves And Most Charges Left.** Do not apply dominance across distances without checking its proof.
 - **Recognize - LC 1293 Shortest Path in a Grid with Obstacles Elimination.** BFS over `(row, col, remainingEliminations)` with safe dominance.
 
 ## Released Combination Lessons

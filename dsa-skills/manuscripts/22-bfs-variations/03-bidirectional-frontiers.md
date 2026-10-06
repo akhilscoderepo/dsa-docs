@@ -7,7 +7,7 @@
 
 A word puzzle app must turn "cold" into "warm" by changing one letter at a time. Every intermediate word must appear in the dictionary. The app shows the shortest chain, and the user counts the words to check it. With 100 000 words in the dictionary, a search that fans out from "cold" through all neighbors becomes slow on a phone when the chain is long.
 
-Model each word as a state and each one-letter change as a move. A move can be undone by a move in the opposite direction, so the moves are reversible. The **branching factor** `b` is the number of moves available from one state. The **distance** `d` is the fewest moves between the start and the target.
+Model each word as a **state**, which is one situation the search can stand on, and each one-letter change as a **move**, which turns one state into another. A move can be undone by a move in the opposite direction, so the moves are reversible. The **branching factor** `b` is the number of moves available from one state. The **distance** `d` is the fewest moves between the start and the target.
 
 This lesson asks how to find `d` without visiting every state within distance `d` of the start.
 
@@ -72,23 +72,44 @@ A **layer** is the set of all states at one distance from the origin of a search
 
 The search tests a state at the moment a move generates it. For each generated `next`, it looks `next` up in the map of the opposite side. When the lookup succeeds, the two searches have **crossing** paths, and the answer is `own[cur] + 1 + other[next]`.
 
-The test must happen here and not later. Suppose the start is 0 and the target is 1, with one move between them. The two maps never share a state before the first expansion, since `distStart` holds 0 and `distTarget` holds 1. A test that waits for the same state in both maps, or for equal queue fronts, finds nothing. Each expansion only moves the two fronts past each other without making them equal. The generated neighbor of 0 is 1, which the opposite map already holds, so the generation test returns 0 + 1 + 0 = 1 at once. Every odd distance has such a crossing edge between a state of one map and a state of the other.
+The test must happen here and not later. Suppose the start is 0 and the target is 1, with one move between them. Before the first expansion, `distStart` holds only 0 and `distTarget` holds only 1, so no state sits in both maps.
+
+A test that waits for one state in both maps still answers correctly. The first expansion writes state 1 into `distStart`, and the test then sees it. That answer comes one expansion later than the generation test, so it does extra work.
+
+A test that compares queue fronts fails. When each side removes one state per turn, the start side removes 0 and queues 1, while the target side removes 1 and queues 0. The two queues never hold the same state at the same time.
+
+The generated neighbor of 0 is 1, which the opposite map already holds, so the generation test returns 0 + 1 + 0 = 1 at once. Every odd distance has such a crossing edge between a state of one map and a state of the other.
 
 #### Why Whole Layers Keep Sums Exact
 
-The invariant is that before a round starts with depths `dS` and `dT`, no path of length `dS + dT` or less exists between the start and the target. The opposite map holds complete layers up to depth `dT`. A match at a smaller depth would give a path of length `dS + dT` or less, which the invariant excludes, so every match has depth `dT`. A match found while expanding side `S` therefore gives the length `dS + 1 + dT`, and the first match is the answer.
+The invariant is that before a round starts with depths `dS` and `dT`, no path of length `dS + dT` or less exists between the start and the target. The opposite map holds complete layers up to depth `dT`.
 
-Expanding a single state breaks this. Take the edges 0-1, 0-4, 1-3, 2-3, 2-4 and 2-5, with start 0 and target 5. Expanding one state per turn lets state 2 find state 3 first, and it returns 1 + 1 + 2 = 4. State 4 also lies in the opposite map at distance 1, so the true answer is 3. With whole layers, the start side first expands 0 and the target side expands 5. The target side then holds the smaller frontier and expands state 2. Its neighbor 3 is not in `distStart`, but its neighbor 4 is, at distance 1, so the sum is 1 + 1 + 1 = 3.
+A match at a smaller depth would give a path of length `dS + dT` or less, which the invariant excludes, so every match has depth `dT`. A match found while expanding side `S` therefore gives the length `dS + 1 + dT`, and the first match is the answer.
+
+Expanding a single state breaks this. Take the edges 0-1, 0-4, 1-3, 2-3, 2-4 and 2-5, with start 0 and target 5. The table shows four turns that expand one state each.
+
+| Turn | Side | State expanded | What the turn finds |
+| --- | --- | --- | --- |
+| 1 | start | 0 | `distStart` gets 1 and 4 at distance 1 |
+| 2 | target | 5 | `distTarget` gets 2 at distance 1 |
+| 3 | start | 1 | `distStart` gets 3 at distance 2 |
+| 4 | target | 2 | neighbor 3 is in `distStart`, so the sum is 1 + 1 + 2 = 4 |
+
+The sum 4 is too large. State 4 also lies in `distStart` at distance 1, and the generation test would have returned 1 + 1 + 1 = 3. Turn 4 reached state 3 first only because the start side stopped in the middle of its layer.
+
+A search that expands whole layers differs at turn 3. After turn 2 the start frontier holds 1 and 4, and the target frontier holds 2. The target side holds the smaller frontier, so it expands state 2 next. Its neighbor 3 is not in `distStart`, but its neighbor 4 is, at distance 1, so the sum is 1 + 1 + 1 = 3.
 
 <!-- stage: variables -->
 ### What Each Search Keeps
 
-The method keeps two maps and two frontiers, and it uses three local names that point to one side or the other. Each name has a fixed starting value.
+The method keeps two maps and two frontiers. Each round also uses five local names: `fromStart`, `frontier`, `own`, `other` and `nextFrontier`. Each name has a fixed starting value.
 
 - **distStart** is a map from state to distance from the start; it begins with the start at 0.
 - **distTarget** is a map from state to distance from the target; it begins with the target at 0.
 - **frontierStart** is the list of newest states of the first search; it begins with the start.
 - **frontierTarget** is the list of newest states of the second search; it begins with the target.
+- **fromStart** is a boolean that is true when the start side holds the smaller frontier.
+- **frontier** is the list that the current round expands.
 - **own** and **other** point to the map of the side being expanded and the map of the opposite side.
 - **nextFrontier** is a new list that collects the generated states of one round.
 
@@ -159,11 +180,11 @@ Use two searches when the start and the target are both known, every move costs 
 
 #### Checking The Invariant
 
-The invariant is that the two maps hold exact distances from their own origins, and that no path shorter than the sum of the two current depths exists. It holds only when each round expands a whole layer and tests each generated state against the opposite map. The invariant breaks when edges have different costs, since a state's first discovery then no longer gives its distance. It also breaks when a move has no reverse, because the target side cannot follow the move backward.
+The invariant is that the two maps hold exact distances from their own origins, and that no path of length `dS + dT` or less exists, where `dS` and `dT` are the two current depths. It holds only when each round expands a whole layer and tests each generated state against the opposite map. The invariant breaks when edges have different costs, since a state's first discovery then no longer gives its distance. It also breaks when a move has no reverse, because the target side cannot follow the move backward.
 
 #### Avoiding The False Friend
 
-The false friend is to declare the meeting only when both queue fronts hold the same state, or when a state sits in both maps. That rule misses the crossing edge of every odd distance, and the search then runs until a side is empty. A second false friend is to expand one state per turn and take the first match, which can return a sum that is too large, as the insight stage showed. A weighted graph needs a different method, which a later chapter teaches.
+The false friend is to declare the meeting only when both queue fronts hold the same state. That rule misses the crossing edge of every odd distance, and the search then runs until a side is empty. A rule that waits for one state in both maps still finds the answer, but one expansion later than the generation test. A second false friend is to expand one state per turn and take the first match, which can return a sum that is too large, as the insight stage showed. A weighted graph needs a different method, which a later chapter teaches.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -184,7 +205,7 @@ The false friend is to declare the meeting only when both queue fronts hold the 
 
 **Example 2.** Input `start = 1`, `target = 1000`, `limit = 1000`, output `12`.
 
-**Hint.** Which of the two maps does a generated value consult before it is stored?
+**Hint.** Write a helper `static int[] neighbors(int x, int limit)` that returns the values one move away, and call it for both sides. Which of the two maps does a generated value consult before it is stored?
 
 **Changed decision.** Each round expands the whole frontier of the smaller side and tests every generated value against the opposite map.
 
@@ -226,7 +247,7 @@ The false friend is to declare the meeting only when both queue fronts hold the 
 
 **Example 2.** Input `n = 5`, `edges = [[0,1],[1,2],[3,4]]`, `start = 0`, `target = 4`, output `-1`.
 
-**Hint.** If both searches write their origin into the same array, what does the first generated neighbor of the start report?
+**Hint.** If start equals target, both maps hold that state before the first expansion. What should the method return, and at which point?
 
 **Changed decision.** The method returns 0 before any search starts, and it keeps one distance array for each side.
 

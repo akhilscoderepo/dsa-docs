@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A fire-spread simulator reports ten minutes for a forest that burns out in four. A word-game solver needs seconds to connect two short words. A lock solver returns a fast route that opens a door the rules forbid. A maze solver with limited wall breaks answers "no path" on a maze that has one. Each program runs an ordinary breadth-first search, and each failure comes from what the search treats as one vertex, one step or one minute. This chapter changes those three decisions one at a time.
+A fire-spread simulator reports ten minutes for a forest that burns out in four. A word-game solver needs seconds to connect two short words. A lock solver answers that a reachable code has no route. A maze solver with limited wall breaks answers "no path" on a maze that has one. Each program runs an ordinary breadth-first search, and each failure comes from what the search treats as one vertex, one step or one minute. This chapter changes those three decisions one at a time.
 
 ### Prerequisites
 

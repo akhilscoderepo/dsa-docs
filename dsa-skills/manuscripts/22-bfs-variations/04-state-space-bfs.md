@@ -69,11 +69,12 @@ The encoding must contain every fact that changes which moves are legal later. T
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search keeps a queue, a set of seen states and a counter. The code below uses these names, and each one has a fixed starting value.
+The search keeps a queue, a set of seen states and a counter. The code below uses these names, and each one has a fixed starting value. The traces also show `queued`, which is the value of `queue.size()` after the step shown.
 
 - **queue** is an `ArrayDeque<String>` that holds generated codes waiting to be expanded; it starts with the start code.
 - **seen** is a `HashSet<String>` that holds every code that is blocked or already generated; it starts with the blocked codes.
-- **turns** is an `int` that counts commands; it is 0 for the start code and grows by one for each pass over the queue.
+- **turns** is an `int` that counts moves from the start, which are commands in the lock; it is 0 for the start code and grows by one for each pass over the queue.
+- **count** is an `int` that starts as `queue.size()` at the beginning of a pass and falls to 0 as the pass removes codes.
 - **current** is the code that the search just took from the queue.
 - **next** is one generated neighbor of `current`.
 
@@ -93,7 +94,7 @@ The first trace uses a lock with two wheels, so there are 100 codes and the sear
 The second trace uses the grid from the insight stage. Each cell label is the triple row, column and key, with key 1 meaning the key is held. The search starts at (0,0,0) and reaches the key cell at (1,1,1). It then returns to cell (0,1) with the key, which is a new state (0,1,1), so the visited set allows it. The door cell (0,2) can now be entered, and the search reaches the target after 5 moves.
 
 ```trace
-{"cells":["(0,0,0)","(0,1,0)","(1,1,1)","(0,1,1)","(0,2,1)","(0,0,1)","(0,3,1)"],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"moves":0,"queued":1},"note":"The search takes (0,0,0) and generates (0,1,0)."},{"at":{"cur":1},"vars":{"moves":1,"queued":1},"note":"The search takes (0,1,0) and generates (1,1,1)."},{"at":{"cur":2},"vars":{"moves":2,"queued":1},"note":"The search takes (1,1,1) and generates (0,1,1)."},{"at":{"cur":3},"vars":{"moves":3,"queued":2},"note":"The search takes (0,1,1) and generates (0,2,1), (0,0,1)."},{"at":{"cur":4},"vars":{"moves":4,"queued":2},"note":"The search takes (0,2,1) and generates (0,3,1)."},{"at":{"cur":5},"vars":{"moves":4,"queued":1},"note":"The search takes (0,0,1) and generates no new state."},{"at":{"cur":6},"vars":{"moves":5,"queued":0},"note":"The search takes (0,3,1), the target cell, after 5 moves, so it returns 5."}]}
+{"cells":["(0,0,0)","(0,1,0)","(1,1,1)","(0,1,1)","(0,2,1)","(0,0,1)","(0,3,1)"],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"turns":0,"queued":1},"note":"The search takes (0,0,0) and generates (0,1,0)."},{"at":{"cur":1},"vars":{"turns":1,"queued":1},"note":"The search takes (0,1,0) and generates (1,1,1)."},{"at":{"cur":2},"vars":{"turns":2,"queued":1},"note":"The search takes (1,1,1) and generates (0,1,1)."},{"at":{"cur":3},"vars":{"turns":3,"queued":2},"note":"The search takes (0,1,1) and generates (0,2,1), (0,0,1)."},{"at":{"cur":4},"vars":{"turns":4,"queued":2},"note":"The search takes (0,2,1) and generates (0,3,1)."},{"at":{"cur":5},"vars":{"turns":4,"queued":1},"note":"The search takes (0,0,1) and generates no new state."},{"at":{"cur":6},"vars":{"turns":5,"queued":0},"note":"The search takes (0,3,1), the target cell, after 5 moves, so it returns 5."}]}
 ```
 
 <!-- stage: code -->
@@ -134,7 +135,7 @@ static List<String> successors(String code) {
 }
 ```
 
-The call `seen.add(next)` returns false when the set already holds the code, so one call both tests and marks it. Adding `+ 9` and taking the remainder by 10 turns a step down into a step up that wraps, because `%` in Java returns a negative value for a negative left operand. The time is O(R * w) for `R` reachable codes of `w` digits. The space is O(R * w) for the set and the queue.
+The call `seen.add(next)` returns false when the set already holds the code, so one call both tests and marks it. Adding 9 and taking the remainder by 10 equals subtracting 1 modulo 10. The sum stays nonnegative, so the result is never negative, while `%` in Java returns a negative value for a negative left operand. The time is O(R * w^2) for `R` reachable codes of `w` digits, because each code generates `2 * w` successors and each successor costs O(w) to build and hash. The space is O(R * w) for the set and the queue.
 
 <!-- stage: applicability -->
 ### Recognizing Searches Over Generated States

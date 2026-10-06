@@ -63,7 +63,7 @@ seen={(0,0,0)}; q=deque([((0,0,0),0)])
 while q:
     (r,c,k),d=q.popleft(); i=cells.index(f"({r},{c},{k})")
     if grid[r][c]=='T':
-        steps.append({"at":{"cur":i},"vars":{"moves":d,"queued":len(q)},"note":f"The search takes ({r},{c},{k}), the target cell, after {d} moves, so it returns {d}."}); break
+        steps.append({"at":{"cur":i},"vars":{"turns":d,"queued":len(q)},"note":f"The search takes ({r},{c},{k}), the target cell, after {d} moves, so it returns {d}."}); break
     new=[]
     for dr,dc in ((0,1),(1,0),(0,-1),(-1,0)):
         x,y=r+dr,c+dc
@@ -72,7 +72,7 @@ while q:
         nk=1 if (k or grid[x][y]=='K') else 0
         if (x,y,nk) in seen: continue
         seen.add((x,y,nk)); q.append(((x,y,nk),d+1)); new.append(f"({x},{y},{nk})")
-    steps.append({"at":{"cur":i},"vars":{"moves":d,"queued":len(q)},"note":f"The search takes ({r},{c},{k}) and generates "+(", ".join(new) if new else "no new state")+"."})
+    steps.append({"at":{"cur":i},"vars":{"turns":d,"queued":len(q)},"note":f"The search takes ({r},{c},{k}) and generates "+(", ".join(new) if new else "no new state")+"."})
 print(cells)
 for s in steps: print(s)
 fill(CH,F,block(cells,["cur"],steps),"@@TRACE2@@")

@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A spread simulator ages every cell one minute per cell, and a lock solver walks through a forbidden code. Each failure matches a question below. Return to this page after the lessons, and again after a few days. Each question describes a situation and hides the lesson name.
+A spread simulator ages every cell one minute per cell, and a maze solver forgets which keys it holds. Each failure matches a question below. Return to this page after the lessons, and again after a few days. Each question describes a situation and hides the lesson name.
 
 ### Recognition Questions
 
@@ -26,5 +26,5 @@ A spread simulator ages every cell one minute per cell, and a lock solver walks 
 ```
 
 ```quiz
-{"id": "bv-rev-model", "q": "A task asks for the shortest word sequence, not only its length. Which of the four modeling choices changes?", "options": ["The start set", "What the search stores per state, which now includes a parent", "The meaning of a layer", "Nothing changes"], "answer": 1, "explain": "The state key stays the word, and the program stores each word's parent so the sequence can be rebuilt after the search."}
+{"id": "bv-rev-model", "q": "A task asks for the shortest word sequence, not only its length. Which part of the model changes?", "options": ["The start set", "What the search records for each state, which now includes a parent", "The meaning of a layer", "Nothing changes"], "answer": 1, "explain": "The state key stays the word, and the program stores each word's parent so the sequence can be rebuilt after the search."}
 ```

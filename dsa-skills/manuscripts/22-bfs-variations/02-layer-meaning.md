@@ -47,7 +47,7 @@ It returns 3, because the queue holds four vertices and the counter starts at -1
 <!-- stage: bottleneck -->
 ### Counting Vertices Instead Of Time
 
-The method visits every vertex once and reads every edge once, so its running time is O(V + E) and that part is fine. The defect is in what the counter measures. Each removal adds one, so the result always equals the number of reached vertices minus one, and it ignores the shape of the graph. A star with a thousand leaves would report 1000, and a path of two vertices would report 1.
+The method visits every vertex once and reads every edge once, so its running time is O(V + E) and that part is fine. The defect is in what the counter measures. Each removal adds one, so the result always equals the number of reached vertices minus one, and it ignores the shape of the graph. A star with a thousand leaves would report 1000, and a path of three vertices with the source in the middle would report 2 although all vertices hold the update after one time unit.
 
 One repair stores a `distance` value for every vertex, as in the earlier distance method, and returns the largest value. That is correct, and it costs O(V) extra memory and a second pass over the array. Many tasks need less. They ask only for the number of time units, or for one count per time unit, and they never ask for the distance of a given vertex.
 
@@ -79,12 +79,13 @@ The invariant is that at the start of each pass the queue holds every vertex of 
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The search keeps one list, one array, one queue and two integers. The name `adj` is the adjacency list, and `adj.get(v)` holds the neighbors of `v`. Each of the other names has a fixed starting value.
+The search keeps one list, one array, one queue, two integers and one flag. The name `adj` is the adjacency list, and `adj.get(v)` holds the neighbors of `v`. Each of the other names has a fixed starting value.
 
 - **visited** is a boolean array; `true` means the vertex is already in the queue or was removed.
 - **queue** is an `ArrayDeque` that holds the current layer first and the next layer behind it.
 - **size** is an int read once per pass; it equals the number of vertices in the current layer.
 - **layers** is an int that starts at 0 and counts the passes that discover a new vertex.
+- **found** is a boolean that starts false in every pass and turns true when the pass appends a vertex.
 
 <!-- stage: trace -->
 ### Counting Layers On Two Graphs
@@ -174,7 +175,7 @@ The false friend is a counter that rises once per removed vertex. It looks like 
 
 **Hint.** When must the size of the queue be read so that it counts one layer exactly?
 
-**Changed decision.** The method reads the queue size before each pass and stores every vertex of that pass in one row.
+**Changed decision.** The method reads the queue size before each pass and stores every vertex of that pass in one row sorted in ascending order.
 
 #### [Vary] Stop At First Target Layer (Author exercise)
 <!-- id: bv2-first-target-layer -->

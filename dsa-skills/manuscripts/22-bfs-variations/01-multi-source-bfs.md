@@ -92,14 +92,14 @@ The search needs the adjacency list `adj`, one array for discovery, one for dist
 - **visited** is a boolean array; `true` means the vertex is a source or was discovered from an earlier vertex.
 - **distance** is an int array; every source holds 0 and a vertex that is never reached keeps -1.
 - **queue** is an `ArrayDeque` that starts with all distinct sources and then holds the discovered vertices in order.
-- **minutes** is an int that counts completed layers in the second trace and in the exercises that ask for a spread time.
+- **minutes** is an int that counts completed layers in the exercises that ask for a spread time. Neither trace shows it.
 
 <!-- stage: trace -->
 ### Following Many Sources Together
 
 #### Two Sources On A Path
 
-The first graph has the edges 0 to 1, 1 to 2, 2 to 3, 3 to 4, 4 to 5 and 2 to 6, with sources 0 and 5. The cells are the vertex ids, and the pointer `cur` shows the vertex that was just taken from the queue. The pointer `cur` is the variable `current` in the code below. The queue holds both sources at the start, so the first two removals discover vertices 1 and 4, each at distance 1. Vertex 3 is three edges from source 0 and two edges from source 5. The search assigns it 2 when vertex 4 is expanded, before vertex 2 can offer a longer route.
+The first graph has the edges 0 to 1, 1 to 2, 2 to 3, 3 to 4, 4 to 5 and 2 to 6, with sources 0 and 5. The cells are the vertex ids, and the pointer `cur` shows the vertex that was just taken from the queue. The pointer `cur` is the variable `current` in the code below. The queue field lists vertices from front to back, so `5-1` means vertex 5 is at the front and vertex 1 stands behind it. The queue holds both sources at the start, so the first two removals discover vertices 1 and 4, each at distance 1. Vertex 3 is three edges from source 0 and two edges from source 5. The search assigns it 2 when vertex 4 is expanded, before vertex 2 can offer a longer route.
 
 ```trace
 {"cells":[0,1,2,3,4,5,6],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"distance":"0,1,-1,-1,-1,0,-1","queue":"5-1"},"note":"The search takes vertex 0 from the queue and discovers 1 at distance 1."},{"at":{"cur":5},"vars":{"distance":"0,1,-1,-1,1,0,-1","queue":"1-4"},"note":"The search takes vertex 5 from the queue and discovers 4 at distance 1."},{"at":{"cur":1},"vars":{"distance":"0,1,2,-1,1,0,-1","queue":"4-2"},"note":"The search takes vertex 1 from the queue and discovers 2 at distance 2."},{"at":{"cur":4},"vars":{"distance":"0,1,2,2,1,0,-1","queue":"2-3"},"note":"The search takes vertex 4 from the queue and discovers 3 at distance 2."},{"at":{"cur":2},"vars":{"distance":"0,1,2,2,1,0,3","queue":"3-6"},"note":"The search takes vertex 2 from the queue and discovers 6 at distance 3."},{"at":{"cur":3},"vars":{"distance":"0,1,2,2,1,0,3","queue":"6"},"note":"The search takes vertex 3 from the queue and finds no undiscovered neighbor."},{"at":{"cur":6},"vars":{"distance":"0,1,2,2,1,0,3","queue":"empty"},"note":"The search takes vertex 6 from the queue and finds no undiscovered neighbor."}]}
@@ -144,7 +144,7 @@ static int[] nearestDistances(List<List<Integer>> adj, int[] sources) {
 }
 ```
 
-The only change from the single-source method is the loop that fills the queue before the main loop starts. The `Arrays.fill` call still matters, because a new `int[]` holds zeros and an unreached vertex would look like a source. An empty `sources` array leaves the queue empty, so the method returns all -1 without error. The time is O(V + E + S), because every vertex is dequeued once, every adjacency entry is read once and the start loop reads `S` sources. The space is O(V) for the arrays and the queue.
+The method differs from the single-source search in two places. A loop fills the queue before the main loop starts, and a separate `visited` array replaces the `d[next] >= 0` test. The `Arrays.fill` call still matters, because a new `int[]` holds zeros and an unreached vertex would look like a source. An empty `sources` array leaves the queue empty, so the method returns all -1 without error. The time is O(V + E + S), because every vertex is dequeued once, every adjacency entry is read once and the start loop reads `S` sources. The space is O(V) for the arrays and the queue.
 
 <!-- stage: applicability -->
 ### Recognizing Spread From Many Starts
@@ -223,7 +223,7 @@ Running one search per source is the false friend. It returns correct values and
 
 **Example 2.** Input `n = 7`, `edges = [[0,1],[1,2],[2,3],[3,4],[4,5]]`, `sources = [0,5]`, output `2`.
 
-**Hint.** When the queue is empty after a round, did that round add a vertex?
+**Hint.** A round is one pass over the queue contents as they stand at its start. The next lesson, Count By Whole Layers, teaches this loop in detail. When the queue is empty after a round, did that round add a vertex?
 
 **Changed decision.** The method adds one to the count only when a round discovers a new vertex, so the last round of the loop does not count.
 
@@ -244,6 +244,6 @@ Running one search per source is the false friend. It returns correct values and
 
 **Example 2.** Input `grid = [[2,1,1],[0,1,1],[1,0,1]]`, output `-1`.
 
-**Hint.** What does one pass over the current queue contents represent?
+**Hint.** A pass over the queue contents as they stand at its start is a layer, which the next lesson, Count By Whole Layers, teaches in detail. What does one such pass represent?
 
 **Changed decision.** The method processes the queue one layer at a time, and each completed layer that rots a fresh orange is one minute.

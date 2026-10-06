@@ -228,7 +228,258 @@ public final class NearestZeroWalls {
 }
 ```
 
-#### Solution: [Boundary] Smallest Shortest Path In A Binary Matrix (LeetCode 1091)
+#### Solution: [Boundary] One Shortest Word Sequence (LeetCode 127)
+<!-- id: bv9-word-sequence -->
+
+**Approach.**
+The state key is the word itself, mapped to an id through a `HashMap`. The move rule generates keys instead of reading them from a table: for each position it replaces the letter with each of the 26 lowercase letters and looks the result up in the map. A word that the map does not hold is not a valid next word. The start set is the begin word alone, and the method adds it to the map when the list lacks it.
+
+The search is plain BFS with a `parent` array. When a word first enters the queue, the method stores the word that discovered it. Because layers are in order, the first discovery of the end word comes from a shortest sequence. The method then follows `parent` from the end word back to the begin word and reverses the result. The invariant is that every queued word has a recorded parent whose layer is one lower. A meet-in-the-middle search would give the same answer with a smaller frontier, but plain BFS with parents is enough here. An end word that the list lacks returns an empty list before any search.
+
+**Complexity.**
+- **Time** is O(n * L * 26 * L), because each of the `n` words generates `26 * L` candidates and each candidate costs O(L) to hash.
+- **Space** is O(n * L), because the map, the `parent` array and the queue hold at most `n + 1` words of length `L`.
+
+```java run
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
+
+public final class WordSequence {
+    /** The shared search of the lesson: layers, a table move rule and a word move rule. */
+    static final class StateWalk {
+        static int[] layers(int keyCount, int[] startSet, IntFunction<int[]> moves, int[] parent) {
+            int[] dist = new int[keyCount];
+            Arrays.fill(dist, -1);
+            Arrays.fill(parent, -1);
+            ArrayDeque<Integer> queue = new ArrayDeque<>();
+            for (int s : startSet) {
+                if (dist[s] == -1) { dist[s] = 0; queue.add(s); }
+            }
+            int layer = 0;
+            while (!queue.isEmpty()) {
+                int layerSize = queue.size();
+                for (int i = 0; i < layerSize; i++) {
+                    int key = queue.poll();
+                    for (int nb : moves.apply(key)) {
+                        if (dist[nb] == -1) { dist[nb] = layer + 1; parent[nb] = key; queue.add(nb); }
+                    }
+                }
+                layer++;
+            }
+            return dist;
+        }
+
+        static IntFunction<int[]> gridMoves(int[][] grid, int[][] dirs, IntPredicate open) {
+            int rows = grid.length, cols = grid[0].length;
+            return key -> {
+                int[] found = new int[dirs.length];
+                int n = 0;
+                for (int[] d : dirs) {
+                    int nr = key / cols + d[0], nc = key % cols + d[1];
+                    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;
+                    if (open.test(grid[nr][nc])) found[n++] = nr * cols + nc;
+                }
+                return Arrays.copyOf(found, n);
+            };
+        }
+
+        static IntFunction<int[]> wordMoves(String[] words) {
+            Map<String, Integer> idOf = new HashMap<>();
+            for (int i = 0; i < words.length; i++) idOf.put(words[i], i);
+            return key -> {
+                char[] chars = words[key].toCharArray();
+                int[] found = new int[chars.length * 25];
+                int n = 0;
+                for (int p = 0; p < chars.length; p++) {
+                    char keep = chars[p];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        if (c == keep) continue;
+                        chars[p] = c;
+                        Integer id = idOf.get(new String(chars));
+                        if (id != null) found[n++] = id;
+                    }
+                    chars[p] = keep;
+                }
+                return Arrays.copyOf(found, n);
+            };
+        }
+    }
+
+    /** Checks the claims of the lesson code: -1 for unreached keys, the largest dist as the minute count, parent chains, and the word rule. */
+    static void checkStateWalk() {
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        // The rotting trace table: two sources, largest distance 2, and every fresh cell reached.
+        int[][] grid = {{2, 1, 1, 0}, {1, 0, 1, 1}, {0, 1, 1, 2}};
+        int[] dist = StateWalk.layers(12, new int[] {0, 11}, StateWalk.gridMoves(grid, dirs, v -> v == 1), new int[12]);
+        if (!Arrays.equals(dist, new int[] {0, 1, 2, -1, 1, -1, 2, 1, -1, 2, 1, 0})) throw new AssertionError("rot dist " + Arrays.toString(dist));
+        int top = 0;
+        for (int d : dist) top = Math.max(top, d);
+        if (top != 2) throw new AssertionError("minutes");
+        // A fresh cell behind a wall keeps -1, and a duplicate source does not queue twice.
+        int[] cut = StateWalk.layers(3, new int[] {0, 0}, StateWalk.gridMoves(new int[][] {{2, 0, 1}}, dirs, v -> v == 1), new int[3]);
+        if (!Arrays.equals(cut, new int[] {0, -1, -1})) throw new AssertionError("cut " + Arrays.toString(cut));
+        // The word chain from the trace: parents lead to the begin word, and the chain has dist + 1 entries.
+        String[] ws = {"lead", "load", "goad", "gold", "lend", "mend", "loan"};
+        int[] parent = new int[ws.length];
+        int[] wd = StateWalk.layers(ws.length, new int[] {0}, StateWalk.wordMoves(ws), parent);
+        int len = 0;
+        for (int at = 3; at != -1; at = parent[at]) len++;
+        if (wd[3] != 3 || len != 4 || parent[0] != -1) throw new AssertionError("chain");
+        // The generated word rule matches a scan of the whole list on random lists.
+        Random rnd = new Random(2291);
+        for (int t = 0; t < 2000; t++) {
+            int n = 1 + rnd.nextInt(8), wl = 1 + rnd.nextInt(3);
+            String[] list = new String[n];
+            for (int i = 0; i < n; i++) list[i] = randomWord(rnd, wl);
+            IntFunction<int[]> rule = StateWalk.wordMoves(list);
+            for (int k = 0; k < n; k++) {
+                int[] got = rule.apply(k);
+                Arrays.sort(got);
+                // The set of ids that hold a word one letter apart, with duplicate words collapsing to the last id.
+                java.util.TreeSet<Integer> want = new java.util.TreeSet<>();
+                for (int o = 0; o < n; o++) {
+                    if (!oneApart(list[k], list[o])) continue;
+                    int last = o;
+                    for (int q = 0; q < n; q++) if (list[q].equals(list[o])) last = q;
+                    want.add(last);
+                }
+                if (!Arrays.equals(got, want.stream().mapToInt(Integer::intValue).toArray())) throw new AssertionError("word rule " + Arrays.toString(list));
+            }
+        }
+    }
+    /**
+     * Returns one shortest sequence from begin to end, or an empty list.
+     * Time: O(n * L * 26 * L), because each word tries 26 letters at each of L positions and hashes a word of length L.
+     * Space: O(n * L), because of the id map, the parent array and the queue.
+     * Invariant: every queued word has a parent that sits exactly one layer closer to the begin word.
+     */
+    static List<String> shortestSequence(String begin, String end, List<String> words) {
+        // The end word must be in the list; otherwise no sequence exists.
+        if (!words.contains(end)) return new ArrayList<>();
+        // Assign one id to every distinct word, including the begin word.
+        HashMap<String, Integer> idOf = new HashMap<>();
+        List<String> byId = new ArrayList<>();
+        for (String w : words) if (!idOf.containsKey(w)) { idOf.put(w, byId.size()); byId.add(w); }
+        if (!idOf.containsKey(begin)) { idOf.put(begin, byId.size()); byId.add(begin); }
+        // parent[id] is -1 for an unreached word and the discovering word otherwise.
+        int[] parent = new int[byId.size()];
+        Arrays.fill(parent, -1);
+        int startId = idOf.get(begin), endId = idOf.get(end);
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        // The begin word is its own parent, which also marks it as reached.
+        parent[startId] = startId;
+        queue.add(startId);
+        // Each word leaves the queue once.
+        while (!queue.isEmpty() && parent[endId] == -1) {
+            int cur = queue.poll();
+            char[] letters = byId.get(cur).toCharArray();
+            // Generate every word that differs from cur in exactly one position.
+            for (int pos = 0; pos < letters.length; pos++) {
+                char original = letters[pos];
+                for (char ch = 'a'; ch <= 'z'; ch++) {
+                    // A candidate equal to cur is not a move.
+                    if (ch == original) continue;
+                    letters[pos] = ch;
+                    Integer next = idOf.get(new String(letters));
+                    // A word outside the list, or one reached earlier, is skipped.
+                    if (next == null || parent[next] != -1) continue;
+                    // Mark when found, then queue.
+                    parent[next] = cur;
+                    queue.add(next);
+                }
+                // Restore the letter before the next position.
+                letters[pos] = original;
+            }
+        }
+        // If the end word was never reached, no sequence exists.
+        if (parent[endId] == -1) return new ArrayList<>();
+        // Follow the parents from the end word back to the begin word.
+        List<String> result = new ArrayList<>();
+        for (int id = endId; ; id = parent[id]) {
+            result.add(byId.get(id));
+            if (id == startId) break;
+        }
+        // The walk ran backward, so reverse it.
+        Collections.reverse(result);
+        return result;
+    }
+
+    /** True when the two words have the same length and differ in exactly one position. */
+    static boolean oneApart(String a, String b) {
+        if (a.length() != b.length()) return false;
+        int diff = 0;
+        for (int i = 0; i < a.length(); i++) if (a.charAt(i) != b.charAt(i)) diff++;
+        return diff == 1;
+    }
+
+    /** Oracle: computes all-pairs distances with Floyd-Warshall, then checks the returned sequence against them. */
+    static void check(String begin, String end, List<String> words, List<String> got) {
+        List<String> nodes = new ArrayList<>(new HashSet<>(words));
+        if (!nodes.contains(begin)) nodes.add(begin);
+        int n = nodes.size(), inf = 1000;
+        int[][] d = new int[n][n];
+        for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) d[i][j] = i == j ? 0 : oneApart(nodes.get(i), nodes.get(j)) ? 1 : inf;
+        for (int k = 0; k < n; k++) for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) d[i][j] = Math.min(d[i][j], d[i][k] + d[k][j]);
+        boolean endInList = words.contains(end);
+        int want = endInList ? d[nodes.indexOf(begin)][nodes.indexOf(end)] : inf;
+        if (want >= inf) {
+            if (!got.isEmpty()) throw new AssertionError("expected empty");
+            return;
+        }
+        if (got.size() != want + 1) throw new AssertionError("wrong length " + got);
+        if (!got.get(0).equals(begin) || !got.get(got.size() - 1).equals(end)) throw new AssertionError("wrong ends " + got);
+        for (int i = 1; i < got.size(); i++) {
+            if (!oneApart(got.get(i - 1), got.get(i))) throw new AssertionError("bad step " + got);
+            if (!words.contains(got.get(i))) throw new AssertionError("word outside list " + got);
+        }
+    }
+
+    public static void main(String[] args) {
+        // The lesson code behaves as its prose claims.
+        checkStateWalk();
+        // Example 1: the only shortest sequence has five words.
+        List<String> w1 = Arrays.asList("cord", "card", "ward", "warm", "wore");
+        List<String> r1 = shortestSequence("cold", "warm", w1);
+        if (!r1.equals(Arrays.asList("cold", "cord", "card", "ward", "warm"))) throw new AssertionError("example 1");
+        // Example 2: the end word is in the list but no chain reaches it.
+        if (!shortestSequence("hat", "cog", Arrays.asList("hot", "dot", "cog")).isEmpty()) throw new AssertionError("example 2");
+        // An end word outside the list gives an empty list.
+        if (!shortestSequence("hit", "hot", Arrays.asList("hat", "hug")).isEmpty()) throw new AssertionError("end missing");
+        // A begin word that is also in the list does not change the answer.
+        if (shortestSequence("hit", "hot", Arrays.asList("hit", "hot")).size() != 2) throw new AssertionError("begin in list");
+        // A sequence of two words has one step.
+        if (!shortestSequence("a", "b", Arrays.asList("b")).equals(Arrays.asList("a", "b"))) throw new AssertionError("one letter");
+        // Random lists over a three-letter alphabet against the Floyd-Warshall oracle.
+        Random rnd = new Random(2204);
+        for (int t = 0; t < 4000; t++) {
+            int len = 1 + rnd.nextInt(3);
+            String begin = randomWord(rnd, len), end = randomWord(rnd, len);
+            while (end.equals(begin)) end = randomWord(rnd, len);
+            List<String> words = new ArrayList<>();
+            for (int i = rnd.nextInt(9); i > 0; i--) words.add(randomWord(rnd, len));
+            check(begin, end, words, shortestSequence(begin, end, words));
+        }
+    }
+
+    /** Builds a random word of the given length over the letters a to c. */
+    static String randomWord(Random rnd, int len) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < len; i++) sb.append((char) ('a' + rnd.nextInt(3)));
+        return sb.toString();
+    }
+}
+```
+
+#### Solution: [Recognize] Smallest Shortest Path In A Binary Matrix (LeetCode 1091)
 <!-- id: bv9-smallest-shortest-path -->
 
 **Approach.**
@@ -361,150 +612,6 @@ public final class SmallestShortestPath {
             for (int[] row : g) for (int j = 0; j < cols; j++) row[j] = rnd.nextInt(10) < 3 ? 1 : 0;
             if (!Arrays.deepEquals(smallestPath(g), oracle(g))) throw new AssertionError("random " + t + " " + Arrays.deepToString(g));
         }
-    }
-}
-```
-
-#### Solution: [Recognize] One Shortest Word Sequence (LeetCode 127)
-<!-- id: bv9-word-sequence -->
-
-**Approach.**
-The state key is the word itself, mapped to an id through a `HashMap`. The move rule generates keys instead of reading them from a table: for each position it replaces the letter with each of the 26 lowercase letters and looks the result up in the map. A word that the map does not hold is not a valid next word. The start set is the begin word alone, and the method adds it to the map when the list lacks it.
-
-The search is plain BFS with a `parent` array. When a word first enters the queue, the method stores the word that discovered it. Because layers are in order, the first discovery of the end word comes from a shortest sequence. The method then follows `parent` from the end word back to the begin word and reverses the result. The invariant is that every queued word has a recorded parent whose layer is one lower. A meet-in-the-middle search would give the same answer with a smaller frontier, but plain BFS with parents is enough here. An end word that the list lacks returns an empty list before any search.
-
-**Complexity.**
-- **Time** is O(n * L * 26 * L), because each of the `n` words generates `26 * L` candidates and each candidate costs O(L) to hash.
-- **Space** is O(n * L), because the map, the `parent` array and the queue hold at most `n + 1` words of length `L`.
-
-```java run
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-
-public final class WordSequence {
-    /**
-     * Returns one shortest sequence from begin to end, or an empty list.
-     * Time: O(n * L * 26 * L), because each word tries 26 letters at each of L positions and hashes a word of length L.
-     * Space: O(n * L), because of the id map, the parent array and the queue.
-     * Invariant: every queued word has a parent that sits exactly one layer closer to the begin word.
-     */
-    static List<String> shortestSequence(String begin, String end, List<String> words) {
-        // The end word must be in the list; otherwise no sequence exists.
-        if (!words.contains(end)) return new ArrayList<>();
-        // Assign one id to every distinct word, including the begin word.
-        HashMap<String, Integer> idOf = new HashMap<>();
-        List<String> byId = new ArrayList<>();
-        for (String w : words) if (!idOf.containsKey(w)) { idOf.put(w, byId.size()); byId.add(w); }
-        if (!idOf.containsKey(begin)) { idOf.put(begin, byId.size()); byId.add(begin); }
-        // parent[id] is -1 for an unreached word and the discovering word otherwise.
-        int[] parent = new int[byId.size()];
-        Arrays.fill(parent, -1);
-        int startId = idOf.get(begin), endId = idOf.get(end);
-        ArrayDeque<Integer> queue = new ArrayDeque<>();
-        // The begin word is its own parent, which also marks it as reached.
-        parent[startId] = startId;
-        queue.add(startId);
-        // Each word leaves the queue once.
-        while (!queue.isEmpty() && parent[endId] == -1) {
-            int cur = queue.poll();
-            char[] letters = byId.get(cur).toCharArray();
-            // Generate every word that differs from cur in exactly one position.
-            for (int pos = 0; pos < letters.length; pos++) {
-                char original = letters[pos];
-                for (char ch = 'a'; ch <= 'z'; ch++) {
-                    // A candidate equal to cur is not a move.
-                    if (ch == original) continue;
-                    letters[pos] = ch;
-                    Integer next = idOf.get(new String(letters));
-                    // A word outside the list, or one reached earlier, is skipped.
-                    if (next == null || parent[next] != -1) continue;
-                    // Mark when found, then queue.
-                    parent[next] = cur;
-                    queue.add(next);
-                }
-                // Restore the letter before the next position.
-                letters[pos] = original;
-            }
-        }
-        // If the end word was never reached, no sequence exists.
-        if (parent[endId] == -1) return new ArrayList<>();
-        // Follow the parents from the end word back to the begin word.
-        List<String> result = new ArrayList<>();
-        for (int id = endId; ; id = parent[id]) {
-            result.add(byId.get(id));
-            if (id == startId) break;
-        }
-        // The walk ran backward, so reverse it.
-        Collections.reverse(result);
-        return result;
-    }
-
-    /** True when the two words have the same length and differ in exactly one position. */
-    static boolean oneApart(String a, String b) {
-        if (a.length() != b.length()) return false;
-        int diff = 0;
-        for (int i = 0; i < a.length(); i++) if (a.charAt(i) != b.charAt(i)) diff++;
-        return diff == 1;
-    }
-
-    /** Oracle: computes all-pairs distances with Floyd-Warshall, then checks the returned sequence against them. */
-    static void check(String begin, String end, List<String> words, List<String> got) {
-        List<String> nodes = new ArrayList<>(new HashSet<>(words));
-        if (!nodes.contains(begin)) nodes.add(begin);
-        int n = nodes.size(), inf = 1000;
-        int[][] d = new int[n][n];
-        for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) d[i][j] = i == j ? 0 : oneApart(nodes.get(i), nodes.get(j)) ? 1 : inf;
-        for (int k = 0; k < n; k++) for (int i = 0; i < n; i++) for (int j = 0; j < n; j++) d[i][j] = Math.min(d[i][j], d[i][k] + d[k][j]);
-        boolean endInList = words.contains(end);
-        int want = endInList ? d[nodes.indexOf(begin)][nodes.indexOf(end)] : inf;
-        if (want >= inf) {
-            if (!got.isEmpty()) throw new AssertionError("expected empty");
-            return;
-        }
-        if (got.size() != want + 1) throw new AssertionError("wrong length " + got);
-        if (!got.get(0).equals(begin) || !got.get(got.size() - 1).equals(end)) throw new AssertionError("wrong ends " + got);
-        for (int i = 1; i < got.size(); i++) {
-            if (!oneApart(got.get(i - 1), got.get(i))) throw new AssertionError("bad step " + got);
-            if (!words.contains(got.get(i))) throw new AssertionError("word outside list " + got);
-        }
-    }
-
-    public static void main(String[] args) {
-        // Example 1: the only shortest sequence has five words.
-        List<String> w1 = Arrays.asList("cord", "card", "ward", "warm", "wore");
-        List<String> r1 = shortestSequence("cold", "warm", w1);
-        if (!r1.equals(Arrays.asList("cold", "cord", "card", "ward", "warm"))) throw new AssertionError("example 1");
-        // Example 2: the end word is in the list but no chain reaches it.
-        if (!shortestSequence("hat", "cog", Arrays.asList("hot", "dot", "cog")).isEmpty()) throw new AssertionError("example 2");
-        // An end word outside the list gives an empty list.
-        if (!shortestSequence("hit", "hot", Arrays.asList("hat", "hug")).isEmpty()) throw new AssertionError("end missing");
-        // A begin word that is also in the list does not change the answer.
-        if (shortestSequence("hit", "hot", Arrays.asList("hit", "hot")).size() != 2) throw new AssertionError("begin in list");
-        // A sequence of two words has one step.
-        if (!shortestSequence("a", "b", Arrays.asList("b")).equals(Arrays.asList("a", "b"))) throw new AssertionError("one letter");
-        // Random lists over a three-letter alphabet against the Floyd-Warshall oracle.
-        Random rnd = new Random(2204);
-        for (int t = 0; t < 4000; t++) {
-            int len = 1 + rnd.nextInt(3);
-            String begin = randomWord(rnd, len), end = randomWord(rnd, len);
-            while (end.equals(begin)) end = randomWord(rnd, len);
-            List<String> words = new ArrayList<>();
-            for (int i = rnd.nextInt(9); i > 0; i--) words.add(randomWord(rnd, len));
-            check(begin, end, words, shortestSequence(begin, end, words));
-        }
-    }
-
-    /** Builds a random word of the given length over the letters a to c. */
-    static String randomWord(Random rnd, int len) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < len; i++) sb.append((char) ('a' + rnd.nextInt(3)));
-        return sb.toString();
     }
 }
 ```
