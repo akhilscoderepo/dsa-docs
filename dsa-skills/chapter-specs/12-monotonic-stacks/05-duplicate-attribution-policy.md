@@ -1,4 +1,4 @@
-# Lesson spec: Duplicate-Attribution Policy
+# Lesson spec: Break Ties Between Equal Values
 
 **Recognition cue.** Equal values could claim the same subarray when nearest boundaries are used for counting. **Invariant.** Make one side strict and the other non-strict so every subarray with tied minima has exactly one owner. **False friend.** Using strict comparisons on both sides can double-count; non-strict on both can leave gaps. The chosen asymmetric side is a convention, not a universal direction.
 

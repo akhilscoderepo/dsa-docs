@@ -1,4 +1,4 @@
-# Lesson spec: Next Greater Or Smaller
+# Lesson spec: Find The Next Greater Value
 
 **Recognition cue.** Each position needs the first later value that crosses a greater/smaller threshold. **Invariant.** The stack stores unresolved indices in monotonic value order; the current value resolves every top it dominates. **False friend.** A globally greater value is not necessarily the next greater value. **Java hazard.** Store indices when the answer is a distance or position.
 

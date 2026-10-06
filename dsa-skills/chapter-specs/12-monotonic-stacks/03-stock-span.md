@@ -1,4 +1,4 @@
-# Lesson spec: Stock Span
+# Lesson spec: Compute The Stock Span
 
 **Recognition cue.** For each new value, count the consecutive suffix ending here whose earlier values do not exceed it. **Invariant.** The stack stores decreasing price candidates paired with the span each candidate already summarizes. **False friend.** This asks for the full dominated run, not merely the nearest greater value.
 

@@ -1,4 +1,4 @@
-# Lesson spec: Boundary Discovery
+# Lesson spec: Find Both Boundaries Of A Value
 
 **Recognition cue.** Each element's valid region ends at the nearest smaller or greater element on both sides. **Invariant.** One scan determines a nearest boundary when an index is popped; a reverse scan or surviving top supplies the other boundary under the chosen comparison. **False friend.** The boundary value alone is insufficient when width or number of choices depends on distance.
 

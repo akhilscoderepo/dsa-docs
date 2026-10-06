@@ -1,4 +1,4 @@
-# Lesson spec: Histogram Rectangles
+# Lesson spec: Find The Largest Rectangle
 
 **Recognition cue.** Every bar may be the limiting height of a rectangle extending until the first smaller bar on either side. **Invariant.** Increasing stack indices await a right boundary; when a shorter bar arrives, the popped bar's right boundary is current and its left boundary is the new stack top. **False friend.** Next-smaller distance on only one side cannot determine rectangle width.
 

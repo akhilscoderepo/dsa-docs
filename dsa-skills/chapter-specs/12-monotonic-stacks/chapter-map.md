@@ -4,13 +4,13 @@
 
 ## Lesson order
 
-01. Next Greater Or Smaller  ->  01-next-greater-or-smaller.md
-02. Circular Next Greater  ->  02-circular-next-greater.md
-03. Stock Span  ->  03-stock-span.md
-04. Boundary Discovery  ->  04-boundary-discovery.md
-05. Duplicate-Attribution Policy  ->  05-duplicate-attribution-policy.md
-06. Contribution Counting  ->  06-contribution-counting.md
-07. Histogram Rectangles  ->  07-histogram-rectangles.md
+01. Find The Next Greater Value  ->  01-next-greater-or-smaller.md
+02. Find The Next Greater In A Circle  ->  02-circular-next-greater.md
+03. Compute The Stock Span  ->  03-stock-span.md
+04. Find Both Boundaries Of A Value  ->  04-boundary-discovery.md
+05. Break Ties Between Equal Values  ->  05-duplicate-attribution-policy.md
+06. Count Subarrays By Their Minimum  ->  06-contribution-counting.md
+07. Find The Largest Rectangle  ->  07-histogram-rectangles.md
 
 # Chapter 12: Monotonic stacks
 

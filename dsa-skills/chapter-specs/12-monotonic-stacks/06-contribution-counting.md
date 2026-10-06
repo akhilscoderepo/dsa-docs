@@ -1,4 +1,4 @@
-# Lesson spec: Contribution Counting
+# Lesson spec: Count Subarrays By Their Minimum
 
 **Recognition cue.** The result is a sum over all subarrays, but each element can be counted as the minimum or maximum for a number of boundary choices. **Invariant.** If index `i` owns subarrays between its selected left and right boundaries, its count is `(i - left) * (right - i)`. **False friend.** This multiplication is valid only after duplicate ownership is proved. **Java hazard.** Multiply with `long` before applying the modulus.
 

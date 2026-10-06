@@ -1,4 +1,4 @@
-# Lesson spec: Circular Next Greater
+# Lesson spec: Find The Next Greater In A Circle
 
 **Recognition cue.** Successors wrap from the end of the array to the beginning, but each answer still needs the first greater value in circular order. **Invariant.** A virtual scan of at most `2n` positions exposes every possible successor; indices are pushed only during the first pass so each position is represented once. **False friend.** Physically duplicating the array is unnecessary.
 

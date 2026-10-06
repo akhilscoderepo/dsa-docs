@@ -58,7 +58,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Next Greater Or Smaller
+### Find The Next Greater Value
 
 **Recognition cue.** Each position needs the first later value that crosses a greater/smaller threshold. **Invariant.** The stack stores unresolved indices in monotonic value order; the current value resolves every top it dominates. **False friend.** A globally greater value is not necessarily the next greater value. **Java hazard.** Store indices when the answer is a distance or position.
 
@@ -67,7 +67,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Equal Values Stay Unresolved.** Use strict comparison so an equal value is not mistaken for a greater one.
 - **Recognize - LC 496 Next Greater Element I.** Precompute next-greater values for the reference array and answer lookups for the subset.
 
-### Circular Next Greater
+### Find The Next Greater In A Circle
 
 **Recognition cue.** Successors wrap from the end of the array to the beginning, but each answer still needs the first greater value in circular order. **Invariant.** A virtual scan of at most `2n` positions exposes every possible successor; indices are pushed only during the first pass so each position is represented once. **False friend.** Physically duplicating the array is unnecessary.
 
@@ -76,7 +76,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: All Equal Circular Array.** Leave every answer at `-1` and avoid resolving on equality.
 - **Recognize - LC 503 Next Greater Element II.** Combine virtual traversal with the unresolved-index stack.
 
-### Stock Span
+### Compute The Stock Span
 
 **Recognition cue.** For each new value, count the consecutive suffix ending here whose earlier values do not exceed it. **Invariant.** The stack stores decreasing price candidates paired with the span each candidate already summarizes. **False friend.** This asks for the full dominated run, not merely the nearest greater value.
 
@@ -85,7 +85,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Equal Prices.** Pop equality because equal earlier days belong to the current `<= price` span.
 - **Recognize - LC 901 Online Stock Span.** Maintain the compressed monotonic state across successive API calls.
 
-### Boundary Discovery
+### Find Both Boundaries Of A Value
 
 **Recognition cue.** Each element's valid region ends at the nearest smaller or greater element on both sides. **Invariant.** One scan determines a nearest boundary when an index is popped; a reverse scan or surviving top supplies the other boundary under the chosen comparison. **False friend.** The boundary value alone is insufficient when width or number of choices depends on distance.
 
@@ -94,7 +94,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: No Boundary.** Use sentinels `-1` and `n` consistently when no smaller element exists.
 - **Recognize - Author exercise: Widest Region Where Each Value Is Minimum.** Combine left and right boundaries into width `right - left - 1`.
 
-### Duplicate-Attribution Policy
+### Break Ties Between Equal Values
 
 **Recognition cue.** Equal values could claim the same subarray when nearest boundaries are used for counting. **Invariant.** Make one side strict and the other non-strict so every subarray with tied minima has exactly one owner. **False friend.** Using strict comparisons on both sides can double-count; non-strict on both can leave gaps. The chosen asymmetric side is a convention, not a universal direction.
 
@@ -103,7 +103,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: All Equal Array.** Confirm the total number of owned subarrays is `n(n+1)/2`.
 - **Recognize - LC 907 Sum of Subarray Minimums.** Explain the tie convention before translating distances into contributions.
 
-### Contribution Counting
+### Count Subarrays By Their Minimum
 
 **Recognition cue.** The result is a sum over all subarrays, but each element can be counted as the minimum or maximum for a number of boundary choices. **Invariant.** If index `i` owns subarrays between its selected left and right boundaries, its count is `(i - left) * (right - i)`. **False friend.** This multiplication is valid only after duplicate ownership is proved. **Java hazard.** Multiply with `long` before applying the modulus.
 
@@ -112,7 +112,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Negative And Repeated Values.** Separate arithmetic/modulus handling from the equality ownership proof.
 - **Recognize - LC 907 Sum of Subarray Minimums.** Discover boundaries with a monotonic stack and accumulate each index's contribution.
 
-### Histogram Rectangles
+### Find The Largest Rectangle
 
 **Recognition cue.** Every bar may be the limiting height of a rectangle extending until the first smaller bar on either side. **Invariant.** Increasing stack indices await a right boundary; when a shorter bar arrives, the popped bar's right boundary is current and its left boundary is the new stack top. **False friend.** Next-smaller distance on only one side cannot determine rectangle width.
 
