@@ -6,8 +6,8 @@
 
 01. Use ArrayDeque For Stack And Queue  ->  01-arraydeque-contracts.md
 02. Process Items In Arrival Order  ->  02-fifo-simulation.md
-03. Two-Stack Queue  ->  03-two-stack-queue.md
-04. BFS Queue State  ->  04-bfs-queue-state.md
+03. Build A Queue From Two Stacks  ->  03-two-stack-queue.md
+04. Find Shortest Steps With A Queue  ->  04-bfs-queue-state.md
 05. Matching Delimiters  ->  05-matching-delimiters.md
 06. Nested Structure  ->  06-nested-structure.md
 07. Min Stack  ->  07-min-stack.md

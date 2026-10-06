@@ -81,7 +81,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Queue Becomes Empty.** Guard or prove every removal and handle a task completed on its first turn.
 - **Recognize - LC 1700 Number of Students Unable to Eat Lunch.** Simulate only while progress is possible and detect a full unsuccessful rotation.
 
-### Two-Stack Queue
+### Build A Queue From Two Stacks
 
 **Recognition cue.** Only LIFO containers are available, but the public API must be FIFO. **Invariant.** New values enter `in`; the oldest available values are on top of `out`. Transfer all values only when `out` is empty. **False friend.** Moving everything on every operation is correct but costs linear time per call.
 
@@ -90,7 +90,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Queue API.** Make `peek` and `pop` follow the stated nonempty-call contract or document the chosen failure behavior.
 - **Recognize - LC 232 Implement Queue using Stacks.** Implement the full API and explain why each element moves between stacks at most once.
 
-### BFS Queue State
+### Find Shortest Steps With A Queue
 
 **Recognition cue.** States are explored in nondecreasing number of transitions from a start. **Invariant.** The queue contains discovered but unprocessed states; each state is marked when enqueued so it is not scheduled twice. **False friend.** A stack explores deeply and does not preserve shortest unweighted transition count. Full graph modeling arrives in Chapter 21.
 

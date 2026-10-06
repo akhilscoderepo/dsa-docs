@@ -1,4 +1,4 @@
-# Lesson spec: Two-Stack Queue
+# Lesson spec: Build A Queue From Two Stacks
 
 **Recognition cue.** Only LIFO containers are available, but the public API must be FIFO. **Invariant.** New values enter `in`; the oldest available values are on top of `out`. Transfer all values only when `out` is empty. **False friend.** Moving everything on every operation is correct but costs linear time per call.
 

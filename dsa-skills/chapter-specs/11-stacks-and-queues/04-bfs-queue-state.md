@@ -1,4 +1,4 @@
-# Lesson spec: BFS Queue State
+# Lesson spec: Find Shortest Steps With A Queue
 
 **Recognition cue.** States are explored in nondecreasing number of transitions from a start. **Invariant.** The queue contains discovered but unprocessed states; each state is marked when enqueued so it is not scheduled twice. **False friend.** A stack explores deeply and does not preserve shortest unweighted transition count. Full graph modeling arrives in Chapter 21.
 
