@@ -86,10 +86,10 @@ A method that changes the list also states its return value. If the first node c
 
 #### Counting The Nodes Of One List
 
-Take the list `4, 7, 9`. The pointer `curr` marks the node being visited, and the value `n` counts the nodes seen so far. The walk starts at the head, adds one to `n` at every node, and stops when `curr` falls off the end of the list.
+Take the list `4, 7, 9`. The pointer `head` stays on the first node, the pointer `curr` marks the node being visited, and the value `n` counts the nodes seen so far. The walk starts at the head, adds one to `n` at every node, and stops when `curr` falls off the end of the list.
 
 ```trace
-{"cells":[4,7,9],"pointers":["curr"],"steps":[{"at":{"curr":0},"vars":{"n":0},"note":"curr starts at the head, the node 4. The count is 0."},{"at":{"curr":1},"vars":{"n":1},"note":"The walk counts the node 4, so n becomes 1. Then curr moves to the node 7."},{"at":{"curr":2},"vars":{"n":2},"note":"The walk counts the node 7, so n becomes 2. Then curr moves to the node 9."},{"at":{"curr":3},"vars":{"n":3},"note":"The walk counts the node 9, so n becomes 3. Then curr moves to null, which ends the loop."}]}
+{"cells":[4,7,9],"pointers":["head","curr"],"steps":[{"at":{"head":0,"curr":0},"vars":{"n":0},"note":"curr starts at the head, the node 4. The count is 0."},{"at":{"head":0,"curr":1},"vars":{"n":1},"note":"The walk counts the node 4, so n becomes 1. Then curr moves to the node 7."},{"at":{"head":0,"curr":2},"vars":{"n":2},"note":"The walk counts the node 7, so n becomes 2. Then curr moves to the node 9."},{"at":{"head":0,"curr":3},"vars":{"n":3},"note":"The walk counts the node 9, so n becomes 3. Then curr moves to null, which ends the loop."}]}
 ```
 
 The last step shows `curr` past the final node, which is the `null` the loop condition tests. The count is 3, so the walk follows 3 hops from the head to the end and visits each node once.
