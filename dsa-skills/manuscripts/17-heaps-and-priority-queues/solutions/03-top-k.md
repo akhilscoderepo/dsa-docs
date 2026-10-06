@@ -7,7 +7,7 @@
 **Approach.**
 The method keeps a natural-order queue of at most `k` values. The first `k` values enter without a test. Each later value is compared once with the root. A value that is not larger than the root is discarded, because `k` kept values are already at least as large. A larger value removes the root and takes its place. At the end the queue holds the `k` largest values. Polling returns them in ascending order, so the method fills the result array from the back.
 
-The invariant is that the queue holds the `min(k, seen)` largest values among those seen.
+After every value, the queue holds the `min(k, seen)` largest values among those seen.
 
 **Complexity.**
 - **Time** is O(n log k), because each value costs one root comparison and at most one removal and one insertion in a queue of size `k`.
@@ -120,7 +120,7 @@ public final class KthLargestArray {
 **Approach.**
 The scan keeps the same size-`k` queue and adds the kept values at the end in a `long` accumulator. At `k = 1` the queue holds one value, and each candidate either beats it or not, so the scan finds the maximum. At `k = n` the queue never evicts, because the queue fills exactly when the input ends, and the sum covers every value. The `int` sum of two large values wraps, so the accumulator has the type `long`.
 
-The invariant is that the queue holds the `k` largest values seen and that the final sum covers exactly those values.
+The queue always holds the `k` largest values seen, so the final sum covers exactly those values.
 
 **Complexity.**
 - **Time** is O(n log k), because each value costs one comparison and at most one removal and one insertion.
