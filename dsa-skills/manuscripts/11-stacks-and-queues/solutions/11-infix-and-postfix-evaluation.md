@@ -5,7 +5,7 @@
 <!-- id: sq-eval-one-operator -->
 
 **Approach.**
-The method pushes `a` and `b` on an `ArrayDeque` used as a stack, so `b` is on top. The operator needs the left value first in the formula, but the stack returns the last pushed value first. The first pop therefore gives `right`, the second pop gives `left`, and the result is `left op right`. The invariant is that the stack holds the operands in written order from bottom to top. The test compares against direct arithmetic and checks that swapped order changes the answer for `-` and `/` but not for `+` and `*`.
+The method pushes `a` and `b` on an `ArrayDeque` used as a stack, so `b` is on top. The operator needs the left value first in the formula, but the stack returns the last pushed value first. The first pop therefore gives `right`, the second pop gives `left`, and the result is `left op right`. The stack keeps the operands in written order from bottom to top, and that order is the invariant. The test compares against direct arithmetic and checks that swapped order changes the answer for `-` and `/` but not for `+` and `*`.
 
 **Complexity.**
 - **Time** is O(1), because the method pushes two values and pops two values.
