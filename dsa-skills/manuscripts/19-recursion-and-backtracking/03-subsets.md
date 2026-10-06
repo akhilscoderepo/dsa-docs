@@ -39,7 +39,7 @@ The array holds n = 10 values. The search makes one call for every ordered list 
 The count is 10!/10! + 10!/9! + ... + 10!/0!, which is about 9.9 million calls. Only 2^10 = 1,024 sets exist, so about 9,600 calls belong to each set. Each call also sorts a copy of its path.
 ```
 
-The search makes about e * n! calls, and each call adds a sort of O(n log n) time. The extra calls repeat orders, and the hash set discards them after the work is done.
+The search makes about e * n! calls, and each call adds a sort of O(n log n) time. The extra calls repeat orders, and the search finishes the work before the hash set discards them.
 
 A set has one canonical order, which is the order of the indices in the input. A search that only builds paths in that order never builds a repeated set, so it needs no sort and no hash set. The question is how to make the path follow the input order.
 
@@ -56,7 +56,7 @@ The values at indices between the old start and the chosen index are the **skipp
 
 #### Recording On Entry
 
-Every path of increasing indices is already a complete subset, so no call needs to wait for a leaf. A call stores a copy of its path at **record on entry**, before its loop starts. The root stores the empty subset. Each path is stored once. The tree has exactly one node for each of the 2^n subsets, because a sorted list of indices names one subset.
+Every path of increasing indices is already a complete subset, so no call needs to wait for a leaf. A call stores a copy of its path at **record on entry**, before its loop starts. The root stores the empty subset. The search stores each path once. The tree has exactly one node for each of the 2^n subsets, because a sorted list of indices names one subset.
 
 <!-- names: start index, skipped indices, record on entry -->
 
