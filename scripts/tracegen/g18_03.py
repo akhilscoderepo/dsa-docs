@@ -1,40 +1,39 @@
 from common import *
-from tn import *
-CH='18-tries'
-F='03-wildcard-branching.md'
-
-def dfs_steps(words, pattern):
-    t = Trie()
-    for w in words: t.insert(w)
-    steps = []; calls = [0]
-    def lab(pre): return pre if pre else "the root"
-    def go(node, pre, pos):
-        calls[0] += 1
-        if pos == len(pattern):
-            ok = t.term[node]
-            steps.append({"at": {"i": pos}, "vars": {"prefix": pre, "calls": calls[0]},
-                          "note": f"The pattern is used up at {lab(pre)}, and its flag is {'set' if ok else 'unset'}, so this call answers {'yes' if ok else 'no'}."})
+CH='18-tries'; F='03-wildcard-branching.md'
+def mk(words):
+    root={}
+    for w in words:
+        c=root
+        for ch in w: c=c.setdefault(ch,{})
+        c['$']=True
+    return root
+def trace(words,pat):
+    root=mk(words); st=[]; calls=[0]
+    def go(node,pre,i):
+        calls[0]+=1
+        if i==len(pat):
+            ok='$' in node
             return ok
-        c = pattern[pos]
-        if c != '.':
-            if c not in t.kids[node]:
-                steps.append({"at": {"i": pos}, "vars": {"prefix": pre, "calls": calls[0]},
-                              "note": f"The square is the letter {c}, and {lab(pre)} has no edge {c}, so this call answers no without looking at any sibling."})
-                return False
-            steps.append({"at": {"i": pos}, "vars": {"prefix": pre, "calls": calls[0]},
-                          "note": f"The square is the letter {c}, so only the edge {c} is followed from {lab(pre)}."})
-            return go(t.kids[node][c], pre + c, pos + 1)
-        ks = sorted(t.kids[node])
-        steps.append({"at": {"i": pos}, "vars": {"prefix": pre, "calls": calls[0]},
-                      "note": f"The square is blank, so every child of {lab(pre)} is a candidate: {', '.join(ks)} in that order."})
-        for k in ks:
-            if go(t.kids[node][k], pre + k, pos + 1): return True
+        ch=pat[i]
+        kids=[k for k in sorted(node) if k!='$']
+        if ch!='.':
+            if ch in node:
+                st.append({"at":{"i":i},"vars":{"node":pre+ch,"calls":calls[0]},"note":f"The letter {ch} has an edge, so the search moves to the node {pre+ch}."})
+                return go(node[ch],pre+ch,i+1)
+            st.append({"at":{"i":i},"vars":{"node":pre,"calls":calls[0]},"note":f"The node {pre} has no edge for {ch}, so this branch returns false."})
+            return False
+        if not kids:
+            st.append({"at":{"i":i},"vars":{"node":pre,"calls":calls[0]},"note":f"The dot needs a child, but the node {pre} has none, so the search returns false."}); return False
+        for k in kids:
+            st.append({"at":{"i":i},"vars":{"node":pre+k,"calls":calls[0]},"note":f"The dot tries the child {k}, which leads to the node {pre+k}."})
+            if go(node[k],pre+k,i+1): return True
         return False
-    return steps, go(0, "", 0)
-
-s1, a1 = dfs_steps(["bad", "bed", "bid", "cod"], "b.d")
-assert a1 is True and len(s1) == 4
-fill(CH, F, block(list("b.d"), ["i"], s1), "@@TRACE1@@")
-s2, a2 = dfs_steps(["bat", "cad", "dad", "cot"], ".ad")
-assert a2 is True and len(s2) == 6
-fill(CH, F, block(list(".ad"), ["i"], s2), "@@TRACE2@@")
+    r=go(root,"",0)
+    return r,st
+r,st=trace(["cap","cot"],"c.t"); assert r
+# make the final success step explicit
+st[-1]["note"]+=" The pattern ends on a node with a true flag, so the search returns true."
+fill(CH,F,block(list("c.t"),["i"],st),"@@TRACE1@@")
+r,st=trace(["cat"],"ca.."); assert not r
+fill(CH,F,block(list("ca.."),["i"],st),"@@TRACE2@@")
+print(len(st))
