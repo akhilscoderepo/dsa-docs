@@ -224,7 +224,7 @@ The false friend is `PriorityQueue.remove(Object)`, which looks like a decrease 
 
 **Example 2.** Input `n = 3`, `edges = [[0,1,0],[1,0,0],[1,2,4],[0,2,4]]`, `src = 0`, output `2`.
 
-**Hint.** What does a self loop of weight 0 offer to the vertex that it leaves, and does the offer beat the stored value?
+**Hint.** In the second example, what does the edge from 1 to 0 of weight 0 offer to vertex 0, and does the offer beat the stored value?
 
 **Changed decision.** The method compares with a strict less-than before it stores a distance and pushes an entry, so an equal offer never reaches the heap.
 

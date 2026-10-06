@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A grid game asks for the cheapest path where stepping onto a wall costs 1 and an open cell costs 0. A full heap search works but pays a logarithm on every step. A deque removes that cost. This chapter releases two pairings and leaves one for later.
+A grid game asks for the cheapest path where stepping onto a wall costs 1 and an open cell costs 0. A full heap search works but pays a logarithm on every step. A deque removes that cost. This chapter releases two pairings, where a pairing is a lesson that joins two earlier topics into one method, and it leaves one for later.
 
 ### Pairings Taught In This Chapter
 
@@ -11,4 +11,4 @@ The lesson Shortest Paths With A Deque joins the graph with the deque. The edge 
 
 ### Pairing That Waits For A Later Chapter
 
-Negative edge costs break both searches, because a cheaper path can appear after a vertex is finished. A method that relaxes every edge in repeated rounds handles them, and this chapter assigns no exercises for it.
+Negative edge costs break both searches, because a cheaper path can appear after a vertex is finished. A method that relaxes every edge in repeated rounds handles them, and this chapter assigns no exercises for it. Chapter 25 covers negative edges, and the repeated-round scan in the heap lesson is the idea that it uses.

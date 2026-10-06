@@ -95,7 +95,7 @@ Every transition adds one edge, so all weights in the pair graph equal 1. The qu
 <!-- stage: variables -->
 ### What The Search Keeps
 
-The method reads the node count `n` and the two edge lists, and it changes none of them. It builds one adjacency list for each color, and the list for color `c` and node `v` holds the targets of the edges of that color from `v`. Three structures hold the search state.
+The method reads the node count `n` and the two edge lists, and it changes none of them. It builds one list of target lists, indexed by `color * n + node`, so the entry for color `c` and node `v` holds the targets of the edges of that color from `v`. Three structures hold the search state.
 
 - **dist** is an `int[n][2]` table, where `dist[v][c]` is the edge count of the shortest walk that ends at `v` with color `c`, or -1.
 - **queue** is an `ArrayDeque<Integer>` that holds the encoded pair `2 * v + c`, so the queue needs no wrapper object.
@@ -108,7 +108,7 @@ The table doubles as the visited record. A value other than -1 means that the se
 
 #### Both Colors Allowed At The Start
 
-The first graph has 5 nodes, red edges 0 to 1, 1 to 2 and 3 to 4, and blue edges 0 to 1 and 2 to 3. The cells list all ten pairs, each as a node followed by `r` or `b`. The pointer `cur` marks the pair that the search expands. The variable `dist` is the distance of that pair, `queue` lists the pairs that wait after the expansion, and `found` counts the pairs that have a distance so far. The search expands the two seeds first. Step 3 is the one that matters: pair `1b` leads over the red edge to node 2, which is the route that the single mark of the first attempt lost. Pair `1r` at step 4 has no blue edge to follow, and that is a dead end that costs nothing.
+The first graph has 5 nodes, red edges 0 to 1, 1 to 2 and 3 to 4, and blue edges 0 to 1 and 2 to 3. The cells list all ten pairs, each as a node followed by `r` or `b`. The pointer `cur` marks the pair that the search expands. The variable `dist` is the distance of that pair, `queue` lists the pairs that wait after the expansion, and `found` counts the pairs that have a distance so far. The search expands the two seeds first. Step 3 is the one that matters: pair `1b` leads over the red edge to node 2, which is the same kind of route that the single mark of the first attempt lost. Pair `1r` at step 4 has no blue edge to follow, and that is a dead end that costs nothing.
 
 ```trace
 {"cells":["0r","0b","1r","1b","2r","2b","3r","3b","4r","4b"],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"dist":0,"queue":"0b-1b","found":3},"note":"Pair 0r has distance 0, so only blue edges may leave node 0. They add 1b with distance 1."},{"at":{"cur":1},"vars":{"dist":0,"queue":"1b-1r","found":4},"note":"Pair 0b has distance 0, so only red edges may leave node 0. They add 1r with distance 1."},{"at":{"cur":3},"vars":{"dist":1,"queue":"1r-2r","found":5},"note":"Pair 1b has distance 1, so only red edges may leave node 1. They add 2r with distance 2."},{"at":{"cur":2},"vars":{"dist":1,"queue":"2r","found":5},"note":"Pair 1r has distance 1, so only blue edges may leave node 1. No such edge reaches a new pair."},{"at":{"cur":4},"vars":{"dist":2,"queue":"3b","found":6},"note":"Pair 2r has distance 2, so only blue edges may leave node 2. They add 3b with distance 3."},{"at":{"cur":7},"vars":{"dist":3,"queue":"4r","found":7},"note":"Pair 3b has distance 3, so only red edges may leave node 3. They add 4r with distance 4."},{"at":{"cur":8},"vars":{"dist":4,"queue":"empty","found":7},"note":"Pair 4r has distance 4, so only blue edges may leave node 4. No such edge reaches a new pair."}]}
@@ -125,7 +125,7 @@ The second graph has 3 nodes, red edges 0 to 1, 1 to 1 and 1 to 2, and blue edge
 <!-- stage: code -->
 ### Breadth-First Search Over Node And Color
 
-The method builds the two adjacency lists in one array of lists, which uses the index `color * n + node`. It seeds both pairs, runs the queue loop and then reduces each row of `dist` to one answer.
+The method builds the lists of both colors in one array of lists, which uses the index `color * n + node`. It seeds both pairs, runs the queue loop and then reduces each row of `dist` to one answer.
 
 ```java
 static int[] alternatingDistances(int n, int[][] red, int[][] blue) {
@@ -141,8 +141,8 @@ static int[] alternatingDistances(int n, int[][] red, int[][] blue) {
     queue.add(0);
     queue.add(1);
     while (!queue.isEmpty()) {
-        int pair = queue.poll();
-        int v = pair / 2, c = pair % 2;
+        int cur = queue.poll();
+        int v = cur / 2, c = cur % 2;
         int other = 1 - c;
         for (int w : next.get(other * n + v)) {
             if (dist[w][other] != -1) continue;
@@ -159,7 +159,7 @@ static int[] alternatingDistances(int n, int[][] red, int[][] blue) {
 }
 ```
 
-Parallel edges and self loops need no special case, because every transition goes through the same check of `dist`. The method runs in O(V + E) time and uses O(V + E) memory. The method fills each row in a loop, because `Arrays.fill` does not accept a two-dimensional array. Writing `Arrays.fill(dist, new int[] {-1, -1})` would make every row the same object, and one write would change all nodes. Distances stay far below the `int` limit, because a walk over `2n` pairs has fewer than `2n` edges.
+Parallel edges and self loops need no special case, because every transition goes through the same check of `dist`. The method runs in O(V + E) time and uses O(V + E) memory. The method fills each row in a loop, because `Arrays.fill` cannot fill the `int` rows of a two-dimensional array with a number. Writing `Arrays.fill(dist, new int[] {-1, -1})` would make every row the same object, and one write would change all nodes. Distances stay far below the `int` limit, because a walk over `2n` pairs has fewer than `2n` edges.
 
 <!-- stage: applicability -->
 ### Recognizing Searches Over Node And Last Color

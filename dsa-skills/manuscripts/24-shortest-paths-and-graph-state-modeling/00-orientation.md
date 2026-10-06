@@ -9,7 +9,7 @@ You should know adjacency lists and breadth-first search from chapter 21, and th
 
 ### The Six Lessons
 
-Each lesson adds one piece of state to a shortest-path search.
+Each lesson adds one idea to a shortest-path search.
 
 - **Find Cheapest Routes With Dijkstra** keeps a best known cost per vertex and always expands the cheapest unfinished vertex.
 - **Skip Outdated Heap Entries** lets a vertex sit in the heap several times and ignores every entry that no longer matches its best cost.

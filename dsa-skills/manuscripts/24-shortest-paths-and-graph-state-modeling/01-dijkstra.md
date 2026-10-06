@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Cheapest Route Is Not Fewest Roads
 
-A navigation app plans trips over a road network where some roads charge a toll. A driver leaves town 0 for town 4. The direct road from town 0 to town 1 costs 7, and a detour through town 2 reaches town 1 for 2 plus 3, which is only 5. The app counts roads and picks the direct one, because one road is fewer than two. The driver pays 7 where 5 was possible, and the loss grows with every town along the way. The app measures the wrong quantity, since a road count treats a free road and an expensive road alike.
+A navigation app plans trips over a road network where some roads charge a toll. A driver leaves town 0 for town 1. The direct road from town 0 to town 1 costs 7, and a detour through town 2 reaches town 1 for 2 plus 3, which is only 5. The app counts roads and picks the direct one, because one road is fewer than two. The driver pays 7 where 5 was possible. The app measures the wrong quantity, since a road count treats a free road and an expensive road alike.
 
 Model the towns as vertices and each road as a directed edge that carries a **weight**, the toll for using it. The cost of a route is the sum of its weights. The task is to find, from one source town, the minimum cost to every other town, and to report that a town is unreachable when no route leads to it. All weights in this lesson are zero or positive.
 
@@ -39,7 +39,7 @@ static long[] fewestRoads(int n, int[][] roads, int src) {
 }
 ```
 
-The method visits each town once and each road once. It reaches exactly the towns that have a route, and it returns the number of roads on the shortest chain correctly. The question is whether the stored cost is the cheapest one.
+The method visits each town once and each road once. It reaches exactly the towns that have a route, and it stores the first cost it sees for each town. The question is whether the stored cost is the cheapest one.
 
 ```predict
 Use the roads 0 to 1 with weight 7, 0 to 2 with weight 2, and 2 to 1 with weight 3. What cost does fewestRoads store for town 1?
@@ -65,7 +65,7 @@ The method keeps a best known cost for every town and always expands the town wi
 
 #### The Tentative Cost Of Each Town
 
-The array `dist` holds a **tentative** distance for every town, which is the cheapest route found so far and an upper bound on the true answer. It starts at infinity for every town except the source, which starts at 0. A tentative value only moves downward, and it is exact once the town is finalized.
+The array `dist` holds a **tentative** distance for every town, which is the cheapest route found so far and an upper bound on the true answer. It starts at infinity for every town except the source, which starts at 0. A tentative value only moves downward. A town is **finalized** when its distance can no longer improve, and the tentative value of a finalized town is exact.
 
 #### Relaxing One Road
 
@@ -73,7 +73,7 @@ To **relax** a road from `u` to `v` with weight `w`, the method computes `dist[u
 
 #### Why The Smallest Entry Is Final
 
-Take the entry with the smallest cost `d` from the heap, for the town `u`. A town is **finalized** when its distance can no longer improve. The claim is that `u` is finalized now. Any other route to `u` must leave the finalized towns through a road whose far end is still waiting in the heap. That far end has a tentative cost of at least `d`, because `d` is the smallest. The remaining roads of the route add weights that are zero or more. So the other route costs at least `d`, and `d` is the minimum.
+Take the entry with the smallest cost `d` from the heap, for the town `u`. The claim is that `u` is finalized now. Any other route to `u` must leave the finalized towns through a road whose far end is still waiting in the heap. That far end has a tentative cost of at least `d`, because `d` is the smallest. The remaining roads of the route add weights that are zero or more. So the other route costs at least `d`, and `d` is the minimum.
 
 #### Skipping Outdated Heap Entries
 
@@ -160,7 +160,7 @@ The invariant is that every town removed as a nonstale entry holds its final dis
 
 #### Avoiding The False Friend
 
-The false friend is breadth-first search. It is correct when every road has the same cost, and the first example of this lesson shows the failure when costs differ. A second false friend is stopping the search when the target is first added to the heap. The first cost pushed for a town is only tentative, and only the removal from the heap makes it final.
+A false friend is a familiar method that looks right and fails. The false friend here is breadth-first search. It is correct when every road has the same cost, and the first example of this lesson shows the failure when costs differ. A second false friend is stopping the search when the target is first added to the heap. The first cost pushed for a town is only tentative, and only the removal from the heap makes it final.
 
 <!-- stage: exercises -->
 ### Exercises

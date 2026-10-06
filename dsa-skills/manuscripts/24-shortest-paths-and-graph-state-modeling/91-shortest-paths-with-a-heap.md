@@ -86,7 +86,7 @@ The **path score** is the single value that the search compares between two rout
 
 #### Stale Entries Replace Decrease-Key
 
-`PriorityQueue` cannot lower the score of an entry that is already inside. The loop pushes a second entry instead. The old entry is removed later with a score worse than the stored best of its state. Such an entry is a **stale entry**. The loop skips it with one comparison. A stale entry costs one heap removal and nothing else, and the number of entries is at most the number of successful relaxations.
+`PriorityQueue` cannot lower the score of an entry that is already inside. The loop pushes a second entry instead. The old entry is removed later with a score worse than the stored best of its state. Such an entry is a **stale entry**. The loop skips it with one comparison. An entry that is not stale is a **current entry**. A stale entry costs one heap removal and nothing else, and the number of entries is at most the number of successful relaxations.
 
 #### Why The First Current Entry Is Final
 
@@ -101,7 +101,7 @@ The loop reads the graph and the source and never changes them. It builds an adj
 - **heap** is a `PriorityQueue` of entries, each holding a score and a state, ordered so that the best score comes out first.
 - **top** is the entry that the last removal returned, and the loop tests its score against `best` before reading any edge.
 
-For the flight tool the state pairs a city with the number of flights used. Then `best` has one row for each city and one column for each count from 0 to the limit.
+For the flight tool the state pairs a city with the number of flights used. Then `best` has one row for each city and one column for each count from 0 to k + 1.
 
 <!-- stage: trace -->
 ### Heap Entries On Two Small Inputs
@@ -124,7 +124,7 @@ The second input has four cities. Its flights are 0 to 1 of price 1, 1 to 2 of p
 {"cells":[0,1,2,3],"pointers":["city"],"steps":[{"at":{"city":0},"vars":{"heap":"(0,0,0)"},"note":"The heap starts with (0,0,0), read as cost 0, city 0, no flight used yet."},{"at":{"city":0},"vars":{"heap":"(1,1,1) (5,2,1)"},"note":"Entry (0,0,0) is current. Each flight from city 0 adds an entry with 1 flights used when it beats the stored price."},{"at":{"city":1},"vars":{"heap":"(2,2,2) (5,2,1)"},"note":"Entry (1,1,1) is current. Each flight from city 1 adds an entry with 2 flights used when it beats the stored price."},{"at":{"city":2},"vars":{"heap":"(5,2,1)"},"note":"Entry (2,2,2) has spent all 2 allowed flights, so no flight leaves it."},{"at":{"city":2},"vars":{"heap":"(6,3,2)"},"note":"Entry (5,2,1) is current. Each flight from city 2 adds an entry with 2 flights used when it beats the stored price."},{"at":{"city":3},"vars":{"heap":"empty"},"note":"City 3 is the destination. Its first current entry gives price 6 with 1 stop, and the search ends."}]}
 ```
 
-Compare the two sequences. Both end when the heap yields what the question asks for, but neither one examines every entry. The weighted search ignores obsolete data cheaply, while the limited search keeps parallel candidates alive because their remaining budgets differ.
+Compare the two sequences. Both end when the heap yields what the question asks for, but they treat extra entries differently. In the weighted search, the stale entry costs one removal and no edge reads, while the limited search keeps parallel candidates alive because their remaining budgets differ.
 
 <!-- stage: code -->
 ### Heap Search With A Skip Test
@@ -161,7 +161,7 @@ static long[] heapDistances(int n, int[][] links, int src) {
 
 #### Cost On A City And A Flight Count
 
-The second method changes only the state. The array `best[city][used]` holds the cheapest price for reaching a city with exactly `used` flights, and a removed entry with `used == k + 1` pushes nothing.
+The second method changes only the state. The array `best[city][used]` holds the cheapest price for reaching a city with exactly `used` flights, and a removed entry with `used == k + 1` pushes nothing. Prices are small, so `int` holds every sum.
 
 ```java
 static int cheapestWithLimit(int n, int[][] flights, int src, int dst, int k) {
@@ -271,7 +271,7 @@ The false friend is the breadth-first search with a visited flag. It finalizes a
 
 **Hint.** If two routes reach a city with different flight counts, which one can a later flight still use when the limit is tight?
 
-**Changed decision.** The method stores one best price for each pair of city and flights used. It reads the stop count from the flight count of the first removed destination entry.
+**Changed decision.** The method stores one best price for each pair of city and flights used. It reads the stop count from the flight count of the first removed destination entry. Among equal prices, the entry with fewer flights leaves the heap first, so a tie goes to fewer stops.
 
 #### [Recognize] Path With Maximum Probability (LeetCode 1514)
 <!-- id: sp-max-probability-path -->

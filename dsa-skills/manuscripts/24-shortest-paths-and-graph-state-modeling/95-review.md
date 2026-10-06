@@ -18,7 +18,7 @@ A route finder reports a cost that a cheaper road beats, and a flight search ign
 ```
 
 ```quiz
-{"id": "sp-rev-stops", "q": "A cheapest route may use at most 2 flights. A cost of 7 reaches city c in 3 flights and a cost of 9 reaches it in 1 flight. Which arrival may matter?", "options": ["Only the cost of 7", "Both, because the second leaves one more flight to use", "Only the cost of 9", "Neither"], "answer": 1, "explain": "The cheaper arrival has no flights left. The costlier arrival can still continue, so a single cost per city loses it."}
+{"id": "sp-rev-stops", "q": "A cheapest route may use at most 3 flights. A cost of 7 reaches city c in 2 flights and a cost of 9 reaches it in 1 flight. Which arrival may matter?", "options": ["Only the cost of 7", "Both, because the costlier arrival leaves one more flight to use", "Only the cost of 9", "Neither"], "answer": 1, "explain": "The cheaper arrival has 1 flight left and the costlier arrival has 2 flights left. The costlier arrival can reach cities that the cheaper one cannot, so a single cost per city loses it."}
 ```
 
 ```quiz

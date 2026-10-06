@@ -60,7 +60,7 @@ The method runs in O(E log E) time, so the cost of the search is not the problem
 
 Two arrivals at the same city compare in two ways. The arrival for 20 is cheaper, and the arrival for 50 has one flight left. Neither is better in both ways, so discarding either one can change the answer. Plain shortest paths never face this, because every continuation from a city costs the same for all arrivals, and the cheaper arrival always wins. A limit on flights breaks that argument, because the number of flights used changes which continuations remain legal.
 
-Raising `k` shows the failure growing. Each extra allowed flight creates more pairs of arrivals that cost and length rank in opposite order. A correct method must keep a separate best cost for each number of flights used, and it must find a rule that keeps the work near O(k · E).
+Raising `k` shows the failure growing. Each extra allowed flight creates more pairs of arrivals that cost and length rank in opposite order. A correct method must keep a separate best cost for each number of flights used, and it must find a rule that keeps the work near O(k · E). The fix should cost about k + 1 passes over the edges.
 
 <!-- stage: insight -->
 ### One Best Cost For Each Flight Count
@@ -93,7 +93,7 @@ The method reads `n`, `flights`, `src`, `dst` and `k`, and it changes none of th
 - **best** is a `long[]` of length `n`, the layer after the last finished pass.
 - **next** is a `long[]` copy of `best`, which receives the offers of the running pass.
 - **INF** is `Long.MAX_VALUE / 4`, a value that survives the addition of a price.
-- **leg** counts finished passes and runs from 0 to `k`, which gives `k + 1` passes in total.
+- **pass** numbers the running pass and runs from 1 to `k + 1`, which gives `k + 1` passes in total.
 
 The array `best` is read-only during a pass, and `next` is write-only apart from its comparison.
 
@@ -127,7 +127,7 @@ static long cheapestWithin(int n, int[][] flights, int src, int dst, int k) {
     long[] best = new long[n];
     Arrays.fill(best, INF);
     best[src] = 0;
-    for (int leg = 0; leg <= k; leg++) {
+    for (int pass = 1; pass <= k + 1; pass++) {
         long[] next = best.clone();
         for (int[] f : flights) {
             if (best[f[0]] < INF && best[f[0]] + f[2] < next[f[1]]) {
@@ -221,7 +221,7 @@ The false friend is plain Dijkstra with one distance for each city. It is correc
 
 **Hint.** For `k = 0`, how many passes run, and in which pass does the cost of `dst` first reach its final value?
 
-**Changed decision.** The method runs `k + 1` passes and records the first pass that lowers the cost of `dst`, which gives the fewest flights for the lowest cost.
+**Changed decision.** The method runs `k + 1` passes and records the first pass that lowers the cost of `dst`, which gives the fewest flights for the lowest cost. When `src == dst`, the method records pass 0.
 
 #### [Recognize] Cheapest Flights Within K Stops (LeetCode 787)
 <!-- id: sp-cheapest-flights-k-stops -->
@@ -240,6 +240,6 @@ The false friend is plain Dijkstra with one distance for each city. It is correc
 
 **Example 2.** Input `n = 3`, `flights = [[0,1,100],[1,2,100],[0,2,500]]`, `src = 0`, `dst = 2`, `k = 0`, output `500`.
 
-**Hint.** If a heap search stores one distance for each city, which arrival can it discard wrongly in the second example?
+**Hint.** If a heap search stores one distance for each city, which arrival can it discard wrongly in the first example, where the route through cities 1 and 2 costs 400 but uses 3 flights?
 
 **Changed decision.** The method keeps a state of city and flights used. It discards an arrival only when an earlier arrival at that city costs no more and used no more flights.
