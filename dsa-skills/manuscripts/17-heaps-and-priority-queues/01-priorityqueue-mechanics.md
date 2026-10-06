@@ -46,9 +46,9 @@ A **priority queue** is a collection with two core operations. The first adds an
 
 #### What Heap Order Says
 
-The array holds the items in positions 0 to `n - 1`. The item at position `i` has its parent at position `(i - 1) / 2`, and its children at positions `2 * i + 1` and `2 * i + 2`. **Heap order** is the rule that every item is less than or equal to its children. The smallest item then sits at position 0, so `peek` reads it in O(1) time.
+The array holds the items in positions 0 to `n - 1`. The item at position `i` has its parent at position `(i - 1) / 2`. Its children sit at positions `2 * i + 1` and `2 * i + 2`. **Heap order** is the rule that every item is less than or equal to its children. The smallest item then sits at position 0, so `peek` reads it in O(1) time.
 
-Heap order is a partial order. A parent is no larger than its children, but two siblings have no required order, and a cousin in one branch has no required relation to a cousin in another. The array is therefore not sorted.
+Heap order is a partial order. A parent is no larger than its children. Two siblings have no required order. Items in different branches have no required relation either. The array is therefore not sorted.
 
 #### Adding An Item
 
@@ -83,7 +83,7 @@ The values 5, 3 and 8 take few steps. The value 3 swaps with its parent 5. The v
 
 #### Removing Two Smallest Values
 
-Now start with the array from the first trace and poll twice. In the second trace the pointer `hole` marks where the moving item currently sits, and the pointer `child` marks the smaller child it is compared with.
+Now start with the array from the first trace and poll twice. In the second trace the pointer `hole` marks where the moving item sits. The pointer `child` marks the smaller child that the item is compared with.
 
 The first poll returns 1. The queue moves the last item 4 to the root and compares it with its smaller child 3. The item 4 swaps down once and stops, because its new child 5 is larger. The second poll returns 3, and the moving item 5 swaps with its smaller child 4. Each poll returns the current smallest value, so the two polls return 1 and then 3.
 
@@ -137,7 +137,7 @@ Both methods cost O(n log n), because n offers and n polls each cost O(log n). `
 
 #### Spotting The Pattern
 
-Use a priority queue when the algorithm repeatedly needs the smallest or largest eligible item and the set of candidates changes between requests. The invariant of the lesson is heap order: after every operation, the item at position 0 is the extreme under the queue's order, and the rest of the array is only partly ordered.
+Use a priority queue when the algorithm repeatedly needs the smallest or largest eligible item and the set of candidates changes between requests. The invariant of the lesson is heap order. After every operation, the item at position 0 is the extreme under the queue's order. The rest of the array is only partly ordered.
 
 #### Finding The False Friend
 
@@ -147,7 +147,7 @@ A second false friend is `contains` and `remove(Object)`. Both scan the array, s
 
 #### Recognizing The No-Go Cases
 
-A priority queue does not fit when the program needs the third smallest item without removing two others, needs items in sorted order many times, or needs random access by rank. It also does not fit when the program reads the smallest value only once, because a single scan costs O(n) and building the queue costs about the same.
+A priority queue does not fit when the program needs the third smallest item without removing two others. It also does not fit when the program needs sorted order many times or access by rank. A single scan also beats the queue when the program reads the smallest value only once, because the scan and the build both cost O(n).
 
 <!-- stage: exercises -->
 ### Exercises
@@ -197,7 +197,7 @@ A priority queue does not fit when the program needs the third smallest item wit
 
 **Prerequisites.** The `peek` and `poll` return rules in the code stage.
 
-**Problem.** Given an array `values` of integers and an integer `m >= 0`, add every value to a `PriorityQueue<Integer>` and call `poll` up to `m` times, stopping early when the queue becomes empty. Return the smallest remaining value without removing it, or `null` when no value remains.
+**Problem.** Given an array `values` of integers and an integer `m >= 0`, add every value to a `PriorityQueue<Integer>`. Call `poll` up to `m` times, and stop early when the queue becomes empty. Return the smallest remaining value without removing it, or `null` when no value remains.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= values.length <= 10^5`.

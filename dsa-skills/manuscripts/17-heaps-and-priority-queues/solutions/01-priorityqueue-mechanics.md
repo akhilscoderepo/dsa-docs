@@ -131,7 +131,7 @@ The loop runs while two conditions hold. The count of finished polls is below `m
 The invariant is that the queue holds the original values minus the smallest `done` values, where `done` counts completed polls.
 
 **Complexity.**
-- **Time** is O(n + m' log n), where `m'` is the smaller of `m` and `n`, because building costs n offers of O(log n) each and the polls cost O(log n) each. The bound simplifies to O(n log n).
+- **Time** is O(n log n), because the build makes n offers and the loop makes at most n polls, and each call costs O(log n).
 - **Space** is O(n), because the queue holds all values at first.
 
 ```java run
@@ -186,7 +186,7 @@ public final class EmptySingleton {
 <!-- id: hp-kth-largest-stream -->
 
 **Approach.**
-A value that is not among the `k` largest seen so far never becomes the kth largest again, because later values only push it further down. The class therefore keeps a min-oriented queue of at most `k` values. The root of that queue is the smallest of the `k` largest values, and that value is the kth largest overall. `add` offers the new value, then polls the root when the size reaches `k + 1`. The constructor calls `add` for each initial value, so one code path serves both.
+A value outside the `k` largest seen so far never becomes the kth largest again. Later values only push it further down. The class therefore keeps a min-oriented queue of at most `k` values. The root of that queue is the smallest of the `k` largest values, and that value is the kth largest overall. `add` offers the new value, then polls the root when the size reaches `k + 1`. The constructor calls `add` for each initial value, so one code path serves both.
 
 The invariant is that the queue holds the `min(k, count)` largest values seen so far.
 
