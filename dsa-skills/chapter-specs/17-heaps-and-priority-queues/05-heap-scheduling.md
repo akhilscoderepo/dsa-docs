@@ -1,4 +1,4 @@
-# Lesson spec: Heap Scheduling
+# Lesson spec: Run Tasks When They Become Ready
 
 **Recognition cue.** Items become eligible over time, and the best eligible item must be selected by a second priority. **Invariant.** After advancing time and adding all released tasks, the heap contains exactly the executable tasks. **False friend.** One global sort cannot generally express both release time and dynamic selection priority.
 

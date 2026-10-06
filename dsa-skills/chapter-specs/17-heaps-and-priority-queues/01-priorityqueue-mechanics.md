@@ -1,4 +1,4 @@
-# Lesson spec: PriorityQueue Mechanics
+# Lesson spec: Take The Smallest Item Repeatedly
 
 **Recognition cue.** The algorithm repeatedly needs the smallest or largest currently eligible item while the candidate set changes. **Invariant.** `peek()` is the extreme under the queue's comparator; the rest of the heap is only partially ordered. **False friend.** Iterating a `PriorityQueue` does not produce sorted order.
 

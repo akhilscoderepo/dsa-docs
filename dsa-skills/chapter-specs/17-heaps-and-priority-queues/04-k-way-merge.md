@@ -1,4 +1,4 @@
-# Lesson spec: K-Way Merge
+# Lesson spec: Merge Sorted Lists With A Heap
 
 **Recognition cue.** Several sources are individually sorted and the next global value must be chosen repeatedly. **Invariant.** The heap contains at most one current head from each nonexhausted source. **False friend.** Inserting every value loses the `O(k)` frontier-space advantage.
 

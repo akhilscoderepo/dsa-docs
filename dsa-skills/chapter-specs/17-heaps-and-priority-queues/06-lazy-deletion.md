@@ -1,4 +1,4 @@
-# Lesson spec: Lazy Deletion
+# Lesson spec: Delete From A Heap Lazily
 
 **Recognition cue.** Priorities change or items expire, but arbitrary heap removal would be linear. **Invariant.** Before using the root, discard entries whose stored version, count, or eligibility no longer matches companion state. **False friend.** `PriorityQueue.remove(Object)` and `contains` are linear, not logarithmic.
 

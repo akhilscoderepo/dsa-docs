@@ -4,13 +4,13 @@
 
 ## Lesson order
 
-01. PriorityQueue Mechanics  ->  01-priorityqueue-mechanics.md
-02. Heap Orientation  ->  02-heap-orientation.md
-03. Top K  ->  03-top-k.md
-04. K-Way Merge  ->  04-k-way-merge.md
-05. Heap Scheduling  ->  05-heap-scheduling.md
-06. Lazy Deletion  ->  06-lazy-deletion.md
-07. Running Median  ->  07-running-median.md
+01. Take The Smallest Item Repeatedly  ->  01-priorityqueue-mechanics.md
+02. Choose The Order With A Comparator  ->  02-heap-orientation.md
+03. Keep Only The Best K Items  ->  03-top-k.md
+04. Merge Sorted Lists With A Heap  ->  04-k-way-merge.md
+05. Run Tasks When They Become Ready  ->  05-heap-scheduling.md
+06. Delete From A Heap Lazily  ->  06-lazy-deletion.md
+07. Track The Median As Numbers Arrive  ->  07-running-median.md
 
 # Chapter 17: Heaps and priority queues
 

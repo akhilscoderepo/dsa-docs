@@ -1,4 +1,4 @@
-# Lesson spec: Top K
+# Lesson spec: Keep Only The Best K Items
 
 **Recognition cue.** Only the best `k` elements matter, so the weakest retained candidate should be cheap to replace. **Invariant.** A size-`k` heap contains the best `k` items seen; its root is the retention boundary. **False friend.** A max-heap holding every item works for extraction but wastes space when `k` is small.
 

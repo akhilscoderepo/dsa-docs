@@ -1,4 +1,4 @@
-# Lesson spec: Running Median
+# Lesson spec: Track The Median As Numbers Arrive
 
 **Recognition cue.** Values arrive online and each prefix needs its median. **Invariant.** A max-heap owns the lower half, a min-heap owns the upper half, their sizes differ by at most one, and every lower value is no greater than every upper value. **False friend.** One heap exposes only one extreme, not the center.
 

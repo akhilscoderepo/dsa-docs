@@ -82,7 +82,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### PriorityQueue Mechanics
+### Take The Smallest Item Repeatedly
 
 **Recognition cue.** The algorithm repeatedly needs the smallest or largest currently eligible item while the candidate set changes. **Invariant.** `peek()` is the extreme under the queue's comparator; the rest of the heap is only partially ordered. **False friend.** Iterating a `PriorityQueue` does not produce sorted order.
 
@@ -91,7 +91,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty And Singleton Heap.** State when `peek` or `poll` is legal and what one remaining item means.
 - **Recognize - LC 703 Kth Largest Element in a Stream.** Maintain a heap whose root is the kth-largest boundary.
 
-### Heap Orientation
+### Choose The Order With A Comparator
 
 **Recognition cue.** Correctness depends on which candidate must be exposed first and how ties are resolved. **Invariant.** The comparator orders the exact priority tuple used by the algorithm. **False friend.** Negating integers to imitate a max-heap can overflow at `Integer.MIN_VALUE`. **Java hazard.** Use `Integer.compare` or `Comparator.comparingInt` rather than subtraction.
 
@@ -100,7 +100,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Equal Priorities And Extreme Integers.** Verify deterministic ties and overflow-safe comparison.
 - **Recognize - LC 1834 Single-Threaded CPU.** Select by processing time and index among currently available tasks.
 
-### Top K
+### Keep Only The Best K Items
 
 **Recognition cue.** Only the best `k` elements matter, so the weakest retained candidate should be cheap to replace. **Invariant.** A size-`k` heap contains the best `k` items seen; its root is the retention boundary. **False friend.** A max-heap holding every item works for extraction but wastes space when `k` is small.
 
@@ -109,7 +109,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: K Equals One Or N.** Preserve the same invariant at both extremes.
 - **Recognize - LC 347 Top K Frequent Elements.** Count with a map, then heap-select by frequency.
 
-### K-Way Merge
+### Merge Sorted Lists With A Heap
 
 **Recognition cue.** Several sources are individually sorted and the next global value must be chosen repeatedly. **Invariant.** The heap contains at most one current head from each nonexhausted source. **False friend.** Inserting every value loses the `O(k)` frontier-space advantage.
 
@@ -118,7 +118,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Sources And Equal Heads.** Skip exhausted sources and use a safe tie policy.
 - **Recognize - LC 378 Kth Smallest Element in a Sorted Matrix.** Treat each row as a sorted stream and stop after `k` polls.
 
-### Heap Scheduling
+### Run Tasks When They Become Ready
 
 **Recognition cue.** Items become eligible over time, and the best eligible item must be selected by a second priority. **Invariant.** After advancing time and adding all released tasks, the heap contains exactly the executable tasks. **False friend.** One global sort cannot generally express both release time and dynamic selection priority.
 
@@ -127,7 +127,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Idle Gap And Simultaneous Releases.** Advance directly to the next release and enqueue every tie before selecting.
 - **Recognize - LC 1882 Process Tasks Using Servers.** Coordinate available-resource and busy-resource heaps.
 
-### Lazy Deletion
+### Delete From A Heap Lazily
 
 **Recognition cue.** Priorities change or items expire, but arbitrary heap removal would be linear. **Invariant.** Before using the root, discard entries whose stored version, count, or eligibility no longer matches companion state. **False friend.** `PriorityQueue.remove(Object)` and `contains` are linear, not logarithmic.
 
@@ -136,7 +136,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Several Stale Roots.** Clean in a loop and handle equal values with multiple outstanding copies.
 - **Recognize - LC 480 Sliding Window Median.** Combine delayed deletion with two balanced heaps.
 
-### Running Median
+### Track The Median As Numbers Arrive
 
 **Recognition cue.** Values arrive online and each prefix needs its median. **Invariant.** A max-heap owns the lower half, a min-heap owns the upper half, their sizes differ by at most one, and every lower value is no greater than every upper value. **False friend.** One heap exposes only one extreme, not the center.
 
@@ -147,7 +147,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Heap And Intervals
+### Reuse Meeting Rooms With A Heap
 
 Interval sorting reveals start times; the heap exposes the active interval that finishes first. Together they decide whether a resource can be reused or a new resource is required.
 
