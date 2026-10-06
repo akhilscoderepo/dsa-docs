@@ -1,45 +1,32 @@
 from common import *
-from tr import *
-CH = '16-trees-bfs-and-bsts'
-F = '05-kth-and-range-queries.md'
-# trace 1: countdown walk
-arr = [5, 3, 6, 2, 4, None, None, 1]
-L, R = parse(arr)
-k = 3; stack = []; node = 0; steps = []; ans = None
+CH='16-trees-bfs-and-bsts'; F='05-kth-and-range-queries.md'
+cells=[50,30,70,20,40,60,80]; kids={0:(1,2),1:(3,4),2:(5,6),3:(None,None),4:(None,None),5:(None,None),6:(None,None)}
+# Trace 1: iterative inorder, k=3
+st=[]; stack=[]; node=0; visits=0; k=3; ans=None
+def snap(i,note): st.append({"at":{"node":i},"vars":{"stack":str([cells[j] for j in stack]),"visits":visits},"note":note})
 while node is not None or stack:
     while node is not None:
-        stack.append(node); node = L[node]
-    node = stack.pop()
-    k -= 1
-    waiting = " ".join(str(arr[j]) for j in reversed(stack)) or "empty"
-    note = f"The crate {arr[node]} is popped as the next heavier crate and the countdown drops to {k}."
-    if k == 0:
-        note += f" The countdown has reached zero, so {arr[node]} is the answer and the walk stops."
-        ans = arr[node]
-    steps.append({"at": {"node": node}, "vars": {"countdown": k, "stack": waiting}, "note": note})
-    if k == 0: break
-    node = R[node]
-assert ans == 3
-fill(CH, F, block(cells(arr), ["node"], steps), "@@TRACE1@@")
-# trace 2: pruned band sum
-arr = [8, 4, 12, 2, 6, 10, 14, 1, 3, 5, 7, 9, 11, 13, 15]
-L, R = parse(arr)
-low, high = 5, 9
-steps = []; total = [0]
-def go(i):
+        stack.append(node); snap(node,f"The loop pushes {cells[node]} onto the stack and moves to its left child."); node=kids[node][0]
+    node=stack.pop(); visits+=1
+    if visits==k:
+        snap(node,f"The loop pops {cells[node]} as visit {visits}. The count equals k, so {cells[node]} is the answer."); ans=cells[node]; break
+    snap(node,f"The loop pops {cells[node]} as visit {visits} and then moves to its right child.")
+    node=kids[node][1]
+assert ans==40
+fill(CH,F,block(cells,["node"],st),"@@TRACE1@@")
+# Trace 2: range sum 35..65
+low,high=35,65; st=[]; total=0
+def walk(i):
+    global total
     if i is None: return
-    v = arr[i]
-    if v < low:
-        note = f"The crate {v} is lighter than {low}, so it and its left side are out and only the right side is entered."
-    elif v > high:
-        note = f"The crate {v} is heavier than {high}, so it and its right side are out and only the left side is entered."
+    v=cells[i]
+    if v<low:
+        st.append({"at":{"node":i},"vars":{"sum":total},"note":f"{v} is below {low}, so it and its left subtree are skipped and the walk goes right."}); walk(kids[i][1])
+    elif v>high:
+        st.append({"at":{"node":i},"vars":{"sum":total},"note":f"{v} is above {high}, so it and its right subtree are skipped and the walk goes left."}); walk(kids[i][0])
     else:
-        total[0] += v
-        note = f"The crate {v} lies inside the band and is added, so the total becomes {total[0]} and both sides are entered."
-    steps.append({"at": {"node": i}, "vars": {"low": low, "high": high, "total": total[0]}, "note": note})
-    if v < low: go(R[i])
-    elif v > high: go(L[i])
-    else: go(L[i]); go(R[i])
-go(0)
-assert total[0] == 35 and [s["at"]["node"] for s in steps] == [0, 1, 4, 9, 10, 2, 5, 11]
-fill(CH, F, block(cells(arr), ["node"], steps), "@@TRACE2@@")
+        total+=v
+        st.append({"at":{"node":i},"vars":{"sum":total},"note":f"{v} lies in the range, so it joins the sum and the walk continues on both sides."}); walk(kids[i][0]); walk(kids[i][1])
+walk(0)
+assert total==150 and 3 not in [s["at"]["node"] for s in st] and 6 not in [s["at"]["node"] for s in st]
+fill(CH,F,block(cells,["node"],st),"@@TRACE2@@")

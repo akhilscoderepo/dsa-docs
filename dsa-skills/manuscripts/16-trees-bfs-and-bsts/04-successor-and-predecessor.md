@@ -77,7 +77,7 @@ The predecessor follows the same rule in **mirror** form. A node smaller than th
 <!-- stage: trace -->
 ### Candidates Along One Path
 
-Each cell is a key listed from the top level down. The pointers are `node` for the node under comparison and `best` for the recorded candidate, with -1 meaning none.
+The cells list the keys row by row from the root. The pointers are `node` for the node under comparison and `best` for the recorded candidate, with -1 meaning none.
 
 #### Finding The Next Key Of A Leaf
 
