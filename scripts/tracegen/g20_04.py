@@ -1,45 +1,27 @@
 from common import *
-CH='20-greedy'
-F='04-exchange-reasoning.md'
-d=[5,2,8,1]
-def total(o):
-    c=t=0
-    for x in o: c+=x; t+=c
-    return t
-o=d[:]; st=[]
-assert total(o)==43
-for i in range(len(o)):
-    k=min(range(i,len(o)),key=lambda j:(o[j],j))
-    before=total(o)
-    if k!=i:
-        o[i],o[k]=o[k],o[i]
-        note=f"The shortest job in the unresolved part is {o[i]}, found at position {k}. Swapping it with the job at position {i} moves the total from {before} to {total(o)}."
+import itertools
+CH='20-greedy'; F='04-exchange-reasoning.md'
+def ov(a,b): return a[0]<b[1] and b[0]<a[1]
+# trace 1: exchange on schedule
+iv=[(1,3),(2,5),(4,7),(6,9)]; opt=[(2,5),(6,9)]
+assert all(not ov(a,b) for a,b in itertools.combinations(opt,2))
+best=max(len(c) for r in range(5) for c in itertools.combinations(iv,r) if all(not ov(a,b) for a,b in itertools.combinations(c,2)))
+assert best==2
+chosen=min(iv,key=lambda x:x[1]); assert chosen==(1,3)
+changed=[chosen]+opt[1:]; assert all(not ov(a,b) for a,b in itertools.combinations(changed,2)) and len(changed)==2
+lab=lambda x:f"{x[0]}-{x[1]}"
+st=[{"at":{"k":0},"vars":{"answer":"2-5, 6-9","size":2},"note":"The best answer begins with [2,5), which is not the choice of the rule. The rule picks [1,3), the interval with the earliest end."},
+{"at":{"k":0},"vars":{"answer":"1-3, 6-9","size":2},"note":"The exchange step replaces [2,5) with [1,3). The new interval ends at 3, before 5, so it ends no later than the interval it replaces."},
+{"at":{"k":1},"vars":{"answer":"1-3, 6-9","size":2},"note":"The interval [6,9) starts at 6, after 3, so it does not overlap the choice. The changed answer is valid, has size 2 and begins with the choice."}]
+fill(CH,F,block([lab(x) for x in opt],["k"],st),"@@TRACE1@@")
+# trace 2: shortest first
+iv=[(0,4),(3,5),(4,8)]
+order=sorted(iv,key=lambda x:(x[1]-x[0],x[0])); kept=[]; st=[]
+for i,m in enumerate(order):
+    if any(ov(m,k) for k in kept):
+        note=f"The interval [{m[0]},{m[1]}) overlaps the accepted interval, so the rule rejects it."
     else:
-        note=f"The job at position {i} is already a shortest one in the unresolved part, so no swap is needed and the total stays {before}."
-    st.append({"at":{"i":i},"vars":{"order":"-".join(map(str,o)),"total":total(o)},"note":note})
-assert o==[1,2,5,8] and total(o)==28 and [s["vars"]["total"] for s in st]==[31,31,28,28]
-fill(CH,F,block([str(x) for x in d],["i"],st),"@@TRACE1@@")
-iv=[(0,3),(2,4),(3,7)]
-cells=[f"{a}-{b}" for a,b in iv]
-def clash(a,b): return a[0]<b[1] and b[0]<a[1]
-st=[]; taken=[]
-for i in sorted(range(3),key=lambda i:iv[i][1]-iv[i][0]):
-    a=iv[i]; c=[x for x in taken if clash(a,x)]
-    if not c:
-        taken.append(a); note=f"Shortest-first examines {a[0]}-{a[1]}, the shortest span left with length {a[1]-a[0]}, and takes it."
-    else:
-        note=f"The span {a[0]}-{a[1]} starts at {a[0]} and ends at {a[1]}, so it overlaps the taken {c[0][0]}-{c[0][1]} and is skipped."
-    st.append({"at":{"i":i},"vars":{"rule":"shortest first","taken":len(taken)},"note":note})
-assert len(taken)==1
-taken=[]; free=None
-for i in sorted(range(3),key=lambda i:iv[i][1]):
-    a=iv[i]
-    if free is None:
-        taken.append(a); free=a[1]; note=f"Earliest-finish sorts by end and takes {a[0]}-{a[1]} first, since it ends at {a[1]}."
-    elif a[0]>=free:
-        taken.append(a); note=f"The span {a[0]}-{a[1]} starts at {a[0]}, not before the boundary {free}, so it is taken. Two spans beat the one that shortest-first found."; free=a[1]
-    else:
-        note=f"The span {a[0]}-{a[1]} starts at {a[0]}, before the boundary {free}, so it is rejected."
-    st.append({"at":{"i":i},"vars":{"rule":"earliest finish","taken":len(taken)},"note":note})
-assert len(taken)==2
-fill(CH,F,block(cells,["i"],st),"@@TRACE2@@")
+        kept.append(m); note=f"The interval [{m[0]},{m[1]}) has length {m[1]-m[0]} and overlaps no accepted interval, so the rule accepts it."
+    st.append({"at":{"i":i},"vars":{"accepted":len(kept)},"note":note})
+assert len(kept)==1 and not ov((0,4),(4,8))
+fill(CH,F,block([lab(x) for x in order],["i"],st),"@@TRACE2@@")
