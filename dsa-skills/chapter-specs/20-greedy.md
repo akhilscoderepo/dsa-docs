@@ -124,7 +124,7 @@ Ordering makes the next locally dominant choice visible; the greedy proof explai
 - **Boundary - LC 452 Minimum Number of Arrows to Burst Balloons.** Apply the closed-endpoint overlap rule at equal coordinates.
 - **Recognize - LC 763 Partition Labels.** Use last-occurrence order to close a partition only when every included character ends inside it.
 
-### Greedy And Heap
+### Undo The Worst Choice With A Heap
 
 Greedy reasoning identifies which past option should be committed or discarded; the heap exposes that option dynamically. Heap priority alone does not prove the choice is safe.
 
