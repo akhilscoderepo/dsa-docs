@@ -1,57 +1,20 @@
 from common import *
-from hp import *
-CH = '17-heaps-and-priority-queues'
-F = '02-heap-orientation.md'
-
-# trace 1: minutes then ticket
-mins = [5, 2, 5, 1, 2]
-h = Heap(key=lambda t: (t[0], t[1]))
-for i, m in enumerate(mins):
-    h.offer((m, i))
-steps = []
-order = []
-tup = lambda items: "[" + ",".join(f"({m},{i})" for m, i in sorted(items)) + "]"
-while len(h):
-    top, _, _ = h.poll()
-    order.append(top[1])
-    note = f"Ticket {top[1]} needs {top[0]} minutes and leaves."
-    ties = [x for x in h.a if x[0] == top[0]]
-    if ties:
-        note += f" Another ticket needs {top[0]} minutes as well, and the smaller ticket number decided."
-    steps.append({"at": {"picked": top[1]}, "vars": {"left": tup(h.a) if h.a else "[]", "order": fmt(order)}, "note": note})
-assert order == [3, 1, 4, 0, 2], order
-fill(CH, F, block(mins, ["picked"], steps), "@@TRACE1@@")
-
-# trace 2: max-first with extremes
-w = [2147483647, -2147483648, 0, 7]
-idx = sorted(range(len(w)), key=lambda i: -w[i])
-steps = []
-out = []
-rest = list(range(len(w)))
-for i in idx:
-    out.append(w[i])
-    rest.remove(i)
-    extra = ""
-    if w[i] == -2147483648:
-        extra = " Under negation this weight would have looked like the lightest crate and left first."
-    steps.append({"at": {"picked": i}, "vars": {"order": fmt(out), "left": len(rest)}, "note": f"Weight {w[i]} is the largest that remains, so it leaves.{extra}"})
-assert idx == [0, 3, 2, 1]
-fill(CH, F, block(w, ["picked"], steps), "@@TRACE2@@")
-
-# examples for exercises (printed for the writer)
-import sys
-tasks = [[2, 3], [0, 6], [3, 1], [3, 1], [20, 2]]
-def cpu(tasks):
-    n = len(tasks)
-    srt = sorted(range(n), key=lambda i: (tasks[i][0], i))
-    t = 0; p = 0; out = []; hh = Heap(key=lambda x: x)
-    while len(out) < n:
-        if not len(hh) and p < n and tasks[srt[p]][0] > t:
-            t = tasks[srt[p]][0]
-        while p < n and tasks[srt[p]][0] <= t:
-            i = srt[p]; hh.offer((tasks[i][1], i)); p += 1
-        d, i = hh.poll()[0]
-        t += d; out.append(i)
-    return out
-print(cpu(tasks), cpu([[1, 2], [1, 2], [1, 2]]), file=sys.stderr)
-assert cpu(tasks) == [1, 2, 3, 0, 4]
+CH='17-heaps-and-priority-queues'; F='02-heap-orientation.md'
+import heapq
+d=[3,1,3,1]; h=[(x,i) for i,x in enumerate(d)]; heapq.heapify(h); st=[]; out=[]
+st.append({"at":{"pick":-1},"vars":{"left":str([i for _,i in sorted(h)]),"order":"[]"},"note":"Four tasks wait. The rule is the smaller duration first and, for a tie, the smaller index."})
+while h:
+    x,i=heapq.heappop(h); out.append(i)
+    tied=[j for _,j in h if d[j]==x]
+    note=f"The task {i} with duration {x} leaves."+(f" Task {tied[0]} has the same duration, and the tie-break picks the smaller index {i}." if tied and min(tied)>i else "")
+    st.append({"at":{"pick":i},"vars":{"left":str(sorted(j for _,j in h)),"order":str(out)},"note":note})
+assert out==[1,3,0,2]
+fill(CH,F,block(d,["pick"],st),"@@TRACE1@@")
+def wrap(x): return (x+2**31)%2**32-2**31
+cells=[2147483647,-1]
+a,b=cells; diff=wrap(a-b)
+st=[{"at":{"a":0,"b":1},"vars":{"a":a,"b":b,"true a - b":a-b},"note":"The values are Integer.MAX_VALUE and -1. The true difference is 2147483648, which is larger than the largest int."},
+{"at":{"a":0,"b":1},"vars":{"a - b in int":diff,"sign":"negative"},"note":"The subtraction wraps to -2147483648. A negative sign says that a leaves first in a smallest-first queue."},
+{"at":{"a":0,"b":1},"vars":{"Integer.compare":1,"leaves first":"b"},"note":"Integer.compare reads the two values directly and returns 1, so b leaves first, which is the correct answer."}]
+assert diff<0 and (a>b)
+fill(CH,F,block(cells,["a","b"],st),"@@TRACE2@@")
