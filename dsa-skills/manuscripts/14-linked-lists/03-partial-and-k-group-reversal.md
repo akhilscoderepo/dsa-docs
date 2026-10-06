@@ -220,7 +220,7 @@ The first group has no predecessor, so the returned head changes. A list shorter
 
 **Prerequisites.** The exercise above and the reversal loop of the previous lesson.
 
-**Problem.** Given the head of a list and two 0-based positions `from` and `to`, reverse the nodes at positions `from` through `min(to, n - 1)` inclusive, where `n` is the length. This contract differs from the 1-based form: `to` may exceed the last position and is then clamped, and a range that is empty after clamping leaves the list unchanged. Return the head.
+**Problem.** A list starts at `head`, and `from` and `to` are 0-based positions. Reverse the nodes at positions `from` through `min(to, n - 1)` inclusive, where `n` is the length. This contract differs from the 1-based form: `to` may exceed the last position and is then clamped, and a range that is empty after clamping leaves the list unchanged. Return the head.
 
 **Constraints.** The limits are:
 - **Length** is `n` with `0 <= n <= 500`.
@@ -241,7 +241,7 @@ The first group has no predecessor, so the returned head changes. A list shorter
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the head of a list and an integer `k`, reverse the first `k` nodes if and only if the list has at least `k` nodes. Otherwise return the original head and write no `next` field at all. Return the head of the resulting list.
+**Problem.** Reverse the first `k` nodes of the list that starts at `head`, if and only if the list has at least `k` nodes. Otherwise return the original head and write no `next` field at all. Return the head of the resulting list.
 
 **Constraints.** The limits are:
 - **Length** is between 0 and 10^4 nodes.
@@ -262,7 +262,7 @@ The first group has no predecessor, so the returned head changes. A list shorter
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the head of a list and an integer `k`, reverse the list `k` nodes at a time and return the head of the changed list. Nodes in a complete group of `k` consecutive nodes appear in reverse order. If the number of nodes is not a multiple of `k`, the final group of fewer than `k` nodes keeps its original order. Change `next` fields only, and do not change any value.
+**Problem.** Reverse the list that starts at `head` in groups of `k` nodes, where `k` is an integer, and return the head of the changed list. Nodes in a complete group of `k` consecutive nodes appear in reverse order. If the number of nodes is not a multiple of `k`, the final group of fewer than `k` nodes keeps its original order. Change `next` fields only, and do not change any value.
 
 **Constraints.** The limits are:
 - **Length** is `n` with `1 <= n <= 5000`.

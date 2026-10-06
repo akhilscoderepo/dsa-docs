@@ -218,7 +218,7 @@ A recursive reversal also works and reads well, but it uses one stack frame per 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the head of a list and two 1-based positions `left` and `right` with `left <= right`, reverse the nodes at positions `left` through `right` inclusive. The nodes before `left` and after `right` stay in place and must stay linked to the reversed block. Return the head of the changed list.
+**Problem.** A list starts at `head`, and two 1-based positions `left` and `right` satisfy `left <= right`. Reverse the nodes at positions `left` through `right` inclusive. The nodes before `left` and after `right` stay in place and must stay linked to the reversed block. Return the head of the changed list.
 
 **Constraints.** The limits are:
 - **Length** is `n` with `1 <= n <= 500`.
