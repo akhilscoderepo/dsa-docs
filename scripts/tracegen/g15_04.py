@@ -1,39 +1,27 @@
 from common import *
 from tr import *
-CH='15-trees-dfs'
-F='04-depth-and-path-state.md'
-arr=[5,4,8,11,None,13,4]
-L,R=parse(arr)
-st=[];found=[]
-def go(i,rem,seen):
-    if i is None: return
-    rem2=rem-arr[i]
-    leaf=L[i] is None and R[i] is None
-    if leaf:
-        ok=rem2==0
-        note=f"The signpost {arr[i]} is a dead end and the remaining amount is {rem2}, " + ("so this route matches the target." if ok else "which is not zero, so this route does not match.")
-        if ok: found.append(i)
-    else:
-        note=f"The signpost {arr[i]} is entered with {rem} still needed, so its children are given {rem2}."
-    st.append({"at":{"node":i},"vars":{"remaining":rem2},"note":note})
-    go(L[i],rem2,seen); go(R[i],rem2,seen)
-go(0,20,[])
-assert found==[3]
-fill(CH,F,block(cells(arr),["node"],st),"@@TRACE1@@")
-arr=[1,2,3,4,5]
-L,R=parse(arr)
-st=[];path=[];tot=[0]
-def go2(i):
-    if i is None: return
-    path.append(arr[i]); s=sum(path)
-    leaf=L[i] is None and R[i] is None
-    if leaf:
-        note=f"The signpost {arr[i]} is chalked and is a dead end with sum {s}, " + ("which equals 7, so the route is copied out." if s==7 else "which is not 7, so nothing is reported.")
-    else:
-        note=f"The signpost {arr[i]} is chalked, and the board now holds the route to it with sum {s}."
-    st.append({"at":{"node":i},"vars":{"board":" ".join(map(str,path)),"sum":s},"note":note})
-    go2(L[i]); go2(R[i])
-    path.pop()
-    st.append({"at":{"node":i},"vars":{"board":" ".join(map(str,path)) or "empty","sum":sum(path)},"note":f"Both trails below the signpost {arr[i]} are done, so its chalk mark is wiped and the board returns to its earlier state."})
-go2(0)
-fill(CH,F,block(cells(arr),["node"],st),"@@TRACE2@@")
+CH='15-trees-dfs'; F='04-depth-and-path-state.md'
+arr=[8,3,10,1,6]; L,R=parse(arr); T=12
+assert L[0]==1 and R[0]==2 and L[1]==3 and R[1]==4
+def run(backtrack):
+    route=[]; steps=[]; found=[]
+    def vs(): return " ".join(map(str,route)) or "empty"
+    def go(i):
+        if i is None: return
+        route.append(arr[i]); rem=T-sum(route); leaf=L[i] is None and R[i] is None
+        if leaf:
+            if backtrack: ok=rem==0
+            else: ok=rem==0
+            note=f"The call on the leaf {arr[i]} adds its value. The remaining amount is {rem}"+(", so this route matches." if rem==0 else ", so this route does not match.")
+        else:
+            note=f"The call on the node {arr[i]} adds its value to the list. The remaining amount is {rem}, and the call continues to its children."
+        if not backtrack and leaf and arr[i]==6:
+            note=f"The call on the leaf 6 adds its value to a list that still holds 1. The remaining amount shows {rem}, but the route to this node is 8, 3, 6 with remaining {T-17}."
+        steps.append({"at":{"node":i},"vars":{"route":vs(),"remaining":rem},"note":note})
+        go(L[i]); go(R[i])
+        if backtrack:
+            route.pop()
+            steps.append({"at":{"node":i},"vars":{"route":vs(),"remaining":T-sum(route)},"note":f"Both children of the node {arr[i]} are done, so the call removes its value from the list."})
+    go(0); return steps
+fill(CH,F,block(cells(arr),["node"],run(True)),"@@TRACE1@@")
+fill(CH,F,block(cells(arr),["node"],run(False)),"@@TRACE2@@")
