@@ -167,7 +167,7 @@ The recursion does not fit when the pattern may contain a wildcard that matches 
 
 **Prerequisites.** The prefix tree walk of the previous lessons.
 
-**Problem.** Given an array `words` of lowercase strings and a string `pattern`, return true when some entry of `words` matches the pattern. The pattern has lowercase letters and may end with one dot. The dot matches exactly one letter. A match needs the same length as the pattern.
+**Problem.** The input is an array `words` of lowercase strings and a string `pattern`. Return true when some entry of `words` matches the pattern. The pattern has lowercase letters and may end with one dot. The dot matches exactly one letter. A match needs the same length as the pattern.
 
 **Constraints.** The limits are:
 - **Count** is `0 <= words.length <= 10^4`.
@@ -188,7 +188,7 @@ The recursion does not fit when the pattern may contain a wildcard that matches 
 
 **Prerequisites.** The previous exercise.
 
-**Problem.** Given an array `words` of lowercase strings and an array `patterns`, return a boolean array. Position `j` is true when some entry of `words` matches `patterns[j]`. A pattern holds lowercase letters and dots, and a dot matches exactly one letter anywhere in the pattern.
+**Problem.** The inputs are `words`, an array of lowercase strings, and an array `patterns`. Return a boolean array. Position `j` is true when some entry of `words` matches `patterns[j]`. A pattern holds lowercase letters and dots, and a dot matches exactly one letter anywhere in the pattern.
 
 **Constraints.** The limits are:
 - **Count** is `0 <= words.length, patterns.length <= 10^4`.

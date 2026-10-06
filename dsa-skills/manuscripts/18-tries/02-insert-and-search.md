@@ -161,7 +161,7 @@ The array does not fit when the alphabet is large or unknown, such as Unicode te
 
 **Prerequisites.** The previous lesson and the index walk of this lesson.
 
-**Problem.** Given an array `words` of lowercase strings, insert them in the given order into an empty tree that stores 26 child slots in each node. Return an array where position `j` holds the number of nodes that the insert of `words[j]` created.
+**Problem.** An array `words` holds lowercase strings. Insert them in the given order into an empty tree that stores 26 child slots in each node. Return an array where position `j` holds the number of nodes that the insert of `words[j]` created.
 
 **Constraints.** The limits are:
 - **Count** is `0 <= words.length <= 10^4`.

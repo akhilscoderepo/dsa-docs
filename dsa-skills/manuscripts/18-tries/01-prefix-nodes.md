@@ -156,7 +156,7 @@ The tree does not fit when the program asks only whole-word membership, because 
 
 **Prerequisites.** The prefix tree and the insert of this lesson.
 
-**Problem.** Given an array `words` of lowercase strings, insert every word into an empty prefix tree and return the number of nodes below the root. A node exists once for each distinct nonempty prefix of the words. Equal words create the nodes only once.
+**Problem.** An array `words` holds lowercase strings. Insert every word into an empty prefix tree and return the number of nodes below the root. A node exists once for each distinct nonempty prefix of the words. Equal words create the nodes only once.
 
 **Constraints.** The limits are:
 - **Count** is `0 <= words.length <= 10^4`.
