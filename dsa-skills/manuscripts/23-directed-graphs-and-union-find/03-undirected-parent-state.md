@@ -48,7 +48,7 @@ It returns true, and the correct answer is false. The call for vertex 0 enters v
 
 The method visits each vertex once and reads each neighbor list once, so its time is O(V + E) and the traversal itself is fine. The defect is the test. Every edge appears twice, once in the list of each endpoint. After the search crosses an edge from `u` to `v`, the list of `v` contains `u`, and `u` already has its visited flag. Every graph with at least one edge is therefore reported as cyclic, including a path and a star.
 
-Ignoring all visited neighbors does not repair this. The method would then never report a cycle, because the only way to meet a visited vertex is through an edge that closes a loop. The test must separate two kinds of visited neighbors: the one the search just came from, and every other one.
+Ignoring all visited neighbors does not repair this. Ignoring every visited neighbor also ignores the neighbors that close real loops, so the method would never report a cycle, even on a triangle. The test must separate two kinds of visited neighbors: the one the search just came from, and every other one.
 
 A repair that stores every crossed edge in a hash set works, but it costs O(E) extra memory and a hash lookup per step. The call that enters a vertex already knows which vertex it came from. A better method passes that single fact down and spends no extra memory beyond the call stack. The next stage names it.
 
@@ -99,7 +99,7 @@ The first graph has the edges 0 to 1, 0 to 2 and 1 to 3. The cells are the verte
 
 #### A Graph With A Triangle
 
-The second graph is the triangle on 0, 1 and 2, plus the edge 2 to 3. The search goes from 0 to 1 and from 1 to 2. Vertex 2 first reads vertex 1, which is its parent, and skips it. Then it reads vertex 0. Vertex 0 has its flag set and is not the parent of 2, so the search reports the cycle at once.
+The second graph is the triangle on 0, 1 and 2, plus a link between 2 and 3. The search goes from 0 to 1 and from 1 to 2. Vertex 2 first reads vertex 1, which is its parent, and skips it. Then it reads vertex 0. Vertex 0 has its flag set and is not the parent of 2, so the search reports the cycle at once.
 
 ```trace
 {"cells":[0,1,2,3],"pointers":["v"],"steps":[{"at":{"v":0},"vars":{"neighbor":1,"parent":-1},"note":"Vertex 0 reads neighbor 1, which is unvisited, so the search enters it with parent 0."},{"at":{"v":1},"vars":{"neighbor":0,"parent":0},"note":"Vertex 1 reads neighbor 0, which is its parent (0), so the search skips it."},{"at":{"v":1},"vars":{"neighbor":2,"parent":0},"note":"Vertex 1 reads neighbor 2, which is unvisited, so the search enters it with parent 1."},{"at":{"v":2},"vars":{"neighbor":1,"parent":1},"note":"Vertex 2 reads neighbor 1, which is its parent (1), so the search skips it."},{"at":{"v":2},"vars":{"neighbor":0,"parent":1},"note":"Vertex 2 reads neighbor 0. It is visited and is not the parent, so the search reports a cycle."}]}
@@ -145,7 +145,7 @@ The invariant is that the only visited neighbor skipped is the entry edge. A com
 
 #### Avoiding The False Friend
 
-The false friend is the directed method with three states: unvisited, active and finished. It is unnecessary here. In an undirected graph, an edge to a finished vertex was already read from the finished vertex, and that earlier read reported the cycle. Two states and one parent argument are enough. The opposite mistake is also common. Adding a parent test to a directed graph hides real cycles, because a pair of opposite directed edges is a cycle there.
+The false friend is the directed method with three states: white, gray and black. It is unnecessary here. In an undirected graph, an edge to a black vertex was already read from the finished vertex, and that earlier read reported the cycle. Two states and one parent argument are enough. The opposite mistake is also common. Adding a parent test to a directed graph hides real cycles, because a pair of opposite directed edges is a cycle there.
 
 <!-- stage: exercises -->
 ### Exercises

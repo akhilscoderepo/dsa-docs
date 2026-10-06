@@ -48,13 +48,15 @@ The test asks the same question every time: do these two vertices already share 
 
 #### What The Result Looks Like
 
-A **spanning tree** of a connected graph with `V` vertices is a set of exactly `V - 1` edges. The set connects all vertices and contains no cycle. A cycle is a closed route that returns to its start without repeating an edge. Every connected graph has at least one spanning tree, and the cheapest one is the answer to the question of the lesson. Fewer than `V - 1` edges cannot connect `V` vertices. More than `V - 1` edges must contain a cycle, and a cycle edge can be removed without breaking connectivity, so it only adds cost.
+A **spanning tree** of a connected graph with `V` vertices is a set of exactly `V - 1` edges. The set connects all vertices and contains no cycle. A cycle is a closed route that returns to its start without repeating an edge. Every connected graph has at least one spanning tree. A minimum spanning tree is a spanning tree with the smallest possible total weight, and it answers the question of the lesson. Kruskal's method builds it by examining edges from lightest to heaviest and accepting an edge only when it joins two different groups. Fewer than `V - 1` edges cannot connect `V` vertices. More than `V - 1` edges must contain a cycle, and a cycle edge can be removed without breaking connectivity, so it only adds cost.
 
 #### Why The Cheapest Valid Edge Is Safe
 
-An edge is a **safe edge** when some cheapest spanning tree contains it together with all the edges accepted so far. The justification is the **cut property**. Split the vertices into two non-empty sets. Among the edges that cross the split, a lightest one belongs to some cheapest spanning tree.
+Take four vertices 0 to 3 with the edges 0-1 of weight 1, 2-3 of weight 2, 1-2 of weight 3 and 0-3 of weight 4. After the loop accepts 0-1 and 2-3, the groups are {0, 1} and {2, 3}. Any spanning tree needs one edge between these groups. The edge 1-2 is the lighter of the two candidates, so choosing it instead of 0-3 saves 1.
 
-Apply it as follows. Process the edges in increasing weight. Suppose the next edge joins group `A` to a different group. Every lighter edge was already examined. Each lighter edge either lies inside a group because the loop accepted it, or has both ends in one group because the loop rejected it. No accepted edge leaves `A`, and no rejected edge crosses the split between `A` and the other vertices. The current edge is therefore a lightest edge that crosses that split, so it is safe.
+An edge is a **safe edge** when some cheapest spanning tree contains it together with all the edges accepted so far. The justification is the **cut property**. Split the vertices into two non-empty sets. Among the edges that cross the split, an edge that is not heavier than any other crossing edge belongs to some cheapest spanning tree.
+
+Apply it as follows. Process the edges in increasing weight. Suppose the next edge joins group `A` to a different group. The loop already examined every edge that comes earlier in the sorted order, and none of them is heavier. Each of those edges either lies inside a group because the loop accepted it, or has both ends in one group because the loop rejected it. No accepted edge leaves `A`, and no rejected edge crosses the split between `A` and the other vertices. The current edge is therefore not heavier than any other edge that crosses that split, so it is safe.
 
 #### Telling Groups Apart With Union-Find
 
@@ -65,10 +67,11 @@ Union-find keeps one representative per group. The program calls `find` on both 
 <!-- stage: variables -->
 ### What The Loop Keeps Between Edges
 
-The loop keeps four values between edges, and the traces below show them under the same names. In both traces the pointer `i` marks the edge that the loop examines, and the cells hold the edge weights in sorted order.
+The loop keeps five values between edges, and the traces below show them under the same names. In both traces the pointer `i` marks the edge that the loop examines, and the cells hold the edge weights in sorted order.
 
 - **sorted** holds the edges in nondecreasing weight, and ties keep the input order because `Arrays.sort` on objects is stable.
-- **parent** and **size** form the union-find arrays, where `parent[x] == x` marks a representative.
+- **parent** is the union-find array of links, where `parent[x] == x` marks a representative.
+- **size** is the union-find array of group sizes, read only at a representative.
 - **accepted** counts the edges taken so far, and the loop stops when it equals `V - 1`.
 - **total** adds the weights of accepted edges and has type `long`, because many `int` weights can sum past the `int` range.
 
@@ -82,7 +85,7 @@ The first trace runs on six vertices and nine edges. Each step shows the edge, t
 The two cheapest edges, 1-2 and 1-3, join separate groups, so the loop accepts them. The next edge, 2-3, has endpoints that already share a representative, so the loop skips it. That skip is the check that the naive method lacks. The loop accepts its fifth edge, which equals `V - 1`, as the sixth edge it examines, and stops before it examines the remaining three. The total is the sum of the five accepted weights.
 
 ```trace
-{"cells":[1,2,2,3,3,3,4,5,6],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"accepted":"0","total":"0","parent":"[0, 1, 2, 3, 4, 5]"},"note":"Start: 6 separate groups. The edges are sorted by weight and the loop needs 5 acceptances."},{"at":{"i":0},"vars":{"accepted":"1","total":"1","parent":"[0, 1, 1, 3, 4, 5]"},"note":"Edge 1-2 with weight 1: the representatives 2 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":1},"vars":{"accepted":"2","total":"3","parent":"[0, 1, 1, 1, 4, 5]"},"note":"Edge 1-3 with weight 2: the representatives 3 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":2},"vars":{"accepted":"2","total":"3","parent":"[0, 1, 1, 1, 4, 5]"},"note":"Edge 2-3 with weight 2: find returns 1 for both ends, so the edge is skipped."},{"at":{"i":3},"vars":{"accepted":"3","total":"6","parent":"[1, 1, 1, 1, 4, 5]"},"note":"Edge 0-2 with weight 3: the representatives 0 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":4},"vars":{"accepted":"4","total":"9","parent":"[1, 1, 1, 1, 1, 5]"},"note":"Edge 3-4 with weight 3: the representatives 4 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":5},"vars":{"accepted":"5","total":"12","parent":"[1, 1, 1, 1, 1, 1]"},"note":"Edge 4-5 with weight 3: the representatives 5 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":6},"vars":{"accepted":"5","total":"12","parent":"[1, 1, 1, 1, 1, 1]"},"note":"accepted equals 5, which is V - 1, so the loop stops. The 2 later edges are never examined, and the total is 12."}]}
+{"cells":[1,2,2,3,3,3,4,5,6],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"accepted":"0","total":"0","parent":"[0, 1, 2, 3, 4, 5]"},"note":"Start: 6 separate groups. The edges are sorted by weight and the loop needs 5 acceptances."},{"at":{"i":0},"vars":{"accepted":"1","total":"1","parent":"[0, 1, 1, 3, 4, 5]"},"note":"Edge 1-2 with weight 1: the representatives 2 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":1},"vars":{"accepted":"2","total":"3","parent":"[0, 1, 1, 1, 4, 5]"},"note":"Edge 1-3 with weight 2: the representatives 3 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":2},"vars":{"accepted":"2","total":"3","parent":"[0, 1, 1, 1, 4, 5]"},"note":"Edge 2-3 with weight 2: find returns 1 for both ends, so the edge is skipped."},{"at":{"i":3},"vars":{"accepted":"3","total":"6","parent":"[1, 1, 1, 1, 4, 5]"},"note":"Edge 0-2 with weight 3: the representatives 0 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":4},"vars":{"accepted":"4","total":"9","parent":"[1, 1, 1, 1, 1, 5]"},"note":"Edge 3-4 with weight 3: the representatives 4 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":5},"vars":{"accepted":"5","total":"12","parent":"[1, 1, 1, 1, 1, 1]"},"note":"Edge 4-5 with weight 3: the representatives 5 and 1 differ, so the edge is accepted and the groups merge."},{"at":{"i":6},"vars":{"accepted":"5","total":"12","parent":"[1, 1, 1, 1, 1, 1]"},"note":"accepted equals 5, which is V - 1, so the loop stops. The 3 later edges are never examined, and the total is 12."}]}
 ```
 
 #### A Graph That Splits In Two
@@ -136,6 +139,8 @@ final class Kruskal {
 ```
 
 #### Reading The Cost
+
+Union by size bounds every tree height by log2(V). Path halving shortens each route that a search walks, so a long walk is paid for once. The known analysis of both rules together gives amortized O(alpha(V)) per call, where alpha is the inverse Ackermann function, which grows so slowly that it stays below 5 for any V that fits in memory.
 
 - **Time** is O(E log E) for the sort plus O(E * alpha(V)) for the union-find calls, where alpha is below 5 for any practical `V`.
 - **Space** is O(V + E), because the arrays `parent` and `size` hold `V` entries and the sorted copy holds `E` edge references.
@@ -227,7 +232,7 @@ The false friend is the plan that takes the cheapest edges without a cycle check
 #### [Recognize] Connect All Points At Lowest Cost (LeetCode 1584)
 <!-- id: dg-min-cost-points -->
 
-**Prerequisites.** The Boundary exercise above.
+**Prerequisites.** All three exercises above.
 
 **Problem.** An array holds `n` distinct points `{x, y}` on a plane. The cost of a link between two points is their Manhattan distance, `|x1 - x2| + |y1 - y2|`. Return the lowest total cost of links that make every point reachable from every other point through links.
 
@@ -242,6 +247,6 @@ The false friend is the plan that takes the cheapest edges without a cycle check
 
 **Example 2.** Input `points = [[-3,2],[4,-1],[1,9]]`, output `21`, because the two shortest links cost 10 and 11.
 
-**Hint.** What are the vertices and what are the edges? Which of the two classical pair counts decides the size of the sorted list?
+**Hint.** What are the vertices and what are the edges? How does the pair count n(n - 1) / 2 decide the size of the sorted list?
 
 **Changed decision.** The graph is not given, so the program generates every pair as a weighted edge before it applies the loop.

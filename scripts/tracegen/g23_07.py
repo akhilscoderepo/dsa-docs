@@ -31,7 +31,7 @@ E1 = [(0, 1, 4), (0, 2, 3), (1, 2, 1), (1, 3, 2), (2, 3, 2), (3, 4, 3), (3, 5, 6
 ws, st, acc, total, last = run(6, E1)
 assert acc == 5 and last < len(E1) - 1
 st.append({"at": {"i": last}, "vars": {"accepted": str(acc), "total": str(total), "parent": st[-1]["vars"]["parent"]},
-           "note": f"accepted equals {acc}, which is V - 1, so the loop stops. The {len(E1) - 1 - last} later edges are never examined, and the total is {total}."})
+           "note": f"accepted equals {acc}, which is V - 1, so the loop stops. The {len(E1) - last} later edges are never examined, and the total is {total}."})
 # cross-check with a brute-force minimum over all 5-edge subsets
 import itertools
 def conn(n, sub):

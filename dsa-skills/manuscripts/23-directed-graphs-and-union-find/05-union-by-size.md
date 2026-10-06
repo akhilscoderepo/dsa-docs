@@ -44,7 +44,7 @@ The method itself is correct, because after each call the two elements share one
 
 Path compression, from the previous lesson, shortens a chain after a walk has climbed it. The first walk still pays the full price, and an adversary can build a new chain whenever it wants. The merge itself must control the shape, because the input decides the argument order and the program does not.
 
-A better merge keeps every find at O(log n) even in the worst case. It needs one more number for each tree, and it needs a rule that uses that number when the two trees meet.
+A better merge keeps every find at O(log n) steps in the worst case, with no help from compression. It needs one more number for each tree, and it needs a rule that uses that number when the two trees meet.
 
 <!-- stage: insight -->
 ### Attach The Smaller Tree Under The Larger
@@ -59,7 +59,7 @@ A **root** is the representative of a tree, the one element whose parent is itse
 
 #### The Rule
 
-After finding the two roots, the program compares `size[ra]` with `size[rb]`. The root with the smaller count is the **smaller root**, and the other one is the **larger root**. On a tie, either root may stay on top. The smaller root gets the larger root as its new parent, and the larger root adds the smaller count to its own entry. The comparison uses the two roots and never the two original elements, because an element deep inside a tree has a stale count.
+After finding the two roots, the program compares the sizes of the two roots. The root with the smaller count is the **smaller root**, and the other one is the **larger root**. On a tie, either root may stay on top. The smaller root gets the larger root as its new parent, and the larger root adds the smaller count to its own entry. The comparison uses the two roots and never the two original elements, because an element deep inside a tree has a stale count.
 
 #### Why Height Stays Small
 
@@ -77,8 +77,7 @@ The structure keeps two arrays and one counter, and each merge uses four short-l
 - **parent** is an int array; `parent[x] == x` marks x as a root.
 - **size** is an int array; `size[r]` counts the elements of the tree rooted at r, and it starts at 1 everywhere.
 - **components** is an int that starts at n and drops by one for each merge of two different trees.
-- **ra** and **rb** are the roots found for the two arguments of one call.
-- **big** and **small** are the same two roots after the comparison; `small` becomes a child of `big`.
+- **big** and **small** hold the roots that `find` returns for `a` and `b`; a swap makes `big` the root of the larger tree, and `small` becomes a child of `big`.
 
 <!-- stage: trace -->
 ### Two Merge Sequences Traced
@@ -137,7 +136,7 @@ final class SizedSets {
 }
 ```
 
-The two writes `parent[small] = big` and `size[big] += size[small]` must happen together. If the program skips the second write, the next comparison reads a wrong count and the height bound breaks. Each `find` is O(log n), so a call to `union` costs O(log n). The two arrays take O(n) space.
+The two writes `parent[small] = big` and `size[big] += size[small]` must happen together. If the program skips the second write, the next comparison reads a wrong count and the height bound breaks. Each `find` takes at most log2(n) steps because the height bound holds, so a call to `union` costs O(log n) in the worst case. Adding path compression lowers the average further, as lesson 7 explains. The two arrays take O(n) space.
 
 <!-- stage: applicability -->
 ### Recognizing Merges That Need Balance

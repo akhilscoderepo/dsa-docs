@@ -12,16 +12,16 @@ You should know adjacency lists and the depth-first and breadth-first traversals
 Each lesson adds one piece of state to a graph algorithm.
 
 - **Kahn Topological Order** keeps an indegree count per vertex and a queue of vertices with count zero.
-- **DFS Topological State** marks each vertex unvisited, active or complete, and treats an edge to an active vertex as a cycle.
+- **DFS Topological State** marks each vertex white, gray or black, and treats an edge to a gray vertex as a cycle.
 - **Undirected Parent State** remembers the vertex a call came from, so the same edge does not count as a cycle.
 - **Find Compression** follows parent links to a root and rewrites the links it walked.
 - **Union By Size** hangs the smaller tree under the larger root and updates the size at the surviving root.
-- **Dynamic Connectivity** answers same-group questions while unions arrive one at a time.
+- **Dynamic Connectivity** answers same-group questions while merges arrive one at a time.
 - **Kruskal Foundations** sorts edges by weight and accepts an edge only when it joins two different groups.
 
 ### The Combination Lesson
 
-- **Merge Groups As Edges Arrive** uses edges as merge events and shows how each of the earlier lessons contributes to one group-merging state.
+- **Merge Groups As Edges Arrive** uses edges as merge events and shows how five of the earlier lessons contribute to one group-merging state.
 
 ### How To Work Through Each Lesson
 

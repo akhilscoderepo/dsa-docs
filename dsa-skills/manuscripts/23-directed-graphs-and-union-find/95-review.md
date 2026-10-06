@@ -6,11 +6,11 @@ A planner schedules a course before its prerequisite, and a cluster counter repo
 ### Recognition Questions
 
 ```quiz
-{"id": "dg-rev-kahn", "q": "A queue run removes 5 of 7 vertices and then the queue is empty. What does that say about the graph?", "options": ["A directed cycle keeps two vertices from reaching indegree zero", "The graph is disconnected", "The graph has two sources", "The queue was too small"], "answer": 0, "explain": "A vertex on a cycle always keeps an unresolved incoming edge, so its indegree never reaches zero and it never enters the queue."}
+{"id": "dg-rev-kahn", "q": "A queue run removes 5 of 7 vertices and then the queue is empty. What does that say about the graph?", "options": ["At least one cycle blocks vertices on it or after it", "The graph is disconnected", "The graph has two sources", "The queue was too small"], "answer": 0, "explain": "A vertex on a cycle always keeps an unresolved incoming edge, so its indegree never reaches zero. Vertices reachable from the cycle wait for it and stay out of the queue as well."}
 ```
 
 ```quiz
-{"id": "dg-rev-color", "q": "A depth-first search from vertex 0 reaches a vertex that was fully finished earlier through another branch. Is that a cycle?", "options": ["Yes, it is visited", "No, only an edge to a vertex still on the current call path closes a cycle", "Yes, if it has a higher index", "Only in an undirected graph"], "answer": 1, "explain": "A finished vertex cannot reach the current vertex again, so the edge forms no loop. Only an edge to an active vertex does."}
+{"id": "dg-rev-color", "q": "A depth-first search from vertex 0 reaches a black vertex that finished earlier through another branch. Is that a cycle?", "options": ["Yes, it is visited", "No, only an edge to a gray vertex, which is still on the current call path, closes a cycle", "Yes, if it has a higher index", "Only in an undirected graph"], "answer": 1, "explain": "A black vertex cannot reach the current vertex again, so the edge forms no loop. Only an edge to a gray vertex does."}
 ```
 
 ```quiz
@@ -26,7 +26,7 @@ A planner schedules a course before its prerequisite, and a cluster counter repo
 ```
 
 ```quiz
-{"id": "dg-rev-connect", "q": "Union is called twice for the same pair of elements. What should the group count do on the second call?", "options": ["Drop by one again", "Stay unchanged", "Reset", "Raise an error"], "answer": 1, "explain": "Both elements share a root after the first call, so the second call merges nothing and leaves the count alone."}
+{"id": "dg-rev-connect", "q": "A merge is requested twice for the same pair of elements. What should the group count do on the second call?", "options": ["Drop by one again", "Stay unchanged", "Reset", "Raise an error"], "answer": 1, "explain": "Both elements share a root after the first call, so the second call merges nothing and leaves the count alone."}
 ```
 
 ```quiz

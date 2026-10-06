@@ -5,7 +5,7 @@ A network tool receives link reports one at a time and must say after each repor
 
 ### Pairing Taught In This Chapter
 
-Graph edges say which elements belong together, and the disjoint-set structure keeps one representative per group. The lesson Merge Groups As Edges Arrive joins them. The edge list supplies merge events, and the parent and size arrays supply group identity. The lesson adds one idea: an edge whose endpoints already share a root changes nothing, and that observation answers cycle, count and spanning-tree questions.
+Graph edges say which elements belong together, and the union-find structure keeps one representative per group. The lesson Merge Groups As Edges Arrive joins them. The edge list supplies merge events, and the parent and size arrays supply group identity. The lesson adds one idea: an edge whose endpoints already share a root changes nothing, and that observation answers cycle, count and spanning-tree questions.
 
 ### Pairing That Waits For A Later Chapter
 

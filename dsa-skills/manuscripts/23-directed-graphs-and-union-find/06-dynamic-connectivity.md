@@ -87,8 +87,9 @@ The program keeps two arrays, one counter, one result list and one map for the w
 - **parent** is an int array; `parent[x]` is the parent of x, and a representative is its own parent.
 - **size** is an int array; `size[r]` counts the items under the representative r.
 - **components** is an int that starts at n and drops by one for each real merge.
-- **answers** is the list of results, one boolean for each question in input order.
-- **owner** is a map used only for shared identifiers; it stores the first item that listed a given identifier.
+- **answers** is the list of results, one boolean for each question in input order; the code below names it `out`.
+- **x** and **y** are the two representatives that the code finds for each event; the trace pointers `ra` and `rb` mark that same pair.
+- **owner** is a map used only for shared identifiers; it stores the first item that listed a given identifier. The code below leaves out `components` and `owner`, and the traces show them.
 
 <!-- stage: trace -->
 ### Two Event Streams Traced
@@ -198,7 +199,7 @@ The false friend is a static depth-first search. It answers one snapshot of the 
 
 **Prerequisites.** The first exercise above.
 
-**Problem.** A country has `n` cities numbered `0` to `n - 1`. A province is a maximal set of cities that are joined by chains of direct connections. This version differs from the usual one, which gives a full matrix and asks for one count. Here the connections arrive as a list `links`, where each entry `[a, b]` is a direct connection. Return an `int[]` of the same length as `links`, where entry `k` is the number of provinces after the first `k + 1` connections exist.
+**Problem.** A country has `n` cities numbered `0` to `n - 1`. A province is a maximal set of cities that are joined by chains of direct connections. Here the connections arrive as a list `links`, where each entry `[a, b]` is a direct connection. Return an `int[]` of the same length as `links`, where entry `k` is the number of provinces after the first `k + 1` connections exist.
 
 **Constraints.** The limits are:
 - **Cities** satisfy `1 <= n <= 1000`.

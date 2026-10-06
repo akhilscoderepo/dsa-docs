@@ -27,7 +27,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 20-greedy | done |
 | 21-graph-traversal-models-dfs-and-ordinary-bfs | done |
 | 22-bfs-variations | done |
-| 23-directed-graphs-and-union-find | claimed 23 2026-10-06T20:38Z |
+| 23-directed-graphs-and-union-find | done |
 | 24-shortest-paths-and-graph-state-modeling | todo |
 | 25-advanced-graph-optimization | todo |
 | 26-dynamic-programming-foundations | todo |
@@ -92,3 +92,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 - claimed 22 2026-10-06T19:38Z (resumed: earlier claim 16:38Z, last push 16:47Z, all files built, no status row or reader review)
 - 22 (2026-10-06): content complete, human review pending. Built in an earlier run (lessons 01 to 05, combination 91, orientation, review); this run added the final reader review (RUNBOOK section 10) with 2 passes by an independent reader subagent each time; pass 1 found 38 points and pass 2 24 (factual errors in 91 code claims, trace/prose mismatches, count and name mismatches, undefined terms), all fixed. A third pass has NOT run, so a clean pass is not confirmed. Interpretation recorded: the role-order audit forbids reordering exercises, so in 91 the role labels were swapped (word sequence is Boundary, smallest path is Recognize), giving two spec-role warnings; the LC 994 tag stays in 02 because the audit requires it; 91 method renamed searchFromSet. Not run: voice_lint after the last edits. JDK 21 only; JDK 25, Windows, phones, printing and teaching quality are unverified.
 - claimed 23 2026-10-06T20:38Z
+- 23 (2026-10-06): content complete, human review pending. Seven lessons plus combination lesson Merge Groups As Edges Arrive, written by parallel subagents and pushed in groups. Final reader review (RUNBOOK section 10) ran 1 pass with an independent reader subagent (23 points: trace/prose mismatches, name and count mismatches, undefined terms such as Kahn, Kruskal, union-find, a missing concrete case before the cut-property proof); all fixed except the "(LeetCode 547)" tag on the 06 Vary exercise, which the audit requires. A second pass has NOT run, so a clean pass is not confirmed. Interpretations recorded: repeats of LC 210, 547, 684, 721 and 1584 change their contract (02 returns the first gray back edge, 06 Vary counts provinces after each edge, combination versions return the largest province, every cycle-closing edge, case-insensitive emails, repeated points); the combination was retitled in the working spec only (not inputs/); contributions stage stays two short paragraphs because of the bullet limit. Remaining WARNs: low-diversity in 05, template phrase in 01. JDK 21 only; JDK 25, Windows, phones, printing and teaching quality are unverified.

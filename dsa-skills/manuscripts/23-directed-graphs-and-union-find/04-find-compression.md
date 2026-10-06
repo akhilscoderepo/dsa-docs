@@ -7,7 +7,7 @@
 
 A monitoring service receives events of the form "machine `a` is now linked to machine `b`". Between events, operators ask whether two machines can reach each other through the links seen so far. A search through the link graph answers one question in O(V + E), and a busy service receives hundreds of thousands of questions. A slow answer delays an alert while an outage spreads.
 
-Model the machines as the numbers `0` to `n - 1`. A group is the set of machines that can reach one another. Two operations arrive in any order. The first merges the groups of two machines. The second asks whether two machines are in the same group. Groups only merge and never split.
+Model the machines as the numbers `0` to `n - 1`. A group is the set of machines that can reach one another. Two operations arrive in any order. The first merges the groups of two machines. The second asks whether two machines are in the same group. Groups only merge and never split. A merge is also called a union, and the code of later lessons uses that name. A structure that supports merges and group lookups is called union-find.
 
 This lesson asks how to keep both operations cheap when the same groups merge and receive thousands of questions.
 
@@ -64,7 +64,7 @@ A question that walks a long path has already paid for the walk. It can rewrite 
 
 #### Links And The Root
 
-Each machine `x` stores `parent[x]`, the machine it links to. A machine with `parent[x] == x` is the **root** of its group, and each group has exactly one root. Following the links from any machine of the group ends at that root. Two machines are in the same group exactly when their roots are equal. At the start every machine is its own root, so `n` groups of size one exist.
+Each machine `x` stores `parent[x]`, the machine it links to. A machine with `parent[x] == x` is the **root** of its group, and each group has exactly one root. The root is also called the representative of the group, because it is the one machine that stands for every member. Following the links from any machine of the group ends at that root. Two machines are in the same group exactly when their roots are equal. At the start every machine is its own root, so `n` groups of size one exist.
 
 #### Walking And Rewriting The Path
 
@@ -74,7 +74,7 @@ The rewrite is safe because it changes no root. A machine still leads to the sam
 
 #### Merging And The Cost
 
-A merge calls `find` on both machines and, when the roots differ, sets `parent` of one root to the other. The invariant is that following `parent` from any machine reaches exactly one root, and that compression never changes which root that is. A first `find` on a chain of length k costs k steps. Afterwards each machine on that chain is one step from the root. Over a sequence of m operations, compression alone gives O(log n) amortized cost per operation, a known result that this lesson uses without proof. The next lesson adds a rule for merging that brings the cost close to constant.
+A merge calls `find` on both machines and, when the roots differ, sets `parent` of one root to the other. The invariant is that following `parent` from any machine reaches exactly one root, and that compression never changes which root that is. A first `find` on a chain of length k costs k steps. Afterwards each machine on that chain is one step from the root. Over a sequence of m operations, compression alone gives O(log n) amortized cost per operation, a known result that this lesson uses without proof. The next lesson adds a rule for merging that limits every walk to O(log n) steps even before compression helps.
 
 <!-- stage: variables -->
 ### What The Structure Keeps
@@ -145,7 +145,7 @@ static final class Groups {
 }
 ```
 
-The second loop must save `next` before it overwrites `parent[cur]`, or the walk loses its place. The loop is iterative on purpose, because a recursive `find` on a chain of 100000 machines overflows the default Java stack. The loop stops at `parent[cur] == root`, so it never rewrites a link that is already correct. Memory is O(n) for `parent`, and the amortized time per operation is O(log n) with this merge rule.
+The second loop must save `next` before it overwrites `parent[cur]`, or the walk loses its place. The loop is iterative on purpose, because a recursive `find` on a chain of 100000 machines overflows the default Java stack. The loop stops at `parent[cur] == root`, so it never rewrites a link that is already correct. Path halving is a one-pass variant of the same idea: while climbing, each visited machine points at its grandparent. Later lessons use it. Memory is O(n) for `parent`, and the amortized time per operation is O(log n), the known bound for compression alone.
 
 <!-- stage: applicability -->
 ### Recognizing Merge And Same-Group Queries

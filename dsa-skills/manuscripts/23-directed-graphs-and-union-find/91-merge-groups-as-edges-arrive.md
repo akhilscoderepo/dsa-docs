@@ -12,11 +12,11 @@ Four more requests follow in the same quarter. An administrator wants the size o
 This lesson asks one question. Which structure, updated one event at a time, answers all four requests without a new search per event?
 
 <!-- stage: contributions -->
-### What Each Earlier Lesson Adds
+### What Five Earlier Lessons Add
 
-Five lessons of this chapter supply the pieces. Undirected Parent State contributes the cycle test for an undirected graph. An edge to a vertex that the search already reached, other than the parent, shows a cycle. That test lives inside one traversal and forgets everything afterward. Find Compression contributes `find`. It returns the representative of a group, the one vertex that stands for the whole group, and it shortens the route it walked. Union By Size contributes the merge rule that attaches the smaller group below the larger one and keeps a `size` entry for each representative.
+Five lessons of this chapter supply the pieces. Undirected Parent State supplies the cycle test, in which a visited neighbor other than the parent closes a cycle. The test forgets everything after one traversal. Find Compression supplies `find`, which returns the representative and shortens the route it walked. The representative is the one vertex that stands for a whole group. Union By Size supplies the merge rule that attaches the smaller group below the larger one and keeps a `size` entry for each representative.
 
-Dynamic Connectivity contributes the view of edges as events that arrive over time. It also contributes a counter that falls by one for each merge that joins two groups. Kruskal Foundations contributes the habit of comparing the representatives of both endpoints before acting, and of processing edges in increasing weight.
+Dynamic Connectivity supplies the view of edges as events over time and a counter that falls by one for each merge. Kruskal Foundations supplies the comparison of both representatives before acting, and the processing of edges in increasing weight.
 
 The combination adds one rule. Compare the representatives of the endpoints before every merge, and let the outcome feed the question of the request. The invariant is that two vertices share a representative exactly when a path of already processed edges joins them. The nearest false friend is the `visited` array of a single traversal. It answers whether this search reached a vertex, and it cannot answer whether earlier edges joined two vertices.
 
@@ -81,7 +81,11 @@ A **closing edge** is an edge whose endpoints already share a representative at 
 
 #### Reading Size From The Root
 
-The **component size** is the number of vertices in one group, and union-find keeps it at the representative. When a merge attaches one root below another, the new size is the sum of both sizes. Keeping the running maximum of these sums gives the largest group at no extra cost. Identifiers that are not integers, such as email addresses, go through a map from key to integer id, after which the same operations apply. Edges that are not given, such as links between points, are generated first and then processed in sorted order.
+The **component size** is the number of vertices in one group, and union-find keeps it at the representative. When a merge attaches one root below another, the new size is the sum of both sizes. Keeping the running maximum of these sums gives the largest group at no extra cost. 
+
+#### Turning Emails And Points Into Events
+
+Identifiers that are not integers, such as email addresses, go through a map from key to integer id, after which the same operations apply. Edges that are not given, such as links between points, are generated first and then processed in sorted order.
 
 <!-- names: representative, closing edge, component size -->
 
@@ -92,7 +96,7 @@ The structure keeps these values, and the traces below use the same names.
 
 - **parent** holds, for each vertex, the next vertex toward its root, and `parent[x] == x` marks a root.
 - **size** holds the vertex count of a group and is read only at a root.
-- **count** is the current number of groups, and it falls by one at each successful merge.
+- **count** is the current number of groups, and it falls by one at each successful merge; it is the `components` variable of the earlier lessons.
 - **largest** is the maximum group size seen so far.
 - **closing** lists the arrival positions of the events that join two vertices of one group.
 - **owner** maps an identifier, such as an email address, to the first record that used it.
@@ -112,7 +116,7 @@ The first two events create the groups {0, 1} and {2, 3}. The third event joins 
 
 #### Merging Accounts By Shared Email
 
-The second trace reads four accounts. The cells are the account positions 0 to 3, and the pointer `acct` marks the account being read. The variable `owner` maps each lowercase email address to the first account that used it. When a later account uses an address that has an owner, the structure merges the two accounts.
+The second trace reads four accounts. Account 0 is Ana with "A@x.io" and "b@x.io". Account 1 is Bo with "B@X.io" and "c@x.io". Account 2 is Cy with "d@x.io". Account 3 is Dee with "C@X.IO" and "e@x.io". The cells are the account positions 0 to 3, and the pointer `acct` marks the account being read. The variable `owner` maps each lowercase email address to the first account that used it. When a later account uses an address that has an owner, the structure merges the two accounts.
 
 Account 1 uses an address that account 0 owns, once the letters are lowercased, so the two merge. Account 3 uses an address that account 1 owns, so it merges as well, and account 0 stays the first-seen account of the group. Account 2 shares nothing and stays alone. The groups by final root are {0, 1, 3} and {2}.
 
@@ -183,7 +187,7 @@ The static method `groupsAfterEach` in the same class answers the dashboard requ
 
 The other requests differ only in the surrounding code. A matrix request calls `union` for every pair with a 1 in the upper triangle. A request for closing edges stores each event whose `union` returns false. A request with identifiers calls `union` on the record numbers after a map lookup. A cheapest-links request sorts the pairs by weight first and adds a weight only when `union` returns true.
 
-- **Time** is O(E * alpha(V)) for E calls, plus O(E log E) when the program sorts, where alpha is the inverse Ackermann function.
+- **Time** is O(E * alpha(V)) for E calls, plus O(E log E) when the program sorts, where alpha grows so slowly that it stays below 5 for any practical V.
 - **Space** is O(V) for the two arrays, plus whatever the request itself stores, such as a map of identifiers.
 
 <!-- stage: applicability -->
@@ -262,9 +266,9 @@ The invariant is that two vertices share a representative exactly when the proce
 - **Comparison** ignores case, and the output uses lowercase only.
 - **Mutation** does not occur; the method leaves `accounts` unchanged.
 
-**Example 1.** Input `accounts = [[Ana,A@x.io,b@x.io],[Bo,B@X.io,c@x.io],[Cy,d@x.io]]`, output `[[Ana,a@x.io,b@x.io,c@x.io],[Cy,d@x.io]]`.
+**Example 1.** Input `accounts = [["Ana","A@x.io","b@x.io"],["Bo","B@X.io","c@x.io"],["Cy","d@x.io"]]`, output `[["Ana","a@x.io","b@x.io","c@x.io"],["Cy","d@x.io"]]`.
 
-**Example 2.** Input `accounts = [[Dee,k@m.org],[Eli,K@m.org,z@m.org],[Fay,Z@M.ORG],[Gus,q@m.org]]`, output `[[Dee,k@m.org,z@m.org],[Gus,q@m.org]]`, because Dee, Eli and Fay link through a chain and the earliest name is kept.
+**Example 2.** Input `accounts = [["Dee","k@m.org"],["Eli","K@m.org","z@m.org"],["Fay","Z@M.ORG"],["Gus","q@m.org"]]`, output `[["Dee","k@m.org","z@m.org"],["Gus","q@m.org"]]`, because Dee, Eli and Fay link through a chain and the earliest name is kept.
 
 **Hint.** What is one vertex here, and which structure turns an address into a vertex? Which locale does the lowercase conversion need?
 
