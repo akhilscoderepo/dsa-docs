@@ -148,7 +148,7 @@ A graph with a cycle looks like a tree at first glance, because it has nodes and
 
 #### No-Go Conditions
 
-Do not use the plain recursion above when the input is a graph or when the tree can be deeper than the call stack allows. A very deep tree needs the explicit stack of lesson 3. The `NNode` method also fails on a `null` child inside the list, so check what the input promises before choosing the guard.
+Do not use the plain recursion above when the input is a graph or when the tree can be deeper than the call stack allows. A very deep tree needs the explicit stack from the lesson "Walk A Tree With Your Own Stack". The `NNode` method also fails on a `null` child inside the list, so check what the input promises before choosing the guard.
 
 <!-- stage: exercises -->
 ### Exercises

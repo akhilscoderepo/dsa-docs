@@ -204,7 +204,7 @@ These walks give depth-first orders only. If the answer needs the nodes grouped 
 
 **Example 2.** Input root 2 with left child 1, where node 1 has left child 0, output `0, 1, 2`.
 
-**Hint.** Which one line moves compared with the preorder method? What does the first value of the output tell you about the left spine?
+**Hint.** Which one line moves compared with the preorder method? What does the first value of the output tell you about the chain of left children?
 
 **Changed decision.** The action moves between the two child calls.
 

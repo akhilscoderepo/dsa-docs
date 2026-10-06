@@ -62,7 +62,7 @@ The walk can leave itself a link that points back to the node it will need, and 
 
 #### The Last Node Of The Left Side
 
-The **predecessor** of a node that has a left child is the last node of its left subtree in inorder. It is found by moving to the left child and then following `right` references until a `right` reference is `null`. The predecessor has no right child, because inorder visits the right subtree of a node after the node itself.
+The **predecessor** of a node that has a left child is the last node of its left subtree in inorder. It is found by moving to the left child and then following `right` references until a `right` reference is `null`. The predecessor has no right child, because a right child would come later in inorder inside the same left subtree, so the predecessor would not be last.
 
 #### A Temporary Link Back
 

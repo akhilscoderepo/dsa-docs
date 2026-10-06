@@ -184,7 +184,7 @@ This pattern needs a tree, because one top node per path is what makes the formu
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4.
 - **Values** are integers that the answer does not use.
-- **Answer** is an integer between 0 and `n - 1`.
+- **Answer** is an integer between 0 and `max(0, n - 1)`.
 - **Mutation** is not allowed.
 
 **Example 1.** Input root 6 with right child 8 and left child 2, where node 2 has a left child 1 that has a left child 0, output 4.

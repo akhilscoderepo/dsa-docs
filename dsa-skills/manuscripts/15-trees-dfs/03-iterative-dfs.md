@@ -178,7 +178,7 @@ Pushing `left` before `right` looks natural, because the recursive method calls 
 
 #### No-Go Conditions
 
-If the tree is small and shallow, the recursive method is shorter and easier to check, so keep it. Suppose each node needs a value that its children computed, such as a height. The loop would then have to store partial results beside the nodes. Lessons 4 and 5 show that case with recursion first.
+If the tree is small and shallow, the recursive method is shorter and easier to check, so keep it. Suppose each node needs a value that its children computed, such as a height. The loop would then have to store partial results beside the nodes. The next two lessons show that case with recursion first.
 
 <!-- stage: exercises -->
 ### Exercises

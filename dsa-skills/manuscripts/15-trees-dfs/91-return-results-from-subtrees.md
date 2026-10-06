@@ -3,9 +3,9 @@
 ## Return Results From Subtrees
 
 <!-- stage: context -->
-### One Report That Needs Three Walks
+### One Report That Needs Three Facts
 
-An organization chart is stored as a binary tree, where each manager has up to two direct reports. A reporting tool must print three facts about the whole chart. The first is the longest chain of managers. The second is the largest difference between the depths of the two sides of any manager. The third is the longest chain between any two people. The first version measures each fact separately at every manager. Each walk asks for the height of both sides at every manager, so the heights are measured again and again.
+An organization chart is stored as a binary tree, where each manager has up to two direct reports. A reporting tool must print three facts about the whole chart. The first is the longest chain of managers. The second is the largest difference between the heights of the two sides of any manager. The third is the longest chain between any two people. The first version measures each fact separately at every manager. Each fact asks for the height of both sides at every manager, so the heights are measured again and again.
 
 On a chart of 100,000 people arranged as a long chain of managers, the report takes far longer than the size of the chart suggests. The facts overlap, because each one is built from the heights of the same subtrees. The question is how one walk can hand each manager the numbers that all three facts need.
 
