@@ -1,46 +1,39 @@
 from common import *
-from tn import *
-CH='18-tries'
-F='04-word-break-trie-search.md'
-
-# trace 1: one walk from start 0
-s = "catsanddog"; words = ["cat", "cats", "and", "sand", "dog"]
-t = Trie()
-for w in words: t.insert(w)
-steps = []; cur = 0; ends = []
-for j in range(0, len(s)):
-    ch = s[j]
-    if ch not in t.kids[cur]:
-        steps.append({"at": {"i": 0, "j": j}, "vars": {"node": s[:j], "ends": " ".join(map(str, ends))},
-                      "note": f"The letter {ch} has no edge below the node for {s[0:j]}, so this is the dead end and the walk stops with the ends found so far."})
-        break
-    cur = t.kids[cur][ch]
-    if t.term[cur]:
-        ends.append(j + 1)
-        note = f"The node for {s[:j+1]} is flagged, so {j+1} is recorded as an end and the walk continues."
-    else:
-        note = f"The node for {s[:j+1]} is not flagged, so only the cursor moves."
-    steps.append({"at": {"i": 0, "j": j}, "vars": {"node": s[:j+1], "ends": " ".join(map(str, ends))}, "note": note})
-assert ends == [3, 4]
-fill(CH, F, block(list(s), ["i", "j"], steps), "@@TRACE1@@")
-
-# trace 2: plain recursion on aaab, words a and aa
-s = "aaab"; ws = {"a", "aa"}
-steps = []; calls = [0]
-def go(st):
-    calls[0] += 1
-    n = len(s)
-    if st == n:
-        steps.append({"at": {"start": st}, "vars": {"calls": calls[0]}, "note": "The whole banner is used up, so this call answers yes."})
-        return True
-    ends = [e for e in range(st + 1, n + 1) if s[st:e] in ws]
-    if ends:
-        steps.append({"at": {"start": st}, "vars": {"calls": calls[0]}, "note": f"The call for start {st} finds the ends {', '.join(map(str, ends))} and tries them in order."})
-    else:
-        steps.append({"at": {"start": st}, "vars": {"calls": calls[0]}, "note": f"The call for start {st} finds no approved word beginning here, so it answers no."})
-    for e in ends:
-        if go(e): return True
-    return False
-assert go(0) is False
-print(calls[0])
-fill(CH, F, block(list(s), ["start"], steps), "@@TRACE2@@")
+CH='18-tries'; F='04-word-break-trie-search.md'
+def mk(words):
+    root={}
+    for w in words:
+        c=root
+        for ch in w: c=c.setdefault(ch,{})
+        c['$']=True
+    return root
+# trace 1
+D=["cat","cats","and","sand","dog"]; root=mk(D); s="catsand"; st=[]; c=root; cuts=[]
+for i in range(0,len(s)):
+    ch=s[i]
+    if ch not in c:
+        st.append({"at":{"i":i},"vars":{"cuts":str(cuts)},"note":f"The node for {s[:i]} has no edge for {ch}, so the walk reaches a dead end and stops."}); break
+    c=c[ch]; note=f"The letter {ch} has an edge, so the walk moves to the node for {s[:i+1]}."
+    if '$' in c: cuts.append(i+1); note+=f" The node is terminal, so the walk records the cut point {i+1}."
+    st.append({"at":{"i":i},"vars":{"cuts":str(cuts)},"note":note})
+assert cuts==[3,4] and len(st)==5
+fill(CH,F,block(list(s),["i"],st),"@@TRACE1@@")
+# trace 2
+D=["a","aa"]; root=mk(D); s="aaab"; st=[]; visits={}
+def cuts_of(s,f):
+    c=root; out=[]
+    for i in range(f,len(s)):
+        if s[i] not in c: break
+        c=c[s[i]]
+        if '$' in c: out.append(i+1)
+    return out
+def go(f):
+    visits[f]=visits.get(f,0)+1
+    cs=cuts_of(s,f)
+    note=f"The call at index {f} finds the cut points {cs}." if cs else f"The call at index {f} finds no cut point, so it fails."
+    if visits[f]>1: note+=f" This index was visited before, so the search repeats its work."
+    st.append({"at":{"from":f},"vars":{"visits":visits[f]},"note":note})
+    for e in cs: go(e)
+go(0)
+assert len(st)==7 and visits=={0:1,1:1,2:2,3:3}
+fill(CH,F,block(list(s),["from"],st),"@@TRACE2@@")
