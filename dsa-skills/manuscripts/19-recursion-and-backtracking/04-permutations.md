@@ -77,7 +77,7 @@ The depth grows by one in each call. The search stores a copy of the path when t
 
 #### Listing All Six Orderings
 
-The first trace lists the orderings of `[1, 2, 3]`. Each step is one choice. The pointer `i` marks the input index that the choice uses. The variable `path` shows the path after the choice, and `used` shows the three marks as `T` or `F`.
+The first trace lists the orderings of `[1, 2, 3]`. Each step is one choice. The pointer `i` marks the input index that the choice uses. The variable `path` lists the values placed so far, and `used` shows the three marks as `T` or `F`.
 
 The first branch picks index 0 and then index 1, and then index 2 completes `[1, 2, 3]`. After the return, the mark of index 2 clears, and the loop at depth 2 finds no other free index. The loop at depth 1 then tries index 2, and index 1 is free again, so `[1, 3, 2]` follows. Then the root repeats the same steps for the first values 2 and 3. The trace has 15 choices and ends with `[3, 2, 1]`.
 
