@@ -163,7 +163,7 @@ The false friend is the key shortcut applied to a tree with no order. In a tree 
 
 **Prerequisites.** The post-order report from this lesson.
 
-**Problem.** Given the root of a binary tree with distinct values and the values of two different leaves `a` and `b`, return the value of their lowest common ancestor. Each call returns the leaf it found below it, or `null`. The call where both children return a leaf is the answer.
+**Problem.** A binary tree has distinct values, and two different leaves are named by their values `a` and `b`. Return the value of their lowest common ancestor. Each call returns the leaf it found below it, or `null`. The call where both children return a leaf is the answer.
 
 **Constraints.** The limits are:
 - **Nodes** number between 3 and 10^4, and all values are distinct.
@@ -184,7 +184,7 @@ The false friend is the key shortcut applied to a tree with no order. In a tree 
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given the root of a binary tree and two nodes `p` and `q` that exist in the tree, return their lowest common ancestor. The ancestor of a node may be the node itself. Values may repeat, so compare nodes by reference and not by value.
+**Problem.** Two nodes `p` and `q` exist in a binary tree. Return their lowest common ancestor. The ancestor of a node may be the node itself. Values may repeat, so compare nodes by reference and not by value.
 
 **Constraints.** The limits are:
 - **Nodes** number between 2 and 10^5.
@@ -205,7 +205,7 @@ The false friend is the key shortcut applied to a tree with no order. In a tree 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the root of a binary tree with distinct values and the values of two nodes `a` and `b`, where one of the two nodes lies in the subtree of the other, return the value of the higher node. The method must return as soon as it meets the first target and must not visit any node below it.
+**Problem.** In a binary tree with distinct values, two nodes are named by their values `a` and `b`, and one of them lies in the subtree of the other. Return the value of the higher node. The method must return as soon as it meets the first target and must not visit any node below it.
 
 **Constraints.** The limits are:
 - **Nodes** number between 2 and 10^4, and all values are distinct.

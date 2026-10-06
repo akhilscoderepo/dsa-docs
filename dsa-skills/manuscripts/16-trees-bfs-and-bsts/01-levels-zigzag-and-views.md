@@ -188,7 +188,7 @@ The false friend is the recursive walk with a depth argument. Both give the same
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given the root of a binary tree, return the values by depth where depth 0 reads from left to right, depth 1 reads from right to left, depth 2 reads from left to right, and the directions keep alternating. The nodes enter the queue in the same order as in the plain level traversal.
+**Problem.** For a binary tree, return the values by depth where depth 0 reads from left to right, depth 1 reads from right to left, depth 2 reads from left to right, and the directions keep alternating. The nodes enter the queue in the same order as in the plain level traversal.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 2000.
@@ -209,7 +209,7 @@ The false friend is the recursive walk with a depth argument. Both give the same
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the root of a binary tree, return the number of nodes at each depth as a list of integers, so that the entry at position `d` is the width of depth `d`. A null root gives an empty list. A chain in which every node has one child gives a list of ones.
+**Problem.** A binary tree is supplied by its root. Return the number of nodes at each depth as a list of integers, so that the entry at position `d` is the width of depth `d`. A null root gives an empty list. A chain in which every node has one child gives a list of ones.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 3000.

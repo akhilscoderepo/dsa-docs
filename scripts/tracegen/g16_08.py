@@ -1,53 +1,24 @@
 from common import *
-from tr import *
-CH = '16-trees-bfs-and-bsts'
-F = '08-serialization-and-deserialization.md'
-arr = [1, 2, 3, None, None, 4, 5]
-# cells that sit below each present node (a null cell is an explicit empty hanging)
-CHILD_CELLS = {}
-q = [0]; nxt = 1; qi = 0
-while qi < len(q):
-    i = q[qi]; qi += 1
-    if arr[i] is None: continue
-    cs = []
-    for _ in range(2):
-        if nxt < len(arr):
-            cs.append(nxt)
-            if arr[nxt] is not None: q.append(nxt)
-            nxt += 1
-    if cs: CHILD_CELLS[i] = cs
-card = []; steps = []
-def walk(i):
-    v = arr[i]
-    if v is None:
-        card.append("#")
-        steps.append({"at": {"node": i}, "vars": {"card": ",".join(card)}, "note": "This hanging spot is empty, so one marker # is written for it."})
-        return
-    card.append(str(v))
-    kids = CHILD_CELLS.get(i)
-    if kids is None:
-        card.append("#"); card.append("#")
-        steps.append({"at": {"node": i}, "vars": {"card": ",".join(card)}, "note": f"The weight {v} is a leaf with no cells below it, so it is written and then two markers # for its empty hangings."})
-        return
-    steps.append({"at": {"node": i}, "vars": {"card": ",".join(card)}, "note": f"The weight {v} is written first, and its left hanging and then its right hanging follow."})
-    for c in kids: walk(c)
-walk(0)
-text = ",".join(card)
-assert text == "1,2,#,#,3,4,#,#,5,#,#", text
-fill(CH, F, block(cells(arr), ["node"], steps), "@@TRACE1@@")
-# trace 2: read the card back with one shared cursor
-tokens = text.split(",")
-evs = []; cur = [0]
-def read(parent, side):
-    k = cur[0]; cur[0] += 1
-    t = tokens[k]
-    where = "as the root" if parent is None else f"as the {side} child of {parent}"
-    if t == "#":
-        evs.append((k, parent, f"The marker # closes an empty {side} hanging of {parent}."))
-        return
-    evs.append((k, t, f"The token {t} creates the weight {t} {where}, and its left hanging is read next."))
-    read(t, "left"); read(t, "right")
-read(None, "left")
-assert cur[0] == len(tokens)
-steps = [{"at": {"cursor": k}, "vars": {"building": b}, "note": n} for k, b, n in evs]
-fill(CH, F, block(tokens, ["cursor"], steps), "@@TRACE2@@")
+CH='16-trees-bfs-and-bsts'; F='08-serialization-and-deserialization.md'
+tokens=["7","3","#","5","#","#","9","#","#"]
+# tree: 7 (3 (None,5), 9)
+T=("7",("3",None,("5",None,None)),("9",None,None))
+st=[]; out=[]
+def enc(n,label):
+    i=len(out)
+    if n is None:
+        out.append("#"); st.append({"at":{"at":i},"vars":{"slot":label},"note":f"The {label} is empty, so the writer emits the null marker."}); return
+    out.append(n[0]); st.append({"at":{"at":i},"vars":{"slot":label},"note":f"The writer emits the value {n[0]} for the {label}."})
+    enc(n[1],f"left slot of {n[0]}"); enc(n[2],f"right slot of {n[0]}")
+enc(T,"root"); assert out==tokens
+fill(CH,F,block(tokens,["at"],st),"@@TRACE1@@")
+st=[]; idx=[0]; made=[0]
+def dec(depth,label):
+    i=idx[0]; t=tokens[i]; idx[0]+=1
+    if t=="#":
+        st.append({"at":{"at":i},"vars":{"depth":depth},"note":f"Token {i} is the null marker, so the {label} stays empty."}); return
+    made[0]+=1
+    st.append({"at":{"at":i},"vars":{"depth":depth},"note":f"Token {i} is {t}, so the reader creates a node for the {label} and reads its left subtree next."})
+    dec(depth+1,f"left slot of {t}"); dec(depth+1,f"right slot of {t}")
+dec(1,"root"); assert idx[0]==9 and made[0]==4
+fill(CH,F,block(tokens,["at"],st),"@@TRACE2@@")

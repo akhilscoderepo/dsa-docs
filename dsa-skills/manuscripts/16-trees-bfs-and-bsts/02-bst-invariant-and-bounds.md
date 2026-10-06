@@ -172,7 +172,7 @@ The false friend is the parent-child comparison, and it fails silently on deep v
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given the root of a binary tree, return the number of nodes that respect all of their ancestors. A node respects its ancestors when its key is smaller than the key of every ancestor it lies to the left of, and larger than the key of every ancestor it lies to the right of. Equivalently, the key lies in the open interval between the largest right-turn key and the smallest left-turn key on its path. A node that breaks its own ancestors still passes its keys down to its children.
+**Problem.** The input is a binary tree. Return the number of nodes that respect all of their ancestors. A node respects its ancestors when its key is smaller than the key of every ancestor it lies to the left of, and larger than the key of every ancestor it lies to the right of. Equivalently, the key lies in the open interval between the largest right-turn key and the smallest left-turn key on its path. A node that breaks its own ancestors still passes its keys down to its children.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4.
@@ -193,7 +193,7 @@ The false friend is the parent-child comparison, and it fails silently on deep v
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the root of a binary tree, return `true` if every key in the left subtree of each node is strictly smaller than the node key, and every key in the right subtree is greater than or equal to the node key. Keys may be any `int`, including `Integer.MIN_VALUE` and `Integer.MAX_VALUE`.
+**Problem.** For a binary tree, return `true` if every key in the left subtree of each node is strictly smaller than the node key, and every key in the right subtree is greater than or equal to the node key. Keys may be any `int`, including `Integer.MIN_VALUE` and `Integer.MAX_VALUE`.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4.
@@ -214,7 +214,7 @@ The false friend is the parent-child comparison, and it fails silently on deep v
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given the root of a binary tree, return `true` if the tree is a valid binary search tree. A valid tree has, for every node, only smaller keys in its left subtree and only larger keys in its right subtree, and both subtrees are valid.
+**Problem.** Decide whether a binary tree is a valid binary search tree, and return `true` if it is. A valid tree has, for every node, only smaller keys in its left subtree and only larger keys in its right subtree, and both subtrees are valid.
 
 **Constraints.** The limits are:
 - **Nodes** number between 1 and 10^4.
