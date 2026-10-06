@@ -74,7 +74,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Call State
+### Shrink The Problem With Each Call
 
 **Recognition cue.** A problem decomposes into smaller instances described by a few parameters. **Invariant.** Each call has a precise subproblem contract and moves toward a base case. **False friend.** Recursion without shrinking state merely relocates an infinite loop to the call stack.
 
@@ -83,7 +83,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Zero And Negative Exponents.** Handle `Integer.MIN_VALUE` by widening before negation.
 - **Recognize - Author exercise: Recursive String Reversal By Range.** Recur on a strictly smaller interval without allocating slices.
 
-### Choose Explore Unchoose
+### Undo Each Choice After Exploring It
 
 **Recognition cue.** The algorithm builds one candidate, explores consequences, then must restore shared mutable state before trying a sibling. **Invariant.** On entry to each call, the working state represents exactly the choices on the current recursion path. **False friend.** Forgetting the unchoose step leaks one branch into another.
 
@@ -92,7 +92,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Store A Completed Path.** Copy the list before adding it to results.
 - **Recognize - LC 78 Subsets.** Generate every include/exclude outcome exactly once.
 
-### Subsets
+### List Every Subset
 
 **Recognition cue.** Every element may be included or excluded, and order inside a result follows input order. **Invariant.** At index `i`, the path fixes decisions for indices before `i`; later indices remain undecided. **False friend.** Permutation state chooses an unused element for a position and creates ordered arrangements.
 
@@ -101,7 +101,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Input.** Return one subset—the empty set—not an empty result collection.
 - **Recognize - LC 90 Subsets II.** Sort and skip equal sibling choices to avoid duplicate subsets.
 
-### Permutations
+### List Every Ordering
 
 **Recognition cue.** Every output uses all elements, but their positions may differ. **Invariant.** Depth equals the next output position; used state prevents one input occurrence from filling two positions. **False friend.** Increasing-start indices generate combinations, not permutations.
 
@@ -110,7 +110,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Restore Used State.** Verify every recursive return clears exactly the selected index.
 - **Recognize - LC 47 Permutations II.** Sort and skip equal unused siblings while allowing equal values at different depths.
 
-### Increasing-Start Combinations
+### Choose K Values Without Reordering
 
 **Recognition cue.** Select `k` distinct values where order does not matter. **Invariant.** Every recursive choice comes from indices at or after `start`, so each set appears in one increasing order. **False friend.** A global used array allows multiple orders of the same combination.
 
@@ -119,7 +119,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Insufficient Remaining Values.** End the loop when too few candidates remain to fill the path.
 - **Recognize - LC 216 Combination Sum III.** Add a remaining-sum state while preserving increasing choices.
 
-### Reusable Candidates
+### Reuse A Value In A Sum
 
 **Recognition cue.** A candidate may be chosen more than once, but result order still should not create duplicates. **Invariant.** Recurse with the same index after choosing a reusable candidate and a later index when skipping to the next candidate. **False friend.** Restarting at zero after every choice generates reordered duplicates.
 
@@ -128,7 +128,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Candidate Larger Than Remainder.** Under positive sorted inputs, stop later candidates safely.
 - **Recognize - Author exercise: Fixed-Length Reusable Sum.** Add a remaining-choice count without changing candidate reuse.
 
-### Duplicate Control
+### Skip Equal Values At One Level
 
 **Recognition cue.** Equal input values create identical sibling branches. **Invariant.** After sorting, skip `candidates[i] == candidates[i-1]` only when both are choices at the same recursion depth. **False friend.** Skipping every repeated value prevents valid results containing multiple equal occurrences.
 
@@ -137,7 +137,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Equal Values At Different Depths.** Permit `[2,2]` when two copies exist.
 - **Recognize - LC 40 Combination Sum II.** Combine one-use candidates, target pruning, and same-depth skipping.
 
-### Proof-Based Pruning
+### Stop A Branch You Can Prove Fails
 
 **Recognition cue.** A partial candidate cannot possibly become valid or beat the current best. **Invariant.** Every pruned branch is ruled out by a monotone constraint or proven bound, not by guesswork. **False friend.** Pruning because a branch “looks bad” risks deleting solutions.
 
@@ -146,7 +146,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Negative Values Break Sum Pruning.** Identify why an over-target sum could later recover.
 - **Recognize - LC 51 N-Queens.** Reject a placement immediately when its column or diagonal is already occupied.
 
-### Partition Generation
+### Cut A String Into Pieces
 
 **Recognition cue.** The output divides an entire sequence into contiguous valid pieces. **Invariant.** `start` is the first unpartitioned position; each choice selects one valid ending and recursion owns the suffix after it. **False friend.** Subset search may skip elements, while a partition must consume every position exactly once.
 
@@ -155,7 +155,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Empty Suffix Completion.** Record a result only when `start == length`.
 - **Recognize - LC 131 Palindrome Partitioning.** Generate every partition whose pieces are palindromes.
 
-### Board Constraints
+### Mark Cells On A Grid
 
 **Recognition cue.** Choices occupy board positions and constrain later spatial choices. **Invariant.** Marker state represents exactly the placements on the current path and is restored after exploration. **False friend.** A global visited mark without restoration incorrectly blocks cells for sibling paths.
 
@@ -166,7 +166,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### Trie And Backtracking
+### Search A Board With A Prefix Tree
 
 Backtracking owns the current board path and restores visited cells; the trie represents every dictionary prefix still compatible with that path. A trie without path search cannot move across the board, while independent word searches repeat the same prefixes.
 

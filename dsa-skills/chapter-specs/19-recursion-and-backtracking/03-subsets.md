@@ -1,4 +1,4 @@
-# Lesson spec: Subsets
+# Lesson spec: List Every Subset
 
 **Recognition cue.** Every element may be included or excluded, and order inside a result follows input order. **Invariant.** At index `i`, the path fixes decisions for indices before `i`; later indices remain undecided. **False friend.** Permutation state chooses an unused element for a position and creates ordered arrangements.
 

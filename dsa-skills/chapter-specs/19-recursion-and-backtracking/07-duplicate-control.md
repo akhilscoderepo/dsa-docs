@@ -1,4 +1,4 @@
-# Lesson spec: Duplicate Control
+# Lesson spec: Skip Equal Values At One Level
 
 **Recognition cue.** Equal input values create identical sibling branches. **Invariant.** After sorting, skip `candidates[i] == candidates[i-1]` only when both are choices at the same recursion depth. **False friend.** Skipping every repeated value prevents valid results containing multiple equal occurrences.
 

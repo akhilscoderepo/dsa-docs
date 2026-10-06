@@ -1,4 +1,4 @@
-# Lesson spec: Reusable Candidates
+# Lesson spec: Reuse A Value In A Sum
 
 **Recognition cue.** A candidate may be chosen more than once, but result order still should not create duplicates. **Invariant.** Recurse with the same index after choosing a reusable candidate and a later index when skipping to the next candidate. **False friend.** Restarting at zero after every choice generates reordered duplicates.
 

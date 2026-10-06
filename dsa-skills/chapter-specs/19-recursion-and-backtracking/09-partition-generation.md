@@ -1,4 +1,4 @@
-# Lesson spec: Partition Generation
+# Lesson spec: Cut A String Into Pieces
 
 **Recognition cue.** The output divides an entire sequence into contiguous valid pieces. **Invariant.** `start` is the first unpartitioned position; each choice selects one valid ending and recursion owns the suffix after it. **False friend.** Subset search may skip elements, while a partition must consume every position exactly once.
 

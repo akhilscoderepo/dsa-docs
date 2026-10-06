@@ -1,4 +1,4 @@
-# Lesson spec: Proof-Based Pruning
+# Lesson spec: Stop A Branch You Can Prove Fails
 
 **Recognition cue.** A partial candidate cannot possibly become valid or beat the current best. **Invariant.** Every pruned branch is ruled out by a monotone constraint or proven bound, not by guesswork. **False friend.** Pruning because a branch “looks bad” risks deleting solutions.
 

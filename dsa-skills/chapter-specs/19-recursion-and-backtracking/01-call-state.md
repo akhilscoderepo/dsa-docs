@@ -1,4 +1,4 @@
-# Lesson spec: Call State
+# Lesson spec: Shrink The Problem With Each Call
 
 **Recognition cue.** A problem decomposes into smaller instances described by a few parameters. **Invariant.** Each call has a precise subproblem contract and moves toward a base case. **False friend.** Recursion without shrinking state merely relocates an infinite loop to the call stack.
 

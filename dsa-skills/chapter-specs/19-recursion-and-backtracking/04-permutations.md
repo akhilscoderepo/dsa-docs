@@ -1,4 +1,4 @@
-# Lesson spec: Permutations
+# Lesson spec: List Every Ordering
 
 **Recognition cue.** Every output uses all elements, but their positions may differ. **Invariant.** Depth equals the next output position; used state prevents one input occurrence from filling two positions. **False friend.** Increasing-start indices generate combinations, not permutations.
 

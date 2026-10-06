@@ -1,4 +1,4 @@
-# Lesson spec: Choose Explore Unchoose
+# Lesson spec: Undo Each Choice After Exploring It
 
 **Recognition cue.** The algorithm builds one candidate, explores consequences, then must restore shared mutable state before trying a sibling. **Invariant.** On entry to each call, the working state represents exactly the choices on the current recursion path. **False friend.** Forgetting the unchoose step leaks one branch into another.
 
