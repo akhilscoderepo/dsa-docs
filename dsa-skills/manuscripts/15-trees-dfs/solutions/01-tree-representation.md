@@ -167,7 +167,7 @@ public final class NaryChildren {
 **Approach.**
 The method has two base cases. A `null` reference is an empty subtree and has no leaves, so it returns 0. A node whose `left` and `right` are both `null` is a leaf, so it returns 1. Any other node returns the sum of the leaf counts of its two sides. The second base case is needed because a leaf has two empty sides. Without it, the sum rule would add 0 and 0 and return 0 for a leaf.
 
-The invariant is that a call returns the number of leaves in exactly its subtree.
+Each call returns the number of leaves in exactly its subtree.
 
 **Complexity.**
 - **Time** is O(n), because each node and each `null` side receives one call.
