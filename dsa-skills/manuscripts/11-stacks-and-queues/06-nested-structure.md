@@ -67,7 +67,7 @@ An inner group must finish before the group around it can finish. While the inne
 
 #### One Frame For Each Open Level
 
-A **frame** is the record of one nesting level that is still open. In this lesson a frame holds one integer, the partial sum of its level. The scan keeps the frame of the innermost open level in the variable `cur`. Every frame of an outer level waits on a stack. The group around a level is its **parent**. When a `(` arrives, the scan pushes `cur` and starts a new frame with sum 0. At that moment the stack holds the frames of every parent, with the nearest parent on top.
+A **frame** is what the scan pushes when a level opens. In this lesson a frame holds one integer, the partial sum of the level around the new one. The scan keeps the partial sum of the innermost open level in the variable `cur`. The group that directly contains a level is its **parent**. When a `(` arrives, the scan pushes `cur` as a frame and starts a new level at sum 0. At that moment the stack holds one frame for every open group around the new one, with the frame of the parent on top.
 
 #### Closing A Level
 
@@ -97,7 +97,7 @@ The first input is `(3(15)2(4))`. The outer group holds 3 and 2 directly. It als
 
 #### A Chain Of Nested Groups
 
-The second input is `(2(4(6))5)`. Every group has one inner group. The saved stack grows to three frames at the deepest point. Each `)` records the sum of its own level and restores the level around it. The outer level resumes with its 2 and adds the 5 after both inner groups are gone.
+The second input is `(2(4(6))5)`. Every group except the innermost has one inner group. The saved stack grows to three frames at the deepest point. Each `)` records the sum of its own level and restores the level around it. The outer level resumes with its 2 and adds the 5 after both inner groups are gone.
 
 ```trace
 {"cells":["(","2","(","4","(","6",")",")","5",")"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"cur":0,"saved":"[0]","out":"[]"},"note":"( pushes the partial sum of the level around it and starts a new level at 0."},{"at":{"i":1},"vars":{"cur":2,"saved":"[0]","out":"[]"},"note":"The digit 2 adds to the current level, so the partial sum becomes 2."},{"at":{"i":2},"vars":{"cur":0,"saved":"[0, 2]","out":"[]"},"note":"( pushes the partial sum of the level around it and starts a new level at 0."},{"at":{"i":3},"vars":{"cur":4,"saved":"[0, 2]","out":"[]"},"note":"The digit 4 adds to the current level, so the partial sum becomes 4."},{"at":{"i":4},"vars":{"cur":0,"saved":"[0, 2, 4]","out":"[]"},"note":"( pushes the partial sum of the level around it and starts a new level at 0."},{"at":{"i":5},"vars":{"cur":6,"saved":"[0, 2, 4]","out":"[]"},"note":"The digit 6 adds to the current level, so the partial sum becomes 6."},{"at":{"i":6},"vars":{"cur":4,"saved":"[0, 2]","out":"[6]"},"note":") records 6 as the finished sum and restores the saved partial sum 4."},{"at":{"i":7},"vars":{"cur":2,"saved":"[0]","out":"[6, 4]"},"note":") records 4 as the finished sum and restores the saved partial sum 2."},{"at":{"i":8},"vars":{"cur":7,"saved":"[0]","out":"[6, 4]"},"note":"The digit 5 adds to the current level, so the partial sum becomes 7."},{"at":{"i":9},"vars":{"cur":0,"saved":"[]","out":"[6, 4, 7]"},"note":") records 7 as the finished sum and restores the saved partial sum 0."},{"at":{"i":10},"vars":{"cur":0,"saved":"[]","out":"[6, 4, 7]"},"note":"The text ends with an empty saved stack, and out holds the answer."}]}
@@ -135,7 +135,7 @@ static int[] directSums(String s) {
 
 #### Cost Of The Scan
 
-Each character causes at most one push, one pop or one addition. The method runs in O(n) time. The stack holds one integer per open level, so the space is O(d) for nesting depth `d`, plus O(g) for the `g` recorded sums. Digits outside every group go into the starting value of `cur` and appear in no answer.
+Each character causes at most one push, one pop or one addition. The method runs in O(n) time. The stack holds one integer per open level, so the space is O(d) for the largest depth `d`, plus O(g) for the `g` recorded sums. Digits outside every group go into the starting value of `cur` and appear in no answer.
 
 <!-- stage: applicability -->
 ### When Each Level Needs Its Own State
@@ -160,7 +160,7 @@ Skip the frames when the answer depends only on how deep the scan is, such as th
 
 **Prerequisites.** The stack of open levels in this lesson.
 
-**Problem.** The depth of a character in a balanced string of `(` and `)` is the number of groups that are open and contain it. The depth of a `(` counts its own group. Given a balanced string `s`, return the largest depth of any character, or 0 for the empty string.
+**Problem.** The depth of a character is the number of groups that contain it, and a bracket counts its own group. Given a balanced string `s`, return the largest depth of any character, or 0 for the empty string.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= s.length() <= 10^5`.
@@ -197,26 +197,26 @@ Skip the frames when the answer depends only on how deep the scan is, such as th
 
 **Changed decision.** The contract counts nested digits, so a closing level adds its total to the restored parent.
 
-#### [Boundary] Deep Single Chain (Author exercise)
+#### [Boundary] First Invalid Character (Author exercise)
 <!-- id: sq-deep-single-chain -->
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** The height of a balanced string of `(` and `)` is the largest number of groups that contain one another, counting empty groups, and 0 for the empty string. A string that is not balanced has no height. Return the height of `s`, or -1 when `s` is not balanced.
+**Problem.** A string of `(` and `)` is valid when every `)` closes an earlier unclosed `(` and no `(` stays unclosed at the end. Return -1 when `s` is valid. Otherwise return the index of the first invalid character. That is the first `)` that has no unclosed `(` before it. When every `)` has a partner, it is the oldest `(` that never closes.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= s.length() <= 10^5`.
 - **Characters** are only `(` and `)`.
-- **Return** is an `int`, and -1 marks any string that is not balanced.
+- **Return** is an `int`, and the empty string is valid.
 - **Mutation** is not allowed; the string does not change.
 
-**Example 1.** Input `((((()))))`, output 5, because the string holds five nested groups and the innermost group is empty.
+**Example 1.** Input `(()`, output 0, because the group opened at index 0 never closes.
 
-**Example 2.** Input `)(`, output -1, because the first character closes a group that was never opened.
+**Example 2.** Input `()(()))(`, output 6, because the `)` at index 6 has no unclosed `(` before it.
 
-**Hint.** Store in each frame the greatest height of the inner groups already closed. What does a level return to its parent when it closes?
+**Hint.** Store the index of each `(` in its frame. Which entry of the stack is the oldest group that never closes?
 
-**Changed decision.** The scan must detect an invalid text, so a `)` on an empty stack and a nonempty final stack both return -1.
+**Changed decision.** The answer is a position, so each frame holds an index, and a nonempty final stack reports its bottom entry.
 
 #### [Recognize] Score Of Parentheses (LeetCode 856)
 <!-- id: sq-score-of-parentheses -->

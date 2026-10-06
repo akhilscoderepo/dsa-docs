@@ -5,7 +5,7 @@
 <!-- id: sq-enqueue-one-dequeue -->
 
 **Approach.**
-The method pushes each value of `values` onto `in`, so the last value ends on top. It then pops `in` until empty and pushes each popped value onto `out`. Each pop from `in` yields the newest remaining value, and each push places it under the next one, so the first value finishes on top of `out`. The method pops that value and reads the rest of `out` from top to bottom. The invariant during the move is that `out` holds the already moved values in arrival order from the bottom up when read in reverse, and the oldest unmoved value is the top of `in` after the newer ones are gone.
+The method pushes each value of `values` onto `in`, so the last value ends on top. It then pops `in` until empty and pushes each popped value onto `out`. Each pop from `in` yields the newest remaining value, and each push places it under the next one, so the first value finishes on top of `out`. The method pops that value and reads the rest of `out` from bottom to top. The invariant during the move is that `out` holds the already moved values in arrival order from the bottom up when read in reverse, and the oldest unmoved value is the top of `in` after the newer ones are gone.
 
 **Complexity.**
 - **Time** is O(n), because each value is pushed and popped a constant number of times on each stack.
@@ -34,25 +34,29 @@ public final class OneDequeue {
         // The first slot receives the popped top of out, the oldest value.
         int k = 0;
         res[k++] = out.pop();
-        // Iterating a stack visits it from top to bottom.
-        for (int v : out) res[k++] = v;
+        // The descending iterator of the deque visits the stack from bottom to top.
+        java.util.Iterator<Integer> it = out.descendingIterator();
+        while (it.hasNext()) res[k++] = it.next();
         return res;
     }
 
     public static void main(String[] args) {
         // Example 1 and Example 2 from the exercise text.
-        if (!Arrays.equals(firstThenRest(new int[] {5, 8, 2}), new int[] {5, 8, 2})) throw new AssertionError("example 1");
-        if (!Arrays.equals(firstThenRest(new int[] {3, 3, 9, 1}), new int[] {3, 3, 9, 1})) throw new AssertionError("example 2");
+        if (!Arrays.equals(firstThenRest(new int[] {5, 8, 2}), new int[] {5, 2, 8})) throw new AssertionError("example 1");
+        if (!Arrays.equals(firstThenRest(new int[] {3, 3, 9, 1}), new int[] {3, 1, 9, 3})) throw new AssertionError("example 2");
         // Reversal fact: a stack read from top to bottom lists values newest first.
         ArrayDeque<Integer> probe = new ArrayDeque<>();
         probe.push(1); probe.push(2); probe.push(3);
         if (!probe.toString().equals("[3, 2, 1]")) throw new AssertionError("stack order");
-        // Random inputs equal the input itself, which is the arrival order.
+        // Random inputs give the first value, then the other values in reverse arrival order.
         Random rnd = new Random(11);
         for (int t = 0; t < 3000; t++) {
             int[] a = new int[1 + rnd.nextInt(12)];
             for (int i = 0; i < a.length; i++) a[i] = rnd.nextInt(5);
-            if (!Arrays.equals(firstThenRest(a), a.clone())) throw new AssertionError("random");
+            int[] want = new int[a.length];
+            want[0] = a[0];
+            for (int i = 1; i < a.length; i++) want[i] = a[a.length - i];
+            if (!Arrays.equals(firstThenRest(a), want)) throw new AssertionError("random");
         }
     }
 }

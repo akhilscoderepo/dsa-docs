@@ -15,7 +15,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 08-two-pointers | done |
 | 09-sliding-window | todo |
 | 10-intervals | done |
-| 11-stacks-and-queues | todo |
+| 11-stacks-and-queues | done |
 | 12-monotonic-stacks | todo |
 | 13-deques-and-monotonic-queues | todo |
 | 14-linked-lists | todo |
@@ -62,5 +62,6 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 - claimed 09 2026-10-05T22:38Z
 - claimed 10 2026-10-05T23:37Z
 - 10 (2026-10-06): content complete, human review pending. Built unattended in one run: six lessons plus the combination lesson Sort Intervals Then Scan Once, pushed lesson by lesson. Chapter 09 showed a claim from the same day, so chapter 10 was taken. Final reader review (RUNBOOK section 10) ran 2 passes with an independent reader subagent each time; pass 1 found 35 points and pass 2 15, most fixed. A third pass has not run, so a clean pass is not confirmed. Interpretation recorded: the spec repeats LC 56, 57, 435 and 452 in the combination lesson, so each repeat changes its contract (covered length, half-open insert, closed schedule size, arrow positions); lesson 01 Recognize counts groups; lesson 02 Recognize returns group starts and keeps the spec title. Open or accepted: 'false friend' and 'invariant' are not defined in plain words; 'Counting ...' headings sit over predict questions; the exchange argument in 05 and the cursor proof in 04 are dense; lesson 91 is long; the Build exercise in 05 returns 0 or 1; the review quiz has no question for the combination lesson. Remaining WARNs: low-diversity trace wording in 03 and insight in 06, template phrase in solutions. JDK 21 only; JDK 25, Windows, phones and printing are unverified. Lesson titles were retitled in plain wording in the working specs (dsa-skills/chapter-specs), not in inputs/.
+- 11 (2026-10-06): content complete, human review pending. Built unattended in one run: eleven lessons plus the combination lesson Parse With A Stack (Stack And Parsing State), pushed lesson by lesson. Final reader review (RUNBOOK section 10) ran 2 passes with an independent reader subagent each time; pass 1 found 25 points and pass 2 20, most fixed. A third pass has not run, so a clean pass is not confirmed. Interpretation recorded: LC 150, 394 and 224 repeat in the combination lesson with changed contracts (error codes for bad postfix, output length limit, named variables). Open or accepted: lesson 10 is dense (term stack plus saved parents); Recognize exercises show their method in titles or hints in places; "False Friend" and "Changed decision" labels are fixed by the format; exercise role names. Remaining WARNs: none. JDK 21 only; JDK 25, Windows, phones and printing are unverified. Lesson titles were retitled in plain wording in the working specs (dsa-skills/chapter-specs), not in inputs/.
 - claimed 11 2026-10-06T00:38Z
 - claimed 09 2026-10-06T01:40Z (stale claim; chapter built, gates and reader review pending)

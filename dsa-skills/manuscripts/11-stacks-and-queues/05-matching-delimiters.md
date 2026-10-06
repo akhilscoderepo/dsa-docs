@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Line With Equal Counts Fails
 
-A JSON parser reads the text `[1, {2]}` and reports an error. A quick count shows one `[`, one `{`, one `]` and one `}`, so every symbol has a partner somewhere. The parser still stops at the `]`, because the opening that is still unfinished at that point is `{`, and a `]` cannot close it. This lesson looks only at the bracket characters, so the input holds just the six symbols `()[]{}`, and the text above reduces to `[{]}`. Compilers, linters and formatters make this same check before they read anything else. The check must work in one pass over the text. How does the code remember which opening a closing symbol has to match?
+A JSON parser reads the text `[1, {2]}` and reports an error. A quick count shows one `[`, one `{`, one `]` and one `}`, so every symbol has a partner somewhere. The parser still stops at the `]`, because the opening that is still unfinished at that point is `{`, and a `]` cannot close it. This lesson looks only at the bracket characters, so the input holds just the six symbols `()[]{}`, and the text above reduces to `[{]}`. Compilers, linters and formatters make this same check while they read the text, and not in a separate pass before it. The check must work in one pass over the text. How does the code remember which opening a closing symbol has to match?
 
 <!-- stage: naive -->
 ### Delete Matched Pairs Until Nothing Changes
@@ -49,7 +49,7 @@ Read the text from left to right. An opening symbol has no answer yet, so the sc
 
 #### The Stack Holds The Pending Openings
 
-A **stack** is a collection that adds and removes items at one end, so the last item added leaves first. The scan pushes each opening symbol on the stack. An opening that has been pushed and not yet removed is **pending**. At every position the stack holds exactly the pending openings, with the oldest at the bottom and the newest on top. That sentence is the invariant of the whole method.
+The scan uses the **stack** from the first lesson, a last-in, first-out collection that adds and removes items at one end. The scan pushes each opening symbol on the stack. An opening that has been pushed and not yet removed is **pending**. At every position the stack holds exactly the pending openings, with the oldest at the bottom and the newest on top. That sentence is the invariant of the whole method.
 
 #### Three Ways A Text Fails
 
@@ -72,10 +72,10 @@ The method `partnerOf(c)` returns the opening symbol that belongs to the closing
 
 #### A Valid Nested Text
 
-The first text is `([]{})`. The cells are its six characters, and the pointer `i` sits on the symbol being tested. The variable `stack` lists the pending openings, `c` holds the tested character and `open` holds the symbol that a pop returns. The scan pushes `(` and then `[`. The `]` pops `[`, which is its partner, so one pending opening leaves. The scan pushes `{`, and `}` pops it. The final `)` pops `(`, and the stack is empty at the end. The text is valid.
+The first text is `([]{})`. The cells are its six characters, and the pointer `i` sits on the symbol being tested. The variable `stack` lists the pending openings from bottom to top, each in quotes, `c` holds the tested character and `open` holds the symbol that a pop returns. The scan pushes `(` and then `[`. The `]` pops `[`, which is its partner, so one pending opening leaves. The scan pushes `{`, and `}` pops it. The final `)` pops `(`, and the stack is empty at the end. The text is valid.
 
 ```trace
-{"cells":["(","[","]","{","}",")"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[(]","c":"("},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"[(, []","c":"["},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"[(]","c":"]","open":"["},"note":"] pops [, which is its partner."},{"at":{"i":3},"vars":{"stack":"[(, {]","c":"{"},"note":"{ is an opening, so the scan pushes it."},{"at":{"i":4},"vars":{"stack":"[(]","c":"}","open":"{"},"note":"} pops {, which is its partner."},{"at":{"i":5},"vars":{"stack":"[]","c":")","open":"("},"note":") pops (, which is its partner."},{"at":{"i":6},"vars":{"stack":"[]","result":"true"},"note":"The text ends with an empty stack, so the result is true."}]}
+{"cells":["(","[","]","{","}",")"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"'('","c":"'('"},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"'(' '['","c":"'['"},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"'('","c":"']'","open":"'['"},"note":"] pops [, which is its partner."},{"at":{"i":3},"vars":{"stack":"'(' '{'","c":"'{'"},"note":"{ is an opening, so the scan pushes it."},{"at":{"i":4},"vars":{"stack":"'('","c":"'}'","open":"'{'"},"note":"} pops {, which is its partner."},{"at":{"i":5},"vars":{"stack":"empty","c":"')'","open":"'('"},"note":") pops (, which is its partner."},{"at":{"i":6},"vars":{"stack":"empty","result":"true"},"note":"The text ends with an empty stack, so the result is true."}]}
 ```
 
 #### Equal Counts With The Wrong Order
@@ -83,7 +83,7 @@ The first text is `([]{})`. The cells are its six characters, and the pointer `i
 The second text is `([)]`. It holds two openings and two closings, so a count would accept it. The scan pushes `(` and `[`. The `)` arrives and pops `[`, because `[` is on top. The partner of `)` is `(`, so the scan finds a mismatch at index 2 and stops. The stack still holds the older `(`, and the scan returns false without reading the rest of the text.
 
 ```trace
-{"cells":["(","[",")","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"[(]","c":"("},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"[(, []","c":"["},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"[(]","c":")","open":"["},"note":") pops [, and the partner of ) is (. This is a mismatch, so the scan stops with false."}]}
+{"cells":["(","[",")","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"stack":"'('","c":"'('"},"note":"( is an opening, so the scan pushes it."},{"at":{"i":1},"vars":{"stack":"'(' '['","c":"'['"},"note":"[ is an opening, so the scan pushes it."},{"at":{"i":2},"vars":{"stack":"'('","c":"')'","open":"'['"},"note":") pops [, and the partner of ) is (. This is a mismatch, so the scan stops with false."}]}
 ```
 
 <!-- stage: code -->
@@ -125,7 +125,7 @@ Each character causes at most one push or one pop, and each of those takes O(1) 
 
 #### Recognize The Cue
 
-Use a stack when each closing symbol must pair with the most recent unfinished opening. The invariant is that the stack holds the pending openings in nesting order. HTML tags, JSON braces, function-call frames and undo steps all follow this shape. The cue is a rule that an inner item must finish before the item that contains it.
+Use a stack when each closing symbol must pair with the most recent unfinished opening. The invariant is that pending openings sit on the stack in nesting order. HTML tags, JSON braces, calls in progress and undo steps all follow this shape. The cue is a rule that an inner item must finish before the item that contains it.
 
 #### Equal Counts Are A False Friend
 
@@ -133,7 +133,7 @@ A count of openings and closings per type looks like a complete check, and it is
 
 #### When A Counter Is Enough
 
-A text with one bracket type needs no stack. A depth counter that goes up on `(` and down on `)` holds the same information as the stack size. The method must reject a depth below zero and a final depth above zero. Do not use a stack for a problem where closings may match any earlier opening, because the rule above then no longer holds.
+A text with one bracket type needs no stack. The depth of a character is the number of groups that contain it, and a bracket counts its own group. A depth counter that goes up on `(` and down on `)` holds the same information as the stack size. The method must reject a depth below zero and a final depth above zero. Do not use a stack for a problem where closings may match any earlier opening, because the rule above then no longer holds.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -218,6 +218,6 @@ A text with one bracket type needs no stack. A depth counter that goes up on `(`
 
 **Example 2.** Input `()()`, output the empty string, because both pieces have length 2.
 
-**Hint.** The depth of a character is the number of pending openings before it. Which `(` has depth 0 before it, and which `)` has depth 0 after it?
+**Hint.** Use the depth defined in this lesson, where a bracket counts its own group. Which `(` and which `)` have depth 1?
 
 **Changed decision.** The stack content is not needed, only its size, so a depth counter replaces the stack.

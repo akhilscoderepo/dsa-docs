@@ -77,7 +77,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 **Recognition cue.** Items must be handled in arrival order while later arrivals wait behind earlier ones. **Invariant.** The front is the next item to process and every enqueued item appears behind all items already present. **False friend.** A stack reverses arrival order.
 
 - **Build - Author exercise: Printer Queue.** Process job IDs in the order received.
-- **Vary - Author exercise: Round-Robin One Step.** Remove the front task, decrement its remaining work, and re-enqueue it only when unfinished.
+- **Vary - Author exercise: Round-Robin Finish Order.** Remove the front task, decrement its remaining work, and re-enqueue it only when unfinished.
 - **Boundary - Author exercise: Queue Becomes Empty.** Guard or prove every removal and handle a task completed on its first turn.
 - **Recognize - LC 1700 Number of Students Unable to Eat Lunch.** Simulate only while progress is possible and detect a full unsuccessful rotation.
 
@@ -114,7 +114,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 - **Build - Author exercise: Maximum Parenthesis Depth.** Track opened but unresolved levels.
 - **Vary - Author exercise: Sum Values By Nested Group.** Save a parent accumulator when entering a group and restore it when leaving.
-- **Boundary - Author exercise: Deep Single Chain.** Trace nested empty groups and reject unbalanced input under the stated contract.
+- **Boundary - Author exercise: First Invalid Character.** Report the index of the first invalid character, or -1 for a valid string, under the stated contract.
 - **Recognize - LC 856 Score of Parentheses.** Resolve each completed nested group into the value expected by its parent.
 
 ### Track The Minimum In A Stack

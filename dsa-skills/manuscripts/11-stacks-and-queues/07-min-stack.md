@@ -115,7 +115,7 @@ final class PairMinStack {
 
 #### Values And A Helper Stack
 
-The second class keeps two stacks of boxed `Integer` values. The unboxed `int v` on the left of `==` makes the comparison numeric. Comparing two `Integer` objects with `==` compares object identity, and equal values above 127 can be different objects.
+The second class keeps two stacks of boxed `Integer` values. In `v == mins.peek()`, the variable `v` is a primitive `int`, so Java unboxes `mins.peek()` and the `==` test is numeric, whichever side `v` is on. Comparing two `Integer` objects with `==` would compare object identity, and equal values above 127 can be different objects.
 
 ```java
 final class HelperMinStack {

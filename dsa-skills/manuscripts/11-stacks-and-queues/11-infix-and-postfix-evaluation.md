@@ -104,7 +104,7 @@ The tokens are `20 4 - 3 2 / *`. The cells are the tokens and the pointer `i` ma
 
 #### Convert An Expression With Three Operators
 
-The tokens are `8 - 3 * 2 + 1`. Numbers go straight to `output`. The `-` waits on `ops`. The `*` has higher precedence than the waiting `-`, so nothing is popped and `*` waits above it. The `+` has precedence equal to `-` and lower than `*`, so it pops `*` and then `-` before it waits. The end of the text pops the last operator.
+The tokens are `8 - 3 * 2 + 1`. Numbers go straight to `output`, which lists the postfix tokens in the order written. The variable `ops` lists the waiting operators with the top on the right. The `-` waits on `ops`. The `*` has higher precedence than the waiting `-`, so nothing is popped and `*` waits above it. The `+` has precedence equal to `-` and lower than `*`, so it pops `*` and then `-` before it waits. The end of the text pops the last operator.
 
 ```trace
 {"cells":["8","-","3","*","2","+","1"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"output":"8","ops":"[]"},"note":"The number 8 goes straight to the output."},{"at":{"i":1},"vars":{"output":"8","ops":"[-]"},"note":"- finds no waiting operator, so it waits."},{"at":{"i":2},"vars":{"output":"8 3","ops":"[-]"},"note":"The number 3 goes straight to the output."},{"at":{"i":3},"vars":{"output":"8 3","ops":"[-, *]"},"note":"* binds tighter than the waiting -, so it pops nothing and waits above it."},{"at":{"i":4},"vars":{"output":"8 3 2","ops":"[-, *]"},"note":"The number 2 goes straight to the output."},{"at":{"i":5},"vars":{"output":"8 3 2 * -","ops":"[+]"},"note":"+ pops * and - to the output, because they bind at least as tightly, and then waits."},{"at":{"i":6},"vars":{"output":"8 3 2 * - 1","ops":"[+]"},"note":"The number 1 goes straight to the output."},{"at":{"i":7},"vars":{"output":"8 3 2 * - 1 +","ops":"[]"},"note":"The end of the text pops the waiting + to the output."}]}
@@ -115,7 +115,7 @@ The tokens are `8 - 3 * 2 + 1`. Numbers go straight to `output`. The `-` waits o
 
 #### Evaluate A Postfix Token Array
 
-The method pops the right operand first. A token is an operator when it is one character long and one of the four signs, so the token `-7` stays a number.
+As in the first lesson, these methods use the last end of the deque, with `addLast` to push and `removeLast` to pop. The method pops the right operand first. A token is an operator when it is one character long and one of the four signs, so the token `-7` stays a number.
 
 ```java
 static boolean isOperator(String tok) {

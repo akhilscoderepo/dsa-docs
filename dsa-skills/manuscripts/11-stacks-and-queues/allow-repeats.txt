@@ -1,0 +1,2 @@
+# deliberate: the same rule is stated in the last lesson and in the unlocked combinations
+a stack that drops entries by comparison is taught in a later chapter

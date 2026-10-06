@@ -79,7 +79,7 @@ The stack `in` changes on every `enqueue` and empties on every transfer. The sta
 
 #### Arrivals Followed By Removals
 
-The first trace enqueues 4, 7 and 9 and then dequeues three times. Stack contents are listed from bottom to top. The pointer `next` counts how many of the cells have been enqueued.
+The first trace enqueues 4, 7 and 9 and then calls `dequeue` three times. Stack contents are listed from bottom to top. The pointer `next` counts how many of the cells have been enqueued.
 
 The three enqueues fill `in` with 4, 7, 9. The first `dequeue` finds `out` empty, so it moves 9, 7 and 4 in that order, and `out` holds 9, 7, 4 with 4 on top. The call returns 4. The next two calls pop 7 and 9 directly, with no further moves.
 
@@ -89,7 +89,7 @@ The three enqueues fill `in` with 4, 7, 9. The first `dequeue` finds `out` empty
 
 #### Arrivals Between Removals
 
-The second trace enqueues 4, 7 and 9, calls `dequeue`, enqueues 2, and then calls `dequeue` three more times. The value 2 lands in `in` while `out` still holds 9 and 7. The second and third `dequeue` calls pop 7 and then 9 without a transfer, so 2 stays behind 9. The last `dequeue` finds `out` empty and moves 2 across, and it returns 2 as the newest value.
+The second trace enqueues 4, 7 and 9, calls `dequeue`, enqueues 2, and then calls `dequeue` three more times. The value 2 lands in `in` while `out` still holds 9 and 7. The next two `dequeue` calls pop 7 then 9 without a transfer, so 2 stays behind 9. The last `dequeue` finds `out` empty and moves 2 across, and it returns 2 as the newest value.
 
 ```trace
 {"cells":[4,7,9,2],"pointers":["next"],"steps":[{"at":{"next":1},"vars":{"in":"[4]","out":"[]"},"note":"enqueue(4) pushes 4 onto in."},{"at":{"next":2},"vars":{"in":"[4, 7]","out":"[]"},"note":"enqueue(7) pushes 7 onto in."},{"at":{"next":3},"vars":{"in":"[4, 7, 9]","out":"[]"},"note":"enqueue(9) pushes 9 onto in."},{"at":{"next":3},"vars":{"in":"[]","out":"[9, 7]"},"note":"out is empty, so 3 value(s) move from in to out. dequeue() pops 4 from out."},{"at":{"next":4},"vars":{"in":"[2]","out":"[9, 7]"},"note":"enqueue(2) pushes 2 onto in."},{"at":{"next":4},"vars":{"in":"[2]","out":"[9]"},"note":"dequeue() pops 7 from out."},{"at":{"next":4},"vars":{"in":"[2]","out":"[]"},"note":"dequeue() pops 9 from out."},{"at":{"next":4},"vars":{"in":"[]","out":"[]"},"note":"out is empty, so 1 value(s) move from in to out. dequeue() pops 2 from out."}]}
@@ -137,7 +137,7 @@ The invariant is that `out` holds the oldest values in arrival order and `in` ho
 
 #### False Friend And Limits
 
-Moving everything between the stacks on every call is a false friend. It returns correct values, so tests pass, but each call costs O(n) and a long run costs O(n^2). Another false friend is a monotonic queue, a deque that drops stored values once newer values make them useless. A later chapter covers it. This queue keeps every value, so it is plain first-in first-out emulation.
+Moving everything between the stacks on every call is a false friend. It returns correct values, so tests pass, but each call costs O(n) and a long run costs O(n^2). This queue keeps every value, so it is plain first-in first-out emulation.
 
 Use two stacks when the platform offers only stack operations. Do not use them when a single call must finish within a hard time bound. One `dequeue` still costs O(n) when it triggers a transfer. An `ArrayDeque` used directly as a queue has amortized O(1) calls for each operation without any transfer, and it is the better choice whenever Java is available.
 
@@ -149,7 +149,7 @@ Use two stacks when the platform offers only stack operations. Do not use them w
 
 **Prerequisites.** The roles of `in` and `out` and the transfer in this lesson.
 
-**Problem.** A stack `in` starts empty and receives the values of the array `values` in order, so the last value is on top. Move every value from `in` onto a stack `out` by popping `in` and pushing `out`. Then pop one value from `out`. Return an array with the popped value first, followed by the remaining values of `out` from top to bottom.
+**Problem.** A stack `in` starts empty and receives the values of the array `values` in order, so the last value is on top. Move every value from `in` onto a stack `out` by popping `in` and pushing `out`. Then pop one value from `out`. Return an array with the popped value first, followed by the remaining values of `out` from bottom to top.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= values.length <= 10^4`.
@@ -157,9 +157,9 @@ Use two stacks when the platform offers only stack operations. Do not use them w
 - **Return** is an `int[]` of the same length as `values`.
 - **Mutation** is not allowed; the input array stays unchanged.
 
-**Example 1.** Input `[5,8,2]`, output `[5,8,2]`. The first value is on top of `out` after the transfer.
+**Example 1.** Input `[5,8,2]`, output `[5,2,8]`. The first value is on top of `out` after the transfer, and the value 2 is at the bottom.
 
-**Example 2.** Input `[3,3,9,1]`, output `[3,3,9,1]`.
+**Example 2.** Input `[3,3,9,1]`, output `[3,1,9,3]`.
 
 **Hint.** What order does a pop from `in` followed by a push onto `out` give? Which value ends on top?
 

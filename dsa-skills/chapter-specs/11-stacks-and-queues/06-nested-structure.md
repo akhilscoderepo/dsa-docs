@@ -4,5 +4,5 @@
 
 - **Build - Author exercise: Maximum Parenthesis Depth.** Track opened but unresolved levels.
 - **Vary - Author exercise: Sum Values By Nested Group.** Save a parent accumulator when entering a group and restore it when leaving.
-- **Boundary - Author exercise: Deep Single Chain.** Trace nested empty groups and reject unbalanced input under the stated contract.
+- **Boundary - Author exercise: First Invalid Character.** Report the index of the first invalid character, or -1 for a valid string, under the stated contract.
 - **Recognize - LC 856 Score of Parentheses.** Resolve each completed nested group into the value expected by its parent.

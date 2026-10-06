@@ -73,7 +73,7 @@ public final class PrinterQueue {
 }
 ```
 
-#### Solution: [Vary] Round-Robin One Step (Author exercise)
+#### Solution: [Vary] Round-Robin Finish Order (Author exercise)
 <!-- id: sq-round-robin-step -->
 
 **Approach.**
@@ -248,7 +248,7 @@ public final class QueueBecomesEmpty {
 <!-- id: sq-students-lunch -->
 
 **Approach.**
-The method queues the students and tracks the index `top` of the top sandwich. The front student takes the sandwich when the preferences match, which advances `top` and resets `misses`. Otherwise the student goes to the back and `misses` grows. When `misses` equals the queue size, every remaining student has been tested against the same top sandwich and none wants it, so no later turn can succeed. The method returns the queue size. The invariant is that `misses` counts consecutive misses since the last success.
+The method queues the students and tracks the index `sandwichAt` of the top sandwich. The front student takes the sandwich when the preferences match, which advances `sandwichAt` and resets `misses`. Otherwise the student goes to the back and `misses` grows. When `misses` equals the queue size, every remaining student has been tested against the same top sandwich and none wants it, so no later turn can succeed. The method returns the queue size. The invariant is that `misses` counts consecutive misses since the last success.
 
 **Complexity.**
 - **Time** is O(n^2) in the worst case, because each of at most n successes can follow up to n misses.
@@ -268,13 +268,13 @@ public final class StudentsLunch {
     static int unableToEat(int[] students, int[] sandwiches) {
         ArrayDeque<Integer> queue = new ArrayDeque<>();
         for (int s : students) queue.addLast(s);
-        int top = 0, misses = 0;
+        int sandwichAt = 0, misses = 0;
         // Stop on an empty queue or after as many consecutive misses as the queue length.
         while (!queue.isEmpty() && misses < queue.size()) {
             int s = queue.removeFirst();
-            if (s == sandwiches[top]) {
+            if (s == sandwiches[sandwichAt]) {
                 // A match takes the sandwich and resets the stall counter.
-                top++;
+                sandwichAt++;
                 misses = 0;
             } else {
                 // A mismatch sends the student to the back and counts one failed turn.

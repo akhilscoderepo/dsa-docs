@@ -71,7 +71,7 @@ A **term** is a chain of numbers joined by `*` and `/`, between two `+` or `-` s
 
 #### Parentheses Save The Parent Expression
 
-The **parent** of a parenthesized group is the expression that directly contains the group. At a `(` the reader has a running result and the sign in front of the group. It saves both on a stack and starts a fresh result of 0 with sign 1 for the inside. At the matching `)` it finishes the inner number, multiplies the inner result by the saved sign, and adds the saved result. The invariant is that the running result belongs to the innermost open group, and the saved pairs belong to the parents. This lesson keeps the two tools in separate grammars: terms for `*` and `/`, and saved parents for parentheses.
+The **parent** of a parenthesized group is the group that directly contains it, and the text outside every group has no parent. At a `(` the reader has a running result and the sign in front of the group. It saves both on a stack and starts a fresh result of 0 with sign 1 for the inside. At the matching `)` it finishes the inner number, multiplies the inner result by the saved sign, and adds the saved result. The invariant is that the running result belongs to the innermost open group, and the saved pairs belong to the parents. This lesson keeps the two tools in separate grammars: terms for `*` and `/`, and saved parents for parentheses.
 
 <!-- stage: variables -->
 ### What The Reader Keeps
@@ -182,11 +182,15 @@ Use a pending operator when numbers and operators arrive as characters and the m
 
 #### Splitting On Spaces Is A False Friend
 
-A method that splits on spaces looks simple. It is a false friend, because spaces are optional, and `120+35-8` is one piece. Evaluating left to right is also a false friend when `*` and `/` appear, since `7+12*3` gives 57 and not 43. A third false friend is the unary minus. In `5 - -3` and in `(-4+1)` the `-` has no left operand, so the reader must not treat it as a binary operator that applies to an earlier number.
+A method that splits on spaces looks simple. It is a false friend, because spaces are optional, and `120+35-8` is one piece. Evaluating left to right is also a false friend when `*` and `/` appear, since `7+12*3` gives 57 and not 43. A third false friend is the unary minus. In `-4+1` and in `(-4+1)` the `-` has no left operand, so the reader must not treat it as a binary operator that applies to an earlier number. The method `calculateGroups` above handles a unary minus only at the start of the text or right after `(`.
+
+#### A Sign After Another Sign
+
+In `5 - -3` the second `-` follows a sign and not a number. The rule is that a sign with no number since the last sign flips the sign. Here the second `-` flips the pending sign from -1 to 1, so the text means 5 + 3. The code above does not apply this rule, because it overwrites the pending sign instead of flipping it. The Boundary exercise below uses the rule.
 
 #### When Not To Use This Reader
 
-The reader in this lesson evaluates `+` and `-` with parentheses, or `+`, `-`, `*` and `/` without parentheses. A text that has both parentheses and `*` or `/` needs the terms stack and the saved parents together. That combination is its own problem. An exponent operator or a function call needs a rule for which operator binds first, and a stack of numbers alone cannot encode it.
+The code in this lesson evaluates `+` and `-` with parentheses, or `+`, `-`, `*` and `/` without parentheses. It handles a unary minus only at the start of the text or after `(`, and it does not handle a sign that follows another sign. A text that has both parentheses and `*` or `/` needs the terms stack and the saved parents together. That combination is its own problem. An exponent operator or a function call needs a rule for which operator binds first, and a stack of numbers alone cannot encode it.
 
 <!-- stage: exercises -->
 ### Exercises

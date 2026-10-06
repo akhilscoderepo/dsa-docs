@@ -301,7 +301,7 @@ public final class FirstBracketError {
 <!-- id: sq-remove-outermost -->
 
 **Approach.**
-A primitive piece starts at a `(` that has depth 0 before it and ends at the `)` that returns the depth to 0. The method keeps only the depth, which is the stack size of the earlier scan, because the content of the stack is always the same symbol. For a `(`, the method appends it only when the depth is already above 0, and then raises the depth. For a `)`, the method lowers the depth first and appends it only when the depth is still above 0. The invariant is that the depth equals the number of pending openings before the current character.
+A primitive piece starts at a `(` that has count 0 before it and ends at the `)` that returns the count to 0. The method keeps only the count, which is the stack size of the earlier scan, because the content of the stack is always the same symbol. For a `(`, the method appends it only when the count is already above 0, and then raises the count. For a `)`, the method lowers the count first and appends it only when the count is still above 0. The invariant is that the count equals the number of pending openings before the current character. The outermost brackets of a piece are the characters of depth 1 in the lesson's definition, and they are exactly the `(` with count 0 before it and the `)` with count 0 after it.
 
 **Complexity.**
 - **Time** is O(n), because the method reads each character once and appends in O(1) amortized time.

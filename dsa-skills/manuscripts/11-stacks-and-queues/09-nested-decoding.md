@@ -57,7 +57,7 @@ The **parent** of a group is the group that directly contains it. The text outsi
 
 #### A Frame Holds What A Group Needs Later
 
-A **frame** is a pair that the decoder saves on a stack when it reads `[`. The pair holds the parent text built so far and the number that the new group repeats. The top frame always belongs to the innermost open group. A frame stays on the stack until the matching `]` arrives, so a group at depth `d` has `d` frames below the current text.
+A **frame** is what the decoder pushes when it reads `[`. It holds the parent text built so far and the number that the new group repeats. The code keeps the two parts on two stacks, `parents` and `repeats`, that always have the same size. The top frame belongs to the innermost open group. A frame stays on the stacks until the matching `]` arrives, so while `d` groups are open the decoder holds `d` frames.
 
 #### Resolve At The Bracket, Not At The Digit
 
@@ -66,11 +66,12 @@ To **resolve** a group is to replace it by its repeated text. The decoder resolv
 <!-- stage: variables -->
 ### What The Single Pass Keeps
 
-The pass keeps three pieces of state.
+The pass keeps four pieces of state.
 
 - **cur** is the decoded text of the innermost open group so far, and it starts as the empty top level.
 - **count** is the number formed by the digits since the last non-digit character, and it resets to 0 after each `[`.
-- **stack** holds one frame per open group, and each frame stores the parent text and the number for that group.
+- **parents** is the stack of parent texts, one for each open group.
+- **repeats** is the stack of numbers, one for each open group, and it always has the same size as `parents`.
 
 A letter changes only `cur`. A digit changes only `count`. Each `[` pushes a frame and gives `cur` and `count` fresh values, and each `]` pops a frame and changes `cur`.
 
@@ -79,20 +80,20 @@ A letter changes only `cur`. A digit changes only `count`. Each `[` pushes a fra
 
 #### A Group Inside A Group
 
-The first trace reads `2[x3[yz]w]`. The cells are the characters, and the pointer `i` marks the character that was just read. The vars show `cur`, `count` and the stack, where each frame is written as the parent text in quotes and the number for its group.
+The first trace reads `2[x3[yz]w]`. The cells are the characters, and the pointer `i` marks the character that was just read. The vars show `cur`, `count`, `parents` with each text in quotes, and `repeats`. Position `k` of the two stacks together is the frame of the `k`-th open group.
 
 The first `[` saves the empty top-level text with the number 2. The second `[` saves the text `x` with the number 3. At the first `]`, the body `yz` appears three times after `x`, so `cur` becomes `xyzyzyz`. The letter `w` joins that text. The last `]` repeats it twice after the empty parent text.
 
 ```trace
-{"cells":["2","[","x","3","[","y","z","]","w","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"cur":"","count":2,"stack":"[]"},"note":"The digit 2 makes count 2."},{"at":{"i":1},"vars":{"cur":"","count":0,"stack":"[(\"\", 2)]"},"note":"[ saves the parent text \"\" with the number 2, then cur and count start fresh."},{"at":{"i":2},"vars":{"cur":"x","count":0,"stack":"[(\"\", 2)]"},"note":"The letter x joins cur."},{"at":{"i":3},"vars":{"cur":"x","count":3,"stack":"[(\"\", 2)]"},"note":"The digit 3 makes count 3."},{"at":{"i":4},"vars":{"cur":"","count":0,"stack":"[(\"\", 2), (\"x\", 3)]"},"note":"[ saves the parent text \"x\" with the number 3, then cur and count start fresh."},{"at":{"i":5},"vars":{"cur":"y","count":0,"stack":"[(\"\", 2), (\"x\", 3)]"},"note":"The letter y joins cur."},{"at":{"i":6},"vars":{"cur":"yz","count":0,"stack":"[(\"\", 2), (\"x\", 3)]"},"note":"The letter z joins cur."},{"at":{"i":7},"vars":{"cur":"xyzyzyz","count":0,"stack":"[(\"\", 2)]"},"note":"] pops the frame, so the body \"yz\" is appended 3 times after \"x\"."},{"at":{"i":8},"vars":{"cur":"xyzyzyzw","count":0,"stack":"[(\"\", 2)]"},"note":"The letter w joins cur."},{"at":{"i":9},"vars":{"cur":"xyzyzyzwxyzyzyzw","count":0,"stack":"[]"},"note":"] pops the frame, so the body \"xyzyzyzw\" is appended 2 times after \"\"."},{"at":{"i":10},"vars":{"cur":"xyzyzyzwxyzyzyzw","count":0,"stack":"[]"},"note":"The text ends with an empty stack, and cur holds the decoded text."}]}
+{"cells":["2","[","x","3","[","y","z","]","w","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"cur":"","count":2,"parents":"[]","repeats":"[]"},"note":"The digit 2 makes count 2."},{"at":{"i":1},"vars":{"cur":"","count":0,"parents":"[\"\"]","repeats":"[2]"},"note":"[ saves the parent text \"\" with the number 2, then cur and count start fresh."},{"at":{"i":2},"vars":{"cur":"x","count":0,"parents":"[\"\"]","repeats":"[2]"},"note":"The letter x joins cur."},{"at":{"i":3},"vars":{"cur":"x","count":3,"parents":"[\"\"]","repeats":"[2]"},"note":"The digit 3 makes count 3."},{"at":{"i":4},"vars":{"cur":"","count":0,"parents":"[\"\", \"x\"]","repeats":"[2, 3]"},"note":"[ saves the parent text \"x\" with the number 3, then cur and count start fresh."},{"at":{"i":5},"vars":{"cur":"y","count":0,"parents":"[\"\", \"x\"]","repeats":"[2, 3]"},"note":"The letter y joins cur."},{"at":{"i":6},"vars":{"cur":"yz","count":0,"parents":"[\"\", \"x\"]","repeats":"[2, 3]"},"note":"The letter z joins cur."},{"at":{"i":7},"vars":{"cur":"xyzyzyz","count":0,"parents":"[\"\"]","repeats":"[2]"},"note":"] pops the frame, so the body \"yz\" is appended 3 times after \"x\"."},{"at":{"i":8},"vars":{"cur":"xyzyzyzw","count":0,"parents":"[\"\"]","repeats":"[2]"},"note":"The letter w joins cur."},{"at":{"i":9},"vars":{"cur":"xyzyzyzwxyzyzyzw","count":0,"parents":"[]","repeats":"[]"},"note":"] pops the frame, so the body \"xyzyzyzw\" is appended 2 times after \"\"."},{"at":{"i":10},"vars":{"cur":"xyzyzyzwxyzyzyzw","count":0,"parents":"[]","repeats":"[]"},"note":"The text ends with an empty stack, and cur holds the decoded text."}]}
 ```
 
 #### A Number With Two Digits
 
-The second trace reads `2[ab]10[c]`. The group `2[ab]` closes before the next group starts, so the stack is empty again. The digits `1` and `0` read in turn give `count` the values 1 and then 10. The decoder does not repeat anything after the digit `1`, because the next character could be another digit. The `[` after `10` saves the number 10 together with the finished text of the first group.
+The second trace reads `2[ab]10[c]`. The group `2[ab]` closes before the next group starts, so both stacks are empty again. The digits `1` and `0` read in turn give `count` the values 1 and then 10. The decoder does not repeat anything after the digit `1`, because the next character could be another digit. The `[` after `10` saves the number 10 together with the finished text of the first group.
 
 ```trace
-{"cells":["2","[","a","b","]","1","0","[","c","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"cur":"","count":2,"stack":"[]"},"note":"The digit 2 makes count 2."},{"at":{"i":1},"vars":{"cur":"","count":0,"stack":"[(\"\", 2)]"},"note":"[ saves the parent text \"\" with the number 2, then cur and count start fresh."},{"at":{"i":2},"vars":{"cur":"a","count":0,"stack":"[(\"\", 2)]"},"note":"The letter a joins cur."},{"at":{"i":3},"vars":{"cur":"ab","count":0,"stack":"[(\"\", 2)]"},"note":"The letter b joins cur."},{"at":{"i":4},"vars":{"cur":"abab","count":0,"stack":"[]"},"note":"] pops the frame, so the body \"ab\" is appended 2 times after \"\"."},{"at":{"i":5},"vars":{"cur":"abab","count":1,"stack":"[]"},"note":"The digit 1 makes count 1."},{"at":{"i":6},"vars":{"cur":"abab","count":10,"stack":"[]"},"note":"The digit 0 makes count 10."},{"at":{"i":7},"vars":{"cur":"","count":0,"stack":"[(\"abab\", 10)]"},"note":"[ saves the parent text \"abab\" with the number 10, then cur and count start fresh."},{"at":{"i":8},"vars":{"cur":"c","count":0,"stack":"[(\"abab\", 10)]"},"note":"The letter c joins cur."},{"at":{"i":9},"vars":{"cur":"ababcccccccccc","count":0,"stack":"[]"},"note":"] pops the frame, so the body \"c\" is appended 10 times after \"abab\"."},{"at":{"i":10},"vars":{"cur":"ababcccccccccc","count":0,"stack":"[]"},"note":"The text ends with an empty stack, and cur holds the decoded text."}]}
+{"cells":["2","[","a","b","]","1","0","[","c","]"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"cur":"","count":2,"parents":"[]","repeats":"[]"},"note":"The digit 2 makes count 2."},{"at":{"i":1},"vars":{"cur":"","count":0,"parents":"[\"\"]","repeats":"[2]"},"note":"[ saves the parent text \"\" with the number 2, then cur and count start fresh."},{"at":{"i":2},"vars":{"cur":"a","count":0,"parents":"[\"\"]","repeats":"[2]"},"note":"The letter a joins cur."},{"at":{"i":3},"vars":{"cur":"ab","count":0,"parents":"[\"\"]","repeats":"[2]"},"note":"The letter b joins cur."},{"at":{"i":4},"vars":{"cur":"abab","count":0,"parents":"[]","repeats":"[]"},"note":"] pops the frame, so the body \"ab\" is appended 2 times after \"\"."},{"at":{"i":5},"vars":{"cur":"abab","count":1,"parents":"[]","repeats":"[]"},"note":"The digit 1 makes count 1."},{"at":{"i":6},"vars":{"cur":"abab","count":10,"parents":"[]","repeats":"[]"},"note":"The digit 0 makes count 10."},{"at":{"i":7},"vars":{"cur":"","count":0,"parents":"[\"abab\"]","repeats":"[10]"},"note":"[ saves the parent text \"abab\" with the number 10, then cur and count start fresh."},{"at":{"i":8},"vars":{"cur":"c","count":0,"parents":"[\"abab\"]","repeats":"[10]"},"note":"The letter c joins cur."},{"at":{"i":9},"vars":{"cur":"ababcccccccccc","count":0,"parents":"[]","repeats":"[]"},"note":"] pops the frame, so the body \"c\" is appended 10 times after \"abab\"."},{"at":{"i":10},"vars":{"cur":"ababcccccccccc","count":0,"parents":"[]","repeats":"[]"},"note":"The text ends with an empty stack, and cur holds the decoded text."}]}
 ```
 
 <!-- stage: code -->
@@ -132,7 +133,7 @@ static String decode(String s) {
 
 #### Cost Of The Pass
 
-The pass reads each input character once. Each `]` copies the body into its parent as many times as the number says. The time is O(n + L * d) for the decoded length `L` and the nesting depth `d`, because a character is copied once for each group that encloses it. The stack holds `d` frames, so the extra space is O(d) plus the text that those frames store. The test `c >= '0' && c <= '9'` is deliberate, because `Character.isDigit` also accepts digits from other scripts.
+The pass reads each input character once. Each `]` copies the body into its parent as many times as the number says. The time is O(n + L * d) for the decoded length `L` and the nesting depth `d`, because a character is copied once for each group that encloses it. The two stacks hold `d` frames, so the extra space is O(d) plus the text that those frames store. The test `c >= '0' && c <= '9'` is deliberate, because `Character.isDigit` also accepts digits from other scripts.
 
 <!-- stage: applicability -->
 ### Recognizing Repeat Groups In Other Problems

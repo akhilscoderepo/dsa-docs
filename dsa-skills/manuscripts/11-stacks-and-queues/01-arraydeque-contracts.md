@@ -3,7 +3,7 @@
 ## Use ArrayDeque For Stack And Queue
 
 <!-- stage: context -->
-### A Marker That Crashes The Search
+### A Null Marker That Crashes
 
 A program puts `null` into an `ArrayDeque` to mark the gap between two groups of items. The program throws `NullPointerException` on the first insertion of that marker. The author expected a container that stores any reference, and the container refuses this one value.
 
@@ -50,7 +50,7 @@ The second problem is a missing contract. The code must also say what happens on
 <!-- stage: insight -->
 ### One End Per Meaning
 
-`ArrayDeque` is a resizable circular array that adds and removes at both ends in amortized O(1) time. Amortized means that the average cost per call over a long sequence is constant, even though an occasional resize of the array costs more. It has no index access, so the interface offers only end operations. The lesson fixes which end plays which role and keeps that choice for the whole implementation.
+`ArrayDeque` is a resizable circular array that adds and removes at both ends in O(1) time per call. An occasional resize of the array costs more, and the lesson on two-stack queues defines how that cost averages out. It has no index access, so the interface offers only end operations. The lesson fixes which end plays which role and keeps that choice for the whole implementation.
 
 #### Choosing A Stack Or A Queue
 
@@ -127,7 +127,7 @@ static int takeOrDefault(java.util.ArrayDeque<Integer> dq, int fallback) {
 }
 ```
 
-Each method runs in O(n) time for `n` values and uses O(n) space for the deque. A single end operation runs in amortized O(1) time.
+Each method runs in O(n) time for `n` values and uses O(n) space for the deque. A single end operation runs in O(1) time, apart from the occasional resize.
 
 <!-- stage: applicability -->
 ### Checking The Contract Before Choosing
@@ -142,7 +142,7 @@ Use `ArrayDeque` when the algorithm needs only last-in access or arrival-order a
 
 #### The Null Hazard And Its Fix
 
-The Java hazard is that `ArrayDeque` throws on `null`. A level divider must therefore be a real value. Use a sentinel value that the data cannot contain, such as `-1` for non-negative data, or count the elements per level and keep the count in an `int`. Do not use a deque when the algorithm must read the middle element, because no deque operation does that.
+The Java hazard is that `ArrayDeque` throws on `null`. A marker between groups must therefore be a real value. Use a sentinel value that the data cannot contain, such as `-1` for non-negative data, or count the elements per group and keep the count in an `int`. Do not use a deque when the algorithm must read the middle element, because no deque operation does that.
 
 <!-- stage: exercises -->
 ### Exercises

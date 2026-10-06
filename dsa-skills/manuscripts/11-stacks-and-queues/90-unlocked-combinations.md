@@ -9,7 +9,7 @@ A stack and a reading step form the lesson Stack And Parsing State. The reading 
 
 ### One Stack Idea Comes Later
 
-An ordinary stack keeps unfinished work in the order it started. It never removes a stored value because a newer value makes it useless. A later chapter adds that rule and uses it for next-larger-value and histogram problems. This chapter assigns none of those problems.
+A stack that drops entries by comparison is taught in a later chapter. That chapter uses it for next-larger-value and histogram problems, and this chapter assigns none of those problems.
 
 ### What Later Chapters Reuse
 
@@ -17,4 +17,4 @@ Three ideas carry forward.
 
 - **The saved frame** returns whenever a later method must restore a parent level after a child level ends.
 - **The empty-stack rule** returns whenever a later reader pops and the contract says what a missing parent means.
-- **The token check** returns whenever a later reader must reject a piece of text before it changes any state.
+- **Validate before any push or pop** returns whenever a later reader must reject a piece of text before it changes any state.

@@ -175,79 +175,87 @@ public final class InclusiveGroupTotals {
 }
 ```
 
-#### Solution: [Boundary] Deep Single Chain (Author exercise)
+#### Solution: [Boundary] First Invalid Character (Author exercise)
 <!-- id: sq-deep-single-chain -->
 
 **Approach.**
-Each level keeps the greatest height among the groups that closed directly inside it. A `(` pushes that value for the level around it and starts a new level at 0. A `)` on an empty stack means a close without an open, so the method returns -1. Otherwise the closing group has height `cur + 1`, and the method restores the saved value and keeps the larger of the two. A nonempty stack at the end means an unclosed group, so the method returns -1. The invariant is that `cur` is the greatest height among closed groups directly inside the innermost open group. An empty group closes with `cur = 0` and has height 1.
+The method pushes the index of each `(` as the frame of the group it opens. A `)` pops the newest index. A `)` on an empty stack is the first character at which no valid continuation exists, so the method returns its index at once. When the scan ends with a nonempty stack, every remaining index is a `(` that never closes. The oldest of them lies at the bottom of the stack, so the method returns that entry. An empty stack at the end means the string is valid, and the method returns -1. The invariant is that the stack holds the indices of the `(` characters that are still open, from the oldest at the bottom to the newest on top.
 
 **Complexity.**
 - **Time** is O(n), because each character causes at most one push or pop.
-- **Space** is O(d), because the stack holds one integer per open group.
+- **Space** is O(d), because the stack holds one index per open group.
 
 ```java run
 import java.util.ArrayDeque;
 import java.util.Random;
 
-public final class DeepSingleChain {
+public final class FirstInvalidCharacter {
     /**
-     * Returns the height of a balanced string, or -1 when it is not balanced.
+     * Returns the index of the first invalid character, or -1 when the string is valid.
      * Time: O(n), one push or pop per character.
      * Space: O(d) for the deepest nesting d.
-     * Invariant: cur is the greatest height of groups closed inside the innermost open group.
+     * Invariant: the stack holds the indices of the open groups, oldest at the bottom.
      */
-    static int height(String s) {
-        ArrayDeque<Integer> saved = new ArrayDeque<>();
-        int cur = 0;
+    static int firstInvalid(String s) {
+        ArrayDeque<Integer> open = new ArrayDeque<>();
         // One pass reads each character once.
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '(') {
-                // Save the level around this group and start a new level.
-                saved.push(cur);
-                cur = 0;
+                // The frame of a new group is the index where it opens.
+                open.push(i);
             } else {
-                // A close with no open group makes the text invalid.
-                if (saved.isEmpty()) return -1;
-                // The closed group is one taller than its tallest inner group.
-                cur = Math.max(saved.pop(), cur + 1);
+                // A close with no open group is the first invalid character.
+                if (open.isEmpty()) return i;
+                open.pop();
             }
         }
-        // Groups still open at the end make the text invalid.
-        return saved.isEmpty() ? cur : -1;
+        // The bottom entry is the oldest group that never closes; an empty stack means valid.
+        return open.isEmpty() ? -1 : open.peekLast();
     }
 
-    /** Reference: remove all non-overlapping "()" pairs in rounds; the round count is the height. */
+    /** Reference: match each "(" by a forward counter, and report a stray ")" by a running balance. */
     static int oracle(String s) {
-        int rounds = 0;
-        // Each round peels the innermost groups.
-        while (s.contains("()")) {
-            s = s.replace("()", "");
-            rounds++;
+        int bal = 0;
+        // A balance below zero marks a close with no open group.
+        for (int i = 0; i < s.length(); i++) {
+            bal += s.charAt(i) == '(' ? 1 : -1;
+            if (bal < 0) return i;
         }
-        return s.isEmpty() ? rounds : -1;
+        // Otherwise the first "(" whose counter never returns to zero is unmatched.
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != '(') continue;
+            int c = 0;
+            boolean closed = false;
+            for (int k = i; k < s.length() && !closed; k++) {
+                c += s.charAt(k) == '(' ? 1 : -1;
+                if (c == 0) closed = true;
+            }
+            if (!closed) return i;
+        }
+        return -1;
     }
 
     public static void main(String[] args) {
-        // Example 1: five nested empty-bodied groups.
-        if (height("((((()))))") != 5) throw new AssertionError("example 1");
-        // Example 2: a close before any open.
-        if (height(")(") != -1) throw new AssertionError("example 2");
-        // Empty input has height 0, and unclosed input is rejected.
-        if (height("") != 0 || height("(()") != -1) throw new AssertionError("edges");
+        // Example 1: the group opened at index 0 never closes.
+        if (firstInvalid("(()") != 0) throw new AssertionError("example 1");
+        // Example 2: the close at index 6 has no open group.
+        if (firstInvalid("()(()))(") != 6) throw new AssertionError("example 2");
+        // Valid and empty strings return -1.
+        if (firstInvalid("(())") != -1 || firstInvalid("") != -1) throw new AssertionError("valid");
         // A long chain keeps the explicit stack off the call stack.
         StringBuilder deep = new StringBuilder();
         for (int k = 0; k < 100000 / 2; k++) deep.append('(');
         for (int k = 0; k < 100000 / 2; k++) deep.append(')');
-        if (height(deep.toString()) != 50000) throw new AssertionError("deep chain");
-        // Random strings agree with the round-count reference, valid or not.
+        if (firstInvalid(deep.toString()) != -1) throw new AssertionError("deep chain");
+        // Random strings agree with the reference, valid or not.
         Random rnd = new Random(23);
         int valid = 0;
         for (int t = 0; t < 8000; t++) {
             StringBuilder sb = new StringBuilder();
             for (int k = rnd.nextInt(13); k > 0; k--) sb.append(rnd.nextBoolean() ? '(' : ')');
-            String s = sb.toString();
-            if (height(s) != oracle(s)) throw new AssertionError("random " + s);
-            if (height(s) >= 0) valid++;
+            String str = sb.toString();
+            if (firstInvalid(str) != oracle(str)) throw new AssertionError("random " + str);
+            if (firstInvalid(str) == -1) valid++;
         }
         if (valid < 100) throw new AssertionError("coverage");
     }

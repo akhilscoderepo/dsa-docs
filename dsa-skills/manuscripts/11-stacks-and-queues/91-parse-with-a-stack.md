@@ -7,7 +7,7 @@
 
 A developer maintains a small tool that reads four kinds of text. The first is a formula written with the operator last, such as `7 2 - 3 *`. The second is a compressed string such as `2[a3[b]]`. The third is a file path such as `/home/user/../docs/./a.txt`. The fourth is an arithmetic line such as `-(x+4)-y` with named variables. The developer writes one stack loop for the formula, and it works on the valid examples. Testing all four texts with that loop, and copies of it, produces four different bugs. The formula `7 2 ^` is accepted silently. The compressed string loses its repeat count. The path `/..` crashes on an empty stack. The arithmetic line `-(x+4)` returns the wrong sign.
 
-The stack loop was the same each time, so the loop is not what differs. The task here is to answer one question. For each of the four texts, what must the reading step decide, and what must the stack remember so that the decision can be finished later?
+The stack loop was the same each time, so the loop is not what differs. The code stage shows two of the texts, the path and the formula, and the exercises add the compressed string and the line with named variables. The traces follow the path and the compressed string, and the compressed string carries a limit on its decoded length. The task here is to answer one question. For each of the four texts, what must the reading step decide, and what must the stack remember so that the decision can be finished later?
 
 <!-- stage: contributions -->
 ### What Each Earlier Idea Adds
@@ -66,11 +66,15 @@ A **token** is the smallest piece of text that has one meaning. In a postfix for
 
 #### The Stack Holds One Frame Per Open Level
 
-A **frame** is the saved state of one unfinished level, and it contains what the reader needs to continue after the level closes. A postfix formula keeps finished values as frames of size one. A compressed string keeps a pair of the text before the bracket and the repeat count. A path keeps the names that stay open. An arithmetic line keeps a pair of the result before the parenthesis and the sign in front of it. When a level closes, the reader pops one frame and combines it with the finished level.
+A **frame** is what the reader pushes when a level opens, and it holds what the reader needs to continue after that level closes. The group that directly contains a given group is its **parent**. A compressed string pushes a pair of the text before the bracket and the repeat count. A path pushes one name for each open directory. An arithmetic line pushes a pair of the result before the parenthesis and the sign in front of it. A postfix formula opens no levels, so its stack holds finished values and no frames. When a level closes, the reader pops one frame and combines it with the finished level.
 
 #### The Contract Decides Empty And Bad Cases
 
-The contract says what happens when a pop finds nothing. In a path, `..` at the top level must **clamp**, so it does nothing, because the root has no parent. In a postfix formula an operator with fewer than two values is an error. In a compressed string a closing bracket without a frame is an error. The contract also says what an unknown token means. Each rule is a decision of the reading step, and the stack only stores what the decision needs.
+The contract says what happens when a pop finds nothing. In a path, `..` at the top level must **clamp**, so it does nothing, because the root has no parent. In a postfix formula an operator with fewer than two values is an error. In a compressed string a closing bracket without a frame is an error. The contract also says what an unknown token means. In a compressed string the contract can also set a **limit** on the decoded length, so an oversized expansion becomes a rejection. Each rule is a decision of the reading step, and the stack only stores what the decision needs.
+
+#### Validate Before Any Push Or Pop
+
+The reader inspects each token and the stack depth before any change. A closing bracket needs a waiting frame, an operator needs two operands on hand, and a repeat needs a projected length within the limit. When an inspection fails, the reader reports a malformed input, and the stored contents stay as they were.
 
 <!-- stage: variables -->
 ### What The Reader And The Stack Carry
@@ -109,7 +113,7 @@ The text is `2[a3[b]]` and the limit on the decoded length is 10. The variable `
 
 #### Path Components On A Stack
 
-The method clamps `..` at the root by testing for an empty stack before it pops.
+As in the first lesson, the code uses the last end of the deque, with `addLast` to push and `removeLast` to pop. The method clamps `..` at the root by testing for an empty stack before it pops.
 
 ```java
 static String simplifyPath(String path) {
@@ -155,7 +159,7 @@ A stack of plain values is a false friend for nested text. It fits a postfix for
 
 #### When A Stack Does Not Fit
 
-A text that needs a lookup of an earlier unmatched piece by value, or that needs to drop entries by comparison, asks for another structure. A text whose parts may end in any order, not the reverse of starting order, also does not fit one stack.
+A text that needs a lookup of an earlier unmatched piece by value asks for another structure. A stack that drops entries by comparison is taught in a later chapter. A text whose parts may end in any order, not the reverse of starting order, also does not fit one stack.
 
 <!-- stage: exercises -->
 ### Exercises

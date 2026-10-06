@@ -35,4 +35,4 @@ Each lesson starts with a program that fails on a real input and then shows a si
 
 ### What You Can Do After This Chapter
 
-You can name the end of a deque that each call touches and say what it returns on an empty deque. You can choose a stack when the newest unfinished item must finish first, and a queue when the oldest must go first. You can say what one stack entry stores, and you can write the check that rejects bad input before any state changes.
+You can name the end of a deque that each call touches and say what it returns on an empty deque. You can choose a stack when the newest unfinished item must finish first, and a queue when the oldest must go first. You can say what one stack entry stores, and you can validate before any push or pop, so bad input is rejected before any state changes.

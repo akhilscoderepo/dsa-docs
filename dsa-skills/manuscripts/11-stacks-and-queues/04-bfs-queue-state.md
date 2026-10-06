@@ -15,23 +15,23 @@ The search visits every floor it can reach, so it does find floor 10. It simply 
 The usual first attempt follows one route as far as possible. It keeps a stack of floors with their press counts. It pops the newest entry, tries the down button first, and stops when the popped floor is the target.
 
 ```java
-static int firstFound(int start, int target, int top) {
+static int firstFound(int start, int target, int maxFloor) {
     java.util.ArrayDeque<int[]> stack = new java.util.ArrayDeque<>();
-    boolean[] seen = new boolean[top + 1];
+    boolean[] seen = new boolean[maxFloor + 1];
     stack.push(new int[] {start, 0});
     seen[start] = true;
     while (!stack.isEmpty()) {
         int[] cur = stack.pop();
         if (cur[0] == target) return cur[1];
         int up = cur[0] + 3, down = cur[0] - 2;
-        if (up <= top && !seen[up]) { seen[up] = true; stack.push(new int[] {up, cur[1] + 1}); }
+        if (up <= maxFloor && !seen[up]) { seen[up] = true; stack.push(new int[] {up, cur[1] + 1}); }
         if (down >= 0 && !seen[down]) { seen[down] = true; stack.push(new int[] {down, cur[1] + 1}); }
     }
     return -1;
 }
 ```
 
-The `seen` array stops the search from revisiting a floor. For start 1, target 10 and top 20, the method returns a press count after it reaches floor 10.
+The `seen` array stops the search from revisiting a floor. For start 1, target 10 and maxFloor 20, the method returns a press count after it reaches floor 10.
 
 <!-- stage: bottleneck -->
 ### The First Route Is Not Shortest
@@ -72,7 +72,7 @@ The search keeps three pieces of state.
 
 - **queue** holds the frontier, and the next floor to serve is at its front.
 - **dist** stores the press count of each discovered floor, with -1 for undiscovered floors.
-- **top** is the highest allowed floor, and the search ignores any move outside 0 to top.
+- **maxFloor** is the highest allowed floor, and the search ignores any move outside 0 to maxFloor.
 
 The array `dist` plays two roles. A value other than -1 means the floor is marked as discovered, so a separate `seen` array is not needed. The same value is the press count that the answer returns. The queue changes on every step, and `dist` changes only when a floor is discovered.
 
@@ -81,7 +81,7 @@ The array `dist` plays two roles. A value other than -1 means the floor is marke
 
 #### From Floor 1 To Floor 10
 
-The first trace starts at floor 1 with target 10 and top 20. The cells are the floors 0 to 20, and the pointer `cur` marks the floor just removed from the queue. Each queue entry reads `floor:count`, so `4:1` is floor 4 with a press count of 1. Each step lists the queue after the removal and after the new floors join it, and the variable `new` names those new floors.
+The first trace starts at floor 1 with target 10 and maxFloor 20. The cells are the floors 0 to 20, and the pointer `cur` marks the floor just removed from the queue. Each queue entry reads `floor:count`, so `4:1` is floor 4 with a press count of 1. Each step lists the queue after the removal and after the new floors join it, and the variable `new` names those new floors.
 
 Floor 1 is served first, and only its up button is valid, so floor 4 enters the queue with count 1. Floor 4 adds floors 7 and 2 with count 2. Floor 7 adds floors 10 and 5 with count 3, and floor 2 adds floor 0. Floor 10 then leaves the queue, and the search returns its count.
 
@@ -105,8 +105,8 @@ The second trace starts at floor 18 with target 13. It shows that a floor alread
 The method uses `dist` as the discovery mark. It checks the target when a floor is removed, which is the first moment the stored count is final.
 
 ```java
-static int fewestPresses(int start, int target, int top) {
-    int[] dist = new int[top + 1];
+static int fewestPresses(int start, int target, int maxFloor) {
+    int[] dist = new int[maxFloor + 1];
     java.util.Arrays.fill(dist, -1);
     java.util.ArrayDeque<Integer> queue = new java.util.ArrayDeque<>();
     dist[start] = 0;
@@ -117,7 +117,7 @@ static int fewestPresses(int start, int target, int top) {
         if (cur == target) return dist[cur];
         for (int s : step) {
             int next = cur + s;
-            if (next < 0 || next > top || dist[next] != -1) continue;
+            if (next < 0 || next > maxFloor || dist[next] != -1) continue;
             dist[next] = dist[cur] + 1;
             queue.addLast(next);
         }
@@ -214,17 +214,17 @@ Do not use this search when the question is only whether a target is reachable a
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** An array `words` has distinct words. The array `neighbors` lists, for each word index, the indices of the words that differ from it in exactly one letter. A transform sequence starts at word `begin`, ends at word `end`, and each step moves to a listed neighbor. Return the number of words in the shortest sequence, counting both ends, or 0 if no sequence exists.
+**Problem.** A list holds `n` distinct words, numbered `0` to `n - 1`. The array `neighbors` lists, for each word index, the indices of the words that differ from it in exactly one letter. A transform sequence starts at the word with index `begin`, ends at the word with index `end`, and each step moves to a listed neighbor. Return the number of words in the shortest sequence, counting both ends, or 0 if no sequence exists.
 
 **Constraints.** The limits are:
-- **Words** number `1 <= words.length <= 2000`.
+- **Words** number `1 <= n <= 2000`, and `n == neighbors.length`.
 - **Neighbors** lists are symmetric and contain no self index.
-- **Indices** satisfy `0 <= begin, end < words.length`.
+- **Indices** satisfy `0 <= begin, end < n`.
 - **Return** is an `int`, with 1 when `begin == end`.
 
-**Example 1.** Input `words = [cat, cot, cog, dog, dot, bat]`, `neighbors = [[1,5],[0,2,4],[1,3],[2,4],[1,3],[0]]`, `begin = 0`, `end = 3`, output 4.
+**Example 1.** Input `neighbors = [[1,5],[0,2,4],[1,3],[2,4],[1,3],[0]]`, `begin = 0`, `end = 3`, output 4. The words are "cat", "cot", "cog", "dog", "dot" and "bat".
 
-**Example 2.** Input `words = [red, rod, rid, bid, mud]`, `neighbors = [[1,2],[0,2],[0,1,3],[2],[]]`, `begin = 0`, `end = 4`, output 0.
+**Example 2.** Input `neighbors = [[1,2],[0,2],[0,1,3],[2],[]]`, `begin = 0`, `end = 4`, output 0. The words are "red", "rod", "rid", "bid" and "mud".
 
 **Hint.** Which quantity in the lesson counts presses? How does it relate to the number of words in the sequence?
 

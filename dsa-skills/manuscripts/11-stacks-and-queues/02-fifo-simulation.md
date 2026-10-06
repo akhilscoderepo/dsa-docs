@@ -7,7 +7,7 @@
 
 A print service stores waiting jobs in a stack. Each new job goes on top, and the printer always takes the top job. Under steady load, a job that arrived early sits at the bottom while newer jobs keep printing first. Users see their document delayed without limit, although the printer is never idle.
 
-The fault is in the order of service, not in the speed. The service must handle items in the order they arrived, and some items need several turns before they finish. The lesson answers one question. How does a queue simulate this process, including tasks that return for another turn, and how does the loop know when it can stop?
+The fault is in the order of service, not in the speed. The service must handle items in the order they arrived, and some items need several turns before they finish. The lesson answers one question. How does a queue simulate this process, including tasks that return for another turn, and how does the loop know when it can stop, as in a lunch line where no waiting student wants the sandwich on top?
 
 <!-- stage: naive -->
 ### Scan The Whole Array Each Pass
@@ -42,7 +42,7 @@ There are 1000 tasks. Nine hundred ninety-nine tasks need 1 unit of work, and th
 Each of the 1000 passes visits all 1000 indexes, so the scan makes 1,000,000 visits. The work itself needs 999 + 1000 = 1999 turns, because every unit of work is one turn. The scan spends almost all visits on finished tasks.
 ```
 
-The scan costs O(n * m) time, where `m` is the largest amount of work, because each pass visits every task. The turns that matter total only the sum of all work, which is O(n + m) in the example. Every visit to a finished slot repeats a check that was already settled. The scan also loses the arrival order of tasks that return later, because it recovers that order from the array index and not from the order of returning.
+The scan costs O(n * m) time, where `m` is the largest amount of work, because each pass visits every task. The turns that matter total only the sum of all work, which is O(n + m) in the example. Every visit to a finished slot repeats a check that was already settled.
 
 The waste points to a different representation. The code should store only the tasks that still need a turn, in the order they will receive it.
 
@@ -61,7 +61,9 @@ The loop removes the front task and gives it one turn. It decrements the task's 
 
 #### Detecting That No Progress Is Possible
 
-Some simulations can stall. A **miss** is a turn where the removed item makes no progress and goes straight back to the queue. When the number of consecutive misses equals the queue length, every item has been tried against the same state and none made progress. Each further turn would repeat the same outcomes, so the loop stops.
+In a lunch line, each student wants sandwich type 0 or 1, and the sandwiches lie in a fixed order. The front student takes the top sandwich when the types match, and otherwise goes to the back of the line.
+
+Some simulations can stall, and this one can. A **miss** is a turn where the removed item makes no progress and goes straight back to the queue. When the number of consecutive misses equals the queue length, every item has been tried against the same state and none made progress. Each further turn would repeat the same outcomes, so the loop stops.
 
 <!-- names: front, back, miss -->
 
@@ -85,12 +87,12 @@ Task 0 loses one unit and returns to the back. Task 1 finishes on its first turn
 {"cells":[2,1,3],"pointers":["task"],"steps":[{"at":{"task":0},"vars":{"queue":"[1, 2, 0]","finished":"[]"},"note":"Task 0 loses one unit, has 1 left and returns to the back."},{"at":{"task":1},"vars":{"queue":"[2, 0]","finished":"[1]"},"note":"Task 1 loses its last unit and finishes."},{"at":{"task":2},"vars":{"queue":"[0, 2]","finished":"[1]"},"note":"Task 2 loses one unit, has 2 left and returns to the back."},{"at":{"task":0},"vars":{"queue":"[2]","finished":"[1, 0]"},"note":"Task 0 loses its last unit and finishes."},{"at":{"task":2},"vars":{"queue":"[2]","finished":"[1, 0]"},"note":"Task 2 loses one unit, has 1 left and returns to the back."},{"at":{"task":2},"vars":{"queue":"[]","finished":"[1, 0, 2]"},"note":"Task 2 loses its last unit and finishes."}]}
 ```
 
-The second trace uses a school lunch case. The students array is `[1,0,0,1,1]` and the sandwiches array is `[0,0,1,0,1]`. Each student prefers sandwich type 0 or 1, and the sandwiches lie in a fixed order. The student at the front eats when the preference equals the top sandwich. Otherwise the student moves to the back. The cells are the sandwiches, and the pointer `top` is the index of the top sandwich, which moves one place right each time a student eats. The variable `misses` counts consecutive moves to the back.
+The second trace uses a school lunch case. The students array is `[1,0,0,1,1]` and the sandwiches array is `[0,0,1,0,1]`. Each student prefers sandwich type 0 or 1, and the sandwiches lie in a fixed order. The student at the front eats when the preference equals the top sandwich. Otherwise the student moves to the back. The cells are the sandwiches, and the pointer `sandwichAt` is the index of the top sandwich, which moves one place right each time a student eats. The variable `misses` counts consecutive moves to the back.
 
 The last two students both want sandwich 1 while the top sandwich is 0. Two consecutive misses equal the queue length, so the loop stops and reports two students left.
 
 ```trace
-{"cells":[0,0,1,0,1],"pointers":["top"],"steps":[{"at":{"top":0},"vars":{"queue":"[0, 0, 1, 1, 1]","misses":1},"note":"A student who wants 1 does not match sandwich 0 and moves to the back, so misses is 1."},{"at":{"top":1},"vars":{"queue":"[0, 1, 1, 1]","misses":0},"note":"A student who wants 0 takes sandwich 0, and misses resets to 0."},{"at":{"top":2},"vars":{"queue":"[1, 1, 1]","misses":0},"note":"A student who wants 0 takes sandwich 0, and misses resets to 0."},{"at":{"top":3},"vars":{"queue":"[1, 1]","misses":0},"note":"A student who wants 1 takes sandwich 1, and misses resets to 0."},{"at":{"top":3},"vars":{"queue":"[1, 1]","misses":1},"note":"A student who wants 1 does not match sandwich 0 and moves to the back, so misses is 1."},{"at":{"top":3},"vars":{"queue":"[1, 1]","misses":2},"note":"A student who wants 1 does not match sandwich 0 and moves to the back, so misses is 2."},{"at":{"top":3},"vars":{"queue":"[1, 1]","misses":2},"note":"The queue size equals misses, so the loop stops with 2 students left."}]}
+{"cells":[0,0,1,0,1],"pointers":["sandwichAt"],"steps":[{"at":{"sandwichAt":0},"vars":{"queue":"[0, 0, 1, 1, 1]","misses":1},"note":"A student who wants 1 does not match sandwich 0 and moves to the back, so misses is 1."},{"at":{"sandwichAt":1},"vars":{"queue":"[0, 1, 1, 1]","misses":0},"note":"A student who wants 0 takes sandwich 0, and misses resets to 0."},{"at":{"sandwichAt":2},"vars":{"queue":"[1, 1, 1]","misses":0},"note":"A student who wants 0 takes sandwich 0, and misses resets to 0."},{"at":{"sandwichAt":3},"vars":{"queue":"[1, 1]","misses":0},"note":"A student who wants 1 takes sandwich 1, and misses resets to 0."},{"at":{"sandwichAt":3},"vars":{"queue":"[1, 1]","misses":1},"note":"A student who wants 1 does not match sandwich 0 and moves to the back, so misses is 1."},{"at":{"sandwichAt":3},"vars":{"queue":"[1, 1]","misses":2},"note":"A student who wants 1 does not match sandwich 0 and moves to the back, so misses is 2."},{"at":{"sandwichAt":3},"vars":{"queue":"[1, 1]","misses":2},"note":"The queue size equals misses, so the loop stops with 2 students left."}]}
 ```
 
 <!-- stage: code -->
@@ -125,10 +127,10 @@ The second method keeps `misses` and stops when it equals the queue size.
 static int unableToEat(int[] students, int[] sandwiches) {
     java.util.ArrayDeque<Integer> queue = new java.util.ArrayDeque<>();
     for (int s : students) queue.addLast(s);
-    int top = 0, misses = 0;
+    int sandwichAt = 0, misses = 0;
     while (!queue.isEmpty() && misses < queue.size()) {
         int s = queue.removeFirst();
-        if (s == sandwiches[top]) { top++; misses = 0; }
+        if (s == sandwiches[sandwichAt]) { sandwichAt++; misses = 0; }
         else { queue.addLast(s); misses++; }
     }
     return queue.size();
@@ -176,7 +178,7 @@ Two Java hazards appear in these loops. Comparing boxed `Integer` values with `=
 
 **Changed decision.** Basic case: every job enters the queue once and leaves once, in arrival order.
 
-#### [Vary] Round-Robin One Step (Author exercise)
+#### [Vary] Round-Robin Finish Order (Author exercise)
 <!-- id: sq-round-robin-step -->
 
 **Prerequisites.** The exercise above.
