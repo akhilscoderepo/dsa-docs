@@ -150,7 +150,7 @@ final class PathState {
 The `int` parameters need no cleanup. The shared list needs the last statement of `routes`. The method removes by index. A call such as `route.remove(Integer.valueOf(v))` deletes the first equal value, which can be an earlier entry of the route.
 
 - **Time** is O(n) for `height` and `countAtDepth`, because each node receives one call. `routes` costs O(n) plus the length of each stored route string.
-- **Space** is O(h) for the call stack and the shared list, because only one route is live at a time.
+- **Space** is O(h) in the stack of pending calls and the shared list, because only one route is live at a time.
 
 <!-- stage: applicability -->
 ### Choosing What To Pass Or Return

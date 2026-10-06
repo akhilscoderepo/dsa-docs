@@ -11,7 +11,7 @@ The same section checks two claims of the lesson: the list must be fresh for eac
 
 **Complexity.**
 - **Time** is O(n), because each node and each `null` side receives one call.
-- **Space** is O(h) for the call stack, where h is the height, plus the n result values.
+- **Space** is O(h) on the chain of open calls, where h is the height, plus the n result values.
 
 ```java run
 import java.util.*;
@@ -113,7 +113,7 @@ The first value written is the value of the leftmost node, which the walk reache
 
 **Complexity.**
 - **Time** is O(n), because each node and each `null` side receives one call.
-- **Space** is O(h) for the call stack, plus the n result values.
+- **Space** is O(h) on the chain of open calls, plus the n result values.
 
 ```java run
 import java.util.*;
@@ -197,7 +197,7 @@ The output alternates `x` and a value, starting and ending with `x`. Between two
 
 **Complexity.**
 - **Time** is O(n), because there are n node calls and n + 1 `null` calls.
-- **Space** is O(h) for the call stack, plus 2n + 1 result entries.
+- **Space** is O(h) on the chain of open calls, plus 2n + 1 result entries.
 
 ```java run
 import java.util.*;
@@ -280,7 +280,7 @@ The action moves to the end of the call. A call on `null` returns. A call on a n
 
 **Complexity.**
 - **Time** is O(n), because each node and each `null` side receives one call.
-- **Space** is O(h) for the call stack, plus the n result values.
+- **Space** is O(h) on the chain of open calls, plus the n result values.
 
 ```java run
 import java.util.*;

@@ -5,11 +5,11 @@
 <!-- id: dp-height -->
 
 **Approach.**
-Each call returns the number of nodes on the longest downward path in its own subtree. A call on `null` returns 0. A call on a node asks both children for their heights and returns one more than the larger answer. The invariant is that a return value is complete the moment the call returns, so the parent only compares two numbers and never looks into the child subtree.
+Each call returns the node count of the longest downward path in its own subtree. A call on `null` returns 0. A call on a node asks both children for their heights and returns one more than the larger answer. The invariant is that a return value is complete the moment the call returns, so the parent only compares two numbers and never looks into the child subtree.
 
 **Complexity.**
 - **Time** is O(n), because each node and each `null` side receives one call.
-- **Space** is O(h) for the call stack, where h is the height of the tree.
+- **Space** is O(h) in the stack of pending calls, where h is the height of the tree.
 
 ```java run
 import java.util.*;
@@ -22,7 +22,7 @@ public final class MaxDepth {
     }
 
     /**
-     * Returns the number of nodes on the longest downward path.
+     * Returns the node count of the longest downward path.
      * Time: O(n).
      * Space: O(h) for the stack.
      * Invariant: the result describes exactly the subtree of node.
@@ -85,7 +85,7 @@ The amount is an `int` passed by value, so a sibling call is never affected by t
 
 **Complexity.**
 - **Time** is O(n), because each node and each `null` side receives at most one call.
-- **Space** is O(h) for the call stack, and no list is stored.
+- **Space** is O(h) in the stack of pending calls, and no list is stored.
 
 ```java run
 import java.util.*;
@@ -163,7 +163,7 @@ The invariant is that a call returns the number of matching leaf routes in its o
 
 **Complexity.**
 - **Time** is O(n), because every node is visited once and no call returns early.
-- **Space** is O(h) for the call stack.
+- **Space** is O(h) in the stack of pending calls.
 
 ```java run
 import java.util.*;
@@ -239,7 +239,7 @@ The invariant is that on entry to a call the list holds exactly the route above 
 
 **Complexity.**
 - **Time** is O(n * h) in the worst case, because each stored route costs up to h to copy, and there are at most n leaves.
-- **Space** is O(h) for the call stack and the shared list, plus the stored answers.
+- **Space** is O(h) in the stack of pending calls and the shared list, plus the stored answers.
 
 ```java run
 import java.util.*;

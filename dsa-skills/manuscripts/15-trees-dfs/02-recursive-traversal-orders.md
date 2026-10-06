@@ -146,7 +146,7 @@ final class ThreeOrders {
 The caller creates a new list for each walk and passes it down. A list stored in a static field would keep the values of the previous walk and mix them with the next.
 
 - **Time** is O(n), because each node receives one call and each `null` side receives one call.
-- **Space** is O(h) for the call stack, where h is the height of the tree, and the list `out` holds n values as the result.
+- **Space** is O(h) on the chain of open calls, where h is the height of the tree, and the list `out` holds n values as the result.
 
 <!-- stage: applicability -->
 ### Choosing The Position

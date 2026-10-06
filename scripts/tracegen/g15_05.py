@@ -1,33 +1,15 @@
 from common import *
 from tr import *
-CH='15-trees-dfs'
-F='05-diameter-and-subtree-returns.md'
-arr=[1,2,3,4,5]
-L,R=parse(arr)
-best=[0];st=[]
-def go(i):
-    if i is None: return 0
-    a=go(L[i]); b=go(R[i])
-    best[0]=max(best[0],a+b)
-    h=1+max(a,b)
-    note=(f"The station {arr[i]} has branches {a} and {b} below it, so a journey turning here has {a + b} segments, and it reports a branch of {h} upward.")
-    st.append({"at":{"node":i},"vars":{"reports":h,"best":best[0]},"note":note})
-    return h
-go(0)
-assert best[0]==3
-fill(CH,F,block(cells(arr),["node"],st),"@@TRACE1@@")
-arr=[-10,9,20,None,None,15,7]
-L,R=parse(arr)
-best=[-10**9];st=[]
-def go2(i):
-    if i is None: return 0
-    a=max(0,go2(L[i])); b=max(0,go2(R[i]))
-    turn=arr[i]+a+b
-    best[0]=max(best[0],turn)
-    up=arr[i]+max(a,b)
-    note=f"The station {arr[i]} adds its label to the branches {a} and {b}, giving {turn} for a journey turning here, and it reports {max(0,up)} upward."
-    st.append({"at":{"node":i},"vars":{"reports":max(0,up),"best":best[0]},"note":note})
-    return up
-go2(0)
-assert best[0]==42
-fill(CH,F,block(cells(arr),["node"],st),"@@TRACE2@@")
+CH='15-trees-dfs'; F='05-diameter-and-subtree-returns.md'
+def run(arr,expect):
+    L,R=parse(arr); steps=[]; best_all=[0]
+    def go(i):
+        if i is None: return (0,0)
+        lh,lb=go(L[i]); rh,rb=go(R[i])
+        through=lh+rh; best=max(through,lb,rb); h=1+max(lh,rh)
+        why=("The complete path here is better than both sides, so best is "+str(best)+".") if best==through and through>max(lb,rb) else ("A path below is at least as long, so best stays "+str(best)+".")
+        steps.append({"at":{"node":i},"vars":{"height":h,"through":through,"best":best},"note":f"The call on the node {arr[i]} finishes. The children report heights {lh} and {rh}, so through is {through} and the height is {h}. {why}"})
+        return (h,best)
+    h,b=go(0); assert b==expect,(b,expect); return steps
+a=[1,2,3,4,5]; fill(CH,F,block(cells(a),["node"],run(a,3)),"@@TRACE1@@")
+a=[1,2,None,3,4,5,None,None,6]; fill(CH,F,block(cells(a),["node"],run(a,4)),"@@TRACE2@@")

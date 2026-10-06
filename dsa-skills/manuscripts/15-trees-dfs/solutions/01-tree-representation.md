@@ -238,7 +238,7 @@ public final class LeafCount {
 <!-- id: tr-nary-depth -->
 
 **Approach.**
-The depth of a node is one more than the depth of its deepest child, and a node with an empty child list has depth 1. A call returns 0 for `null`, which covers the empty tree. For any other node the call loops over the child list, keeps the largest child depth, and adds one for the node itself. The invariant is that the return value is the number of nodes on the longest downward path inside exactly this subtree.
+The depth of a node is one more than the depth of its deepest child, and a node with an empty child list has depth 1. A call returns 0 for `null`, which covers the empty tree. For any other node the call loops over the child list, keeps the largest child depth, and adds one for the node itself. The invariant is that the return value is the node count of the longest downward path inside exactly this subtree.
 
 **Complexity.**
 - **Time** is O(n), because each node is visited once and each child-list entry is read once.
@@ -255,7 +255,7 @@ public final class NaryDepth {
     }
 
     /**
-     * Returns the number of nodes on the longest downward path.
+     * Returns the node count of the longest downward path.
      * Time: O(n), each node is visited once.
      * Space: O(h), one frame per level.
      * Invariant: the result is the depth of exactly this subtree.
