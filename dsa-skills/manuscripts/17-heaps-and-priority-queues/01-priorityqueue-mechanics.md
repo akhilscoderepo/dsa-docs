@@ -192,7 +192,7 @@ A priority queue does not fit when the program needs the third smallest item wit
 
 **Changed decision.** The queue returns the largest item first, and each round inserts a new value.
 
-#### [Boundary] Empty And Singleton Queue (Author exercise)
+#### [Boundary] Empty And Singleton Heap (Author exercise)
 <!-- id: hp-empty-singleton -->
 
 **Prerequisites.** The `peek` and `poll` return rules in the code stage.

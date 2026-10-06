@@ -122,7 +122,7 @@ public final class LastStone {
 }
 ```
 
-#### Solution: [Boundary] Empty And Singleton Queue (Author exercise)
+#### Solution: [Boundary] Empty And Singleton Heap (Author exercise)
 <!-- id: hp-empty-singleton -->
 
 **Approach.**
