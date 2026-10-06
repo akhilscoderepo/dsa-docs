@@ -207,7 +207,7 @@ Do not use a left pointer when the range can also move backward, because the deq
 
 **Example 2.** Input `a = [2, 2, 2]`, `k = 2`, output `[1, 2]`.
 
-**Hint.** Compare the two ranges that contain both copies of the minimum in Example 1. Which copy leaves the range first, and which one should the deque have kept?
+**Hint.** Look at the range that contains both copies of the minimum in Example 1. Which copy leaves the range first, and which one should the deque have kept?
 
 **Changed decision.** The tie rule makes the newest equal value replace the older one, so the older copy cannot return when it expires.
 

@@ -75,7 +75,7 @@ The output index is `right - k + 1`, so the first answer is written at `right = 
 <!-- stage: trace -->
 ### Reading The Front After Each Update
 
-The first trace follows `a = [8, 3, 5, 9, 2, 7, 7, 1]` with `k = 3`. The first two samples fill the deque but give no answer, because the range is not complete. At position 2 the first range is complete, and the front reads 8. The value 9 at position 3 removes position 2 and position 1 from the back, and it expires position 0 from the front, so the deque holds only position 3. The second 7 at position 6 does not remove the first 7, since equal values stay, and the front is still the older 7 for that read. The output is `[8, 9, 9, 9, 7, 7]`.
+The first trace follows `a = [8, 3, 5, 9, 2, 7, 7, 1]` with `k = 3`. The first two samples fill the deque but give no answer, because the range is not complete. At position 2 the first range is complete, and the front reads 8. The value 9 at position 3 removes position 2 from the back, and it expires position 0 from the front, so the deque holds only position 3. The second 7 at position 6 does not remove the first 7, since equal values stay, and the front is still the older 7 for that read. The output is `[8, 9, 9, 9, 7, 7]`.
 
 The second trace follows the decreasing array `[6, 5, 4, 3, 2, 1]`. The back never removes anything, because no new value beats the value before it. Only the age test works, and it removes the front once per step after the range fills. The deque keeps `k` positions, which is the largest size it can reach.
 

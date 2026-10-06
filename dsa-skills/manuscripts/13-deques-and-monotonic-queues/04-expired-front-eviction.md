@@ -28,7 +28,7 @@ static int[] rescan(int[] a, int k) {
 }
 ```
 
-For `a = [4, 2, 12, 3, 8, 1]` and `k = 3`, the method returns `12, 12, 8, 8`. Each answer is correct.
+For `a = [4, 2, 12, 3, 8, 1]` and `k = 3`, the method returns `12, 12, 12, 8`. Each answer is correct.
 
 <!-- stage: bottleneck -->
 ### Counting Reads And Spotting Stale Entries
@@ -56,7 +56,7 @@ The stored positions increase from the front to the back, because each arrival a
 
 #### Using A Loop Instead Of A Single Check
 
-A fixed length removes at most one position per step. A left bound that jumps can expire several positions at once, so the age test is a loop and not a single `if`. The invariant is that before the method reads the answer for the range ending at `right`, every stored position is at least the left bound. Each position is removed by the age test at most once, so the total cost of all age tests is O(n).
+A fixed length removes at most one position per step, so a single `if` is enough in that case. A left bound that jumps can expire several positions at once, so the age test is a loop and not a single `if`. The invariant is that before the method reads the answer for the range ending at `right`, every stored position is at least the left bound. Each position is removed by the age test at most once, so the total cost of all age tests is O(n).
 
 <!-- names: left bound, expired, age test -->
 

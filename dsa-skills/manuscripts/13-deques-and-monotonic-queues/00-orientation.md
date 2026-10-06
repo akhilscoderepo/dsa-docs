@@ -28,7 +28,7 @@ One lesson joins the deque lessons with the window lessons of Chapter 09.
 
 ### How To Work Through Each Lesson
 
-Each lesson begins with a program that fails or slows down on a real input and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to a full interview problem.
+Each lesson begins with a program that fails or slows down on a real input and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to a full interview problem. Each exercise has a role in brackets: Build, Vary, Boundary or Recognize. The line named Changed decision says what the exercise changes compared with the one before it.
 
 ### What You Can Do After This Chapter
 

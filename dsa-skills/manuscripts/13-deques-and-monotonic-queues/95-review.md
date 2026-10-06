@@ -18,7 +18,7 @@ Come back to this page after the lessons and again a few days later. Each questi
 ```
 
 ```quiz
-{"id": "dq-rev-expiry-edge", "q": "A range of length 4 ends at position 9. Which stored position is the first that is expired?", "options": ["Position 6", "Position 5", "Position 7", "Position 9"], "answer": 1, "explain": "The range covers positions 6 through 9, so the left bound is 6. Position 5 lies below it and is at most `9 - 4`, which makes it expired. Position 6 is still inside."}
+{"id": "dq-rev-expiry-edge", "q": "A range of length 4 ends at position 9. Which stored position is the largest expired position?", "options": ["Position 6", "Position 5", "Position 7", "Position 9"], "answer": 1, "explain": "The range covers positions 6 through 9, so the left bound is 6. Position 5 lies below it and is at most `9 - 4`, which makes it expired. Position 6 is still inside."}
 ```
 
 ```quiz
@@ -30,7 +30,7 @@ Come back to this page after the lessons and again a few days later. Each questi
 ```
 
 ```quiz
-{"id": "dq-rev-query-order", "q": "A query at position i must not see position i. Where does the read sit among the age test, the back removal and the append?", "options": ["After the append", "After the age test and before the append", "Before the age test", "After the back removal and before the append"], "answer": 1, "explain": "The age test makes every stored position eligible. The read then uses the front. The append comes last, because it would put position i into its own query."}
+{"id": "dq-rev-query-order", "q": "A query at position i must not see position i. Where does the read sit among the age test, the back removal and the append?", "options": ["After the append", "Right after the age test, before the back removal", "Before the age test", "After the back removal and before the append"], "answer": 1, "explain": "The age test makes every stored position eligible. The read then uses the front. The append comes last, because it would put position i into its own query."}
 ```
 
 ```quiz

@@ -37,7 +37,7 @@ The method is correct when every value is at least zero. For `a = [5, 3, 6, 2]` 
 ```predict
 The scores 5 and then 8 arrive, and a position may look back at most 3 positions. Can the score 5 ever be the best of the positions a later query can see?
 
-No. Every later query that can see 5 can also see 8, because 8 arrived after 5 and stays visible longer than 5 does. Since 8 is larger, 5 never wins.
+No. Every query after the position of 8 that can see 5 can also see 8, because 8 arrived after 5 and stays visible longer than 5 does. Since 8 is larger, 5 never wins.
 ```
 
 Each query scans up to `k` stored positions, so the total cost is O(n * k). For `n = 1,000,000` and `k = 50,000` that is about fifty billion comparisons. The scan reads positions that already lost, and it reads them again for every later query. The repeated work is the comparison against positions that a newer and larger position will outlast.
@@ -51,7 +51,7 @@ A position `j` is **eligible** for the query at position `i` when `i - k <= j < 
 
 #### Keeping The Newer Entry
 
-A newer position can **outlast** an older one, because it stays eligible for more future queries. When the new score is at least as large as an older stored score, the older entry can never win and leaves from the back. The newer entry is the only one that needs to stay.
+A newer position can **outlast** an older one, because it stays eligible for more future queries. When the new score is larger than an older stored score, the older entry can never win and leaves from the back. The walk method below also removes equal scores, because an equal older score gives the same answer and expires sooner. The newer entry is the only one that needs to stay.
 
 #### Choosing The Query Order
 
@@ -74,9 +74,9 @@ The sentinel works only because every score is at least zero. A problem that all
 <!-- stage: trace -->
 ### Reading Before The Append
 
-The first trace follows `a = [5, 3, 6, 2, 4, 1, 7]` with `k = 3`. At position 0 the deque is empty, so the answer is none, and position 0 is appended. At position 3 the age test removes nothing, because `3 - 3 = 0` and position 0 is still eligible. The read gives 6 from position 2. At position 4 the age test removes position 0, since 0 is smaller than `4 - 3`. The answers are `[-1, 5, 5, 6, 6, 6, 4]`.
+The first trace follows `a = [5, 3, 6, 2, 4, 1, 7]` with `k = 3`. At position 0 the deque is empty, so the answer is none, and position 0 is appended. At position 2 the read gives 5 from position 0, and then the value 6 removes positions 1 and 0 from the back. At position 6 the age test removes position 2, since 2 is smaller than `6 - 3`, and the read gives 4. The answers are `[-1, 5, 5, 6, 6, 6, 4]`.
 
-The second trace gives each position a score equal to its own value plus the best score among the previous three positions. The array is `[3, -2, 4, -1, 2, -5, 6]`. The start has score 3. Position 2 reads the front, which is position 0 with score 3, so its score is 7. The scores may be negative here, and the front is still the largest eligible score. The last score is 15.
+The second trace belongs to a walk problem that the last exercise states in full. A walk starts at position 0 and may jump forward by at most `k` positions. Each position gets a score equal to its own value plus the best score among the previous three positions. The array is `[3, -2, 4, -1, 2, -5, 6]`. The start has score 3. Position 2 reads the front, which is position 0 with score 3, so its score is 7. The scores may be negative here, and the front is still the largest eligible score. The last score is 15.
 
 ```trace
 {"cells":[5,3,6,2,4,1,7],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"deque":"[0]","answers":"[-1]"},"note":"Position 0 holds 5. No earlier position is eligible, so the answer is none. Then position 0 is appended."},{"at":{"i":1},"vars":{"deque":"[0,1]","answers":"[-1,5]"},"note":"Position 1 holds 3. The front gives the answer 5. Then position 1 is appended."},{"at":{"i":2},"vars":{"deque":"[2]","answers":"[-1,5,5]"},"note":"Position 2 holds 6. The front gives the answer 5. Then the value 6 removes position 1, 0 from the back. Then position 2 is appended."},{"at":{"i":3},"vars":{"deque":"[2,3]","answers":"[-1,5,5,6]"},"note":"Position 3 holds 2. The front gives the answer 6. Then position 3 is appended."},{"at":{"i":4},"vars":{"deque":"[2,4]","answers":"[-1,5,5,6,6]"},"note":"Position 4 holds 4. The front gives the answer 6. Then the value 4 removes position 3 from the back. Then position 4 is appended."},{"at":{"i":5},"vars":{"deque":"[2,4,5]","answers":"[-1,5,5,6,6,6]"},"note":"Position 5 holds 1. The front gives the answer 6. Then position 5 is appended."},{"at":{"i":6},"vars":{"deque":"[6]","answers":"[-1,5,5,6,6,6,4]"},"note":"Position 6 holds 7. The age test removes position 2 from the front. The front gives the answer 4. Then the value 7 removes position 5, 4 from the back. Then position 6 is appended."}]}
