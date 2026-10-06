@@ -164,7 +164,7 @@ The search does not fit when the question wants one ordering, such as the next o
 
 **Prerequisites.** The used array and the mark restoration of this lesson.
 
-**Problem.** Given an array `nums` of exactly three distinct integers, return all six orderings of its values. The search fills one position per call. At each position it tries the indices from 0 to 2 and skips indices that an earlier position holds. The result lists the orderings in the order in which the search reaches them.
+**Problem.** Given an array `nums` of exactly three distinct integers, return all six orderings of its values. The search fills one position per call. At each position it tries the indices from 0 to 2 and skips indices that an earlier position holds. The result keeps the order of the search.
 
 **Constraints.** The limits are:
 - **Length** is exactly 3.

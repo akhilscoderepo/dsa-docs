@@ -188,7 +188,7 @@ The search does not fit when the output is too large to list, because 2^n subset
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given an integer array `nums` that may be empty and an integer `target`, return every subset of `nums` whose values add up to `target`. The empty subset adds up to 0. The result lists the subsets in the order in which a search with a start index begins its calls. The values may be negative, so the search does not stop early.
+**Problem.** Given an integer array `nums` that may be empty and an integer `target`, return every subset of `nums` whose values add up to `target`. The empty subset adds up to 0. The result keeps the order in which the calls begin. The values may be negative, so the search does not stop early.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 12`.
@@ -209,7 +209,7 @@ The search does not fit when the output is too large to list, because 2^n subset
 
 **Prerequisites.** The previous three exercises.
 
-**Problem.** Given an integer array `nums` that may hold equal values, return the number of different subsets. Two subsets are the same when they hold the same values with the same multiplicities, whatever the indices are. The empty subset counts once. The method may sort `nums` first.
+**Problem.** Given an integer array `nums` that may hold equal values, return the number of different subsets. Two subsets count as one when they hold the same values with the same multiplicities, whatever the indices are. The empty subset counts once. The method may sort `nums` first.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 12`.
