@@ -52,7 +52,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### Multi-Source BFS
+### Start From Many Sources
 
 **Recognition cue.** Several sources spread simultaneously and the answer is distance to the nearest source or total spread time. **Invariant.** Every source begins at distance zero in the same queue; first discovery gives minimum distance to any source. **False friend.** Running one BFS per source repeats most work.
 
@@ -61,7 +61,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: No Source Or All Sources.** Follow the input contract and avoid a false time increment.
 - **Recognize - LC 994 Rotting Oranges.** Interpret one BFS layer as one minute of simultaneous spread.
 
-### Layer Meaning
+### Count By Whole Layers
 
 **Recognition cue.** Distance, time, or operation count advances once per entire frontier. **Invariant.** All states in the captured queue size share one distance; their unseen neighbors belong to the next layer. **False friend.** Incrementing time per node overcounts simultaneous work.
 
@@ -70,7 +70,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Initially Complete State.** Return zero before processing any layer.
 - **Recognize - LC 994 Rotting Oranges.** Count only transitions between nonempty layers that create new rotten oranges.
 
-### Bidirectional Frontiers
+### Search From Both Ends
 
 **Recognition cue.** One unweighted start and target have reversible transitions and the search space branches heavily. **Invariant.** Two visited-distance maps represent shortest discovery from each side; when a generated state exists in the opposite map, the distances combine. **False friend.** Meeting only when queue fronts are equal can miss crossing edges.
 
@@ -79,7 +79,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Start Equals Target.** Return immediately and keep the two visited maps logically distinct.
 - **Recognize - LC 127 Word Ladder.** Expand the smaller word frontier until the searches connect.
 
-### State-Space BFS
+### Search States You Generate
 
 **Recognition cue.** Vertices are not listed explicitly; legal operations generate neighboring states. **Invariant.** The state encoding contains every fact that affects future moves, and visited uses that complete encoding. **False friend.** Marking only a visible location is wrong when inventory, mask, or mode changes future options.
 
@@ -88,7 +88,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Forbidden Start And Target.** Apply the problem's dead-state contract before enqueueing.
 - **Recognize - LC 1091 Shortest Path in Binary Matrix.** Recognize coordinates as an implicit state space with uniform moves.
 
-### Resource Dominance
+### Keep The Best Resource Left
 
 **Recognition cue.** Search state includes a consumable resource, but multiple states at the same node may dominate one another. **Invariant.** At equal or smaller distance, reaching a node with more remaining resource dominates a state with less; discard only when that relation is proved. **False friend.** A Boolean visited array by node loses useful resource states.
 
@@ -99,7 +99,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Released Combination Lessons
 
-### BFS State Modeling
+### Model The State Before Searching
 
 Graph BFS supplies shortest-layer processing; state modeling decides what constitutes one distinct vertex and what visited must remember.
 
