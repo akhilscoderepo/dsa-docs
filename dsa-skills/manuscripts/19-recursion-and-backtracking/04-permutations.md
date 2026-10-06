@@ -70,7 +70,7 @@ Four pieces of state describe a call.
 - **Used array** holds one boolean per input index, true when the index is on the path.
 - **Index i** is the input index that the loop tries at this depth.
 
-The depth grows by one in each call. The search stores a copy of the path when the depth reaches `n`. The tree has n! leaves and about e * n! calls in total.
+The depth grows by one in each call. The search stores a copy of the path when the depth reaches `n`. The tree has n! leaves and about 2.7 * n! calls in total.
 
 <!-- stage: trace -->
 ### Following The Marks Through Three Values
@@ -139,7 +139,7 @@ static void swapGo(int[] a, int d, List<List<Integer>> out) {
 
 #### Cost Of The Search
 
-The search makes about e * n! calls, and each leaf copies n values. The time is O(n * n!). The used array, the path and the stack use O(n) memory besides the output.
+The search makes about 2.7 * n! calls, and each leaf copies n values. The time is O(n * n!). The used array, the path and the stack use O(n) memory besides the output.
 
 <!-- stage: applicability -->
 ### Recognizing An Ordering Problem

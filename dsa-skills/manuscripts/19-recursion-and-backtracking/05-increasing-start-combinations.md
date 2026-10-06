@@ -37,7 +37,7 @@ The method finds every panel, because each panel appears in every one of its ord
 ### Counting The Repeated Panels
 
 ```predict
-A company has n = 10 engineers, and each panel holds k = 4 of them. How many ordered paths does the search build, and how many different panels exist?
+A company has n = 10 engineers, and each panel holds k = 4 of them. How many ordered paths does the search build, and how many different panels exist? Write C(10, 4) for the number of ways to pick 4 of 10.
 
 The search builds 10 * 9 * 8 * 7 = 5,040 ordered paths. Only C(10, 4) = 210 panels exist. Every panel appears in 4! = 24 orders, so the search does 24 times the necessary work.
 ```
@@ -80,7 +80,7 @@ The loop runs from `start` to `last`. A call with a full path stores a copy and 
 
 #### Choosing Two From Four
 
-The first trace lists the pairs of `[1, 2, 3, 4]` with a loop that ends at the last index of the input. The pointer `start` is the start of the call that makes the choice. The variable `path` holds the values chosen so far, and `stored` counts the pairs in the output.
+The first trace lists the pairs of `[1, 2, 3, 4]` with the code of this lesson changed so that `last` is always `n - 1`. The pointer `start` is the start of the call that makes the choice. The variable `path` holds the values chosen so far, and `stored` counts the pairs in the output.
 
 The call with start 0 chooses 1, and the child with start 1 chooses 2, 3 and 4 in turn. Each choice completes a pair, so the child stores three pairs. The root then chooses 2 and 3 in the same way. The last root choice, 4, passes next start 4. The child has no index left, so it returns with a path of one value and stores nothing. The trace shows 10 choices and 6 pairs.
 

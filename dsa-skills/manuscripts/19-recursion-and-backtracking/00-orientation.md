@@ -5,7 +5,7 @@ A test that lists every ordering of four inputs prints the same list ten times. 
 
 ### Prerequisites
 
-You should know loops, arrays and the `ArrayList` and `HashSet` classes. Chapter 03 introduced strings, `substring` and character arithmetic, which the cutting lesson and the combination lesson use. Chapter 02 introduced grids and the four neighbours of a cell, which the last lesson uses. Chapter 15 introduced recursion on trees, so a call that makes calls is not new, although this chapter calls a method on arguments that describe a smaller task. Chapter 18 introduced the prefix tree, which the combination lesson needs. Code samples assume `import java.util.*;` and a recent JDK.
+You should know loops, arrays and the `ArrayList` and `HashSet` classes. Chapter 03 introduced strings, `substring` and character arithmetic, which the cutting lesson and the board lesson use. Chapter 02 introduced grids and the four neighbours of a cell, which the last lesson uses. Chapter 15 introduced recursion on trees, so a call that makes calls is not new, although this chapter calls a method on arguments that describe a smaller task. Chapter 18 introduced the prefix tree, which the last lesson needs. Code samples assume `import java.util.*;` and a recent JDK.
 
 ### The Ten Lessons
 
@@ -22,7 +22,7 @@ Each lesson names one rule that keeps a search correct or keeps it small.
 - **Cut A String Into Pieces** chooses where the next piece ends and stores a result only when no letter remains.
 - **Mark Cells On A Grid** marks the cells of one path, clears each mark on the way out and rejects a queen by its column and diagonals.
 
-### The Combination Lesson
+### The Board Lesson
 
 One lesson joins this chapter with the chapter on prefix trees.
 

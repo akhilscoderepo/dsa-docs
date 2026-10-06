@@ -39,7 +39,7 @@ The array holds n = 10 values. The search makes one call for every ordered list 
 The count is 10!/10! + 10!/9! + ... + 10!/0!, which is about 9.9 million calls. Only 2^10 = 1,024 sets exist, so about 9,600 calls belong to each set. Each call also sorts a copy of its path.
 ```
 
-The search makes about e * n! calls, and each call adds a sort of O(n log n) time. The extra calls repeat orders, and the search finishes the work before the hash set discards them.
+The search makes about 2.7 * n! calls (the factor is the sum of 1/k!, which is close to 2.7), and each call adds a sort of O(n log n) time. The extra calls repeat orders, and the search finishes the work before the hash set discards them.
 
 A set has one canonical order, which is the order of the indices in the input. A search that only builds paths in that order never builds a repeated set, so it needs no sort and no hash set. The question is how to make the path follow the input order.
 
@@ -52,7 +52,7 @@ Each call receives a **start index**, the smallest index that the next choice ma
 
 #### Counting Skipped Indices
 
-The values at indices between the old start and the chosen index are the **skipped indices**. The call that chooses index `i` decides that those values stay out of the set, and no later call may add them. This is the same decision as the exclusion branch of the include-or-exclude search from the previous lesson. The invariant is that at start `s`, the path fixes the decision for every index below `s`, and indices from `s` on stay undecided.
+The values at indices between the old start and the chosen index are the **skipped indices**. The call that chooses index `i` decides that those values stay out of the set, and no later call may add them. The skip works like an exclusion: the value stays out of the set, and the search never returns to it. The invariant is that at start `s`, the path fixes the decision for every index below `s`, and indices from `s` on stay undecided.
 
 #### Recording On Entry
 
@@ -79,7 +79,7 @@ Choosing index `i` raises the start of the child call to `i + 1`. The loop in a 
 
 The first trace lists the subsets of `[1, 2, 3]`. The pointer `start` marks the start index of the current call, and the variable `path` shows the path. Each step is one entry into a call. The variable `stored` counts the snapshots that exist after the step.
 
-The root call has start 0 and stores the empty subset. It chooses index 0, and the call with start 1 stores `[1]`. That call chooses index 1 and then index 2, which stores `[1, 2]` and `[1, 2, 3]`. The path `[1, 3]` appears next, because the call for `[1]` also tries index 2. The root then tries index 1 and index 2, and the trace ends with `[2]`, `[2, 3]` and `[3]`. The trace stores 8 subsets, which equals 2^3.
+The root call has start 0 and stores the empty subset. It chooses index 0, and the call with start 1 stores `[1]`. That call chooses index 1 and stores `[1, 2]`. The call for `[1, 2]` chooses index 2 and stores `[1, 2, 3]`. The path `[1, 3]` appears next, because the call for `[1]` also tries index 2. The root then tries index 1 and index 2, and the trace ends with `[2]`, `[2, 3]` and `[3]`. The trace stores 8 subsets, which equals 2^3.
 
 #### Counting Calls Without A Start Index
 
@@ -167,7 +167,7 @@ The search does not fit when the output is too large to list, because 2^n subset
 
 **Prerequisites.** The previous exercise.
 
-**Problem.** Given an array `nums` of distinct integers, return every subset of `nums`. Search with a start index and store a copy of the path at the beginning of every call. The result lists the subsets in the order in which the calls begin, which differs from the order of the include-or-exclude search of the previous lesson.
+**Problem.** Given an array `nums` of distinct integers, return every subset of `nums`. Search with a start index and store a copy of the path at the beginning of every call. The result lists the subsets in the order in which the calls begin, which differs from the order of the include-or-exclude search of the earlier exercise on subsets.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10`.

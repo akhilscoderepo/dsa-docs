@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Sum Method Overflows The Stack
 
-A reporting job adds up the sizes of the files in one list. A developer writes a method that adds the first value to the sum of the rest, and the method calls itself to get the sum of the rest. The first test with three values passes. The next test, with an empty list, crashes with `StackOverflowError`. A third version of the method passes the same position to every call, so it also crashes on the three-value list.
+A reporting job adds up the sizes of the files in one list. A developer writes a method that adds the first value to the sum of the rest, and the method calls itself to get the sum of the rest. The first version stops only at a list of one value. It passes the test with three values, and then it crashes with `StackOverflowError` on the empty list, which it never reaches a stop for. A second version passes the same position to every call, so it crashes on the three-value list too.
 
 Both crashes have one cause. The call does not say which part of the list it is responsible for, or the part does not get smaller. This lesson asks what a call must receive and promise so that every recursive call works on a strictly smaller task and the chain of calls ends.
 
@@ -167,7 +167,7 @@ Plain recursion does not fit when the chain is as long as the input and the inpu
 **Problem.** Given a real number `x` and an integer `n` with `n >= 0`, return `x` raised to the power `n`. The input never asks for a negative exponent. Use a recursive method whose call state holds only `x` and the current exponent, and make each call use half of the exponent of its caller.
 
 **Constraints.** The limits are:
-- **Base** is `-10, 10` as a real number, and `x` may be 0.
+- **Base** satisfies `-10 <= x <= 10`, and `x` may be 0.
 - **Exponent** is `0 <= n <= 2^31 - 1`.
 - **Result** fits in a `double` for every input of the tests.
 - **Zero** to the power 0 equals 1.
@@ -191,7 +191,6 @@ Plain recursion does not fit when the chain is as long as the input and the inpu
 - **Base** is `0.5 <= |x| <= 2`, and `x` is never 0.
 - **Exponent** is any `int`, including `Integer.MIN_VALUE`.
 - **Result** may underflow to 0 or overflow to infinity, and the method returns that `double` value.
-- **Types** use `long` for the exponent inside the method.
 
 **Example 1.** Input `x = 2`, `n = -3`, output 0.125.
 

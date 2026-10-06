@@ -76,7 +76,7 @@ Four pieces of state describe a call.
 A choice passes `i` as the next start and lowers the remaining target by `coins[i]`. A call stores a copy of the path when the remaining target is 0.
 
 <!-- stage: trace -->
-### Following Two Coins Through A Target
+### Following The Coins Through A Target
 
 #### Paying Seven With Three Coins
 
@@ -86,7 +86,7 @@ The root chooses 2, and its child keeps start 0, so it chooses 2 again and then 
 
 #### Seeing The Order Repeat
 
-The second trace uses the coins `[1, 2]` and the target 3 with a loop that restarts at the first coin. It stores `[1, 1, 1]`, then `[1, 2]`, then `[2, 1]`. The last two lists hold the same coins in a different order, so the search counts one payment twice.
+The second trace uses the coins `[1, 2]` and the target 3 with a loop that restarts at the first coin. The trace omits overshooting choices. It stores `[1, 1, 1]`, then `[1, 2]`, then `[2, 1]`. The last two lists hold the same coins in a different order, so the search counts one payment twice.
 
 #### Stepping Through Both Runs
 
@@ -147,7 +147,7 @@ The search does not fit when the question asks for a count or a minimum and not 
 
 **Prerequisites.** The same start and the remaining target of this lesson.
 
-**Problem.** Given a positive integer array `coins` with distinct values and a non-negative integer `target`, return every nondecreasing list of coins that adds up to `target`. A coin may appear several times in one list. A list that adds up to 0 is the empty list. The result keeps the order of the search.
+**Problem.** Given a positive integer array `coins` with distinct values and a non-negative integer `target`, return every list of coins in input order that adds up to `target`. A coin may appear several times in one list. A list that adds up to 0 is the empty list. The result keeps the order of the search.
 
 **Constraints.** The limits are:
 - **Coins** satisfy `1 <= coins.length <= 5` and `1 <= coins[i] <= 10`, and the coins are distinct.
@@ -210,7 +210,7 @@ The search does not fit when the question asks for a count or a minimum and not 
 
 **Prerequisites.** The previous three exercises.
 
-**Problem.** The array `candidates` holds distinct positive integers, `target` is a positive integer and `k` is a positive integer. Return every nondecreasing list of exactly `k` candidates that adds up to `target`. A candidate may appear several times in one list. The values follow the order of `candidates`.
+**Problem.** The array `candidates` holds distinct positive integers, `target` is a positive integer and `k` is a positive integer. Return every list of exactly `k` candidates in input order that adds up to `target`. A candidate may appear several times in one list. The values follow the order of `candidates`.
 
 **Constraints.** The limits are:
 - **Candidates** satisfy `1 <= candidates.length <= 6` and `1 <= candidates[i] <= 20`, and they are distinct.

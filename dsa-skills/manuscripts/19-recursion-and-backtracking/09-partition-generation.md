@@ -126,7 +126,7 @@ static boolean isPalindrome(String s, int lo, int hi) {
 
 #### Using The End Index Of Substring
 
-The call `s.substring(start, end)` includes the index `start` and excludes the index `end`. For `end == start`, it returns the empty string, which the loop never requests because `end` begins at `start + 1`. For `start == s.length()`, the call `s.substring(start)` returns the empty string and does not throw.
+The call `s.substring(start, end)` includes the index `start` and excludes the index `end`. For `end == start`, it returns the empty string, which the loop never requests because `end` begins at `start + 1`.
 
 #### Cost Of The Search
 
@@ -190,7 +190,7 @@ The search does not fit when the question asks for the number of cuts or for the
 
 **Hint.** Which fields may a call try after the digit `0` begins a field? Once a field exceeds `limit`, do longer fields from the same start stay valid?
 
-**Changed decision.** The call tests a field before it recurses, and a failed field removes that piece end only.
+**Changed decision.** The call tests a field before it recurses, and a field above `limit` ends the loop for that start.
 
 #### [Boundary] Empty Suffix Completion (Author exercise)
 <!-- id: bt-empty-suffix-completion -->

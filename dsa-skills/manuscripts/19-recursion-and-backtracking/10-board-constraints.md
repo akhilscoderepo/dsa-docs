@@ -33,9 +33,9 @@ The method answers correctly, because no branch sees the flags of another branch
 ### Counting The Copied Flags
 
 ```predict
-The board has 6 rows and 6 columns, and the word has 10 letters. A call can enter at most 3 neighbours after the first letter. About how many flags do the copies move, at most?
+The board has 6 rows and 6 columns, and the word has 10 letters. Each call enters at most 3 neighbours after the first letter. About how many flags do the copies move, at most?
 
-One start cell makes at most 4 * 3^9 = 78,732 calls. The 36 start cells make at most 2.8 million calls. Each call copies 36 flags, so the copies move about 102 million flags. A search that sets and clears one flag per call writes about 2.8 million flags.
+A start cell makes at most 4 + 4*3 + ... + 4 * 3^8 calls, fewer than 4 * 3^9 = 78,732 in total. The 36 start cells make fewer than 2.9 million calls. Each call copies 36 flags, so the copies move about 100 million flags. A search that sets and clears one flag per call writes about 5.7 million flags.
 ```
 
 The copying plan costs O(R * C) extra time and memory per call, for a board with `R` rows and `C` columns. The flag grid does not change between a call and its caller except for one cell. The copy is much larger than the difference.
@@ -65,7 +65,7 @@ A **short-circuit return** leaves the loop as soon as one neighbour succeeds. Th
 Four pieces of state describe a call.
 
 - **Cell** is the pair of a row `r` and a column `c` that the call tries to enter.
-- **Letter index k** is the number of letters of the word that the path has matched.
+- **Letter index k** is the index of the letter that the cell must match, which equals the number of cells already on the path.
 - **Path marks** are one boolean flag for each cell, true exactly for the cells of the active calls.
 - **Result** is the local boolean that the call returns after the unmark step.
 
@@ -121,6 +121,10 @@ static boolean go(char[][] b, String w, int r, int c, int k, boolean[][] on) {
     return found;                                                            // then return the stored result
 }
 ```
+
+#### Marking Columns And Diagonals
+
+A queen search on an `n` by `n` board uses the same pattern with three kinds of marks instead of one grid. Two queens in cells `(r, c)` and `(r2, c2)` attack each other when `c == c2`, when `r - c == r2 - c2` or when `r + c == r2 + c2`. The search places one queen per row, so rows never clash. It keeps one boolean array for the columns, one for the values `r - c + n - 1` and one for the values `r + c`. A cell is legal when its three marks are false. The call sets the three marks, explores the next row and clears the same three marks.
 
 #### Costs Of The Search
 

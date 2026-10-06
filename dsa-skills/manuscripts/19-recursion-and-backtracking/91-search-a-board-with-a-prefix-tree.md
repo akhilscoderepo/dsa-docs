@@ -22,7 +22,7 @@ The prefix tree from the chapter on tries represents every prefix of every dicti
 The direct plan keeps the dictionary as a list. For each word, it calls the board search of the lesson on marking cells and collects the words that the search finds.
 
 ```java
-static List<String> wordByWord(char[][] board, List<String> words, BiPredicate<char[][], String> exists) {
+static List<String> wordByWord(char[][] board, List<String> words, java.util.function.BiPredicate<char[][], String> exists) {
     List<String> found = new ArrayList<>();
     for (String w : words) {                            // one complete board search for each word
         if (exists.test(board, w)) found.add(w);        // the board search marks cells and restores them, as before
@@ -81,13 +81,13 @@ Entering a cell moves the node to the child for the letter, sets the mark, repor
 
 #### Searching The Row Aba
 
-The first trace searches the row `aba` for the dictionary `ab` and `aba`. Moves go to the touching cell on the left or on the right. The pointer `cell` marks the cell that the step enters. The variable `node` shows the letters that the node spells, and `found` counts the reports so far.
+The first trace searches the row `aba` for the dictionary `ab` and `aba`, without the emit-once rule, so each path reports its word. Moves go to the touching cell on the left or on the right. The pointer `cell` marks the cell that the step enters. The variable `node` shows the letters that the node spells, and `found` counts the reports so far.
 
 The search starts at cell 0 and enters the node `a`. Cell 1 holds `b`, and the node `ab` stores a word, so the search reports `ab`. Cell 2 holds `a` and leads to the node `aba`, which reports `aba`. The start at cell 1 finds no edge for `b` below the root, so the call returns at once. The start at cell 2 enters `a`, then reaches cell 1 and reports `ab` again, and then reaches cell 0 and reports `aba` again. The trace ends with 4 reports.
 
 #### Reporting Each Word Once
 
-The second trace repeats the start at cell 2 with the emit-once rule. The start at cell 0 reported both words, so their stored slots are empty. The path enters the nodes `a`, `ab` and `aba` and reports nothing. The list of found words keeps its 2 entries.
+The second trace repeats the start at cell 2 with the emit-once rule in force. The start at cell 0 reported both words, so their stored slots are empty. The path enters the nodes `a`, `ab` and `aba` and reports nothing. The list of found words keeps its 2 entries.
 
 #### Stepping Through Both Runs
 
@@ -171,7 +171,7 @@ The combination does not fit when the dictionary is tiny, because one search per
 
 **Prerequisites.** The node state and the marks of this lesson.
 
-**Problem.** The string `row` is a board with one row of lowercase letters, and `words` is an array of lowercase words. A path starts at any cell and moves to the touching cell on the left or on the right, and no cell appears twice. Build a prefix tree of `words` and search with it. Each time a path spells a dictionary word, add the word to the result. The search starts at the cells from left to right and tries the left neighbour before the right one.
+**Problem.** The string `row` is a board with one row of lowercase letters, and `words` is an array of lowercase words. A path starts at any cell and moves to the touching cell on the left or on the right, and no cell appears twice. Build a prefix tree of `words` and search with it. Each time a path spells a dictionary word, add the word to the result. This exercise does not clear the stored word, so a word repeats once for each path. The search starts at the cells from left to right and tries the left neighbour before the right one.
 
 **Constraints.** The limits are:
 - **Row** has `1 <= row.length() <= 12` lowercase letters.
