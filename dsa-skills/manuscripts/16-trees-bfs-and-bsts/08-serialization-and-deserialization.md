@@ -92,7 +92,7 @@ The writer produced four value tokens and five null markers. That is 2n + 1 = 9 
 
 #### Reading The Tokens Back
 
-The reader gets the same nine tokens. The variable `depth` is the number of calls that are waiting for a child to finish.
+The reader gets the same nine tokens. The variable `depth` is the nesting level of the call that reads the token, where the root call is level 1.
 
 ```trace
 {"cells":["7","3","#","5","#","#","9","#","#"],"pointers":["at"],"steps":[{"at":{"at":0},"vars":{"depth":1},"note":"Token 0 is 7, so the reader creates a node for the root and reads its left subtree next."},{"at":{"at":1},"vars":{"depth":2},"note":"Token 1 is 3, so the reader creates a node for the left slot of 7 and reads its left subtree next."},{"at":{"at":2},"vars":{"depth":3},"note":"Token 2 is the null marker, so the left slot of 3 stays empty."},{"at":{"at":3},"vars":{"depth":3},"note":"Token 3 is 5, so the reader creates a node for the right slot of 3 and reads its left subtree next."},{"at":{"at":4},"vars":{"depth":4},"note":"Token 4 is the null marker, so the left slot of 5 stays empty."},{"at":{"at":5},"vars":{"depth":4},"note":"Token 5 is the null marker, so the right slot of 5 stays empty."},{"at":{"at":6},"vars":{"depth":2},"note":"Token 6 is 9, so the reader creates a node for the right slot of 7 and reads its left subtree next."},{"at":{"at":7},"vars":{"depth":3},"note":"Token 7 is the null marker, so the left slot of 9 stays empty."},{"at":{"at":8},"vars":{"depth":3},"note":"Token 8 is the null marker, so the right slot of 9 stays empty."}]}

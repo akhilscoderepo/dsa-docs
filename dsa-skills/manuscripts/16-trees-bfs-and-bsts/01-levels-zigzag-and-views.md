@@ -142,7 +142,7 @@ final class LevelOrder {
 The code never adds `null` to the queue, because `ArrayDeque.add(null)` throws a `NullPointerException`. The guard on each child and the early return for an empty root keep every queued value real.
 
 - **Time** is O(n), because each node is added once and removed once.
-- **Space** is O(w), where `w` is the widest level, because the queue never holds more than two adjacent levels and the result holds the n values the caller asked for.
+- **Space** is O(w), where `w` is the widest level, because the queue never holds more than two adjacent levels. The result needs another O(n) for the n values.
 
 <!-- stage: applicability -->
 ### Choosing The Level Loop

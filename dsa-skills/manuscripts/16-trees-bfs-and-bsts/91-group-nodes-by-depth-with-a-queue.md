@@ -56,7 +56,7 @@ The tree is a chain of 500000 nodes, each with one child. What does the recursiv
 The method makes 500000 nested calls, and each call keeps a frame on the call stack, so the program throws a StackOverflowError. The time is O(n), but the call stack grows to O(h), which is 500000 frames here.
 ```
 
-The failure is a crash, and not a slowdown. A call stack is a small fixed region, and a height of a few thousand to a few tens of thousands of frames fills it. The method also has no natural way to stop reading below a chosen depth, and it needs a second code path to handle a node with many children.
+The failure is a crash, and not a slowdown. A call stack is a small fixed region, and a height of a few thousand to a few tens of thousands of frames fills it. The method also mixes two jobs in one call, because it tracks the depth and the visiting order together, and a node with many children needs a loop over its list in place of two fixed calls.
 
 The program needs a loop in which the waiting nodes live in an ordinary collection that grows on the heap, and in which each row is processed completely before the next one starts.
 
@@ -89,10 +89,10 @@ The step that adds children is the only part that depends on the shape of the no
 
 #### Summing The Rows Of A Tree With Many Children
 
-The tree has the root 1 with the children 2, 3 and 4, where 3 has the children 5 and 6 and 4 has the child 7. Each cell is one node, listed in the order the queue finds it. The pointer `front` marks the next node to remove, and the pointer `stop` marks the end of the current row.
+The tree has the root 1 with the children 2, 3 and 4, where 3 has the children 5 and 6 and 4 has the child 7. Each cell is one node, listed in the order the queue finds it. Two pointers track the queue: `removed` is the last node taken out, and `queued` is the last node put in.
 
 ```trace
-{"cells":[1,2,3,4,5,6,7],"pointers":["front","stop"],"steps":[{"at":{"front":1,"stop":1},"vars":{"size":1,"row sum":1},"note":"Row 0 ends. The loop stored size 1, removed that many nodes and found the sum 1."},{"at":{"front":4,"stop":4},"vars":{"size":3,"row sum":9},"note":"Row 1 ends. The loop stored size 3, removed that many nodes and found the sum 9."},{"at":{"front":7,"stop":7},"vars":{"size":3,"row sum":18},"note":"Row 2 ends. The loop stored size 3, removed that many nodes and found the sum 18."}]}
+{"cells":[1,2,3,4,5,6,7],"pointers":["removed","queued"],"steps":[{"at":{"removed":-1,"queued":0},"vars":{"depth":0},"note":"Start: the queue holds only the root."},{"at":{"removed":0,"queued":3},"vars":{"size":1,"row sum":1},"note":"Row 0 ends. The loop stored size 1, removed that many nodes and found the sum 1."},{"at":{"removed":3,"queued":6},"vars":{"size":3,"row sum":9},"note":"Row 1 ends. The loop stored size 3, removed that many nodes and found the sum 9."},{"at":{"removed":6,"queued":6},"vars":{"size":3,"row sum":18},"note":"Row 2 ends. The loop stored size 3, removed that many nodes and found the sum 18."}]}
 ```
 
 Child expansion added three children for the root, and later two and one. The row sums are 1, 9 and 18.
@@ -102,10 +102,10 @@ Child expansion added three children for the root, and later two and one. The ro
 The tree has the root 1 with the children 2 and 3, the node 4 below the node 2, the node 5 below the node 3, and the node 6 below the node 4. The loop reads the right-side view of only the first three rows.
 
 ```trace
-{"cells":[1,2,3,4,5,6],"pointers":["front","stop"],"steps":[{"at":{"front":1,"stop":1},"vars":{"depth":1,"view":"[1]"},"note":"Row 0 ends. The last node removed was 1, so it joins the view. The pass counter is now 1."},{"at":{"front":3,"stop":3},"vars":{"depth":2,"view":"[1, 3]"},"note":"Row 1 ends. The last node removed was 3, so it joins the view. The pass counter is now 2."},{"at":{"front":5,"stop":5},"vars":{"depth":3,"view":"[1, 3, 5]"},"note":"Row 2 ends. The last node removed was 5, so it joins the view. The pass counter is now 3. The counter equals k, so the loop stops."}]}
+{"cells":[1,2,3,4,5,6],"pointers":["removed","queued"],"steps":[{"at":{"removed":-1,"queued":0},"vars":{"depth":0},"note":"Start: the queue holds only the root."},{"at":{"removed":0,"queued":2},"vars":{"depth":1,"view":"[1]"},"note":"Row 0 ends. The last node removed was 1, so it joins the view. The pass counter is now 1."},{"at":{"removed":2,"queued":4},"vars":{"depth":2,"view":"[1, 3]"},"note":"Row 1 ends. The last node removed was 3, so it joins the view. The pass counter is now 2."},{"at":{"removed":4,"queued":5},"vars":{"depth":3,"view":"[1, 3, 5]"},"note":"Row 2 ends. The last node removed was 5, so it joins the view. The pass counter is now 3. The counter equals k, so the loop stops."}]}
 ```
 
-The pass counter reaches 3 and the loop ends. The node 6 was discovered during the last pass but never removed.
+Here `k` is the number of rows the caller wants, and it is 3. The pass counter reaches 3 and the loop ends. The node 6 was discovered during the last pass but never removed.
 
 <!-- stage: code -->
 ### The Row Loop For Both Tree Shapes

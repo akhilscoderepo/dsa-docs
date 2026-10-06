@@ -6,7 +6,7 @@ Come back to this page after the lessons and again a few days later. Each questi
 ### Recognition Questions
 
 ```quiz
-{"id": "tb-rev-size-inside", "q": "A row loop uses `for (int i = 0; i < queue.size(); i++)` and adds the children of each removed node to the same queue. A root has two children. What does the first pass do?", "options": ["It removes only the root", "It removes the root and then both children", "It removes the root and one child", "It throws an exception"], "answer": 1, "explain": "A removal shrinks the queue by one and two additions grow it by two, so the test reads 2 after the first removal. The loop removes both children, and the first row mixes two depths."}
+{"id": "tb-rev-size-inside", "q": "A row loop uses `for (int i = 0; i < queue.size(); i++)` and adds the children of each removed node to the same queue. A root has two children. What does the first pass do?", "options": ["It removes only the root", "It removes the root and then both children", "It removes the root and one child", "It throws an exception"], "answer": 2, "explain": "After the first removal and two additions the queue holds 2 nodes, so the test i < 2 passes with i = 1 and removes one child. The next test compares 2 with a queue of size 1 and stops. The first row mixes two depths."}
 ```
 
 ```quiz

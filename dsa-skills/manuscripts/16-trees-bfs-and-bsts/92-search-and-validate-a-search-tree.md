@@ -14,7 +14,7 @@ A tree is valid when every lookup finds its key. This lesson asks whether the jo
 
 Two earlier ideas meet here. The one-path search supplies the rule that a comparison with a node key discards a whole side. A lookup follows a single line from the root and ignores everything else. The search alone says nothing about whether the rest of the tree obeys the same rule, because it only looks at the nodes on its own line.
 
-The value limits from the lesson on ancestor limits supply the memory. Each node carries the strictest lower and upper limit that the nodes above it impose. The limits alone do not say what the limits mean for a lookup. Together the two ideas show that the interval of a node is exactly the set of keys whose lookups pass through that node, so a valid tree is one where every node lies in its own interval.
+The value limits from the lesson on carrying limits down a search tree supply the memory. Each node carries the strictest lower and upper limit that the nodes above it impose. The limits alone do not say what the limits mean for a lookup. Together the two ideas show that the interval of a node is exactly the set of keys whose lookups pass through that node, so a valid tree is one where every node lies in its own interval.
 
 <!-- stage: naive -->
 ### Looking Up Every Key From The Root
@@ -194,7 +194,7 @@ The false friend is the repeated lookup from the root. It tests the right proper
 
 **Example 2.** Input the same tree, `low = 5` and `high = 20`, output `false`, because the key 5 is not above 5.
 
-**Hint.** What do the outer limits do to the limits of the root? Why must the limits be wider than `int`?
+**Hint.** What do the outer limits do to the limits of the root? What happens to the limit of a child when the caller's limit is `Integer.MIN_VALUE` or `Integer.MAX_VALUE`?
 
 **Changed decision.** The first call starts with limits from the caller, and not with no limits.
 
