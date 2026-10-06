@@ -77,7 +77,7 @@ Every `offer` and every `poll` restores heap order before it returns, so the nex
 
 #### Adding Five Values
 
-Start with an empty queue and offer 5, 3, 8, 1 and 4 in that order. In the first trace the pointer `next` marks the value just offered, and the variable `array` shows the queue after sift up finishes.
+Start with an empty queue and offer 5, 3, 8, 1 and 4 in that order. The first trace uses the pointer `next` for the value just offered, and the variable `array` shows the queue after sift up finishes.
 
 The values 5, 3 and 8 take few steps. The value 3 swaps with its parent 5. The value 8 stays in place, because its parent 3 is smaller. The value 1 is the interesting case, because it swaps twice and travels from position 3 to position 0. The value 4 stops at once, because its parent 3 is smaller. The final array is not sorted, because 8 sits before 5 and 4.
 

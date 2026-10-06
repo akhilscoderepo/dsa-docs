@@ -77,7 +77,7 @@ The root changes only when a candidate beats it, and then it moves up to the nex
 
 #### Keeping The Three Largest
 
-Take the stream 4, 9, 2, 7, 5, 8, 3 with `k = 3`. In the first trace the pointer `next` marks the candidate under test, and the variable `kept` lists the queue contents in ascending order.
+Take the stream 4, 9, 2, 7, 5, 8, 3 with `k = 3`. The first trace uses the pointer `next` for the candidate under test, and the variable `kept` lists the queue contents in ascending order.
 
 The first three values 4, 9 and 2 fill the queue, so the root is 2. The candidate 7 beats the root 2, so 2 leaves and 7 enters. The candidate 5 beats the new root 4, and 4 leaves. The candidate 8 beats the root 5, so 5 leaves. The candidate 3 is below the root 7 and gets discarded. The queue ends with 7, 8 and 9, and the root 7 is the third largest value.
 

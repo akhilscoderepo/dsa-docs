@@ -83,7 +83,7 @@ The queue holds exactly one entry for each file that still has unread values.
 
 #### Merging Three Files
 
-Take the files `[1, 4, 7]`, `[2, 5]` and `[3, 6, 9]`. In the first trace the pointer `out` marks the output position just written. The variable `frontier` lists the entries as `value from source index`.
+Take the files `[1, 4, 7]`, `[2, 5]` and `[3, 6, 9]`. The pointer `out` in the first trace marks the output position just written. The variable `frontier` lists the entries as `value from source index`.
 
 The frontier starts with 1, 2 and 3, one entry per file. The first poll returns 1 from file 0, and file 0 offers its successor 4. The next polls return 2 and 3 and refill the frontier with 5 and 6. The frontier always holds three entries until file 1 runs out after its value 5. From then on it holds two entries and then one, and the output ends as 1, 2, 3, 4, 5, 6, 7, 9.
 
