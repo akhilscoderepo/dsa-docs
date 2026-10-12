@@ -138,11 +138,11 @@ Use rolling state when every transition reads values at a fixed number of positi
 
 #### Checking The Invariant
 
-An **invariant** is a statement about the state that holds before and after every step. Here, before the iteration for index `i`, the saved variables equal the entries `dp[i - 1]` and so on up to the window size. The shift order protects this statement. Test n equal to 0 and 1, where the loop does not run. Test the largest n against a table, because a wrong shift is silent. Test a sequence whose values hit the modulus, because the sum of two values must not overflow.
+An **invariant** is a condition on the variables that is true at the start of every loop iteration. Here, before the iteration for index `i`, the saved variables equal the entries `dp[i - 1]` and so on up to the window size. The shift order protects this statement. Test n equal to 0 and 1, where the loop does not run. Test the largest n against a table, because a wrong shift is silent. Test a sequence whose values hit the modulus, because the sum of two values must not overflow.
 
 #### Avoiding The False Friend
 
-A **false friend** is a technique that looks right and fails on some inputs. The first false friend is reusing the table as a single variable, which loses the second saved value. The second is shrinking a table to the last two rows or entries when the recurrence reads offset three or a whole column, which gives wrong answers without an error. The third is rolling the state when the output requires the path, because the dropped entries are the only record of the choices.
+A **false friend** is a shortcut that passes small examples and breaks on others. The first false friend is reusing the table as a single variable, which loses the second saved value. The second is shrinking a table to the last two rows or entries when the recurrence reads offset three or a whole column, which gives wrong answers without an error. The third is rolling the state when the output requires the path, because the dropped entries are the only record of the choices.
 
 <!-- stage: exercises -->
 ### Exercises

@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Test That Runs For Minutes
 
-A developer writes a unit test for a sequence generator. The generator defines `F(0) = 0`, `F(1) = 1`, and `F(n) = F(n - 1) + F(n - 2)` for larger `n`. The recurrence is clear, and the recursive method that mirrors it is three lines long. The test checks `F(10)` and passes in a blink. A second test checks `F(50)`, and the build agent kills it after ten minutes without a result.
+A developer writes a unit test for a sequence generator. The generator defines `F(0) = 0`, `F(1) = 1`, and `F(n) = F(n - 1) + F(n - 2)` for larger `n`. The recurrence is clear, and the recursive method that mirrors it is three lines long. The test checks `F(10)` and passes in a blink. A second test checks `F(50)`, and the test runner kills it after ten minutes without a result.
 
 Nothing in the method is wrong, so the reader needs to ask what the machine is doing for those ten minutes. The same value is computed many times, and nothing keeps the earlier results. This lesson asks how to compute each value once, and it compares two ways to do that: remembering answers during the recursion, and filling an array in a planned order. Both methods read an integer `n`, return a `long`, and change no input.
 
@@ -34,7 +34,7 @@ It makes 15 calls. The call for 5 makes calls for 4 and 3. The call for 4 makes 
 
 Let `C(n)` be the number of calls made by `fibPlain(n)`. A call with `n < 2` is a single call, and any other call adds the calls of its two children plus itself. So `C(n) = C(n - 1) + C(n - 2) + 1`, which gives 15 calls for `n = 5`. The count is larger than `F(n)` itself, and `F(n)` grows by the factor 1.618 per step. The method therefore runs in O(1.618^n) time, which is exponential.
 
-For `n = 50` the method makes about 40 billion calls. At one billion simple calls per second that is still around 40 seconds of pure call overhead, and each call costs more than a simple operation. The test with `n = 50` cannot pass in a reasonable time, and `n = 90` would take thousands of years.
+For `n = 50` the method makes about 40 billion calls. At one billion simple calls per second that is still around 40 seconds of pure call overhead, and each call costs more than a simple operation. The test with `n = 50` cannot pass in a reasonable time, and `n = 90` would take well over a century.
 
 The tree of calls shows where the time goes. The value for 3 appears under both children of the call for 5, and each copy repeats its whole subtree. There are only `n + 1` distinct arguments, and the method computes a single answer for each argument many times. A fix has to compute each argument once and reuse the result. Two orderings achieve this, and the next section develops both.
 
@@ -88,7 +88,7 @@ The marker `-1` is safe because every Fibonacci number is at least 0. Each entry
 
 The first run follows the memoized method for `F(6)`. The pointer `call` marks the argument of the call that just finished. The variable `depth` is the number of active calls when it finished, `filled` is the number of cache entries that hold a final value, and `calls` counts the finished calls so far. The note says whether the call computed its value or found it in the cache.
 
-The method first descends through the arguments 5, 4, 3 and 2 to the base calls for 1 and 0. Then each call for 2, 3, 4, 5 and 6 stores a value, so five cache entries become final. Three calls find a cache hit, for the arguments 2, 3 and 4. The call for 1 that follows the store for 3 is a base case, so it needs no cache. The method makes 11 calls, instead of the 25 calls that the plain recursion makes for `n = 6`.
+The method first descends through the arguments 5, 4, 3 and 2 to the base calls for 1 and 0. Then each call for 2, 3, 4, 5 and 6 stores a value, so five cache entries become final. Three calls find a cache hit, for the arguments 2, 3 and 4. The second call for 1, made by the call for 3, is a base case, so it needs no cache. The method makes 11 calls, instead of the 25 calls that the plain recursion makes for `n = 6`.
 
 ```trace
 {"cells":["0","1","2","3","4","5","6"],"pointers":["call"],"steps":[{"at":{"call":1},"vars":{"depth":6,"filled":0,"calls":1},"note":"The call for 1 is a base case and returns 1 without touching the cache."},{"at":{"call":0},"vars":{"depth":6,"filled":0,"calls":2},"note":"The call for 0 is a base case and returns 0 without touching the cache."},{"at":{"call":2},"vars":{"depth":5,"filled":1,"calls":3},"note":"The call for 2 adds its two smaller answers and stores 1."},{"at":{"call":1},"vars":{"depth":5,"filled":1,"calls":4},"note":"The call for 1 is a base case and returns 1 without touching the cache."},{"at":{"call":3},"vars":{"depth":4,"filled":2,"calls":5},"note":"The call for 3 adds its two smaller answers and stores 2."},{"at":{"call":2},"vars":{"depth":4,"filled":2,"calls":6},"note":"The call for 2 finds its answer in the cache and returns at once."},{"at":{"call":4},"vars":{"depth":3,"filled":3,"calls":7},"note":"The call for 4 adds its two smaller answers and stores 3."},{"at":{"call":3},"vars":{"depth":3,"filled":3,"calls":8},"note":"The call for 3 finds its answer in the cache and returns at once."},{"at":{"call":5},"vars":{"depth":2,"filled":4,"calls":9},"note":"The call for 5 adds its two smaller answers and stores 5."},{"at":{"call":4},"vars":{"depth":2,"filled":4,"calls":10},"note":"The call for 4 finds its answer in the cache and returns at once."},{"at":{"call":6},"vars":{"depth":1,"filled":5,"calls":11},"note":"The call for 6 adds its two smaller answers and stores 8."}]}
@@ -142,11 +142,11 @@ Use this lesson when a recurrence is clear and a direct recursion repeats argume
 
 #### Checking The Invariant
 
-An **invariant** is a statement that holds at every step of a method. For memoization the invariant is that every cache entry is either the marker or the final answer for its argument. For tabulation it is that every entry the loop reads has already been finalized. Test the smallest inputs, `n = 0` and `n = 1`, where the array size and base entries decide whether the code runs. Test a mid-size value against a hand calculation, and test the largest value that fits.
+An **invariant** is a condition that stays true while the loop or recursion runs. For memoization the invariant is that every cache entry is either the marker or the final answer for its argument. For tabulation it is that every entry the loop reads has already been finalized. Test the smallest inputs, `n = 0` and `n = 1`, where the array size and base entries decide whether the code runs. Test a mid-size value against a hand calculation, and test the largest value that fits.
 
 #### Avoiding The False Friend
 
-A **false friend** is a familiar shortcut that passes simple tests and fails on other inputs. One is a cache marker of 0 for a problem whose answers can be 0. Another is a cache keyed by only some of the arguments, which returns an answer computed for a different call. The third is a table loop in the wrong direction, which reads default values and gives wrong results silently. Caching also does not help when every call has a distinct argument, because then nothing repeats.
+A **false friend** is a habit that works on easy cases and breaks on others. One is a cache marker of 0 for a problem whose answers can be 0. Another is a cache keyed by only some of the arguments, which returns an answer computed for a different call. The third is a table loop in the wrong direction, which reads default values and gives wrong results silently. Caching also does not help when every call has a distinct argument, because then nothing repeats.
 
 <!-- stage: exercises -->
 ### Exercises

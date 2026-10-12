@@ -152,11 +152,11 @@ The wording of the question names the objective. "Can" or "is it possible" asks 
 
 #### Checking The Invariant
 
-An **invariant** is a statement about the state that holds before and after every step. Here, after cell `c` is filled, each table holds the answer of its objective for the cells from 0 to `c`, and the entry of a broken or unreachable cell holds that objective's sentinel. Test cell 0 alone, where the base value is the answer. Test a level with no usable path, which must return false, 0 and -1. Test costs large enough that a sentinel plus a cost would overflow.
+An **invariant** is a fact about the tables that stays true as the loop advances. Here, after cell `c` is filled, each table holds the answer of its objective for the cells from 0 to `c`, and the entry of a broken or unreachable cell holds that objective's sentinel. Test cell 0 alone, where the base value is the answer. Test a level with no usable path, which must return false, 0 and -1. Test costs large enough that a sentinel plus a cost would overflow.
 
 #### Avoiding The False Friend
 
-A **false friend** is a technique that looks right and fails on some inputs. The first false friend is counting reachable cells instead of counting paths, which gives the same number for a row with one path and a row with a thousand. The second is a minimum table that starts at zero, because the zero then wins every comparison. The third is reusing the feasibility merge, OR, for counting, which collapses every count to 0 or 1.
+A **false friend** is a method that resembles the right one but answers a different question. The first false friend is counting reachable cells instead of counting paths, which gives the same number for a row with one path and a row with a thousand. The second is a minimum table that starts at zero, because the zero then wins every comparison. The third is reusing the feasibility merge, OR, for counting, which collapses every count to 0 or 1.
 
 <!-- stage: exercises -->
 ### Exercises

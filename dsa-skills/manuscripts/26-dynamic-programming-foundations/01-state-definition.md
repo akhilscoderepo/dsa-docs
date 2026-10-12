@@ -139,7 +139,7 @@ Use this lesson when a recursive method repeats work and the answer to a call de
 
 #### Checking The Invariant
 
-An **invariant** is a statement that holds at every step of a method. Here the invariant is that `dp[i]` equals exactly what its sentence says for every `i` the loop has finished. Test it on the smallest inputs. Check `n = 0`, which must give 1, and `n = 1`, which must give 0. Then check that every read index is at least 0. If a hand count of a small case disagrees with the table, the sentence and the formula disagree, and the sentence is the one to fix first.
+An **invariant** is a fact about the table that remains true after each step. Here the invariant is that `dp[i]` equals exactly what its sentence says for every `i` the loop has finished. Test it on the smallest inputs. Check `n = 0`, which must give 1, and `n = 1`, which must give 0. Then check that every read index is at least 0. If a hand count of a small case disagrees with the table, the sentence and the formula disagree, and the sentence is the one to fix first.
 
 #### Avoiding The False Friend
 
