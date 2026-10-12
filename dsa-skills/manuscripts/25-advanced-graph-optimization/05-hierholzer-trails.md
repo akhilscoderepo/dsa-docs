@@ -65,7 +65,7 @@ The method walks until it is stuck, writes the stuck vertex to an output list, s
 
 #### Counting Degrees Before Walking
 
-A **trail** is a route that uses each link at most once. An **Eulerian trail** uses every link exactly once, and an **Eulerian cycle** is an Eulerian trail that ends where it starts. The out-degree of a vertex counts the links that leave it, and the in-degree counts the links that enter it. A vertex is **balanced** when its out-degree equals its in-degree.
+A **trail** is a route that uses each link at most once. An **Eulerian trail** uses every link exactly once, and the exercises also call it an Eulerian path, and an **Eulerian cycle** is an Eulerian trail that ends where it starts. The out-degree of a vertex counts the links that leave it, and the in-degree counts the links that enter it. A vertex is **balanced** when its out-degree equals its in-degree.
 
 An Eulerian cycle needs every vertex to be balanced, because each visit enters through one link and leaves through another. An Eulerian trail that ends elsewhere needs the same condition at every vertex except two. The start has one more outgoing link than incoming links, and the end has one more incoming link than outgoing links. The method counts `out - in` for each vertex and rejects any other pattern before it walks.
 
@@ -79,7 +79,13 @@ When the vertex on top of the stack has no unused outgoing link, the method pops
 
 #### Reversing The Recorded Order
 
-Read the output list from its last entry to its first entry. Each vertex was recorded after every vertex that follows it on the trail, so the reversed list is the trail in travel order. The recorded order is right for a further reason. In a balanced graph, every vertex has as many unused outgoing links as incoming ones, so a stuck walk can only end at the vertex where it began. The stuck walk is therefore a closed loop. The method records it first and then returns to the vertex below, which is the place where the loop is spliced in. The invariant is that the output list, read backward, is a valid tail of the trail and uses only consumed links. The method finishes when the stack is empty. The trail is complete when the output holds `E + 1` vertices. A shorter output means that some links were not reachable from the start.
+Read the output list from its last entry to its first entry. Each vertex was recorded after every vertex that follows it on the trail, so the reversed list is the trail in travel order.
+
+The recorded order is right for a further reason. When every vertex is balanced, a stuck walk can only end at the vertex where it began. The stuck walk is therefore a closed loop. The method records it first and then returns to the vertex below, which is the place where the loop is spliced in.
+
+In the case of a start with one extra outgoing link and an end with one extra incoming link, the first stuck walk ends at the end vertex. Every later stuck walk starts at a vertex that is balanced for the unused links, so it closes where it began. The splice works the same way.
+
+The invariant is that the output list, read backward, is a valid tail of the trail and uses only consumed links. The method finishes when the stack is empty. The trail is complete when the output holds `E + 1` vertices. A shorter output means that some links were not reachable from the start.
 
 <!-- stage: variables -->
 ### Stack, Cursors And Output

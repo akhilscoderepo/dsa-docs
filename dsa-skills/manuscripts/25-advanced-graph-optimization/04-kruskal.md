@@ -68,7 +68,7 @@ The method keeps the islands as groups and buys the cheapest edge that joins two
 
 #### Groups Stored As Parent Links
 
-Each vertex has one **group**, the set of vertices it reaches through bought edges. The array `parent` stores each group as a tree of links. The entry `parent[v]` is the next vertex toward the **root** of the group, and a root satisfies `parent[v] == v`. The call `find(v)` follows the links from `v` and returns the root. Two vertices share a group exactly when `find` returns the same root for both. This representation comes from the union-find lesson, and the definition here is the only one the code below needs.
+Each vertex has one **group**, the set of vertices it reaches through bought edges. The array `parent` stores each group as a tree of links. The entry `parent[v]` is the next vertex toward the **root** of the group, and a root satisfies `parent[v] == v`. The call `find(v)` follows the links from `v` and returns the root. Two vertices share a group exactly when `find` returns the same root for both. This representation comes from the union-find lesson in chapter 23, and the definition here is the only one the code below needs.
 
 The array `size` holds the number of vertices of a group at its root. To merge two groups, the method links the root of the smaller group below the root of the larger one, which keeps the trees shallow. The call `find` also halves its path, so that a later search walks fewer links.
 

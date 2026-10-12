@@ -129,10 +129,10 @@ Every addition first checks the sentinel `Long.MAX_VALUE`, because the sum of tw
 
 #### Cabling With Union-Find
 
-Five sites sit at the points (0,0), (1,3), (3,2), (2,6) and (6,5), and a cable between two sites costs the sum of the horizontal and vertical gaps. Each cell is one of the ten possible cables, written `a-b@cost` and sorted by cost. The pointer `edge` marks the cable under review. The variable `groups` lists the groups of sites, and `total` is the cost bought so far. At cable 0-2@5 the sites 0 and 2 already share a group through site 1, so the loop skips it. The loop stops at cable 3-4@5 because one group remains, and it never reads the last four cables.
+Five sites sit at the points (0,0), (1,3), (3,2), (2,6) and (6,5), and a cable between two sites costs the sum of the horizontal and vertical gaps. Each cell is one of the ten possible cables, written `a-b@cost` and sorted by cost. The pointer `edge` marks the cable under review. The variable `sets` lists the groups of sites, `groups` counts them, and `total` is the cost bought so far. At cable 0-2@5 the sites 0 and 2 already share a group through site 1, so the loop skips it. The loop stops at cable 3-4@5 because one group remains, and it never reads the last four cables.
 
 ```trace
-{"cells":["1-2@3","0-1@4","1-3@4","0-2@5","2-3@5","3-4@5","2-4@6","1-4@7","0-3@8","0-4@11"],"pointers":["edge"],"steps":[{"at":{"edge":-1},"vars":{"groups":"{0} {1} {2} {3} {4}","total":0},"note":"Five groups of one site each. No cable is bought."},{"at":{"edge":0},"vars":{"groups":"{0} {1,2} {3} {4}","total":3},"note":"Cable 1-2@3 joins two groups, so the loop buys it. 4 groups remain."},{"at":{"edge":1},"vars":{"groups":"{0,1,2} {3} {4}","total":7},"note":"Cable 0-1@4 joins two groups, so the loop buys it. 3 groups remain."},{"at":{"edge":2},"vars":{"groups":"{0,1,2,3} {4}","total":11},"note":"Cable 1-3@4 joins two groups, so the loop buys it. 2 groups remain."},{"at":{"edge":3},"vars":{"groups":"{0,1,2,3} {4}","total":11},"note":"Cable 0-2@5: sites 0 and 2 share root 3, so the cable would close a cycle and the loop skips it."},{"at":{"edge":4},"vars":{"groups":"{0,1,2,3} {4}","total":11},"note":"Cable 2-3@5: sites 2 and 3 share root 3, so the cable would close a cycle and the loop skips it."},{"at":{"edge":5},"vars":{"groups":"{0,1,2,3,4}","total":16},"note":"Cable 3-4@5 joins two groups, so the loop buys it. Only one group remains, so the loop stops and never reads the last 4 cables."}]}
+{"cells":["1-2@3","0-1@4","1-3@4","0-2@5","2-3@5","3-4@5","2-4@6","1-4@7","0-3@8","0-4@11"],"pointers":["edge"],"steps":[{"at":{"edge":-1},"vars":{"sets":"{0} {1} {2} {3} {4}","groups":5,"total":0},"note":"Five groups of one site each. No cable is bought."},{"at":{"edge":0},"vars":{"sets":"{0} {1,2} {3} {4}","groups":4,"total":3},"note":"Cable 1-2@3 joins two groups, so the loop buys it. 4 groups remain."},{"at":{"edge":1},"vars":{"sets":"{0,1,2} {3} {4}","groups":3,"total":7},"note":"Cable 0-1@4 joins two groups, so the loop buys it. 3 groups remain."},{"at":{"edge":2},"vars":{"sets":"{0,1,2,3} {4}","groups":2,"total":11},"note":"Cable 1-3@4 joins two groups, so the loop buys it. 2 groups remain."},{"at":{"edge":3},"vars":{"sets":"{0,1,2,3} {4}","groups":2,"total":11},"note":"Cable 0-2@5: sites 0 and 2 share root 3, so the cable would close a cycle and the loop skips it."},{"at":{"edge":4},"vars":{"sets":"{0,1,2,3} {4}","groups":2,"total":11},"note":"Cable 2-3@5: sites 2 and 3 share root 3, so the cable would close a cycle and the loop skips it."},{"at":{"edge":5},"vars":{"sets":"{0,1,2,3,4}","groups":1,"total":16},"note":"Cable 3-4@5 joins two groups, so the loop buys it. Only one group remains, so the loop stops and never reads the last 4 cables."}]}
 ```
 
 The total is 16. Notice that the skipped cables are exactly the ones whose endpoints already share a root.
@@ -163,6 +163,7 @@ static long spanningCost(int n, int[][] edges) {
     long total = 0;
     int groups = n;
     for (int[] e : sorted) {
+        if (groups == 1) break;                                     // one group left: stop early
         int a = find(parent, e[0]), b = find(parent, e[1]);
         if (a == b) continue;                                       // equal roots: the edge would close a cycle
         parent[a] = b;
@@ -258,7 +259,7 @@ static List<Integer> trailFrom(int n, int[][] links, int start) {
 }
 ```
 
-Each method costs what its lesson states. The sorted edges take O(E log E), the table takes O(V^3), the search takes O(V + E), and the trail with queues takes O(E log E).
+Each method costs what its lesson states. The sorted edges take O(E log E), the table takes O(V^3), the search takes O(V + E), and the trail takes O(V + E) as in lesson 05. The trail code here uses priority queues for the smallest-first rule, which adds a log factor and gives O(E log E). The log factor comes only from sorting and priority queues.
 
 <!-- stage: applicability -->
 ### Choosing Among The Graph Methods

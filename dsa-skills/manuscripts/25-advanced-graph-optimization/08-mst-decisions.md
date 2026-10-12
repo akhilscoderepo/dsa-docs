@@ -199,7 +199,7 @@ static int find(int[] root, int x) {
 }
 ```
 
-Sorting costs O(E log E), and the loop makes E calls to `find`, which are close to constant with path halving. The method uses O(V) memory beyond the cloned array. The edge `c` is safe whenever its endpoints have different roots, since it is the lightest edge that leaves the component of `ra`.
+Sorting costs O(E log E), and the loop makes E calls to `find`, and path halving alone gives amortized O(log V) per call. The loop costs O(E log V), so the sort dominates. The method uses O(V) memory beyond the cloned array. The edge `c` is safe whenever its endpoints have different roots, since it is the lightest edge that leaves the component of `ra`.
 
 <!-- stage: applicability -->
 ### Recognizing Minimum Connection Problems
@@ -214,7 +214,7 @@ An invariant is a property that every step of the method must preserve. Here the
 
 #### Choosing Between Prim And Kruskal
 
-The decision follows the density and the form of the input. A dense graph has close to V^2 / 2 edges. When the input is a list of edges, Kruskal sorts it at O(E log E). Suppose the input is a matrix, or the weights come from a formula for every pair, such as distances between points. Then dense Prim runs at O(V^2) and never stores an edge list. A sparse graph with an edge list favors Kruskal, and a sparse graph held as an adjacency list can use Prim with a heap. Kruskal also handles a graph that is not connected, because it simply stops with a forest.
+The decision follows the density and the form of the input. A dense graph has close to V^2 / 2 edges. When the input is a list of edges, Kruskal sorts it at O(E log E). Suppose the input is a matrix, or the weights come from a formula for every pair, such as distances between points. Then dense Prim runs at O(V^2) and never stores an edge list. A sparse graph with an edge list favors Kruskal, and a sparse graph held as an adjacency list can use Prim with a heap. Kruskal also handles a graph that is not connected, because it ends with fewer than `n - 1` accepted edges and returns -1.
 
 #### Avoiding The False Friend
 

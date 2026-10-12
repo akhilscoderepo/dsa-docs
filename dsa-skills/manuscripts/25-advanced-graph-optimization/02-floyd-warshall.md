@@ -63,7 +63,7 @@ For one pair (a, b), the search follows every ordered choice of a subset of the 
 <!-- stage: bottleneck -->
 ### Routes Are Counted Again And Again
 
-The number of routes grows like the factorial of n, so the worst case is O(n!) per pair. Twenty servers are already far beyond any time limit. The work is also wasteful. The route 0, 2, 3 is the route to server 3, and it is also the start of routes from 0 to 4 and from 0 to 5. The search rebuilds that start for each of them. The cost of the cheapest part from 2 to 3 is computed again for every route that passes through 2.
+The number of routes grows like the factorial of n, so the worst case is O(n!) per pair. Twenty servers are already far beyond any time limit. The work is also wasteful. The route 0, 2, 3 is the route to server 3, and it is also the start of routes from 0 to 4 and from 0 to 1. The search rebuilds that start for each of them. The cost of the cheapest part from 2 to 3 is computed again for every route that passes through 2.
 
 A faster method must store a cheapest cost for each pair and reuse it. The n by n table has only n squared entries, which is tiny next to the number of routes. The open question is the order in which to improve the entries. Every entry must end with the true minimum after a small, fixed number of passes.
 

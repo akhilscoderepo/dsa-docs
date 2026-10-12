@@ -14,19 +14,19 @@ pts=[(0,0),(1,3),(3,2),(2,6),(6,5)]; n=len(pts)
 E=sorted((abs(pts[i][0]-pts[j][0])+abs(pts[i][1]-pts[j][1]),i,j) for i in range(n) for j in range(i+1,n))
 cells=[f"{i}-{j}@{w}" for w,i,j in E]
 p=list(range(n)); total=0; groups=n; skips=[]
-steps=[{"at":{"edge":-1},"vars":{"groups":groups_str(p,n),"total":0},"note":"Five groups of one site each. No cable is bought."}]
+steps=[{"at":{"edge":-1},"vars":{"sets":groups_str(p,n),"groups":groups,"total":0},"note":"Five groups of one site each. No cable is bought."}]
 last=None
 for k,(w,i,j) in enumerate(E):
     a,b=find(p,i),find(p,j)
     if a==b:
         skips.append(cells[k])
-        steps.append({"at":{"edge":k},"vars":{"groups":groups_str(p,n),"total":total},"note":f"Cable {i}-{j}@{w}: sites {i} and {j} share root {a}, so the cable would close a cycle and the loop skips it."})
+        steps.append({"at":{"edge":k},"vars":{"sets":groups_str(p,n),"groups":groups,"total":total},"note":f"Cable {i}-{j}@{w}: sites {i} and {j} share root {a}, so the cable would close a cycle and the loop skips it."})
         continue
     p[a]=b; total+=w; groups-=1
     note=f"Cable {i}-{j}@{w} joins two groups, so the loop buys it." + (f" {groups} groups remain." if groups>1 else "")
     if groups==1:
         note+=f" Only one group remains, so the loop stops and never reads the last {len(E)-k-1} cables."
-    steps.append({"at":{"edge":k},"vars":{"groups":groups_str(p,n),"total":total},"note":note})
+    steps.append({"at":{"edge":k},"vars":{"sets":groups_str(p,n),"groups":groups,"total":total},"note":note})
     if groups==1: break
 assert total==16 and skips==["0-2@5","2-3@5"] and len(E)-k-1==4 and cells[k]=="3-4@5"
 fill(CH,F,block(cells,["edge"],steps),"@@TRACE1@@")

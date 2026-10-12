@@ -260,6 +260,6 @@ A false friend is a familiar method that looks right and fails. The first false 
 
 **Example 2.** Input `points = [[0,0],[0,5],[0,6]]`, output `[6,5]`.
 
-**Hint.** The graph has an edge for every pair of points, which is n(n-1)/2 edges. List those edges, then decide between Kruskal and heap Prim.
+**Hint.** The graph has an edge for every pair of points, which is n(n-1)/2 edges. List those edges, then run heap Prim on them.
 
 **Changed decision.** The method returns the heaviest tree edge as well as the total. The usual statement asks for the total only.

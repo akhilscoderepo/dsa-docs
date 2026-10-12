@@ -39,7 +39,7 @@ def sweep(n,order,g,truthsize):
                 for v in g[u]:
                     if label[v]==-1: label[v]=nxt; st.append(v); got.append(v)
             found=len(got); lab=nxt; labeled+=found
-            note=f"Vertex {s} opens label {nxt} and the search collects {found} vertices: "+", ".join(map(str,sorted(got)))+"."
+            note=f"Vertex {s} opens label {nxt} and the search collects {found} {'vertex' if found==1 else 'vertices'}: "+", ".join(map(str,sorted(got)))+"."
             nxt+=1
         steps.append({"at":{"i":i},"vars":{"label":lab,"found":found,"labeled":labeled,**({"truth":truthsize[s]} if truthsize else {})},"note":note})
     return cells,steps,label

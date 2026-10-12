@@ -77,7 +77,7 @@ The **discovery time** `disc[u]` is the number of vertices the search has discov
 
 #### Every Other Edge Is A Back Edge
 
-In an undirected graph, each non-tree edge joins a vertex to one of its ancestors. This kind of edge is a **back edge**. The reason is the order of the search, which has three cases when it stands at `u` and scans an edge to `v`. First, `v` is undiscovered, so the edge becomes a tree edge and `v` becomes a child of `u`. Second, `v` lies on the current path from the root to `u`, so `v` is an ancestor of `u` and the edge is a back edge. Third, `v` is finished and lies on another branch. That case cannot occur, because the search would have crossed the edge from `v` and found `u` earlier.
+In an undirected graph, each non-tree edge joins a vertex to one of its ancestors. This kind of edge is a **back edge**. The reason is the order of the search, which has three cases when it stands at `u` and scans an edge to `v`. First, `v` is undiscovered, so the edge becomes a tree edge and `v` becomes a child of `u`. Second, `v` lies on the current path from the root to `u`, so `v` is an ancestor of `u` and the edge is a back edge. Third, `v` is already finished. Then `v` is a descendant of `u`, and the edge is the back edge that `v` scanned from below, so `u` ignores it. A finished `v` on another branch cannot occur, because the search would have crossed the edge from `v` and found `u` earlier.
 
 #### The Low Link Value
 

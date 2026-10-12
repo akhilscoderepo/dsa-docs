@@ -105,9 +105,11 @@ The method reads the vertex count `n` and the array `edges` of pairs `[from, to]
 - **back** is the list of incoming neighbours of each vertex, which forms the reversed graph.
 - **order** is an `int[]` of length `n` that holds the vertices in finish order.
 - **cursor** is an `int[]` where `cursor[u]` is the position of the next edge of `u` to examine.
+- **seen** is a `boolean[]` of length `n` that marks vertices the first sweep has pushed.
+- **placed** is the number of vertices written to `order` so far.
 - **label** is an `int[]` of length `n` where `-1` marks a vertex that no search has reached.
 
-The labels count up from 0 in the order in which the second sweep opens components. The method assigns a label when it pushes a vertex, so a vertex never enters a stack twice. The first sweep uses an explicit stack, because a recursive search over a long chain of modules can exhaust the Java call stack.
+The labels count up from 0 in the order in which the second sweep opens components. In the second sweep, the method assigns a label when it pushes a vertex, so a vertex never enters a stack twice. The first sweep uses `seen` for the same purpose. The first sweep uses an explicit stack, because a recursive search over a long chain of modules can exhaust the Java call stack.
 
 <!-- stage: trace -->
 ### Two Runs On Module Graphs
@@ -119,7 +121,7 @@ The first graph has eight modules and eleven imports. The imports run 0 to 3, 3 
 The first sweep derives its order from a single search that starts at vertex 0. That search walks 0, 3, 6, 1, 4, 2, 5 and then 7. Vertex 7 has no outgoing import, so it finishes first. The search then backs up and finishes 5, 2, 4, 1, 6, 3 and 0, because every other edge of those vertices leads to a vertex that is already visited.
 
 ```trace
-{"cells":["0","3","6","1","4","2","5","7"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"label":0,"found":3,"labeled":3},"note":"Vertex 0 opens label 0 and the search collects 3 vertices: 0, 3, 6."},{"at":{"i":1},"vars":{"label":0,"found":0,"labeled":3},"note":"Vertex 3 already has label 0, so no search starts."},{"at":{"i":2},"vars":{"label":0,"found":0,"labeled":3},"note":"Vertex 6 already has label 0, so no search starts."},{"at":{"i":3},"vars":{"label":1,"found":2,"labeled":5},"note":"Vertex 1 opens label 1 and the search collects 2 vertices: 1, 4."},{"at":{"i":4},"vars":{"label":1,"found":0,"labeled":5},"note":"Vertex 4 already has label 1, so no search starts."},{"at":{"i":5},"vars":{"label":2,"found":2,"labeled":7},"note":"Vertex 2 opens label 2 and the search collects 2 vertices: 2, 5."},{"at":{"i":6},"vars":{"label":2,"found":0,"labeled":7},"note":"Vertex 5 already has label 2, so no search starts."},{"at":{"i":7},"vars":{"label":3,"found":1,"labeled":8},"note":"Vertex 7 opens label 3 and the search collects 1 vertices: 7."}]}
+{"cells":["0","3","6","1","4","2","5","7"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"label":0,"found":3,"labeled":3},"note":"Vertex 0 opens label 0 and the search collects 3 vertices: 0, 3, 6."},{"at":{"i":1},"vars":{"label":0,"found":0,"labeled":3},"note":"Vertex 3 already has label 0, so no search starts."},{"at":{"i":2},"vars":{"label":0,"found":0,"labeled":3},"note":"Vertex 6 already has label 0, so no search starts."},{"at":{"i":3},"vars":{"label":1,"found":2,"labeled":5},"note":"Vertex 1 opens label 1 and the search collects 2 vertices: 1, 4."},{"at":{"i":4},"vars":{"label":1,"found":0,"labeled":5},"note":"Vertex 4 already has label 1, so no search starts."},{"at":{"i":5},"vars":{"label":2,"found":2,"labeled":7},"note":"Vertex 2 opens label 2 and the search collects 2 vertices: 2, 5."},{"at":{"i":6},"vars":{"label":2,"found":0,"labeled":7},"note":"Vertex 5 already has label 2, so no search starts."},{"at":{"i":7},"vars":{"label":3,"found":1,"labeled":8},"note":"Vertex 7 opens label 3 and the search collects 1 vertex: 7."}]}
 ```
 
 #### Searching The Wrong Direction

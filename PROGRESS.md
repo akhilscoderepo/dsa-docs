@@ -29,7 +29,7 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 | 22-bfs-variations | done |
 | 23-directed-graphs-and-union-find | done |
 | 24-shortest-paths-and-graph-state-modeling | done |
-| 25-advanced-graph-optimization | todo |
+| 25-advanced-graph-optimization | done |
 | 26-dynamic-programming-foundations | todo |
 | 27-dynamic-programming-capacity-and-partition-patterns | todo |
 | 28-dynamic-programming-state-machines-and-sequences | todo |
@@ -98,3 +98,4 @@ Statuses: done | claimed NN <UTC time> | todo. Update on every chapter.
 - claimed 25 2026-10-06T22:38Z
 - claimed 26 2026-10-07T00:38Z (25 claimed 2026-10-06T22:38Z, under 3 hours old, so skipped)
 - claimed 25 2026-10-12T18:38Z (stale claim from 2026-10-06T22:38Z, no files pushed)
+- 25 (2026-10-12): content complete, human review pending. Built unattended in one run after reclaiming the stale 2026-10-06 claim: eight lessons plus the combination lesson Choose A Method For Each Graph Goal (lessons written by parallel subagents, pushed after the set, then orientation, unlocked combinations and review). Final reader review (RUNBOOK section 10) ran 2 passes with an independent reader subagent each time; pass 1 found 35 points and pass 2 20, factual errors (Kruskal size claim, Floyd negative-edge wording, trace/prose mismatches, counts, a missing early stop in 91 code, path-halving cost) were fixed. A third pass has NOT run, so a clean pass is not confirmed. Interpretation recorded: the spec repeats LC 1584 (03, 08, 91), LC 1192 (07, 91), LC 1334 (02, 91) and LC 332 (05, 91), so each repeat changes its contract (heaviest edge, free cables, exactly g groups, bridge count with largest small side, bridges by side size, city with tie rules, lexically largest itinerary). Lesson 01 Vary (LC 787) returns the cheapest price per stop limit. Strong components has no LeetCode tag in the spec. Open or accepted, not changed: LC 1584 is the Recognize exercise in 03, 04 and 08 with different asks under the same title; exchange argument for the cut property is repeated in 03, 04, 08 and 91; invariant and false friend are redefined per lesson; trace setup paragraphs are long prose; trace step numbering differs between lessons (0-based in 03 and 06, 1-based in 07 and 08); 91 does not choose between lessons 01 and 06 families (stated as out of scope); variables-stage headings repeat a template. Remaining WARNs: low-diversity trace and insight wording. JDK 21 only; JDK 25, Windows, phones, printing and teaching quality are unverified.
