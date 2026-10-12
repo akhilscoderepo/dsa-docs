@@ -139,52 +139,51 @@ The **invariant** is a statement that stays true throughout the loops. Here, whe
 
 #### Avoiding The False Friend
 
-A **false friend** is a technique that looks right but fails on some inputs. Here the first false friend is a greedy walk that always steps to the neighbor with the best value. It ignores that a poor step now can lead to a rich region. The second is the closed formula for open grids, which counts choose-style combinations. It stops working as soon as a shelf or a different move set removes the symmetry. The third is the reading order itself: with moves that go up or left, filling row by row reads cells that are not ready.
+A **false friend** is a familiar method that seems correct and returns wrong answers on some inputs. Here the first false friend is a greedy walk that always steps to the neighbor with the best value. It ignores that a poor step now can lead to a rich region. The second is the closed formula for open grids, which counts choose-style combinations. It stops working as soon as a shelf or a different move set removes the symmetry. The third is the reading order itself: with moves that go up or left, filling row by row reads cells that are not ready.
 
 <!-- stage: exercises -->
 ### Exercises
 
-#### [Build] Routes With Three Moves (Author exercise)
-<!-- id: dp-grid-three-moves -->
+#### [Build] Unique Paths (LeetCode 62)
+<!-- id: dp-grid-unique-paths -->
 
 **Prerequisites.** The route table and the border rule of this lesson.
 
-**Problem.** A grid has `rows` rows and `cols` columns, and `open[r][c]` is `true` when the cell can be entered. A route starts at `(0, 0)` and ends at `(rows - 1, cols - 1)`. Each step moves from `(r, c)` to `(r + 1, c)`, `(r, c + 1)` or `(r + 1, c + 1)`, and every cell on the route, including both ends, must be open. Return the number of distinct routes modulo 1000000007 as an `int`. Two routes are distinct when their cell sequences differ.
+**Problem.** A grid has `m` rows and `n` columns. A robot starts at the top-left cell and must reach the bottom-right cell. Each step moves it one cell right or one cell down. Return the number of distinct routes as an `int`. Two routes are distinct when their cell sequences differ.
 
 **Constraints.** The limits are:
-- **Grid** satisfies `1 <= rows, cols <= 300`.
-- **Cells** are `true` for open and `false` for blocked.
-- **Result** is reduced modulo 1000000007 and lies in `0..1000000006`.
-- **Mutation** is not allowed, because `open` stays unchanged.
+- **Grid** satisfies `1 <= m, n <= 100`.
+- **Result** fits in an `int` for every input.
+- **Cells** are all open, so no cell is blocked.
 
-**Example 1.** Input `open = [[true,true,true],[true,true,true]]`, output `5`.
+**Example 1.** Input `m = 3`, `n = 4`, output `10`.
 
-**Example 2.** Input `open = [[true,true,true],[true,false,true],[true,true,true]]`, output `4`.
+**Example 2.** Input `m = 1`, `n = 6`, output `1`.
 
-**Hint.** Which cells can precede cell `(1, 1)` in the first example, and what value does each hold when the loop reaches it?
+**Hint.** What does the first row of the table hold, and why does every cell in it have only one predecessor?
 
-**Changed decision.** The table adds a third predecessor, and every sum is reduced modulo 1000000007. The reduction keeps each entry below the modulus, so the sum of three entries fits in a `long`.
+**Changed decision.** The table drops the diagonal predecessor and the blocked cells of the lesson. The first row and first column are set to 1 before the loops, and each interior cell adds the cell above and the cell on the left.
 
-#### [Vary] Maximum Gain Path (Author exercise)
-<!-- id: dp-grid-max-gain -->
+#### [Vary] Minimum Path Sum (LeetCode 64)
+<!-- id: dp-grid-min-path-sum -->
 
 **Prerequisites.** The exercise above.
 
-**Problem.** An `int[][]` named `gain` has `rows` rows and `cols` columns. A route starts at `(0, 0)`, ends at `(rows - 1, cols - 1)`, and each step moves one cell right or one cell down. The total of a route is the sum of `gain` over every cell on it, both ends included. Return the largest total over all routes as an `int`.
+**Problem.** An `m` by `n` matrix `grid` of nonnegative integers is given. A route starts at the top-left cell, ends at the bottom-right cell, and each step moves one cell right or one cell down. The cost of a route is the sum of the grid values on its cells, both ends included. Return the smallest cost over all routes as an `int`.
 
 **Constraints.** The limits are:
-- **Grid** satisfies `1 <= rows, cols <= 200`.
-- **Gain** satisfies `-1000 <= gain[r][c] <= 1000`, so negative cells are allowed.
+- **Grid** satisfies `1 <= m, n <= 200`.
+- **Values** satisfy `0 <= grid[r][c] <= 200`.
 - **Result** fits in an `int`.
-- **Mutation** is not allowed, because `gain` stays unchanged.
+- **Mutation** is not allowed, because `grid` stays unchanged.
 
-**Example 1.** Input `gain = [[2,-1,3],[1,4,-2],[-3,2,5]]`, output `14`.
+**Example 1.** Input `grid = [[4,1,6],[2,7,3],[5,2,1]]`, output `14`.
 
-**Example 2.** Input `gain = [[-5,-2],[-7,-9]]`, output `-16`.
+**Example 2.** Input `grid = [[3,9,1,2]]`, output `15`.
 
-**Hint.** In the second example every cell is negative. What would go wrong if the table started from 0 for cells that are not yet filled?
+**Hint.** In the first row, which single predecessor decides each cell, and why can the loop not take a minimum there?
 
-**Changed decision.** The state now stores a total, and the combination is the larger predecessor plus the cell's own gain. A missing predecessor must not act as 0, because a total of 0 can beat a real negative total.
+**Changed decision.** The state stores a smallest cost and the combination is the smaller predecessor plus the cell value. The border cells read only the predecessor that exists.
 
 #### [Boundary] First Row And Column (Author exercise)
 <!-- id: dp-grid-border-counts -->

@@ -1,183 +1,158 @@
 <!-- solutions-for: 26-dynamic-programming-foundations -->
 ### Solutions For Grid DP
 
-#### Solution: [Build] Routes With Three Moves (Author exercise)
-<!-- id: dp-grid-three-moves -->
+#### Solution: [Build] Unique Paths (LeetCode 62)
+<!-- id: dp-grid-unique-paths -->
 
 **Approach.**
-The method keeps a table `dp` where `dp[r][c]` is the number of routes that end exactly at `(r, c)`, reduced modulo 1000000007. It visits cells in reading order. A closed cell keeps 0. The start cell gets 1 when it is open. Every other open cell adds the entries of the cell above, the cell on the left and the cell on the upper left, and it skips a neighbor that lies outside the grid. Each addition happens in a `long`, and the sum is reduced once per cell.
+The table entry `ways[r][c]` is the number of routes that end exactly at `(r, c)`. Every cell in row 0 and column 0 has a single predecessor direction and no shelf, so the method sets those entries to 1 before the main loops. Each interior cell then adds the entry above it and the entry on its left. The answer is the entry of the bottom-right cell.
 
-The invariant is that when the loops reach a cell, all three possible predecessors already hold their final reduced values, since each has a smaller row or the same row with a smaller column. The reduction matters because three entries below the modulus add up to more than `Integer.MAX_VALUE`, so an `int` sum would wrap. The test below asserts that fact.
+The invariant is that the loops read only entries with a smaller row, or the same row and a smaller column, so every read value is final. The two sets of routes entering a cell from above and from the left are disjoint, so the sum counts each route once. The result fits in an `int` by the stated guarantee, and the test cross-checks the table against the binomial coefficient computed in a `long`.
 
 **Complexity.**
-- **Time** is O(rows * cols), because each cell performs at most three additions and one reduction.
-- **Space** is O(rows * cols) for the table, and the input stays unchanged.
+- **Time** is O(m * n), because each interior cell does one addition.
+- **Space** is O(m * n) for the table.
 
 ```java run
 import java.util.*;
 
-public final class DpGridThreeMoves {
-    static final int MOD = 1_000_000_007;
-
+public final class DpGridUniquePaths {
     /**
-     * Counts routes from the top-left to the bottom-right cell using right, down and diagonal steps.
-     * Time: O(rows * cols). Space: O(rows * cols).
-     * Invariant: dp[r][c] is the number of routes ending exactly at (r, c), modulo MOD.
+     * Counts right/down routes across an open m by n grid.
+     * Time: O(m * n). Space: O(m * n).
+     * Invariant: ways[r][c] is the number of routes ending exactly at (r, c).
      */
-    static int countRoutes(boolean[][] open) {
-        int rows = open.length, cols = open[0].length;
-        // The table has one long per cell, which is the O(rows * cols) memory cost.
-        long[][] dp = new long[rows][cols];
-        // Reading order makes every predecessor final before it is read.
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                // A closed cell cannot end a route, so its entry stays 0.
-                if (!open[r][c]) continue;
-                // The start has no predecessor and holds the single empty route.
-                if (r == 0 && c == 0) { dp[r][c] = 1; continue; }
-                long ways = 0;
-                // The cell above exists only below row 0.
-                if (r > 0) ways += dp[r - 1][c];
-                // The cell on the left exists only right of column 0.
-                if (c > 0) ways += dp[r][c - 1];
-                // The upper-left cell needs both a row above and a column to the left.
-                if (r > 0 && c > 0) ways += dp[r - 1][c - 1];
-                // One reduction per cell keeps every stored value below MOD.
-                dp[r][c] = ways % MOD;
+    static int uniquePaths(int m, int n) {
+        // One int per cell.
+        int[][] ways = new int[m][n];
+        // Border cells have a single predecessor direction, so each holds exactly one route.
+        for (int r = 0; r < m; r++) ways[r][0] = 1;
+        for (int c = 0; c < n; c++) ways[0][c] = 1;
+        // Interior cells combine the two earlier neighbors.
+        for (int r = 1; r < m; r++) {
+            for (int c = 1; c < n; c++) {
+                // Routes from above and routes from the left never overlap.
+                ways[r][c] = ways[r - 1][c] + ways[r][c - 1];
             }
         }
-        // The answer is the entry of the target cell.
-        return (int) dp[rows - 1][cols - 1];
+        // The target holds the answer.
+        return ways[m - 1][n - 1];
     }
 
-    /** Oracle: plain recursion over the last step, without any stored answers. */
-    static long oracle(boolean[][] open, int r, int c) {
-        if (r < 0 || c < 0 || !open[r][c]) return 0;
-        if (r == 0 && c == 0) return 1;
-        return oracle(open, r - 1, c) + oracle(open, r, c - 1) + oracle(open, r - 1, c - 1);
+    /** Oracle: choose which of the m + n - 2 steps go down, using an exact binomial coefficient. */
+    static long oracle(int m, int n) {
+        long result = 1;
+        int k = Math.min(m - 1, n - 1), total = m + n - 2;
+        for (int i = 1; i <= k; i++) result = result * (total - k + i) / i;
+        return result;
     }
 
     public static void main(String[] args) {
         // The two examples of the exercise.
-        if (countRoutes(new boolean[][] {{true, true, true}, {true, true, true}}) != 5) throw new AssertionError("ex1");
-        if (countRoutes(new boolean[][] {{true, true, true}, {true, false, true}, {true, true, true}}) != 4) throw new AssertionError("ex2");
-        // Java fact: three entries just below the modulus overflow an int sum but fit a long sum.
-        int e = MOD - 1;
-        if (e + e + e >= 0) throw new AssertionError("int sum should wrap");
-        if (3L * e <= Integer.MAX_VALUE) throw new AssertionError("long sum should exceed int range");
-        // Blocked start and blocked target both give 0.
-        if (countRoutes(new boolean[][] {{false, true}, {true, true}}) != 0) throw new AssertionError("start");
-        if (countRoutes(new boolean[][] {{true, true}, {true, false}}) != 0) throw new AssertionError("target");
-        // Large open grid: the value must stay inside the modulus range.
-        boolean[][] big = new boolean[300][300];
-        for (boolean[] row : big) Arrays.fill(row, true);
-        int bigAns = countRoutes(big);
-        if (bigAns < 0 || bigAns >= MOD) throw new AssertionError("range");
-        // Random small grids against the oracle, including single rows and columns.
-        Random rnd = new Random(2601);
-        for (int t = 0; t < 3000; t++) {
-            int rows = 1 + rnd.nextInt(6), cols = 1 + rnd.nextInt(6);
-            boolean[][] g = new boolean[rows][cols];
-            for (boolean[] row : g) for (int c = 0; c < cols; c++) row[c] = rnd.nextInt(4) != 0;
-            boolean[][] copy = new boolean[rows][];
-            for (int i = 0; i < rows; i++) copy[i] = g[i].clone();
-            long want = oracle(g, rows - 1, cols - 1) % MOD;
-            if (countRoutes(g) != want) throw new AssertionError("random " + t);
-            if (!Arrays.deepEquals(g, copy)) throw new AssertionError("mutated " + t);
+        if (uniquePaths(3, 4) != 10) throw new AssertionError("ex1");
+        if (uniquePaths(1, 6) != 1) throw new AssertionError("ex2");
+        // One cell and one column.
+        if (uniquePaths(1, 1) != 1) throw new AssertionError("one cell");
+        if (uniquePaths(7, 1) != 1) throw new AssertionError("column");
+        // Every size up to 12 by 12 against the binomial oracle; larger sizes stay within long.
+        for (int m = 1; m <= 12; m++) for (int n = 1; n <= 12; n++) {
+            if (uniquePaths(m, n) != oracle(m, n)) throw new AssertionError(m + "x" + n);
         }
+        // Random sizes against a plain recursion on the last step.
+        Random rnd = new Random(2601);
+        for (int t = 0; t < 300; t++) {
+            int m = 1 + rnd.nextInt(8), n = 1 + rnd.nextInt(8);
+            if (uniquePaths(m, n) != rec(m - 1, n - 1)) throw new AssertionError("random " + t);
+        }
+    }
+
+    static long rec(int r, int c) {
+        if (r == 0 || c == 0) return 1;
+        return rec(r - 1, c) + rec(r, c - 1);
     }
 }
 ```
 
-#### Solution: [Vary] Maximum Gain Path (Author exercise)
-<!-- id: dp-grid-max-gain -->
+#### Solution: [Vary] Minimum Path Sum (LeetCode 64)
+<!-- id: dp-grid-min-path-sum -->
 
 **Approach.**
-The table entry `best[r][c]` is the largest total over routes that end exactly at `(r, c)`. The start cell holds its own gain. A cell in row 0 can come only from the left, and a cell in column 0 can come only from above, so each takes its single predecessor. Any other cell takes the larger of the two predecessor entries and adds its own gain. The answer is the entry of the bottom-right cell.
+The entry `cost[r][c]` is the smallest sum over routes that end exactly at `(r, c)`. The start holds its own value. A cell in row 0 can come only from the left, and a cell in column 0 only from above, so each adds its value to that single predecessor. An interior cell adds its value to the smaller of the two predecessor entries. The answer is the bottom-right entry.
 
-The invariant is that every stored entry is the total of a real route, and no entry starts from a made-up zero. That is why the border cells read only the predecessor that exists. If a missing predecessor counted as 0, a cell in the first row would pretend that a route with total 0 reaches it, and the method would return 0 instead of -16 on the second example. The test below asserts this difference.
+The invariant is that every entry is the sum of a real route. A border cell must not take a minimum against a missing neighbor, because a stand-in of 0 would look cheaper than every real route and produce a wrong sum. The test builds that wrong variant and asserts that it differs on a positive grid.
 
 **Complexity.**
-- **Time** is O(rows * cols), because each cell compares at most two entries once.
-- **Space** is O(rows * cols) for the table, and the input stays unchanged.
+- **Time** is O(m * n), because each cell compares at most two entries.
+- **Space** is O(m * n) for the table, and the input stays unchanged.
 
 ```java run
 import java.util.*;
 
-public final class DpGridMaxGain {
+public final class DpGridMinPathSum {
     /**
-     * Returns the largest total gain over right/down routes from the top-left to the bottom-right cell.
-     * Time: O(rows * cols). Space: O(rows * cols).
-     * Invariant: best[r][c] is the largest total of a route that ends exactly at (r, c).
+     * Returns the smallest sum over right/down routes from the top-left to the bottom-right cell.
+     * Time: O(m * n). Space: O(m * n).
+     * Invariant: cost[r][c] is the smallest sum of a route ending exactly at (r, c).
      */
-    static int maxGain(int[][] gain) {
-        int rows = gain.length, cols = gain[0].length;
-        // One int per cell stores the best total ending there.
-        int[][] best = new int[rows][cols];
-        // Reading order guarantees the cell above and the cell on the left are final.
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (r == 0 && c == 0) {
-                    // The start route consists of the start cell alone.
-                    best[r][c] = gain[r][c];
-                } else if (r == 0) {
-                    // First row: the only predecessor is on the left.
-                    best[r][c] = best[r][c - 1] + gain[r][c];
-                } else if (c == 0) {
-                    // First column: the only predecessor is above.
-                    best[r][c] = best[r - 1][c] + gain[r][c];
-                } else {
-                    // Interior: extend the better of the two real predecessors.
-                    best[r][c] = Math.max(best[r - 1][c], best[r][c - 1]) + gain[r][c];
-                }
+    static int minPathSum(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        // One int per cell.
+        int[][] cost = new int[m][n];
+        cost[0][0] = grid[0][0];
+        // First row: the only predecessor is on the left.
+        for (int c = 1; c < n; c++) cost[0][c] = cost[0][c - 1] + grid[0][c];
+        // First column: the only predecessor is above.
+        for (int r = 1; r < m; r++) cost[r][0] = cost[r - 1][0] + grid[r][0];
+        // Interior cells extend the cheaper of two real predecessors.
+        for (int r = 1; r < m; r++) {
+            for (int c = 1; c < n; c++) {
+                cost[r][c] = grid[r][c] + Math.min(cost[r - 1][c], cost[r][c - 1]);
             }
         }
-        // The target cell holds the best total over all complete routes.
-        return best[rows - 1][cols - 1];
+        // The target holds the cheapest total.
+        return cost[m - 1][n - 1];
     }
 
     /** Wrong variant used only in the test: a missing predecessor counts as 0. */
-    static int zeroStart(int[][] gain) {
-        int rows = gain.length, cols = gain[0].length;
-        int[][] best = new int[rows][cols];
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                int up = r > 0 ? best[r - 1][c] : 0, left = c > 0 ? best[r][c - 1] : 0;
-                best[r][c] = gain[r][c] + Math.max(up, left);
+    static int zeroPad(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int[][] cost = new int[m][n];
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                int up = r > 0 ? cost[r - 1][c] : 0, left = c > 0 ? cost[r][c - 1] : 0;
+                cost[r][c] = grid[r][c] + Math.min(up, left);
             }
         }
-        return best[rows - 1][cols - 1];
+        return cost[m - 1][n - 1];
     }
 
     /** Oracle: depth-first search over every route. */
     static int oracle(int[][] g, int r, int c) {
         if (r == g.length - 1 && c == g[0].length - 1) return g[r][c];
-        int best = Integer.MIN_VALUE;
-        if (r + 1 < g.length) best = Math.max(best, oracle(g, r + 1, c));
-        if (c + 1 < g[0].length) best = Math.max(best, oracle(g, r, c + 1));
+        int best = Integer.MAX_VALUE;
+        if (r + 1 < g.length) best = Math.min(best, oracle(g, r + 1, c));
+        if (c + 1 < g[0].length) best = Math.min(best, oracle(g, r, c + 1));
         return g[r][c] + best;
     }
 
     public static void main(String[] args) {
         // The two examples of the exercise.
-        if (maxGain(new int[][] {{2, -1, 3}, {1, 4, -2}, {-3, 2, 5}}) != 14) throw new AssertionError("ex1");
-        int[][] allNeg = {{-5, -2}, {-7, -9}};
-        if (maxGain(allNeg) != -16) throw new AssertionError("ex2");
-        // The zero-start variant returns a wrong value on the all-negative grid.
-        if (zeroStart(allNeg) == -16) throw new AssertionError("zero start should differ");
-        // A single cell and single lines are plain sums.
-        if (maxGain(new int[][] {{-3}}) != -3) throw new AssertionError("one cell");
-        if (maxGain(new int[][] {{1, -4, 2}}) != -1) throw new AssertionError("one row");
-        if (maxGain(new int[][] {{1}, {-4}, {2}}) != -1) throw new AssertionError("one column");
-        // Random grids with negative cells against the oracle.
+        if (minPathSum(new int[][] {{4, 1, 6}, {2, 7, 3}, {5, 2, 1}}) != 14) throw new AssertionError("ex1");
+        if (minPathSum(new int[][] {{3, 9, 1, 2}}) != 15) throw new AssertionError("ex2");
+        // The zero-padded variant is wrong on a positive grid.
+        if (zeroPad(new int[][] {{3, 9, 1, 2}}) == 15) throw new AssertionError("zero pad should differ");
+        // One cell and one column.
+        if (minPathSum(new int[][] {{7}}) != 7) throw new AssertionError("one cell");
+        if (minPathSum(new int[][] {{1}, {4}, {2}}) != 7) throw new AssertionError("column");
+        // Random grids against the oracle; the input must stay unchanged.
         Random rnd = new Random(2602);
         for (int t = 0; t < 3000; t++) {
-            int rows = 1 + rnd.nextInt(5), cols = 1 + rnd.nextInt(5);
-            int[][] g = new int[rows][cols];
-            for (int[] row : g) for (int c = 0; c < cols; c++) row[c] = rnd.nextInt(41) - 25;
-            int[][] copy = new int[rows][];
-            for (int i = 0; i < rows; i++) copy[i] = g[i].clone();
-            if (maxGain(g) != oracle(g, 0, 0)) throw new AssertionError("random " + t);
+            int m = 1 + rnd.nextInt(5), n = 1 + rnd.nextInt(5);
+            int[][] g = new int[m][n];
+            for (int[] row : g) for (int c = 0; c < n; c++) row[c] = rnd.nextInt(30);
+            int[][] copy = new int[m][];
+            for (int i = 0; i < m; i++) copy[i] = g[i].clone();
+            if (minPathSum(g) != oracle(g, 0, 0)) throw new AssertionError("random " + t);
             if (!Arrays.deepEquals(g, copy)) throw new AssertionError("mutated " + t);
         }
     }
