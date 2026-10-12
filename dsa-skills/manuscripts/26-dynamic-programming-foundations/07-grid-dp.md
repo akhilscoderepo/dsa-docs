@@ -82,7 +82,7 @@ The type is `long` because the route count on a 30 by 30 open floor already pass
 
 #### Counting Routes Around A Shelf
 
-The first floor has 3 rows and 4 columns, with one shelf at row 1, column 1. Each cell of the trace is one grid cell in reading order, so cell 0 is `(0, 0)` and cell 11 is `(2, 3)`. The pointer `cell` selects the cell being filled. The variable `row` and `col` give its coordinates, and `ways` gives its stored count.
+The first floor has 3 rows and 4 columns, with one shelf at row 1, column 1. Each cell of the trace is one grid cell in reading order, so cell 0 is `(0, 0)` and cell 11 is `(2, 3)`. The pointer `cell` selects the cell being filled. The variables `row` and `col` give its coordinates, and `ways` gives its stored count.
 
 The first row fills with ones, since each cell has only the left predecessor. The shelf stores 0 and blocks the center. Cells below and to the right of it still receive routes from their other predecessors. The last cell stores the answer.
 
@@ -159,7 +159,7 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 
 **Example 1.** Input `open = [[true,true,true],[true,true,true]]`, output `5`.
 
-**Example 2.** Input `open = [[true,true,true],[true,false,true],[true,true,true]]`, output `3`.
+**Example 2.** Input `open = [[true,true,true],[true,false,true],[true,true,true]]`, output `4`.
 
 **Hint.** Which cells can precede cell `(1, 1)` in the first example, and what value does each hold when the loop reaches it?
 
@@ -178,7 +178,7 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 - **Result** fits in an `int`.
 - **Mutation** is not allowed, because `gain` stays unchanged.
 
-**Example 1.** Input `gain = [[2,-1,3],[1,4,-2],[-3,2,5]]`, output `13`.
+**Example 1.** Input `gain = [[2,-1,3],[1,4,-2],[-3,2,5]]`, output `14`.
 
 **Example 2.** Input `gain = [[-5,-2],[-7,-9]]`, output `-16`.
 
@@ -186,7 +186,7 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 
 **Changed decision.** The state now stores a total, and the combination is the larger predecessor plus the cell's own gain. A missing predecessor must not act as 0, because a total of 0 can beat a real negative total.
 
-#### [Boundary] Counts Along The Border (Author exercise)
+#### [Boundary] First Row And Column (Author exercise)
 <!-- id: dp-grid-border-counts -->
 
 **Prerequisites.** The two exercises above.
