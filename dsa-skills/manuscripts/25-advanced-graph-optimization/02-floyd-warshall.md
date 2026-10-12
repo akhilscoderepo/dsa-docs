@@ -63,7 +63,7 @@ For one pair (a, b), the search follows every ordered choice of a subset of the 
 <!-- stage: bottleneck -->
 ### Routes Are Counted Again And Again
 
-The number of routes grows like the factorial of n, so the worst case is O(n!) per pair. Twenty servers are already far beyond any time limit. The work is also wasteful. The route 0, 2, 3 is a prefix of the routes from 0 to 3, from 0 to 4 and from 0 to 5. The search rebuilds it for each one. The cost of the cheapest part from 2 to 3 is computed again for every route that passes through 2.
+The number of routes grows like the factorial of n, so the worst case is O(n!) per pair. Twenty servers are already far beyond any time limit. The work is also wasteful. The route 0, 2, 3 is the route to server 3, and it is also the start of routes from 0 to 4 and from 0 to 5. The search rebuilds that start for each of them. The cost of the cheapest part from 2 to 3 is computed again for every route that passes through 2.
 
 A faster method must store a cheapest cost for each pair and reuse it. The n by n table has only n squared entries, which is tiny next to the number of routes. The open question is the order in which to improve the entries. Every entry must end with the true minimum after a small, fixed number of passes.
 
@@ -154,7 +154,7 @@ The loop over `k` must stay outermost, so the loops over `i` and `j` see a table
 
 #### Reading The Cue
 
-Use this method when the statement asks for the lowest cost between many or all pairs of vertices on a graph with at most a few hundred vertices. Typical cases are a latency table between servers, a route matrix between warehouses, and a count of how many places lie within a cost limit of each place. When the graph is large and sparse, running Dijkstra's method from every source costs less than O(n^3).
+Use this method when the statement asks for the lowest cost between many or all pairs of vertices on a graph with at most a few hundred vertices. Typical cases are a latency table between servers, a route matrix between warehouses, and a count of how many places lie within a cost limit of each place. When the graph is large and sparse, running Dijkstra's method from every source costs less than O(n^3). Floyd Warshall also works with negative edges when no negative cycle exists. If a negative cycle exists, some diagonal entry `dist[i][i]` ends below zero, which reveals it. This lesson's inputs stay nonnegative.
 
 #### Checking The Invariant
 
@@ -162,7 +162,7 @@ An invariant is a condition that stays true at the start and end of each round o
 
 #### Avoiding The False Friend
 
-A false friend is a familiar approach that looks right and fails. The false friend here is reordering the loops. The three loops look symmetric, and putting `k` innermost compiles and runs, yet the second trace shows wrong entries. With `k` innermost, an entry for `i` and `j` reads values in other rows that are not finished. Another false friend is Dijkstra's method run once and read as a table, because one run gives distances from a single source only. A method that fits negative weights, such as Bellman Ford, solves a different question.
+A false friend is a familiar approach that looks right and fails. The false friend here is reordering the loops. The three loops look symmetric, and putting `k` innermost compiles and runs, yet the second trace shows wrong entries. With `k` innermost, an entry for `i` and `j` reads values in other rows that are not finished. Another false friend is Dijkstra's method run once and read as a table, because one run gives distances from a single source only. Bellman Ford is not a false friend here, because it answers a different question with one source.
 
 <!-- stage: exercises -->
 ### Exercises

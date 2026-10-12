@@ -77,7 +77,7 @@ The **discovery time** `disc[u]` is the number of vertices the search has discov
 
 #### Every Other Edge Is A Back Edge
 
-In an undirected graph, each non-tree edge joins a vertex to one of its ancestors. This kind of edge is a **back edge**. The reason is the order of the search. When the search stands at `u` and scans an edge to `v`, an undiscovered `v` becomes a child of `u`. A discovered `v` was found earlier on the current path, so it is an ancestor of `u`. Otherwise it was found inside the subtree of `u`, so it is a descendant. No edge can point to a finished branch elsewhere, because the search would have crossed that edge from the other end first.
+In an undirected graph, each non-tree edge joins a vertex to one of its ancestors. This kind of edge is a **back edge**. The reason is the order of the search, which has three cases when it stands at `u` and scans an edge to `v`. First, `v` is undiscovered, so the edge becomes a tree edge and `v` becomes a child of `u`. Second, `v` lies on the current path from the root to `u`, so `v` is an ancestor of `u` and the edge is a back edge. Third, `v` is finished and lies on another branch. That case cannot occur, because the search would have crossed the edge from `v` and found `u` earlier.
 
 #### The Low Link Value
 
@@ -101,7 +101,7 @@ The finder reads `n` and the array `cables` of pairs `[a, b]`, and it changes ne
 - **timer** is the next discovery time to give out; it increases by one at each new vertex.
 - **parentId** is the number of the cable the search used to enter the current vertex; the root receives -1.
 
-The method writes each pair that passes the bridge test to a list as it finds the pair. All values are small nonnegative counts or -1, so `int` is enough and no overflow guard is needed. The search runs recursively, so the call depth equals the longest tree path, and the exercises keep graphs small enough for the default stack.
+The method writes each pair that passes the bridge test to a list as it finds the pair. All values are small nonnegative counts or -1, so `int` is enough and no overflow guard is needed. The search runs recursively, so the call depth equals the longest path that the search follows. The exercises use `n` of at most about 1000, so the default stack is enough. A deeper graph needs an explicit stack, as in lessons 05 and 06.
 
 <!-- stage: trace -->
 ### Two Runs On Small Cable Maps
@@ -177,7 +177,7 @@ The order of two lines inside the tree branch matters. The call to `visit(v, ...
 
 #### Reading The Cue
 
-Use this method when an undirected graph and a question about the loss of one edge appear together. Typical statements ask which cables, roads, or dependencies are critical, whether a network survives any single failure, or how many edges a redundant design still needs. The answer is usually a list of edges, a count, or a yes or no for a whole graph. With the same two arrays, the test `low[v] >= disc[u]` finds articulation points, the vertices whose removal splits the graph.
+Use this method when an undirected graph and a question about the loss of one edge appear together. Typical statements ask which cables, roads, or dependencies are critical, or whether a network survives any single failure. The answer is usually a list of edges, a count, or a yes or no for a whole graph. With the same two arrays, the test `low[v] >= disc[u]` finds articulation points, the vertices whose removal splits the graph.
 
 #### Checking The Invariant
 
@@ -185,7 +185,7 @@ The invariant is that `low[u]` is final when `visit(u, ...)` returns. It equals 
 
 #### Avoiding The False Friend
 
-A false friend is a familiar idea that looks right for the problem and fails on it. The first false friend is the cycle check from directed graphs. In a directed graph, a search also produces edges that join unrelated branches, so the ancestor argument fails. The question about losing one edge changes there, and strongly connected components answer the related question. The second false friend is the skip by parent vertex, shown in the second trace. It is correct for simple graphs and wrong as soon as a pair of vertices has two edges. Do not use this method when edges have capacities and the question asks for the cheapest set of edges to cut. That question needs flow, which this chapter does not cover.
+A false friend is a familiar idea that looks right for the problem and fails on it. The first false friend is to delete each edge in turn and recount the components. It is correct, but it costs O(E * (V + E)), as the naive stage shows. The second false friend is the skip by parent vertex, shown in the second trace. It is correct for simple graphs and wrong as soon as a pair of vertices has two edges, because it also skips the second edge. Do not use this method when edges have capacities and the question asks for the cheapest set of edges to cut. That question needs flow, which this chapter does not cover.
 
 <!-- stage: exercises -->
 ### Exercises

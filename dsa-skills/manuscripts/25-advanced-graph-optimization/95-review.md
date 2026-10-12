@@ -18,7 +18,7 @@ A refund price comes out wrong because one fee was a credit. A cable plan costs 
 ```
 
 ```quiz
-{"id": "ga-rev-kruskal", "q": "Two sorted edges join vertices that already have the same union-find root. What happens?", "options": ["The method buys the cheaper one", "The method merges the two groups again", "The method skips the edge, because it would close a cycle", "The method reorders the list"], "answer": 2, "explain": "Equal roots show that a chain of bought edges already joins the endpoints. A further edge between them adds cost and no new connection."}
+{"id": "ga-rev-kruskal", "q": "A sorted edge joins two vertices that already have the same root. What happens?", "options": ["The method buys the cheaper one", "The method merges the two groups again", "The method skips the edge, because it would close a cycle", "The method reorders the list"], "answer": 2, "explain": "Equal roots show that a chain of bought edges already joins the endpoints. A further edge between them adds cost and no new connection."}
 ```
 
 ```quiz

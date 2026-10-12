@@ -32,11 +32,12 @@ for i,(u,v,w) in enumerate(s):
         skipped+=1
         steps.append({"at":{"i":i},"vars":{"bought":b,"total":t,"ru":ru,"rv":rv},"note":f"Edge {u}-{v} has equal roots {ru} and {rv}, so it would close a cycle and the method skips it."})
         continue
+    shown=(ru,rv)
     if sz[ru]<sz[rv]: ru,rv=rv,ru
     p[rv]=ru; sz[ru]+=sz[rv]; b+=1; t+=w
-    note=f"Edge {u}-{v} joins the roots {find(u) if False else ru} and {rv}, so the method buys it for {w}."
+    note=f"Edge {u}-{v} joins the roots {shown[0]} and {shown[1]}, so the method buys it for {w}."
     if b==n1-1: note+=" That is purchase 6, so the loop stops and the last "+str(len(s)-i-1)+" edges are never examined."
-    steps.append({"at":{"i":i},"vars":{"bought":b,"total":t,"ru":ru,"rv":rv},"note":note})
+    steps.append({"at":{"i":i},"vars":{"bought":b,"total":t,"ru":shown[0],"rv":shown[1]},"note":note})
     if b==n1-1: break
 assert t==16 and b==6 and skipped==1 and t==kruskal(n1,e1)
 assert len(s)-i-1==4

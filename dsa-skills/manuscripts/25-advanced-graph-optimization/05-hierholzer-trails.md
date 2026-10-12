@@ -79,7 +79,7 @@ When the vertex on top of the stack has no unused outgoing link, the method pops
 
 #### Reversing The Recorded Order
 
-Read the output list from its last entry to its first entry. Each vertex was recorded after every vertex that follows it on the trail, so the reversed list is the trail in travel order. The invariant is that the output list, read backward, is a valid tail of the trail and uses only consumed links. The method finishes when the stack is empty. The trail is complete when the output holds `E + 1` vertices. A shorter output means that some links were not reachable from the start.
+Read the output list from its last entry to its first entry. Each vertex was recorded after every vertex that follows it on the trail, so the reversed list is the trail in travel order. The recorded order is right for a further reason. In a balanced graph, every vertex has as many unused outgoing links as incoming ones, so a stuck walk can only end at the vertex where it began. The stuck walk is therefore a closed loop. The method records it first and then returns to the vertex below, which is the place where the loop is spliced in. The invariant is that the output list, read backward, is a valid tail of the trail and uses only consumed links. The method finishes when the stack is empty. The trail is complete when the output holds `E + 1` vertices. A shorter output means that some links were not reachable from the start.
 
 <!-- stage: variables -->
 ### Stack, Cursors And Output

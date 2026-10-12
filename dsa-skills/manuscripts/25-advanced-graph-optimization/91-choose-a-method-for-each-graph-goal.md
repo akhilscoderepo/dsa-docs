@@ -12,7 +12,7 @@ An engineer owns a tested shortest path routine with a heap and tries it on all 
 The four requests ask for four different kinds of answer. Each answer stays correct only while a different fact holds during the computation. This lesson asks how to read the goal in a statement and pick the method whose fact matches it.
 
 <!-- stage: contributions -->
-### What Five Earlier Lessons Add
+### What Six Earlier Lessons Add
 
 #### What Spanning Tree Methods Supply
 
@@ -28,7 +28,7 @@ The Floyd-Warshall lesson supplies a table `dist[i][j]` of best distances for ev
 
 #### What The Combination Adds
 
-The five methods do not compete, because each keeps a different fact true. The combination adds a step before any code. Read the goal in the statement, name the fact that a correct program must keep true, and choose the method that keeps it. The nearest false friend is the heap shortest path routine of the previous chapter. It is a strong tool, yet it answers only questions about routes from one source.
+The methods of these six lessons do not compete, because each keeps a different fact true. The combination adds a step before any code. Read the goal in the statement, name the fact that a correct program must keep true, and choose the method that keeps it. The nearest false friend is the heap shortest path routine of the previous chapter. It is a strong tool, yet it answers only questions about routes from one source.
 
 <!-- stage: naive -->
 ### Reusing The Shortest Path Routine
@@ -117,7 +117,7 @@ A **postorder** write happens after the walk has finished everything reachable f
 Every method reads its input and never changes it. Each one keeps a small piece of state that carries its fact, and the names below are the ones that the code uses.
 
 - **parent** is an `int[]` of union-find links, and `find(x)` returns the root of the group of `x`.
-- **disc** and **low** are `int[]` arrays of discovery times and low links, with 0 meaning not yet reached.
+- **disc** and **low** are `int[]` arrays of discovery times and low links, with -1 in `disc` meaning not yet reached and the clock starting at 0, as in the low links lesson.
 - **dist** is a `long[][]` table of pair distances, and `Long.MAX_VALUE` means no route is known.
 - **unused** holds one min-ordered queue of destinations per vertex, and the walk polls from it.
 - **groups** counts the groups that remain, and the cabling loop stops when it reaches the target.
@@ -145,7 +145,7 @@ The second network has four sites. Its links are 0 to 1 at cost 4, 0 to 2 at cos
 {"cells":[0,1,2,3],"pointers":["site"],"steps":[{"at":{"site":0},"vars":{"dist":"0,inf,inf,inf","bought":0},"note":"Only site 0 has a distance. Nothing is bought."},{"at":{"site":0},"vars":{"dist":"0,4,5,inf","bought":0},"note":"Site 0 is final at distance 0. Its links give site 1 the distance 4 and site 2 the distance 5."},{"at":{"site":1},"vars":{"dist":"0,4,5,inf","bought":4},"note":"Site 1 is final at distance 4, and the routine buys the link of cost 4. Route 0-1-2 costs 6, which is more than the stored 5, so site 2 keeps 5."},{"at":{"site":2},"vars":{"dist":"0,4,5,7","bought":9},"note":"Site 2 is final at distance 5, and the routine buys the direct link of cost 5. The cheap link 1-2@2 stays unbought. Site 3 gets distance 7."},{"at":{"site":3},"vars":{"dist":"0,4,5,7","bought":11},"note":"Site 3 is final at distance 7, and the routine buys the link of cost 2. The total is 11."}]}
 ```
 
-The routine pays 11, while the cabling loop of the first trace buys links of cost 2, 2 and 4 for a total of 8.
+The routine pays 11. A cheapest cable set for this four-site network buys the links of cost 2, 2 and 4, for a total of 8, so the routine overpays by 3.
 
 <!-- stage: code -->
 ### Four Methods In Short Form
@@ -219,15 +219,16 @@ static int countBridges(int n, int[][] links) {
         adj.get(links[id][1]).add(new int[] {links[id][0], id});
     }
     int[] disc = new int[n], low = new int[n], state = new int[2];  // state: {clock, bridges}
-    for (int s = 0; s < n; s++) if (disc[s] == 0) visit(s, -1, adj, disc, low, state);
+    Arrays.fill(disc, -1);                                          // -1 marks an unreached vertex
+    for (int s = 0; s < n; s++) if (disc[s] == -1) visit(s, -1, adj, disc, low, state);
     return state[1];
 }
 
 static void visit(int u, int viaId, List<List<int[]>> adj, int[] disc, int[] low, int[] state) {
-    disc[u] = low[u] = ++state[0];
+    disc[u] = low[u] = state[0]++;
     for (int[] e : adj.get(u)) {
         if (e[1] == viaId) continue;                                // never reuse the edge that entered u
-        if (disc[e[0]] == 0) {
+        if (disc[e[0]] == -1) {
             visit(e[0], e[1], adj, disc, low, state);
             low[u] = Math.min(low[u], low[e[0]]);
             if (low[e[0]] > disc[u]) state[1]++;                    // no way around the tree edge
@@ -264,7 +265,7 @@ Each method costs what its lesson states. The sorted edges take O(E log E), the 
 
 #### Reading The Goal
 
-Read the sentence that states what the answer must be. A smallest total cost over links that connect everything calls for a spanning tree method, and a count of groups to leave behind changes only the stopping rule. A request for the links that disconnect the network calls for low links. A request that compares every pair of sites with a distance limit calls for the table, as long as the map is small enough for a cubic loop. A request to use every link once and to print the order calls for the trail walk. A route from one source with a cost per step calls for the heap search from the previous chapter.
+Read the sentence that states what the answer must be. A smallest total cost over links that connect everything calls for a spanning tree method, and a count of groups to leave behind changes only the stopping rule. A request for the links that disconnect the network calls for low links. A request that compares every pair of sites with a distance limit calls for the table, as long as the map is small enough for a cubic loop. A request to use every link once and to print the order calls for the trail walk. A route from one source with a cost per step calls for the heap search from the previous chapter. Shortest paths with negative edges and strong components of a directed graph lie outside these four goal families. Lesson 01 covers the first, and lesson 06 covers the second.
 
 #### Checking The Invariant
 

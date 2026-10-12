@@ -13,7 +13,7 @@ A database team runs six replicas in different data halls. Any two replicas can 
 
 Model the replicas as vertices numbered `0` to `n - 1` and each line as an undirected edge with a weight, the monthly bill. A **spanning tree** is a set of exactly `n - 1` edges that connects all `n` vertices. The task is to find the spanning tree with the smallest total weight, or to report that none exists for a disconnected graph.
 
-The graph is undirected. The vertices are numbered `0` to `n - 1`. The input list of edges stays unchanged. This lesson asks how a program decides, one edge at a time, whether an edge belongs in the cheapest network.
+The graph is undirected. The vertices are numbered `0` to `n - 1`. Weights are whole numbers that are never negative. The input list of edges stays unchanged. This lesson asks how a program decides, one edge at a time, whether an edge belongs in the cheapest network.
 
 <!-- stage: naive -->
 ### Skip Edges Between Used Vertices
@@ -97,17 +97,17 @@ The method reads `n`, the list `edges` of triples `{u, v, weight}`, and it chang
 - **bought** counts the accepted edges, and the loop stops when it equals `n - 1`.
 - **total** is a `long` that adds the weights of the bought edges, because many `int` weights sum past the `int` range.
 
-In the traces, the pointer `i` marks the edge under examination, and the cells hold the sorted edges written as endpoints and weight. The values `ru` and `rv` are the roots that `find` returns for the two endpoints. The method returns `-1` when `bought` is below `n - 1` at the end. That value cannot collide with a total, because every weight is nonnegative.
+In the traces, the pointer `i` marks the edge under examination, and the cells hold the sorted edges written as endpoints and weight. In the first trace, `ru` and `rv` are the roots that `find` returns for the first and second endpoint, shown in edge order before any size swap. The method returns `-1` when `bought` is below `n - 1` at the end. That value signals a disconnected graph and is not a cost. Weights are whole numbers, and these lessons use weights of zero or more.
 
 <!-- stage: trace -->
 ### Two Runs On Small Graphs
 
 #### Seven Vertices With Equal Weights
 
-The first graph has seven vertices and eleven edges. The cells show the sorted order. Each step shows the two roots and the decision. The first five edges join separate groups, so the method buys each one. The edge 0-1 has equal roots, because vertex 0 joined vertex 2 and vertex 2 joined vertex 1 earlier. The method skips it without paying. The edges 1-3 and 2-3 both weigh 5, and the stable sort puts 1-3 first. The method buys 1-3 and reaches `n - 1 = 6` purchases, so it stops. The last four edges are never examined. The total is 16.
+The first graph has seven vertices and eleven edges. The cells show the sorted order. Each step shows the roots of the first and second endpoint, in edge order, and the decision. The first five edges join separate groups, so the method buys each one. The edge 0-1 has equal roots, because vertex 0 joined vertex 2 and vertex 2 joined vertex 1 earlier. The method skips it without paying. The edges 1-3 and 2-3 both weigh 5, and the stable sort puts 1-3 first. The method buys 1-3 and reaches `n - 1 = 6` purchases, so it stops. The last four edges are never examined. The total is 16.
 
 ```trace
-{"cells":["5-6@1","1-2@2","3-4@2","0-2@3","4-5@3","0-1@4","1-3@5","2-3@5","3-5@6","4-6@7","2-6@9"],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"bought":0,"total":0,"ru":-1,"rv":-1},"note":"Start: 7 groups of one vertex each. The loop needs 6 purchases."},{"at":{"i":0},"vars":{"bought":1,"total":1,"ru":5,"rv":6},"note":"Edge 5-6 joins the roots 5 and 6, so the method buys it for 1."},{"at":{"i":1},"vars":{"bought":2,"total":3,"ru":1,"rv":2},"note":"Edge 1-2 joins the roots 1 and 2, so the method buys it for 2."},{"at":{"i":2},"vars":{"bought":3,"total":5,"ru":3,"rv":4},"note":"Edge 3-4 joins the roots 3 and 4, so the method buys it for 2."},{"at":{"i":3},"vars":{"bought":4,"total":8,"ru":1,"rv":0},"note":"Edge 0-2 joins the roots 1 and 0, so the method buys it for 3."},{"at":{"i":4},"vars":{"bought":5,"total":11,"ru":3,"rv":5},"note":"Edge 4-5 joins the roots 3 and 5, so the method buys it for 3."},{"at":{"i":5},"vars":{"bought":5,"total":11,"ru":1,"rv":1},"note":"Edge 0-1 has equal roots 1 and 1, so it would close a cycle and the method skips it."},{"at":{"i":6},"vars":{"bought":6,"total":16,"ru":3,"rv":1},"note":"Edge 1-3 joins the roots 3 and 1, so the method buys it for 5. That is purchase 6, so the loop stops and the last 4 edges are never examined."}]}
+{"cells":["5-6@1","1-2@2","3-4@2","0-2@3","4-5@3","0-1@4","1-3@5","2-3@5","3-5@6","4-6@7","2-6@9"],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"bought":0,"total":0,"ru":-1,"rv":-1},"note":"Start: 7 groups of one vertex each. The loop needs 6 purchases."},{"at":{"i":0},"vars":{"bought":1,"total":1,"ru":5,"rv":6},"note":"Edge 5-6 joins the roots 5 and 6, so the method buys it for 1."},{"at":{"i":1},"vars":{"bought":2,"total":3,"ru":1,"rv":2},"note":"Edge 1-2 joins the roots 1 and 2, so the method buys it for 2."},{"at":{"i":2},"vars":{"bought":3,"total":5,"ru":3,"rv":4},"note":"Edge 3-4 joins the roots 3 and 4, so the method buys it for 2."},{"at":{"i":3},"vars":{"bought":4,"total":8,"ru":0,"rv":1},"note":"Edge 0-2 joins the roots 0 and 1, so the method buys it for 3."},{"at":{"i":4},"vars":{"bought":5,"total":11,"ru":3,"rv":5},"note":"Edge 4-5 joins the roots 3 and 5, so the method buys it for 3."},{"at":{"i":5},"vars":{"bought":5,"total":11,"ru":1,"rv":1},"note":"Edge 0-1 has equal roots 1 and 1, so it would close a cycle and the method skips it."},{"at":{"i":6},"vars":{"bought":6,"total":16,"ru":1,"rv":3},"note":"Edge 1-3 joins the roots 1 and 3, so the method buys it for 5. That is purchase 6, so the loop stops and the last 4 edges are never examined."}]}
 ```
 
 #### The Touched Rule Against Kruskal
@@ -179,7 +179,7 @@ Use Kruskal when the statement asks to connect every vertex at the lowest total 
 
 #### Checking The Invariant
 
-The invariant is a statement that stays true before and after every loop step. Here the bought edges form a forest. The groups of `parent` equal the connected pieces of that forest. Every bought edge was a lightest edge leaving its group at that moment. The invariant breaks when the merge forgets to update `size`. It also breaks when the loop buys an edge without comparing roots, or sorts by a different key. Test a graph with parallel edges, a self-loop and a single vertex. A self-loop always has equal roots and is never bought. A single vertex needs zero purchases and returns 0.
+The invariant is a statement that stays true before and after every loop step. Here the bought edges form a forest. The groups of `parent` equal the connected pieces of that forest. Every bought edge was a lightest edge leaving its group at that moment. A missing `size` update only slows `find` and leaves the answer correct. The invariant breaks when the loop buys an edge without comparing roots, or sorts by a different key. Test a graph with parallel edges, a self-loop and a single vertex. A self-loop always has equal roots and is never bought. A single vertex needs zero purchases and returns 0.
 
 #### Avoiding The False Friend
 

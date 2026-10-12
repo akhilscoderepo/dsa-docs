@@ -7,7 +7,7 @@
 
 A company has six offices and wants one private network that joins all of them. A telecom provider quotes a price for each cable between two offices, and not every pair of offices has a quote. A cable works in both directions. The company must be able to send data from any office to any other office, possibly through several cables. It wants the lowest total price for the cables it buys.
 
-Model the offices as vertices numbered 0 to n - 1 and each quoted cable as an undirected edge with a **weight**, which is its price. The input is a connected graph, and the method does not change it. The task is to choose some of the edges so that every office reaches every other office and the sum of the chosen weights is as small as possible. Weights are integers and may be zero.
+Model the offices as vertices numbered 0 to n - 1 and each quoted cable as an undirected edge with a **weight**, which is its price. The input is a connected graph, and the method does not change it. The task is to choose some of the edges so that every office reaches every other office and the sum of the chosen weights is as small as possible. Weights are whole numbers and may be zero, and the inputs of these lessons never use negative weights.
 
 This lesson asks how to decide that an edge belongs in the purchase without comparing every possible purchase, and it asks which of two standard methods fits a given input.
 
@@ -99,14 +99,19 @@ The rule needs a cut that the chosen edges respect, and two choices appear in pr
 <!-- stage: variables -->
 ### Tree Membership And Best Weights
 
-The input is `n`, an array `cables` of triples `[a, b, weight]`, and nothing else. The methods read it and change nothing. The methods use four variables.
+This lesson uses the array form of Prim. It keeps `best[]` and the matrix `price[][]` and scans all vertices in each round, with no heap. That form fits a dense graph, because the matrix already holds up to V^2 / 2 distinct prices and the scans cost O(V^2), which is about the size of the input.
+
+The input is `n`, an array `cables` of triples `[a, b, weight]`, and nothing else. The methods read it and change nothing. Prim uses four variables, and Kruskal uses three more.
 
 - **inTree** is a `boolean[]` of length `n` that marks the vertices already joined to the growing tree.
 - **best** is a `long[]` where `best[v]` is the weight of the lightest known edge from `v` to a vertex in the tree; `Long.MAX_VALUE` means no such edge is known.
-- **total** is a `long` that sums the weights of the edges bought so far.
+- **price** is a `long[][]` where `price[u][v]` is the lightest cable between `u` and `v`; `Long.MAX_VALUE` means no cable.
+- **total** is a `long` that sums the weights of the edges bought so far, and both methods use it.
+- **sorted** is a copy of `cables` ordered by weight for Kruskal.
+- **bought** is the number of edges Kruskal has accepted, and it must reach `n - 1`.
 - **root** is an `int[]` for Kruskal in which two vertices share a root exactly when the chosen edges already connect them.
 
-The sum is a `long`, because a thousand edges of weight near two billion exceed the range of `int`. Vertex `u` is picked by comparing `best` entries with `Long.compare` and never by subtraction. The marker `Long.MAX_VALUE` is only compared and never added to anything.
+The sum is a `long`, because a thousand edges of weight near two billion exceed the range of `int`. Vertex `u` is picked by comparing `best` entries with `Long.compare` and never by subtraction. The marker `Long.MAX_VALUE` is only compared and never added to anything. Both methods return `-1` to signal that fewer than `n` vertices joined, and the value is not a cost. Negative weights would also give a correct minimum spanning tree, because the proof never uses the sign, but these lessons do not assume them in their inputs.
 
 <!-- stage: trace -->
 ### Two Runs On Small Cable Maps

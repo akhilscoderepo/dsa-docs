@@ -9,7 +9,7 @@ A language runtime loads source modules and runs each module's start-up code onc
 
 Model the modules as vertices of a directed graph and each import as a directed edge. Vertex `v` **reaches** vertex `u` when a path of edges leads from `v` to `u`. A **strongly connected component** is a largest set of vertices in which every vertex reaches every other vertex. The three modules A, B and C form one such set, and D forms a set of its own.
 
-The task is to label every vertex with its component, so that two vertices share a label exactly when each reaches the other. This lesson asks how to find all components in one linear sweep, without testing every pair of vertices.
+The task is to label every vertex with its component, so that two vertices share a label exactly when each reaches the other. This lesson asks how to find all components in linear time, without testing every pair of vertices.
 
 <!-- stage: naive -->
 ### Testing Every Pair Of Vertices
@@ -61,11 +61,11 @@ It performs about 100000 searches that each visit up to 300000 edges, which is o
 <!-- stage: bottleneck -->
 ### One Search Per Vertex Is Too Slow
 
-The method runs one search from each of the V vertices, and each search may scan all E edges. The time is O(V * (V + E)). The table `reach` has V * V cells, so the memory is O(V^2). For a graph with 100000 vertices, the table alone is larger than the memory of an ordinary machine.
+The method runs one search from each of the V vertices, and each search may scan all E edges. The time is O(V * (V + E)). The table `reach` has V * V cells, so the memory is O(V^2). For a graph with 100000 vertices, the table alone has 10^10 cells, which is about 10 GB at one byte per cell.
 
 Most of this work repeats facts. If vertex `a` reaches vertex `b`, then everything that `b` reaches is also reachable from `a`, and the method rediscovers this from scratch for every start. The labeling step adds another O(V^2) pair checks.
 
-A better method must visit each vertex and each edge a constant number of times, so the time is O(V + E). It must also store O(V) values, one label per vertex, and no table of pairs. That requires a single sweep order that exposes the components, instead of a separate search per vertex.
+A better method must visit each vertex and each edge a constant number of times, so the time is O(V + E). It must also store O(V) values, one label per vertex, and no table of pairs. That requires a fixed order from two linear sweeps that exposes the components, instead of a separate search per vertex.
 
 <!-- stage: insight -->
 ### Two Sweeps With A Reversed Graph
@@ -115,6 +115,8 @@ The labels count up from 0 in the order in which the second sweep opens componen
 #### Eight Modules In Four Groups
 
 The first graph has eight modules and eleven imports. The imports run 0 to 3, 3 to 6, 6 to 0, 6 to 1, 1 to 4 and 4 to 1. They continue with 4 to 2, 2 to 5, 5 to 2, 5 to 7 and 3 to 7. The first sweep produces the finish order 7, 5, 2, 4, 1, 6, 3, 0. The second sweep reads that order from the right, so each cell below is one vertex in the order 0, 3, 6, 1, 4, 2, 5, 7. The pointer `i` marks the vertex under examination. The variable `label` is the label of that vertex after the step. The variable `found` is the number of vertices that a new search collects. The variable `labeled` is the total number of labeled vertices afterward. At step 0, vertex 0 opens label 0 and the reversed edges lead to 6 and then to 3, so `found` is 3. Vertices 3 and 6 need no search, because they already have a label. The sweep ends with four labels, and the groups are 0 3 6, 1 4, 2 5 and 7.
+
+The first sweep derives its order from a single search that starts at vertex 0. That search walks 0, 3, 6, 1, 4, 2, 5 and then 7. Vertex 7 has no outgoing import, so it finishes first. The search then backs up and finishes 5, 2, 4, 1, 6, 3 and 0, because every other edge of those vertices leads to a vertex that is already visited.
 
 ```trace
 {"cells":["0","3","6","1","4","2","5","7"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"label":0,"found":3,"labeled":3},"note":"Vertex 0 opens label 0 and the search collects 3 vertices: 0, 3, 6."},{"at":{"i":1},"vars":{"label":0,"found":0,"labeled":3},"note":"Vertex 3 already has label 0, so no search starts."},{"at":{"i":2},"vars":{"label":0,"found":0,"labeled":3},"note":"Vertex 6 already has label 0, so no search starts."},{"at":{"i":3},"vars":{"label":1,"found":2,"labeled":5},"note":"Vertex 1 opens label 1 and the search collects 2 vertices: 1, 4."},{"at":{"i":4},"vars":{"label":1,"found":0,"labeled":5},"note":"Vertex 4 already has label 1, so no search starts."},{"at":{"i":5},"vars":{"label":2,"found":2,"labeled":7},"note":"Vertex 2 opens label 2 and the search collects 2 vertices: 2, 5."},{"at":{"i":6},"vars":{"label":2,"found":0,"labeled":7},"note":"Vertex 5 already has label 2, so no search starts."},{"at":{"i":7},"vars":{"label":3,"found":1,"labeled":8},"note":"Vertex 7 opens label 3 and the search collects 1 vertices: 7."}]}

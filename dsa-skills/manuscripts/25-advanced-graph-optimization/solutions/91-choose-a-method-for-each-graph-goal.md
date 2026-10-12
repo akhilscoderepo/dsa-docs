@@ -155,6 +155,7 @@ public final class ChooseBridgesBySize {
             adj.get(connections[id][1]).add(new int[] {connections[id][0], id});
         }
         int[] disc = new int[n], low = new int[n], sz = new int[n];
+        Arrays.fill(disc, -1);
         int[] clock = {0};
         List<List<Integer>> out = new ArrayList<>();
         // The network is connected, so one search from server 0 reaches everything.
@@ -167,14 +168,14 @@ public final class ChooseBridgesBySize {
     /** Depth-first visit that fills disc, low and sz. Time: O(deg(u)) per call. Space: O(1) per frame. */
     static void visit(int u, int viaId, int n, int s, List<List<int[]>> adj, int[] disc, int[] low, int[] sz,
                       int[] clock, List<List<Integer>> out) {
-        // The first discovery sets both numbers; 0 stays the marker of an unreached server.
-        disc[u] = low[u] = ++clock[0];
+        // The first discovery sets both numbers; -1 stays the marker of an unreached server.
+        disc[u] = low[u] = clock[0]++;
         sz[u] = 1;
         for (int[] e : adj.get(u)) {
             // The entering connection is skipped by number, so it never acts as a back edge.
             if (e[1] == viaId) continue;
             int v = e[0];
-            if (disc[v] == 0) {
+            if (disc[v] == -1) {
                 visit(v, e[1], n, s, adj, disc, low, sz, clock, out);
                 // The child's low link may reach above u, and its size joins the subtree of u.
                 low[u] = Math.min(low[u], low[v]);

@@ -11,14 +11,14 @@ You should know adjacency lists and depth-first search from chapter 21. You shou
 
 Each lesson keeps one fact true while a loop runs.
 
-- **Find Shortest Paths With Negative Edges** repeats passes over all edges, and after pass `i` the distances cover routes of at most `i` edges.
-- **Find All Distances With Floyd Warshall** fills a table of every pair by admitting one more intermediate vertex per round.
-- **Grow A Spanning Tree With Prim** adds the cheapest edge that leaves the tree built so far.
-- **Build A Spanning Tree With Kruskal** adds sorted edges whose ends lie in different union-find groups.
-- **Walk Every Edge Once With Hierholzer** consumes edges and writes a vertex when no unused edge leaves it.
-- **Find Strongly Connected Components** groups directed vertices that reach each other, using finish order and the reversed graph.
-- **Find Bridges With Low Links** compares discovery times to find edges that disconnect an undirected graph.
-- **Choose Edges For A Minimum Spanning Tree** explains why the cheapest edge across a cut is safe, and separates spanning trees from shortest paths.
+- **Find Shortest Paths With Negative Edges** repeats passes over all edges, and after pass `i` the distances cover routes of at most `i` edges. A negative cycle is a loop whose weights add up below zero.
+- **Find All Distances With Floyd Warshall** fills a table of every pair by admitting one more intermediate vertex per round. An intermediate vertex is a stop between the start and the end of a route.
+- **Grow A Spanning Tree With Prim** adds the cheapest edge that leaves the tree built so far. Such a crossing edge has one end inside the tree and one end outside.
+- **Build A Spanning Tree With Kruskal** adds sorted edges whose ends lie in different union-find groups. A group is the set of vertices that the chosen edges already connect.
+- **Walk Every Edge Once With Hierholzer** consumes edges and writes a vertex when no unused edge leaves it. A trail is a walk that never repeats an edge.
+- **Find Strongly Connected Components** groups directed vertices that reach each other, using finish order and the reversed graph. The finish order lists vertices in the sequence a depth-first search leaves them.
+- **Find Bridges With Low Links** compares discovery times to find edges that disconnect an undirected graph. A low link is the earliest discovery time that a subtree reaches through one back edge.
+- **Choose Edges For A Minimum Spanning Tree** explains why the cheapest edge across a cut is safe, and separates spanning trees from shortest paths. A cut is a split of the vertices into two groups.
 
 ### The Combination Lesson
 

@@ -113,7 +113,7 @@ The early passes discover accounts and lower fees in bulk. Account 4 needs the l
 
 The second map lists four transfers. Account 0 charges 2 toward account 1. Account 1 pays a rebate of 3 toward account 2, while account 2 charges 1 to return, so that loop totals -2. Account 2 also charges 4 toward account 3. Because account 0 reaches the loop, no lowest fees exist. Four accounts allow three ordinary passes, and the variable `limit` holds that number.
 
-Fees keep falling through pass 3, which a loop-free map would not do. Pass 4 acts as the extra check, and it still lowers account 2 from -1 to -3. That drop proves a reachable negative cycle, so the method reports failure.
+Pass 4 is the extra pass, and it still improves. It lowers account 2 from -1 to -3. That drop proves a reachable negative cycle, so the method reports failure.
 
 ```trace
 {"cells":["start","pass 1","pass 2","pass 3","pass 4"],"pointers":["pass"],"steps":[{"at":{"pass":0},"vars":{"improved":0,"reached":1,"limit":3},"note":"Before pass 1, the table holds only the source fee: [0, unknown, unknown, unknown]."},{"at":{"pass":1},"vars":{"improved":1,"reached":2,"limit":3},"note":"Pass 1 reads the start values and improves 1 entry; the table now reads [0, 2, unknown, unknown]."},{"at":{"pass":2},"vars":{"improved":1,"reached":3,"limit":3},"note":"Reading the previous table, pass 2 writes 1 cheaper entry, giving [0, 2, -1, unknown]."},{"at":{"pass":3},"vars":{"improved":2,"reached":4,"limit":3},"note":"In pass 3, 2 entries drop below the stored value, leaving [0, 0, -1, 3]."},{"at":{"pass":4},"vars":{"improved":1,"reached":4,"limit":3},"note":"Pass 4 still finds 1 cheaper entry, and the table becomes [0, 0, -3, 3]. This pass is the extra one, so a negative cycle is reachable."}]}
@@ -149,14 +149,14 @@ static long[] bellmanFord(int n, int[][] edges, int src) {
 }
 ```
 
-The skip of unknown sources must come before the sum, so the sum never starts from the marker. The early return inside the loop is valid because an unchanged pass repeats forever. The final loop is the extra pass, and it only reads, since a single improvement is enough to answer. The method runs in O(V * (V + E)) time, because each of at most n - 1 passes copies the array and scans every edge. It uses O(V) memory for `dist` and `prev`, not counting the input.
+The skip of unknown sources must come before the sum, so the sum never starts from the marker. The early return inside the loop is valid because every later pass would repeat an unchanged pass unchanged. The final loop is the extra pass, and it only reads, since a single improvement is enough to answer. The method runs in O(V * (V + E)) time, because each of at most n - 1 passes copies the array and scans every edge. It uses O(V) memory for `dist` and `prev`, not counting the input.
 
 <!-- stage: applicability -->
 ### Recognizing Negative Fee Problems
 
 #### Reading The Cue
 
-Use this method when the statement gives weighted edges that may be negative, or when it limits the number of edges a route may use. Refunds, price adjustments, and currency conversion steps all produce negative weights. A cap such as at most k flights asks for the same pass structure. The answer is usually a distance array, one distance to a target, or a report that the distances do not exist.
+Use this method when the statement gives weighted edges that may be negative, or when it limits the number of edges a route may use. Refunds and price adjustments both produce negative weights. A cap such as at most k transfers asks for the same pass structure. The answer is usually a distance array, one distance to a target, or a report that the distances do not exist.
 
 #### Checking The Invariant
 

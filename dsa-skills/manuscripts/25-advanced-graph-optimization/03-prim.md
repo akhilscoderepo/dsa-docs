@@ -13,7 +13,7 @@ A company opens six offices in one city and must link them all to one network. A
 
 Model the offices as vertices and each possible cable run as an undirected edge with a **weight**, which is its price. A **spanning tree** is a set of edges that connects all `n` vertices and has no cycle, so it uses exactly `n - 1` edges. Its cost is the sum of its weights. The task is to find a spanning tree of minimum cost, and to report when no tree exists because some office is out of reach.
 
-This lesson assumes an undirected graph with vertices numbered `0` to `n - 1`, edges given as triples `[a, b, weight]`, and an input that the method never changes. It asks which edge the method should add next, so that the finished tree is the cheapest one.
+This lesson assumes an undirected graph with vertices numbered `0` to `n - 1`, edges given as triples `[a, b, weight]`, and an input that the method never changes. Weights are whole numbers that are never negative. It asks which edge the method should add next, so that the finished tree is the cheapest one.
 
 <!-- stage: naive -->
 ### Walking To The Nearest Office
@@ -94,7 +94,7 @@ The **frontier** is the set of crossing edges at one moment. The method stores t
 
 #### Skipping Outdated Heap Entries
 
-An edge can leave the frontier without leaving the heap. Suppose two inside vertices both have an edge to the same outside vertex `x`. The cheaper entry joins `x`, and the other entry now points to a vertex that is inside. Java's `PriorityQueue` cannot delete an arbitrary entry cheaply, so the entry stays. It is **stale**, because its far vertex is already in the tree and it is no longer crossing. When a stale entry leaves the heap, the method finds the far vertex flagged as inside and skips the entry. The second trace below uses the false friend that breaks this rule by changing the heap key.
+An edge can leave the frontier without leaving the heap. Suppose two inside vertices both have an edge to the same outside vertex `x`. The cheaper entry joins `x`, and the other entry now points to a vertex that is inside. Java's `PriorityQueue` cannot delete an arbitrary entry cheaply, so the entry stays. It is **stale**, because its far vertex is already in the tree and it is no longer crossing. When a stale entry leaves the heap, the method finds the far vertex flagged as inside and skips the entry. The first trace below shows four such entries leaving the heap and being skipped.
 
 <!-- stage: variables -->
 ### Tree Flags, Heap And Total
@@ -106,7 +106,7 @@ The method reads `n`, the list `edges` of triples `[a, b, weight]`, and it chang
 - **total** is a `long` sum of the accepted weights, because many large weights exceed the range of `int`.
 - **joined** is the number of vertices in the tree, and the tree is complete when it equals `n`.
 
-The first heap entry is `{0, 0}`, which joins vertex 0 at no cost. A graph that is not connected leaves `joined` below `n` when the heap empties, and the method then returns minus one. That value cannot be a real cost, since weights are nonnegative.
+The first heap entry is `{0, 0}`, which joins vertex 0 at no cost. A graph that is not connected leaves `joined` below `n` when the heap empties, and the method then returns minus one. That value only signals `joined < n`, and the method returns it in no other case. The inputs of this lesson have weights of zero or more.
 
 <!-- stage: trace -->
 ### Two Runs On Small Networks
@@ -260,6 +260,6 @@ A false friend is a familiar method that looks right and fails. The first false 
 
 **Example 2.** Input `points = [[0,0],[0,5],[0,6]]`, output `[6,5]`.
 
-**Hint.** The graph has an edge for every pair of points, so is a heap of edges the cheapest structure to scan?
+**Hint.** The graph has an edge for every pair of points, which is n(n-1)/2 edges. List those edges, then decide between Kruskal and heap Prim.
 
 **Changed decision.** The method returns the heaviest tree edge as well as the total. The usual statement asks for the total only.
