@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Map That Never Gets Reused
 
-A level editor for a tile game shows designers how many monotone routes cross a board. A route starts at the top left tile, ends at the bottom right tile and moves only right or down. A developer writes a recursive method that adds the route counts of the two neighbors. The method answers a 3 by 3 board at once, but a 10 by 10 board takes a visible pause, and a 20 by 20 board never finishes during a code review.
+A level editor for a tile game shows designers how many monotone routes cross a board. A route starts at the top left tile, ends at the bottom right tile and moves only right or down. A developer writes a recursive method that adds the route counts of the two neighbors. The method answers a 3 by 3 board at once, but a 16 by 16 board takes a visible pause, and a 20 by 20 board does not finish during a code review.
 
 The developer adds a `HashMap` that stores each finished answer, expecting a speedup. The pause stays the same, and the map grows to hundreds of thousands of entries. The code is not wrong, because every answer is still correct. Something in the way the map is used prevents it from helping.
 
@@ -82,7 +82,7 @@ A **cache key** is the value that identifies one question in the store. For a re
 
 A **cache hit** is a call that finds its key already stored and returns the stored value without recursing. The first call for a key is a miss. It recurses, computes and writes. The total number of misses therefore equals the number of distinct keys that the recursion reaches, and every other call is a hit. On the 3 by 3 board a working store reduces the 11 calls to 9: 8 misses and 1 hit.
 
-The **recursion depth** is the number of nested calls that are open at one moment. Memoization keeps the depth unchanged, because a miss still recurses all the way to a base case before its first write. For the board, the depth is at most `rows + cols - 1`. For the row of houses, the depth is at most the number of houses. A depth beyond what the thread stack holds throws a `StackOverflowError`, and a table filled in a loop avoids that limit.
+The **recursion depth** is the number of nested calls that are open at one moment. Memoization keeps the depth unchanged, because a miss still recurses all the way to a base case before its first write. For the board, the depth is at most `rows + cols - 1`. For the row of houses in the first trace below, the depth is at most the number of houses. A depth beyond what the thread stack holds throws a `StackOverflowError`, and a table filled in a loop avoids that limit.
 
 <!-- names: cache key, cache hit, recursion depth -->
 
@@ -91,7 +91,7 @@ The combined **invariant** has three parts. A stored value always equals the ans
 <!-- stage: variables -->
 ### What The Memoized Method Keeps
 
-Each method in this lesson keeps the same small set of names, and the code uses them with these meanings.
+Each method in this lesson keeps the same small set of names, and the traces and exercises use them with these meanings.
 
 - **memo** is a `long[]`, a `long[][]` or a `HashMap<Long, Long>`, and the value -1 marks a slot with no answer yet.
 - **hits** is an `int` that counts the calls answered by reading `memo`.

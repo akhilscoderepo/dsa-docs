@@ -171,7 +171,7 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 **Constraints.** The limits are:
 - **Width** satisfies `1 <= w <= 60`.
 - **Turns** satisfy `0 <= steps <= 60`.
-- **Blocked** columns may include column 0, which is blocked only at the end of each turn.
+- **Blocked** columns may include column 0, which then holds 0 after the first turn.
 - **Mutation** is not allowed, because `blocked` stays unchanged.
 
 **Example 1.** Input `w = 4`, `blocked = [false,false,false,false]`, `steps = 3`, output `[1,3,3,1]`.
@@ -180,7 +180,7 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 
 **Hint.** In the update of column `j`, which neighbor belongs to the previous turn, and which direction of the loop keeps it unchanged until it is read?
 
-**Changed decision.** The loop visits columns from right to left, and a blocked column is set to 0 after its sum is computed. With zero turns, the start row `[1,0,...,0]` is returned unchanged, apart from a blocked column 0.
+**Changed decision.** The loop visits columns from right to left, and a blocked column is set to 0 after its sum is computed. With zero turns, no turn ends, so the start row `[1,0,...,0]` is returned unchanged even when column 0 is blocked.
 
 #### [Boundary] Aliased Arrays (Author exercise)
 <!-- id: dp-trans-aliased-rows -->
@@ -222,4 +222,4 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 
 **Hint.** Each new row reads three cells of the previous row. Can a single array update in one pass, or does the left read and the right read both need old values?
 
-**Changed decision.** The new cost depends on a window of three old costs, so the method keeps a previous row and a next row and swaps their roles after each row. A one-column matrix is a plain sum of its cells.
+**Changed decision.** The new cost depends on a window of three old costs, so the method keeps a previous row and a next row and swaps their roles after each row. A matrix with `n = 1` returns its only cell.

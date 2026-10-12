@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A shipping tool counts the ways to split a load into crates of 2 or 3 units. It answers for 12 units in a blink and then runs all night for 40. A route planner counts the paths a robot can take across a 20 by 20 floor and returns a number that is far too small. An inventory script that should save memory overwrites a value it still needs and reports a wrong total. Each program has a correct idea and a broken bookkeeping step. This chapter teaches dynamic programming, which is a way to answer a big question by storing the answers to smaller questions of the same kind, and it teaches how to keep that storage honest.
+A shipping tool counts the ways to split a load into crates of 2 or 3 units. It answers for 12 units in a blink and then runs all night for 100. A route planner counts the paths a robot can take across a 20 by 20 floor and returns a number that is far too small. An inventory script that should save memory overwrites a value it still needs and reports a wrong total. Each program has a correct idea and a broken bookkeeping step. This chapter teaches dynamic programming, which is a way to answer a big question by storing the answers to smaller questions of the same kind, and it teaches how to keep that storage honest.
 
 ### Prerequisites
 

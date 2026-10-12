@@ -81,7 +81,7 @@ Every legal selection falls into exactly one of the two cases, so `best[i] = max
 The method reads the array `value` and changes nothing. It keeps three working values.
 
 - **best** is an `int[]` of length `n + 1`; entry `i` is the highest score within the first `i` hours.
-- **skip** is `best[i]` carried from the previous prefix, which is the score when the last hour stays out.
+- **skip** is `best[i - 1]`, which is the score when the last hour of the prefix stays out.
 - **take** is `value[i - 1]` plus the entry two prefixes back, or plus 0 when `i` is 1.
 
 The loop index `i` is a prefix length from 1 to `n`, so the hour it examines is `value[i - 1]`. The table stores prefix lengths and never overwrites `value`. Updating `value` in place would change the caller's data and would also read a number that has already been replaced.
@@ -91,7 +91,7 @@ The loop index `i` is a prefix length from 1 to `n`, so the hour it examines is 
 
 #### Eight Beats Two Fives
 
-The first run uses the forecasts `[5, 8, 5, 3, 9, 4]`. Each cell is one hour, and the pointer `i` marks the hour that the loop examines. At each hour the trace shows `skip`, which is the previous best, and `take`, which is the hour's value plus the best from two prefixes back. The variable `best` is the larger of the two. The first step, with the pointer at -1, shows the empty prefix.
+The first run uses the forecasts `[5, 8, 5, 3, 9, 4]`. Each cell is one hour, and the pointer `i` marks the hour that the loop examines, which is the prefix length minus 1. At each hour the trace shows `skip`, which is the previous best, and `take`, which is the hour's value plus the best from two prefixes back. The variable `best` is the larger of the two. The first step, with the pointer at -1, shows the empty prefix.
 
 At hour 1, taking 8 beats the earlier 5. At hour 2, taking 5 on top of the 5 from hour 0 gives 10 and beats 8. At hour 3, taking 3 on top of 8 gives 11. At hour 4, taking 9 on top of 10 gives 19. Hour 5 offers 4, and taking it gives only 15, so skipping keeps the best at 19.
 

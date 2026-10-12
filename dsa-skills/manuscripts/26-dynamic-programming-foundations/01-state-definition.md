@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### A Counter That Never Finishes
 
-A file-transfer tool sends a payload of `n` bytes as a sequence of chunks, and every chunk carries exactly 2 or 3 bytes. A developer needs to count the distinct chunk sequences for a given `n`, so that a test matrix covers all of them. Two sequences differ when their chunk sizes differ at any position, so 2 then 3 and 3 then 2 are two sequences. She writes a recursive counter that passes a list of the chunks sent so far. It answers `n = 12` at once. At `n = 40` the test run does not finish.
+A file-transfer tool sends a payload of `n` bytes as a sequence of chunks, and every chunk carries exactly 2 or 3 bytes. A developer needs to count the distinct chunk sequences for a given `n`, so that a test matrix covers all of them. Two sequences differ when their chunk sizes differ at any position, so 2 then 3 and 3 then 2 are two sequences. She writes a recursive counter that passes a list of the chunks sent so far. It answers `n = 12` at once. At `n = 100` the test run does not finish.
 
 The counter is correct, and the slowness has a specific cause. The method does the same work again and again, because calls that need the same future answer look different to the machine. This lesson asks what a recursive call must remember, what it must forget, and how to write that choice as one sentence. The method reads `n` and changes nothing outside its own arrays.
 
@@ -39,7 +39,7 @@ They return the same number, and the list has no effect on it. Both calls count 
 <!-- stage: bottleneck -->
 ### Equal Futures Are Computed Many Times
 
-Each call to `countWithHistory` branches into two more calls, and the recursion stops only when `sent` reaches or passes `n`. The number of calls is at least the number of finished sequences. That number grows by a factor of about 1.33 for each added byte. The method therefore runs in O(1.33^n) time, which is exponential. For `n = 40` the answer is 31572, but the method makes many more calls than that, and for `n = 100` the answer is about 6.7 * 10^11.
+Each call to `countWithHistory` branches into two more calls, and the recursion stops only when `sent` reaches or passes `n`. The number of calls is at least the number of finished sequences. That number grows by a factor of about 1.33 for each added byte. The method therefore runs in O(1.33^n) time, which is exponential. For `n = 100` the answer is about 6.7 * 10^11, so the method makes more than that many calls and runs for hours.
 
 The waste does not come from the branching itself. It comes from calls that hold different arguments but need the same answer. The `sent` value tells a call how many bytes remain. The list tells it nothing useful. Because the list differs between histories, any attempt to remember an answer by its arguments would treat equal futures as different questions.
 
@@ -102,7 +102,7 @@ The values grow slowly at first, then faster. Index 5 gets 2 because both 2 then
 
 #### At Most One Three-Byte Chunk
 
-The second run adds the rule from the last insight section. The state is now the pair (`i`, `used`), where `used` is 0 or 1. The variable `zero` holds the count for sequences with no 3-chunk, and `one` holds the count for sequences with exactly one. The pointer `i` runs to 7 bytes.
+The second run adds the rule from the insight section on a rule that needs memory. The state is now the pair (`i`, `used`), where `used` is 0 or 1. The variable `zero` holds the count for sequences with no 3-chunk, and `one` holds the count for sequences with exactly one. The pointer `i` runs to 7 bytes.
 
 A sequence with no 3-chunk reads only `zero[i - 2]`. A sequence with one reads `one[i - 2]` and `zero[i - 3]`, because adding the single allowed 3-chunk moves the pair from used = 0 to used = 1. At index 7 the answer is `zero + one`, which is 3, because the single 3-chunk has three possible positions among two 2-chunks. With a single index the two columns would merge and the rule could not be enforced.
 

@@ -60,7 +60,7 @@ The table has one entry for each cell. Each entry describes the best answer for 
 
 #### One Table Layout For All Three Questions
 
-Entry `dp[c]` answers the question for the cells from 0 to `c`. The predecessors of cell `c` are the cells `c - j` for every allowed jump `j`, when `c - j >= 0`. A broken cell keeps its starting entry, because no sequence may land on it. The loop fills cells from left to right, so every predecessor is complete before it is read.
+Entry `dp[c]` answers the question for jump sequences that land on cell `c`. The predecessors of cell `c` are the cells from which one jump lands on `c`, which are the cells `c - j` for every allowed jump `j`, when `c - j >= 0`. A broken cell keeps its starting entry, because no sequence may land on it. The loop fills cells from left to right, so every predecessor is complete before it is read.
 
 #### Choose The Base Value For Cell Zero
 
@@ -76,7 +76,7 @@ A **sentinel** is a special value that marks an entry for which no answer exists
 
 #### Counts Need Room
 
-The count for a cell is at most 2^(c - 1), because it never exceeds the number of ways to split `c` into ordered positive parts. A count over a large row exceeds the range of `int`, so the method stores counts in a `long` or reduces them by a modulus when the statement asks for it.
+The count for a cell `c >= 1` is at most 2^(c - 1), because it never exceeds the number of ways to split `c` into ordered positive parts. A count over a large row exceeds the range of `int`, so the method stores counts in a `long` or reduces them by a modulus when the statement asks for it.
 
 <!-- stage: variables -->
 ### Three Tables Over One Row
@@ -99,7 +99,7 @@ The first level has cells 0 through 9, with the jumps 1, 3 and 4 and cell 4 brok
 Cell 4 keeps the sentinel values because it is broken, yet cells 5 through 9 stay reachable through other predecessors. Cell 6 gets its count from cells 5, 3 and 2, so 2 + 2 + 1 gives 5. The exit, cell 9, has 16 sequences and a shortest sequence of 3 jumps.
 
 ```trace
-{"cells":["c0","c1","c2","c3","c4 x","c5","c6","c7","c8","c9"],"pointers":["c"],"steps":[{"at":{"c":0},"vars":{"reach":1,"ways":1,"fewest":0},"note":"Cell 0 receives the base values: reachable, one way and zero jumps."},{"at":{"c":1},"vars":{"reach":1,"ways":1,"fewest":1},"note":"Cell 1 is entered from cells 0. Adding their counts gives 1, and the best predecessor gives 1 jumps."},{"at":{"c":2},"vars":{"reach":1,"ways":1,"fewest":2},"note":"Cell 2 is entered from cells 1. Adding their counts gives 1, and the best predecessor gives 2 jumps."},{"at":{"c":3},"vars":{"reach":1,"ways":2,"fewest":1},"note":"Cell 3 is entered from cells 2, 0. Adding their counts gives 2, and the best predecessor gives 1 jumps."},{"at":{"c":4},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 4 is broken, so it keeps the sentinel values: not reachable, no ways and no jump count."},{"at":{"c":5},"vars":{"reach":1,"ways":2,"fewest":2},"note":"Cell 5 is entered from cells 4, 2, 1. Adding their counts gives 2, and the best predecessor gives 2 jumps."},{"at":{"c":6},"vars":{"reach":1,"ways":5,"fewest":2},"note":"Cell 6 is entered from cells 5, 3, 2. Adding their counts gives 5, and the best predecessor gives 2 jumps."},{"at":{"c":7},"vars":{"reach":1,"ways":7,"fewest":2},"note":"Cell 7 is entered from cells 6, 4, 3. Adding their counts gives 7, and the best predecessor gives 2 jumps."},{"at":{"c":8},"vars":{"reach":1,"ways":9,"fewest":3},"note":"Cell 8 is entered from cells 7, 5, 4. Adding their counts gives 9, and the best predecessor gives 3 jumps."},{"at":{"c":9},"vars":{"reach":1,"ways":16,"fewest":3},"note":"Cell 9 is entered from cells 8, 6, 5. Adding their counts gives 16, and the best predecessor gives 3 jumps."}]}
+{"cells":["c0","c1","c2","c3","c4 x","c5","c6","c7","c8","c9"],"pointers":["c"],"steps":[{"at":{"c":0},"vars":{"reach":1,"ways":1,"fewest":0},"note":"Cell 0 receives the base values: reachable, one way and zero jumps."},{"at":{"c":1},"vars":{"reach":1,"ways":1,"fewest":1},"note":"Cell 1 is entered from cell 0. Adding their counts gives 1, and the best predecessor gives 1 jump."},{"at":{"c":2},"vars":{"reach":1,"ways":1,"fewest":2},"note":"Cell 2 is entered from cell 1. Adding their counts gives 1, and the best predecessor gives 2 jumps."},{"at":{"c":3},"vars":{"reach":1,"ways":2,"fewest":1},"note":"Cell 3 is entered from cells 2, 0. Adding their counts gives 2, and the best predecessor gives 1 jump."},{"at":{"c":4},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 4 is broken, so it keeps the sentinel values: not reachable, no ways and no jump count."},{"at":{"c":5},"vars":{"reach":1,"ways":2,"fewest":2},"note":"Cell 5 is entered from cells 4, 2, 1. Adding their counts gives 2, and the best predecessor gives 2 jumps."},{"at":{"c":6},"vars":{"reach":1,"ways":5,"fewest":2},"note":"Cell 6 is entered from cells 5, 3, 2. Adding their counts gives 5, and the best predecessor gives 2 jumps."},{"at":{"c":7},"vars":{"reach":1,"ways":7,"fewest":2},"note":"Cell 7 is entered from cells 6, 4, 3. Adding their counts gives 7, and the best predecessor gives 2 jumps."},{"at":{"c":8},"vars":{"reach":1,"ways":9,"fewest":3},"note":"Cell 8 is entered from cells 7, 5, 4. Adding their counts gives 9, and the best predecessor gives 3 jumps."},{"at":{"c":9},"vars":{"reach":1,"ways":16,"fewest":3},"note":"Cell 9 is entered from cells 8, 6, 5. Adding their counts gives 16, and the best predecessor gives 3 jumps."}]}
 ```
 
 #### A Level That Cannot Be Finished
@@ -109,7 +109,7 @@ The second level has cells 0 through 6, the jumps 1 and 2, and broken cells 3 an
 The reach flag, the count and the jump total all stay at their sentinel values from cell 3 onward. The count of 0 is a real answer for counting, while the -1 in `fewest` means that no number of jumps exists.
 
 ```trace
-{"cells":["c0","c1","c2","c3 x","c4 x","c5","c6"],"pointers":["c"],"steps":[{"at":{"c":0},"vars":{"reach":1,"ways":1,"fewest":0},"note":"Cell 0 receives the base values: reachable, one way and zero jumps."},{"at":{"c":1},"vars":{"reach":1,"ways":1,"fewest":1},"note":"Cell 1 is entered from cells 0. Adding their counts gives 1, and the best predecessor gives 1 jumps."},{"at":{"c":2},"vars":{"reach":1,"ways":2,"fewest":1},"note":"Cell 2 is entered from cells 1, 0. Adding their counts gives 2, and the best predecessor gives 1 jumps."},{"at":{"c":3},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 3 is broken, so it keeps the sentinel values: not reachable, no ways and no jump count."},{"at":{"c":4},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 4 is broken, so it keeps the sentinel values: not reachable, no ways and no jump count."},{"at":{"c":5},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 5 is entered from cells 4, 3, and none of them is reachable, so the entries stay at the sentinel values."},{"at":{"c":6},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 6 is entered from cells 5, 4, and none of them is reachable, so the entries stay at the sentinel values."}]}
+{"cells":["c0","c1","c2","c3 x","c4 x","c5","c6"],"pointers":["c"],"steps":[{"at":{"c":0},"vars":{"reach":1,"ways":1,"fewest":0},"note":"Cell 0 receives the base values: reachable, one way and zero jumps."},{"at":{"c":1},"vars":{"reach":1,"ways":1,"fewest":1},"note":"Cell 1 is entered from cell 0. Adding their counts gives 1, and the best predecessor gives 1 jump."},{"at":{"c":2},"vars":{"reach":1,"ways":2,"fewest":1},"note":"Cell 2 is entered from cells 1, 0. Adding their counts gives 2, and the best predecessor gives 1 jump."},{"at":{"c":3},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 3 is broken, so it keeps the sentinel values: not reachable, no ways and no jump count."},{"at":{"c":4},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 4 is broken, so it keeps the sentinel values: not reachable, no ways and no jump count."},{"at":{"c":5},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 5 is entered from cells 4, 3, and none of them is reachable, so the entries stay at the sentinel values."},{"at":{"c":6},"vars":{"reach":0,"ways":0,"fewest":-1},"note":"Cell 6 is entered from cells 5, 4, and none of them is reachable, so the entries stay at the sentinel values."}]}
 ```
 
 <!-- stage: code -->
@@ -152,7 +152,7 @@ The wording of the question names the objective. "Can" or "is it possible" asks 
 
 #### Checking The Invariant
 
-An **invariant** is a fact about the tables that stays true as the loop advances. Here, after cell `c` is filled, each table holds the answer of its objective for the cells from 0 to `c`, and the entry of a broken or unreachable cell holds that objective's sentinel. Test cell 0 alone, where the base value is the answer. Test a level with no usable path, which must return false, 0 and -1. Test costs large enough that a sentinel plus a cost would overflow.
+An **invariant** is a fact about the tables that stays true as the loop advances. Here, after cell `c` is filled, each table entry for a cell up to `c` holds the answer of its objective for that cell, and the entry of a broken or unreachable cell holds that objective's sentinel. Test cell 0 alone, where the base value is the answer. Test a level with no usable path, which must return false, 0 and -1. Test costs large enough that a sentinel plus a cost would overflow.
 
 #### Avoiding The False Friend
 
@@ -239,6 +239,6 @@ A **false friend** is a method that resembles the right one but answers a differ
 
 **Example 2.** Input `grid = [[7,0,4,6]]`, output `17`.
 
-**Hint.** Which two cells can a path come from to reach cell (r, c), and what changes on the first row and the first column?
+**Hint.** Treat each cell as a table entry whose predecessors are the cell above and the cell on the left. Which of the two exist on the first row and the first column?
 
 **Changed decision.** The merge step takes the smaller of two predecessor sums and adds the value of the current cell. The first row and the first column have only one predecessor, so they need no comparison.

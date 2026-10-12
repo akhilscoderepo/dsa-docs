@@ -40,7 +40,7 @@ It reads only dp[999] and dp[998]. The entries dp[0] through dp[997] are never r
 <!-- stage: bottleneck -->
 ### Memory Grows With The Input
 
-The table has n + 1 entries, so the method uses O(n) memory. The time of O(n) is already the best possible for a loop that visits every index. Only the memory is wasteful. For n equal to 100 million the table takes 400 MB, and the garbage collector cannot reclaim it while `dp` is alive.
+The table has n + 1 entries, so the method uses O(n) memory. The time of O(n) is not the problem. Only the memory is wasteful. For n equal to 100 million the table takes 400 MB, and the garbage collector cannot reclaim it while `dp` is alive.
 
 The waste comes from a fixed fact about the recurrence. Iteration `i` reads positions `i - 1` and `i - 2` and nothing else. Positions further left were useful once and are dead afterwards. A method that keeps them pays for memory that no instruction will ever read.
 
@@ -55,7 +55,7 @@ A recurrence that looks back by fixed offsets needs only that many past values. 
 
 #### Read The Offsets In The Recurrence
 
-List the indices on the right side of the recurrence, written relative to `i`. For `dp[i] = dp[i - 1] + dp[i - 2]`, the offsets are 1 and 2. The largest offset is the size of the **window**, which is the set of most recent entries that later iterations can still read. Here the window holds two entries. A recurrence with offsets 1, 2 and 3 has a window of three entries.
+List the indices on the right side of the recurrence, written relative to `i`. For `dp[i] = dp[i - 1] + dp[i - 2]`, the offsets are 1 and 2. The largest offset is the size of the **window**, the set of most recent entries that later iterations can still read. This is the same window as in the lesson on linear recurrences. Here the window holds two entries. A recurrence with offsets 1, 2 and 3 has a window of three entries.
 
 #### One Variable For Each Position
 
@@ -89,7 +89,7 @@ Each iteration computes `cur` from the two saved values, copies `prev1` into `pr
 
 #### The Correct Order For Seven Flags
 
-The first run counts the valid settings for seven flags. The cells are the table entries `dp[0]` through `dp[7]`, which the method never stores. The pointer `i` marks the entry that the current iteration computes. At each step the variables show the window before the shift and the new value `cur`.
+The first run counts the valid settings for seven flags. The cells are the table entries `dp[0]` through `dp[7]`, which the method never stores. The pointer `i` marks the entry that the current iteration computes. At each step the variables show the window after the shift and the new value `cur`.
 
 The window starts as 1 and 2. Each new value equals the sum of the two saved values, so the sequence reads 3, 5, 8, 13, 21 and 34. After the iteration for `dp[7]`, the variable `prev1` holds 34, which is the answer. The method touched only three variables, although the table it replaced has eight entries.
 
@@ -142,7 +142,7 @@ An **invariant** is a condition on the variables that is true at the start of ev
 
 #### Avoiding The False Friend
 
-A **false friend** is a shortcut that passes small examples and breaks on others. The first false friend is reusing the table as a single variable, which loses the second saved value. The second is shrinking a table to the last two rows or entries when the recurrence reads offset three or a whole column, which gives wrong answers without an error. The third is rolling the state when the output requires the path, because the dropped entries are the only record of the choices.
+A **false friend** is a shortcut that passes small examples and breaks on others. The first false friend is reusing the table as a single variable, which loses the second saved value. The second is shrinking a table to the last two rows or entries when the recurrence reads offset three, which gives wrong answers without an error. The third is rolling the state when the output requires the path, because the dropped entries are the only record of the choices.
 
 <!-- stage: exercises -->
 ### Exercises

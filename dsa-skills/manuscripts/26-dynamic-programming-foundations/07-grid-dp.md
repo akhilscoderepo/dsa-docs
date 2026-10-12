@@ -7,7 +7,7 @@
 
 A planning tool for a warehouse robot counts the distinct routes across a rectangular floor. The robot starts in the top-left cell and must stop in the bottom-right cell. Each step moves it one cell right, one cell down, or one cell down and right at once. Some cells hold shelves, and the robot cannot enter them. The tool must report the route count for any floor plan the operators draw.
 
-The first version works on the 4 by 4 test floor and answers instantly. Operators then upload a 12 by 12 plan, and the call runs for minutes. Nothing is wrong with the logic. Something about the way the count is computed makes the work explode as the floor grows.
+The first version works on the 4 by 4 test floor and answers instantly. Operators then upload a 12 by 12 plan, and the call pauses for seconds. A 16 by 16 plan runs for hours. Nothing is wrong with the logic. Something about the way the count is computed makes the work explode as the floor grows.
 
 A **grid** here is a matrix with `R` rows and `C` columns, where `(r, c)` names the cell in row `r` and column `c`, both counted from 0. A **route** is a sequence of allowed steps that avoids blocked cells. The method reads the floor plan and never changes it. This lesson asks how a count over a grid can stay cheap when millions of routes share the same cells.
 
@@ -39,7 +39,7 @@ For the 4 by 4 grid it makes 292 calls, which is already more than 18 calls per 
 
 The recursion treats every call as new work. Yet the call `routes(blocked, 2, 2)` returns the same number each time it appears, because the answer depends only on the arguments `r` and `c` and on the fixed floor plan. The cell `(2, 2)` is reached from the start through many different routes, and each of them re-enters the full recursion below that cell.
 
-Each cell can be requested by three later cells, so the requests multiply as the recursion deepens. The total call count satisfies roughly `T(r, c) = T(r - 1, c) + T(r, c - 1) + T(r - 1, c - 1) + 1`, which grows exponentially in `R + C`, near O(3^(R + C)) for an open grid. A 12 by 12 floor already needs hundreds of millions of calls. In contrast, the grid holds only `R * C` distinct answers, one per cell.
+Each cell can be requested by three later cells, so the requests multiply as the recursion deepens. The total call count satisfies roughly `T(r, c) = T(r - 1, c) + T(r, c - 1) + T(r - 1, c - 1) + 1`, which grows exponentially in `R + C` and is bounded by O(3^(R + C)) for an open grid. A 12 by 12 floor already needs hundreds of millions of calls. In contrast, the grid holds only `R * C` distinct answers, one per cell.
 
 A usable method must compute each cell's answer once and reuse it. That brings the work down to O(R * C) cell visits, with O(1) work per visit, since each cell combines at most three known numbers. The remaining question is how to guarantee that the three numbers are ready before the cell needs them.
 
@@ -92,7 +92,7 @@ The first row fills with ones, since each cell has only the left predecessor. Th
 
 #### Collecting The Largest Gain
 
-The second floor stores a gain in every cell, and some gains are negative. The robot now moves only right or down, and the table stores the largest total gain of any route that ends exactly at the cell. The recurrence adds the cell's own gain to the larger of its two predecessor entries. The pointer `cell` again moves in reading order, with `gain` holding the stored value.
+The second floor has 3 rows and 4 columns. Its gains by row are `[2, -1, 3, 0]`, `[1, 4, -2, 2]` and `[-3, 2, 5, -1]`, so some gains are negative. The robot now moves only right or down, and the table stores the largest total gain of any route that ends exactly at the cell. The recurrence adds the cell's own gain to the larger of its two predecessor entries. The pointer `cell` again moves in reading order, with `gain` holding the stored value.
 
 A negative cell still gets an entry, because a route may have to cross it. The last entry holds the best total.
 
@@ -153,7 +153,7 @@ A **false friend** is a familiar method that seems correct and returns wrong ans
 
 **Constraints.** The limits are:
 - **Grid** satisfies `1 <= m, n <= 100`.
-- **Result** fits in an `int` for every input.
+- **Result** is at most 2000000000, so it fits in an `int`.
 - **Cells** are all open, so no cell is blocked.
 
 **Example 1.** Input `m = 3`, `n = 4`, output `10`.
@@ -216,13 +216,13 @@ A **false friend** is a familiar method that seems correct and returns wrong ans
 **Constraints.** The limits are:
 - **Grid** satisfies `1 <= m, n <= 100`.
 - **Cell** values are 0 or 1.
-- **Result** fits in an `int` for every input.
+- **Result** is at most 2000000000, so it fits in an `int`.
 - **Mutation** is not allowed, because `obstacleGrid` stays unchanged.
 
 **Example 1.** Input `obstacleGrid = [[0,0,0,0],[0,1,0,0],[0,0,0,0]]`, output `4`.
 
 **Example 2.** Input `obstacleGrid = [[0,1],[0,0]]`, output `1`.
 
-**Hint.** The grid has two move types, not three. Which predecessor of the previous exercises disappears, and what does an obstacle store?
+**Hint.** The grid has two move types, not three. Which predecessor of the lesson's route table disappears, and what does an obstacle store?
 
-**Changed decision.** The state is the same as in the first exercise with the diagonal move removed. An obstacle stores 0 so later cells receive nothing from it. The result fits in an `int` by the guarantee, so a `long` table is optional.
+**Changed decision.** The state is the same as in the lesson's route table with the diagonal move removed. An obstacle stores 0 so later cells receive nothing from it. The result fits in an `int` by the guarantee, so a `long` table is optional.

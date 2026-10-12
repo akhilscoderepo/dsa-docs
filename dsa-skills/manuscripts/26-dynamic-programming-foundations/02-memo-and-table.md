@@ -7,7 +7,7 @@
 
 A developer writes a unit test for a sequence generator. The generator defines `F(0) = 0`, `F(1) = 1`, and `F(n) = F(n - 1) + F(n - 2)` for larger `n`. The recurrence is clear, and the recursive method that mirrors it is three lines long. The test checks `F(10)` and passes in a blink. A second test checks `F(50)`, and the test runner kills it after ten minutes without a result.
 
-Nothing in the method is wrong, so the reader needs to ask what the machine is doing for those ten minutes. The same value is computed many times, and nothing keeps the earlier results. This lesson asks how to compute each value once, and it compares two ways to do that: remembering answers during the recursion, and filling an array in a planned order. Both methods read an integer `n`, return a `long`, and change no input.
+Nothing in the method is wrong, so the question is what the machine does for those ten minutes. The same value is computed many times, and nothing keeps the earlier results. This lesson asks how to compute each value once, and it compares two ways to do that: remembering answers during the recursion, and filling an array in a planned order. Both methods read an integer `n`, return a `long`, and change no input.
 
 <!-- stage: naive -->
 ### Recursing Straight From The Formula
@@ -131,7 +131,7 @@ static long fibTable(int n) {
 }
 ```
 
-The base case in `fibFrom` returns before the cache is read, so the array never needs entries below 2 for the recursion. The sum is a `long`, and `F(92)` is the last Fibonacci number that fits, because `F(93)` wraps around to a negative value without any error. Both methods run in O(n) time. Memoization uses O(n) memory for the cache and O(n) for the call stack. Tabulation uses O(n) memory for the table.
+The base case in `fibFrom` returns before the cache is read, so the recursion never reads the cache for the arguments 0 and 1. The sum is a `long`, and `F(92)` is the last Fibonacci number that fits, because `F(93)` wraps around to a negative value without any error. Both methods run in O(n) time. Memoization uses O(n) memory for the cache and O(n) for the call stack. Tabulation uses O(n) memory for the table.
 
 <!-- stage: applicability -->
 ### Choosing Between The Two Forms
@@ -209,7 +209,7 @@ A **false friend** is a habit that works on easy cases and breaks on others. One
 
 **Hint.** What is the length of the array for `n = 0`, and which line writes to index 1?
 
-**Changed decision.** Both base entries are non-zero or distinct from the Fibonacci pair, so a table that assumes `table[0] = 0` fails. The array length is the larger of 2 and `n + 1`.
+**Changed decision.** Both base entries differ from the Fibonacci pair, so a table that assumes `table[0] = 0` fails. The array length is the larger of 2 and `n + 1`.
 
 #### [Recognize] Stairs With Broken Steps (LeetCode 70)
 <!-- id: dp-memo-stairs-broken -->
