@@ -12,7 +12,7 @@ The token starts in column 0. On a test row with two columns, the code gives the
 A **transition** is one application of the formula that turns the counts of one turn into the counts of the next turn. This lesson asks how an in-place loop can keep every read tied to the turn it is supposed to read from.
 
 <!-- stage: naive -->
-### Updating The Same Array From Left To Right
+### Updating One Array Left To Right
 
 The formula says that the count in column `j` after a turn is the old count in column `j`, which covers a token that stayed, plus the old count in column `j - 1`, which covers a token that moved right. Column 0 has no left neighbor, so it keeps its old count. The direct way to write this is one loop over the columns.
 
@@ -42,7 +42,7 @@ Small tests hide the problem. In a row with two columns, the only write is to co
 The obvious repair is a full table with one row per turn. That costs O(T * W) memory for `T` turns and `W` columns, which defeats the purpose of the in-place array. A second repair copies the row at the start of every turn, which costs O(W) extra work and memory per turn but keeps the O(W) total memory if the copy is released. The better question is when a single array is enough, and which loop direction or saved value makes it safe. The next section answers that with a rule about which cells a transition reads.
 
 <!-- stage: insight -->
-### Each Turn Reads Only The Layer Before It
+### Each Turn Reads The Layer Before
 
 A transition is correct when every value it reads belongs to the previous turn and every value it writes belongs to the current turn.
 
