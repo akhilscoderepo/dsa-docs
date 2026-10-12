@@ -235,7 +235,7 @@ A false friend is a plausible method that gives a wrong answer on some input. Th
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** An undirected graph uses vertex labels `0` through `n - 1` and the edge array `edges` of triples `{u, v, w}`. The graph may be disconnected. Accept the edges by Kruskal's rule over the whole sorted list, with any order among equal weights. Return a `long[]` of length 2. The first entry is the number of groups left at the end, and the second entry is the total weight of the accepted edges.
+**Problem.** An undirected graph uses vertex labels `0` through `n - 1` and the edge array `edges` of triples `{u, v, w}`. The graph may be disconnected. Accept the edges by Kruskal's rule over the whole sorted list, with any order among equal weights. The result is a `long[]` with two slots. Slot 0 holds the number of groups left at the end, and slot 1 holds the total weight of the accepted edges.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.

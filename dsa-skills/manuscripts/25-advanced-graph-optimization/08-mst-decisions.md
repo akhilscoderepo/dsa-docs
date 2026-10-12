@@ -223,7 +223,7 @@ A false friend is a method that resembles the correct one and still returns wron
 
 **Prerequisites.** The naive method and the Prim method of this lesson.
 
-**Problem.** An undirected connected graph joins `n` offices labelled `0`, ..., `n - 1` and has edges `[a, b, w]`. Let `dist[v]` be the least total weight of a path from vertex `0` to `v`. The shortest-path tree buys, for each vertex `v` other than `0`, the lightest edge `[u, v, w]` that satisfies `dist[u] + w == dist[v]`. Return a `long[]` of length 2. The first entry is the total weight of the shortest-path tree. The second entry is the total weight of a minimum spanning tree.
+**Problem.** An undirected connected graph joins `n` offices labelled `0`, ..., `n - 1` and has edges `[a, b, w]`. Let `dist[v]` be the least total weight of a path from vertex `0` to `v`. The shortest-path tree buys, for each vertex `v` other than `0`, the lightest edge `[u, v, w]` that satisfies `dist[u] + w == dist[v]`. Return a `long[]` with exactly two entries. Entry 0 is the total weight of the shortest-path tree. The second entry is the total weight of a minimum spanning tree.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 200`.
@@ -244,7 +244,7 @@ A false friend is a method that resembles the correct one and still returns wron
 
 **Prerequisites.** The exercise above.
 
-**Problem.** A graph labels its vertices from `0` up to `n - 1` and has undirected edges `[a, b, w]` listed by index. The array `side` of length `n` assigns each vertex to group `true` or group `false`. An edge crosses the cut when its endpoints lie in different groups. Return the index of the crossing edge of the lowest weight, using the lowest index among equal weights. Return `-1` when no edge crosses.
+**Problem.** A graph has `n` vertices, labelled from `0` and has undirected edges `[a, b, w]` listed by index. The array `side` of length `n` assigns each vertex to group `true` or group `false`. An edge crosses the cut when its endpoints lie in different groups. Return the index of the crossing edge of the lowest weight, using the lowest index among equal weights. Return `-1` when no edge crosses.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `2 <= n <= 1000`.
@@ -265,7 +265,7 @@ A false friend is a method that resembles the correct one and still returns wron
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A connected undirected graph uses vertex labels `0` through `n - 1` and has edges `[a, b, w]`. Return a `long[]` of length 2. The first entry is the total weight of a minimum spanning tree. The second entry is `1` when exactly one minimum spanning tree exists, where trees are different when their edge sets differ, and `0` otherwise. Parallel edges are different edges.
+**Problem.** A connected undirected graph uses vertex labels `0` through `n - 1` and has edges `[a, b, w]`. Return a `long[]` of two values. The first value is the total weight of a minimum spanning tree. The second entry is `1` when exactly one minimum spanning tree exists, where trees are different when their edge sets differ, and `0` otherwise. Parallel edges are different edges.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.

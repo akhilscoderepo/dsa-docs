@@ -248,7 +248,7 @@ A false friend is a familiar method that looks right and fails. The first false 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Each point `[x, y]` in `points` is a vertex. The edge between two points has weight `|x1 - x2| + |y1 - y2|`. Return a `long[]` of length 2. The first entry is the weight of a minimum spanning tree of the complete graph on the points. The second entry is the weight of the heaviest edge in that tree, or `0` when the tree has no edge.
+**Problem.** Each point `[x, y]` in `points` is a vertex. The edge between two points has weight `|x1 - x2| + |y1 - y2|`. Return a two-element `long[]` whose entry 0 holds the weight of a minimum spanning tree of the complete graph on the points. The second entry is the weight of the heaviest edge in that tree, or `0` when the tree has no edge.
 
 **Constraints.** The limits are:
 - **Points** satisfy `1 <= points.length <= 1000`, and all points are distinct.

@@ -237,7 +237,7 @@ A false friend is a familiar idea that looks right for the problem and fails on 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** An undirected graph labels its vertices from `0` up to `n - 1` and the edges in `edges`. An **articulation point** is a vertex whose removal, together with its edges, increases the number of connected components among the remaining vertices. Return an `int[]` of all articulation points in increasing order. Start a depth-first search from every undiscovered vertex in increasing order. A search root is an articulation point when it has at least two children in its tree. Any other vertex `u` is one when it has a child `c` with `low[c] >= disc[u]`.
+**Problem.** An undirected graph contains vertices `0` to `n - 1` and the edges in `edges`. An **articulation point** is a vertex whose removal, together with its edges, increases the number of connected components among the remaining vertices. Return an `int[]` of all articulation points in increasing order. Start a depth-first search from every undiscovered vertex in increasing order. A search root is an articulation point when it has at least two children in its tree. Any other vertex `u` is one when it has a child `c` with `low[c] >= disc[u]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 300`.
@@ -258,7 +258,7 @@ A false friend is a familiar idea that looks right for the problem and fails on 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** A network has servers `0` to `n - 1` and undirected connections in `connections`. The network is connected. A critical connection is a connection whose removal disconnects the network. Removing a critical connection leaves two components, and its **small side** is the smaller of the two component sizes. Return an `int[]` of length 2. The first entry is the number of critical connections. The second entry is the largest small side over all critical connections, or `0` when none exists.
+**Problem.** A network has servers `0` to `n - 1` and undirected connections in `connections`. The network is connected. A critical connection is a connection whose removal disconnects the network. Removing a critical connection leaves two components, and its **small side** is the smaller of the two component sizes. Return an `int[]` of size two, where index 0 gives the number of critical connections. The second entry is the largest small side over all critical connections, or `0` when none exists.
 
 **Constraints.** The limits are:
 - **Servers** satisfy `1 <= n <= 1000`.

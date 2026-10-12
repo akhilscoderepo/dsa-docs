@@ -201,7 +201,7 @@ A false friend is a method that looks correct for the problem and gives a wrong 
 
 **Prerequisites.** The exercise above.
 
-**Problem.** A directed graph labels its vertices from `0` up to `n - 1` and has a list `links` of pairs `[a, b]`. An Eulerian path is a route that uses every link exactly once and may end at a different vertex than it starts. The start vertex is the one whose out-degree is one more than its in-degree. When every vertex is balanced, the start is the smallest vertex that has an outgoing link. The method always takes the earliest listed unused link out of the current vertex. Return the path as an `int[]`, or an empty array when none exists. A graph with no links returns `[0]`.
+**Problem.** A directed graph has the vertex labels `0` to `n - 1` and has a list `links` of pairs `[a, b]`. An Eulerian path is a route that uses every link exactly once and may end at a different vertex than it starts. The start vertex is the one whose out-degree is one more than its in-degree. When every vertex is balanced, the start is the smallest vertex that has an outgoing link. The method always takes the earliest listed unused link out of the current vertex. Return the path as an `int[]`, or an empty array when none exists. A graph with no links returns `[0]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
