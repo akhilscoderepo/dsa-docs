@@ -1,4 +1,4 @@
-# Lesson spec: State Definition
+# Lesson spec: Define What Each Table Entry Means
 
 **Recognition cue.** Recursive subproblems repeat and their future answer depends on a small set of arguments. **Invariant.** `dp[state]` has one complete sentence defining exactly what it returns.
 

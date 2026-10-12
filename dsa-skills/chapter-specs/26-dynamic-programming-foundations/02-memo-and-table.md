@@ -1,4 +1,4 @@
-# Lesson spec: Memo And Table
+# Lesson spec: Cache Results Or Fill A Table
 
 **Recognition cue.** The recurrence is clear but repeated calls cause exponential work. **Invariant.** Memoization caches completed states; tabulation evaluates dependencies before consumers.
 

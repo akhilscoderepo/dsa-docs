@@ -86,7 +86,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 ## Lesson Blueprints
 
-### State Definition
+### Define What Each Table Entry Means
 
 **Recognition cue.** Recursive subproblems repeat and their future answer depends on a small set of arguments. **Invariant.** `dp[state]` has one complete sentence defining exactly what it returns.
 
@@ -95,7 +95,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 - **Boundary - Author exercise: Base-State Contract.** Make every transition terminate at a defined state.
 - **Recognize - LC 70 Climbing Stairs.** Define ways to reach or leave index `i` consistently.
 
-### Memo And Table
+### Cache Results Or Fill A Table
 
 **Recognition cue.** The recurrence is clear but repeated calls cause exponential work. **Invariant.** Memoization caches completed states; tabulation evaluates dependencies before consumers.
 
