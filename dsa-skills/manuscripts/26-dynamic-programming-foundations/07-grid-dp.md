@@ -7,7 +7,7 @@
 
 A planning tool for a warehouse robot counts the distinct routes across a rectangular floor. The robot starts in the top-left cell and must stop in the bottom-right cell. Each step moves it one cell right, one cell down, or one cell down and right at once. Some cells hold shelves, and the robot cannot enter them. The tool must report the route count for any floor plan the operators draw.
 
-The first version works on the 4 by 4 test floor and answers instantly. Operators then upload a 12 by 12 plan, and the call pauses for seconds. A 16 by 16 plan runs for hours. Nothing is wrong with the logic. Something about the way the count is computed makes the work explode as the floor grows.
+The first version works on the 4 by 4 test floor and answers instantly. Operators then upload a 12 by 12 plan, and the call pauses for about a second. A 16 by 16 plan runs for many minutes. Nothing is wrong with the logic. Something about the way the count is computed makes the work explode as the floor grows.
 
 A **grid** here is a matrix with `R` rows and `C` columns, where `(r, c)` names the cell in row `r` and column `c`, both counted from 0. A **route** is a sequence of allowed steps that avoids blocked cells. The method reads the floor plan and never changes it. This lesson asks how a count over a grid can stay cheap when millions of routes share the same cells.
 
@@ -75,7 +75,7 @@ The method receives `blocked`, a `boolean[R][C]` where `true` marks a shelf. It 
 - **r** is the row index of the cell being filled, from 0 to `R - 1`.
 - **c** is the column index of the cell being filled, from 0 to `C - 1`.
 
-The type is `long` because the route count on a 30 by 30 open floor already passes the range of `int`. The answer is the entry `dp[R - 1][C - 1]`, and a blocked start or target gives 0.
+The type is `long` because the route count on an open floor passes the range of `int` at 15 by 15. It passes the range of `long` at 28 by 28, so larger floors need a modulus or a bigger type. The answer is the entry `dp[R - 1][C - 1]`, and a blocked start or target gives 0.
 
 <!-- stage: trace -->
 ### Two Runs On Small Grids

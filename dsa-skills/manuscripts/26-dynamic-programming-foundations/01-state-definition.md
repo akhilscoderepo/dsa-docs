@@ -7,7 +7,7 @@
 
 A file-transfer tool sends a payload of `n` bytes as a sequence of chunks, and every chunk carries exactly 2 or 3 bytes. A developer needs to count the distinct chunk sequences for a given `n`, so that a test matrix covers all of them. Two sequences differ when their chunk sizes differ at any position, so 2 then 3 and 3 then 2 are two sequences. She writes a recursive counter that passes a list of the chunks sent so far. It answers `n = 12` at once. At `n = 100` the test run does not finish.
 
-The counter is correct, and the slowness has a specific cause. The method does the same work again and again, because calls that need the same future answer look different to the machine. This lesson asks what a recursive call must remember, what it must forget, and how to write that choice as one sentence. The method reads `n` and changes nothing outside its own arrays.
+The counter is correct, and the slowness has a specific cause. The method does the same work again and again, because calls that need the same future answer look different to the machine. This lesson asks what a recursive call must remember, what it must forget, and how to write that choice as one sentence. The method reads only the integer `n`.
 
 <!-- stage: naive -->
 ### Passing The Whole History Down
@@ -39,7 +39,7 @@ They return the same number, and the list has no effect on it. Both calls count 
 <!-- stage: bottleneck -->
 ### Equal Futures Are Computed Many Times
 
-Each call to `countWithHistory` branches into two more calls, and the recursion stops only when `sent` reaches or passes `n`. The number of calls is at least the number of finished sequences. That number grows by a factor of about 1.33 for each added byte. The method therefore runs in O(1.33^n) time, which is exponential. For `n = 100` the answer is about 6.7 * 10^11, so the method makes more than that many calls and runs for hours.
+Each call to `countWithHistory` branches into two more calls, and the recursion stops only when `sent` reaches or passes `n`. The number of calls is at least the number of finished sequences. That number grows by a factor of about 1.33 for each added byte. The method therefore runs in O(1.33^n) time, which is exponential. For `n = 100` the answer is about 6.7 * 10^11, so the method makes more than that many calls and runs far longer than a test allows.
 
 The waste does not come from the branching itself. It comes from calls that hold different arguments but need the same answer. The `sent` value tells a call how many bytes remain. The list tells it nothing useful. Because the list differs between histories, any attempt to remember an answer by its arguments would treat equal futures as different questions.
 
@@ -58,7 +58,7 @@ A **subproblem** is a smaller question of the same kind as the original. The ori
 
 #### The State Holds Only What The Future Needs
 
-The **state** of a subproblem is the smallest set of values that fully determines its answer. Two calls with equal state must return equal answers. For the chunk counter the state is the single number `i`, the number of bytes still to fill. The list of chunks fails this test, because two calls with different lists and equal `i` return equal answers.
+The **state** of a subproblem is the smallest set of values that fully determines its answer. Two calls with equal state must return equal answers. For the chunk counter the state is the single number `i`, the byte total that a sequence must add up to. The list of chunks fails this test, because two calls with different lists and equal `i` return equal answers.
 
 #### Write The Definition As A Sentence
 
@@ -107,7 +107,7 @@ The second run adds the rule from the insight section on a rule that needs memor
 A sequence with no 3-chunk reads only `zero[i - 2]`. A sequence with one reads `one[i - 2]` and `zero[i - 3]`, because adding the single allowed 3-chunk moves the pair from used = 0 to used = 1. At index 7 the answer is `zero + one`, which is 3, because the single 3-chunk has three possible positions among two 2-chunks. With a single index the two columns would merge and the rule could not be enforced.
 
 ```trace
-{"cells":["0","1","2","3","4","5","6","7"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"zero":1,"one":0},"note":"Index 0 holds the empty sequence, which has no 3-chunk, so zero is 1 and one is 0."},{"at":{"i":1},"vars":{"zero":0,"one":0},"note":"Index 1 gives zero = 0 and one = 0, so the total for 1 bytes is 0."},{"at":{"i":2},"vars":{"zero":1,"one":0},"note":"Index 2 gives zero = 1 and one = 0, so the total for 2 bytes is 1."},{"at":{"i":3},"vars":{"zero":0,"one":1},"note":"Index 3 gives zero = 0 and one = 1, so the total for 3 bytes is 1."},{"at":{"i":4},"vars":{"zero":1,"one":0},"note":"Index 4 gives zero = 1 and one = 0, so the total for 4 bytes is 1."},{"at":{"i":5},"vars":{"zero":0,"one":2},"note":"Index 5 gives zero = 0 and one = 2, so the total for 5 bytes is 2."},{"at":{"i":6},"vars":{"zero":1,"one":0},"note":"Index 6 gives zero = 1 and one = 0, so the total for 6 bytes is 1."},{"at":{"i":7},"vars":{"zero":0,"one":3},"note":"Index 7 gives zero = 0 and one = 3, so the total for 7 bytes is 3."}]}
+{"cells":["0","1","2","3","4","5","6","7"],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"zero":1,"one":0},"note":"Index 0 holds the empty sequence, which has no 3-chunk, so zero is 1 and one is 0."},{"at":{"i":1},"vars":{"zero":0,"one":0},"note":"Index 1 gives zero = 0 and one = 0, so the total for 1 byte is 0."},{"at":{"i":2},"vars":{"zero":1,"one":0},"note":"Index 2 gives zero = 1 and one = 0, so the total for 2 bytes is 1."},{"at":{"i":3},"vars":{"zero":0,"one":1},"note":"Index 3 gives zero = 0 and one = 1, so the total for 3 bytes is 1."},{"at":{"i":4},"vars":{"zero":1,"one":0},"note":"Index 4 gives zero = 1 and one = 0, so the total for 4 bytes is 1."},{"at":{"i":5},"vars":{"zero":0,"one":2},"note":"Index 5 gives zero = 0 and one = 2, so the total for 5 bytes is 2."},{"at":{"i":6},"vars":{"zero":1,"one":0},"note":"Index 6 gives zero = 1 and one = 0, so the total for 6 bytes is 1."},{"at":{"i":7},"vars":{"zero":0,"one":3},"note":"Index 7 gives zero = 0 and one = 3, so the total for 7 bytes is 3."}]}
 ```
 
 <!-- stage: code -->
@@ -205,7 +205,7 @@ A **false friend** is a familiar shortcut that passes simple tests and fails on 
 
 **Example 2.** Input `jump = [3]`, output `1`.
 
-**Hint.** What does `ways[n - 1]` have to be, and what answer does a move past the last cell contribute?
+**Hint.** What does `dp[n - 1]` have to be, and what answer does a move past the last cell contribute?
 
 **Changed decision.** The sentence describes routes that leave cell `i` and not routes that reach it, so the table fills from the last cell backward. Moves past the end must contribute 0.
 

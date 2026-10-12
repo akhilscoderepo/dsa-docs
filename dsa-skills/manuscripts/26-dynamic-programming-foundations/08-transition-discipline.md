@@ -161,7 +161,7 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 
 **Changed decision.** The method allocates a new array and reads only from the old one. The first column has a single choice, because it has no left neighbor.
 
-#### [Vary] Safe In-Place Grid Row (Author exercise)
+#### [Vary] Update One Row In Place (Author exercise)
 <!-- id: dp-trans-inplace-row -->
 
 **Prerequisites.** The exercise above.

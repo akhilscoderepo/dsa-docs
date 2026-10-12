@@ -34,7 +34,7 @@ The total is 15 calls, which return the answer 8. Only 6 calls have a new argume
 <!-- stage: bottleneck -->
 ### The Same Argument Is Solved Again
 
-Each call to `count` with n of 2 or more starts two calls, so the number of calls grows by a factor of about 1.6 with every extra block. The call count for n = 5 is 15, and for n = 40 it is more than 300 million. The growth is exponential, and the bound O(2^n) holds as a loose upper limit. The answer for n = 45 would take tens of seconds on a laptop.
+Each call to `count` with n of 2 or more starts two calls, so the number of calls grows by a factor of about 1.6 with every extra block. The call count for n = 5 is 15, and for n = 40 it is more than 300 million. The growth is exponential, and the bound O(2^n) holds as a loose upper limit. The answer for n = 45 would take several seconds on a laptop.
 
 The waste is visible in the call tree. The calls fall on only n + 1 different arguments, from 0 to n, yet the tree has far more than n + 1 nodes. Every node with an argument that appeared earlier recomputes a value that is already known.
 

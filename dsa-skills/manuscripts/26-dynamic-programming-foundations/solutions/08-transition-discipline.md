@@ -74,7 +74,7 @@ public final class DpTransPreviousRow {
 }
 ```
 
-#### Solution: [Vary] Safe In-Place Grid Row (Author exercise)
+#### Solution: [Vary] Update One Row In Place (Author exercise)
 <!-- id: dp-trans-inplace-row -->
 
 **Approach.**

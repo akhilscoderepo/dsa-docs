@@ -89,7 +89,7 @@ The loop index `i` is a prefix length from 1 to `n`, so the hour it examines is 
 <!-- stage: trace -->
 ### Two Runs Over Small Forecasts
 
-#### Eight Beats Two Fives
+#### Taking Wins At Most Hours
 
 The first run uses the forecasts `[5, 8, 5, 3, 9, 4]`. Each cell is one hour, and the pointer `i` marks the hour that the loop examines, which is the prefix length minus 1. At each hour the trace shows `skip`, which is the previous best, and `take`, which is the hour's value plus the best from two prefixes back. The variable `best` is the larger of the two. The first step, with the pointer at -1, shows the empty prefix.
 

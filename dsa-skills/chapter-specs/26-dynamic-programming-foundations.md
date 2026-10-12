@@ -135,7 +135,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 
 **Recognition cue.** The same state graph may ask whether, how many, or what minimum/maximum. **Invariant.** Initialization and combination operator match feasibility, counting, or optimization semantics.
 
-- **Build - Author exercise: Reachable Boolean States.** Combine predecessors with OR.
+- **Build - Author exercise: Mark The Reachable Cells.** Combine predecessors with OR.
 - **Vary - Author exercise: Count The Same Paths.** Replace OR with addition.
 - **Boundary - Author exercise: Impossible Minimum.** Use a sentinel that cannot overflow when adding cost.
 - **Recognize - LC 64 Minimum Path Sum.** Minimize predecessor cost instead of counting paths.
@@ -154,7 +154,7 @@ Use the supplied progression as the initial ordering evidence. Before a PDF is g
 **Recognition cue.** A recurrence is known, but in-place loop order can accidentally reuse current-iteration state. **Invariant.** Every read comes from the intended logical layer.
 
 - **Build - Author exercise: Separate Previous Row.** Compute a new layer from an immutable old layer.
-- **Vary - Author exercise: Safe In-Place Grid Row.** Explain which neighbor is current-row and which is prior-row.
+- **Vary - Author exercise: Update One Row In Place.** Explain which neighbor is current-row and which is prior-row.
 - **Boundary - Author exercise: Aliased Arrays.** Show why assigning `next = current` destroys layer separation.
 - **Recognize - LC 931 Minimum Falling Path Sum.** Use explicit prior-row ownership or safe update storage.
 

@@ -29,7 +29,7 @@ static int countSettings(int n) {
 }
 ```
 
-The method is correct for every n. Base entry `dp[0]` is 1 because the empty row has exactly one setting. Base entry `dp[1]` is 2 because one flag is either off or on. The sum of two remainders stays below 2 * 10^9 + 12, which fits in an `int`, so the addition cannot overflow.
+The method is correct for every n. Base entry `dp[0]` is 1 because the empty row has exactly one setting. Base entry `dp[1]` is 2 because one flag is either off or on. The sum of two remainders is at most 2 * 10^9 + 12, which fits in an `int`, so the addition cannot overflow.
 
 ```predict
 While the loop computes dp[1000], which earlier entries does it read, and which entries can the loop never read again?

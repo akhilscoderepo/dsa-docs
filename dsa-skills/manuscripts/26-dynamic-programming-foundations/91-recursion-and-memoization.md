@@ -93,7 +93,7 @@ The combined **invariant** has three parts. A stored value always equals the ans
 
 Each method in this lesson keeps the same small set of names, and the traces and exercises use them with these meanings.
 
-- **memo** is a `long[]`, a `long[][]` or a `HashMap<Long, Long>`, and the value -1 marks a slot with no answer yet.
+- **memo** is a `long[]`, a `long[][]` or a `HashMap<Long, Long>`, and the value -1 marks an empty slot in the array forms. The map form tests `containsKey` instead.
 - **hits** is an `int` that counts the calls answered by reading `memo`.
 - **misses** is an `int` that counts the calls that compute and write a value.
 - **depth** is the number of calls that are open on the stack right now, and the deepest value seen is the stack cost.

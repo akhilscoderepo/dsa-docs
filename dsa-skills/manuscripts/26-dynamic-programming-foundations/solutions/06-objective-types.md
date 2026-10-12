@@ -1,7 +1,7 @@
 <!-- solutions-for: 26-dynamic-programming-foundations -->
 ### Solutions For Objective Types
 
-#### Solution: [Build] Reachable Boolean States (Author exercise)
+#### Solution: [Build] Mark The Reachable Cells (Author exercise)
 <!-- id: dp-obj-reachable-states -->
 
 **Approach.**

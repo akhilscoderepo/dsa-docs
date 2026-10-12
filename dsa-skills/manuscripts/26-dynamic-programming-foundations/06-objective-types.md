@@ -161,7 +161,7 @@ A **false friend** is a method that resembles the right one but answers a differ
 <!-- stage: exercises -->
 ### Exercises
 
-#### [Build] Reachable Boolean States (Author exercise)
+#### [Build] Mark The Reachable Cells (Author exercise)
 <!-- id: dp-obj-reachable-states -->
 
 **Prerequisites.** The base value and the OR merge step of this lesson.
