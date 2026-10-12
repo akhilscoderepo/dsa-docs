@@ -74,7 +74,7 @@ The loop visits capacities from `weight[i]` up to `capacity`. When it reaches `c
 <!-- stage: variables -->
 ### The Capacity Table And Two Candidates
 
-The method reads `weight`, `value` and `capacity` and changes none of them. It keeps these working values.
+The inputs `weight`, `value` and `capacity` stay unchanged, and the method keeps five working values.
 
 - **dp** is an `int[]` of length `capacity + 1`; entry `c` is the best value with weight at most `c`.
 - **i** is the item kind that the outer loop processes.
@@ -123,7 +123,7 @@ static int unboundedPack(int[] weight, int[] value, int capacity) {
 }
 ```
 
-The inner loop starts at `weight[i]`, so the index `c - weight[i]` is never negative. The array starts at 0 because Java zero-fills new arrays, which matches the empty selection. The method runs in O(capacity * k) time and uses O(capacity) memory. An item heavier than the capacity never enters the inner loop.
+The inner loop starts at `weight[i]`, so the index `c - weight[i]` is never negative. The array starts at 0 because Java zero-fills new arrays, which matches the empty selection. The cost is O(capacity * k) time and O(capacity) memory for k kinds. An item heavier than the capacity never enters the inner loop.
 
 <!-- stage: applicability -->
 ### Recognizing Repeatable Items With A Weight Limit
@@ -134,7 +134,7 @@ Use this method when items have a weight and a value, the total weight has a lim
 
 #### Checking The Invariant
 
-An **invariant** is a condition that holds at the start of every loop iteration. Here it says that after item `i` finishes, `dp[c]` is the best value using kinds 0 through `i` for each `c`. Test capacity 0, which must return 0. Test an item heavier than the capacity, which must change nothing. Test two items with equal ratios, where either may be chosen.
+An **invariant** is a condition that holds at the start of every loop iteration. Here it says that after item `i` finishes, `dp[c]` is the best value using kinds 0 through `i` for each `c`. Test capacity 0, which must return 0. Test an item that does not fit at all, which must leave the table alone. Test two items with equal ratios, where either may be chosen.
 
 #### Avoiding The False Friend
 
