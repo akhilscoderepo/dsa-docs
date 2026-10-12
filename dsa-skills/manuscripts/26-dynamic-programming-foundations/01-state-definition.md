@@ -143,7 +143,7 @@ An **invariant** is a statement that holds at every step of a method. Here the i
 
 #### Avoiding The False Friend
 
-A **false friend** is a technique that looks right and gives wrong results on some inputs. Here it is a state that is too small. A table indexed only by `i` looks natural, but it merges calls whose futures differ whenever a rule remembers something else, such as a cap on one chunk size. The opposite mistake is a state that is too large, as in the history list of the first method. A too-large state is correct and slow, and a too-small state is fast and wrong.
+A **false friend** is a familiar shortcut that passes simple tests and fails on other inputs. Here the shortcut is a state that is too small. A table indexed only by `i` looks natural, but it merges calls whose futures differ whenever a rule remembers something else, such as a cap on one chunk size. The opposite mistake is a state that is too large, as in the history list of the first method. A too-large state is correct and slow, and a too-small state is fast and wrong.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -173,7 +173,7 @@ A **false friend** is a technique that looks right and gives wrong results on so
 
 **Prerequisites.** The exercise above, and the section on a rule that needs memory.
 
-**Problem.** A message of `n` bytes is sent as an ordered sequence of chunks of size 2 or 5. The sequence may contain at most `k` chunks of size 5. Return the number of sequences whose sizes add up to exactly `n`, as a `long`. The empty sequence adds up to 0 and counts as one sequence.
+**Problem.** A message of `n` bytes is sent as an ordered sequence of chunks of size 2 or 5. The sequence may contain at most `k` chunks of size 5. Count the sequences that fill exactly `n` bytes and return that count as a `long`. For `n = 0` the only sequence is the empty one.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= n <= 60`.
