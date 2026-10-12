@@ -180,8 +180,8 @@ A **false friend** is a habit that works on easy cases and breaks on others. One
 
 **Constraints.** The limits are:
 - **Index** satisfies `0 <= n <= 1000`.
-- **Modulus** satisfies `1 <= m <= 1000000000`.
-- **Sums** may reach `2 * 10^9`, so they must be computed as `long`.
+- **Modulus** satisfies `1 <= m <= 2000000000`.
+- **Sums** may reach `4 * 10^9`, so they must be computed as `long`.
 
 **Example 1.** Input `n = 6`, `m = 10`, output `[0,1,1,2,3,5,8]`.
 

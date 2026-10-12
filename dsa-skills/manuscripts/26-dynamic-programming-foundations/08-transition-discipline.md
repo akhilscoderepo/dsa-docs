@@ -7,7 +7,7 @@
 
 A route counter for a game level keeps one `long[]` named `row`. Entry `row[j]` holds the number of ways a token can stand in column `j` after some number of turns. In each turn the token either stays in its column or moves one column to the right. The programmer saves memory by updating the same array in place for every turn, instead of storing a table with one row per turn.
 
-The token starts in column 0, so the row begins as `[1, 0, 0, 0, 0]`. After the first turn the counts should read `[1, 1, 0, 0, 0]`, and the code agrees. After the second turn they should read `[1, 2, 1, 0, 0]`, and the code agrees again. On the third turn the code prints `[1, 3, 4, 4, 4]` where the correct answer is `[1, 3, 3, 1, 0]`. The formula is right, and the sample turns passed, yet the numbers drift.
+The token starts in column 0. On a test row with two columns, the code gives the right counts after every turn. On a row with five columns, the first turn should turn `[1, 0, 0, 0, 0]` into `[1, 1, 0, 0, 0]`, yet the code prints `[1, 1, 1, 1, 1]`. The formula is right, the short test passed, and the numbers are still wrong.
 
 A **transition** is one application of the formula that turns the counts of one turn into the counts of the next turn. This lesson asks how an in-place loop can keep every read tied to the turn it is supposed to read from.
 
@@ -37,7 +37,7 @@ It holds [1, 3, 4, 4, 4], while the correct result is [1, 3, 3, 1, 0]. The loop 
 
 The loop breaks because of the order of its own writes. Assigning `row[j]` destroys the old value of column `j`. The next iteration then reads `row[j]` as its left neighbor and gets the new value instead. Every column after the first receives a sum that includes this turn's changes, so the error spreads along the array, and a token appears to move several columns in one turn.
 
-Small tests hide the problem. On the first turn the row is `[1, 0, 0, 0, 0]`, and the second column adds a left value that is already correct by luck. The fault shows only once two neighbors both hold nonzero old values.
+Small tests hide the problem. In a row with two columns, the only write is to column 1, and its left neighbor, column 0, is never overwritten. The fault appears only when a row has a third column, whose left neighbor the loop has just changed.
 
 The obvious repair is a full table with one row per turn. That costs O(T * W) memory for `T` turns and `W` columns, which defeats the purpose of the in-place array. A second repair copies the row at the start of every turn, which costs O(W) extra work and memory per turn but keeps the O(W) total memory if the copy is released. The better question is when a single array is enough, and which loop direction or saved value makes it safe. The next section answers that with a rule about which cells a transition reads.
 
@@ -69,7 +69,7 @@ A single array is safe when the loop visits cells so that each read happens befo
 
 The two-array version of the turn receives `prev`, a `long[]` of length `W`. It never writes to it. It keeps these working values.
 
-- **next** is a new `long[]` of length `W`; the loop writes it and reads it never.
+- **next** is a new `long[]` of length `W`; the loop writes it and never reads it.
 - **j** is the column index being computed, from 0 to `W - 1`.
 - **old** is the value of `prev[j - 1]` when `j > 0`, and it is read only from `prev`.
 
@@ -84,15 +84,19 @@ The start row is `[1, 2, 1, 0, 0]`, and one turn must produce `[1, 3, 3, 1, 0]`.
 
 Each read finds a left neighbor that no earlier iteration has touched, so `old` always equals the previous turn's value. Column 0 is never written, because it has no left neighbor.
 
-@@TRACE1@@
+```trace
+{"cells":["col 0","col 1","col 2","col 3","col 4"],"pointers":["j"],"steps":[{"at":{"j":-1},"vars":{"old":0,"written":0},"note":"Before the turn, the row reads [1, 2, 1, 0, 0]."},{"at":{"j":4},"vars":{"old":0,"written":0},"note":"Column 4 reads 0 on its left and stores 0, so the row becomes [1, 2, 1, 0, 0]. That left neighbor still holds its value from the previous turn."},{"at":{"j":3},"vars":{"old":1,"written":1},"note":"Column 3 reads 1 on its left and stores 1, so the row becomes [1, 2, 1, 1, 0]. That left neighbor still holds its value from the previous turn."},{"at":{"j":2},"vars":{"old":2,"written":3},"note":"Column 2 reads 2 on its left and stores 3, so the row becomes [1, 2, 3, 1, 0]. That left neighbor still holds its value from the previous turn."},{"at":{"j":1},"vars":{"old":1,"written":3},"note":"Column 1 reads 1 on its left and stores 3, so the row becomes [1, 3, 3, 1, 0]. That left neighbor still holds its value from the previous turn."}]}
+```
 
 #### Visiting Columns From The Left
 
-The second run applies the same formula to the same row but visits columns 1, 2, 3 and 4. The variable `old` now reads a left neighbor that the previous iteration has just overwritten. The error is small at column 2 and grows with each step, ending with four counts of 4 at the end.
+The second run applies the same formula to the same row but visits columns 1, 2, 3 and 4. The variable `old` now reads a left neighbor that the previous iteration has just overwritten. The error is small at column 2 and grows with each step, ending with three counts of 4.
 
 The final array `[1, 3, 4, 4, 4]` differs from the correct result in columns 2, 3 and 4. The formula is identical in both runs, and only the visiting order changed.
 
-@@TRACE2@@
+```trace
+{"cells":["col 0","col 1","col 2","col 3","col 4"],"pointers":["j"],"steps":[{"at":{"j":-1},"vars":{"old":0,"written":0},"note":"Before the turn, the row reads [1, 2, 1, 0, 0]."},{"at":{"j":1},"vars":{"old":1,"written":3},"note":"Column 1 reads 1 on its left and stores 3, so the row becomes [1, 3, 1, 0, 0]. Column 0 is never written, so this read is still correct."},{"at":{"j":2},"vars":{"old":3,"written":4},"note":"Column 2 reads 3 on its left and stores 4, so the row becomes [1, 3, 4, 0, 0]. That left neighbor was just overwritten, so the sum uses a changed value."},{"at":{"j":3},"vars":{"old":4,"written":4},"note":"Column 3 reads 4 on its left and stores 4, so the row becomes [1, 3, 4, 4, 0]. That left neighbor was just overwritten, so the sum uses a changed value."},{"at":{"j":4},"vars":{"old":4,"written":4},"note":"Column 4 reads 4 on its left and stores 4, so the row becomes [1, 3, 4, 4, 4]. That left neighbor was just overwritten, so the sum uses a changed value."}]}
+```
 
 <!-- stage: code -->
 ### Two Arrays And One Reverse Loop
@@ -167,7 +171,7 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 **Constraints.** The limits are:
 - **Width** satisfies `1 <= w <= 60`.
 - **Turns** satisfy `0 <= steps <= 60`.
-- **Blocked** columns may include column 0, and then every count is 0 after the first turn.
+- **Blocked** columns may include column 0, which is blocked only at the end of each turn.
 - **Mutation** is not allowed, because `blocked` stays unchanged.
 
 **Example 1.** Input `w = 4`, `blocked = [false,false,false,false]`, `steps = 3`, output `[1,3,3,1]`.
@@ -212,9 +216,9 @@ A **false friend** is a technique that looks right but fails on some inputs. Her
 - **Result** fits in an `int`.
 - **Mutation** is not allowed, because `matrix` stays unchanged.
 
-**Example 1.** Input `matrix = [[5,-2,4],[3,8,-1],[2,6,7]]`, output `@@EX1@@`.
+**Example 1.** Input `matrix = [[5,-2,4],[3,8,-1],[2,6,7]]`, output `3`.
 
-**Example 2.** Input `matrix = [[4,-9],[7,1]]`, output `@@EX2@@`.
+**Example 2.** Input `matrix = [[4,-9],[7,1]]`, output `-8`.
 
 **Hint.** Each new row reads three cells of the previous row. Can a single array update in one pass, or does the left read and the right read both need old values?
 

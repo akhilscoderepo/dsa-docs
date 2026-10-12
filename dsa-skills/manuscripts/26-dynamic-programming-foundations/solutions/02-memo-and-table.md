@@ -81,7 +81,7 @@ public final class DpMemoFibCache {
 <!-- id: dp-memo-fib-table -->
 
 **Approach.**
-The method allocates a `long[]` of length `n + 1` and fills it with a loop in increasing index order. The base entries are `0 % m` and `1 % m`, so the value 1 reduces to 0 when `m` is 1. For an index `i >= 2` the sum of the two previous reduced entries is computed in `long` and reduced once. Each reduced entry is below `m`, so the sum stays below `2 * 10^9` and fits in a `long`. An `int` sum would overflow for large `m`.
+The method allocates a `long[]` of length `n + 1` and fills it with a loop in increasing index order. The base entries are `0 % m` and `1 % m`, so the value 1 reduces to 0 when `m` is 1. For an index `i >= 2` the sum of the two previous reduced entries is computed in `long` and reduced once. Each reduced entry is below `m`, so the sum stays below `4 * 10^9` and fits in a `long`. An `int` sum would overflow for large `m`.
 
 The invariant is that `table[i]` equals `F(i) % m` for every finished index. Reduction after each addition is valid because addition commutes with the remainder. The array length is `n + 1`, and the base entry for index 1 is written only when it exists.
 
@@ -137,7 +137,7 @@ public final class DpMemoFibTable {
         if (big + big >= 0) throw new AssertionError("int overflow");
         if ((long) big + big != 2_400_000_000L) throw new AssertionError("long sum");
         // The largest modulus keeps all entries below it.
-        for (long v : fibTable(1000, 1_000_000_000)) if (v < 0 || v >= 1_000_000_000) throw new AssertionError("range");
+        for (long v : fibTable(1000, 2_000_000_000)) if (v < 0 || v >= 2_000_000_000L) throw new AssertionError("range");
         // Random sizes and moduli against the BigInteger oracle.
         Random rnd = new Random(2606);
         for (int t = 0; t < 1000; t++) {
