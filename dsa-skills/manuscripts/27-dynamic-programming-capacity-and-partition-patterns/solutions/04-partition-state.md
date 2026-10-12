@@ -79,7 +79,7 @@ public final class CapPartReachableSums {
 **Approach.**
 An odd total has no equal split, so the method returns -1 at once. For an even total, each group of an equal split sums to the target `total / 2`, so the smallest group has the fewest elements among subsets that sum to the target. The table `fewest[s]` holds the fewest elements of a subset that sums to `s`, with the marker `n + 1` for sums that no subset reaches and `fewest[0] = 0`.
 
-For each element `x`, the loop visits sums from the target down to `x` and keeps the smaller of `fewest[s]` and `fewest[s - x] + 1`. The descending order makes `fewest[s - x]` describe the elements before `x`. The invariant is that `fewest[s]` is exact for the processed elements. The answer is `fewest[target]` or -1 when it holds the marker.
+Each element `x` triggers one pass over the sums from the target down to `x`, and the pass keeps the smaller of `fewest[s]` and `fewest[s - x] + 1`. The descending order makes `fewest[s - x]` describe the elements before `x`. The invariant is that `fewest[s]` is exact for the processed elements. The answer is `fewest[target]` or -1 when it holds the marker.
 
 **Complexity.**
 - **Time** is O(n * target), because each element updates up to `target` entries.
