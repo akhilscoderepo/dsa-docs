@@ -195,7 +195,7 @@ A false friend is a familiar idea that looks right for the problem and fails on 
 
 **Prerequisites.** The variables and the code of this lesson.
 
-**Problem.** An undirected connected graph has vertices `0` to `n - 1` and the edges in `edges`, where edge number `i` joins `edges[i][0]` and `edges[i][1]`. Run a depth-first search from vertex `0`. At each vertex, scan its edges in the order of their numbers, and treat a self loop as one edge scanned twice. Return an `int[][]` of two rows. Row 0 is the discovery time of every vertex. Row 1 is the low link of every vertex, where the edge used to enter a vertex does not count as a back edge, and any other edge does.
+**Problem.** An undirected connected graph spans the `n` servers `0`, ..., `n - 1` and the edges in `edges`, where edge number `i` joins `edges[i][0]` and `edges[i][1]`. Run a depth-first search from vertex `0`. At each vertex, scan its edges in the order of their numbers, and treat a self loop as one edge scanned twice. Return an `int[][]` of two rows. Row 0 is the discovery time of every vertex. Row 1 is the low link of every vertex, where the edge used to enter a vertex does not count as a back edge, and any other edge does.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 300`.
@@ -237,7 +237,7 @@ A false friend is a familiar idea that looks right for the problem and fails on 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** An undirected graph has vertices `0` to `n - 1` and the edges in `edges`. An **articulation point** is a vertex whose removal, together with its edges, increases the number of connected components among the remaining vertices. Return an `int[]` of all articulation points in increasing order. Start a depth-first search from every undiscovered vertex in increasing order. A search root is an articulation point when it has at least two children in its tree. Any other vertex `u` is one when it has a child `c` with `low[c] >= disc[u]`.
+**Problem.** An undirected graph labels its vertices from `0` up to `n - 1` and the edges in `edges`. An **articulation point** is a vertex whose removal, together with its edges, increases the number of connected components among the remaining vertices. Return an `int[]` of all articulation points in increasing order. Start a depth-first search from every undiscovered vertex in increasing order. A search root is an articulation point when it has at least two children in its tree. Any other vertex `u` is one when it has a child `c` with `low[c] >= disc[u]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 300`.

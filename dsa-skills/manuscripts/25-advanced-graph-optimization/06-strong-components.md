@@ -216,7 +216,7 @@ A **false friend** is a well-known technique that seems to fit the problem and g
 
 **Prerequisites.** The first sweep of this lesson.
 
-**Problem.** A directed graph has vertices `0` to `n - 1`, and `edges` lists pairs `[a, b]` for an edge from `a` to `b`. Run a depth-first search that starts from vertices `0, 1, ..., n - 1` in ascending order and skips visited vertices. At each vertex the search follows outgoing edges in the order in which they appear in `edges`. Return an `int[]` of length `n` that lists the vertices in the order in which the search finishes them.
+**Problem.** A directed graph consists of the vertex set `0`, ..., `n - 1`, and `edges` lists pairs `[a, b]` for an edge from `a` to `b`. Run a depth-first search that starts from vertices `0, 1, ..., n - 1` in ascending order and skips visited vertices. At each vertex the search follows outgoing edges in the order in which they appear in `edges`. Return an `int[]` of length `n` that lists the vertices in the order in which the search finishes them.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
@@ -236,7 +236,7 @@ A **false friend** is a well-known technique that seems to fit the problem and g
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Take a directed graph with vertices `0` to `n - 1` and edges `[a, b]`. Compute the finish order of the original graph as in the exercise above. Then take vertices in decreasing finish order and search the reversed graph from each vertex that has no label yet. Return an `int[]` `label` where `label[v]` names the group of `v`. The groups carry the numbers `0, 1, 2, ...` in the order in which these searches begin.
+**Problem.** Take a directed graph whose vertex labels run `0` through `n - 1`, with edges `[a, b]`. Compute the finish order of the original graph as in the exercise above. Then take vertices in decreasing finish order and search the reversed graph from each vertex that has no label yet. Return an `int[]` `label` where `label[v]` names the group of `v`. The groups carry the numbers `0, 1, 2, ...` in the order in which these searches begin.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
@@ -278,7 +278,7 @@ A **false friend** is a well-known technique that seems to fit the problem and g
 
 **Prerequisites.** The three exercises above.
 
-**Problem.** Let a directed graph have vertices `0` to `n - 1` and edges `[a, b]`. Merge each strongly connected component into one node. Keep an edge from node C to node D when some edge leads from a vertex of C to a vertex of D and C differs from D. Count each such pair once. Return an `int[]` of length 3 with the number of nodes, the number of distinct edges between nodes, and the number of nodes that have no incoming edge.
+**Problem.** Let a directed graph use vertex labels `0` through `n - 1` and edges `[a, b]`. Merge each strongly connected component into one node. Keep an edge from node C to node D when some edge leads from a vertex of C to a vertex of D and C differs from D. Count each such pair once. Return an `int[]` of length 3 with the number of nodes, the number of distinct edges between nodes, and the number of nodes that have no incoming edge.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.

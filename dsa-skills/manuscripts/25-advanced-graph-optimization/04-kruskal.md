@@ -193,7 +193,7 @@ A false friend is a plausible method that gives a wrong answer on some input. Th
 
 **Prerequisites.** The group rule and the `find` helper of this lesson.
 
-**Problem.** An undirected graph has vertices `0` to `n - 1`. The array `edges` holds triples `{u, v, w}` and is already sorted by nondecreasing `w`. Scan the edges in the given order and keep groups of vertices that the accepted edges connect. Accept edge `k` when its endpoints lie in different groups at that moment, and skip it otherwise. Scan every edge, with no early stop. Return a `boolean[]` of length `edges.length` where entry `k` is `true` when edge `k` is accepted.
+**Problem.** An undirected graph labels its vertices from `0` up to `n - 1`. The array `edges` holds triples `{u, v, w}` and is already sorted by nondecreasing `w`. Scan the edges in the given order and keep groups of vertices that the accepted edges connect. Accept edge `k` when its endpoints lie in different groups at that moment, and skip it otherwise. Scan every edge, with no early stop. Return a `boolean[]` of length `edges.length` where entry `k` is `true` when edge `k` is accepted.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
@@ -214,7 +214,7 @@ A false friend is a plausible method that gives a wrong answer on some input. Th
 
 **Prerequisites.** The exercise above.
 
-**Problem.** An undirected connected graph has vertices `0` to `n - 1` and the unsorted edge array `edges` of triples `{u, v, w}`. Sort a copy by `w`, keeping the input order among equal weights. Scan the sorted copy and stop as soon as `n - 1` edges are accepted. Return the number of edges that the scan skips because their endpoints already share a group. Edges after the stop are not examined and are not counted.
+**Problem.** An undirected connected graph draws vertices from `0` to `n - 1` and has the unsorted edge array `edges` of triples `{u, v, w}`. Sort a copy by `w`, keeping the input order among equal weights. Scan the sorted copy and stop as soon as `n - 1` edges are accepted. Return the number of edges that the scan skips because their endpoints already share a group. Edges after the stop are not examined and are not counted.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
@@ -235,7 +235,7 @@ A false friend is a plausible method that gives a wrong answer on some input. Th
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** An undirected graph has vertices `0` to `n - 1` and the edge array `edges` of triples `{u, v, w}`. The graph may be disconnected. Accept the edges by Kruskal's rule over the whole sorted list, with any order among equal weights. Return a `long[]` of length 2. The first entry is the number of groups left at the end, and the second entry is the total weight of the accepted edges.
+**Problem.** An undirected graph uses vertex labels `0` through `n - 1` and the edge array `edges` of triples `{u, v, w}`. The graph may be disconnected. Accept the edges by Kruskal's rule over the whole sorted list, with any order among equal weights. Return a `long[]` of length 2. The first entry is the number of groups left at the end, and the second entry is the total weight of the accepted edges.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.

@@ -158,7 +158,7 @@ Use this method when the statement asks for the lowest cost between many or all 
 
 #### Checking The Invariant
 
-An invariant is a statement that holds before and after every step of a loop. The invariant here is that after the round for `k`, each entry `dist[i][j]` equals the lowest cost of a route that uses only intermediates 0 to `k`. Two conditions in the code protect it. The loop over `k` is the outermost loop, and no sum starts from the sentinel. Test a graph with no edges, a pair with two equal routes, a self loop, and weights near two billion, where a sum leaves the range of `int`.
+An invariant is a condition that stays true at the start and end of each round of a loop. The invariant here is that after the round for `k`, each entry `dist[i][j]` equals the lowest cost of a route that uses only intermediates 0 to `k`. Two conditions in the code protect it. The loop over `k` is the outermost loop, and no sum starts from the sentinel. Test a graph with no edges, a pair with two equal routes, a self loop, and weights near two billion, where a sum leaves the range of `int`.
 
 #### Avoiding The False Friend
 

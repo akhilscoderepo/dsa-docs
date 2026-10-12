@@ -171,7 +171,7 @@ Use this method when the statement gives an undirected weighted graph and asks f
 
 #### Checking The Invariant
 
-An invariant is a statement that holds before and after every loop pass. Here the invariant is that the tree built so far lies inside some minimum spanning tree, and that the heap holds every crossing edge. It depends on two conditions in the code. The stale test must run before any update, and the method must push only edges from a newly joined vertex. Test a graph with two equal cheapest crossing edges, where either choice is safe. Test a disconnected graph, where the heap empties early. Test one vertex alone, which needs no edge and costs 0.
+An invariant is a fact that no pass of the loop is allowed to break. Here the invariant is that the tree built so far lies inside some minimum spanning tree, and that the heap holds every crossing edge. It depends on two conditions in the code. The stale test must run before any update, and the method must push only edges from a newly joined vertex. Test a graph with two equal cheapest crossing edges, where either choice is safe. Test a disconnected graph, where the heap empties early. Test one vertex alone, which needs no edge and costs 0.
 
 #### Avoiding The False Friend
 

@@ -180,7 +180,7 @@ A false friend is a method that looks correct for the problem and gives a wrong 
 
 **Prerequisites.** The code stage of this lesson.
 
-**Problem.** A directed graph has vertices `0` to `n - 1` and a list `links` of pairs `[a, b]`, each a link from `a` to `b`. An Eulerian cycle is a route that starts and ends at vertex `0` and uses every link exactly once. At each vertex the method consumes the unused link that appears earliest in `links`. Return the cycle as an `int[]` of vertices. Return an empty array when no Eulerian cycle through vertex `0` exists. A graph with no links returns `[0]`.
+**Problem.** A directed graph is given on `n` vertices numbered from zero and has a list `links` of pairs `[a, b]`, each a link from `a` to `b`. An Eulerian cycle is a route that starts and ends at vertex `0` and uses every link exactly once. At each vertex the method consumes the unused link that appears earliest in `links`. Return the cycle as an `int[]` of vertices. Return an empty array when no Eulerian cycle through vertex `0` exists. A graph with no links returns `[0]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
@@ -201,7 +201,7 @@ A false friend is a method that looks correct for the problem and gives a wrong 
 
 **Prerequisites.** The exercise above.
 
-**Problem.** A directed graph has vertices `0` to `n - 1` and a list `links` of pairs `[a, b]`. An Eulerian path is a route that uses every link exactly once and may end at a different vertex than it starts. The start vertex is the one whose out-degree is one more than its in-degree. When every vertex is balanced, the start is the smallest vertex that has an outgoing link. The method always takes the earliest listed unused link out of the current vertex. Return the path as an `int[]`, or an empty array when none exists. A graph with no links returns `[0]`.
+**Problem.** A directed graph labels its vertices from `0` up to `n - 1` and has a list `links` of pairs `[a, b]`. An Eulerian path is a route that uses every link exactly once and may end at a different vertex than it starts. The start vertex is the one whose out-degree is one more than its in-degree. When every vertex is balanced, the start is the smallest vertex that has an outgoing link. The method always takes the earliest listed unused link out of the current vertex. Return the path as an `int[]`, or an empty array when none exists. A graph with no links returns `[0]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
@@ -222,7 +222,7 @@ A false friend is a method that looks correct for the problem and gives a wrong 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A directed multigraph has vertices `0` to `n - 1`. The matrix `count` has size `n` by `n`, and `count[u][v]` is the number of links from `u` to `v`. Self loops are allowed, so `count[u][u]` may be positive. Find an Eulerian cycle that starts and ends at vertex `0` and uses every link exactly once. At each vertex the method takes the link to the smallest target that still has an unused link. Return the cycle as an `int[]`, or an empty array when none exists. A graph with no links returns `[0]`.
+**Problem.** A directed multigraph uses vertex labels `0` through `n - 1`. The matrix `count` has size `n` by `n`, and `count[u][v]` is the number of links from `u` to `v`. Self loops are allowed, so `count[u][u]` may be positive. Find an Eulerian cycle that starts and ends at vertex `0` and uses every link exactly once. At each vertex the method takes the link to the smallest target that still has an unused link. Return the cycle as an `int[]`, or an empty array when none exists. A graph with no links returns `[0]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 100`.
