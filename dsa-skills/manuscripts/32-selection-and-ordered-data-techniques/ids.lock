@@ -1,0 +1,32 @@
+{
+ "lessons": [
+  "merge-counting",
+  "ordered-maps-and-sets",
+  "partition-and-selection",
+  "partition-invariants",
+  "quickselect"
+ ],
+ "exercises": [
+  "mrg-count-inversions",
+  "mrg-equal-values",
+  "mrg-greater-before",
+  "mrg-large-drop",
+  "ord-calendar-booking",
+  "ord-comparator-equality",
+  "ord-floor-ceiling",
+  "ord-frequency-map",
+  "par-all-equal-values",
+  "par-kth-largest-unchanged",
+  "par-lomuto-partition",
+  "par-three-way-partition",
+  "ps-closest-ties",
+  "ps-kth-range",
+  "ps-triple-pairs",
+  "ps-window-smaller-right",
+  "sel-duplicates-extreme",
+  "sel-k-closest-points",
+  "sel-kth-largest",
+  "sel-select-kth-smallest"
+ ],
+ "retired": []
+}
