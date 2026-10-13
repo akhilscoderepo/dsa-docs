@@ -7,7 +7,7 @@
 
 A brokerage backtester replays a price list such as 2, 6, 3, 7 and reports the best profit a strategy could have made. The venue enforces a settlement rule: after a sale on one day, the account cannot buy on the next day. The backtester reports 8, and the compliance team confirms that no legal plan on those four days earns more than 5.
 
-The report is not random noise. It reports the largest profit with the rule ignored. Every printed number is too high whenever the rule applies. Traders who trust the report size their positions on profit that no account can collect.
+The report is not random noise. It reports the largest profit with the rule ignored. Every printed number is too high whenever the rule binds. Traders who trust the report size their positions on profit that no account can collect.
 
 This lesson asks how a table over days can respect rules about what the account holds and when it may act, and how to extend the same table with a trade limit or a fee.
 
@@ -234,7 +234,7 @@ The false friend is a prefix table that adds the best gains day by day and looks
 
 **Hint.** Where does the fee enter the move table? Which day's `free` entry must a purchase read?
 
-**Changed decision.** The fee moves from the sale to the purchase, and the final answer passes through a threshold test. The update order stays the same as in the lesson.
+**Changed decision.** The fee is charged on the purchase, as in this lesson's move table, and the final answer passes through a threshold test. The update order stays the same as in the lesson.
 
 #### [Recognize] Best Time To Buy And Sell Stock III (LeetCode 123)
 <!-- id: sm-k-trades -->

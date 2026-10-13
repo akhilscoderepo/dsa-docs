@@ -125,7 +125,7 @@ static int editDistance(String s, String t) {
 }
 ```
 
-The cost is O(m * n) time and O(m * n) memory. Two empty strings give a 1 by 1 table with answer 0. Row `i` reads only row `i - 1` and itself, so two arrays of length `n + 1` are enough when no script is needed. The exercises below build the table in three forms.
+The cost is O(m * n) time and O(m * n) memory. Two empty strings give a 1 by 1 table with answer 0. Row `i` reads only row `i - 1` and itself, so two arrays of length `n + 1` are enough when no script is needed. The exercises below build the table in four forms.
 
 <!-- stage: applicability -->
 ### Recognizing Strings That Become Each Other

@@ -26,7 +26,7 @@ A report sells before it buys, a diff lists extra changes and a checker misreads
 ```
 
 ```quiz
-{"id": "seq-rev-palindromic-sequences", "q": "A range table is indexed by left and right. In what order must the cells be filled so the inner range is ready?", "options": ["By increasing left only", "By increasing range length", "By decreasing right only, ignoring length", "In any order"], "answer": 1, "explain": "The cell for left and right reads the cell for left plus one and right minus one. That cell has a shorter length, so filling by length finishes it first."}
+{"id": "seq-rev-palindromic-sequences", "q": "A range table is indexed by left and right. Which fill order guarantees that the inner range is ready, whichever other orders also work?", "options": ["By increasing left, one row at a time", "By increasing range length", "By decreasing right only, ignoring length", "In any order"], "answer": 1, "explain": "The cell for left and right reads the cell for left plus one and right minus one. That cell has a shorter length, so filling by length finishes it first."}
 ```
 
 ```quiz

@@ -97,7 +97,7 @@ If `pos` equals `size`, the value is larger than every tail, and `size` grows by
 
 #### Quadratic Table On The Opening Readings
 
-The first run fills the length table for the readings 5, 1, 6, 2, 7, 3 and 8. Each cell is one reading. The pointer `i` marks the reading whose entry is being computed, and the pointer `j` marks the earlier reading that it is compared with. The variable `len` is `dp[j]`, and In this trace only, `best` is the current entry for `i`.
+The first run fills the length table for the readings 5, 1, 6, 2, 7, 3 and 8. Each cell is one reading. The pointer `i` marks the reading whose entry is being computed, and the pointer `j` marks the earlier reading that it is compared with. The variable `len` is `dp[j]`, and in this trace only, `best` is the current entry for `i`.
 
 Index 2 holds 6 and extends both 5 and 1, so its length is 2. Index 4 holds 7 and extends 6 at length 2, so its length is 3. Index 6 holds 8, which is larger than everything, and it takes the best earlier length 3 plus one. The final length is 4, the same as the subsequence 5, 6, 7, 8 or 1, 2, 3, 8.
 
