@@ -4,9 +4,9 @@
 #### Solution: [Build] Compress Sparse Coordinates (Author exercise)
 <!-- id: rq31-compress-sparse -->
 
-**Approach.** Sorting and removing duplicates produces the array `keys`, whose index plus 1 is the rank of a value.
+**Approach.** Sorting and removing duplicates produces the array `keys`, whose index is the number of smaller keys.
 
-A query is answered by binary search on `keys`. A found index `p` gives rank `p + 1`. A missing value gives a negative result from `Arrays.binarySearch`, and that case returns 0, which no rank uses. The invariant is that `keys` is strictly increasing, so binary search is valid and equal values land on one index.
+A query is answered by binary search on `keys`. A found index `p` is exactly the number of smaller keys. A missing value gives the negative result `-p - 1` from `Arrays.binarySearch`, where `p` is the insertion point, which is again the number of smaller keys. The invariant is that `keys` is strictly increasing, so binary search is valid and equal values land on one index.
 
 **Complexity.**
 
@@ -18,7 +18,7 @@ import java.util.*;
 
 public final class CompressSparse {
     /**
-     * Returns the 1-based rank of each query among the distinct values, or 0 when absent.
+     * Returns, for each query, the number of distinct values strictly smaller than it.
      * Time: O((n + q) log n). Space: O(n + q).
      * Invariant: keys[0..m-1] is strictly increasing, so binary search finds each value at most once.
      */
@@ -40,23 +40,23 @@ public final class CompressSparse {
         int[] out = new int[queries.length];
         // Each iteration performs one O(log m) binary search.
         for (int i = 0; i < queries.length; i++) {
-            // A present value gives an index at or above 0.
+            // A present value gives its index; an absent value gives -(insertion point) - 1.
             int p = Arrays.binarySearch(keys, 0, m, queries[i]);
-            // Present values map to index + 1; absent values map to 0.
-            out[i] = p >= 0 ? p + 1 : 0;
+            // Both cases give the number of keys below the query.
+            out[i] = p >= 0 ? p : -p - 1;
         }
         // Return the answers in query order.
         return out;
     }
 
     public static void main(String[] args) {
-        // Checks Example 1: duplicates share a rank and an absent query returns 0.
-        if (!Arrays.equals(ranksOf(new int[]{900, -40, 900, 12, 7000000}, new int[]{12, 900, 13, -40, 7000000}), new int[]{2, 3, 0, 1, 4}))
+        // Checks Example 1: duplicates count once and an absent query still gets its insertion point.
+        if (!Arrays.equals(ranksOf(new int[]{900, -40, 900, 12, 7000000}, new int[]{12, 900, 13, -40, 7000000}), new int[]{1, 2, 2, 0, 3}))
             throw new AssertionError("example 1");
         // Checks Example 2: an empty value array makes every query absent.
         if (!Arrays.equals(ranksOf(new int[]{}, new int[]{5}), new int[]{0})) throw new AssertionError("example 2");
-        // Checks the Java behaviour that an absent value yields a negative search result.
-        if (Arrays.binarySearch(new int[]{1, 3}, 2) >= 0) throw new AssertionError("absent value must be negative");
+        // Checks the Java behaviour that an absent value yields -(insertion point) - 1.
+        if (Arrays.binarySearch(new int[]{1, 3}, 2) != -2) throw new AssertionError("absent value must be negative");
         // Checks the input arrays stay unchanged.
         int[] vals = {5, 1, 5};
         ranksOf(vals, new int[]{1});
@@ -72,7 +72,7 @@ public final class CompressSparse {
             TreeSet<Integer> set = new TreeSet<>();
             for (int x : v) set.add(x);
             int[] expect = new int[q.length];
-            for (int i = 0; i < q.length; i++) expect[i] = set.contains(q[i]) ? set.headSet(q[i]).size() + 1 : 0;
+            for (int i = 0; i < q.length; i++) expect[i] = set.headSet(q[i]).size();
             if (!Arrays.equals(ranksOf(v, q), expect)) throw new AssertionError("random " + iter);
         }
     }

@@ -22,7 +22,7 @@ Coordinate compression sorts the distinct values and replaces each value with it
 
 #### The Fenwick Tree Adds Cheap Prefix Sums
 
-The Fenwick tree from the first lesson of this chapter stores one `long` per position in a one-based array. It supports `add(pos, delta)` and `prefix(pos)`, which returns the sum of positions 1 through `pos`. Both operations take O(log m) time for `m` positions.
+The Fenwick tree from the first lesson of this chapter stores one `long` per position in a one-based array. It supports `add(pos, delta)` and `prefix(pos)`, which returns the sum of positions 1 through `pos`. Both operations take O(log m) time for `m` positions. The code in this lesson uses the internal one-based form, so `add` takes the rank itself. The first lesson's `add` took a zero-based position and added 1 before the loop.
 
 The two skills fit because each covers the weakness of the other. Compression gives small positions that a tree array can hold, and the tree answers how many stored items lie at or below a position. Neither skill alone solves the sensor problem.
 
@@ -61,7 +61,7 @@ The scan costs O(n^2) time. At roughly one billion simple comparisons per second
 
 #### Find The Two Opposing Costs
 
-A counter array indexed by value answers a query by summing the cells below the reading. That sum still costs time proportional to the number of cells, and the array needs a cell per possible value. The scan trades memory for time, and the value-indexed array trades time and memory in the wrong direction. The goal is a structure whose memory depends on the number of readings and whose query cost depends on the logarithm of that number.
+A counter array indexed by value answers a query by summing the cells below the reading. That sum still costs time proportional to the number of cells, and the array needs a cell per possible value. The scan needs O(1) extra memory but O(n^2) time. The value-indexed array needs O(V) memory for the largest value `V`, and a query still costs O(V) time. Both costs are too high. The goal is a structure whose memory depends on the number of readings and whose query cost depends on the logarithm of that number.
 
 <!-- stage: insight -->
 ### Rank Values Then Count With A Tree
@@ -74,7 +74,7 @@ The two weaknesses have separate fixes. Order is the only property the question 
 
 Sort the distinct values of the input into a list `keys` in increasing order. The **dense rank** of a value is its index in `keys` plus 1, so ranks run from 1 to `m`, where `m` is the number of distinct values. Equal values share one rank, and no rank is skipped. For `[30, -5, 30, 1000000, -5, 7]`, the keys are `[-5, 7, 30, 1000000]`, and the ranks are 3, 1, 3, 4, 1, 2.
 
-The **rank lookup** finds a value's rank with binary search on `keys`. It costs O(log m) time per reading and needs no hash table. Sorting costs O(n log n) time once, and the array `keys` uses O(m) memory. The lookup uses the sorted array, so the order of the values stays intact.
+The **rank lookup** finds a value's rank with binary search on `keys`. It costs O(log m) time per reading and needs no hash table. When the value is absent, `Arrays.binarySearch` returns `-p - 1`, where `p` is the number of keys smaller than the value, so the same call also counts the keys below any bound. Sorting costs O(n log n) time once, and the array `keys` uses O(m) memory. The lookup uses the sorted array, so the order of the values stays intact.
 
 #### Count Stored Readings With A Prefix Query
 
@@ -95,7 +95,7 @@ The code below uses these quantities for the stream `[30, -5, 30, 1000000, -5, 7
 - **smaller** is `prefix(rank - 1)`, the number of earlier readings with a strictly smaller value.
 - **total** is the running sum of `smaller` over all processed readings.
 
-In the trace, the variable `counts` shows how many readings of each rank have been added, listed from rank 1 to rank `m`. The array `tree` holds sums of blocks of those counts, so a trace shows `counts` because it is easier to read.
+In the code, the Fenwick object is named `seen`, and `smaller` is stored directly in `out[i]`. The running `total` appears only in the trace, as a check on the sum of the answers. In the trace, the variable `counts` shows how many readings of each rank have been added, listed from rank 1 to rank `m`. The array `tree` holds sums of blocks of those counts, so a trace shows `counts` because it is easier to read.
 
 <!-- stage: trace -->
 ### Process Two Streams Of Readings
@@ -109,7 +109,7 @@ The first reading, 30, has rank 3 and finds an empty tree, so its answer is 0. T
 The reading 1000000 has rank 4, and `prefix(3)` counts the two 30s and the -5, so the answer is 3. The next -5 answers 0, and the final 7 has rank 2, so it counts only the two readings of -5 and answers 2.
 
 ```trace
-{"cells":[30,-5,30,1000000,-5,7],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"keys":"[-5, 7, 30, 1000000]","counts":"[0, 0, 0, 0]","total":0},"note":"Compression gives the keys [-5, 7, 30, 1000000]. The tree starts empty, so every count is 0."},{"at":{"i":0},"vars":{"value":30,"rank":3,"smaller":0,"counts":"[0, 0, 1, 0]","total":0},"note":"Step 1 reads 30, which has rank 3. The query over ranks below 3 returns 0, so the running total becomes 0. Rank 3 then holds 1 reading(s)."},{"at":{"i":1},"vars":{"value":-5,"rank":1,"smaller":0,"counts":"[1, 0, 1, 0]","total":0},"note":"Step 2 reads -5, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 0. Rank 1 then holds 1 reading(s)."},{"at":{"i":2},"vars":{"value":30,"rank":3,"smaller":1,"counts":"[1, 0, 2, 0]","total":1},"note":"Step 3 reads 30, which has rank 3. The query over ranks below 3 returns 1, so the running total becomes 1. Rank 3 then holds 2 reading(s)."},{"at":{"i":3},"vars":{"value":1000000,"rank":4,"smaller":3,"counts":"[1, 0, 2, 1]","total":4},"note":"Step 4 reads 1000000, which has rank 4. The query over ranks below 4 returns 3, so the running total becomes 4. Rank 4 then holds 1 reading(s)."},{"at":{"i":4},"vars":{"value":-5,"rank":1,"smaller":0,"counts":"[2, 0, 2, 1]","total":4},"note":"Step 5 reads -5, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 4. Rank 1 then holds 2 reading(s)."},{"at":{"i":5},"vars":{"value":7,"rank":2,"smaller":2,"counts":"[2, 1, 2, 1]","total":6},"note":"Step 6 reads 7, which has rank 2. The query over ranks below 2 returns 2, so the running total becomes 6. Rank 2 then holds 1 reading(s)."}]}
+{"cells":[30,-5,30,1000000,-5,7],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"keys":"[-5, 7, 30, 1000000]","counts":"[0, 0, 0, 0]","total":0},"note":"Compression gives the keys [-5, 7, 30, 1000000]. The tree starts empty, so every count is 0."},{"at":{"i":0},"vars":{"value":30,"rank":3,"smaller":0,"counts":"[0, 0, 1, 0]","total":0},"note":"Step 1 reads 30, which has rank 3. The query over ranks below 3 returns 0, so the running total becomes 0. The count stored at rank 3 is now 1."},{"at":{"i":1},"vars":{"value":-5,"rank":1,"smaller":0,"counts":"[1, 0, 1, 0]","total":0},"note":"Step 2 reads -5, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 0. The count stored at rank 1 is now 1."},{"at":{"i":2},"vars":{"value":30,"rank":3,"smaller":1,"counts":"[1, 0, 2, 0]","total":1},"note":"Step 3 reads 30, which has rank 3. The query over ranks below 3 returns 1, so the running total becomes 1. The count stored at rank 3 is now 2."},{"at":{"i":3},"vars":{"value":1000000,"rank":4,"smaller":3,"counts":"[1, 0, 2, 1]","total":4},"note":"Step 4 reads 1000000, which has rank 4. The query over ranks below 4 returns 3, so the running total becomes 4. The count stored at rank 4 is now 1."},{"at":{"i":4},"vars":{"value":-5,"rank":1,"smaller":0,"counts":"[2, 0, 2, 1]","total":4},"note":"Step 5 reads -5, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 4. The count stored at rank 1 is now 2."},{"at":{"i":5},"vars":{"value":7,"rank":2,"smaller":2,"counts":"[2, 1, 2, 1]","total":6},"note":"Step 6 reads 7, which has rank 2. The query over ranks below 2 returns 2, so the running total becomes 6. The count stored at rank 2 is now 1."}]}
 ```
 
 #### A Stream With Extreme Values
@@ -119,7 +119,7 @@ The second stream is `[9, 2000000000, -3, 9, 2000000000, 0, -3]`. The keys are `
 The hardest step is the fifth reading. The value 2,000,000,000 appears for the second time. Its rank is 4, and `prefix(3)` counts the readings 9, -3 and 9, so the answer is 3. The earlier 2,000,000,000 does not count. The last step repeats the lowest value -3 and answers 0, because no earlier reading is smaller.
 
 ```trace
-{"cells":[9,2000000000,-3,9,2000000000,0,-3],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"keys":"[-3, 0, 9, 2000000000]","counts":"[0, 0, 0, 0]","total":0},"note":"Compression gives the keys [-3, 0, 9, 2000000000]. The tree starts empty, so every count is 0."},{"at":{"i":0},"vars":{"value":9,"rank":3,"smaller":0,"counts":"[0, 0, 1, 0]","total":0},"note":"Step 1 reads 9, which has rank 3. The query over ranks below 3 returns 0, so the running total becomes 0. Rank 3 then holds 1 reading(s)."},{"at":{"i":1},"vars":{"value":2000000000,"rank":4,"smaller":1,"counts":"[0, 0, 1, 1]","total":1},"note":"Step 2 reads 2000000000, which has rank 4. The query over ranks below 4 returns 1, so the running total becomes 1. Rank 4 then holds 1 reading(s)."},{"at":{"i":2},"vars":{"value":-3,"rank":1,"smaller":0,"counts":"[1, 0, 1, 1]","total":1},"note":"Step 3 reads -3, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 1. Rank 1 then holds 1 reading(s)."},{"at":{"i":3},"vars":{"value":9,"rank":3,"smaller":1,"counts":"[1, 0, 2, 1]","total":2},"note":"Step 4 reads 9, which has rank 3. The query over ranks below 3 returns 1, so the running total becomes 2. Rank 3 then holds 2 reading(s)."},{"at":{"i":4},"vars":{"value":2000000000,"rank":4,"smaller":3,"counts":"[1, 0, 2, 2]","total":5},"note":"Step 5 reads 2000000000, which has rank 4. The query over ranks below 4 returns 3, so the running total becomes 5. Rank 4 then holds 2 reading(s)."},{"at":{"i":5},"vars":{"value":0,"rank":2,"smaller":1,"counts":"[1, 1, 2, 2]","total":6},"note":"Step 6 reads 0, which has rank 2. The query over ranks below 2 returns 1, so the running total becomes 6. Rank 2 then holds 1 reading(s)."},{"at":{"i":6},"vars":{"value":-3,"rank":1,"smaller":0,"counts":"[2, 1, 2, 2]","total":6},"note":"Step 7 reads -3, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 6. Rank 1 then holds 2 reading(s)."}]}
+{"cells":[9,2000000000,-3,9,2000000000,0,-3],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"keys":"[-3, 0, 9, 2000000000]","counts":"[0, 0, 0, 0]","total":0},"note":"Compression gives the keys [-3, 0, 9, 2000000000]. The tree starts empty, so every count is 0."},{"at":{"i":0},"vars":{"value":9,"rank":3,"smaller":0,"counts":"[0, 0, 1, 0]","total":0},"note":"Step 1 reads 9, which has rank 3. The query over ranks below 3 returns 0, so the running total becomes 0. The count stored at rank 3 is now 1."},{"at":{"i":1},"vars":{"value":2000000000,"rank":4,"smaller":1,"counts":"[0, 0, 1, 1]","total":1},"note":"Step 2 reads 2000000000, which has rank 4. The query over ranks below 4 returns 1, so the running total becomes 1. The count stored at rank 4 is now 1."},{"at":{"i":2},"vars":{"value":-3,"rank":1,"smaller":0,"counts":"[1, 0, 1, 1]","total":1},"note":"Step 3 reads -3, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 1. The count stored at rank 1 is now 1."},{"at":{"i":3},"vars":{"value":9,"rank":3,"smaller":1,"counts":"[1, 0, 2, 1]","total":2},"note":"Step 4 reads 9, which has rank 3. The query over ranks below 3 returns 1, so the running total becomes 2. The count stored at rank 3 is now 2."},{"at":{"i":4},"vars":{"value":2000000000,"rank":4,"smaller":3,"counts":"[1, 0, 2, 2]","total":5},"note":"Step 5 reads 2000000000, which has rank 4. The query over ranks below 4 returns 3, so the running total becomes 5. The count stored at rank 4 is now 2."},{"at":{"i":5},"vars":{"value":0,"rank":2,"smaller":1,"counts":"[1, 1, 2, 2]","total":6},"note":"Step 6 reads 0, which has rank 2. The query over ranks below 2 returns 1, so the running total becomes 6. The count stored at rank 2 is now 1."},{"at":{"i":6},"vars":{"value":-3,"rank":1,"smaller":0,"counts":"[2, 1, 2, 2]","total":6},"note":"Step 7 reads -3, which has rank 1. The query over ranks below 1 returns 0, so the running total becomes 6. The count stored at rank 1 is now 2."}]}
 ```
 
 <!-- stage: code -->
@@ -195,22 +195,22 @@ Skip compression when the values already form a small dense range, since a direc
 
 **Prerequisites.** The sorted distinct keys and the rank lookup from this lesson.
 
-**Problem.** An `int[] values` and an `int[] queries` are given. Let `keys` be the distinct entries of `values` in increasing order. The rank of a value is its 1-based position in `keys`. For each query, return its rank if the value occurs in `values`, and return 0 if it does not occur. Return the answers in query order.
+**Problem.** An `int[] values` and an `int[] queries` are given. Let `keys` be the distinct entries of `values` in increasing order. The rank of a value is its 1-based position in `keys`. For each query, return how many entries of `keys` are strictly smaller than the query, whether or not the query occurs in `values`. Return the answers in query order.
 
 **Constraints.** The limits are:
 - **`values`** has length from 0 to 100,000, and the array may be empty.
 - **`queries`** has length from 1 to 100,000.
-- **Entries** are `int` values between -10^9 and 10^9, and ties share one rank.
+- **Entries** are `int` values between -10^9 and 10^9, and equal entries count once.
 - **Result** is an `int[]` with one entry per query.
 - **Mutation** of the input arrays is not allowed.
 
-**Example 1.** Input `values = [900, -40, 900, 12, 7000000]`, `queries = [12, 900, 13, -40, 7000000]`, output `[2, 3, 0, 1, 4]`.
+**Example 1.** Input `values = [900, -40, 900, 12, 7000000]`, `queries = [12, 900, 13, -40, 7000000]`, output `[1, 2, 2, 0, 3]`.
 
-**Example 2.** Input `values = []`, `queries = [5]`, output `[0]`, since no value is stored.
+**Example 2.** Input `values = []`, `queries = [5]`, output `[0]`, since no value is stored and no key is smaller.
 
 **Hint.** How do you remove duplicates after sorting? What does `Arrays.binarySearch` return for a value that is absent?
 
-**Changed decision.** The task asks for a rank or 0 for absent values, and it does not rank the input itself. The lookup must tell a present value from a missing one.
+**Changed decision.** The task asks for the count of smaller keys and not the rank, so an absent query must still get an answer. The lookup must turn a missing value into its insertion point.
 
 #### [Vary] Range Sum With Sparse Keys (LeetCode 307)
 <!-- id: rq31-sparse-key-sum -->

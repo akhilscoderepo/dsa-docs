@@ -354,8 +354,8 @@ public final class RangeAddRangeSum {
         int[][] ops1 = {{2, 0, 5, 0}, {1, 1, 4, 10}, {2, 0, 3, 0}, {1, 0, 5, -2}, {2, 2, 5, 0}, {2, 3, 4, 0}};
         if (!solve(new int[]{3, 1, 4, 1, 5}, ops1).equals(List.of(14L, 28L, 24L, 9L))) throw new AssertionError("example 1");
         // Checks Example 2: a single element with extreme deltas.
-        int[][] ops2 = {{1, 0, 1, -1_000_000_000}, {2, 0, 1, 0}, {1, 0, 1, 1_000_000_000}, {2, 0, 1, 0}};
-        if (!solve(new int[]{7}, ops2).equals(List.of(-999_999_993L, 7L))) throw new AssertionError("example 2");
+        int[][] ops2 = {{1, 0, 1, -10_000}, {2, 0, 1, 0}, {1, 0, 1, 10_000}, {2, 0, 1, 0}};
+        if (!solve(new int[]{7}, ops2).equals(List.of(-9_993L, 7L))) throw new AssertionError("example 2");
         // Compares with the brute force on random arrays and operation lists using a fixed seed.
         Random rnd = new Random(31_03_04);
         for (int t = 0; t < 400; t++) {

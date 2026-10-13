@@ -41,10 +41,10 @@ The array in the naive method has `V + 1` slots, where `V` is the largest value.
 
 #### Spot What The Answer Needs
 
-Take the values 7, 40 and 1,000,000. The count of values below 40 is 1. It stays 1 if the values become 2, 3 and 4. Only two facts about the data affect any count: which value is smaller than which, and which values are equal. Memory should therefore depend on the number of distinct values, which is at most `n`, and not on `V`.
+Take the values 7, 40 and 1,000,000. The count of values below 40 is 1. It stays 1 if the values become 2, 3 and 4 and the question asks about 3. Only two facts about the data affect any count: which value is smaller than which, and which values are equal. Memory should therefore depend on the number of distinct values, which is at most `n`, and not on `V`.
 
 <!-- stage: insight -->
-### Replace Each Value By Its Position
+### Replace Each Value By Its Rank
 
 #### Build The Table Of Distinct Values
 
@@ -61,7 +61,7 @@ The mapping preserves exactly what counting needs. For two values `a` and `b`, `
 The invariant of this method is that the table is sorted and free of duplicates. Binary search is only correct under that condition, and the dense ranks are only gap-free under it.
 
 <!-- stage: variables -->
-### Quantities Held During Compression
+### Quantities To Track While Compressing
 
 These items describe the state of one compression.
 
@@ -87,14 +87,14 @@ The second 900 lands at position 3 again, so it receives rank 4 once more. The r
 {"cells":[900,-5,1000000000,900,42,-5,7],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"m":5},"note":"Sorting and removing duplicates gives the table [-5, 7, 42, 900, 1000000000] with 5 distinct values."},{"at":{"i":0},"vars":{"value":900,"position":3,"rank":4},"note":"The value 900 sits at table position 3, so its rank is 4."},{"at":{"i":1},"vars":{"value":-5,"position":0,"rank":1},"note":"The value -5 sits at table position 0, so its rank is 1."},{"at":{"i":2},"vars":{"value":1000000000,"position":4,"rank":5},"note":"The value 1000000000 sits at table position 4, so its rank is 5."},{"at":{"i":3},"vars":{"value":900,"position":3,"rank":4},"note":"The value 900 sits at table position 3, so its rank is 4."},{"at":{"i":4},"vars":{"value":42,"position":2,"rank":3},"note":"The value 42 sits at table position 2, so its rank is 3."},{"at":{"i":5},"vars":{"value":-5,"position":0,"rank":1},"note":"The value -5 sits at table position 0, so its rank is 1."},{"at":{"i":6},"vars":{"value":7,"position":1,"rank":2},"note":"The value 7 sits at table position 1, so its rank is 2."}]}
 ```
 
-#### Count Smaller Values With A Fenwick Tree
+#### Count Both Sides With A Fenwick Tree
 
-The next input is the instruction order 8, 2, 5, 5, 9, 1, 5. Each value is first compressed, then counted against the values inserted before it. The cost of an insertion is the smaller of two counts: the inserted values strictly below it and the inserted values strictly above it.
+The second trace puts the values 8, 2, 5, 5, 9, 1, 5 one at a time into an initially empty sorted container. Inserting a value costs the smaller of two counts: the inserted values strictly below it and the inserted values strictly above it. Each value is compressed to its rank, and a Fenwick tree over the ranks answers both counts.
 
 The table is 1, 2, 5, 8 and 9. The third value, 5, arrives after 8 and 2, so one value lies below it and one lies above it. The fourth value, 5, finds the earlier 5 in neither count, because the counts are strict. That strict comparison is the step to watch, since `prefix(r)` would include the equal value and `prefix(r - 1)` does not.
 
 ```trace
-{"cells":[8,2,5,5,9,1,5],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"m":5,"total":0},"note":"The table is [1, 2, 5, 8, 9], so the tree has 5 positions and starts empty."},{"at":{"i":0},"vars":{"rank":4,"less":0,"greater":0,"cost":0,"total":0},"note":"The value 8 has rank 4. 0 earlier values are below it and 0 are above it, so the cost is 0 and the total is 0."},{"at":{"i":1},"vars":{"rank":2,"less":0,"greater":1,"cost":0,"total":0},"note":"The value 2 has rank 2. 0 earlier values are below it and 1 are above it, so the cost is 0 and the total is 0."},{"at":{"i":2},"vars":{"rank":3,"less":1,"greater":1,"cost":1,"total":1},"note":"The value 5 has rank 3. 1 earlier values are below it and 1 are above it, so the cost is 1 and the total is 1."},{"at":{"i":3},"vars":{"rank":3,"less":1,"greater":1,"cost":1,"total":2},"note":"The value 5 has rank 3. 1 earlier values are below it and 1 are above it, so the cost is 1 and the total is 2."},{"at":{"i":4},"vars":{"rank":5,"less":4,"greater":0,"cost":0,"total":2},"note":"The value 9 has rank 5. 4 earlier values are below it and 0 are above it, so the cost is 0 and the total is 2."},{"at":{"i":5},"vars":{"rank":1,"less":0,"greater":5,"cost":0,"total":2},"note":"The value 1 has rank 1. 0 earlier values are below it and 5 are above it, so the cost is 0 and the total is 2."},{"at":{"i":6},"vars":{"rank":3,"less":2,"greater":2,"cost":2,"total":4},"note":"The value 5 has rank 3. 2 earlier values are below it and 2 are above it, so the cost is 2 and the total is 4."}]}
+{"cells":[8,2,5,5,9,1,5],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"m":5,"total":0},"note":"The table is [1, 2, 5, 8, 9], so the tree has 5 positions and starts empty."},{"at":{"i":0},"vars":{"rank":4,"less":0,"greater":0,"cost":0,"total":0},"note":"The value 8 has rank 4. The count of earlier values below it is 0 and above it is 0, so the cost is 0 and the total is 0."},{"at":{"i":1},"vars":{"rank":2,"less":0,"greater":1,"cost":0,"total":0},"note":"The value 2 has rank 2. The count of earlier values below it is 0 and above it is 1, so the cost is 0 and the total is 0."},{"at":{"i":2},"vars":{"rank":3,"less":1,"greater":1,"cost":1,"total":1},"note":"The value 5 has rank 3. The count of earlier values below it is 1 and above it is 1, so the cost is 1 and the total is 1."},{"at":{"i":3},"vars":{"rank":3,"less":1,"greater":1,"cost":1,"total":2},"note":"The value 5 has rank 3. The count of earlier values below it is 1 and above it is 1, so the cost is 1 and the total is 2."},{"at":{"i":4},"vars":{"rank":5,"less":4,"greater":0,"cost":0,"total":2},"note":"The value 9 has rank 5. The count of earlier values below it is 4 and above it is 0, so the cost is 0 and the total is 2."},{"at":{"i":5},"vars":{"rank":1,"less":0,"greater":5,"cost":0,"total":2},"note":"The value 1 has rank 1. The count of earlier values below it is 0 and above it is 5, so the cost is 0 and the total is 2."},{"at":{"i":6},"vars":{"rank":3,"less":2,"greater":2,"cost":2,"total":4},"note":"The value 5 has rank 3. The count of earlier values below it is 2 and above it is 2, so the cost is 2 and the total is 4."}]}
 ```
 
 <!-- stage: code -->
@@ -124,7 +124,7 @@ The first method sorts a copy and writes each first-of-run value forward, which 
 
 #### Recognize The Pattern
 
-Compress when the values are sparse, huge or negative, and the question depends only on order and equality. Typical cases are counting smaller earlier values with a Fenwick tree, counting inversions, and sweeping over interval endpoints. The invariant to protect is that the table is sorted without duplicates, and that every query value either appears in the table or is handled as absent.
+Compress when the values are sparse, huge or negative, and the question depends only on order and equality. Typical cases are counting smaller earlier values with a Fenwick tree, counting inversions (pairs where an earlier value is larger than a later one), and sweeping over interval endpoints. The invariant to protect is that the table is sorted without duplicates, and that every query value either appears in the table or is handled as absent.
 
 #### Avoid The False Friend
 

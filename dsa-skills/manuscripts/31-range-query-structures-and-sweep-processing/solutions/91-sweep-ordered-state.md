@@ -174,9 +174,9 @@ public final class SkylineTallest {
     }
 
     public static void main(String[] args) {
-        // Checks Example 1: height 15 starts at coordinate 3 and ends at 7.
-        int[][] ex1 = {{2, 9, 10}, {3, 7, 15}, {5, 12, 12}, {15, 20, 10}, {19, 24, 8}};
-        if (!java.util.Arrays.equals(tallest(ex1), new int[]{15, 3, 7})) throw new AssertionError("example 1");
+        // Checks Example 1: height 9 starts at coordinate 2 and ends at 8.
+        int[][] ex1 = {{1, 5, 7}, {2, 4, 9}, {3, 8, 9}, {6, 10, 4}};
+        if (!java.util.Arrays.equals(tallest(ex1), new int[]{9, 2, 8})) throw new AssertionError("example 1");
         // Checks Example 2: two buildings of equal height keep the stretch alive when one of them ends.
         if (!java.util.Arrays.equals(tallest(new int[][]{{1, 4, 6}, {2, 3, 6}}), new int[]{6, 1, 4})) throw new AssertionError("example 2");
         // Checks the touching case: the end at 3 and the start at 3 give one stretch from 1 to 5.
@@ -203,7 +203,7 @@ public final class SkylineTallest {
 
 **Approach.** The solution turns each interval into two events and sorts them with a tie rule that depends on the interval kind.
 
-For half-open intervals, an end at coordinate `x` must come before a start at `x`, because the ended interval no longer contains `x`. For closed intervals, a start at `x` must come before an end at `x`, because the ending interval still contains `x`. The comparator sorts by coordinate first and by the delta sign second, with the sign order reversed between the two kinds. The sweep adds each delta and records the largest running load after every event. An empty half-open interval, where `start == end`, contains no coordinate, so the solution skips it.
+For half-open intervals, an end at coordinate `x` must come before a start at `x`, because the ended interval no longer contains `x`. For closed intervals, a start at `x` must come before an end at `x`, because the ending interval still contains `x`. The comparator sorts by coordinate first and by the delta sign second, with the sign order reversed between the two kinds. The sweep adds each delta and records the largest running load after every event, together with the coordinate of the first event that reaches it. An empty half-open interval, where `start == end`, contains no coordinate, so the solution skips it.
 
 The invariant is that the running load after any prefix of events never exceeds the true overlap at the coordinate being processed, and it equals the true overlap after the last event at that coordinate. The tie rule makes the first part hold.
 
@@ -218,12 +218,12 @@ import java.util.Random;
 
 public final class EqualCoordinateEvents {
     /**
-     * Returns the largest number of intervals that contain one common integer coordinate.
+     * Returns {largest number of intervals that contain one common integer coordinate, smallest such coordinate}, or {0, -1}.
      * Time: O(n log n), because sorting 2n events dominates the linear sweep.
      * Space: O(n), because the event table holds two entries per interval.
      * Invariant: with the tie rule applied, the running load equals the overlap after each event.
      */
-    static int maxOverlap(int[][] intervals, boolean closed) {
+    static int[] maxOverlap(int[][] intervals, boolean closed) {
         // Events are {coordinate, delta}; two per interval.
         int[][] ev = new int[intervals.length * 2][];
         // Count of events actually created, because empty half-open intervals add none.
@@ -245,42 +245,42 @@ public final class EqualCoordinateEvents {
             return closed ? Integer.compare(b[1], a[1]) : Integer.compare(a[1], b[1]);
         });
         // The running load and the best load seen so far.
-        int load = 0, best = 0;
+        int load = 0, best = 0, where = -1;
         // Apply events in sorted order, which is the sweep order.
         for (int i = 0; i < m; i++) {
             // Each event changes the load by its delta.
             load += ev[i][1];
-            // Track the largest load after any event.
-            best = Math.max(best, load);
+            // A strictly larger load marks the first coordinate that reaches the new best.
+            if (load > best) { best = load; where = ev[i][0]; }
         }
-        // Return the largest overlap.
-        return best;
+        // Return the largest overlap and where it first occurs.
+        return new int[]{best, where};
     }
 
     /** Brute-force oracle that counts containing intervals at every integer coordinate. */
-    static int oracle(int[][] intervals, boolean closed) {
+    static int[] oracle(int[][] intervals, boolean closed) {
         // The best count over all coordinates.
-        int best = 0;
+        int best = 0, where = -1;
         // Coordinates 0..59 cover the random inputs.
         for (int x = 0; x < 60; x++) {
             // Count the intervals that contain x under the chosen kind.
             int c = 0;
             for (int[] iv : intervals) if (closed ? (iv[0] <= x && x <= iv[1]) : (iv[0] <= x && x < iv[1])) c++;
-            best = Math.max(best, c);
+            if (c > best) { best = c; where = x; }
         }
-        // Return the best count.
-        return best;
+        // Return the best count and its first coordinate.
+        return new int[]{best, where};
     }
 
     public static void main(String[] args) {
         // Checks Example 1: touching intervals overlap only when the ends are included.
         int[][] touching = {{1, 3}, {3, 5}};
-        if (maxOverlap(touching, false) != 1) throw new AssertionError("half-open touching");
-        if (maxOverlap(touching, true) != 2) throw new AssertionError("closed touching");
+        if (!Arrays.equals(maxOverlap(touching, false), new int[]{1, 1})) throw new AssertionError("half-open touching");
+        if (!Arrays.equals(maxOverlap(touching, true), new int[]{2, 3})) throw new AssertionError("closed touching");
         // Checks Example 2: the zero-length interval counts only when the ends are included.
         int[][] mixed = {{2, 6}, {6, 9}, {4, 6}, {6, 6}};
-        if (maxOverlap(mixed, false) != 2) throw new AssertionError("half-open mixed");
-        if (maxOverlap(mixed, true) != 4) throw new AssertionError("closed mixed");
+        if (!Arrays.equals(maxOverlap(mixed, false), new int[]{2, 4})) throw new AssertionError("half-open mixed");
+        if (!Arrays.equals(maxOverlap(mixed, true), new int[]{4, 6})) throw new AssertionError("closed mixed");
         // Checks 3000 random inputs for both kinds against the oracle with a fixed seed.
         Random rnd = new Random(9103L);
         for (int iter = 0; iter < 3000; iter++) {
@@ -290,8 +290,8 @@ public final class EqualCoordinateEvents {
                 int s = rnd.nextInt(30);
                 iv[i] = new int[]{s, s + rnd.nextInt(10)};
             }
-            if (maxOverlap(iv, false) != oracle(iv, false)) throw new AssertionError("half-open mismatch at " + iter);
-            if (maxOverlap(iv, true) != oracle(iv, true)) throw new AssertionError("closed mismatch at " + iter);
+            if (!Arrays.equals(maxOverlap(iv, false), oracle(iv, false))) throw new AssertionError("half-open mismatch at " + iter);
+            if (!Arrays.equals(maxOverlap(iv, true), oracle(iv, true))) throw new AssertionError("closed mismatch at " + iter);
         }
     }
 }

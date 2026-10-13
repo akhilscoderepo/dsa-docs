@@ -12,7 +12,7 @@ The segment tree from the previous lesson answers a range sum in O(log n). It al
 <!-- stage: naive -->
 ### Update Every Position One At A Time
 
-The direct approach reuses the point update. For each position in the range, it descends from the root to that leaf, adds the amount and recomputes the sums on the way back up.
+This lesson writes ranges as half-open `[lo, hi)`, which includes `lo` and excludes `hi`, where the previous lesson used inclusive ranges. The direct approach reuses the point update. For each position in the range, it descends from the root to that leaf, adds the amount and recomputes the sums on the way back up.
 
 ```java
 // tree[k] holds the sum of positions [lo, hi) for node k; node 1 is the root.
@@ -46,7 +46,7 @@ About 2.4 million node visits for a single update. Each of the 131,072 descents 
 
 The tree with 131,072 leaves has 18 levels. One descent visits 18 nodes, so the full-range update makes 131,072 times 18 visits, which is about 2.36 million. A workload of 100,000 such updates costs about 2.4 times 10^11 visits. The range update costs O(k log n) for a range of length `k`, which is O(n log n) in the worst case. A sum query still costs only O(log n), so the updates dominate everything.
 
-#### Find The Stale Children
+#### See Why Skipped Children Are Wrong
 
 A range query already avoids visiting every leaf. It stops at nodes whose range lies entirely inside the query range and reads their stored sums. A range update can stop at the same nodes. A node that covers positions `lo` to `hi` and lies inside the update range gains `delta * (hi - lo)` in its own sum, and the update stops there. At most about 2 log n nodes qualify, so the visit count drops to O(log n).
 
@@ -59,7 +59,7 @@ That shortcut leaves a problem. The children of a covered node still hold their 
 
 The fix keeps a second number at each node, called the **lazy tag**. The tag stores the amount that every position under the node has gained but that the node's children do not know about yet. A covered node updates its own sum immediately and adds `delta` to its tag. It leaves the children alone.
 
-The invariant is that a lazy tag records an update already applied to the node's sum but not yet pushed to the children. The true sum of any range is then the stored sum plus the effect of the tags above it. A node's own stored sum is therefore always correct as long as every tag above it has been dealt with.
+The invariant is that a lazy tag records an update already applied to the node's sum but not yet pushed to the children. A node's stored sum is correct exactly when no ancestor holds a pending tag. A query or update that enters a node therefore clears the tags above it first.
 
 <!-- names: lazy tag, push down, tag composition -->
 
@@ -71,7 +71,7 @@ After the push down, both children hold correct sums, and the descent can contin
 
 #### Combine Tags In The Right Order
 
-Addition tags combine by adding the amounts, because adding 3 and then 4 equals adding 7 in either order. A different kind of update shows why the combination rule needs care. Suppose an update sets every position to a value `v`, and a node already holds a pending tag. The **tag composition** rule decides the result. A new assignment replaces whatever tag exists, because the old values no longer matter. A new addition applied after an assignment of `v` changes the assignment to `v + delta`. Reversing the order gives a different answer, so the order of composition is part of the data structure's contract.
+Addition tags combine by adding the amounts, because adding 3 and then 4 equals adding 7 in either order. A different kind of update shows why the combination rule needs care. Suppose an update sets every position to a value `v`, and a node already holds a pending tag. The **tag composition** rule decides the result. A new assignment replaces whatever tag exists, because the old values no longer matter. A new addition applied after an assignment of `v` changes the assignment to `v + delta`. Reversing the order gives a different answer, so the order of composition is part of the data structure's contract. For example, a node of length 4 with sum 10 receives `add 3` and then `set 5`. The tag becomes `set 5`, and the sum becomes 20. In the opposite order, `set 5` and then `add 3` give the tag `set 8` and the sum 32.
 
 <!-- stage: variables -->
 ### Quantities Stored At Each Node
@@ -79,11 +79,10 @@ Addition tags combine by adding the amounts, because adding 3 and then 4 equals 
 The lazy tree keeps two arrays indexed by node number, with node 1 as the root.
 
 - **sum[k]** holds the total of the positions under node `k`, including every tag already applied at `k`.
-- **add[k]** holds the pending amount per position that node `k` has not passed to its children.
-- **lo and hi** describe the half-open range `[lo, hi)` of positions that node `k` covers.
-- **hi - lo** is the length of that range, and it scales an amount into a change of the sum.
+- **add[k]** holds the pending amount per position that node `k` has not passed to its children. This pending amount is the lazy tag.
+- **lo and hi** describe the half-open range `[lo, hi)` of positions that node `k` covers. The range includes `lo` and excludes `hi`, so its length `hi - lo` scales an amount into a change of the sum.
 
-Both arrays hold `long` values, because a delta times a length easily exceeds the `int` range. Each array needs `4 * n` slots to hold every node safely.
+This lesson uses half-open ranges where the previous lesson used inclusive ones, because the length `hi - lo` then needs no `+ 1`. Both arrays hold `long` values, because a delta times a length easily exceeds the `int` range. Each array needs `4 * n` slots to hold every node safely.
 
 <!-- stage: trace -->
 ### Add To A Range, Then Query It
@@ -109,7 +108,7 @@ The query covers `[3, 6)`. The descent reaches node 5 over `[2, 4)`, and this no
 The query takes the 6 from position 3. Node 6 covers `[4, 6)` and lies fully inside, so it contributes its stored sum 24 without any push. The total is 30, which equals 6 plus 10 plus 14 in the updated array.
 
 ```trace
-{"cells":[3,1,4,1,5,9,2,6],"pointers":["lo","hi"],"steps":[{"at":{"lo":0,"hi":8},"vars":{"node":1,"sum":56,"add":0,"pushes":0},"note":"Node 1 covers [0, 8) and overlaps [3, 6) only in part, so the query descends. Its tag is 0, so nothing needs pushing."},{"at":{"lo":0,"hi":4},"vars":{"node":2,"sum":19,"add":0,"pushes":0},"note":"Node 2 covers [0, 4) and overlaps [3, 6) only in part, so the query descends. Its tag is 0, so nothing needs pushing."},{"at":{"lo":0,"hi":2},"vars":{"node":4,"sum":4,"add":0,"pushes":0,"result":0},"note":"Node 4 covers [0, 2) and lies outside [3, 6), so it contributes 0."},{"at":{"lo":2,"hi":4},"vars":{"node":5,"sum":15,"add":0,"pushes":1},"note":"Node 5 covers [2, 4) and overlaps [3, 6) only in part, so the query descends. It pushes its tag first, so both children hold correct sums."},{"at":{"lo":2,"hi":3},"vars":{"node":10,"sum":9,"add":5,"pushes":1,"result":0},"note":"Node 10 covers [2, 3) and lies outside [3, 6), so it contributes 0."},{"at":{"lo":3,"hi":4},"vars":{"node":11,"sum":6,"add":5,"pushes":1,"result":6},"note":"Node 11 covers [3, 4) and lies inside [3, 6), so it contributes its sum 6. Its own tag has been applied to that sum already."},{"at":{"lo":4,"hi":8},"vars":{"node":3,"sum":37,"add":0,"pushes":1},"note":"Node 3 covers [4, 8) and overlaps [3, 6) only in part, so the query descends. Its tag is 0, so nothing needs pushing."},{"at":{"lo":4,"hi":6},"vars":{"node":6,"sum":24,"add":5,"pushes":1,"result":24},"note":"Node 6 covers [4, 6) and lies inside [3, 6), so it contributes its sum 24. Its own tag has been applied to that sum already."},{"at":{"lo":6,"hi":8},"vars":{"node":7,"sum":13,"add":0,"pushes":1,"result":0},"note":"Node 7 covers [6, 8) and lies outside [3, 6), so it contributes 0."},{"at":{"lo":3,"hi":6},"vars":{"result":30,"pushes":1},"note":"The two partial branches and the covered node add up to 30, which equals the sum of positions 3, 4 and 5 of the updated array."}]}
+{"cells":[3,1,4,1,5,9,2,6],"pointers":["lo","hi"],"steps":[{"at":{"lo":0,"hi":8},"vars":{"node":1,"sum":56,"add":0,"pushes":0},"note":"Node 1 covers [0, 8) and overlaps [3, 6) only in part, so the query descends. Its tag is 0, so nothing needs pushing."},{"at":{"lo":0,"hi":4},"vars":{"node":2,"sum":19,"add":0,"pushes":0},"note":"Node 2 covers [0, 4) and overlaps [3, 6) only in part, so the query descends. Its tag is 0, so nothing needs pushing."},{"at":{"lo":0,"hi":2},"vars":{"node":4,"sum":4,"add":0,"pushes":0,"result":0},"note":"Node 4 covers [0, 2) and lies outside [3, 6), so it contributes 0."},{"at":{"lo":2,"hi":4},"vars":{"node":5,"sum":15,"add":0,"pushes":1},"note":"Node 5 covers [2, 4) and overlaps [3, 6) only in part, so the query descends. It pushes its tag first, so both children hold correct sums."},{"at":{"lo":2,"hi":3},"vars":{"node":10,"sum":9,"add":5,"pushes":1,"result":0},"note":"Node 10 covers [2, 3) and lies outside [3, 6), so it contributes 0."},{"at":{"lo":3,"hi":4},"vars":{"node":11,"sum":6,"add":5,"pushes":1,"result":6},"note":"Node 11 covers [3, 4) and lies inside [3, 6), so it contributes its sum 6. Its own tag has been applied to that sum already."},{"at":{"lo":4,"hi":8},"vars":{"node":3,"sum":37,"add":0,"pushes":1},"note":"Node 3 covers [4, 8) and overlaps [3, 6) only in part, so the query descends. Its tag is 0, so nothing needs pushing."},{"at":{"lo":4,"hi":6},"vars":{"node":6,"sum":24,"add":5,"pushes":1,"result":24},"note":"Node 6 covers [4, 6) and lies inside [3, 6), so it contributes its sum 24. Its own tag has been applied to that sum already."},{"at":{"lo":6,"hi":8},"vars":{"node":7,"sum":13,"add":0,"pushes":1,"result":0},"note":"Node 7 covers [6, 8) and lies outside [3, 6), so it contributes 0."},{"at":{"lo":3,"hi":6},"vars":{"result":30,"pushes":1},"note":"The two fully covered nodes, leaf 11 with 6 and node 6 with 24, add up to 30, which equals the sum of positions 3, 4 and 5 of the updated array."}]}
 ```
 
 <!-- stage: code -->
@@ -207,7 +206,7 @@ Multiply a delta by the range length in `long`. An `int` product of 10^9 and 10^
 **Constraints.** The limits are:
 - **`len`** is an `int` with `1 <= len <= 10^5`.
 - **`S`** is a `long` with absolute value at most `10^15`.
-- **Deltas** are `long` values with absolute value at most `10^9`, and the list has at most `10^5` entries.
+- **Deltas** are `long` values with absolute value at most `10^9`, and the list has at most `10^3` entries.
 - **Empty list** returns `S` and a tag of 0.
 
 **Example 1.** Input `len = 4`, `S = 10`, deltas 3, -1, 2. Output sum 26 and tag 4.
@@ -249,7 +248,7 @@ Multiply a delta by the range length in `long`. An `int` product of 10^9 and 10^
 **Constraints.** The limits are:
 - **`len` and `c`** are `int` values with `1 <= c <= len <= 10^5`.
 - **`S` and `sc`** are `long` values with absolute value at most `10^12`.
-- **Operations** number at most `10^5`, with amounts of absolute value at most `10^9`.
+- **Operations** number at most `10^3`, with amounts of absolute value at most `10^9`.
 - **Tag output** is `none`, `add d` or `set v`.
 
 **Example 1.** Input `len = 4`, `S = 10`, operations add 3, set 5, add 2, child `c = 2`, `sc = 6`. Output sum 28, tag `set 7` and child sum 14.
@@ -270,12 +269,12 @@ Multiply a delta by the range length in `long`. An `int` product of 10^9 and 10^
 **Constraints.** The limits are:
 - **`n`** is an `int` with `1 <= n <= 10^5`, and `a[i]` is an `int` with absolute value at most `10^9`.
 - **Operations** number at most `10^5`, and each range satisfies `0 <= l < r <= n`.
-- **Added value `d`** is an `int` with absolute value at most `10^9`.
+- **Added value `d`** is an `int` with absolute value at most `10^4`.
 - **Answers** are `long` values.
 
 **Example 1.** Input `a = [3, 1, 4, 1, 5]` and operations: sum `[0, 5)`, add 10 on `[1, 4)`, sum `[0, 3)`, add -2 on `[0, 5)`, sum `[2, 5)`, sum `[3, 4)`. Output 14, 28, 24, 9.
 
-**Example 2.** Input `a = [7]` and operations: add -10^9 on `[0, 1)`, sum `[0, 1)`, add 10^9 on `[0, 1)`, sum `[0, 1)`. Output -999999993, 7.
+**Example 2.** Input `a = [7]` and operations: add -10000 on `[0, 1)`, sum `[0, 1)`, add 10000 on `[0, 1)`, sum `[0, 1)`. Output -9993, 7.
 
 **Hint.** Which operation needs the children to be current? What do you do with a node that lies entirely inside the range?
 

@@ -37,7 +37,7 @@ The method is correct, and it works well when the road has a few hundred markers
 ```predict
 There are 1,000 trips, and each one runs from marker 0 to marker 1,000,000,000. About how many counter updates does the direct approach perform, and how many coordinates actually change the load?
 
-About 10^12 updates, because each trip updates one billion counters. Only 2,000 coordinates change the load, namely 1,000 pickups and 1,000 drop-offs. Everywhere else the load stays the same as at the previous coordinate.
+About 10^12 updates, because each trip updates one billion counters. Only 2 distinct coordinates change the load, 0 and 1,000,000,000, although they hold 2,000 events, namely 1,000 pickups and 1,000 drop-offs. Everywhere else the load stays the same as at the previous coordinate.
 ```
 
 #### Count The Work
@@ -46,7 +46,7 @@ With `n` trips and a longest trip of length `L`, the loop performs O(n * L) upda
 
 #### Find The Wasted Work
 
-Between two neighboring pickup or drop-off coordinates, no trip starts or ends. Every position in that gap has the same load, so the inner loop recomputes one number millions of times. The load at a position equals the load at the previous change coordinate plus the changes that happen exactly there. Only the 2n change coordinates carry information, so the work should be O(n log n) for sorting them and not O(n * L).
+Between two neighboring pickup or drop-off coordinates, no trip starts or ends. Every position in that gap has the same load, so the inner loop recomputes one number millions of times. The load at a position equals the load at the previous change coordinate plus the changes that happen exactly there. Only the change coordinates, at most 2n of them, carry information, so the work should be O(n log n) for sorting them and not O(n * L).
 
 <!-- stage: insight -->
 ### Process Changes In Coordinate Order
@@ -57,27 +57,30 @@ An **event** is a pair of a coordinate and a signed change in the active state. 
 
 #### Sort Then Move Along The Line
 
-A **sweep line** visits the events in ascending coordinate order and keeps the active state up to date. For car pooling, the state is one number, the current load. Add each delta to the load, and the load after an event is the load on the span up to the next event coordinate. Checking the load against the capacity at each step covers every position with 2n steps.
+A **sweep line** visits the events in ascending coordinate order and keeps the active state up to date. For car pooling, the state is one number, the current load. Add each delta to the load, and the load after an event is the load on the span up to the next event coordinate. Checking the load against the capacity at each step covers every position with at most 2n steps.
 
 <!-- names: sweep line, event, tie policy -->
 
 #### Fix A Tie Policy For Equal Coordinates
 
-Several events can share one coordinate, for example a drop-off and a pickup at the same marker. The **tie policy** is the rule for those events. One valid policy applies every delta at the coordinate and only then reads the state. Another orders the deltas, with decreases first for half-open ranges and increases first for closed ranges, and reads the state after each one. Without a stated policy, the load can show a peak that no position ever had.
+Several events can share one coordinate, for example a drop-off and a pickup at the same marker. The **tie policy** is the rule for those events. For half-open ranges, the policy applies every delta at the coordinate and only then reads the state. Ordering the deltas with decreases first and reading after each one gives the same maximum. For closed ranges, a range that ends at the coordinate still counts there, so the policy orders increases first and reads the state before the decreases apply. Without a stated policy, the load can show a peak that no position ever had.
 
-The invariant is this. After the events at a coordinate are applied under the tie policy, the active state describes exactly the positions from this coordinate up to the next one. Every sweep line algorithm preserves that sentence, and only the kind of state changes. A counter handles a load, and a structure that reports a maximum handles heights.
+The invariant is this. With the half-open tie policy, after the events at a coordinate are applied, the active state describes exactly the positions from this coordinate up to the next one. Every sweep line algorithm preserves that sentence, and only the kind of state changes. A counter handles a load, and a structure that reports a maximum handles heights.
 
 <!-- stage: variables -->
 ### Quantities To Track While Sweeping
 
-Track these items for the car pooling sweep.
+Track these items for the two sweeps in the code stage.
 
 - **events** holds the pairs `{coordinate, delta}`, two per trip, sorted by coordinate and then by delta.
 - **load** is the sum of all deltas applied so far, which equals the passengers on board.
 - **capacity** is the fixed seat limit that `load` must never exceed.
-- **index** is the position of the next unapplied event in the sorted array.
+- **e** is the event being applied, and it is the pointer in the first trace.
+- **heap** holds the heights of started buildings with the greatest on top, and it starts with the ground height 0.
+- **pending** counts each ended height whose value still sits inside `heap`.
+- **previous** is the height of the last outline point, so a new point appears only when the top differs.
 
-The sorted order by delta puts drop-offs, which are negative, before pickups at the same coordinate. That order is the tie policy used here. In the code below, the array `events` is the same list that the insight called the set of events.
+The sorted order by delta puts drop-offs, which are negative, before pickups at the same coordinate. That order is the tie policy used here. The skyline sweep sorts its events by coordinate only and applies every event at one coordinate before it reads the state. In the skyline trace, `maxHeight` is the code variable `top`, which is the top of `heap` after the discards. The trace value `pendingRemovals` is the number of ended heights still waiting in `pending`.
 
 <!-- stage: trace -->
 ### Follow The Load Across Sorted Events
@@ -96,7 +99,7 @@ The remaining events lower the load to 3 and then to 0, so every trip fits. The 
 
 #### Buildings With Shared Edges
 
-A skyline sweep keeps the set of active building heights, and its state is the maximum of that set. Take buildings `[2,6)` of height 3, `[4,6)` of height 5 and `[6,9)` of height 2.
+A skyline problem gives buildings `[left, right)` with a height. The outline lists a key point `(x, height)` wherever the greatest active height changes, and the last key point has height 0. The state of this sweep is the maximum of the active heights, so it must forget a height when its building ends. A max-heap gives the maximum, but removing an arbitrary value costs O(n). Lazy deletion avoids that: an ended height is only counted as a pending removal and leaves the heap when it reaches the top. Take buildings `[2,6)` of height 3, `[4,6)` of height 5 and `[6,9)` of height 2.
 
 At coordinate 2 the maximum rises from 0 to 3, so the outline gets a key point `(2,3)`. At coordinate 4 it rises to 5, giving `(4,5)`. At coordinate 6 two buildings end and one starts, and all three events are applied before the maximum is read. The maximum becomes 2, giving `(6,2)`. At coordinate 9 the last building ends and the outline returns to height 0.
 
@@ -117,7 +120,7 @@ static boolean carPooling(int[][] trips, int capacity) {
         events[k++] = new int[]{t[1], t[0]};      // pickup adds passengers
         events[k++] = new int[]{t[2], -t[0]};     // drop-off removes them at the exclusive end
     }
-    // Compare with Integer.compare, because subtraction can overflow for large coordinates.
+    // Integer.compare states the order directly and cannot overflow.
     Arrays.sort(events, (p, q) -> p[0] != q[0] ? Integer.compare(p[0], q[0]) : Integer.compare(p[1], q[1]));
     long load = 0;
     for (int[] e : events) {
@@ -173,7 +176,7 @@ A difference array looks like a close relative, because both add a delta at the 
 
 #### Watch The Java Hazards
 
-Sorting with a comparator such as `p[0] - q[0]` overflows when coordinates have opposite signs and large magnitude, so use `Integer.compare`. A tie policy that disagrees with the range convention gives wrong answers on touching intervals, and no test with distinct coordinates reveals it. Test every sweep with two events at one coordinate.
+Sorting with a comparator such as `p[0] - q[0]` overflows when coordinates have opposite signs and large magnitude, so use `Integer.compare`. The coordinates here stay between 0 and 10^9, where subtraction would still fit, but negative inputs make the habit necessary. A tie policy that disagrees with the range convention gives wrong answers on touching intervals, and no test with distinct coordinates reveals it. Test every sweep with two events at one coordinate.
 
 <!-- stage: exercises -->
 ### Exercises

@@ -26,7 +26,7 @@ The compression lesson replaced sparse values with dense ranks, because only the
 
 #### Tree Structures Answer Interleaved Queries
 
-The Fenwick and segment tree lessons answered range questions while values changed at fixed positions. They are the right tool when queries ask about arbitrary ranges between updates. A sweep asks one fixed question at each coordinate in order. A sorted map then suffices, and this lesson shows where that choice stops working.
+The Fenwick and segment tree lessons answered range questions while values changed at fixed positions. They are the right tool when queries ask about arbitrary ranges between updates. A sweep asks one fixed question at each coordinate in order. A sorted map then suffices, and the applicability part names the case where a tree is needed instead.
 
 #### The Ordered Map
 
@@ -71,7 +71,7 @@ The scan performs n tests for each of n starts, so it runs in O(n^2) time. For `
 Reading the maximum of an active set is also hard. Take the skyline task, where each building has a height and the answer at each coordinate is the greatest active height. A single variable `maxHeight` works while heights only arrive. When the tallest building ends, the variable cannot say which height is next. An unsorted list of active heights fixes that but costs O(n) to search and O(n) to delete from. The target is O(log n) per event, which gives O(n log n) for the whole sweep.
 
 <!-- stage: insight -->
-### Sorted Changes Held In An Ordered Map
+### Keep Net Changes In A Sorted Map
 
 #### Store Net Changes In A Delta Map
 
@@ -85,23 +85,24 @@ Some answers need the extreme of the currently active values and not their sum. 
 
 #### Fix A Tie Policy
 
-Events at one coordinate need a **tie policy**, which is the rule for the order in which they are applied and when the state is read. For half-open intervals `[start, end)`, all changes at coordinate `x` apply before the state is read, so an ending interval and a starting interval at `x` never overlap. For closed intervals `[start, end]`, starts apply before ends at `x`, so touching intervals do overlap. The tie policy follows from the interval contract and is chosen before any code.
+Events at one coordinate need a **tie policy**, which is the rule for the order in which they are applied and when the state is read. For half-open intervals `[start, end)`, all changes at coordinate `x` apply before the state is read, so an ending interval and a starting interval at `x` never overlap. For closed intervals `[start, end]`, an interval that ends at `x` still counts at `x`, so the starts at `x` apply first and the state is read before the ends apply. A delta map merges all changes at one key, so it fits only the half-open rule. A closed integer interval fits it after the end moves to `end + 1`. The tie policy follows from the interval contract and is chosen before any code.
 
-The invariant is the same for both structures. After all events at coordinate `x` are applied under the tie policy, the state describes exactly the span from `x` up to the next event coordinate.
+Under the half-open rule the invariant is the same for both structures. After all events at coordinate `x` are applied, the state describes exactly the span from `x` up to the next event coordinate.
 
 <!-- stage: variables -->
 ### Quantities To Track During The Sweep
 
-Track these six quantities across the sweeps in this lesson.
+Track these seven quantities across the sweeps in this lesson.
 
 - **delta map** holds the net change in weight at each event coordinate, in sorted order.
 - **load** is the running sum of the deltas applied so far, kept as a `long`.
 - **active multiset** maps each active height to the number of active buildings with it.
 - **height** is the greatest key of the active multiset after a coordinate, or 0 when it is empty.
-- **best height** is the greatest height seen so far, and **best x** is the coordinate where it first appeared.
+- **best height** is the greatest height seen so far.
+- **best x** is the coordinate where the best height first appeared.
 - **end x** is the first later coordinate whose height is lower than the best height, and it stays -1 while the stretch is open.
 
-In the code, the delta map is the variable `change`, and the active multiset is the variable `active`. The names differ only because the code uses short identifiers.
+In the code, the delta map is the variable `change`, and the active multiset is the variable `active`. In the second trace, `bestH`, `bestX` and `endX` are best height, best x and end x. The names differ only because the code and trace use short identifiers.
 
 <!-- stage: trace -->
 ### Two Sweeps Step By Step
@@ -148,6 +149,20 @@ static long peakLoad(int[][] trips) {
     return peak;
 }
 
+static int firstOverload(int[][] trips, int capacity) {
+    java.util.TreeMap<Integer, Long> change = new java.util.TreeMap<>();
+    for (int[] t : trips) {
+        change.merge(t[1], (long) t[0], Long::sum);
+        change.merge(t[2], -(long) t[0], Long::sum);
+    }
+    long load = 0;
+    for (var entry : change.entrySet()) {
+        load += entry.getValue();                  // the merged change is applied as one step
+        if (load > capacity) return entry.getKey();   // the load holds until the next key
+    }
+    return -1;
+}
+
 static void addHeight(java.util.TreeMap<Integer, Integer> active, int h) {
     active.merge(h, 1, Integer::sum);
 }
@@ -159,9 +174,28 @@ static void removeHeight(java.util.TreeMap<Integer, Integer> active, int h) {
 static int greatestHeight(java.util.TreeMap<Integer, Integer> active) {
     return active.isEmpty() ? 0 : active.lastKey();
 }
+
+static int[] tallestStretch(int[][] buildings) {
+    java.util.TreeMap<Integer, java.util.List<int[]>> at = new java.util.TreeMap<>();
+    for (int[] b : buildings) {
+        at.computeIfAbsent(b[0], k -> new java.util.ArrayList<>()).add(new int[]{b[2], 1});
+        at.computeIfAbsent(b[1], k -> new java.util.ArrayList<>()).add(new int[]{b[2], -1});
+    }
+    java.util.TreeMap<Integer, Integer> active = new java.util.TreeMap<>();
+    int bestH = 0, bestX = -1, endX = -1;
+    for (var group : at.entrySet()) {
+        for (int[] ev : group.getValue()) {          // apply the whole group before reading
+            if (ev[1] == 1) addHeight(active, ev[0]); else removeHeight(active, ev[0]);
+        }
+        int height = greatestHeight(active);
+        if (height > bestH) { bestH = height; bestX = group.getKey(); endX = -1; }   // a new best opens a stretch
+        else if (height < bestH && endX == -1) endX = group.getKey();           // the first lower height closes it
+    }
+    return new int[]{bestH, bestX, endX};
+}
 ```
 
-The first method needs only the values of the delta map, because the keys matter for order and not for arithmetic. The second group of methods wraps the three multiset operations. The call to `merge` with a zero result is the single place where a key disappears. Each helper costs O(log n), so a sweep over 2n events costs O(n log n) in total.
+The method `peakLoad` needs only the values of the delta map, because the keys matter for order and not for arithmetic. The method `firstOverload` also reads the keys, because it returns the coordinate where the load first passes the capacity. The three helpers wrap the multiset operations, and `removeHeight` is the single place where a key disappears, when its count reaches zero. The method `tallestStretch` applies every event at one coordinate before it reads `greatestHeight`. Each map operation costs O(log n), so a sweep over 2n events costs O(n log n) in total.
 
 <!-- stage: applicability -->
 ### When To Sweep With Ordered State
@@ -174,13 +208,13 @@ The invariant is that the state after each coordinate describes the span up to t
 
 #### Choose The Tie Policy From The Contract
 
-Read whether the end coordinate belongs to the interval. Half-open ends apply with starts at one coordinate before the state is read. Closed ends need starts first. A skipped decision here produces off-by-one answers that pass most random tests and fail on touching intervals.
+Read whether the end coordinate belongs to the interval. Half-open ends apply with starts at one coordinate before the state is read. Closed ends need starts first and the state read before the ends apply. A skipped decision here produces off-by-one answers that pass most random tests and fail on touching intervals.
 
 #### Avoid The False Friend
 
 A single running maximum is a false friend of the active multiset. It looks like enough state, but it cannot recover the next value when the current maximum leaves. A `PriorityQueue` is a related trap, because its `remove(Object)` call costs O(n) in Java. A `TreeMap` of counts removes in O(log n).
 
-Two Java hazards remain. Sums of weights can pass `int` range, so use `long`. Compare boxed `Integer` counts with `equals` or unbox them, because `==` on boxed values above 127 compares references.
+One Java hazard remains. Sums of weights can pass `int` range, so use `long`.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -221,9 +255,9 @@ Two Java hazards remain. Sums of weights can pass `int` range, so use `long`. Co
 - **Equal heights** may occur, and buildings may touch at an endpoint.
 - **Input** is not modified.
 
-**Example 1.** Input `[[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]`, output `[15,3,7]`.
+**Example 1.** Input `[[1,5,7],[2,4,9],[3,8,9],[6,10,4]]`, output `[9,2,8]`, because the two buildings of height 9 overlap on [3,4) and together cover [2,8).
 
-**Example 2.** Input `[[1,4,6],[2,3,6]]`, output `[6,1,4]`, because one building of height 6 still covers coordinate 3 after the other ends. Input `[[1,3,4],[3,5,4]]` outputs `[4,1,5]`.
+**Example 2.** Input `[[1,4,6],[2,3,6]]`, output `[6,1,4]`, because one building of height 6 still covers coordinate 3 after the other ends.
 
 **Hint.** What must the active structure remember when two buildings share a height? When is the skyline height read at a coordinate?
 
@@ -234,28 +268,28 @@ Two Java hazards remain. Sums of weights can pass `int` range, so use `long`. Co
 
 **Prerequisites.** The tie policy from this lesson.
 
-**Problem.** Given integer intervals `[start, end]` and a flag `closed`, return the largest number of intervals that contain one common integer coordinate. When `closed` is true, an interval contains every `x` with `start <= x <= end`. When `closed` is false, it contains every `x` with `start <= x < end`, so an interval with `start == end` contains nothing.
+**Problem.** Given integer intervals `[start, end]` and a flag `closed`, return the largest number of intervals that contain one common integer coordinate, and the smallest coordinate where that number occurs. When `closed` is true, an interval contains every `x` with `start <= x <= end`. When `closed` is false, it contains every `x` with `start <= x < end`, so an interval with `start == end` contains nothing.
 
 **Constraints.** The limits are:
 - **Intervals** number between 1 and 100,000, and the order is arbitrary.
 - **Coordinates** satisfy `0 <= start <= end <= 1,000,000,000`.
 - **`closed`** is a `boolean` that applies to every interval.
-- **Result** is an `int`, and 0 is possible when `closed` is false and all intervals are empty.
+- **Result** is an `int[]` of the form `{count, coordinate}`, and `{0, -1}` is possible when `closed` is false and all intervals are empty.
 
-**Example 1.** Input `[[1,3],[3,5]]`, output 1 when `closed` is false and 2 when `closed` is true.
+**Example 1.** Input `[[1,3],[3,5]]`, output `{1, 1}` when `closed` is false and `{2, 3}` when `closed` is true.
 
-**Example 2.** Input `[[2,6],[6,9],[4,6],[6,6]]`, output 2 when `closed` is false and 4 when `closed` is true.
+**Example 2.** Input `[[2,6],[6,9],[4,6],[6,6]]`, output `{2, 4}` when `closed` is false and `{4, 6}` when `closed` is true.
 
-**Hint.** At one coordinate, should a start or an end come first? Does the answer differ for the two flags?
+**Hint.** At one coordinate, should a start or an end come first? When does the running load first reach its maximum?
 
-**Changed decision.** Only the interval contract changes between the two calls, and the event order at equal coordinates must change with it.
+**Changed decision.** The interval contract changes between the two calls, and the result also names the first coordinate of the maximum, so the event order at equal coordinates must change with it and the load must be read at the right moment.
 
 #### [Recognize] Busiest Moment After Each Booking (LeetCode 732)
 <!-- id: rq31-calendar-busiest -->
 
 **Prerequisites.** The delta map and all three exercises above.
 
-**Problem.** Design a class with a method `int[] book(int start, int end)`. Each call adds the booking `[start, end)`. It returns `[k, x]`, where `k` is the largest number of bookings so far that cover one integer coordinate, and `x` is the smallest coordinate covered by `k` bookings. Implement the state with a `TreeMap` of net changes.
+**Problem.** Design a class with a method `int[] book(int start, int end)`. Each call adds the booking `[start, end)`. It returns `[k, x]`, where `k` is the largest number of bookings so far that cover one integer coordinate, and `x` is the smallest coordinate covered by `k` bookings.
 
 **Constraints.** The limits are:
 - **Calls** number at most 400.

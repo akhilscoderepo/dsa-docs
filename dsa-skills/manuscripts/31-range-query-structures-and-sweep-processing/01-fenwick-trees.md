@@ -39,7 +39,7 @@ About ten billion writes. Each change rewrites on average half of the 200,000 en
 
 #### Count The Writes
 
-One update writes up to `n` entries, so it costs O(n). With `q` updates mixed into the workload, the total cost is O(n * q). For `n = q = 200,000` the product is 4 * 10^10 in the worst case, and a typical run still writes ten billion entries. A program that does that much work per second misses any real-time deadline.
+One update writes up to `n` entries, so it costs O(n). With `q` updates mixed into the workload, the total cost is O(n * q). For `n = q = 200,000` the product is 4 * 10^10 in the worst case, and a typical run still writes ten billion entries. Ten billion writes take several seconds, which is over a typical limit of one or two seconds.
 
 #### Compare The Two Extremes
 
@@ -84,9 +84,9 @@ The caller passes a zero-based `pos`, and the class converts it to the internal 
 
 Take eight counts `3, 1, 4, 1, 5, 9, 2, 6`. The array `tree` for them is `0, 3, 4, 4, 9, 5, 14, 2, 31`, where the leading 0 is the unused slot.
 
-#### Add Ten At Position Two
+#### Add Ten To The Third Count
 
-The call `add(2, 10)` converts position 2 to internal index 3. The entry `tree[3]` covers one count, so it changes first. Index 3 plus its low bit 1 gives 4. The entry `tree[4]` covers positions 1 to 4, which contain position 3, so it changes next. Index 4 plus its low bit 4 gives 8, and `tree[8]` covers all eight positions, so it changes last. Index 8 plus 8 is 16, which is past the array, so the loop stops.
+In this trace, every index and position inside `tree` counts from 1. The call `add(2, 10)` targets the zero-based position 2, which is the third count, so it converts position 2 to internal index 3. The entry `tree[3]` covers one count, so it changes first. Index 3 plus its low bit 1 gives 4. The entry `tree[4]` covers positions 1 to 4, which contain position 3, so it changes next. Index 4 plus its low bit 4 gives 8, and `tree[8]` covers all eight positions, so it changes last. Index 8 plus 8 is 16, which is past the array, so the loop stops.
 
 ```trace
 {"cells":[0,3,4,4,9,5,14,2,31],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"pos":2,"delta":10},"note":"The call converts position 2 to internal index 3. No entry has changed yet."},{"at":{"i":3},"vars":{"lowBit":1,"newValue":14},"note":"Index 3 has low bit 1, so its block covers positions 3 to 3. The entry becomes 14."},{"at":{"i":4},"vars":{"lowBit":4,"newValue":19},"note":"Index 4 has low bit 4, so its block covers positions 1 to 4. The entry becomes 19."},{"at":{"i":8},"vars":{"lowBit":8,"newValue":41},"note":"Index 8 has low bit 8, so its block covers positions 1 to 8. The entry becomes 41. The next index is 16, which is past the last slot 8, so the loop stops."}]}

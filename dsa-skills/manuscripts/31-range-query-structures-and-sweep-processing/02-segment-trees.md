@@ -7,7 +7,7 @@
 
 A monitoring service keeps one response time per request in an array. Operators ask for the lowest response time between request `l` and request `r`. Between questions, a late measurement overwrites one stored value, and the next question must see it.
 
-The Fenwick tree from the previous lesson answers a range sum as the difference of two prefix sums. That subtraction works because addition has an inverse. Minimum has no inverse. Knowing the lowest value of the first seven requests and of the first four requests does not reveal the lowest value of requests 4 to 6. A structure for range minimum with updates needs a different design.
+The Fenwick tree from the previous lesson answers a range sum as the difference of two prefix sums. That subtraction works because addition has an inverse. Minimum has no inverse. Knowing the lowest value of the first seven requests and of the first four requests does not reveal the lowest value of requests at positions 4 to 6, counting from 0. A structure for range minimum with updates needs a different design.
 
 <!-- stage: naive -->
 ### Scanning The Range On Every Query
@@ -81,7 +81,7 @@ Track these items for each recursive call.
 - **l and r** bound the query range, both inclusive.
 - **tree[node]** holds the aggregate of the node range.
 
-The tree array needs about `4 * n` entries so that every node index of an unbalanced split stays inside it. In the trace below, the cells are that array, and cell 0 stays unused.
+The tree array needs about `4 * n` entries so that every node index of an unbalanced split stays inside it. In the trace below, the cells are the first 16 slots of that array, because eight values need only nodes 1 to 15, and cell 0 stays unused.
 
 <!-- stage: trace -->
 ### Build And Query On Eight Values
@@ -165,7 +165,7 @@ The invariant is that each node stores the aggregate of exactly its node range, 
 
 #### Choose Between A Fenwick Tree And This Tree
 
-A Fenwick tree is shorter and faster by a constant factor, but it needs a sum-like operator with an inverse and answers prefixes. A segment tree answers any range directly for any associative operator. A static array with no updates is a false friend for this tree, because a prefix-sum array or a sparse table answers it with less machinery. A plain Fenwick tree is a false friend in the other direction, since it cannot hold a minimum under point assignment.
+A Fenwick tree is shorter and faster by a constant factor, but it needs a sum-like operator with an inverse and answers prefixes. A segment tree answers any range directly for any associative operator. A static array with no updates is a false friend for this tree, because a prefix-sum array answers it with less machinery, and a sparse table, which precomputes the minimum of every range whose length is a power of two, answers range minimum on fixed data. A plain Fenwick tree is a false friend in the other direction, since it cannot hold a minimum under point assignment.
 
 #### Avoid The Java Hazards
 

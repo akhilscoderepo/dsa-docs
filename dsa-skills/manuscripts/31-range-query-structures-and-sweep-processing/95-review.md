@@ -22,7 +22,7 @@ A leaderboard recomputes a range total on every request, a calendar scans every 
 ```
 
 ```quiz
-{"id": "rq31-rev-sweep-grouping", "q": "Trips take 2 passengers from stop 1 to stop 5 and 3 passengers from stop 5 to stop 8, with half-open trips [pick-up, drop-off). Is the peak load 5 at stop 5?", "options": ["Yes, both trips are active at stop 5", "Yes, because pick-ups run before drop-offs", "No, the first trip ended before stop 5 and the peak is 3", "No, the peak is 2"], "answer": 2, "explain": "A half-open trip stops counting at its drop-off stop. The first trip releases its 2 passengers at stop 5 before the second boards, so the load never exceeds 3."}
+{"id": "rq31-rev-sweep-grouping", "q": "Trips take 2 passengers from stop 1 to stop 5 and 3 passengers from stop 5 to stop 8, with half-open trips [pickup, drop-off). Is the peak load 5 at stop 5?", "options": ["Yes, both trips are active at stop 5", "Yes, because pickups run before drop-offs", "No, the first trip ended before stop 5 and the peak is 3", "No, the peak is 2"], "answer": 2, "explain": "A half-open trip stops counting at its drop-off stop. The first trip releases its 2 passengers at stop 5 before the second boards, so the load never exceeds 3."}
 ```
 
 ```quiz
@@ -35,4 +35,4 @@ A leaderboard recomputes a range total on every request, a calendar scans every 
 
 ### Fixing A Wrong Answer
 
-Open the lesson that the question names and reread its variables list and its applicability part. Then rerun its first trace by hand on a smaller input.
+Open the lesson whose topic the question covers, such as Fenwick Trees, Sweep Events or Compress Values Then Count Ranks, and reread its variables list and its applicability part. Then rerun its first trace by hand on a smaller input.
