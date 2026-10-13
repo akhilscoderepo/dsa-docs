@@ -1,0 +1,38 @@
+{
+ "lessons": [
+  "aho-corasick",
+  "palindrome-radii",
+  "prefix-automata-state",
+  "prefix-matching",
+  "rolling-hash",
+  "suffix-structures"
+ ],
+ "exercises": [
+  "as-adjacent-suffix-lcp",
+  "as-all-starts-automaton",
+  "as-count-words-ending-here",
+  "as-expand-odd-centers",
+  "as-first-occurrence-kmp",
+  "as-fixed-window-hash",
+  "as-longest-duplicate-contract",
+  "as-longest-duplicate-substring",
+  "as-longest-happy-prefix",
+  "as-longest-palindrome-radii",
+  "as-mirror-beyond-boundary",
+  "as-multi-pattern-scan",
+  "as-negative-modular-difference",
+  "as-prefix-border-lengths",
+  "as-prefix-function",
+  "as-repeated-character-string",
+  "as-repeated-dna",
+  "as-repeated-prefixes",
+  "as-smallest-repeating-unit",
+  "as-sort-small-suffixes",
+  "as-stream-of-characters",
+  "as-suffix-pattern-matches",
+  "as-trie-failure-links",
+  "as-unified-separators",
+  "as-z-array"
+ ],
+ "retired": []
+}
