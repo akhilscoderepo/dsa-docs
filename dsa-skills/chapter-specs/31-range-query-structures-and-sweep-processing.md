@@ -107,7 +107,7 @@ Event sorting determines when state changes; ordered structures summarize active
 - **Boundary - Author exercise: Equal-Coordinate Events.** Group or order starts and ends according to the interval contract.
 - **Recognize - LC 732 My Calendar III.** Maintain booking deltas and compute the maximum active overlap.
 
-### Compression And Fenwick
+### Compress Values Then Count Ranks
 
 Coordinate compression preserves order while replacing sparse values with dense ranks; the Fenwick tree maintains prefix aggregates over those ranks.
 

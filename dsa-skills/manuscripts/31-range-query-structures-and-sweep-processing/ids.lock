@@ -1,0 +1,42 @@
+{
+ "lessons": [
+  "compress-then-count",
+  "coordinate-compression",
+  "fenwick-trees",
+  "lazy-propagation",
+  "segment-trees",
+  "sweep-events",
+  "sweep-ordered-state"
+ ],
+ "exercises": [
+  "rq31-assignment-versus-addition",
+  "rq31-calendar-busiest",
+  "rq31-car-pooling",
+  "rq31-compress-distinct",
+  "rq31-compress-sparse",
+  "rq31-equal-coordinate-events",
+  "rq31-equal-ranks",
+  "rq31-extreme-coordinates",
+  "rq31-extreme-values",
+  "rq31-fenwick-index-conversion",
+  "rq31-fenwick-point-update",
+  "rq31-fenwick-prefix",
+  "rq31-fenwick-range-sum-mutable",
+  "rq31-first-overload-stop",
+  "rq31-group-equal-coordinates",
+  "rq31-push-before-descent",
+  "rq31-range-add-one-node",
+  "rq31-range-add-range-sum",
+  "rq31-segment-build-sums",
+  "rq31-segment-mutable-sum",
+  "rq31-segment-no-overlap-full-cover",
+  "rq31-segment-point-assign",
+  "rq31-skyline",
+  "rq31-skyline-tallest",
+  "rq31-smaller-insertion-cost",
+  "rq31-sorted-array-cost",
+  "rq31-sparse-key-sum",
+  "rq31-start-end-tie"
+ ],
+ "retired": []
+}
