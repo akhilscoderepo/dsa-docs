@@ -7,7 +7,7 @@
 **Approach.**
 With `h = 0` the priority `f` equals `g`, so the loop is Dijkstra's algorithm. The queue holds entries `(f, row, col, g)` ordered by `f`, then row, then column. Each pop first compares the entry's `g` with `best` for the cell. A larger `g` means a cheaper route was recorded after the entry was pushed, so the entry is stale and the loop skips it without counting. Every other pop counts as one expansion. When the goal pops, its `g` is final, because every entry still in the queue has `f` at least as large and no entering cost is negative. The method then returns the cost and the count. If the queue empties, the goal is unreachable and the method returns -1 with the count so far. The invariant is that a cell pops non-stale at most once, and its `g` equals the cheapest cost from the start.
 
-The program checks the cost against a Bellman-Ford style relaxation oracle, and it checks the expansion count against a second implementation that keeps entries in a `TreeSet`, so the order of pops comes from a different structure.
+The program checks the cost against a Bellman-Ford style relaxation oracle. It checks the expansion count against a second implementation that keeps entries in a `TreeSet`, so the order of pops comes from a different structure.
 
 **Complexity.**
 - **Time** is O(V log V) for `V` cells, because each cell enters the queue a bounded number of times and every queue operation costs O(log V).

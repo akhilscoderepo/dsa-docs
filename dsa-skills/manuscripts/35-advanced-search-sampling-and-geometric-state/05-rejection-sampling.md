@@ -39,9 +39,15 @@ The inner disc has radius 1/2, so its area is pi * (1/2)^2 = pi / 4, which is on
 <!-- stage: bottleneck -->
 ### Equal Distances Are Not Equal Areas
 
+#### Why The Polar Method Fails
+
 The polar method costs O(1) time and O(1) space, and it is wrong. Its error is in what the uniform distance means. A ring between distance `d` and `d + e` has area about `2 * pi * d * e`, which grows with `d`. A uniform distance gives every ring of the same width the same number of points. The ring near the wall has far more area than the ring near the center, so its points are spread thin, and the center is crowded. Fair points need a distance whose chance of falling in a ring is proportional to the ring's area.
 
+#### An Exact Repair For One Shape
+
 There is an exact repair for the circle. Taking the square root of the uniform number gives a distance with the right chance for every ring. The repair works only because the area of a disc has a formula that can be inverted. For an arena shaped like a ring with a hole, a triangle, or a region given by a test function, no such formula is available. The method has to stay simple, exact, and independent of the shape.
+
+#### A Method Without A Formula
 
 A tool that needs no formula for the shape would be valuable. The only shape-specific operation it may use is a yes-or-no test: is this point inside the region? The tool needs a source of points that is uniform over some simpler region, where uniform points are easy to produce.
 
@@ -69,7 +75,7 @@ The invariant is that every draw is uniform over the bounding square, the test d
 
 The loop keeps five names.
 
-- **u** and **v** are the two numbers from `rand`, each from 0 (included) to 1 (excluded).
+- **u** and **v** come from `rand`, and each lies from 0 (included) to 1 (excluded).
 - **x** and **y** are `2u - 1` and `2v - 1`, so they lie from -1 (included) to 1 (excluded).
 - **r2** is `x * x + y * y`, the squared distance from the center. Comparing squares avoids a square root.
 - **trials** counts the pairs drawn so far. It starts at 0 and grows by one per pair.
@@ -136,7 +142,7 @@ final class CirclePicker {
 
 #### Recognizing The Pattern
 
-Use this method when uniform points are easy in a larger region, the shape inside it can be tested by a yes-or-no question, and the shape fills a good share of the region. The words "uniformly at random in a circle, triangle or range" are the cue. Before coding, compute the acceptance probability and decide whether boundary points count as inside. The invariant to keep is that every draw is uniform over the larger region and the test sees only the drawn point.
+Use this method in three conditions. Uniform points are easy in a larger region. A yes-or-no test decides whether a point lies in the shape. The shape fills a good share of the larger region. The words "uniformly at random in a circle, triangle or range" are the cue. Before coding, compute the acceptance probability and decide whether boundary points count as inside. The invariant to keep is that every draw is uniform over the larger region and the test sees only the drawn point.
 
 #### False Friends
 

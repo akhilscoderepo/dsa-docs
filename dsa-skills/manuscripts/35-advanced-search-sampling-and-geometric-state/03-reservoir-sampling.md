@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### One Random Line From A Pipe
 
-A support dashboard shows one random request from today's traffic so engineers can spot odd cases. The traffic arrives as a log stream, one line at a time, and nobody knows in advance how many lines will come. By the evening the stream holds a billion lines of about 100 bytes each. A first version collects every line into a list and then picks a random position. It works on a developer laptop. On the real stream it needs about 100 GB of memory and the process dies before the dashboard refreshes.
+A support dashboard shows one random request from today's traffic so engineers can spot odd cases. The traffic arrives as a log stream, one line at a time, and nobody knows in advance how many lines arrive. By the evening the stream holds a billion lines of about 100 bytes each. A first version collects every line into a list and then picks a random position. It works on a developer laptop. On the real stream it needs about 100 GB of memory and the program dies before the dashboard refreshes.
 
 Two facts make the task hard. The program sees each line once and cannot go back, and it cannot hold the stream. Yet the line on display must be fair. A line from the first minute and a line from the last minute must have exactly the same chance of being chosen. The question of this lesson is whether a program can keep one line, or a handful, while still being fair at every moment the stream stops.
 
@@ -41,9 +41,15 @@ The first item stays only if the three later coins all come up "keep", which has
 <!-- stage: bottleneck -->
 ### Memory Grows, Coins Skew
 
+#### Memory Grows With The Stream
+
 The store-all design takes O(n) space for a stream of `n` items, and `n` has no upper limit. The sampling step costs O(1) time, so the bottleneck is memory alone. For a billion lines the list does not fit, and a stream that never ends has no moment at which it is allowed to be picked from.
 
+#### Why The Fixed Coin Skews
+
 The coin rule shows what a repair has to fix. A fair rule treats every item that has arrived the same way, and a fixed coin cannot. The first item is exposed to many coins, one for each later item. The last item faces only its own. The more items have arrived, the less likely each newer item should be to replace the held one, because there are more earlier items that also deserve their fair share.
+
+#### What A Fix Needs
 
 A fix therefore needs a replacement chance that depends on how many items have arrived. The chance for the third item must differ from the chance for the thousandth. The program needs a counter, one held item, and a rule that makes every item equally likely whenever the stream stops. Memory of one item and one counter is O(1) and does not depend on `n`.
 
@@ -54,7 +60,7 @@ A fix therefore needs a replacement chance that depends on how many items have a
 
 #### The Rule For One Item
 
-The **reservoir** is the small array that holds the current sample. For a sample of one item, the reservoir has one slot. The first item always enters. When item number `t` arrives, with `t` counting from 1, the program makes a **replacement draw**: it asks for an integer from 0 to `t - 1`, and it replaces the held item with the new one only when the result is 0. The chance of replacement is `1 / t`, so item 2 replaces with chance one half, item 3 with chance one third, and item 1000 with chance one in a thousand.
+The **reservoir** is the small array that holds the current sample. For a sample of one item, the reservoir has one slot. The first item always enters. When item number `t` arrives, with `t` counting from 1, the program makes a **replacement draw**: it asks for an integer from 0 to `t - 1`. It replaces the held item with the new one only when the result is 0. The chance of replacement is `1 / t`, so item 2 replaces with chance one half, item 3 with chance one third, and item 1000 with chance one in a thousand.
 
 #### Why The Chances Come Out Equal
 
@@ -189,9 +195,9 @@ If items carry different weights, the chance `1 / t` is wrong and the next lesso
 - **Draws** use the bound equal to the number of nodes read so far.
 - **Memory** is O(1) beyond the list.
 
-**Example 1.** Input list `1 -> 2 -> 3` with scripted draws `0, 0` for the bounds 2 and 3, output `3`.
+**Example 1.** Input list with the values 1, 2 and 3 in this order, with scripted draws `0, 0` for the bounds 2 and 3, output `3`.
 
-**Example 2.** Input list `4 -> 5` with scripted draw `1` for the bound 2, output `4`.
+**Example 2.** Input list with the values 4 and 5 in this order, with scripted draw `1` for the bound 2, output `4`.
 
 **Hint.** Which variable plays the role of the array index in the previous exercise?
 

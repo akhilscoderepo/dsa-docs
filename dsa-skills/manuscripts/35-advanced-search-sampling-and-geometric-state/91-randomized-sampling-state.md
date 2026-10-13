@@ -7,16 +7,24 @@
 
 A game server awards one random reward to a player. Only some rewards qualify: the player's level must be high enough, the reward must not already be owned, and the season must be active. Each qualifying reward has a drop weight. The first implementation counts all rewards in the catalog, picks a random number below that count, and walks the catalog to the chosen position. When the position falls on a reward that does not qualify, the code gives the next qualifying reward instead. Players with few qualifying rewards notice that one reward appears far more often than the others.
 
-The error is a wrong denominator. A fair pick is fair among the items that qualify, with chances proportional to their weights, and the code computed its chances against the whole catalog. The lessons before this one taught three separate tools for fair random choice. This lesson asks how to combine them when a data structure decides which items qualify, and how to prove that the final chances are right.
+The error is the wrong total. A fair pick is fair among the items that qualify, with chances proportional to their weights, and the code computed its chances against the whole catalog. The lessons before this one taught three separate tools for fair random choice. This lesson asks how to combine them when a data structure decides which items qualify, and how to prove that the final chances are right.
 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
 
+#### Counting Eligible Items
+
 The lesson Reservoir Sampling supplied the one-pass rule for a stream of unknown length. The item at position `t` replaces the held item with probability `1 / t`, and a counter that counts only eligible items keeps the denominator correct. That lesson also supplied the habit of injecting the source of randomness so that a test can script every draw.
+
+#### Mapping Tickets To Items
 
 The lesson Weighted Selection supplied the ticket view. Each item owns a range of tickets as wide as its weight, and a uniform ticket from 1 to the total makes each item's chance proportional to its weight. It also supplied the rules for `long` totals and for zero weights.
 
+#### Testing Membership In A Shape
+
 The lesson Rejection Sampling supplied a way to sample a shape that has no formula. A uniform draw from a larger region is kept only when it passes a membership test, and the kept draws are uniform over the shape.
+
+#### Combining The Three
 
 The new work is the combination. The data structure, whether an array window, a linked list or a geometric test, decides which items are eligible. The probability rule must then use the total weight of the eligible items as its denominator. The lesson shows how each of the three tools keeps that denominator correct, and which of them applies when eligibility is discovered during a single pass.
 
@@ -102,7 +110,7 @@ The first trace reads five records in order, each written as a name and a weight
 
 #### Rejection On A Ring
 
-The second trace samples a point in a ring with inner radius 1 and outer radius 2. The square around the outer circle gives unit coordinates from -1 to 1, and a point is accepted when its squared distance from the center is between `0.25` and `1`, because the inner radius is half the outer radius. The pointer `trial` marks the trial. The first pair of draws lies inside the hole and is rejected. The second pair lies outside the outer circle and is rejected. The third pair lies in the ring and is accepted, and the result is scaled by the outer radius.
+The second trace samples a point in a ring with inner radius 1 and outer radius 2. The square around the outer circle gives unit coordinates from -1 to 1. A point is accepted when its squared distance from the center is between `0.25` and `1`, because the inner radius is half the outer radius. The pointer `trial` marks the trial. The first pair of draws lies inside the hole and is rejected. The second pair lies outside the outer circle and is rejected. The third pair lies in the ring and is accepted, and the result is scaled by the outer radius.
 
 ```trace
 {"cells":["(0.1, -0.1)","(-0.9, 0.9)","(0.8, 0.0)"],"pointers":["trial"],"steps":[{"at":{"trial":0},"vars":{"x":0.1,"y":-0.1,"r2":0.02,"verdict":"reject"},"note":"Draws 0.55 and 0.45 give the unit point (0.1, -0.1) with squared distance 0.02. It lies inside the hole, below 0.25, so it is rejected."},{"at":{"trial":1},"vars":{"x":-0.9,"y":0.9,"r2":1.62,"verdict":"reject"},"note":"Draws 0.05 and 0.95 give the unit point (-0.9, 0.9) with squared distance 1.62. It lies outside the outer circle, above 1, so it is rejected."},{"at":{"trial":2},"vars":{"x":0.8,"y":0.0,"r2":0.64,"verdict":"accept"},"note":"Draws 0.9 and 0.5 give the unit point (0.8, 0.0) with squared distance 0.64. It is accepted and returned after scaling by 2."}]}
@@ -144,7 +152,7 @@ final class WeightedReservoir {
 
 #### Recognizing The Pattern
 
-Use this combination when a statement asks for a random pick among items that satisfy a condition, and the condition is decided by a data structure such as a window, a list traversal, a set or a geometric test. Before coding, name the eligible set, name its total weight and write the chance of one eligible item as a fraction. The invariant to protect is that every eligible item has chance `weight / denominator` and nothing else has any chance.
+Use this combination when a statement asks for a random pick among items that satisfy a condition. A data structure decides the condition, for example a window, a list traversal, a set or a geometric test. Before coding, name the eligible set, name its total weight and write the chance of one eligible item as a fraction. The invariant to protect is that every eligible item has chance `weight / denominator` and nothing else has any chance.
 
 #### False Friends
 
@@ -191,7 +199,7 @@ If the weights change between picks, a Fenwick tree keeps the totals current. If
 - **Walk** reads each node once and does not change the list.
 - **Memory** is O(1) beyond the list.
 
-**Example 1.** Input list `(5, x2) -> (8, x1) -> (3, x3)` with scripted draws `0, 4` for the bounds 3 and 6, output `8`.
+**Example 1.** Input list of three nodes `(5, x2)`, `(8, x1)` and `(3, x3)` in this order, with scripted draws `0, 4` for the bounds 3 and 6, output `8`.
 
 **Example 2.** Input list `(7, x4)`, no draws, output `7`.
 
@@ -204,7 +212,7 @@ If the weights change between picks, a Fenwick tree keeps the totals current. If
 
 **Prerequisites.** The Linked List Random Node exercise above and the Weighted Selection lesson. This exercise uses zero-based tickets and weights that need the full `long` range.
 
-**Problem.** Design the class `WidePicker` with a constructor that receives `long[] w` and a `LongUnaryOperator pick`. The constructor builds prefix totals with `Math.addExact`. It throws `IllegalArgumentException` for an empty array, a negative weight or a zero total, and `ArithmeticException` when the total exceeds `Long.MAX_VALUE`. The method `pickIndex()` takes the ticket `pick.applyAsLong(total)`, which lies from 0 to `total - 1`, and returns the first index whose prefix total is strictly greater than the ticket.
+**Problem.** Design the class `WidePicker` with a constructor that receives `long[] w` and a `LongUnaryOperator pick`. The constructor builds prefix totals with `Math.addExact`. It throws `IllegalArgumentException` when the array is empty, when any weight is negative, or when the total is zero, and `ArithmeticException` when the total exceeds `Long.MAX_VALUE`. The method `pickIndex()` takes the ticket `pick.applyAsLong(total)`, which lies from 0 to `total - 1`, and returns the first index whose prefix total is strictly greater than the ticket.
 
 **Constraints.** The limits are:
 - **Length** of `w` is from 0 to 10^5.

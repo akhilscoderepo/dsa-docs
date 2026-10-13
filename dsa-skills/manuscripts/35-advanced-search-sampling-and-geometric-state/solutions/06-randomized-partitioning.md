@@ -66,7 +66,7 @@ public final class UniformPivotIndexBuild {
 **Approach.**
 Each round draws the pivot position, swaps the pivot to the end of the active range and scans the rest of the range once. A value below the pivot goes to the next free slot at the front, and the pivot then swaps into the slot after the last smaller value. That slot, `store`, is the pivot's final index in sorted order. If `store` equals the wanted index `k - 1`, the loop returns. If the wanted index is smaller, the range shrinks to the part before `store`, and otherwise to the part after it. The part that is dropped never contains the wanted index, so the answer stays inside the active range. The invariant is that every value left of `lo` is no larger than every value in the range, and every value right of `hi` is no smaller.
 
-The program compares the method with a sort on random arrays that include repeats. It also checks the lesson's claim about the last-element rule: on a sorted array the last-pivot version makes exactly `n(n - 1) / 2` comparisons, and the random version makes far fewer on the same input.
+The program compares the method with a sort on random arrays that include repeats. It also checks the lesson's claim about the last-element rule: on a sorted array the last-pivot version makes exactly `n(n - 1) / 2` comparisons. The random version makes far fewer on the same input.
 
 **Complexity.**
 - **Time** is O(n) expected for any input order and O(n^2) in the worst case.

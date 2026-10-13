@@ -51,9 +51,15 @@ Every cell within cost 9 of the start pops first, which is a diamond of 181 cell
 <!-- stage: bottleneck -->
 ### Cost So Far Ignores The Goal
 
+#### Why The Queue Ignores The Goal
+
 The loop costs O(V log V) time and O(V) space for `V` cells that can pop. In the open case above, `V` is the number of cells within the goal's cost from the start, and it grows with the square of the distance. The priority `g` measures only the past. A cell above the row and a cell on the row have the same `g` when they are the same number of steps from the start, so the queue treats them the same. The goal is on the row, and only one of them leads there.
 
+#### What Extra Information Helps
+
 The missing piece is information about the future. For every cell, the planner can cheaply compute a number `h` that tells how much cost might remain, for example the count of rows and columns between the cell and the goal. Combining `g` and `h` into one priority would reorder the queue so that cells headed toward the goal pop first.
+
+#### Why A Careless Guess Fails
 
 A careless guess breaks the exact answer. If `h` claims the remaining cost is larger than it truly is, a cheap route can hide behind a cell that the queue ranks too low. The search then pops the goal through a worse route. The repair must say precisely which guesses are allowed.
 
@@ -177,7 +183,7 @@ If the search needs distances to every cell, as in a map of reachable areas, the
 
 **Prerequisites.** The priority `f = g + h` and the stale-entry skip from this lesson.
 
-**Problem.** Write `int[] zeroHeuristic(int[][] cost, int sr, int sc, int gr, int gc)`. The grid `cost` has entries 0 for a wall and 1 to 9 for an open cell with that entering cost. A move goes to one of four neighbours and pays the entering cost of the target cell. Run the search with `h = 0` for every cell. The queue pops the smallest `f`, then the smallest row, then the smallest column. Return `{c, e}`, where `c` is the cheapest cost from the start to the goal or -1 if unreachable, and `e` is the number of non-stale pops, counting the goal pop, before the method returns.
+**Problem.** Write `int[] zeroHeuristic(int[][] cost, int sr, int sc, int gr, int gc)`. The grid `cost` has entries 0 for a wall and 1 to 9 for an open cell with that entering cost. A move goes to one of four neighbours and pays the entering cost of the target cell. Run the search with `h = 0` for every cell. The queue pops the smallest `f`, then the smallest row, then the smallest column. Return `{c, e}`. Here `c` is the cheapest cost from the start to the goal, or -1 if unreachable. The value `e` is the number of non-stale pops, counting the goal pop, before the method returns.
 
 **Constraints.** The limits are:
 - **Grid** has 1 to 50 rows and 1 to 50 columns.

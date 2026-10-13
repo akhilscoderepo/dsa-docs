@@ -5,7 +5,7 @@
 <!-- id: rs35-sample-one -->
 
 **Approach.**
-The method stores the first item as the held item and starts the counter `t` at 1. For each later item it raises `t` by one and calls `pick` with the new `t`, so the bound grows from 2 up to `n`. A result of 0 replaces the held item. The chance that item `t` is held right after its own draw is `1 / t`, and an older item that was held with chance `1 / (t - 1)` stays with chance `(t - 1) / t`, so every item holds with chance `1 / t`. The method checks the range of each draw before using it. The invariant is that after `t` items each of them is held with chance `1 / t`.
+The method stores the first item as the held item and starts the counter `t` at 1. For each later item it raises `t` by one and calls `pick` with the new `t`, so the bound grows from 2 up to `n`. A result of 0 replaces the held item. The chance that item `t` is held right after its own draw is `1 / t`. An older item that was held with chance `1 / (t - 1)` stays with chance `(t - 1) / t`, so every item holds with chance `1 / t`. The method checks the range of each draw before using it. The invariant is that after `t` items each of them is held with chance `1 / t`.
 
 The program proves fairness by enumeration. For each stream length up to 6 it runs the method on every possible sequence of draws, which has `n!` members, and counts how often each position is the held one. Every position must appear exactly `(n - 1)!` times. A scripted source checks that the bounds are 2, 3 and so on.
 
@@ -155,7 +155,7 @@ public final class LinkedListRandomNodeVary {
 <!-- id: rs35-first-k-short-stream -->
 
 **Approach.**
-The result array has length `min(k, n)`, which covers a stream shorter than `k` without a special case. The first `min(k, n)` items go into slots 0 onward in arrival order. For each later item number `t` the method draws `j` from bound `t`. When `j < k` the item overwrites slot `j`. The new item is kept with chance `k / t`, and a specific held item is overwritten with chance `(k / t) * (1 / k) = 1 / t`, so an item held with chance `k / (t - 1)` keeps `k / t`. The invariant is that after `t` items every item seen is in the reservoir with chance `k / t` (or with chance 1 when `t <= k`).
+The result array has length `min(k, n)`, which covers a stream shorter than `k` without a special case. The first `min(k, n)` items go into slots 0 onward in arrival order. For each later item number `t` the method draws `j` from bound `t`. When `j < k` the item overwrites slot `j`. The new item is kept with chance `k / t`. A specific held item is overwritten with chance `(k / t) * (1 / k) = 1 / t`, so an item held with chance `k / (t - 1)` keeps `k / t`. The invariant is that after `t` items every item seen is in the reservoir with chance `k / t` (or with chance 1 when `t <= k`).
 
 The program enumerates every sequence of draws for stream lengths up to 6 and every `k` up to 7. For each case, every position must appear in the final reservoir in exactly `k * n! / (k! * n)` sequences when `n >= k`, and in every sequence when `n < k`. It also checks the two examples and the empty stream.
 

@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Servers With Unequal Capacity
 
-A load balancer sends each incoming request to one of three servers. Server 0 has weight 1, server 1 has weight 3 and server 2 has weight 6, so over many requests server 2 should receive 60 percent of the traffic. A test with these weights passes. In production the weights are capacities measured in requests per hour, and a single weight reaches a billion. The balancer builds a table with one row per unit of weight, and the process runs out of memory while it fills the table.
+A load balancer sends each incoming request to one of three servers. Server 0 has weight 1, server 1 has weight 3 and server 2 has weight 6, so over many requests server 2 should receive 60 percent of the traffic. A test with these weights passes. In production the weights are capacities measured in requests per hour, and a single weight reaches a billion. The balancer builds a table with one row per unit of weight, and the program runs out of memory while it fills the table.
 
 The task is to choose index `i` with probability proportional to `w[i]`, using memory that grows with the number of servers and not with the sum of their weights. Each pick must also be fast, because the balancer chooses for every request. The question of this lesson is how a single random number can be mapped to the right server without a table of billions of rows.
 

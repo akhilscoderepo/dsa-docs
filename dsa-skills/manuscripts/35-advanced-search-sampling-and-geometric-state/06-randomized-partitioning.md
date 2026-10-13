@@ -41,9 +41,15 @@ The pivot is always the largest value of the active range, so every round compar
 <!-- stage: bottleneck -->
 ### One Bad Pivot Removes One Value
 
+#### Cost Depends On The Pivot
+
 The method costs O(n) time per round and the number of rounds depends on the pivot. A pivot that splits the range into two nearly equal parts cuts the work in half each round, so the total is about `n + n/2 + n/4 + ...`, which is O(n). A pivot that is the largest or smallest value removes one element per round, so the total is `n + (n - 1) + ...`, which is O(n^2). The worst case needs O(n^2) time and O(1) space.
 
+#### Fixed Rules Can Be Defeated
+
 The pivot rule decides which case occurs, and a fixed rule can be defeated. The last element is the maximum on a sorted ascending array. The first element fails on a sorted descending array. A middle element fails on a specially built array that places extreme values at the middle of every active range. Any rule that reads positions in a fixed way has some input that makes every split unbalanced.
+
+#### Equal Values Break The Split
 
 A second weakness hides in the partition itself. When many values are equal, the test `a[j] < pv` leaves all of the equal values on one side. An array of 10^5 equal values gives the same removal of one element per round, even with a good pivot. The repair has to handle both the choice of the pivot and the equal values.
 
@@ -140,7 +146,7 @@ final class RandomizedSelect {
 
 #### Recognizing The Pattern
 
-Use this method when the task needs the k-th smallest value, a median or a percentile, one rank is wanted and not the full order, and the input order is not under your control. Before coding, decide whether equal values are common and whether the input array may be rearranged. The invariant to keep is that the wanted rank lies in the active range after every round.
+Use this method when the task needs the k-th smallest value, a median or a percentile. Check two conditions: only one rank is wanted, and the input order is not under your control. Before coding, decide whether equal values are common and whether the input array may be rearranged. The invariant to keep is that the wanted rank lies in the active range after every round.
 
 #### False Friends
 

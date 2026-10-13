@@ -42,9 +42,13 @@ The loop needs 2^40, about 1.1 x 10^12, checks. At one per nanosecond that is ro
 <!-- stage: bottleneck -->
 ### Recomputing Totals For Every Pair
 
+#### Repeated Work In The Loop
+
 The loop costs O(2^n * n) time and O(1) extra space. The `2^n` factor is the real problem. Look at what happens inside it. Take two patterns that agree on the first 20 items and differ only on the last 20. The loop adds up the same first 20 items for both patterns, then adds different last items. Across all patterns, the same 2^20 partial totals of the first group are rebuilt 2^20 times each.
 
 The patterns also have a structure that the loop ignores. Choosing a subset of 40 items is the same as choosing a subset of the first 20 and, independently, a subset of the last 20. The final total is the sum of two numbers, one from each side, and the choices on the two sides never interact. The loop pairs every first-group choice with every last-group choice one at a time, and that pairing is where the 2^40 comes from.
+
+#### Looking Up Instead Of Pairing
 
 Pairing is not necessary. If the loop fixes one first-group total `s` and wants the total closest to `target`, it needs one value from the last group that is closest to `target - s`. Finding the closest value to a given number in a list is a search question, and a sorted list answers it quickly. So the requirement is a way to write each group's totals once and look up the best partner for each.
 

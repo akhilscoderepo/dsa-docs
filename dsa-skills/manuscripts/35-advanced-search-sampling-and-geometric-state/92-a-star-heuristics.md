@@ -14,7 +14,7 @@ The search of the previous lesson is exact only when the guess obeys a rule, and
 
 Chapter 24 supplied shortest paths on weighted directed graphs. Its Dijkstra loop keeps a queue of entries ordered by cost so far, skips entries whose cost is larger than the best known cost, and finalizes a vertex when it pops. It also supplied the proof that this works because no edge weight is negative.
 
-The lesson A Star Search supplied the priority `f = g + h`, the two properties of a guess `h`, and the proof that the first goal pop is optimal when the guess never overestimates. It worked on a grid, where Manhattan distance is the guess and no test of the guess was needed, because the grid made the guess obviously valid.
+The lesson A Star Search supplied the priority `f = g + h` and the two properties of a guess `h`. It also supplied the proof that the first goal pop is optimal when the guess never overestimates. It worked on a grid, where Manhattan distance is the guess and no test of the guess was needed, because the grid made the guess obviously valid.
 
 The new work is the combination on general graphs. The guess becomes an array of numbers supplied by a caller, and the program has to check it against the graph. The lesson derives a test for each of the two properties and shows that a consistent guess turns the search into Dijkstra's algorithm on adjusted edge weights, which reuses the chapter 24 proof. It then shows what changes when the guess is valid but not consistent.
 
@@ -59,9 +59,15 @@ The start entry has priority 0 and pops first. It pushes G with cost 10 and prio
 <!-- stage: bottleneck -->
 ### Nothing Checks The Guess
 
+#### Cost Is Not The Problem
+
 The search costs O(E log V) time and O(V + E) space, the same as Dijkstra's algorithm. The cost is not the problem. The problem is that the answer depends on the guess, and the guess is an input that is never validated. The predict example shows a single wrong number turning the exact answer 2 into 10.
 
+#### Two Questions A Program Can Answer
+
 Two questions need an answer that a program can compute. First, how far is each vertex from the goal in truth? If the program knows that distance, it can compare it with the guess and report a violation. Second, a valid guess can still be loose in one particular way: it can drop by more than the edge weight when the search moves from one vertex to the next. The first lesson's proof assumed the guess never overestimates, but its stronger rule, which lets a vertex be finalized at its first pop, needs more.
+
+#### Why A Manual Check Fails
 
 A graph with many vertices also makes a manual check impossible. A planner with a million junctions has a million guesses. The test has to be a loop over the vertices and the edges, with a clear yes or no and a measure of how far the worst violation reaches.
 
@@ -82,7 +88,7 @@ The **reduced weight** of an edge `(u, v)` with weight `w` is `w + h(v) - h(u)`.
 
 A guess can be admissible and still have a negative reduced weight on some edge. The search can then pop a vertex with a cost that a later pop improves. To stay exact, the search must **reopen** the vertex: when an entry with a smaller cost than the recorded cost arrives for a vertex that was already expanded, it expands the vertex again and updates its neighbours. The stale-entry skip still discards entries whose cost is larger than the recorded cost. Reopening costs extra expansions, and the optimality proof from the previous lesson still holds for an admissible guess.
 
-The invariant is that the recorded cost of a vertex never increases, and the first goal pop is optimal as long as the guess is admissible and cheaper entries are never discarded.
+The invariant is twofold. The recorded cost of a vertex never increases, and the first goal pop is optimal as long as the guess is admissible and cheaper entries are never discarded.
 
 <!-- stage: variables -->
 ### Guess, Remaining Cost And Excess
@@ -169,7 +175,7 @@ final class GuessChecker {
 
 #### Recognizing The Pattern
 
-Use this combination when a shortest-path search has one goal, edge weights are non-negative, and a guess toward the goal comes from outside the graph, for example from coordinates, from a table or from a learned model. Before shipping the guess, compute the true remaining cost on test graphs and run the edge test. The invariant to protect is that the guess never exceeds the true remaining cost, and that a negative reduced weight triggers reopening.
+Use this combination when a shortest-path search has one goal and edge weights are non-negative. The guess toward the goal comes from outside the graph, for example from coordinates, from a table or from a learned model. Before shipping the guess, compute the true remaining cost on test graphs and run the edge test. The invariant to protect is that the guess never exceeds the true remaining cost, and that a negative reduced weight triggers reopening.
 
 #### False Friends
 
