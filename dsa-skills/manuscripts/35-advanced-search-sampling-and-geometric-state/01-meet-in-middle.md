@@ -31,7 +31,7 @@ final class NaiveClosest {
 }
 ```
 
-The method is correct and easy to check. For `n = 20` it makes about a million patterns and finishes at once. A different attempt would try dynamic programming over the total, as in the knapsack lessons, but prices up to a billion make the table of totals far too large.
+The method is correct and easy to check. For `n = 20` it makes about a million patterns and finishes at once. A different attempt would try dynamic programming over the total, but prices up to a billion make the table of totals far too large.
 
 ```predict
 Suppose the machine checks one pattern per nanosecond and ignores the inner loop. About how long does the loop take for n = 40? Now cut the 40 items into two groups of 20 and write down every subset total of each group separately. How many totals do you write down in all?
@@ -78,7 +78,7 @@ The invariant is this: the pairs (first-half sum, second-half sum) stand for eve
 
 The code keeps six names, and each one is set in a known place.
 
-- **mid** is `n / 2`. It is the first position of the second half.
+- **mid** is `n / 2`. It is the first position of the second half. The binary search uses its own probe, called `m` in the code and shown as the pointer `mid` in the trace.
 - **left** is the array of all first-half sums, with `2^mid` entries.
 - **right** is the sorted array of all second-half sums, with `2^(n - mid)` entries.
 - **target** is the goal total, stored as a `long`.
@@ -111,7 +111,7 @@ The second trace searches the sorted second-half list `0 4 7 11 15` for the comp
 
 #### Building And Searching
 
-The method `halfSums` builds the sums of positions `from` to `to - 1` by doubling. The method `closest` sorts the second list and runs a lower-bound binary search for each first-half sum.
+The method `halfSums` builds the sums of positions `from` to `to - 1` by doubling. The method `closest` sorts the second list and runs a binary search for the first entry at or above the complement for each first-half sum.
 
 ```java
 final class MeetInMiddle {

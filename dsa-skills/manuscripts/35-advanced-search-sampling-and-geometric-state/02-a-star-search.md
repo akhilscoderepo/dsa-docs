@@ -40,12 +40,12 @@ final class GridDijkstra {
 }
 ```
 
-The planner is exact, and tests with small floors pass. A tempting repair is to stop the search early at some cost limit, but a limit that is too tight loses valid routes.
+The planner is exact, and tests with small floors pass.
 
 ```predict
-The floor is open, every enter cost is 1, the start is at column 0, and the goal is 10 cells to the right on the same row. Roughly how many cells does the loop pop before it returns? If the planner could add to each entry a guess of how far the goal still is, which cells would never be popped?
+The floor is open, every enter cost is 1, the start is at column 0, and the goal is 10 cells to the right on the same row. The floor has 21 rows and 21 columns, and the start is in the middle of the left edge. Roughly how many cells does the loop pop before it returns? If the planner could add to each entry a guess of how far the goal still is, which cells would never be popped?
 
-Every cell within cost 9 of the start pops first, which is a diamond of 181 cells, and some cells at cost 10 pop before the goal. The run on a floor of 21 by 21 cells pops 111 cells because the start sits at the edge of the diamond on some sides. Cells that sit above or below the row do not lie on any cheapest route, yet they pop because their cost from the start is small. A guess of the remaining distance would push those entries behind the entries on the row.
+On an unbounded open floor, every cell within cost 9 of the start pops first, which is a diamond of 181 cells, and some cells at cost 10 pop before the goal. The logged run uses a floor of 21 by 21 cells with the start in the middle of the left edge, so the edge cuts the diamond and the loop pops 111 cells. Cells that sit above or below the row do not lie on any cheapest route, yet they pop because their cost from the start is small. A guess of the remaining distance would push those entries behind the entries on the row.
 ```
 
 <!-- stage: bottleneck -->

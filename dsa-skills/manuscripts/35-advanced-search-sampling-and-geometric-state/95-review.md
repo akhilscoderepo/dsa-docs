@@ -10,7 +10,7 @@ A search that skips a subset boundary, a pick that favours the last item, and a 
 ```
 
 ```quiz
-{"id": "rq35-rev-multiplicity", "q": "Why must the half-sum lists keep equal sums as separate entries when counting subsets?", "options": ["Equal sums make the list shorter.", "Two different subsets can have the same sum, and each one counts.", "The sort needs distinct keys.", "Equal sums are always zero."], "answer": 1, "explain": "The answer counts position sets. Dropping duplicates would undercount subsets whose values coincide."}
+{"id": "rq35-rev-multiplicity", "q": "Why must the half-sum lists keep equal sums as separate entries when counting subsets?", "options": ["Two different subsets can have the same sum, and each one counts.", "Equal sums make the list shorter.", "The sort needs distinct keys.", "Equal sums are always zero."], "answer": 0, "explain": "The answer counts position sets. Dropping duplicates would undercount subsets whose values coincide."}
 ```
 
 ```quiz
@@ -26,25 +26,25 @@ A search that skips a subset boundary, a pick that favours the last item, and a 
 ```
 
 ```quiz
-{"id": "rq35-rev-ticket-boundary", "q": "The weights are 2, 5 and 3, and tickets run from 1 to 10. Which index owns ticket 7?", "options": ["Index 0.", "Index 1.", "Index 2.", "No index."], "answer": 1, "explain": "The prefix totals are 2, 7 and 10. The first prefix total at least 7 belongs to index 1, so the boundary ticket stays with the earlier index."}
+{"id": "rq35-rev-ticket-boundary", "q": "The weights are 2, 5 and 3, and tickets run from 1 to 10. Which index owns ticket 7?", "options": ["Index 1.", "Index 0.", "Index 2.", "No index."], "answer": 0, "explain": "The prefix totals are 2, 7 and 10. The first prefix total at least 7 belongs to index 1, so the boundary ticket stays with the earlier index."}
 ```
 
 ```quiz
-{"id": "rq35-rev-polar-bias", "q": "Why does a uniform distance and a uniform angle give too many points near the center of a circle?", "options": ["The angle is not uniform.", "Rings near the wall have more area but receive the same share of points as rings near the center.", "The generator repeats values.", "Cosine is larger near zero."], "answer": 1, "explain": "Equal distance steps are not equal areas. A ring at distance d has area proportional to d, so the center is crowded."}
+{"id": "rq35-rev-polar-bias", "q": "Why does a uniform distance and a uniform angle give too many points near the center of a circle?", "options": ["Rings near the wall have more area but receive the same share of points as rings near the center.", "The angle is not uniform.", "The generator repeats values.", "Cosine is larger near zero."], "answer": 0, "explain": "Equal distance steps are not equal areas. A ring at distance d has area proportional to d, so the center is crowded."}
 ```
 
 ```quiz
-{"id": "rq35-rev-random-pivot", "q": "Why does a uniformly random pivot protect quickselect from sorted input?", "options": ["Sorted input becomes unsorted.", "The pivot lands in the middle half with probability one half whatever the order is.", "The partition becomes unnecessary.", "The worst case disappears."], "answer": 1, "explain": "The chance of a good split depends on the draw, not on the input order. The worst case remains possible but becomes unlikely."}
+{"id": "rq35-rev-random-pivot", "q": "Why does a uniformly random pivot protect quickselect from sorted input?", "options": ["Sorted input becomes unsorted.", "The partition becomes unnecessary.", "The worst case disappears.", "The pivot lands in the middle half with probability one half whatever the order is."], "answer": 3, "explain": "The chance of a good split depends on the draw, not on the input order. The worst case remains possible but becomes unlikely."}
 ```
 
 ```quiz
-{"id": "rq35-rev-eligible-total", "q": "A pick must be fair among the items that qualify. What must the denominator of each chance be?", "options": ["The number of all items in the catalog.", "The total weight of the qualifying items.", "The weight of the heaviest item.", "The length of the longest run of non-qualifying items."], "answer": 1, "explain": "Each qualifying item needs chance weight divided by the eligible total. Any other denominator moves probability to the wrong items."}
+{"id": "rq35-rev-eligible-total", "q": "A pick must be fair among the items that qualify. What must the denominator of each chance be?", "options": ["The total weight of the qualifying items.", "The number of all items in the catalog.", "The weight of the heaviest item.", "The length of the longest run of non-qualifying items."], "answer": 0, "explain": "Each qualifying item needs chance weight divided by the eligible total. Any other denominator moves probability to the wrong items."}
 ```
 
 ```quiz
-{"id": "rq35-rev-admissible-test", "q": "How can a program test whether a guess never exceeds the true remaining cost?", "options": ["Run the search once and compare costs.", "Run Dijkstra on the reversed graph from the goal and compare every vertex.", "Check that the guess is positive.", "Sort the guesses."], "answer": 1, "explain": "The reversed run gives the exact remaining cost of every vertex. The test is one comparison per vertex."}
+{"id": "rq35-rev-admissible-test", "q": "How can a program test whether a guess never exceeds the true remaining cost?", "options": ["Run the search once and compare costs.", "Check that the guess is positive.", "Sort the guesses.", "Run Dijkstra on the reversed graph from the goal and compare every vertex."], "answer": 3, "explain": "The reversed run gives the exact remaining cost of every vertex. The test is one comparison per vertex."}
 ```
 
 ```quiz
-{"id": "rq35-rev-reopen", "q": "A guess is admissible but not consistent. What must the search do when a cheaper entry arrives for a cell that was already expanded?", "options": ["Ignore it.", "Expand the cell again.", "Return an error.", "Add the cost to the old one."], "answer": 1, "explain": "Reopening keeps the answer exact for an admissible guess. Ignoring the cheaper entry can return a longer route."}
+{"id": "rq35-rev-reopen", "q": "A guess is admissible but not consistent. What must the search do when a cheaper entry arrives for a cell that was already expanded?", "options": ["Expand the cell again.", "Ignore it.", "Return an error.", "Add the cost to the old one."], "answer": 0, "explain": "Reopening keeps the answer exact for an admissible guess. Ignoring the cheaper entry can return a longer route."}
 ```

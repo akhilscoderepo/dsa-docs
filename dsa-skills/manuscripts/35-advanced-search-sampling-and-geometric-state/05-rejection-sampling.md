@@ -94,7 +94,7 @@ The first trace follows three trials of the circle sampler. The pointer `trial` 
 {"cells":["(-0.8, 0.8)","(0.8, -0.8)","(0.2, -0.4)"],"pointers":["trial"],"steps":[{"at":{"trial":0},"vars":{"u":0.1,"v":0.9,"x":-0.8,"y":0.8,"r2":1.28,"verdict":"reject"},"note":"Draws 0.1 and 0.9 give the point (-0.8, 0.8) with squared distance 1.28. It is above 1, so the point is rejected."},{"at":{"trial":1},"vars":{"u":0.9,"v":0.1,"x":0.8,"y":-0.8,"r2":1.28,"verdict":"reject"},"note":"Draws 0.9 and 0.1 give the point (0.8, -0.8) with squared distance 1.28. It is above 1, so the point is rejected."},{"at":{"trial":2},"vars":{"u":0.6,"v":0.3,"x":0.2,"y":-0.4,"r2":0.2,"verdict":"accept"},"note":"Draws 0.6 and 0.3 give the point (0.2, -0.4) with squared distance 0.2. It is at most 1, so the point is accepted and returned."}]}
 ```
 
-#### Digits From Seven Faces
+#### Ten Values From Seven Faces
 
 The second trace uses the same idea on integers. A die with seven faces numbered 1 to 7 must produce a fair number from 1 to 10. Two rolls `a` and `b` give the index `(a - 1) * 7 + b`, which is uniform over 1 to 49. Only the indexes 1 to 40 divide evenly into 10 groups of 4, so the loop rejects indexes 41 to 49. The first roll pair `6, 6` gives index 41 and is rejected. The pair `7, 3` gives index 45 and is rejected. The pair `2, 5` gives index 12, which is accepted, and the result is `1 + (12 - 1) % 10 = 2`.
 

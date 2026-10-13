@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### The Median Query That Got Slow
 
-A monitoring job reports the 95th percentile of response times for each hour. It copies the hour's measurements into an array and selects the right value with quickselect, which avoids sorting the whole array. The job runs in milliseconds on live data. One night an engineer replays the logs after a backup step that sorts them by time of arrival, and the same job takes minutes on the same number of values. The code did not change, only the order of the input.
+A monitoring job reports the 95th percentile of response times for each hour. It copies the hour's measurements into an array and selects the right value with quickselect, which avoids sorting the whole array. The job runs in milliseconds on live data. One night an engineer replays the logs after a backup step that stores them sorted by value, and the same job takes minutes on the same number of values. The code did not change, only the order of the input.
 
 A method whose speed depends on how the input is ordered is risky, because an attacker or an unlucky export can choose the order. The question of this lesson is how to select the k-th smallest value so that no input order can make the method slow, while the answer stays exactly correct.
 
@@ -75,7 +75,7 @@ The invariant is that the wanted rank always lies inside the active range, and e
 <!-- stage: variables -->
 ### Range, Pivot And Three Bands
 
-The loop keeps eight names.
+The loop keeps nine names.
 
 - **lo** and **hi** are the ends of the active range, inclusive. Both change only when a side is dropped.
 - **target** is the 0-based rank of the wanted value in sorted order. It equals `k - 1` for the k-th smallest.

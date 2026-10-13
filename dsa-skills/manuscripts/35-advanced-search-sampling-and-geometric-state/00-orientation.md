@@ -1,11 +1,11 @@
 <!-- section: orientation -->
 ## Orientation
 
-A coupon tool must pick the best subset of 40 items for a budget, and a loop over every subset never finishes. A promotion engine must choose one winner at random, and its winners cluster at the start of the list. A map app must find a route fast, and its shortcut sometimes returns a slower road. Each problem has a correct method that is neither the first idea nor an exotic one. This chapter teaches six such methods for search that must split its work, and for random choices that must stay fair.
+A coupon tool must pick the best subset of 40 items for a budget, and a loop over every subset never finishes. A promotion engine must choose one winner at random, and its winners cluster at the start of the list. A map app must find a route fast, and its shortcut sometimes returns a slower road. Each problem has a correct method that is neither the first idea nor an exotic one. This chapter teaches six such methods and then two lessons that combine them for search that must split its work, and for random choices that must stay fair.
 
 ### Prerequisites
 
-You should know binary search, sorting, heaps, shortest paths with a priority queue, and the Fenwick tree from the range-query chapter. A **uniform** choice gives every allowed outcome the same chance. A **distribution** states the chance of each outcome. An **expected** cost is the average cost over the random draws for a fixed input. Every lesson passes the source of randomness into the method as a parameter, so tests can script each draw and check each probability by counting.
+You should know binary search, sorting, heaps, shortest paths with a priority queue, and the Fenwick tree from the range-query chapter. A **uniform** choice gives every allowed outcome the same chance. A **distribution** states the chance of each outcome. An **expected** cost is the average cost over the random draws for a fixed input. Every sampling lesson passes the source of randomness into the method as a parameter, so tests can script each draw and check each probability by counting.
 
 ### What Each Lesson Protects
 

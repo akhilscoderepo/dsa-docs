@@ -74,7 +74,7 @@ Building the prefix totals costs O(n) time and O(n) space. Each pick draws one t
 <!-- stage: variables -->
 ### Totals, Tickets And Search Range
 
-The picker keeps four names.
+The picker keeps five names.
 
 - **prefix** is a `long` array where `prefix[i]` is the sum of weights `0` to `i`. It is built once.
 - **total** is `prefix[n - 1]`, the number of tickets. It is a `long`, because a sum of 10^5 weights of 10^9 reaches 10^14.
@@ -149,7 +149,7 @@ Use this method when each item has a non-negative weight, the chance of an item 
 
 #### False Friends
 
-Reservoir sampling looks related, since both pick at random, but it chooses among items that arrive one at a time with equal chance. A random pick from a sorted array by value is a second false friend: it uses binary search too, but the array holds values, not cumulative weights. A pick by rejection, which draws an index and a number below the maximum weight and keeps the pair when the number is below the weight, is exact but its speed depends on how uneven the weights are.
+Reservoir sampling looks related, since both pick at random, but it chooses among items that arrive one at a time with equal chance. A random pick from a sorted array by value is a second false friend: it uses binary search too, but the array holds values, not cumulative weights. A pick that draws an index and a number below the maximum weight, and keeps the pair when the number is below the weight, is exact but its speed depends on how uneven the weights are. The next lesson treats that retry idea in general.
 
 #### When The Method Does Not Apply
 
@@ -230,7 +230,7 @@ If weights change between picks, rebuilding the prefix totals costs O(n) per upd
 
 **Constraints.** The limits are:
 - **Length** of `w` is from 1 to 10^5.
-- **Weights** are `int` values from 0 to 10^9, and the total is positive before every pick.
+- **Weights** are `int` values from 0 to 10^9, and the total may be 0 after an update.
 - **Calls** number at most 10^5 per object.
 - **Update** index `i` is valid, and the total after an update may be 0 until the next update.
 

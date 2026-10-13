@@ -182,7 +182,7 @@ If the weights change between picks, a Fenwick tree keeps the totals current. If
 
 **Example 2.** Input `nums = [4, 5]`, `target = 9`, `from = 0`, `to = 1`, no draws, output `-1`.
 
-**Hint.** Which count is the denominator when matches outside the window do not exist for this call?
+**Hint.** Which positions count toward the denominator: every match in the array, or only matches inside the window?
 
 **Changed decision.** The eligible set is a window of the array, and the answer may be empty.
 

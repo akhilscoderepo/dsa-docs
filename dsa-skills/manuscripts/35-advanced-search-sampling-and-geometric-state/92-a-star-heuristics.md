@@ -65,7 +65,7 @@ The search costs O(E log V) time and O(V + E) space, the same as Dijkstra's algo
 
 #### Two Questions A Program Can Answer
 
-Two questions need an answer that a program can compute. First, how far is each vertex from the goal in truth? If the program knows that distance, it can compare it with the guess and report a violation. Second, a valid guess can still be loose in one particular way: it can drop by more than the edge weight when the search moves from one vertex to the next. The first lesson's proof assumed the guess never overestimates, but its stronger rule, which lets a vertex be finalized at its first pop, needs more.
+Two questions need an answer that a program can compute. First, how far is each vertex from the goal in truth? If the program knows that distance, it can compare it with the guess and report a violation. Second, a valid guess can still be loose in one particular way: it can drop by more than the edge weight when the search moves from one vertex to the next. The proof in the previous lesson assumed the guess never overestimates, but its stronger rule, which lets a vertex be finalized at its first pop, needs more.
 
 #### Why A Manual Check Fails
 
@@ -109,7 +109,7 @@ Every vertex must be able to reach the goal for the checks to be defined. A vert
 
 #### A Guess That Saves Work
 
-The first trace runs the search on a graph of seven vertices placed on a plane. The guess is the Manhattan distance to the goal, and every edge is at least as long as the Manhattan distance of its endpoints, so the guess is consistent. The pointer `cur` marks the vertex that pops. The start pops first with cost 0 and priority equal to its guess. Vertex 5 pops next, because its priority is the lowest in the queue, and then the goal, vertex 6. Only three vertices are finalized, while Dijkstra's algorithm finalizes six on the same graph.
+The first trace runs the search on a graph of seven vertices placed on a plane. Vertices 0 to 6 sit at the positions (0,0), (4,1), (3,3), (2,2), (1,3), (0,1) and (4,0). The start is vertex 0 and the goal is vertex 6. The edges are written as `{from, to, weight}`: `{2,4,3}`, `{0,5,2}`, `{0,3,6}`, `{3,5,4}`, `{2,6,5}`, `{5,6,7}`, `{3,4,4}`, `{5,4,3}`, `{4,2,2}`, `{6,1,1}` and `{3,6,4}`. The guess is the Manhattan distance to the goal, and every edge is at least as long as the Manhattan distance of its endpoints, so the guess is consistent. The pointer `cur` marks the vertex that pops. The start pops first with cost 0 and priority equal to its guess. Vertex 5 pops next, because its priority is the lowest in the queue, and then the goal, vertex 6. Only three vertices are finalized, while Dijkstra's algorithm finalizes six on the same graph.
 
 ```trace
 {"cells":["0","1","2","3","4","5","6"],"pointers":["cur"],"steps":[{"at":{"cur":-1},"vars":{"queue":"vertex 0 (f 4)"},"note":"Start: vertex 0 has cost 0 and guess 4, so its priority is 4."},{"at":{"cur":0},"vars":{"g":0,"h":4,"f":4,"queue":"5 (f 7), 3 (f 10)"},"note":"Vertex 0 pops with cost 0, guess 4 and priority 4. Its edges push or improve the entries in the queue."},{"at":{"cur":5},"vars":{"g":2,"h":5,"f":7,"queue":"6 (f 9), 3 (f 10), 4 (f 11)"},"note":"Vertex 5 pops with cost 2, guess 5 and priority 7. Its edges push or improve the entries in the queue."},{"at":{"cur":6},"vars":{"g":9,"f":9,"pops":3},"note":"The goal pops with cost 9 after 3 finalized vertices. The first goal pop is optimal."}]}
@@ -179,7 +179,7 @@ Use this combination when a shortest-path search has one goal and edge weights a
 
 #### False Friends
 
-Scaling the guess by a constant above 1 looks like a safe speed-up and is a false friend, since it makes the guess exceed the true remaining cost whenever the path is not a straight line. A guess that is exact on a few test routes is a second false friend: the check must hold at every vertex. Passing the admissibility test does not prove consistency, and the two tests answer different questions.
+Scaling the guess by a constant above 1 looks like a safe speed-up and is a false friend, since it makes the guess exceed the true remaining cost whenever the true cost is below 1.5 times the straight-line distance. A guess that is exact on a few test routes is a second false friend: the check must hold at every vertex. Passing the admissibility test does not prove consistency, and the two tests answer different questions.
 
 #### When The Method Does Not Apply
 
