@@ -9,7 +9,9 @@ A configuration service stores the enabled feature flags of one customer as the 
 
 A developer writes the obvious scan. It counts `s` from 1 up to the mask and keeps `s` when `s & mask == s`, which means every set bit of `s` is also set in the mask. For the mask 13 the scan makes 13 steps to find 7 combinations, and nobody notices the waste.
 
-The waste appears when the enabled flags sit at high positions. A customer with only flags 0 and 29 enabled has 3 combinations, but the scan counts up to more than half a billion. The same pattern appears in every problem that splits a set of up to 20 items into two groups.
+The waste appears when the enabled flags sit at high positions. A customer with only flags 0 and 29 enabled has 3 combinations, but the scan counts up to more than half a billion. The same pattern appears in every problem that splits a set of up to about 16 items into two groups.
+
+One such problem is grouping. Four items weigh 4, 3, 3 and 2, and a group may hold items of total weight at most 6. The task is the smallest number of groups. A solution tries every way to cut the item set into two parts, and each part is a subset of the items.
 
 Formally, the input is one non-negative `int` called `mask`. A **subset** of the mask is an `int` whose set bits all lie among the set bits of the mask. The task is to visit every nonempty subset exactly once. This lesson asks how to reach each one in constant work, so the cost depends on the number of enabled flags and not on their positions.
 
@@ -43,9 +45,9 @@ It finds 3 subsets: 2^29 + 1, 2^29 and 1. It makes 2^29 + 1 = 536870913 iteratio
 
 The scan spends one iteration per integer, and a mask with k set bits has only 2^k subsets. The ratio of wasted work to useful work is about mask / 2^k. A mask of 30 bits with 2 set bits wastes about 2^30 iterations to reach 3 results.
 
-The cost grows when a dynamic program needs the subsets of every mask. Such a program loops over all masks from 0 to 2^n - 1 and runs the scan inside each one. The total is the sum of the mask values, which is about 2^n * 2^n / 2, so the cost is O(4^n). For n = 20 that is more than 10^12 steps, which no judge accepts.
+The cost grows when a dynamic program needs the subsets of every mask. Such a program loops over all masks from 0 to 2^n - 1 and runs the scan inside each one. The total is the sum of the mask values, which is about 2^n * 2^n / 2, so the cost is O(4^n). For n = 20 that is about 5.5 * 10^11 steps, which no judge accepts.
 
-Most of those steps are wasted. A mask with k set bits has only 2^k subsets, and the sum of 2^k over all masks is 3^n. Each of the n items is in the subset, in the rest of the mask, or outside the mask, which gives 3 choices per item. For n = 20 the number is 3486784401, about 300 times smaller than 4^20. The next section shows how to step directly from one subset to the next, so the work matches the number of subsets.
+Most of those steps are wasted. A mask with k set bits has only 2^k subsets, and the sum of 2^k over all masks is 3^n. Each of the n items is in the subset, in the rest of the mask, or outside the mask, which gives 3 choices per item. For n = 20 the number is 3486784401, about 160 times smaller than the 5.5 * 10^11 steps of the scan, yet still too many for a time limit. The next section shows how to step directly from one subset to the next, so the work matches the number of subsets.
 
 <!-- stage: insight -->
 ### Step Down To The Next Subset
@@ -74,7 +76,9 @@ A submask `sub` also names a split. The pair `sub` and `mask ^ sub` divides the 
 
 #### Sum Over Subsets With Bit Layers
 
-Some problems need, for every mask, the sum of `a[sub]` over all of its submasks. Enumerating them costs O(3^n). A **bit layer** reduces this to O(n * 2^n). Layer b visits every mask that has bit b set and adds the value of the mask with bit b cleared. After layer b, `f[mask]` holds the sum over the submasks that differ from `mask` only in bits 0 to b. After all n layers, every submask has been counted exactly once.
+Some problems need, for every mask, the sum of `a[sub]` over all of its submasks. This task is called **sum over subsets**, and the exercises abbreviate it as SOS. Enumerating the submasks costs O(3^n). A **bit layer** reduces this to O(n * 2^n). Layer b visits every mask that has bit b set and adds the value of the mask with bit b cleared. After layer b, `f[mask]` holds the sum over the submasks that differ from `mask` only in bits 0 to b. After all n layers, every submask has been counted exactly once.
+
+Take n = 2 and `a = [1, 2, 3, 4]`, indexed by masks 0 to 3. Layer 0 visits masks 1 and 3. It adds `f[0]` to `f[1]`, which gives 3, and adds `f[2]` to `f[3]`, which gives 7. The array is now `[1, 3, 3, 7]`. Layer 1 visits masks 2 and 3. It adds `f[0]` to `f[2]`, which gives 4, and adds `f[1]` to `f[3]`, which gives 7 + 3 = 10. The final array is `[1, 3, 4, 10]`. Mask 3 holds 1 + 2 + 3 + 4, one term for each of its four submasks.
 
 <!-- stage: variables -->
 ### Masks, Submasks And Tables
@@ -163,7 +167,7 @@ The first method runs in O(2^k) time for a mask with k set bits. The second runs
 
 #### Reading The Cue
 
-Use this method when a transition or a query ranges over every subset of a mask. Phrases such as "split the set into two groups", "for every subset of the chosen items" and "sum over all subsets" point here. The bit count n must stay small, usually at most 20, because 3^n is the cost of full enumeration.
+Use this method when a transition or a query ranges over every subset of a mask. Phrases such as "split the set into two groups", "for every subset of the chosen items" and "sum over all subsets" point here. The bit count n must stay small, because 3^n is the cost of full enumeration. That is feasible up to about n = 15 or 16, where 3^16 is about 43 million. The bit-layer sum costs only n * 2^n, so it reaches n = 20.
 
 #### Checking The Invariant
 
@@ -173,7 +177,7 @@ The invariant of the descending step is that every submask below the current one
 
 The first false friend is the counting scan from the opening, which gives correct output at a cost that depends on the highest bit. The second is a loop written `sub >= 0`, which never ends, because `-1 & mask` equals `mask`. The third is a split that visits both `sub` and `mask ^ sub` as separate cases and counts every pair twice. When the pair is unordered, the loop can fix the lowest bit of `mask` inside `sub`.
 
-The method does not apply when n is above about 22, because 3^n is too large, or when the groups are not drawn from one shared set of items. In those cases a different state or a greedy argument is needed.
+The split loop does not apply when n is above about 16, because 3^n is too large. The bit-layer sum does not apply above about 20. Neither applies when the groups are not drawn from one shared set of items. In those cases a different state or a greedy argument is needed.
 
 <!-- stage: exercises -->
 ### Exercises

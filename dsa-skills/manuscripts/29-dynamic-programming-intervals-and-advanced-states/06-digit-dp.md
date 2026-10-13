@@ -213,7 +213,7 @@ The first false friend is a table that counts only numbers with exactly `d` digi
 
 **Example 2.** Input `n = 0`, `k = 1`, output `1`.
 
-**Hint.** Which padding zeros must stay out of the count, and which digit of the integer 0 must stay in?
+**Hint.** Add a third part to the state, a count of real zeros placed so far, from 0 to `k`. Which padding zeros must stay out of that count, and which digit of the integer 0 must stay in?
 
 **Changed decision.** The started flag decides which zeros count, and the integer 0 is the one case where the number never starts but still owns one zero digit.
 
@@ -236,4 +236,4 @@ The first false friend is a table that counts only numbers with exactly `d` digi
 
 **Hint.** Which numbers are shorter than `n`, and which flag lets the table count them without a separate case?
 
-**Changed decision.** The rule now forbids digits outside a set and not one digit, and the set has no 0, so a started number can never place a padding zero by mistake.
+**Changed decision.** The rule now allows only the digits in a given set, where the lesson forbade the digit 0. The set contains no 0, so every number must place a nonzero digit first. A shorter number is then a prefix that starts late, and the started flag marks that start.

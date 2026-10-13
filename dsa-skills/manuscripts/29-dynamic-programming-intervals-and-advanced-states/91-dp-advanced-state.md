@@ -30,7 +30,7 @@ The bitmask lesson stored which items are already taken in one integer. Bit `i` 
 
 #### Range Tables Add Many Queries
 
-Chapter 28 filled a table over pairs of positions so that every range answer was ready after one pass. Here the same idea lets one table answer many range questions. Together, the four skills give the recurrence a choice of index: a range, a prefix, a set, or a table that serves all ranges at once.
+Chapter 28 filled a table over pairs of positions so that every range answer was ready after one pass. That table has one entry per pair of positions, so a single fill answers any range question afterwards. The four skills lead to three index choices: a range (the interval and range tables), a prefix (the palindrome lesson) and a set (the bit mask).
 
 <!-- stage: naive -->
 ### Deleting The Best Entry Each Time
@@ -92,7 +92,7 @@ The **prefix state** stores `best[j]` for the first `j` items and tries every ea
 
 #### Mask State For Sets
 
-The **mask state** stores a subset of items in an integer. It works when the next decision depends on which items remain, and not on their order. A group fill that equals the sum of the used items modulo the target is a function of the mask alone, so the mask can replace a list of bucket loads.
+The **mask state** stores a subset of items in an integer. It works when the next decision depends on which items remain, and not on their order. A group fill that equals the sum of the used items modulo the target is a function of the mask alone, so the mask can replace a stored fill for every group.
 
 #### The Rule Behind All Three
 
@@ -173,7 +173,7 @@ The invariant says that each entry is final before any entry reads it and that i
 
 #### Spotting The False Friend
 
-The false friend is a prefix table used for a problem where choices change the neighbours of other items. It passes tests where the best order happens to run left to right. The second false friend is the greedy rule above, which passes whenever the best immediate choice is also globally best. A third false friend is a mask over bucket loads: it stores a bucket order that the problem does not care about.
+The false friend is a prefix table used for a problem where choices change the neighbours of other items. It passes tests where the best order happens to run left to right. The second false friend is the greedy rule above, which passes whenever the best immediate choice is also globally best. A third false friend is a table that records the fill of every group separately: it stores a group order that the problem does not care about.
 
 #### Knowing When Not To Use It
 
@@ -185,9 +185,9 @@ Do not use a mask when the item count exceeds about 20, because 2^n entries no l
 #### [Build] Palindromic Subsequence In Query Ranges (LeetCode 516)
 <!-- id: dp29-range-palindrome-queries -->
 
-**Prerequisites.** The interval table from this lesson and the range table from chapter 28.
+**Prerequisites.** The interval table from this lesson and the range table from chapter 28, which stores one answer for every pair of positions. This exercise uses only the range index.
 
-**Problem.** A string `s` and a list of queries are given. Each query is a pair `(l, r)` of indexes with `l <= r`. For every query, return the length of the longest palindromic subsequence of the substring `s[l..r]`. A palindromic subsequence keeps characters in order, may skip characters and reads the same in both directions. Return the answers in query order.
+**Problem.** This is a variant of LeetCode 516 that adds range queries. A string `s` and a list of queries are given. Each query is a pair `(l, r)` of indexes with `l <= r`. For every query, return the length of the longest palindromic subsequence of the substring `s[l..r]`. A palindromic subsequence keeps characters in order, may skip characters and reads the same in both directions. Return the answers in query order.
 
 **Constraints.** The limits are:
 - **Length** satisfies `1 <= s.length() <= 300`.
@@ -207,9 +207,9 @@ Do not use a mask when the item count exceeds about 20, because 2^n entries no l
 #### [Vary] Palindrome Cuts With Minimum Piece Length (LeetCode 132)
 <!-- id: dp29-cuts-min-piece-length -->
 
-**Prerequisites.** The exercise above and the palindrome table lesson.
+**Prerequisites.** The exercise above and the palindrome table lesson. This exercise uses the prefix index with a palindrome table.
 
-**Problem.** A string `s` and an integer `minLen` are given. A cut splits `s` between two neighbouring characters. Choose cuts so that every piece is a palindrome with at least `minLen` characters. Return the smallest number of cuts, or -1 if no choice of cuts works.
+**Problem.** This is a variant of LeetCode 132 that adds a minimum piece length and an impossible result. A string `s` and an integer `minLen` are given. A cut splits `s` between two neighbouring characters. Choose cuts so that every piece is a palindrome with at least `minLen` characters. Return the smallest number of cuts, or -1 if no choice of cuts works.
 
 **Constraints.** The limits are:
 - **Length** satisfies `1 <= s.length() <= 1000`.
@@ -229,9 +229,9 @@ Do not use a mask when the item count exceeds about 20, because 2^n entries no l
 #### [Boundary] Burst Balloons With Given Outer Values (LeetCode 312)
 <!-- id: dp29-burst-outer-values -->
 
-**Prerequisites.** The two exercises above and the interval table from this lesson.
+**Prerequisites.** The two exercises above and the interval table from this lesson. This exercise uses only the range index.
 
-**Problem.** An array `nums` and two integers `leftEdge` and `rightEdge` are given. Bursting the balloon at index `i` earns `left * nums[i] * right`, where `left` and `right` are the nearest balloons that have not burst yet. If no balloon remains on a side, that side uses `leftEdge` or `rightEdge`. Burst every balloon in some order. Return the largest total.
+**Problem.** This is a variant of LeetCode 312 that replaces the fixed outer 1s with given edge values. An array `nums` and two integers `leftEdge` and `rightEdge` are given. Bursting the balloon at index `i` earns `left * nums[i] * right`, where `left` and `right` are the nearest balloons that have not burst yet. If no balloon remains on a side, that side uses `leftEdge` or `rightEdge`. Burst every balloon in some order. Return the largest total.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 300`, and the array may be empty.
@@ -246,14 +246,14 @@ Do not use a mask when the item count exceeds about 20, because 2^n entries no l
 
 **Hint.** If a balloon is the last one burst inside an interval, which two values are its neighbours, and where do the edges enter the table?
 
-**Changed decision.** The two outside values are inputs, not fixed to 1. A value of 0 at an edge makes some choices worth nothing, so the table cannot rely on ones as defaults.
+**Changed decision.** The two outside values are inputs, not fixed to 1. The self term changes the recurrence. The last balloon `k` in `(l, r)` earns `a[l] * nums[k] * a[r]`, which includes the value of `k` itself, whereas the deletion game earns only `a[l] * a[r]`. A value of 0 at an edge makes some choices worth nothing, so the table cannot rely on ones as defaults.
 
 #### [Recognize] Largest Number Of Equal Sum Groups (LeetCode 698)
 <!-- id: dp29-equal-sum-groups -->
 
-**Prerequisites.** All three exercises above and the bitmask lesson.
+**Prerequisites.** All three exercises above and the bitmask lesson. This exercise uses the mask index.
 
-**Problem.** An array `nums` of positive integers is given. Split all entries into `k` non-empty groups so that every group has the same sum. Every entry belongs to exactly one group. Return the largest `k` for which such a split exists.
+**Problem.** This is a variant of LeetCode 698 that asks for the largest group count and not a yes or no for a given count. An array `nums` of positive integers is given. Split all entries into `k` non-empty groups so that every group has the same sum. Every entry belongs to exactly one group. Return the largest `k` for which such a split exists.
 
 **Constraints.** The limits are:
 - **Length** satisfies `1 <= nums.length <= 16`.

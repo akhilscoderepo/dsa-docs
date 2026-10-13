@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A greedy loop misprices balloons, a cleaner runs out of workers and a counter times out. The questions below cover all seven lessons and the closing lesson. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A greedy merge order overpays, a worker assignment misses the cheapest plan and a counter loops over every number up to a large bound. The questions below cover all seven lessons and the closing lesson. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
 
 ### Recognition Questions
 
@@ -10,7 +10,7 @@ A greedy loop misprices balloons, a cleaner runs out of workers and a counter ti
 ```
 
 ```quiz
-{"id": "dp29-rev-palindrome-partitions", "q": "A palindrome table says whether s[i..j] is a palindrome. Which condition must hold before the table marks it true when the ends match?", "options": ["The inner range s[i+1..j-1] is already marked true", "The range is longer than 3", "The first letter appears twice", "The whole prefix is a palindrome"], "answer": 0, "explain": "Equal ends make a palindrome only when the inside is one. A range of length one or two has an empty or single inside."}
+{"id": "dp29-rev-palindrome-partitions", "q": "A palindrome table says whether s[i..j] is a palindrome. Which condition must hold before the table marks it true when the ends match?", "options": ["The inner range s[i+1..j-1] is already marked true", "The range is longer than 3", "The first letter appears twice", "The whole prefix is a palindrome"], "answer": 0, "explain": "Equal ends make a palindrome only when the inside is one. A range of length one has no second end to match, and a range of length two has an empty inside."}
 ```
 
 ```quiz

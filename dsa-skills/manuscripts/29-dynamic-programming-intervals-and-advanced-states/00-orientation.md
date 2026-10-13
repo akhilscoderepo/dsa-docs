@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A greedy loop pops balloons in the order of their sizes and reports fewer coins than the best plan earns. A cleaner rejects a two-person assignment because it tries the cheapest worker for each task and runs out of workers. A counter loops through ten million numbers to count the ones without a zero digit and times out. Each program fails because one position, one set or one bound is not part of the state. This chapter adds that missing piece to a table entry: a range of positions, the children of a tree node, a set of used items, or the digits seen so far.
+A build tool joins four chunk files by always merging the two smallest neighbours and copies 70 megabytes, while another plan copies only 64. A batch system gives each worker the cheapest free job and pays 6 minutes more than the best assignment. A registration system counts codes without the digit 0 by testing every integer, and the same loop stalls on limits near 10^18. Each program fails because one position, one set or one bound is not part of the state. This chapter adds that missing piece to a table entry: a range of positions, the children of a tree node, a set of used items, or the digits seen so far.
 
 ### Prerequisites
 
@@ -13,7 +13,7 @@ Each lesson fixes one question about what an entry remembers.
 
 - **Interval DP** stores the best value for every contiguous range and combines two shorter ranges around one split.
 - **Palindrome Partitions** builds a table that says whether each substring reads the same in both directions, then uses it to count the fewest pieces of a prefix.
-- **Tree DP** returns several values from each subtree, one for each choice the parent can make, and passes distances from the parent in a second pass.
+- **Tree DP** returns several values from each subtree, one for each choice the parent can make, and leaves the second pass that gives an answer for every root to its last exercise.
 - **Bitmask Assignment** packs a set of used items into one `int` and explains the bit operations it needs.
 - **Submask Aggregation** visits every subset of a mask, and it sums over all subsets with one pass per bit.
 - **Digit DP** counts numbers up to a bound by tracking the position and two flags.
@@ -21,7 +21,7 @@ Each lesson fixes one question about what an entry remembers.
 
 ### The Closing Lesson
 
-- **DP With Advanced State** compares the three index choices (range, prefix, mask) on one problem and then solves four exercises that each need two of them.
+- **DP With Advanced State** compares the three index choices (range, prefix, mask) on one deletion problem, and each of its four exercises uses a range, a prefix, a mask or a pair of them.
 
 ### How To Work Through Each Lesson
 
