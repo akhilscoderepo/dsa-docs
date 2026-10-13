@@ -1,0 +1,42 @@
+{
+ "lessons": [
+  "common-subsequences",
+  "dp-state-machines",
+  "edit-distance",
+  "increasing-subsequences",
+  "palindromic-sequences",
+  "stock-states",
+  "transaction-variants"
+ ],
+ "exercises": [
+  "cs-delete-operation",
+  "cs-empty-prefix",
+  "cs-longest-common-subsequence",
+  "cs-short-prefixes",
+  "ed-edit-distance",
+  "ed-empty-string",
+  "ed-insert-delete-only",
+  "ed-reconstruct-operations",
+  "is-duplicates",
+  "is-ending-at-i",
+  "is-prefix-lengths",
+  "is-quadratic-length",
+  "ps-fill-by-increasing-length",
+  "ps-length-one-and-two",
+  "ps-longest-palindromic-subsequence",
+  "ps-minimum-insertions-palindrome",
+  "sm-best-trade-days",
+  "sm-cooldown-days",
+  "sm-fee-min-profit",
+  "sm-k-trades",
+  "ss-falling-prices",
+  "ss-many-trades",
+  "ss-one-trade-states",
+  "ss-state-diagram",
+  "tv-cooldown-profit",
+  "tv-fee-profit",
+  "tv-two-transactions",
+  "tv-update-aliasing"
+ ],
+ "retired": []
+}
