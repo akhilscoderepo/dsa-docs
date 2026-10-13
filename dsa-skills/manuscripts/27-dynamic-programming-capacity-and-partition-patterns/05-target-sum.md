@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Marking Adjustments As Credits Or Debits
 
-A reconciliation tool receives five ledger adjustments of 1 unit each. A reviewer must mark every adjustment as a credit or a debit, and the net change must equal 3 units. A credit counts +1 and a debit counts -1. Four credits and one debit give 4 - 1 = 3. The reviewer wants to know how many different markings reach the net change 3. The tool must also answer for lists of 20 adjustments with larger amounts, and the first version is too slow for them.
+A reconciliation tool receives five ledger adjustments of 1 unit each. A reviewer must mark every adjustment as a credit or a debit, and the net change must equal 3 units. A credit counts +1 and a debit counts -1. Four credits and one debit give 4 - 1 = 3. The reviewer wants to know how many different markings reach the net change 3. The tool must also answer for lists of 20 adjustments with larger amounts, and the totals and ranges there grow large.
 
 Formally, the input is an array `nums` of nonnegative integers and an integer `target`. A **sign assignment** puts a plus sign or a minus sign in front of every element, and its value is the signed sum. Two assignments differ when they differ at some index, even if the elements at those indexes are equal. The task is to count the assignments whose value equals `target`. The method never changes the array.
 
@@ -37,13 +37,13 @@ This method is correct. It merges the two moves of equal sums, so it does not en
 ```predict
 Run countBySignedSums on [1, 1, 1, 1, 1] with target 3. What does it return, and how many distinct sums does the map hold after the last element?
 
-It returns 5, because four plus signs and one minus sign can be arranged in five places. The map holds 6 sums: -5, -3, -1, 1, 3 and 5. The map spans every value between minus the total and plus the total.
+It returns 5, because four plus signs and one minus sign can be arranged in five places. The map holds 6 sums: -5, -3, -1, 1, 3 and 5. The map spans the values of the same parity as the total, from minus the total to plus the total.
 ```
 
 <!-- stage: bottleneck -->
 ### The State Range Is Twice As Wide
 
-The map must cover every signed sum from minus the total to plus the total. With total T, that is up to 2T + 1 keys, and each key is a boxed `Integer` with a boxed `Long` count. Every element rebuilds the whole map, so the work is O(n * T) hash operations and O(T) memory for boxed objects.
+The map must cover the signed sums from minus the total to plus the total that share the parity of the total. With total T, that is up to 2T + 1 keys, and each key is a boxed `Integer` with a boxed `Long` count. Every element rebuilds the whole map, so the work is O(n * T) hash operations and O(T) memory for boxed objects.
 
 Most of that range is wasted. A target above T or below -T has no assignment, yet the method still builds the whole map before it answers 0. The method also hides a simpler structure. A sign assignment splits the elements into two groups by sign, and the values of the two groups are tied together by the total and the target.
 

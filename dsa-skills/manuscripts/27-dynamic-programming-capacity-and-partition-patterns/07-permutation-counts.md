@@ -5,9 +5,9 @@
 <!-- stage: context -->
 ### Counting Schedules For A Maintenance Window
 
-A job scheduler fills a 4-minute maintenance window with tasks that last 1 or 2 minutes. The tasks run one after another, so the order is part of the schedule. Running a 1-minute task and then a 2-minute task differs from running the 2-minute task first, because the first task can fail and block the rest. The window of 4 minutes has five schedules: 1 + 1 + 1 + 1, 1 + 1 + 2, 1 + 2 + 1, 2 + 1 + 1 and 2 + 2.
+A job scheduler fills a 4-minute maintenance window with tasks that last 1 or 2 minutes. The tasks run one after another, so the order is part of the schedule. Running a 1-minute task and then a 2-minute task is a different schedule from running the 2-minute task first. The window of 4 minutes has five schedules: 1 + 1 + 1 + 1, 1 + 1 + 2, 1 + 2 + 1, 2 + 1 + 1 and 2 + 2.
 
-An engineer reuses the change-counting code from the previous lesson to display the number of schedules. It prints 3, because it treats 1 + 1 + 2, 1 + 2 + 1 and 2 + 1 + 1 as a single schedule. The display is wrong for every window that has more than one task order.
+An engineer reuses the change-counting code from the previous lesson to display the number of schedules. It prints 3, because it treats 1 + 1 + 2, 1 + 2 + 1 and 2 + 1 + 1 as a single schedule. The display is wrong whenever a window has more than one task order.
 
 Formally, `nums` is an array of distinct positive integers, and `target` is a nonnegative integer. A **sequence** is a list of values from `nums`, with repeats allowed, and two sequences are equal only when they have the same values in the same positions. The task is to count the sequences whose values add up to `target`. The empty sequence adds up to 0. The method never changes the array.
 
@@ -42,7 +42,7 @@ It returns 3, and 5 sequences add up to 4. The method writes every collection of
 
 The combination loop fixes the order in which values may appear. That rule is the reason it counts each multiset once, and it is also the reason it cannot see a reordering. The count of sequences needs the opposite rule: after any prefix, every value must be allowed to come next.
 
-A correct but slow method builds sequences one value at a time and recurses on the remaining sum. With k values and a smallest value `m`, the recursion branches k ways at each level and has depth up to `target / m`, so it makes O(k^(target / m)) calls. For the values 1, 2 and 3 and target 40, that is far beyond 10^15.
+A correct but slow method builds sequences one value at a time and recurses on the remaining sum. With k values and a smallest value `m`, the recursion branches k ways at each level and has depth up to `target / m`, so its call count is bounded by O(k^(target / m)). For the values 1, 2 and 3 and target 40, the recursion makes about 5 * 10^10 calls.
 
 Most of those calls repeat. After the prefixes 1 + 2 and 2 + 1, the remaining sum is the same, and the number of ways to finish depends only on that remaining sum. There are `target + 1` possible remaining sums. A table with one entry per total does k reads per entry, which is O(target * k) time. The next section builds that table.
 
@@ -68,7 +68,7 @@ Computing `ways[t]` needs the entries `ways[t - v]` to be final for every `v`. T
 <!-- stage: variables -->
 ### Counts For Each Total
 
-The inputs `nums` and `target` stay unchanged, and the method keeps four working values.
+The inputs `nums` and `target` stay unchanged, and the method keeps these values.
 
 - **ways** is a `long[]` of length `target + 1`; entry `t` counts the sequences that add up to `t`.
 - **t** is the total that the outer loop computes, from 1 to `target`.

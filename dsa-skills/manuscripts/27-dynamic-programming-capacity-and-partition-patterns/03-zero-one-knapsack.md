@@ -125,7 +125,7 @@ Only the direction of the inner loop differs from the repeatable version. The co
 
 #### Reading The Cue
 
-Use this method when each item is either chosen or left out, the total weight has a limit, and the goal is a total value or a yes-or-no question about reachable totals. Words such as "each element at most once" and "a subset of the items" point here. The table indexes capacity, and every entry for an item depends on entries that describe the items before it.
+Use this method when each item is either chosen or left out, the total weight has a limit, and the goal is a total value. Words such as "each element at most once" and "a subset of the items" point here. The table indexes capacity, and every entry for an item depends on entries that describe the items before it.
 
 #### Checking The Invariant
 

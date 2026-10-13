@@ -162,7 +162,7 @@ A **false friend** is a method that looks right on small samples but fails on ot
 
 **Hint.** With one item, which earlier capacity does each entry read, and what does an entry hold when the item does not fit?
 
-**Changed decision.** The loop has one item, so only the capacities that are multiples of the weight gain value. All other entries copy the entry one block below through the current-row read.
+**Changed decision.** The loop has one item, so each entry equals the value times the number of whole weights that fit in its capacity. The entry steps up by `value` at every multiple of the weight and stays level in between.
 
 #### [Vary] Maximum Value With Reuse (Author exercise)
 <!-- id: cap-ukn-max-value -->

@@ -42,7 +42,7 @@ It returns 9, and only 4 combinations exist. The method counts 1 + 2 + 2, 2 + 1 
 
 The entry for amount `a` adds `ways[a - coin]` for every denomination. The breakdown with the coins 1, 2 and 2 can be laid down in three orders, and the table follows a separate path for each order, so it adds 3 to the count. The table does not remember which coins came before the last one, so it cannot merge those paths.
 
-A correct but slow method lists the combinations by choosing a count for each denomination. With k denominations and amount `A`, the number of count vectors is about A^k divided by the product of the denominations, which is O(A^k) in the worst case. For the denominations 1 through 8 and amount 600, there are about 1.7 * 10^11 combinations, so listing them one by one is too slow.
+A correct but slow method lists the combinations by choosing a count for each denomination. With k denominations and amount `A`, the number of count vectors grows like A^k divided by k! and by the product of the denominations, so it is O(A^k) in the worst case. For the denominations 1 through 8 and amount 600, there are about 1.7 * 10^11 combinations, so listing them one by one is too slow.
 
 The fix is to lay down the coins in a fixed order so that each combination has exactly one path through the table. If all uses of the first denomination come before all uses of the second, no reordering is possible. A table that processes one denomination at a time follows this rule and needs O(amount * k) time. The next section shows how.
 
@@ -68,7 +68,7 @@ The **empty combination** uses no coins and adds up to 0. It is the one combinat
 <!-- stage: variables -->
 ### Counts For Each Amount
 
-The inputs `coins` and `amount` stay unchanged, and the method keeps four working values.
+The inputs `coins` and `amount` stay unchanged, and the method keeps these values.
 
 - **ways** is a `long[]` of length `amount + 1`; entry `a` counts the combinations that add up to `a`.
 - **coin** is the denomination that the outer loop adds.

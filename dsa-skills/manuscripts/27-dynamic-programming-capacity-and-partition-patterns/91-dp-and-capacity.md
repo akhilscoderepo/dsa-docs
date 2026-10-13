@@ -7,7 +7,7 @@
 
 A billing service sells prepaid credit packs of 1, 2 and 3 units and shows three counts for an invoice of 4 units. The first screen counts bundles, where a bundle is a set of packs and the same pack type can be bought many times. The second counts purchase orders, where buying a 1-pack and then a 3-pack differs from buying them in the other order. The third counts one-time promo vouchers of 1, 2 and 3 units, where each voucher can be redeemed only once.
 
-A developer writes one table routine and reuses it for all three screens. The screens show plausible numbers, and none of them matches the product team's hand count. The correct counts are 4 bundles, 7 purchase orders and 1 voucher set, and the routine gets at least two of them wrong.
+A developer writes one table routine and reuses it for all three screens. The screens show plausible numbers, and at least two of them do not match the product team's hand count. The correct counts are 4 bundles, 7 purchase orders and 1 voucher set, and the routine gets at least two of them wrong.
 
 This lesson asks which choices in a capacity table decide the meaning of the count, and how to set them for each question.
 
@@ -78,7 +78,7 @@ The **loop owner** is the loop that stays on the outside. If the items own the o
 
 The **combine rule** says how two entries merge: addition counts ways, taking the smaller value minimizes the item count, and a logical or tests reachability. The rule does not interact with the other two choices, so the same loop structure serves all three questions. The last row of the table below is excluded from this chapter. Sequences of single-use items need to know which items were used, which a table indexed by total cannot record, so this chapter excludes it.
 
-| Items repeat | Order counts | Outer loop | Inner direction |
+| Items repeat | Order counts | Outer loop | Inner loop |
 | --- | --- | --- | --- |
 | yes | no | items | upward |
 | yes | yes | totals | items tried as last element |
@@ -115,7 +115,7 @@ The pack 1 reaches total 1. The pack 2 then reaches totals 3 and 2, in that orde
 
 #### Order Counts
 
-The second run uses the same packs and target with the totals on the outside. Each total sums the entries one pack below it. Total 2 holds 2 and total 3 holds 4. Total 4 receives 4 from the last element 1, 2 from the last element 2, and 1 from the last element 3. The result is 7, which matches the purchase-order screen.
+The second run uses the same packs and target with the totals on the outside. Each total sums, over every pack v, the entry v below it. Total 2 holds 2 and total 3 holds 4. Total 4 receives 4 from the last element 1, 2 from the last element 2, and 1 from the last element 3. The result is 7, which matches the purchase-order screen.
 
 ```trace
 {"cells":[0,1,2,3,4],"pointers":["t"],"steps":[{"at":{"t":0},"vars":{"v":0,"add":0,"ways":1},"note":"The seed is the empty sequence, so the count for total 0 is 1."},{"at":{"t":1},"vars":{"v":1,"add":1,"ways":1},"note":"Total 1 with the last element 1 gains 1 from total 0, so its count becomes 1."},{"at":{"t":2},"vars":{"v":1,"add":1,"ways":1},"note":"Total 2 with the last element 1 gains 1 from total 1, so its count becomes 1."},{"at":{"t":2},"vars":{"v":2,"add":1,"ways":2},"note":"Total 2 with the last element 2 gains 1 from total 0, so its count becomes 2."},{"at":{"t":3},"vars":{"v":1,"add":2,"ways":2},"note":"Total 3 with the last element 1 gains 2 from total 2, so its count becomes 2."},{"at":{"t":3},"vars":{"v":2,"add":1,"ways":3},"note":"Total 3 with the last element 2 gains 1 from total 1, so its count becomes 3."},{"at":{"t":3},"vars":{"v":3,"add":1,"ways":4},"note":"Total 3 with the last element 3 gains 1 from total 0, so its count becomes 4."},{"at":{"t":4},"vars":{"v":1,"add":4,"ways":4},"note":"Total 4 with the last element 1 gains 4 from total 3, so its count becomes 4."},{"at":{"t":4},"vars":{"v":2,"add":2,"ways":6},"note":"Total 4 with the last element 2 gains 2 from total 2, so its count becomes 6."},{"at":{"t":4},"vars":{"v":3,"add":1,"ways":7},"note":"Total 4 with the last element 3 gains 1 from total 1, so its count becomes 7."}]}

@@ -82,7 +82,7 @@ Only sums up to the target matter, because a subset above the target cannot be c
 
 #### A Split That Exists
 
-The first run uses the file sizes `[3, 3, 2, 2, 2]`. The total is 12 and the target is 6. Each cell is a sum from 0 to 6, and the pointer `s` marks a sum that becomes reachable. The variable `x` is the element being added, and `count` is the number of reachable sums after the update. The trace lists only the steps that change an entry. The first step shows the starting state, and the last step checks the target.
+The first run uses the file sizes `[3, 3, 2, 2, 2]`. The total is 12 and the target is 6. Each cell is a sum from 0 to 6, and the pointer `s` marks a sum that becomes reachable. The variable `x` is the element being added, and `count` is the number of reachable sums after the update, and `reach` is 1 once the sum at the pointer is reachable. The trace lists only the steps that change an entry. The first step shows the starting state, and the last step checks the target.
 
 The first 3 makes sum 3 reachable. The second 3 makes sum 6 reachable, and the target is already true after two elements. The next 2s make sums 5, 2 and 4 reachable. The last step puts the pointer on the target, where `reach[6]` is true.
 
@@ -92,7 +92,7 @@ The first 3 makes sum 3 reachable. The second 3 makes sum 6 reachable, and the t
 
 #### A Split That Does Not Exist
 
-The second run uses `[7, 3, 3, 9]`. The total is 22 and the target is 11. The elements produce only the sums 3, 6, 7, 9 and 10 between 1 and the target. No subset sums to 11, since 7 plus 3 is 10 and 9 plus 3 is 12. The trace ends with the pointer on 11, and `count` shows that no step ever flagged it. The method returns false.
+The second run uses `[7, 3, 3, 9]`. The total is 22 and the target is 11. The elements produce only the sums 3, 6, 7, 9 and 10 between 1 and the target. No subset sums to 11, since 7 plus 3 is 10 and 9 plus 3 is 12. The trace ends with the pointer on 11, and the final `reach` value of 0 shows that no step ever flagged it. The method returns false.
 
 ```trace
 {"cells":[0,1,2,3,4,5,6,7,8,9,10,11],"pointers":["s"],"steps":[{"at":{"s":0},"vars":{"x":0,"count":1,"reach":1},"note":"Only sum 0 is reachable at the start, because the empty subset sums to 0."},{"at":{"s":7},"vars":{"x":7,"count":2,"reach":1},"note":"Adding the element 7, sum 7 becomes reachable because sum 0 was reachable before it, so the count of reachable sums is 2."},{"at":{"s":10},"vars":{"x":3,"count":3,"reach":1},"note":"Adding the element 3, sum 10 becomes reachable because sum 7 was reachable before it, so the count of reachable sums is 3."},{"at":{"s":3},"vars":{"x":3,"count":4,"reach":1},"note":"Adding the element 3, sum 3 becomes reachable because sum 0 was reachable before it, so the count of reachable sums is 4."},{"at":{"s":6},"vars":{"x":3,"count":5,"reach":1},"note":"Adding the element 3, sum 6 becomes reachable because sum 3 was reachable before it, so the count of reachable sums is 5."},{"at":{"s":9},"vars":{"x":9,"count":6,"reach":1},"note":"Adding the element 9, sum 9 becomes reachable because sum 0 was reachable before it, so the count of reachable sums is 6."},{"at":{"s":11},"vars":{"x":0,"count":6,"reach":0},"note":"The target is 11 and the final flag is false, so no subset reaches the target and no equal split exists."}]}

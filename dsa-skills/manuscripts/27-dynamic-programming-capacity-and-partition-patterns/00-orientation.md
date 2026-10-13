@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A game shop pays out loyalty points in tokens and its change routine hands out four tokens where two would do. A backup tool copies a file onto a disk twice because its table lets the file be chosen again. A cashier screen lists nine ways to pay five units when only four exist. Each program has a table with a sound meaning and one wrong choice in its loops. This chapter adds a capacity to the table state and shows how the direction of a loop and the owner of the outer loop decide what the table counts.
+A game shop pays out loyalty points in tokens and its change routine hands out three tokens where two would do. A backup tool copies a file onto a disk twice because its table lets the file be chosen again. A cashier screen lists nine ways to pay five units when only four exist. Each program has a table with a sound meaning and one wrong choice in its loops. This chapter adds a capacity to the table state and shows how the direction of a loop and the owner of the outer loop decide what the table counts.
 
 ### Prerequisites
 
@@ -19,7 +19,7 @@ Each lesson fixes one decision about a table that is indexed by a total or a cap
 - **Combination Counts** counts unordered ways to reach a total. A combination is a choice of how many times each item is used.
 - **Permutation Counts** counts ordered ways to reach a total. A sequence is a list in which the order of the items matters.
 
-### The Combination Lesson
+### The Closing Lesson
 
 - **DP And Capacity** joins the two loop decisions and the combine rule into one procedure, and it shows what each wrong setting returns.
 
