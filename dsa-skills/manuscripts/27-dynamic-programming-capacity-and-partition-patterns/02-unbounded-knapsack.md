@@ -7,7 +7,7 @@
 
 A batch scheduler has a 6-hour compute window. It offers two job types that can each run any number of times. Job A needs 4 hours and pays 5 points. Job B needs 3 hours and pays 3 points. A planner that ranks jobs by points per hour picks job A first, since 1.25 beats 1.0. Only 2 hours remain after that, so the plan earns 5 points. Running job B twice fills the window and earns 6 points.
 
-Formally, the input is two arrays `weight` and `value` of equal length, plus a nonnegative integer `capacity`. Item `i` uses `weight[i]` units of capacity and pays `value[i]`. An item may be chosen any number of times. The task is to return the largest total value of a selection whose total weight is at most `capacity`. The empty selection is legal and the method never changes the arrays.
+Formally, the input is two arrays `weight` and `value` of equal length, plus a nonnegative integer `capacity`. Every weight is a positive integer. Item `i` uses `weight[i]` units of capacity and pays `value[i]`. An item may be chosen any number of times. The task is to return the largest total value of a selection whose total weight is at most `capacity`. The empty selection is legal and the method never changes the arrays.
 
 This lesson asks how to find the best total value without testing every combination of repeats.
 

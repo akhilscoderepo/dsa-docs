@@ -43,7 +43,7 @@ It returns 5, because four plus signs and one minus sign can be arranged in five
 <!-- stage: bottleneck -->
 ### The State Range Is Twice As Wide
 
-The map must cover the signed sums from minus the total to plus the total that share the parity of the total. With total T, that is up to 2T + 1 keys, and each key is a boxed `Integer` with a boxed `Long` count. Every element rebuilds the whole map, so the work is O(n * T) hash operations and O(T) memory for boxed objects.
+The map must cover the signed sums from minus the total to plus the total that share the parity of the total. With total T, that is up to T + 1 keys, because only sums with the parity of T occur, and each key is a boxed `Integer` with a boxed `Long` count. Every element rebuilds the whole map, so the work is O(n * T) hash operations and O(T) memory for boxed objects.
 
 Most of that range is wasted. A target above T or below -T has no assignment, yet the method still builds the whole map before it answers 0. The method also hides a simpler structure. A sign assignment splits the elements into two groups by sign, and the values of the two groups are tied together by the total and the target.
 

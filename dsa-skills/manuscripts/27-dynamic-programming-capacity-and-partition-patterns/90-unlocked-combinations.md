@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A pricing engine shows the same invoice three times and prints three different counts: 4, 7 and 1. All three counts are correct, because the screens ask three different questions about the same list of packs. A developer who merges them into one routine ships a bug that no unit test with a single input can reveal. This chapter releases one pairing and leaves one for later, where a pairing is a lesson that joins earlier topics into one decision.
+A pricing engine shows the same invoice three times and prints three different counts: 4, 7 and 1. All three counts are correct, because the screens ask three different questions about the same list of packs. A developer who merges them into one routine ships a bug that returns plausible numbers and that only a hand count catches. This chapter releases one pairing and leaves one for later, where a pairing is a lesson that joins earlier topics into one decision.
 
 ### Pairing Taught In This Chapter
 

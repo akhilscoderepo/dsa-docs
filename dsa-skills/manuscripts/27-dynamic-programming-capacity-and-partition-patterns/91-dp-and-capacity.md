@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### One Routine For Three Billing Screens
 
-A billing service sells prepaid credit packs of 1, 2 and 3 units and shows three counts for an invoice of 4 units. The first screen counts bundles, where a bundle is a set of packs and the same pack type can be bought many times. The second counts purchase orders, where buying a 1-pack and then a 3-pack differs from buying them in the other order. The third counts one-time promo vouchers of 1, 2 and 3 units, where each voucher can be redeemed only once.
+A billing service sells prepaid credit packs of 1, 2 and 3 units and shows three counts for an invoice of 4 units. The first screen counts bundles, where a bundle is a multiset of packs, so the same pack type can be bought many times. The second counts purchase orders, where buying a 1-pack and then a 3-pack differs from buying them in the other order. The third counts one-time promo vouchers of 1, 2 and 3 units, where each voucher can be redeemed only once.
 
 A developer writes one table routine and reuses it for all three screens. The screens show plausible numbers, and at least two of them do not match the product team's hand count. The correct counts are 4 bundles, 7 purchase orders and 1 voucher set, and the routine gets at least two of them wrong.
 
@@ -29,7 +29,7 @@ Neither skill settles the loops alone. A table meaning without the loop choices 
 <!-- stage: naive -->
 ### Copying One Loop For Every Question
 
-The quick idea picks the loop structure from the first problem and keeps it. The routine below puts the items on the outside and walks the totals upward, which is the structure of the fewest-coins and bundle-count tables. It adds counts and is called with a flag for each screen.
+The quick idea picks the loop structure from the first problem and keeps it. The routine below puts the items on the outside and walks the totals upward, which is the structure of the fewest-coins and bundle-count tables. It adds counts, and the developer calls it unchanged for each screen.
 
 ```java
 static long copiedRoutine(int[] packs, int target) {
@@ -55,7 +55,7 @@ It returns 4, which matches the bundle count. The purchase-order screen needs 7,
 
 The routine has the right cost for all three screens, since each valid structure runs in O(target * k). The defect is not speed. A wrong choice of loop direction or of loop owner keeps the code short and the output a plain integer, so nothing signals the mistake. A count of 4 for the voucher screen looks as believable as the correct 1.
 
-Testing each variant against hand counts does not scale. The structure has two independent choices, and a third choice for the objective, so a team that copies code between screens can pair the wrong choices without noticing. Counting every pairing by exhaustive search is not an option for large targets, because the number of sequences grows exponentially.
+Testing each variant against hand counts does not scale. The structure has two independent choices, and a third choice for the combine rule, so a team that copies code between screens can pair the wrong choices without noticing. Counting every pairing by exhaustive search is not an option for large targets, because the number of sequences grows exponentially.
 
 A reliable method must tie the loop choices to the two questions in the problem statement. Asking whether an item can repeat fixes the inner direction, and asking whether order counts fixes the outer loop. The next section states that rule and the cases it excludes.
 
