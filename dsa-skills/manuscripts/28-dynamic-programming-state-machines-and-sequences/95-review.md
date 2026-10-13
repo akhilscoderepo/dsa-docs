@@ -1,12 +1,12 @@
 <!-- section: review -->
 ## Review
 
-A report sells before it buys, a diff lists extra changes and a checker misreads a word. Each failure matches a question below. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A report sells before it buys, a diff lists extra changes and a checker misreads a word. The questions below cover all six lessons and the closing lesson. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
 
 ### Recognition Questions
 
 ```quiz
-{"id": "seq-rev-stock-states", "q": "A report tracks the best cash on each day while holding a share and while holding none. Which pair of values moves to the next day when the price rises by 3 and the share is sold?", "options": ["The no-share value plus the price goes to the holding value", "Both values add 3", "Holding value plus the price goes to the no-share value, if that beats the old no-share value", "Both values reset to zero"], "answer": 2, "explain": "Selling moves value from the holding label to the no-share label. The new no-share value is the larger of its old value and the holding value plus the price."}
+{"id": "seq-rev-stock-states", "q": "A report tracks the best cash on each day while holding a share and while holding none. Which pair of values moves to the next day when the share is sold?", "options": ["The no-share value plus the price goes to the holding value", "Both values add 3", "Holding value plus the price goes to the no-share value, if that beats the old no-share value", "Both values reset to zero"], "answer": 2, "explain": "Selling moves value from the holding label to the no-share label. The new no-share value is the larger of its old value and the holding value plus the price."}
 ```
 
 ```quiz
@@ -22,7 +22,7 @@ A report sells before it buys, a diff lists extra changes and a checker misreads
 ```
 
 ```quiz
-{"id": "seq-rev-edit-distance", "q": "The table for turning an empty prefix into a prefix of length 5 holds what value in the first row?", "options": ["0, because the empty string matches", "1, because only one rule applies", "5, one insertion for each character", "The length of the longer string"], "answer": 2, "explain": "Each character of the target needs one insertion, so the entry for empty against length j is j."}
+{"id": "seq-rev-edit-distance", "q": "The table for turning an empty prefix into a prefix of length 5 holds what value in the first row?", "options": ["0, because the empty string matches", "1, because only one rule applies", "5, one insertion for each character", "The length of the shorter string plus one"], "answer": 2, "explain": "Each character of the target needs one insertion, so the entry for empty against length j is j."}
 ```
 
 ```quiz

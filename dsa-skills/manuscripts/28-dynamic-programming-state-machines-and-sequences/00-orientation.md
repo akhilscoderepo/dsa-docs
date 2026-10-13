@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A trading report sells a share on the day before it buys it. A diff tool lists eleven changes where three would turn one file into the other. A spell checker rates a word as far from its correction because it counts only matching letters in the same positions. Each program keeps a sound table and forgets one fact: what situation an entry describes. This chapter labels every table entry with that situation, such as holding a share or having used one of two trades, and then fills tables over two strings or over the ends of one string.
+A trading report sells a share on the day before it buys it. A diff tool lists three changes where one would turn "abc" into "bc". A spell checker rates a word as far from its correction because it counts only matching letters in the same positions. Each program leaves out one fact: what situation a table entry describes. This chapter labels every table entry with that situation, such as holding a share or having used one of two trades, and then fills tables over two strings or over the ends of one string.
 
 ### Prerequisites
 
@@ -32,4 +32,4 @@ You can list the legal moves of a problem and turn them into a table whose entri
 
 ### What Later Chapters Reuse
 
-Chapter 29 reuses the range table from the last lesson and adds states such as tree nodes, digits and bit masks. Every later table problem reuses the habit of writing the meaning of an entry before writing a loop.
+Chapter 29 reuses the range table from the last lesson and adds states such as ranges of positions, digits and bit masks. Every later table problem reuses the habit of writing the meaning of an entry before writing a loop.

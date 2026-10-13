@@ -60,7 +60,7 @@ Each state must answer two questions at once: does the trader own a share, and w
 
 The cooldown splits the cash condition in two. The **sold state** means the trader sold today, so a purchase tomorrow is illegal. The **rest state** means the trader holds no share and may buy tomorrow. The hold state keeps its meaning. Each state stores the best profit of any history that ends the day in it.
 
-Four transitions are legal. Hold stays hold, or comes from the rest state by paying today's price. The sold state comes only from hold by receiving today's price. The rest state comes from the rest state or from the sold state of the day before. A purchase never reads the sold state, so the rule holds by construction.
+Five transitions are legal. Hold stays hold, or comes from the rest state by paying today's price. The sold state comes only from hold by receiving today's price. The rest state comes from the rest state or from the sold state of the day before. A purchase never reads the sold state, so the rule holds by construction.
 
 #### One Fee On One Transition
 
@@ -68,7 +68,7 @@ A fee changes the value of a transition and leaves the states alone. The two sta
 
 #### A Count Becomes A State
 
-A limit of two sales needs the number of completed sales in the state. Hold after zero sales, cash after one sale, hold after one sale and cash after two sales are four states. A purchase moves from a cash state to the next hold state, and a sale moves from a hold state to the next cash state.
+A limit of two sales needs the number of completed sales in the state. Hold after zero sales, cash after one sale, hold after one sale and cash after two sales are four states, and cash after zero sales is the constant 0, which the table does not store. A purchase moves from a cash state to the next hold state, and a sale moves from a hold state to the next cash state.
 
 #### Reading Only The Old Values
 
@@ -85,7 +85,7 @@ The cooldown method leaves `prices` alone and keeps these working values.
 - **i** is the current day, from 1 to `n - 1`.
 - **nextHold**, **nextSold** and **nextRest** are the values for day `i`, computed before any assignment.
 
-Day 0 starts with `hold = -prices[0]`, `sold = 0` and `rest = 0`. A sale on day 0 would give profit 0, so `sold = 0` does not allow anything that a real history cannot do. The answer is the larger of `sold` and `rest` after the last day, because a history that still owns a share has not realized its profit.
+Day 0 starts with `hold = -prices[0]`, `sold = 0` and `rest = 0`. The value `sold = 0` is a placeholder that no purchase reads, because a purchase reads only `rest`. The answer is the larger of `sold` and `rest` after the last day, because a history that still owns a share has not realized its profit.
 
 <!-- stage: trace -->
 ### Two Runs Over Short Price Lists
@@ -149,7 +149,7 @@ The invariant says that each state stores the best profit of histories that end 
 
 The first false friend is the two-state update, which passes every list in which the rule never binds. The second is a greedy rule that sells at every peak, which ignores both the fee and the waiting day. The third is an in-place update that overwrites a variable before another state reads it.
 
-The method does not fit when legality depends on a history that no small label summarizes. A cooldown of `n / 2` days needs about `n` states. A rule that compares the next purchase price with an earlier purchase price needs that price in the state. In those cases a table indexed by day and a larger parameter fits better.
+The method does not fit when legality depends on a history that no small label summarizes. A cooldown of `n / 2` days needs about `n / 2` states. A rule that compares the next purchase price with an earlier purchase price needs that price in the state. In those cases a table indexed by day and a larger parameter fits better.
 
 <!-- stage: exercises -->
 ### Exercises

@@ -46,7 +46,7 @@ A correct but slow method lists every subsequence. An array of n elements has 2^
 
 A better method uses the structure of the problem. Every increasing subsequence ends at some index, and what comes before that last element is itself an increasing subsequence that ends at a smaller index. This allows a table with one entry per index. Filling the entry for index `i` compares `nums[i]` with every earlier element, so the total work is O(n^2). That is fast enough for n = 2,000, because it needs about four million comparisons.
 
-The quadratic method fails when n reaches 200,000. It needs about 2 * 10^10 comparisons, which takes tens of seconds in Java. The extra cost comes from comparing each new element with all earlier elements, even though most of those comparisons cannot change the answer. The next section builds the table first and then removes the repeated comparisons.
+The quadratic method fails when n reaches 200,000. It needs about 4 * 10^10 comparisons, which takes tens of seconds in Java. The extra cost comes from comparing each new element with all earlier elements, even though most of those comparisons cannot change the answer. The next section builds the table first and then removes the repeated comparisons.
 
 <!-- stage: insight -->
 ### Keep The Best Ending For Each Length
@@ -97,7 +97,7 @@ If `pos` equals `size`, the value is larger than every tail, and `size` grows by
 
 #### Quadratic Table On The Opening Readings
 
-The first run fills the length table for the readings 5, 1, 6, 2, 7, 3 and 8. Each cell is one reading. The pointer `i` marks the reading whose entry is being computed, and the pointer `j` marks the earlier reading that it is compared with. The variable `len` is `dp[j]`, and `best` is the current entry for `i`.
+The first run fills the length table for the readings 5, 1, 6, 2, 7, 3 and 8. Each cell is one reading. The pointer `i` marks the reading whose entry is being computed, and the pointer `j` marks the earlier reading that it is compared with. The variable `len` is `dp[j]`, and In this trace only, `best` is the current entry for `i`.
 
 Index 2 holds 6 and extends both 5 and 1, so its length is 2. Index 4 holds 7 and extends 6 at length 2, so its length is 3. Index 6 holds 8, which is larger than everything, and it takes the best earlier length 3 plus one. The final length is 4, the same as the subsequence 5, 6, 7, 8 or 1, 2, 3, 8.
 

@@ -82,7 +82,7 @@ The method reads the array without changing it and keeps these values.
 - **nextHold** is the new value of `hold` computed from the old `hold` and old `cash`.
 - **nextCash** is the new value of `cash` computed from the old `hold` and old `cash`.
 
-The start value of `hold` is half of the smallest `int`. Adding a price of at most 10^4 to it cannot overflow, while the smallest `int` itself would wrap around after a subtraction. The loop computes both next values before it overwrites either old value, so the second computation never reads an updated value.
+The start value of `hold` is half of the smallest `int`. Adding a price of at most 10^4 to it cannot overflow, and the half value leaves a wide margin before the smallest `int`. The loop computes both next values before it overwrites either old value, so the second computation never reads an updated value.
 
 <!-- stage: trace -->
 ### Two Runs Day By Day

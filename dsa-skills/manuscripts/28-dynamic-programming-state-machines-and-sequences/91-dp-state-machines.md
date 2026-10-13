@@ -54,7 +54,7 @@ It returns 8, from the rise 4 on day 1 and the rise 4 on day 3. Collecting both 
 
 The routine is fast, and the defect lies in what one number per day can express. After day 1, a plan that sold the share and a plan that still holds it differ in what they may do on day 2. The prefix entry stores a single profit and drops that difference, so the next day cannot tell which actions are legal.
 
-Patching the routine with special cases does not scale. A cooldown needs to know whether yesterday was a sale. A transaction limit needs to know how many purchases happened. A fee needs to know whether this day starts a trade. Each rule adds a new fact to remember, and checking all plans one by one costs O(2^n) time for n days, because every day offers several actions.
+Patching the routine with special cases does not scale. A cooldown needs to know whether yesterday was a sale. A trade limit needs to know how many purchases happened, and a fee only changes the value of one move. Each rule adds a new fact to remember, and checking all plans one by one costs O(2^n) time for n days, because every day offers several actions.
 
 A reliable method must keep the facts that the rules read, and keep nothing else. The next section states how to name those facts and how to list the actions that each one allows.
 
@@ -67,7 +67,7 @@ A prefix table answers "what is the best value after the first `d` days". A stat
 
 #### Name The Situations
 
-A **state label** is a short name for one situation that the rules distinguish. The stock rules need three labels. `free` means the account holds no share and may buy. `hold` means the account holds one share. `rest` means the account sold a share today, so it cannot buy tomorrow. A trade limit adds the **trade count**, the number of purchases made so far, and the table then keeps one entry per pair of count and label.
+A **state label** is a short name for one situation that the rules distinguish. The stock rules need three labels. `free` means the account holds no share and may buy. `hold` means the account holds one share. `rest` means the account sold a share today, so it cannot buy tomorrow. The second lesson names the no-share state `rest` and the sold-today state `sold`; this lesson uses `free` and `rest` for those same two situations. A trade limit adds the **trade count**, the number of purchases made so far, and the table then keeps one entry per pair of count and label.
 
 #### List The Legal Moves
 
