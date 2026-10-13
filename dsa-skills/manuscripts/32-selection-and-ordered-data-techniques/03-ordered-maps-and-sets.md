@@ -82,7 +82,7 @@ The four navigation calls differ only in which comparison results qualify a node
 <!-- stage: trace -->
 ### Follow Two Descents
 
-The trace draws the keys in sorted order and picks the node to compare with a midpoint rule, so the picture shows a balanced tree. Java's `TreeMap` reaches the same shape of path with rotations, and its comparisons follow the same rule. Each step shows the node being compared and the best candidate so far. The pointer value -1 means that no node is selected or no candidate exists.
+The trace draws the keys in sorted order and picks the node to compare with a midpoint rule, so the picture shows a balanced tree. The real `TreeMap` may have a different shape, but its descent follows the same comparison rule and its height stays O(log n). Each step shows the node being compared and the best candidate so far. The pointer value -1 means that no node is selected or no candidate exists.
 
 #### Find The Ceiling Of 14
 

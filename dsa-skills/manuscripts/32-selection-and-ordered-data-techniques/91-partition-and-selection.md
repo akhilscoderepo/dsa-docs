@@ -7,7 +7,7 @@
 
 A web service records the response time of every request in an `int[]` of 1,000,000 entries, measured in milliseconds. The on-call engineer wants the 95th-percentile time, and the alert must also name how many requests were strictly slower than that time. Many requests share the same time, so the count of ties matters as much as the value.
 
-Sorting the whole array answers the question, but it also orders 950,000 entries that nobody asked about. The report needs one value at one rank plus two counts, and the full order is wasted work.
+Sorting the whole array answers the question, but it also orders 999,999 entries that the answer never reads. The report needs one value at one rank plus two counts, and the full order is wasted work.
 
 Formally, the input is an `int[] a` and a zero-based rank `r` with `0 <= r < n`. The output is the value `v` that sits at index `r` when `a` is sorted in increasing order, the number `below` of entries strictly smaller than `v`, and the number `equal` of entries equal to `v`.
 
@@ -22,7 +22,7 @@ Quickselect partitions the array around a pivot. The pivot lands at its final so
 
 #### Partition Invariants Add An Equal Region
 
-The three-way partition from the previous lesson splits a range into entries smaller than the pivot, entries equal to the pivot and entries larger than the pivot. Duplicates stay together in the middle region, so one pass reports how many entries tie with the pivot. That count is the extra output this lesson needs.
+The three-way partition from the Partition Invariants lesson splits a range into entries smaller than the pivot, entries equal to the pivot and entries larger than the pivot. Duplicates stay together in the middle region, so one pass reports how many entries tie with the pivot. That count is the extra output this lesson needs.
 
 #### Merge Counting Adds A Contrast
 
@@ -31,7 +31,7 @@ Merge counting counts, during a merge sort, the pairs that take one entry from e
 <!-- stage: naive -->
 ### Sort Everything And Read One Index
 
-The direct method sorts a copy of the array, reads index `r`, and then scans once to count the smaller and equal entries. It is correct for every input and works as a test oracle for faster code.
+The direct method sorts a copy of the array, reads index `r`, and then scans once to count the smaller and equal entries. It is correct for every input and works as a reference answer to test faster code against.
 
 ```java
 static int[] selectBySorting(int[] a, int r) {
@@ -123,7 +123,7 @@ The second array is `[4, 4, 4, 3, 10, -6, 4, 8]` with `r = 1`. The sorted order 
 The middle entry of the whole array is 3, so the first round uses pivot 3. One entry, -6, is smaller, and the equal block holds only the 3 at index 1. Rank 1 falls inside that block, so the loop stops after one round. The four 4s and the other larger entries are never examined again. This array shows that a pivot equal to the answer ends the search at once.
 
 ```trace
-{"cells":[4,4,4,3,10,-6,4,8],"pointers":["lo","hi"],"steps":[{"at":{"lo":0,"hi":7},"vars":{"r":1,"array":"[4, 4, 4, 3, 10, -6, 4, 8]"},"note":"The range is the whole array and the target rank is r = 1."},{"at":{"lo":0,"hi":7},"vars":{"pivot":3,"lt":1,"gt":1,"array":"[-6, 3, 4, 10, 4, 4, 8, 4]","move":"stop"},"note":"Round 1 on indices 0 to 7 uses pivot 3. The equal block covers indices 1 to 1, and r = 1, so the search stops because the pivot is the answer."},{"at":{"lo":0,"hi":7},"vars":{"value":3,"below":1,"equal":1},"note":"The loop stops. The answer is 3, with 1 smaller entries and 1 equal entries."}]}
+{"cells":[4,4,4,3,10,-6,4,8],"pointers":["lo","hi"],"steps":[{"at":{"lo":0,"hi":7},"vars":{"r":1,"array":"[4, 4, 4, 3, 10, -6, 4, 8]"},"note":"The range is the whole array and the target rank is r = 1."},{"at":{"lo":0,"hi":7},"vars":{"pivot":3,"lt":1,"gt":1,"array":"[-6, 3, 4, 10, 4, 4, 8, 4]","move":"stop"},"note":"Round 1 on indices 0 to 7 uses pivot 3. The equal block covers indices 1 to 1, and r = 1, so the search stops because the pivot is the answer."},{"at":{"lo":0,"hi":7},"vars":{"value":3,"below":1,"equal":1},"note":"The loop stops. The answer is 3, with 1 smaller entry and 1 equal entry."}]}
 ```
 
 <!-- stage: code -->

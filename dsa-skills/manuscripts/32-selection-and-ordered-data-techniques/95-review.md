@@ -10,19 +10,19 @@ A dashboard sorts a million samples to read the median, a lookup scans every pri
 ```
 
 ```quiz
-{"id": "rq32-rev-three-way", "q": "A partition on the values 4, 4, 4, 4 with pivot 4 uses a two-way split that sends equal values to one side. What risk does that create?", "options": ["Each call may shrink the range by only one value, giving O(n^2) time", "The pivot may be lost", "The array may be sorted wrongly", "No risk exists"], "answer": 0, "explain": "All equal values land on one side, so the next range shrinks by one. A three-way split removes the whole run of equal values at once."}
+{"id": "rq32-rev-three-way", "q": "A partition on the values 4, 4, 4, 4 with pivot 4 uses a two-way split that sends equal values to one side. What risk does that create?", "options": ["No risk exists", "Each call may shrink the range by only one value, giving O(n^2) time", "The pivot may be lost", "The array may be sorted wrongly"], "answer": 1, "explain": "All equal values land on one side, so the next range shrinks by one. A three-way split removes the whole run of equal values at once."}
 ```
 
 ```quiz
-{"id": "rq32-rev-treemap-floor", "q": "A TreeMap holds the keys 10, 20 and 30. What does floorKey(25) return?", "options": ["20", "30", "25", "null"], "answer": 0, "explain": "floorKey returns the greatest key that is less than or equal to its argument. That key is 20."}
+{"id": "rq32-rev-treemap-floor", "q": "A TreeMap holds the keys 10, 20 and 30. What does floorKey(25) return?", "options": ["25", "null", "20", "30"], "answer": 2, "explain": "floorKey returns the greatest key that is less than or equal to its argument. That key is 20."}
 ```
 
 ```quiz
-{"id": "rq32-rev-merge-count", "q": "Two sorted halves are [2, 5, 9] and [1, 3]. While merging, how many pairs of a left value greater than a right value does the merge count?", "options": ["5", "2", "6", "3"], "answer": 0, "explain": "The value 1 is below 2, 5 and 9, which gives 3 pairs. The value 3 is below 5 and 9, which gives 2 more. The total is 5." }
+{"id": "rq32-rev-merge-count", "q": "Two sorted halves are [2, 5, 9] and [1, 3]. While merging, how many pairs of a left value greater than a right value does the merge count?", "options": ["2", "6", "3", "5"], "answer": 3, "explain": "The value 1 is below 2, 5 and 9, which gives 3 pairs. The value 3 is below 5 and 9, which gives 2 more. The total is 5."}
 ```
 
 ```quiz
-{"id": "rq32-rev-overflow", "q": "A pair test compares a[i] > 2 * a[j] for int values near 2^31 - 1. Why does the code use long?", "options": ["2 * a[j] can exceed the int range and wrap to a negative number", "long is faster than int", "int cannot compare two values", "The array must hold long values"], "answer": 0, "explain": "Doubling a large int overflows the 32-bit range. A long holds the exact product."}
+{"id": "rq32-rev-overflow", "q": "A pair test compares a[i] > 2 * a[j] for int values near 2^31 - 1. Why does the code use long?", "options": ["The array must hold long values", "2 * a[j] can exceed the int range and wrap to a negative number", "long is faster than int", "int cannot compare two values"], "answer": 1, "explain": "Doubling a large int overflows the 32-bit range. A long holds the exact product."}
 ```
 
 ### Fixing A Wrong Answer

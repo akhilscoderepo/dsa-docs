@@ -18,11 +18,11 @@ Each lesson answers one question about order.
 
 ### The Closing Lesson
 
-**Partition And Selection** joins the first three skills. A partition places one value at its final position, and selection uses that proof to skip a whole side. Its four exercises select a rank with its position range, select the closest points with ties, count smaller values to the right within a distance, and count pairs with a scaled threshold.
+**Partition And Selection** joins Quickselect, Partition Invariants and Merge Counting. A partition places one value at its final position, and selection uses that proof to skip a whole side. Its four exercises select a rank with its position range, select the closest points with ties, count smaller values to the right within a distance, and count pairs with a scaled threshold.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a realistic failure and a direct program that is too slow or wrong. You predict its cost before the explanation appears. Later parts name the stored quantity, list the variables, follow two traces, show the code and say when the idea stops fitting. Four exercises close each lesson, and each has a hint and a solution you can open after your own attempt.
+A lesson opens with a realistic failure and a direct program that is too slow or wrong. You predict its cost before the explanation appears. Later parts say which value the method keeps between steps, list the variables, follow two traces, show the code and say when the idea stops fitting. Four exercises close each lesson, and each has a hint and a solution you can open after your own attempt.
 
 ### What You Can Do After This Chapter
 

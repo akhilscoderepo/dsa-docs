@@ -96,7 +96,7 @@ public final class InversionCount {
 }
 ```
 
-#### Solution: [Vary] Count of Smaller Numbers After Self (LeetCode 315)
+#### Solution: [Vary] Count Of Greater Values Before Each Position (LeetCode 315)
 <!-- id: mrg-greater-before -->
 
 **Approach.** Sort an array of positions instead of values, and add to the entry of the right value when it is taken.

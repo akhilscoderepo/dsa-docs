@@ -35,11 +35,11 @@ About 23 comparisons per value, because log2 of ten million is about 23. A corre
 
 #### Count The Comparisons
 
-A comparison sort on `n` values costs O(n log n). For `n = 10^7` that is about 2.3 * 10^8 comparisons. Any method that answers correctly must read every value at least once, because one unread value could be the answer. The lower bound for selection is therefore O(n), and the sort exceeds it by a factor of log n.
+A comparison sort on `n` values costs O(n log n). For `n = 10^7` that is about 2.3 * 10^8 comparisons. Any method that answers correctly must read every value at least once, because one unread value could be the answer. Selection therefore cannot beat linear time, and the sort exceeds that by a factor of log n.
 
 #### Name The Missing Idea
 
-The sort throws away its progress after each answer, so repeating the query on the same array repeats the full cost. The extra factor comes from ordering values that cannot affect the answer. A faster method must split the values so that one whole group can be ignored. It must also prove that the ignored group does not hold position `k`.
+The extra factor comes from ordering values that cannot affect the answer. A faster method must split the values so that one whole group can be ignored. It must also prove that the ignored group does not hold position `k`.
 
 <!-- stage: insight -->
 ### Split Around One Value

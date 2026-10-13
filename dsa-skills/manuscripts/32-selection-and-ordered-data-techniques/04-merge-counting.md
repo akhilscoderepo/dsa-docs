@@ -104,7 +104,7 @@ The left half is `2, 4, 4, 8` and the right half is `4, 4, 6`. The equal values 
 {"cells":[2,4,4,8,4,4,6],"pointers":["i","j"],"steps":[{"at":{"i":0,"j":4},"vars":{"count":0},"note":"The left half [2, 4, 4, 8] and the right half [4, 4, 6] are both sorted. The count starts at 0."},{"at":{"i":0,"j":4},"vars":{"count":0},"note":"The left value 2 is at most the right value 4, so it forms no pair with any right value still unread. The left pointer moves on."},{"at":{"i":1,"j":4},"vars":{"count":0},"note":"The left value 4 is at most the right value 4, so it forms no pair with any right value still unread. The left pointer moves on."},{"at":{"i":2,"j":4},"vars":{"count":0},"note":"The left value 4 is at most the right value 4, so it forms no pair with any right value still unread. The left pointer moves on."},{"at":{"i":3,"j":4},"vars":{"count":1},"note":"The left value 8 is greater than the right value 4, and so are all 1 unread left values. The count grows by 1 and becomes 1. The right pointer moves on."},{"at":{"i":3,"j":5},"vars":{"count":2},"note":"The left value 8 is greater than the right value 4, and so are all 1 unread left values. The count grows by 1 and becomes 2. The right pointer moves on."},{"at":{"i":3,"j":6},"vars":{"count":3},"note":"The left value 8 is greater than the right value 6, and so are all 1 unread left values. The count grows by 1 and becomes 3. The right pointer moves on."},{"at":{"i":3,"j":7},"vars":{"count":3},"note":"One half is used up, so no further pair can form. The answer for this merge is 3."}]}
 ```
 
-The first trace shows a count larger than 1 from one comparison, which is the saving over the double loop. The second trace shows that the sign of the comparison decides which ties count.
+The first trace shows a count larger than 1 from one comparison, which is the saving over the double loop. The second trace shows that the choice of `<` or `<=` decides which ties count.
 
 <!-- stage: code -->
 ### Implement Counting During The Merge
@@ -181,12 +181,12 @@ Keep the count in a `long`, because an array of 100,000 reversed values holds al
 
 **Changed decision.** Baseline case: the merge gains one addition when it takes a right value.
 
-#### [Vary] Count of Smaller Numbers After Self (LeetCode 315)
+#### [Vary] Count Of Greater Values Before Each Position (LeetCode 315)
 <!-- id: mrg-greater-before -->
 
 **Prerequisites.** Count Inversions above.
 
-**Problem.** Given an integer array `a`, return an array `result` of the same length. The entry `result[j]` is the number of positions `i < j` with `a[i] > a[j]`.
+**Problem.** This mirrors LeetCode 315, which counts later smaller values. Given an integer array `a`, return an array `result` of the same length. The entry `result[j]` is the number of positions `i < j` with `a[i] > a[j]`.
 
 **Constraints.** The limits are:
 - **Length** `n` is an `int` with `0 <= n <= 10^5`.
@@ -228,7 +228,7 @@ Keep the count in a `long`, because an array of 100,000 reversed values holds al
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given an integer array `a` and a non-negative integer `d`, return the number of pairs of positions `(i, j)` with `i < j` and `a[i] - a[j] > d`.
+**Problem.** This changes the factor 2 of LeetCode 493 into a threshold `d`. Given an integer array `a` and a non-negative integer `d`, return the number of pairs of positions `(i, j)` with `i < j` and `a[i] - a[j] > d`.
 
 **Constraints.** The limits are:
 - **Length** `n` is an `int` with `0 <= n <= 10^5`.

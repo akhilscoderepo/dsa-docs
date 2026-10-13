@@ -162,7 +162,7 @@ Use a partition when values must be divided around a pivot in place and the orde
 
 #### Watch For The Nearest False Friend
 
-Sorting is a false friend. It also leaves the pivot in place, but it orders every group and costs O(n log n). A partition costs O(n) and gives only the grouping. If the problem asks for sorted output, partition alone is not enough. A second false friend is the Lomuto partition on many equal values. Equal values count as large there, so an array of identical values leaves the pivot at index `lo` and an unresolved right part of size `n - 1`. A recursion on that input does O(n) work per level for n levels.
+Sorting is a false friend. It also leaves the pivot in place, but it orders every group and costs O(n log n). A partition costs O(n) and gives only the grouping. If the problem asks for sorted output, partition alone is not enough. A second false friend is the Lomuto partition on many equal values. Equal values count as large there, so an array of identical values leaves the pivot at index `lo` and a right part of `n - 1` values that the next call must partition again. A recursion on that input does O(n) work per level for n levels.
 
 #### Avoid The Java Index Traps
 
