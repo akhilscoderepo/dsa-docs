@@ -97,7 +97,7 @@ The bounds use `long` because a tree may store `Integer.MIN_VALUE` or `Integer.M
 
 #### Decoding A Framed String
 
-The encoded string `2#ab0#3#c#d` holds three frames. The pointer `i` marks the first character of the current frame, and the pointer `hash` marks the `#` that ends its header. The decoder reads the digit 2 and the `#`, so the body starts right after `hash`. It takes `ab` and moves `i` past them. The next header is `0#`, so the body is empty, and the decoder takes nothing. The last header reads 3, and the body `c#d` contains a `#` that the decoder never examines, because the length already fixed where the frame ends. At the end `i` equals the number of cells, and the list holds three tags.
+The encoded string `2#ab0#3#c#d` holds three frames. The pointer `i` marks the first character of the current frame, and the pointer `hash` marks the `#` that ends its header. The decoder reads the digit 2 and the `#`, so the body starts right after `hash`. It takes `ab` and moves `i` past them. The next header is `0#`, so the body is empty, and the decoder takes nothing. The last header reads 3, and the body `c#d` contains a `#` that the decoder never examines, because the length already fixed where the frame ends. At the end `i` equals the number of characters, and the list holds three tags.
 
 ```trace
 {"cells":["2","#","a","b","0","#","3","#","c","#","d"],"pointers":["i","hash"],"steps":[{"at":{"i":0,"hash":-1},"vars":{"items":"[]"},"note":"Start: the pointer i stands on the first character of the first frame, and no item is decoded."},{"at":{"i":4,"hash":1},"vars":{"len":2,"items":"[\"ab\"]"},"note":"The header says 2. The decoder takes the next 2 characters and moves i past them."},{"at":{"i":6,"hash":5},"vars":{"len":0,"items":"[\"ab\", \"\"]"},"note":"The header says 0, so the frame has an empty body. The decoder takes no characters and stores an empty item."},{"at":{"i":11,"hash":7},"vars":{"len":3,"items":"[\"ab\", \"\", \"c#d\"]"},"note":"The header says 3. The decoder takes the next 3 characters, including the # inside the body, because the length already fixed where the frame ends."}]}
@@ -246,7 +246,7 @@ Do not design a text format when a standard one fits and both sides can use a li
 
 **Hint.** Which link of a binary node reaches its first child, and which link reaches the next child of the same parent?
 
-**Changed decision.** Ownership of children moves into the links. A sibling hangs on the right link of the previous sibling, so a long list of children makes a long right chain and adds no depth.
+**Changed decision.** Ownership of children moves into the links. A sibling hangs on the right link of the previous sibling, so a long list of children makes a long right chain. The chain adds loop iterations and no recursion depth.
 
 #### [Recognize] Serialize and Deserialize BST (LeetCode 449)
 <!-- id: it37-bst-preorder-bounds -->

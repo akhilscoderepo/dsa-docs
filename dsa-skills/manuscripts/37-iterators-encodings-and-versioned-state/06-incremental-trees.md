@@ -68,11 +68,7 @@ The waste has a precise source. All the nodes in front of the target are full, a
 
 The **frontier** is the queue of nodes that still have fewer than two children, listed in level order. In a complete tree these nodes form the tail of the level order, so the node at the head of the frontier is always the parent of the next insertion. An insert reads the head and attaches the new node to its left slot. When the left slot has a child already, the insert uses the right slot and removes the head, because the head now has two children. The new node has no children, so it joins the back of the frontier. The insert now costs O(1) time because it never walks the tree.
 
-<!-- names: frontier, parent link, visit history -->
-
-#### Two Facts For Later Exercises
-
-A **parent link** is a stored reference from a node to the node above it, and the Operations On Tree exercise uses it to climb to the root. A **visit history** is the sequence of values that an iterator already returned, and the Binary Search Tree Iterator II exercise uses it to move backward.
+<!-- names: frontier -->
 
 #### One Rule For Stored Facts
 
@@ -170,7 +166,7 @@ final class FrontierInserter {
 
 #### Recognizing The Pattern
 
-Look for a class whose public methods change a tree or move through it, while a later call depends on something an earlier call learned. List the questions that later calls ask. For each question, name the stored structure that answers it in constant or logarithmic time. Then write the rule that keeps the structure equal to what a full scan of the tree would produce. An insert into a complete tree asks for the first open slot, and the frontier answers it. A step backward asks for the previous value, and the visit history answers it. A lock rule asks for the ancestors, and the parent array answers it.
+Look for a class whose public methods change a tree or move through it, while a later call depends on something an earlier call learned. List the questions that later calls ask. For each question, name the stored structure that answers it in constant or logarithmic time. Then write the rule that keeps the structure equal to what a full scan of the tree would produce. An insert into a complete tree asks for the first open slot, and the frontier answers it. A step backward asks for the previous value, and the list of values already returned answers it. The locking exercise below asks whether an ancestor is locked, and its `parent` array answers that question.
 
 #### A False Friend
 
@@ -188,7 +184,7 @@ The frontier queue works only because a complete tree fills in level order. A tr
 
 **Prerequisites.** The frontier definition and the level-order walk from this lesson.
 
-**Problem.** Design the class `CBTInserter`. The constructor receives a complete binary tree, given as its level-order list of values with no gaps. The call `insert(val)` adds a node with value `val` at the first free position in level order, so the tree stays complete. It returns the value of the new node's parent. The call `levelOrder()` returns the values of all nodes in level order as a list.
+**Problem.** Design the class `CBTInserter`. The constructor receives the root of a complete binary tree of `TreeNode` objects. The call `insert(val)` adds a node with value `val` at the first free position in level order, so the tree stays complete. It returns the value of the new node's parent. The call `getRoot()` returns the root, so a caller can read the whole tree.
 
 **Constraints.** The limits are:
 - **Initial tree** has 1 to 1000 nodes.
@@ -196,9 +192,9 @@ The frontier queue works only because a complete tree fills in level order. A tr
 - **Calls** number at most 10 000 per object.
 - **Mutation** happens only inside `insert`, which edits the node objects in place.
 
-**Example 1.** Input calls `["CBTInserter","insert","insert","levelOrder"]` with arguments `[[5,3,8,1],[9],[4],[]]`, output `[null,3,8,[5,3,8,1,9,4]]`.
+**Example 1.** The initial tree is `[5,3,8,1]` in level order. Input calls `["insert","insert","getRoot"]` with arguments `[[9],[4],[]]`, output `[3,8,[5,3,8,1,9,4]]`, where the last entry lists the tree from `getRoot()` in level order.
 
-**Example 2.** Input calls `["CBTInserter","insert","insert","insert","levelOrder"]` with arguments `[[7],[2],[6],[1],[]]`, output `[null,7,7,2,[7,2,6,1]]`.
+**Example 2.** The initial tree is `[7]` in level order. Input calls `["insert","insert","insert","getRoot"]` with arguments `[[2],[6],[1],[]]`, output `[7,7,2,[7,2,6,1]]`, where the last entry lists the tree from `getRoot()` in level order.
 
 **Hint.** Which nodes can still receive a child, and in which order must the class remember them so that the head is always the next parent?
 
@@ -207,7 +203,7 @@ The frontier queue works only because a complete tree fills in level order. A tr
 #### [Vary] Binary Search Tree Iterator II With A Window (LeetCode 1586)
 <!-- id: it37-window-bst-iterator -->
 
-**Prerequisites.** The visit history definition from this lesson and the stack-based inorder iterator for a binary search tree.
+**Prerequisites.** The stack-based inorder iterator for a binary search tree. A **visit history** is the sequence of values that the iterator already returned, kept so that `prev` can read them.
 
 **Problem.** Design the class `WindowBstIterator` over a binary search tree with distinct values. The constructor receives the root and an integer `k`. The cursor starts before the smallest value. The call `next()` moves the cursor to the next larger value and returns it. The call `prev()` moves the cursor to the next smaller value and returns it. The call `hasNext()` reports whether a larger value exists, and `hasPrev()` reports whether a smaller value is still available. The iterator keeps only the `k` most recently produced values, so `prev()` never reaches a value older than that window.
 
@@ -223,7 +219,7 @@ The frontier queue works only because a complete tree fills in level order. A tr
 
 **Hint.** A step backward cannot use the stack. Where do the already produced values live, and what happens to the oldest one when the window is full?
 
-**Changed decision.** The history is bounded by `k`, so the class stores produced values in a ring of size `k` and counts cursor positions from the first value.
+**Changed decision.** Changed from LeetCode 1586: the iterator keeps only the `k` latest values, so `prev` cannot go further back. The history is bounded by `k`, so the class stores produced values in a ring of size `k` and counts cursor positions from the first value.
 
 #### [Boundary] Find Elements In A Contaminated Binary Tree (LeetCode 1261)
 <!-- id: it37-contaminated-tree-find -->
@@ -249,7 +245,7 @@ The frontier queue works only because a complete tree fills in level order. A tr
 #### [Recognize] Operations On Tree (LeetCode 1993)
 <!-- id: it37-operations-on-tree -->
 
-**Prerequisites.** The parent link definition from this lesson. This exercise is a transfer problem: treat it as an interview prompt.
+**Prerequisites.** A **parent link** is a stored reference from a node to the node above it. Here the array `parent` holds one link for every node, so a climb to the root needs no search. This exercise is a transfer problem: treat it as an interview prompt.
 
 **Problem.** A rooted tree has nodes numbered 0 to `n - 1`. The array `parent` gives the parent of each node, and `parent[0] = -1` marks the root. Design the class `LockingTree` with three calls. The call `lock(num, user)` locks the node for the user when the node is unlocked and returns `true`. Otherwise it returns `false`. The call `unlock(num, user)` unlocks the node and returns `true` when the same user locked it, and otherwise returns `false`. The call `upgrade(num, user)` needs three conditions: the node is unlocked, the node has at least one locked descendant, and no ancestor is locked. When all three hold, it unlocks every locked descendant, locks the node and returns `true`. Otherwise it returns `false` and changes nothing.
 

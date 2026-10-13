@@ -39,9 +39,9 @@ final class NaiveRunReader {
 With counts `{2, 1}` and values `{8, 5}`, the calls `peek()`, `next()`, `next()`, `next()` return 8, 8, 8 and 5. The answers are correct, and the class looks finished.
 
 ```predict
-A caller builds the reader with counts {1000000000} and values {7}, and then calls next() once. What happens, and what does the class do when the caller calls next() four times on counts {2} and values {7}?
+A caller builds the reader with counts {1000000000} and values {7}, and then calls next() once. What happens, and what does the class do when the caller calls next() three times on counts {2} and values {7}?
 
-The constructor tries to store one billion Integer references, so it runs for a long time and then fails with an OutOfMemoryError before next() is ever called. On the short input, the fourth call to next() reaches the end of the list and throws an IndexOutOfBoundsException that names a list index the caller never used. The class never decided what the end looks like, so that message is an accident of the list inside it.
+The constructor tries to store one billion Integer references, so it runs for a long time and then fails with an OutOfMemoryError before next() is ever called. On the short input, the third call to next() reaches the end of the list and throws an IndexOutOfBoundsException that names a list index the caller never used. The class never decided what the end looks like, so that message is an accident of the list inside it.
 ```
 
 <!-- stage: bottleneck -->
@@ -92,7 +92,7 @@ The invariant is `0 <= pos <= tokens.length` for the reader, and `0 <= used <= c
 
 #### The Token Reader With Look-Ahead
 
-The pointer `pos` marks the next unread token. The first call, `peek()`, returns `let` and leaves `pos` at 0, and a second `peek()` returns `let` again. The call `next()` returns `let` and moves `pos` to 1. The calls `next()` for `x`, `=` and `5` move `pos` to 4, which equals the number of tokens. At that point `hasNext()` returns `false`. The last call, `next()`, finds the cursor past the end, throws `NoSuchElementException` and leaves `pos` at 4. The trace shows that only `next` ever changes `pos`.
+The first trace reads the tokens `let`, `x`, `=` and `5`. The pointer `pos` marks the next unread token. The first call, `peek()`, returns `let` and leaves `pos` at 0, and a second `peek()` returns `let` again. The call `next()` returns `let` and moves `pos` to 1. The calls `next()` for `x`, `=` and `5` move `pos` to 4, which equals the number of tokens. At that point `hasNext()` returns `false`. The last call, `next()`, finds the cursor past the end, throws `NoSuchElementException` and leaves `pos` at 4. The trace shows that only `next` ever changes `pos`.
 
 ```trace
 {"cells":["let","x","=","5","end"],"pointers":["pos"],"steps":[{"at":{"pos":0},"vars":{"call":"new","result":"none"},"note":"Start: pos is 0, so the first token is next."},{"at":{"pos":0},"vars":{"call":"peek()","result":"let"},"note":"peek returns let and leaves pos at 0."},{"at":{"pos":0},"vars":{"call":"peek()","result":"let"},"note":"A second peek returns let again, because observation does not move pos."},{"at":{"pos":1},"vars":{"call":"next()","result":"let"},"note":"next returns let and moves pos to 1."},{"at":{"pos":2},"vars":{"call":"next()","result":"x"},"note":"next returns x and moves pos to 2."},{"at":{"pos":3},"vars":{"call":"next()","result":"="},"note":"next returns = and moves pos to 3."},{"at":{"pos":4},"vars":{"call":"next()","result":"5"},"note":"next returns 5 and moves pos to 4."},{"at":{"pos":4},"vars":{"call":"hasNext()","result":"false"},"note":"pos equals the number of tokens, so hasNext returns false and changes nothing."},{"at":{"pos":4},"vars":{"call":"next()","result":"throws"},"note":"The cursor lies past the last token, so next throws NoSuchElementException and pos stays at 4."}]}

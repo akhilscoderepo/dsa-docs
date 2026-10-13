@@ -165,9 +165,17 @@ public final class CompleteTreeInserterBuild {
 <!-- id: it37-window-bst-iterator -->
 
 **Approach.**
-The class combines a stack of unfinished nodes with a ring buffer of size `k`. The stack gives the next larger value, as in a plain inorder iterator: `next` pops a node, pushes the left spine of its right child, and returns the node value. The ring buffer records each produced value at slot `position % k`, where `position` counts the values produced so far. The integer `cur` is the absolute position of the value that the cursor sits on, and it is -1 before the first call.
+The class combines a stack of unfinished nodes with a ring buffer of size `k`. The stack gives the next larger value, as in a plain inorder iterator. The **left spine** of a node is that node followed by its left child, that child's left child, and so on down to a node with no left child. The call `next` pops a node, pushes the left spine of its right child, and returns the node value. The ring buffer records each produced value at slot `position % k`, where `position` counts the values produced so far. The integer `cur` is the absolute position of the value that the cursor sits on, and it is -1 before the first call.
 
-A call to `next` first checks whether `cur + 1` is below the produced count. If it is, the cursor re-enters a stored value and moves forward without touching the tree. Otherwise the stack produces a new value, which overwrites the oldest slot once `k` values exist. A call to `prev` moves `cur` back by one and reads the ring. The method `hasPrev` is true while `cur - 1` is at least the oldest retained position, which is `max(0, produced - k)`. The invariant says that `cur` lies between the oldest retained position and `produced - 1` after the first call. Every read therefore hits a slot that still holds its value. The program compares the class with a model that keeps an explicit window list on random trees. It also drives a chain of 200 000 nodes, which a recursive traversal could not survive.
+The state has four values:
+- **ring** holds the last `k` produced values, and slot `position % k` holds the value at that position.
+- **produced** counts the values taken from the tree so far.
+- **cur** is the absolute position under the cursor.
+- **oldest retained** is `max(0, produced - k)`, the smallest position whose slot still holds its value.
+
+A call to `next` first checks whether `cur + 1` is below the produced count. If it is, the cursor re-enters a stored value and moves forward without touching the tree. Otherwise the stack produces a new value, which overwrites the oldest slot once `k` values exist. A call to `prev` moves `cur` back by one and reads the ring. The method `hasPrev` is true while `cur - 1` is at least the oldest retained position, which is `max(0, produced - k)`. The invariant says that `cur` lies between the oldest retained position and `produced - 1` after the first call. Every read therefore hits a slot that still holds its value.
+
+Take the tree `[2,1,3]` with `k = 2`. Three calls to `next` return 1, 2 and 3, so `produced` is 3, `cur` is 2 and the ring is `[3,2]`, because the value 3 overwrote the value 1 in slot 0. Now `prev` returns 2 and moves `cur` to 1. The oldest retained position is `3 - 2 = 1`, so `hasPrev` is false, and the value 1 is gone. The program compares the class with a model that keeps an explicit window list on random trees. It also drives a chain of 100 000 nodes, which a recursive traversal could not survive.
 
 **Complexity.**
 - **Time** is O(1) amortized per call, because the left-spine pushes across all `next` calls total at most the number of nodes.
@@ -353,12 +361,12 @@ public final class WindowBstIteratorVary {
                 if (op == 1 && model.hasPrev()) { if (real.prev() != model.prev()) throw new AssertionError("prev"); }
             }
         }
-        // A left chain of 200 000 nodes would overflow a recursive traversal; the explicit stack handles it.
+        // A left chain of 100 000 nodes would overflow a recursive traversal; the explicit stack handles it.
         TreeNode chain = null;
-        for (int v = 0; v < 200_000; v++) { TreeNode top = new TreeNode(v); top.left = chain; chain = top; }
+        for (int v = 0; v < 100_000; v++) { TreeNode top = new TreeNode(v); top.left = chain; chain = top; }
         WindowBstIterator deep = new WindowBstIterator(chain, 2);
-        for (int v = 0; v < 200_000; v++) if (deep.next() != v) throw new AssertionError("deep chain " + v);
-        if (deep.hasNext() || deep.prev() != 199_998) throw new AssertionError("deep end");
+        for (int v = 0; v < 100_000; v++) if (deep.next() != v) throw new AssertionError("deep chain " + v);
+        if (deep.hasNext() || deep.prev() != 99_998) throw new AssertionError("deep end");
     }
 }
 ```

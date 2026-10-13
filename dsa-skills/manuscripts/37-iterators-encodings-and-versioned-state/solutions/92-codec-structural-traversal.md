@@ -132,7 +132,7 @@ The decoder repeats the same walk. It creates the root from the first token, and
 
 **Complexity.**
 - **Time** is O(n), because each node enters and leaves the queue once and each token is read once.
-- **Space** is O(n) for the token list, and the queue holds at most one level of the tree, which is O(w) for width w and at most O(n).
+- **Space** is O(n) for the token list, and the queue holds at most about two adjacent levels of the tree, which is O(w) for width w and at most O(n).
 
 ```java run
 import java.util.ArrayDeque;
@@ -296,7 +296,7 @@ The decoder `decodeChain` walks one right chain and produces the list of nodes. 
 
 **Complexity.**
 - **Time** is O(n) for n nodes in the forest, because each node is converted once in each direction.
-- **Space** is O(n) for the output, plus O(h) recursion depth for forest height h. A long list of siblings adds loop iterations and no depth.
+- **Space** is O(n) for the output, plus O(h) recursion depth for forest height h. A long list of siblings adds loop iterations and no recursion depth.
 
 ```java run
 import java.util.ArrayList;

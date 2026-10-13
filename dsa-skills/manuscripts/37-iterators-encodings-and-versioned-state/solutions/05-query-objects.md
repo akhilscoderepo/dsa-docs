@@ -301,7 +301,7 @@ public final class AbbrDictionaryBoundary {
 <!-- id: it37-query-objects-range-frequency -->
 
 **Approach.**
-The constructor stores, for each value, the sorted array of indices where it occurs. A query first cuts the range to the array, so `left` becomes `max(left, 0)` and `right` becomes `min(right, n - 1)`. An empty range after the cut returns 0. Otherwise the answer is the lower bound of `right + 1` minus the lower bound of `left` in the position list of the value. The first lower bound counts the positions before the range, the second counts the positions up to its end, and the difference counts the positions inside. An absent value has no list and returns 0.
+The constructor stores, for each value, the sorted array of indices where it occurs. A query first cuts the range to the array, so `left` becomes `max(left, 0)` and `right` becomes `min(right, n - 1)`. An empty range after the cut returns 0. Otherwise the answer is the lower bound of `right + 1` minus the lower bound of `left` in the position list of the value. The lower bound of `left` counts the positions before the range. The lower bound of `right + 1` counts the positions up to the end of the range. The difference counts the positions inside. An absent value has no list and returns 0.
 
 The invariant is that every list is strictly increasing, so a lower bound splits it into the positions below the target and the positions at or above it. The cut also prevents overflow, because after it `right + 1` is at most `n`. The harness compares the class with a linear count on random arrays and on ranges that start below 0, end beyond the array or have `left > right`.
 

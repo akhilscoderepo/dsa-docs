@@ -1,11 +1,11 @@
 <!-- section: orientation -->
 ## Orientation
 
-A paging client calls `hasNext()` twice and then `next()`. The first call quietly advanced the source, so the second `next()` returns the wrong element. The code looked at a value and consumed it in the same step. This chapter teaches APIs that hand out a large or nested value one piece at a time, turn a structure into text and back, and answer questions about an earlier version.
+A paging client calls `hasNext()` twice and then `next()`. Each `hasNext()` call quietly advances the source, so `next()` returns the third element and not the first. The code looked at a value and consumed it in the same step. This chapter teaches APIs that hand out a large or nested value one piece at a time, turn a structure into text and back, and answer questions about an earlier version.
 
 ### Prerequisites
 
-You should know stacks, queues, binary trees, tries, prefix sums and binary search. An **iterator** is an object that returns the elements of a source one at a time. A **codec** is a pair of methods, `encode` and `decode`, that convert a value to a string and back. A **version** is a numbered state that a caller may query after later changes. The key words are **observation** (looking at the next value), **availability** (whether a next value exists), **consumption** (moving past it) and **exhaustion** (nothing is left).
+You should know stacks, queues, recursion, binary trees, binary search trees, binary search and hash maps. An **iterator** is an object that returns the elements of a source one at a time. A **codec** is a pair of methods, `encode` and `decode`, that convert a value to a string and back. A **version** is a numbered state that a caller may query after later changes. The key words are **observation** (looking at the next value), **availability** (whether a next value exists), **consumption** (moving past it) and **exhaustion** (nothing is left).
 
 ### What Each Lesson Protects
 

@@ -91,7 +91,7 @@ The invariant is that `col` is less than the size of page `page` after `settle`,
 
 #### Passing Empty Pages
 
-The pointer `page` marks the page that holds the next element, and `col` is the column in that page. The first call, `hasNext()`, finds `a` at column 0 of page 0 and returns `true`. Two calls to `next()` return `a` and `b` and move `col` to 2, which equals the size of page 0. No call has asked for more, so `page` stays at 0 and the position is not settled. The next `hasNext()` call settles it. It passes page 0 because the column reached its size, passes the empty page 1, and stops at page 2 with `col` 0. It returns `true`. One `next()` returns `c`. The last `hasNext()` passes page 3 and reaches page 4, one past the last page, so it returns `false`.
+The first trace reads four pages, `[a, b]`, `[]`, `[c]` and `[]`, and makes the calls `hasNext()`, `next()`, `next()`, `hasNext()`, `next()` and `hasNext()` in that order. The pointer `page` marks the page that holds the next element, and `col` is the column in that page. The first call, `hasNext()`, finds `a` at column 0 of page 0 and returns `true`. Two calls to `next()` return `a` and `b` and move `col` to 2, which equals the size of page 0. No call has asked for more, so `page` stays at 0 and the position is not settled. The next `hasNext()` call settles it. It passes page 0 because the column reached its size, passes the empty page 1, and stops at page 2 with `col` 0. It returns `true`. One `next()` returns `c`. The last `hasNext()` passes page 2, whose single element is used up, and the empty page 3. It reaches page 4, one past the last page, so it returns `false`.
 
 ```trace
 {"cells":["[a,b]","[]","[c]","[]"],"pointers":["page"],"steps":[{"at":{"page":0},"vars":{"col":0,"call":"new","result":"none"},"note":"Start: the position is page 0, column 0, and nothing is settled yet."},{"at":{"page":0},"vars":{"col":0,"call":"hasNext()","result":"true"},"note":"hasNext finds a at column 0 of page 0 and returns true."},{"at":{"page":0},"vars":{"col":1,"call":"next()","result":"a"},"note":"next returns a and moves col to 1."},{"at":{"page":0},"vars":{"col":2,"call":"next()","result":"b"},"note":"next returns b and moves col to 2, which equals the size of page 0. The position stays on page 0 until a call needs more."},{"at":{"page":2},"vars":{"col":0,"call":"hasNext()","result":"true"},"note":"hasNext passes page 0 because col equals its size, passes the empty page 1, and stops at page 2 with col 0. It returns true."},{"at":{"page":2},"vars":{"col":1,"call":"next()","result":"c"},"note":"next returns c and moves col to 1."},{"at":{"page":4},"vars":{"col":0,"call":"hasNext()","result":"false"},"note":"hasNext passes page 2 and the empty page 3, reaches page 4 (one past the last page) and returns false."}]}
@@ -198,7 +198,7 @@ When the input is small, fixed and read once, a plain loop with two levels is si
 - **Rows** number from 0 to 200, and each row has from 0 to 500 elements.
 - **Elements** are `int` values.
 - **Calls** number at most 10^5, and `hasNext()` may be called any number of times in a row.
-- **Exhaustion** means `next()` throws `NoSuchElementException` and changes no field.
+- **Exhaustion** means `next()` throws `NoSuchElementException` and changes no logical state.
 
 **Example 1.** Input calls `["Vector2D","next","next","hasNext","next","hasNext"]` with arguments `[[[1,2],[],[3]],[],[],[],[],[]]`, output `[null,1,2,true,3,false]`.
 

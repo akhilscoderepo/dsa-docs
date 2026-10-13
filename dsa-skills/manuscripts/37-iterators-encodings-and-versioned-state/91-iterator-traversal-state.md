@@ -153,9 +153,9 @@ final class TreeBrowser {
 }
 ```
 
-#### One Rule For All Four Iterators
+#### One Rule For The Tree Browser
 
-The same split appears in every exercise below. A lookahead iterator keeps the read-ahead elements in a small buffer and pulls from the source only when the buffer is too short. A run skipper keeps a cursor of run index and used count and jumps by subtraction. A nested iterator keeps a stack of open lists. A bounded tree iterator keeps the pending stack and the visited list. The invariant is that the stored history and the stored cursor always describe one position in one sequence, and extending the history never skips or repeats a key.
+The class `TreeBrowser` keeps the pending stack and the visited list. The invariant is that the stored history and the stored cursor always describe one position in one sequence, and extending the history never skips or repeats a key.
 
 #### Cost
 
@@ -263,4 +263,4 @@ If the caller only moves forward, the visited list is wasted memory, and the sta
 
 **Hint.** Which nodes may the left-spine push skip because their key is below `lo`, and how does the iterator know that a stack top above `hi` ends the sequence?
 
-**Changed decision.** The range bounds the walk on both sides. The push skips nodes below `lo` by moving right, and a top node above `hi` ends the sequence for every node under it, because the stack is ascending.
+**Changed decision.** Changed from LeetCode 1586: only keys inside the closed range `lo` to `hi` take part. The range bounds the walk on both sides. The push skips nodes below `lo` by moving right, and a top node above `hi` ends the sequence for every node under it, because the stack is ascending.

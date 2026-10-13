@@ -10,7 +10,7 @@ An iterator that moves when it only looks, a codec that gives two lists the same
 ```
 
 ```quiz
-{"id": "rq37-rev-exhausted", "q": "An iterator is exhausted and a caller invokes `next()`. Which rule keeps the class predictable?", "options": ["Throw `NoSuchElementException` and leave every field unchanged.", "Return a default value such as -1 on some paths and throw on others.", "Retry the source until a value appears.", "Reset the cursor to the start."], "answer": 0, "explain": "One stated rule on every path is the contract. A throw that changes no field lets the caller call again and get the same answer."}
+{"id": "rq37-rev-exhausted", "q": "An iterator is exhausted and a caller invokes `next()`. Which rule keeps the class predictable?", "options": ["Throw `NoSuchElementException` and leave the logical state unchanged.", "Return a default value such as -1 on some paths and throw on others.", "Retry the source until a value appears.", "Reset the cursor to the start."], "answer": 0, "explain": "One stated rule on every path is the contract. A throw that changes no logical state lets the caller call again and get the same answer."}
 ```
 
 ```quiz

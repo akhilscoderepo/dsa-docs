@@ -73,20 +73,25 @@ The invariant says that the versions inside each history are strictly increasing
 <!-- stage: variables -->
 ### What One History Stores
 
-The class keeps one history per cell and one counter for the snapshots. A query adds a target version.
+Two classes appear in the code, so the state is listed for each class.
+
+#### State Of CellHistory
 
 - **versions** is the sorted array of version numbers in one history, held as `long`.
 - **values** is the array of values in the same order, so `values[k]` belongs to `versions[k]`.
 - **size** is the number of pairs in use in one history.
-- **target** is the version named by a query, and the trace shows it as `target`.
+- **target** is the version named by a query.
 - **fallback** is the value that a query returns when no change is at or before `target`.
 - **lo, hi and mid** bound the search window, and after the loop `lo` is the first index with a version above `target`, so `lo - 1` is the answer slot.
+
+#### State Of ChangeLogArray
+
 - **start** is the starting value of every cell in the snapshot array.
 - **cells** holds one `TreeMap` history for each index, and it is null until the index first changes. The trace shows these as `c0`, `c1` and `c2` in the variable `histories`.
 - **pending** holds the writes of the current interval, with one entry for each index.
 - **snaps** is the number of snapshots taken so far, and it is also the id of the next snapshot.
 
-The invariant is `versions[0] < versions[1] < ...` in every history, and a query with `lo == 0` returns `fallback`.
+The invariant is `versions[0] < versions[1] < ...` in every history, and a query with `lo == 0` returns `fallback`. In `ChangeLogArray`, the value `start` plays the role of `fallback`.
 
 <!-- stage: trace -->
 ### Tracing A Search And A Snapshot Run
@@ -150,7 +155,7 @@ final class CellHistory {
 
 #### The Snapshot Array
 
-The array class keeps a pending table for the current interval and one history per index that has ever changed. Here each history is a `TreeMap` from snapshot id to value, and its `floorEntry` method is the floor search from the previous section. The table holds at most one entry per index, so `snap` makes one `TreeMap.put` for each distinct index written since the last snapshot. Each `put` costs O(log k) time.
+The array class keeps a pending table for the current interval and one history per index that has ever changed. Here each history is a `TreeMap` from snapshot id to value, and its `floorEntry` method is the floor search from the previous section. The table holds at most one entry per index, so `snap` makes one `TreeMap.put` for each distinct index written since the last snapshot. Each `put` costs O(log k) time. The class uses a `TreeMap` and not `CellHistory` because snapshot ids are `int` keys that the map keeps in order, and `floorEntry` is a floor search that the library already provides. `CellHistory` would also work here, because snapshot ids arrive in increasing order.
 
 ```java
 final class ChangeLogArray {
@@ -250,7 +255,7 @@ A query before the first change must return the declared default and must not re
 
 **Hint.** What does a snapshot store for a cell that was not written since the last snapshot, and where does the starting value come from?
 
-**Changed decision.** Each cell owns a history, and the version of a saved write is the id of the snapshot that saves it.
+**Changed decision.** Changed from LeetCode 1146: `get` returns -1 for a snapshot that the program has not yet taken. Each cell owns a history, and the version of a saved write is the id of the snapshot that saves it.
 
 #### [Boundary] Equal Versions Replace (Author exercise)
 <!-- id: it37-version-histories-repeated-writes -->

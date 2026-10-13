@@ -76,11 +76,23 @@ A **slot** is a place where a child may appear. Each node has two slots, a left 
 
 The **canonical form** of a tree is the one text that the encoder produces for it. The encoder must produce the canonical form for every tree, and the decoder must accept only the canonical form. In the level-order format, the encoder trims the empty slots at the end of the text, and the decoder treats a missing token as empty. A text that ends with an explicit empty slot then breaks the rule and raises an error. A strict decoder gives a bijection between trees and texts, so a text that is accepted always rebuilds the tree whose canonical form it is.
 
-#### Let Order Replace Markers
+#### Read A Postorder Text From The End
 
-A search tree writes no markers because the value order fixes the shape. A postorder text lists the left subtree, then the right subtree, then the node, so the node is the last token of its subtree. The decoder reads from the end of the text. It takes the node, builds the right subtree next, and builds the left subtree last. The bounds follow the rule for equal values. If equal values go left, a subtree range is `(lo, hi]`, with the lower bound open and the upper bound closed. A token outside the range is left for an ancestor.
+A search tree writes no markers because the value order fixes the shape. A postorder text lists the left subtree, then the right subtree, then the node. The node is therefore the last token of its subtree. The decoder reads from the end of the text. It takes the node first. It then builds the right subtree, because the right tokens sit just before the node. It builds the left subtree last.
 
-Take the postorder text `2,2,5`. The decoder reads 5 from the end and makes it the root with range `(-inf, inf]`. The right subtree needs a value above 5, and the next token 2 is not above it, so the right subtree is empty. The left range is `(-inf, 5]`, which accepts 2. That node gets right range `(2, 5]`, which rejects the next token 2. Its left range `(-inf, 2]` accepts that token. The result is a left path 5, 2, 2.
+#### Place Equal Values On The Left
+
+The bounds follow one rule for equal values. If equal values go left, a subtree range is `(lo, hi]`, with the lower bound open and the upper bound closed. A node with value `v` gives its right subtree the range `(v, hi]` and its left subtree the range `(lo, v]`. A token outside the range is left for an ancestor. The postorder text `2,2,5` shows the rule. The decoder reads it from the end.
+
+| Step | Token read | Range of the call | Result |
+|---|---|---|---|
+| 1 | 5 | `(-inf, inf]` | Accepted as the root. |
+| 2 | 2 (second) | `(5, inf]` | Rejected, so the right subtree of 5 is empty. |
+| 3 | 2 (second) | `(-inf, 5]` | Accepted as the left child of 5. |
+| 4 | 2 (first) | `(2, 5]` | Rejected, so the right subtree of that node is empty. |
+| 5 | 2 (first) | `(-inf, 2]` | Accepted as its left child. |
+
+The result is a left path 5, 2, 2.
 
 <!-- stage: variables -->
 ### State Shared By The Two Walks
@@ -89,9 +101,10 @@ The pair of walks needs a small amount of state, and each piece has one owner.
 
 - **out** is the list that the encoder appends tokens to, and the second trace shows its length as the pointer `out`.
 - **in** is the iterator over the tokens that the decoder reads, and only the decoder moves it. The first trace marks its next unread token with the pointer `in`.
-- **queue** holds the nodes whose slots are still unwritten or unread, in level order, and it contains no `null`.
+- **queue** holds the nodes whose slots are still unwritten or unread, in level order, and it contains no `null`. The level-order decoder below uses it.
 - **lo and hi** are the bounds of a subtree range, held as `long` so that the extreme `int` values stay inside.
-- **chain** is the right-linked list of siblings that one call creates or walks.
+- **owner** is the node taken from the front of the queue, and it receives the next two tokens. The trace shows it as `owner`.
+- **chain** is the right-linked list of siblings that one call creates or walks in the forest exercise.
 
 Every walk keeps this rule: the position moves only when a token is consumed, and every consumed token fills exactly one slot.
 
@@ -147,6 +160,37 @@ final class PreorderPair {
         if (in.hasNext()) throw new IllegalArgumentException("leftover tokens"); // exactly one tree per text
         return root;
     }
+}
+```
+
+#### A Level-Order Decoder
+
+The level-order text needs a queue, because the oldest queued node owns the next two tokens. This sketch uses the iterator `in` and the node `owner` from the trace above. It accepts any text, and the level-order exercise adds the canonical-form checks.
+
+```java
+static final class Node {
+    int val; Node left, right;
+    Node(int val) { this.val = val; }
+}
+
+static Node parseLevels(String text) {
+    if (text.isEmpty()) return null;                                      // the empty tree has the empty text
+    java.util.Iterator<String> in = java.util.Arrays.asList(text.split(",", -1)).iterator();
+    Node root = new Node(Integer.parseInt(in.next()));                    // the first token is the root
+    java.util.ArrayDeque<Node> queue = new java.util.ArrayDeque<>();
+    queue.add(root);
+    while (!queue.isEmpty()) {
+        Node owner = queue.poll();                                        // the oldest queued node owns two slots
+        if (in.hasNext()) {                                               // a missing token means an empty slot
+            String t = in.next();
+            if (!t.equals("null")) { owner.left = new Node(Integer.parseInt(t)); queue.add(owner.left); }
+        }
+        if (in.hasNext()) {
+            String t = in.next();
+            if (!t.equals("null")) { owner.right = new Node(Integer.parseInt(t)); queue.add(owner.right); }
+        }
+    }
+    return root;
 }
 ```
 
@@ -242,7 +286,7 @@ Do not write a codec by hand when a library format fits the contract and both si
 #### [Recognize] Serialize and Deserialize BST (LeetCode 449)
 <!-- id: it37-bst-postorder-duplicates -->
 
-**Prerequisites.** The third exercise above and the bounded preorder decoder from the lesson Structural Codecs. This exercise is a transfer prompt: the interview question is how the bounds change when equal values are allowed and the text is postorder. It changes the contract of LeetCode 449.
+**Prerequisites.** The bounds idea from the lesson Structural Codecs, where each subtree accepts only values inside a range, and the bounded preorder decoder from that lesson. This exercise is a transfer prompt: the interview question is how the bounds change when equal values are allowed and the text is postorder. It changes the contract of LeetCode 449.
 
 **Problem.** A binary search tree stores `int` values. Every value in the left subtree is at most the node value, and every value in the right subtree is greater. The method `String serialize(TreeNode root)` returns the values in postorder, separated by commas, with no other token. The empty tree gives the empty string. The method `TreeNode deserialize(String s)` returns the tree that `s` describes and throws `IllegalArgumentException` when no tree that follows the rule has `s` as its postorder.
 

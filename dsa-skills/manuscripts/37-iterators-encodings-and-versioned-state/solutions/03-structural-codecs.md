@@ -295,7 +295,7 @@ The decoder reverses the roles. For a binary node it starts at the left link and
 
 **Complexity.**
 - **Time** is O(n) for n nodes, because both directions create or visit each node once.
-- **Space** is O(n) for the new tree, plus O(h) recursion depth where h is the height of the N-ary tree. A parent with many children adds no depth, since siblings are linked in a loop.
+- **Space** is O(n) for the new tree, plus O(h) recursion depth where h is the height of the N-ary tree. A parent with many children adds loop iterations and no recursion depth, since siblings are linked in a loop.
 
 ```java run
 import java.util.ArrayList;

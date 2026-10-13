@@ -78,10 +78,10 @@ The constructor builds one map. Each query reads a few entries from it.
 - **positions** maps a key, such as a word or a number, to its sorted array of indices.
 - **pa** and **pb** are the position lists of the two query words in a distance query.
 - **i** and **j** are the cursors into `pa` and `pb` during a merge walk.
-- **gap** is the difference between `pa[i]` and `pb[j]` at one comparison.
-- **best** is the smallest gap seen so far, or -1 when no pair exists.
+- **gap** is the difference between `pa[i]` and `pb[j]` at one comparison. Only the trace shows it, and the code computes it inline.
+- **best** is the smallest gap seen so far. The code starts it at `Integer.MAX_VALUE`, and the method returns -1 before the walk when a list is absent.
 - **lo, hi and mid** bound one binary search, and **target** is the value that the search looks for.
-- **left** and **right** are the inclusive text positions of a range query, and the search looks for `left` and `right + 1`.
+- **left** and **right** are the inclusive text positions of a range query, and the search looks for `left` and `right + 1`. The prose and the exercise use these names, and the lesson code does not.
 
 The invariant is that every list is strictly increasing, so a cursor never needs to move backward.
 
@@ -221,7 +221,7 @@ An absent key must return the documented value and must not throw a null pointer
 
 **Hint.** Which entries of each vector can make a product nonzero, and which type must hold the product of two values near one million?
 
-**Changed decision.** The stored list keeps only the nonzero pairs of an index and a value, and the product is computed in `long` instead of `int`.
+**Changed decision.** Changed from LeetCode 1570: the two vectors may have different lengths. The stored list keeps only the nonzero pairs of an index and a value, and the product is computed in `long` instead of `int`.
 
 #### [Boundary] Unique Word Abbreviation (LeetCode 288)
 <!-- id: it37-query-objects-abbreviation -->
@@ -263,4 +263,4 @@ An absent key must return the documented value and must not throw a null pointer
 
 **Hint.** Which two lower bounds in the position list of `value` give the count, and what does the constructor store for a value that never occurs?
 
-**Changed decision.** The query never reads `arr`. It cuts the range to the array, then subtracts two lower bounds in one position list, and an absent value gives 0.
+**Changed decision.** Changed from LeetCode 2080: the range may reach outside the array or be empty. The query never reads `arr`. It cuts the range to the array, then subtracts two lower bounds in one position list, and an absent value gives 0.
