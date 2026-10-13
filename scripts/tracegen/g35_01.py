@@ -5,7 +5,7 @@ def t1(a):
     for i,x in enumerate(a):
         s=s+[v+x for v in s]
         st.append({"at":{"i":i},"vars":{"element":x,"count":len(s),"sums":" ".join(map(str,s))},"note":f"Add {x} to a shifted copy of the list. The list now has {len(s)} sums."})
-    s2=sorted(s); st.append({"at":{"i":len(a)},"vars":{"count":len(s2),"sums":" ".join(map(str,s2))},"note":"Sort the list. Both copies of the sum 5 stay in the list."})
+    s2=sorted(s); st.append({"at":{"i":len(a)-1},"vars":{"count":len(s2),"sums":" ".join(map(str,s2))},"note":"Sort the list. Both copies of the sum 5 stay in the list."})
     assert s2==[0,2,3,5,5,7,8,10]; return block(a,["i"],st)
 def t2(r,need):
     lo,hi=0,len(r); st=[{"at":{"lo":0,"mid":-1,"hi":hi},"vars":{"need":need},"note":f"Start: search the whole list for the first sum at or above {need}."}]
