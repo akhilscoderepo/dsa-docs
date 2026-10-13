@@ -30,7 +30,7 @@ On `"abcdabc"` with `k = 3` the method returns 4, the start of the second `"abc"
 ```predict
 The loop above handles a string of length n with window length k. How many characters does it copy and read in total, and what changes when k grows to half of n?
 
-Each of the n - k + 1 windows costs about k characters to copy and about k more to hash, so the total is roughly n * k. When k is n / 2, the total becomes about n^2 / 4 characters, and the set also holds all of those characters in memory at once.
+Each of the n - k + 1 windows costs about k characters to copy and about k more to hash, so the copy costs (n - k + 1) * k characters and the hashing costs the same amount again. When k is n / 2, each of those two counts is about n^2 / 4, so the total is about n^2 / 2 character reads, and the set also holds the copied characters in memory at once.
 ```
 
 <!-- stage: bottleneck -->
@@ -76,6 +76,7 @@ The scan keeps a small set of named values, and each one belongs to the policy s
 - **power** is `BASE^(k-1) mod MOD`, the weight of the outgoing letter.
 - **hash** is the value of the current window, always in the range 0 to `MOD - 1`.
 - **seen** maps a hash value to the start indexes of the windows that produced it.
+- **DNA code** is the 2-bit number for one letter in the DNA policy: A is 0, C is 1, G is 2 and T is 3.
 
 <!-- stage: trace -->
 ### Sliding Across Two Strings
@@ -86,7 +87,7 @@ Take `s = "abcdabc"` with `k = 3`, base 27 and modulus 1,000,000,007. The weight
 
 #### Second String Meets A False Match
 
-To make a collision visible by hand, the second trace uses the small modulus 101, so `power` is 22. The string is `"abbcde"` and `k = 3`. The first window `"abb"` has the value 78. The slide to `"bbc"` subtracts 22 and gives 0 after the multiplication. The slide to `"bcd"` subtracts 44 from 0, which gives -44, so the code adds 101 and continues with 57. This step is the reason for the normalization. The value becomes 28. The slide to `"cde"` also normalizes and ends at 78, the same value as `"abb"`. The table reports start 0, the collision check compares `c` with `a` and rejects the match, and the scan correctly finds no repeat.
+To make a collision visible by hand, the second trace uses the small modulus 101, so `power` is 22. The string is `"abbcde"` and `k = 3`. The first window `"abb"` has the value 78. The slide to `"bbc"` subtracts 22 and gives 0 after the multiplication. The slide to `"bcd"` subtracts 44 from 0, which gives -44. The code adds 101 and continues with -44 + 101 = 57, which is the reason for the normalization. Then 57 * 27 + 4 = 1543, which is 28 modulo 101, so the new hash is 28. The slide to `"cde"` also normalizes and ends at 78, the same value as `"abb"`. The table reports start 0, the collision check compares `c` with `a` and rejects the match, and the scan correctly finds no repeat.
 
 #### Stepping Through Both Strings
 

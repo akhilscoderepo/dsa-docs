@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Search Freezes On Repeated Text
 
-A log viewer opens a two-megabyte export in which a faulty exporter padded every line with the letter `a`. An engineer searches for `aaaaaaaaab`, a pattern of nine letters `a` followed by one `b`. The search should finish at once, yet the viewer stops responding for several seconds. The text holds about two million characters, and the viewer is comparing the pattern against almost every start position, nine characters deep each time, before the final `b` rejects it.
+A log viewer opens a two-megabyte export in which a faulty exporter padded every line with the letter `a`. An engineer searches for `aaaaaaaaab`, a pattern of nine letters `a` followed by one `b`. The search should finish at once, yet the viewer lags far behind what a single pass over the text would cost. The text holds about two million characters, and the viewer is comparing the pattern against almost every start position, nine characters deep each time, before the final `b` rejects it.
 
 The same failure appears in any tool that scans text for a fixed pattern, such as a find command, a log filter or a file importer that looks for a marker line. The lesson asks one question. After a mismatch, what must the scan remember so that it never re-reads a text character it has already matched?
 
@@ -47,11 +47,11 @@ The repeated work is therefore a re-comparison of text characters whose values t
 
 #### The Prefix Function
 
-Take the first `i + 1` characters of the pattern. A **border** of that text is a non-empty string that is both a proper prefix of it and a suffix of it. A proper prefix is a prefix shorter than the whole text. The **prefix function** `pi` of the pattern stores, for each index `i`, the length of the longest border of `p[0..i]`, and 0 when no border exists.
+Take the prefix `p[0..i]`, which holds the first `i + 1` characters of the pattern. A **border** of `p[0..i]` is a non-empty string that is both a proper prefix of it and a suffix of it. A proper prefix is a prefix shorter than the whole string. The **prefix function** `pi` of the pattern stores, for each index `i`, the length of the longest border of `p[0..i]`, and 0 when no border exists.
 
 <!-- names: prefix function, border, fallback -->
 
-For the pattern `ababaca`, the text `ababa` has the borders `a` and `aba`, so `pi[4] = 3`.
+For the pattern `ababaca`, the prefix `ababa` has the borders `a` and `aba`, so `pi[4] = 3`.
 
 #### Why A Mismatch Needs No Restart
 
@@ -83,10 +83,10 @@ The state invariant is that `k` is the largest value less than `m` (or equal to 
 
 The pattern `ababaca` is the case to study, because its mismatch at index 5 triggers two fallbacks in a row. In the trace below, the pointer `i` is the index being read and the pointer `k` is the matched length.
 
-The scan reads `b` at index 1 and finds no match with `p[0] = a`, so `pi[1]` stays 0. Indexes 2, 3 and 4 match `a`, `b`, `a` against `p[0]`, `p[1]`, `p[2]`, so `k` grows to 3. At index 5 the character `c` differs from `p[3] = b`. The first fallback sets `k = pi[2] = 1`, and `c` still differs from `p[1] = b`. The second fallback sets `k = pi[0] = 0`, and `c` differs from `p[0] = a`, so `pi[5] = 0`. At index 6 the character `a` matches `p[0]`, so `pi[6] = 1`. The finished array is `0, 0, 1, 2, 3, 0, 1`. The two consecutive fallbacks at index 5 are the reason the pattern is a good test: a single fallback would stop at length 1 and wrongly compare `c` once, while the chain visits every shorter border of `ababa` before giving up.
+The scan reads `b` at index 1 and finds no match with `p[0] = a`, so `pi[1]` stays 0. Indexes 2, 3 and 4 match `a`, `b`, `a` against `p[0]`, `p[1]`, `p[2]`, so `k` grows to 3. At index 5 the character `c` differs from `p[3] = b`. The first fallback sets `k = pi[2] = 1`, and `c` still differs from `p[1] = b`. The second fallback sets `k = pi[0] = 0`, and `c` differs from `p[0] = a`, so `pi[5] = 0`. At index 6 the character `a` matches `p[0]`, so `pi[6] = 1`. The finished array is `0, 0, 1, 2, 3, 0, 1`. The two consecutive fallbacks at index 5 are the reason the pattern is a good test: one fallback is not enough there. After the first fallback the length is 1 and `c` still fails against `p[1]`. The chain must continue to length 0 before the scan can give up on `c`.
 
 ```trace
-{"cells":["a","b","a","b","a","c","a"],"pointers":["i","k"],"steps":[{"at":{"i":0,"k":0},"vars":{"pi":"0"},"note":"pi[0] is 0 because a one-character text has no proper prefix. The matched length k starts at 0."},{"at":{"i":1,"k":0},"vars":{"pi":"0,0"},"note":"i = 1: no border is left to try. The character 'b' is not p[0], and pi[1] stays 0."},{"at":{"i":2,"k":1},"vars":{"pi":"0,0,1"},"note":"i = 2: the character 'a' matches p[0], the next expected pattern character, and k rises to 1, which is also the new border length."},{"at":{"i":3,"k":2},"vars":{"pi":"0,0,1,2"},"note":"i = 3: the character 'b' matches p[1], the next expected pattern character, and k rises to 2, which is also the new border length."},{"at":{"i":4,"k":3},"vars":{"pi":"0,0,1,2,3"},"note":"i = 4: the character 'a' matches p[2], the next expected pattern character, and k rises to 3, which is also the new border length."},{"at":{"i":5,"k":1},"vars":{"pi":"0,0,1,2,3"},"note":"i = 5: p[3] is 'b' and rejects 'c'. A fallback sets k to pi[2] = 1, the next shorter border, without moving i."},{"at":{"i":5,"k":0},"vars":{"pi":"0,0,1,2,3"},"note":"i = 5: p[1] is 'b' and rejects 'c'. A fallback sets k to pi[0] = 0, the next shorter border, without moving i."},{"at":{"i":5,"k":0},"vars":{"pi":"0,0,1,2,3,0"},"note":"i = 5: no border is left to try. The character 'c' is not p[0], and pi[5] stays 0."},{"at":{"i":6,"k":1},"vars":{"pi":"0,0,1,2,3,0,1"},"note":"i = 6: the character 'a' matches p[0], the next expected pattern character, and k rises to 1, which is also the new border length."}]}
+{"cells":["a","b","a","b","a","c","a"],"pointers":["i","k"],"steps":[{"at":{"i":0,"k":0},"vars":{"pi":"0"},"note":"pi[0] is 0 because a one-character prefix has no proper prefix. The matched length k starts at 0."},{"at":{"i":1,"k":0},"vars":{"pi":"0,0"},"note":"i = 1: no border is left to try. The character 'b' is not p[0], and pi[1] stays 0."},{"at":{"i":2,"k":1},"vars":{"pi":"0,0,1"},"note":"i = 2: the character 'a' matches p[0], the next expected pattern character, and k rises to 1, which is also the new border length."},{"at":{"i":3,"k":2},"vars":{"pi":"0,0,1,2"},"note":"i = 3: the character 'b' matches p[1], the next expected pattern character, and k rises to 2, which is also the new border length."},{"at":{"i":4,"k":3},"vars":{"pi":"0,0,1,2,3"},"note":"i = 4: the character 'a' matches p[2], the next expected pattern character, and k rises to 3, which is also the new border length."},{"at":{"i":5,"k":1},"vars":{"pi":"0,0,1,2,3"},"note":"i = 5: p[3] is 'b' and rejects 'c'. A fallback sets k to pi[2] = 1, the next shorter border, without moving i."},{"at":{"i":5,"k":0},"vars":{"pi":"0,0,1,2,3"},"note":"i = 5: p[1] is 'b' and rejects 'c'. A fallback sets k to pi[0] = 0, the next shorter border, without moving i."},{"at":{"i":5,"k":0},"vars":{"pi":"0,0,1,2,3,0"},"note":"i = 5: no border is left to try. The character 'c' is not p[0], and pi[5] stays 0."},{"at":{"i":6,"k":1},"vars":{"pi":"0,0,1,2,3,0,1"},"note":"i = 6: the character 'a' matches p[0], the next expected pattern character, and k rises to 1, which is also the new border length."}]}
 ```
 
 #### Scanning A Text With The Array
@@ -151,7 +151,7 @@ The invariant to state before coding is that `k` is the longest pattern prefix t
 
 #### Two False Friends
 
-The Z array looks like a close relative, because it is also an array of match lengths. It is a false friend of the prefix function. The value `z[i]` looks forward and gives the match between the whole string and the suffix starting at `i`. The value `pi[i]` looks backward and gives the longest border that ends at `i`. Reading one as the other shifts every answer by the length of the match.
+The Z array looks like a close relative, because it is also an array of match lengths. It is a false friend of the prefix function. The **Z array** `z` stores, for each index `i`, the length of the longest common prefix of the whole string and the suffix that starts at `i`. The value `z[i]` looks forward from `i`. The value `pi[i]` looks backward and gives the longest border of `p[0..i]`. For `aabxaab` the Z array is `7,1,0,0,3,1,0` and the prefix function is `0,1,0,0,1,2,3`. At index 4 the suffix `aab` matches the prefix for 3 characters, so `z[4] = 3`, while the longest border of `aabxa` is only `a`, so `pi[4] = 1`.
 
 A second false friend is the rolling hash from the previous lesson. It also avoids restarting, yet an equal hash does not prove an equal string, while the prefix function compares characters and is exact.
 
@@ -221,7 +221,7 @@ Do not use it when the pattern is short and the text is small, because the libra
 
 **Example 1.** Input `p = "ababaca"`, `k = 5`, output `[3,1]`.
 
-**Example 2.** Input `p = "aaaa"`, `k = 1`, output `[]`, because the whole text is excluded and no shorter length exists.
+**Example 2.** Input `p = "aaaa"`, `k = 1`, output `[]`, because the whole prefix is excluded and no shorter length exists.
 
 **Hint.** Start from `pi[k - 1]`. Is every shorter border also a border of that longest border?
 

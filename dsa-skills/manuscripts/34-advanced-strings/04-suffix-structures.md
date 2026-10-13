@@ -17,11 +17,11 @@ The direct method copies each suffix with `substring`, sorts the copies with the
 ```java
 static int[] sortCopiedSuffixes(String s) {
     int n = s.length();
-    List<String> suffixes = new ArrayList<>();
+    java.util.List<String> suffixes = new java.util.ArrayList<>();
     for (int i = 0; i < n; i++) {
         suffixes.add(s.substring(i)); // copies n - i characters
     }
-    Collections.sort(suffixes);
+    java.util.Collections.sort(suffixes);
     int[] start = new int[n];
     for (int j = 0; j < n; j++) {
         start[j] = n - suffixes.get(j).length();
@@ -60,7 +60,7 @@ Start from `k = 1`, where the rank is the character code itself. After at most `
 
 #### Reading Repeats From Neighbours
 
-Once the suffix array exists, the **LCP array** (longest common prefix array) records one number per sorted position `r`. The number `lcp[r]` is the length of the longest common prefix of the suffixes `sa[r - 1]` and `sa[r]`, and `lcp[0] = 0`. Two suffixes that share a long beginning must sit next to each other in sorted order, because everything between them in the order shares that beginning too. A substring that occurs twice is therefore a common prefix of two neighbouring suffixes, and the longest repeated substring has length `max(lcp)`.
+Once the suffix array exists, the **LCP array** (longest common prefix array) records one number per sorted position `r`. The number `lcp[r]` is the length of the longest common prefix of the suffixes `sa[r - 1]` and `sa[r]`, and `lcp[0] = 0`. The suffixes that share a given prefix form one contiguous block in sorted order, because any suffix sorted between two of them also begins with that prefix. A substring that occurs twice is therefore a common prefix of two suffixes in one block, and adjacent pairs inside the block share it too. The longest repeated substring has length `max(lcp)`.
 
 Computing each LCP value by comparing neighbours directly can cost O(n) per pair. Kasai's method processes suffixes in text order instead. If `s[i..]` shares `h` characters with its sorted predecessor, then `s[i+1..]` shares at least `h - 1` characters with its own predecessor. The variable `h` never drops by more than 1 per step and never exceeds `n`, so all increments together are at most `2n` and the whole LCP array costs O(n).
 
@@ -80,12 +80,13 @@ Construction and the LCP pass keep a short list of arrays and counters.
 - **s** is the text, read by `charAt` and never copied.
 - **sa** holds start indexes in sorted order, so `sa[r]` is the start of the suffix with sorted position `r`.
 - **rank** holds one integer per start index; `rank[i]` orders suffix `i` by its first `k` characters, and after the last round it equals the sorted position of suffix `i`.
+- **order** lists the start indexes sorted by the current ranks, and after the last round it equals `sa`.
 - **k** is the compared length, which starts at 1 and doubles each round.
 - **lcp** holds `lcp[r]`, the common prefix length of the suffixes at sorted positions `r - 1` and `r`.
 - **h** is the running match length in Kasai's loop, carried from one text position to the next.
 
 <!-- stage: trace -->
-### Building And Comparing Two Texts
+### Building The Order And LCP On banana
 
 #### Doubling Rounds On banana
 
@@ -94,7 +95,7 @@ The text is `banana`. The pointers `first` and `last` mark the start index of th
 The round with `k = 1` sorts by pairs of the first two characters and gives ranks `[2, 1, 3, 1, 3, 0]`. Two ties remain. The suffixes at 1 and 3 tie because both begin with `an`, and the suffixes at 2 and 4 tie because both begin with `na`. Sorted order so far is `[5, 1, 3, 0, 2, 4]`. The round with `k = 2` compares four characters, and the ties break because `ana` ends while `anana` continues. Ranks become `[3, 2, 5, 1, 4, 0]`, all distinct, and the array is `[5, 3, 1, 0, 4, 2]`. The loop stops after two rounds.
 
 ```trace
-{"cells":["b","a","n","a","n","a"],"pointers":["first","last"],"steps":[{"at":{"first":-1,"last":-1},"vars":{"k":0,"rank":"[98,97,110,97,110,97]"},"note":"Before any round the rank of each suffix is the code of its first character."},{"at":{"first":5,"last":4},"vars":{"k":1,"rank":"[2,1,3,1,3,0]","order":"[5,1,3,0,2,4]"},"note":"Round with k = 1 sorts by pairs of ranks, so it orders by 2 characters. Ties remain, so another round follows."},{"at":{"first":5,"last":2},"vars":{"k":2,"rank":"[3,2,5,1,4,0]","order":"[5,3,1,0,4,2]"},"note":"Round with k = 2 sorts by pairs of ranks, so it orders by 4 characters. All ranks are distinct, so the loop stops."}]}
+{"cells":["b","a","n","a","n","a"],"pointers":["first","last"],"steps":[{"at":{"first":-1,"last":-1},"vars":{"k":0,"rank":"[98,97,110,97,110,97]"},"note":"k = 0, before any round: the rank of each suffix is the code of its first character."},{"at":{"first":5,"last":4},"vars":{"k":1,"rank":"[2,1,3,1,3,0]","order":"[5,1,3,0,2,4]"},"note":"Round with k = 1 sorts by pairs of ranks, so it orders by 2 characters. Ties remain, so another round follows."},{"at":{"first":5,"last":2},"vars":{"k":2,"rank":"[3,2,5,1,4,0]","order":"[5,3,1,0,4,2]"},"note":"Round with k = 2 sorts by pairs of ranks, so it orders by 4 characters. All ranks are distinct, so the loop stops."}]}
 ```
 
 #### Kasai Pass On banana
@@ -126,13 +127,13 @@ static int[] suffixArray(String s) {
     }
     for (int k = 1; n > 0; k <<= 1) {
         final int step = k;
-        Comparator<Integer> byPair = (a, b) -> {
+        java.util.Comparator<Integer> byPair = (a, b) -> {
             if (rank[a] != rank[b]) return Integer.compare(rank[a], rank[b]);
             int ra = a + step < n ? rank[a + step] : -1;
             int rb = b + step < n ? rank[b + step] : -1;
             return Integer.compare(ra, rb);
         };
-        Arrays.sort(order, byPair);
+        java.util.Arrays.sort(order, byPair);
         next[order[0]] = 0;
         for (int t = 1; t < n; t++) {
             int bump = byPair.compare(order[t - 1], order[t]) < 0 ? 1 : 0;

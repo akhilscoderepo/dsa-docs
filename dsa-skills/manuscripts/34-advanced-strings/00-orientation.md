@@ -7,9 +7,9 @@ A moderation service watches a chat feed for 5,000 banned phrases. The first ver
 
 You should know arrays and strings, the two-pointer and sliding-window habits, hash maps, tries from the trie chapter, and sorting with a comparator. A **prefix** of a string is its first characters, and a **suffix** is its last characters. A **border** is a piece that is both a proper prefix and a suffix of the same string.
 
-### The Five Lessons And The Closing Lesson
+### What Each Lesson Reuses
 
-Each lesson answers one question about reusing work on text.
+Each lesson answers one question about reusing work on text. The prefix-matching lesson also ends with an extension exercise on the Z array.
 
 - **Rolling Hash** gives every window of a fixed length a number that updates in constant time, and it compares characters whenever two numbers agree.
 - **Match A Pattern Without Restarting** stores the longest border of every pattern prefix, so a mismatch falls back instead of rewinding the text.

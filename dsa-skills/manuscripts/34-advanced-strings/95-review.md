@@ -14,6 +14,10 @@ A chat filter misses a phrase split across two messages, a duplicate finder repo
 ```
 
 ```quiz
+{"id": "rq34-rev-restart-aaab", "q": "A matcher searches for `aaab` in `aaaaaab` and has matched `aaa` when the text character at index 3 is `a`, which differs from `b`. The prefix function of `aaab` is `0,1,2,0`. What does the prefix-function matcher do next?", "options": ["It stops and reports no match.", "It restarts at text index 1 with matched length 0.", "It sets the matched length to 0 and moves on to text index 4.", "It sets the matched length to pi[2] = 2 and compares the same text character with `p[2]`."], "answer": 3, "explain": "The longest border of `aaa` is `aa`, so the matched length falls to 2 with the text pointer unchanged. The character `a` equals `p[2]`, so the length rises to 3 again. A restart scan would read the same three letters again from index 1."}
+```
+
+```quiz
 {"id": "rq34-rev-radius-meaning", "q": "In the padded string `#a#b#a#b#` (indexes 0 to 8) the radius at index 3 is 3. Which palindrome of `abab` does this describe?", "options": ["The string `bab`.", "The string `abab`.", "The string `b` alone.", "The string `aba`, starting at index 0."], "answer": 3, "explain": "The window from index 0 to 6 reads `#a#b#a#`, and the radius 3 equals the length of `aba`. It starts at original index (3 - 3) / 2 = 0."}
 ```
 
@@ -23,6 +27,10 @@ A chat filter misses a phrase split across two messages, a duplicate finder repo
 
 ```quiz
 {"id": "rq34-rev-failure-link", "q": "A trie holds the patterns `he`, `she`, `his` and `hers`. Where does the failure link of the node for `she` point?", "options": ["The root", "The node for `s`", "The node for `sh`", "The node for `he`"], "answer": 3, "explain": "The proper suffixes of `she` are `he` and `e`. The string `he` is a prefix of a pattern and `e` is not, so the longest one that is a trie node is `he`."}
+```
+
+```quiz
+{"id": "rq34-rev-output-link", "q": "The patterns are `he`, `she`, `his` and `hers`. The scan of `ushers` reaches the node for `she`. Which patterns end at this position, and how does the scan find the second one?", "options": ["Only `she`, because a node reports one pattern.", "Only `she`, and `he` is found by rescanning the text from index 2.", "Both `she` and `he`, and the scan reaches `he` through the output link of `she`.", "Both `she` and `he`, and the scan reaches `he` by moving the text pointer back."], "answer": 2, "explain": "The string `he` is a suffix of `she` and also a pattern, so it ends at the same text position. The failure link of `she` is the node `he`, which is terminal, so the output link of `she` points there. The text pointer never moves."}
 ```
 
 ```quiz

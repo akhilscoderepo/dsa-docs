@@ -226,17 +226,17 @@ public final class SmallestRepeatingUnit {
 }
 ```
 
-#### Solution: [Boundary] Border Length For Every Prefix (LeetCode 1392)
+#### Solution: [Boundary] Borders And Repeats Of Every Prefix (LeetCode 1392)
 <!-- id: as-prefix-border-lengths -->
 
 **Approach.**
-The string is matched against itself. The state `k` is the border of the prefix read so far, and each new character `s[i]` is one transition of the machine built from the earlier entries. While `s[k]` differs from `s[i]`, the state falls to `fail[k - 1]`. When the characters agree, the state rises to `k + 1`. The result for index `i` is that state. The state is always at most `i`, because the transition reads `s[i]` against a position `k` that is still before `i`, so the border is strictly shorter than the prefix.
+The string is matched against itself. The state `k` is the border of the prefix read so far, and each new character `s[i]` is one transition of the machine built from the earlier entries. While `s[k]` differs from `s[i]`, the state falls to `fail[k - 1]`. When the characters agree, the state rises to `k + 1`. Row 0 stores that state for index `i`. The state is always at most `i`, because the transition reads `s[i]` against a position `k` that is still before `i`, so the border is strictly shorter than the prefix.
 
-Index 0 is written as 0 without a transition, which handles the length-one string, and the loop does not run. For an all-equal string every character agrees at once, so entry `i` becomes `i` and no fallback happens. The invariant is that before iteration `i`, the value `k` equals `fail[i - 1]`, and the fall chain visits every border of the prefix from longest to shortest.
+Row 1 reads only the finished border. A prefix of length `len = i + 1` with border `b` has the period `p = len - b`. The prefix is a repeat exactly when `b > 0` and `len % p == 0`. When `b` is 0 the period equals `len`, so there is no shorter unit. When `p` does not divide `len`, no other length can work, because every period of the prefix is at least `p` and a unit length must divide `len`. Index 0 has border 0, so both rows hold 0 there and the loop does not run for a string of length one. The invariant is that before iteration `i`, the value `k` equals `fail[i - 1]`.
 
 **Complexity.**
-- **Time** is O(n), because `k` rises by at most 1 per index and each fallback lowers it by at least 1.
-- **Space** is O(n), because the answer array has one entry per index.
+- **Time** is O(n), because `k` rises by at most 1 per index, each fallback lowers it by at least 1, and the flag is one remainder test per index.
+- **Space** is O(n), because the two rows have one entry per index.
 
 ```java run
 import java.util.Arrays;
@@ -244,44 +244,54 @@ import java.util.Random;
 
 public final class PrefixBorderLengths {
     /**
-     * Returns, for every prefix of s, the length of its longest proper border.
+     * Returns row 0 with the longest proper border of every prefix and row 1 with the repeat flag of every prefix.
      * Time: O(n), by the amortized rise and fall of k.
-     * Space: O(n), because the result has n entries.
-     * Invariant: before iteration i, k equals out[i - 1].
+     * Space: O(n), because both rows have n entries.
+     * Invariant: before iteration i, k equals out[0][i - 1].
      */
-    static int[] borders(String s) {
-        // One entry per index; entry 0 is 0 because the one-character prefix has no proper prefix.
-        int[] out = new int[s.length()];
+    static int[][] bordersAndRepeats(String s) {
+        // Row 0 holds borders and row 1 holds repeat flags; entry 0 of both is 0.
+        int[][] out = new int[2][s.length()];
         // k starts at the border of the first prefix.
         int k = 0;
         // The loop is skipped for a string of length one.
         for (int i = 1; i < s.length(); i++) {
             // Fall to shorter borders while the next character disagrees.
-            while (k > 0 && s.charAt(k) != s.charAt(i)) k = out[k - 1];
-            // Rise by one when the characters agree; k stays below i + 1 because s.charAt(k) is read before i.
+            while (k > 0 && s.charAt(k) != s.charAt(i)) k = out[0][k - 1];
+            // Rise by one when the characters agree; k stays at most i because s.charAt(k) is read before i.
             if (s.charAt(k) == s.charAt(i)) k++;
             // Store the border for the prefix ending at i.
-            out[i] = k;
+            out[0][i] = k;
+            // The period is the prefix length minus the border; it divides the length only for a repeat.
+            int len = i + 1;
+            if (k > 0 && len % (len - k) == 0) out[1][i] = 1;
         }
-        // The caller reads the lengths from this array.
+        // The caller reads both rows from this array.
         return out;
     }
 
     /**
-     * Brute-force oracle that tests every proper length for every prefix.
+     * Brute-force oracle that tests every proper length and every unit length for every prefix.
      * Time: O(n^3), because of three nested loops.
      * Space: O(n), because of the result.
-     * Invariant: the first matching length tried from the longest is the maximum.
+     * Invariant: the first matching border tried from the longest is the maximum.
      */
-    static int[] oracle(String s) {
-        // Result array.
-        int[] out = new int[s.length()];
+    static int[][] oracle(String s) {
+        // Result rows.
+        int[][] out = new int[2][s.length()];
         // Each prefix s[0..i] is handled alone.
         for (int i = 0; i < s.length(); i++) {
-            // Proper lengths run from i down to 1.
+            // Proper border lengths run from i down to 1.
             for (int len = i; len >= 1; len--) {
                 // The prefix and the suffix of this length must agree.
-                if (s.regionMatches(0, s, i + 1 - len, len)) { out[i] = len; break; }
+                if (s.regionMatches(0, s, i + 1 - len, len)) { out[0][i] = len; break; }
+            }
+            // A unit length u below the prefix length that divides it and rebuilds the prefix proves a repeat.
+            for (int u = 1; u <= i; u++) {
+                if ((i + 1) % u != 0) continue;
+                boolean same = true;
+                for (int j = u; j <= i; j++) if (s.charAt(j) != s.charAt(j - u)) { same = false; break; }
+                if (same) { out[1][i] = 1; break; }
             }
         }
         // Compared with the fast answer in main.
@@ -290,25 +300,25 @@ public final class PrefixBorderLengths {
 
     public static void main(String[] args) {
         // Worked examples from the exercise.
-        if (!Arrays.equals(borders("ababab"), new int[] {0, 0, 1, 2, 3, 4})) throw new AssertionError("ababab");
-        // All-equal text: every border is one shorter than its prefix.
-        if (!Arrays.equals(borders("aaaa"), new int[] {0, 1, 2, 3})) throw new AssertionError("aaaa");
-        // Length one gives a single zero.
-        if (!Arrays.equals(borders("a"), new int[] {0})) throw new AssertionError("a");
-        // A palindrome is not automatically a border: only the last entry grows here.
-        if (!Arrays.equals(borders("level"), new int[] {0, 0, 0, 0, 1})) throw new AssertionError("level");
+        if (!Arrays.deepEquals(bordersAndRepeats("ababab"), new int[][] {{0, 0, 1, 2, 3, 4}, {0, 0, 0, 1, 0, 1}})) throw new AssertionError("ababab");
+        // A border that does not divide the length is not a repeat.
+        if (!Arrays.deepEquals(bordersAndRepeats("abcab"), new int[][] {{0, 0, 0, 1, 2}, {0, 0, 0, 0, 0}})) throw new AssertionError("abcab");
+        // All-equal text: every prefix after the first is a repeat of one letter.
+        if (!Arrays.deepEquals(bordersAndRepeats("aaaa"), new int[][] {{0, 1, 2, 3}, {0, 1, 1, 1}})) throw new AssertionError("aaaa");
+        // Length one gives a zero in both rows.
+        if (!Arrays.deepEquals(bordersAndRepeats("a"), new int[][] {{0}, {0}})) throw new AssertionError("a");
         // Random comparison with the oracle; the seed makes any failure reproducible.
         Random rnd = new Random(3493L);
         for (int t = 0; t < 4000; t++) {
-            // Small alphabets create many borders.
+            // Small alphabets create many borders and repeats.
             int alpha = 1 + rnd.nextInt(3);
             StringBuilder sb = new StringBuilder();
             for (int i = 1 + rnd.nextInt(14); i > 0; i--) sb.append((char) ('a' + rnd.nextInt(alpha)));
             String s = sb.toString();
-            int[] got = borders(s);
-            if (!Arrays.equals(got, oracle(s))) throw new AssertionError("mismatch " + s);
-            // Every entry is a proper border: strictly shorter than its prefix.
-            for (int i = 0; i < got.length; i++) if (got[i] > i) throw new AssertionError("not proper " + s);
+            int[][] got = bordersAndRepeats(s);
+            if (!Arrays.deepEquals(got, oracle(s))) throw new AssertionError("mismatch " + s);
+            // Every border is proper: strictly shorter than its prefix.
+            for (int i = 0; i < s.length(); i++) if (got[0][i] > i) throw new AssertionError("not proper " + s);
         }
     }
 }

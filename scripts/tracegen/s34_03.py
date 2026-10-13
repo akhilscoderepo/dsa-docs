@@ -22,7 +22,7 @@ def trace(s, expected):
         if i + rad[i] > right: center, right = i, i + rad[i]
         grown = rad[i] - start
         st.append({"at": {"i": i, "c": center, "r": right},
-                   "vars": {"rad": str(rad[i]), "start": str(start), "grown": str(grown)},
+                   "vars": {"rad": str(rad[i]), "copied": str(start), "expanded": str(grown)},
                    "note": f"i = {i}: {how} Expansion adds {grown}, so rad[{i}] = {rad[i]}."})
     assert rad == expected, (rad, expected)
     # brute-force oracle for the radii

@@ -12,7 +12,7 @@ The question of this lesson is how a scanner can keep a small state for each str
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
 
-The lesson Match A Pattern Without Restarting supplied the prefix function. For one pattern `p`, the entry `fail[i]` is the length of the longest proper prefix of `p[0..i]` that is also a suffix of it. After a mismatch, the matched length moves to `fail[k - 1]` and the text index stays where it is. The lesson Match Many Patterns In One Pass supplied the trie. Each trie node stands for one prefix of some word, a failure link points to the longest proper suffix of that prefix that is also a node, and an output link reaches the nearest word that ends on that chain.
+The lesson Match A Pattern Without Restarting supplied the prefix function, which that lesson stored in an array named `pi`. This lesson calls the same array `fail`, to match the failure links of the trie. For one pattern `p`, the entry `fail[i]` is the length of the longest proper prefix of `p[0..i]` that is also a suffix of it. After a mismatch, the matched length moves to `fail[k - 1]` and the text index stays where it is. The lesson Match Many Patterns In One Pass supplied the trie. Each trie node stands for one prefix of some word, a failure link points to the longest proper suffix of that prefix that is also a node, and an output link reaches the nearest word that ends on that chain.
 
 This lesson reads both ideas as one machine whose only memory is one state. The new step is to keep the machine running after a full match, so that overlapping occurrences are reported, and to keep the state alive between calls, so that the input never has to be stored.
 
@@ -171,7 +171,7 @@ The call `failArray(pat)` relies on `advance` reading `fail[state - 1]` only for
 
 #### Many Words With A Persistent State
 
-The class below builds the trie once, fills `go`, `fail` and `hits` in one level-order pass, and keeps one `state` between calls.
+The class below builds the trie once, fills `go`, `fail` and `hits` in one level-order pass, and keeps one `state` between calls. The array `made` marks which `go` entries are real trie edges, because the fill later writes fallback results into the same table and a plain `0` cannot tell the two apart.
 
 ```java
 final class WordStream {
@@ -287,29 +287,29 @@ Do not use the table version when the word list changes while the stream runs, b
 
 **Hint.** If the gap `n - fail[n - 1]` does not divide `n`, can any other length work?
 
-**Changed decision.** The output changes from "does a proper repeating unit exist" to its exact length, and the divisibility test moves from the answer into the formula.
+**Changed decision.** The output changes from a yes-or-no answer to the exact unit length. The test `n % p == 0` still decides between `p` and `n`, where `p = n - fail[n - 1]`.
 
-#### [Boundary] Border Length For Every Prefix (LeetCode 1392)
+#### [Boundary] Borders And Repeats Of Every Prefix (LeetCode 1392)
 <!-- id: as-prefix-border-lengths -->
 
-**Prerequisites.** The second exercise above. This exercise changes the contract of LeetCode 1392: it reports every prefix, not only the whole string.
+**Prerequisites.** The second exercise above. This exercise changes the contract of LeetCode 1392: it reports every prefix, and it adds a repeat flag for each one.
 
-**Problem.** Given a non-empty string `s` of length `n`, return an `int[]` of length `n`. Entry `i` is the length of the longest proper prefix of `s[0..i]` that is also a suffix of `s[0..i]`. A proper prefix is shorter than the string it belongs to, so entry `i` is at most `i`. The prefix and the suffix may overlap. Entry `i` is 0 when no such prefix exists.
+**Problem.** Given a non-empty string `s` of length `n`, return an `int[][]` with two rows of length `n`. In row 0, entry `i` is the length of the longest proper prefix of `s[0..i]` that is also a suffix of `s[0..i]`, or 0 when none exists. In row 1, entry `i` is 1 when `s[0..i]` consists of two or more equal copies of a shorter string, and 0 otherwise.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= s.length() <= 10^5`.
 - **Characters** are lowercase English letters.
-- **Return** value is a new `int[]` of length `n`.
-- **Length one** gives `[0]`, because the only prefix is the whole string.
+- **Return** value is a new `int[2][n]`, and row 1 holds only 0 and 1.
+- **Length one** gives `[[0], [0]]`, because a single character has no shorter string to repeat.
 - **Mutation** does not occur; the string is immutable.
 
-**Example 1.** Input `s = "ababab"`, output `[0, 0, 1, 2, 3, 4]`.
+**Example 1.** Input `s = "ababab"`, output `[[0, 0, 1, 2, 3, 4], [0, 0, 0, 1, 0, 1]]`. The prefixes `abab` and `ababab` are repeats.
 
-**Example 2.** Input `s = "aaaa"`, output `[0, 1, 2, 3]`. Every prefix has the longest border it can have, one character less than itself.
+**Example 2.** Input `s = "abcab"`, output `[[0, 0, 0, 1, 2], [0, 0, 0, 0, 0]]`. The last prefix has a border of length 2, yet its gap 3 does not divide 5, so it is not a repeat.
 
-**Hint.** If the border of a prefix were allowed to be the whole prefix, which entries would become wrong?
+**Hint.** For a prefix of length `len` with border `b > 0`, which length is the only candidate for the repeating unit, and what test confirms it?
 
-**Changed decision.** The answer is read at every index and not only at the end, and the border must be strictly shorter than its prefix.
+**Changed decision.** The border row is the same as before. The repeat row applies the divisibility test to every prefix, so a border that exists is no longer enough to report a repeat.
 
 #### [Recognize] Count Words Ending Here (LeetCode 1032)
 <!-- id: as-count-words-ending-here -->
