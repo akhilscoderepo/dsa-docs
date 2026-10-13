@@ -16,7 +16,7 @@ Formally, the input is a small list, a short string over a small alphabet, or an
 
 #### Bit Masks Supply Set Membership
 
-The bit-masks lesson stored a set of up to 31 items in one `int` for membership tests, and up to 63 items in one `long`. Bit `i` is 1 when item `i` belongs to the set. The expression `1 << i` builds a one-item set, `|` joins sets and `&` finds the common items. Two sets share nothing when the `&` of their integers is 0. This lesson relies on that exact encoding, because equal sets always have equal integers.
+The bit-masks lesson stored a set in one `int`, which has 32 bits, or in one `long`, which has 64 bits. Loops that count through every mask stop at `n = 30` for an `int` and `n = 62` for a `long`. Bit `i` is 1 when item `i` belongs to the set. The expression `1 << i` builds a one-item set, `|` joins sets and `&` finds the common items. Two sets share nothing when the `&` of their integers is 0. This lesson relies on that exact encoding, because equal sets always have equal integers.
 
 #### Shifts Supply Fixed Windows
 
@@ -38,10 +38,10 @@ The direct approach stores each set as a Java collection. The method below runs 
 ```java
 static int shortestVisitAllNaive(int[][] graph) {
     int n = graph.length;
-    java.util.Deque<Object[]> queue = new java.util.ArrayDeque<>();
-    java.util.Set<String> queued = new java.util.HashSet<>();
+    Deque<Object[]> queue = new ArrayDeque<>();
+    Set<String> queued = new HashSet<>();
     for (int s = 0; s < n; s++) {
-        java.util.TreeSet<Integer> seen = new java.util.TreeSet<>(java.util.List.of(s));
+        TreeSet<Integer> seen = new TreeSet<>(List.of(s));
         queue.add(new Object[]{s, seen, 0});
         queued.add(s + ":" + seen);                       // the string key lists every seen node
     }
@@ -49,11 +49,11 @@ static int shortestVisitAllNaive(int[][] graph) {
         Object[] cur = queue.poll();
         int node = (int) cur[0];
         @SuppressWarnings("unchecked")
-        java.util.TreeSet<Integer> seen = (java.util.TreeSet<Integer>) cur[1];
+        TreeSet<Integer> seen = (TreeSet<Integer>) cur[1];
         int dist = (int) cur[2];
         if (seen.size() == n) return dist;                // every node was seen
         for (int next : graph[node]) {
-            java.util.TreeSet<Integer> copy = new java.util.TreeSet<>(seen);   // one copy per edge
+            TreeSet<Integer> copy = new TreeSet<>(seen);   // one copy per edge
             copy.add(next);
             if (queued.add(next + ":" + copy)) queue.add(new Object[]{next, copy, dist + 1});
         }
@@ -105,10 +105,11 @@ Subset listing costs O(n * 2^n) with the size filter. The window scan costs O(N)
 <!-- stage: variables -->
 ### Quantities Across The Four Tasks
 
-Lesson 91 uses these five quantities in all four methods.
+These quantities appear across the four methods.
 
 - **mask** is the membership mask, an `int` for up to 30 items and a `long` for up to 62 items when a loop counts through every mask.
-- **full** is the mask with every low bit set, which is `(1 << n) - 1` for `n` items.
+- **full** in the subset and graph methods is the mask `(1 << n) - 1` with one bit per item.
+- **full** in the window method is the mask `(1L << (2 * k)) - 1` with two bits per letter.
 - **window** is the window mask of the last `k` letters, kept as a `long`.
 - **node** is the current graph node in a search state.
 - **state** is the state key `(node << n) | mask`, and `dist[state]` is its distance, or -1 when unvisited.
@@ -146,13 +147,13 @@ The hardest step is the cut `& 63`. It first matters at `GAC`. The raw value is 
 #### List Subsets And Pick Word Pairs
 
 ```java
-static java.util.List<java.util.List<Integer>> subsetsBySize(int[] nums) {
+static List<List<Integer>> subsetsBySize(int[] nums) {
     int n = nums.length;
-    java.util.List<java.util.List<Integer>> out = new java.util.ArrayList<>();
+    List<List<Integer>> out = new ArrayList<>();
     for (int size = 0; size <= n; size++) {
         for (int mask = 0; mask < (1 << n); mask++) {
             if (Integer.bitCount(mask) != size) continue;       // keep one size at a time
-            java.util.List<Integer> subset = new java.util.ArrayList<>();
+            List<Integer> subset = new ArrayList<>();
             for (int i = 0; i < n; i++) {
                 if ((mask & (1 << i)) != 0) subset.add(nums[i]);   // bit i selects nums[i]
             }
@@ -183,14 +184,14 @@ static long[] bestWordPair(String[] words) {
 
 The subset method visits `2^n` masks once for each size. The word method keeps the first pair that reaches the best product, because only a strictly larger product replaces it.
 
-#### Scan Windows And Search States
+#### Scan Repeated Windows
 
-The next two methods handle the genome windows and the robot search. They do not call the two methods above.
+The next two methods handle the genome windows and the robot search. They do not call the two methods above, and they do not call each other.
 
 ```java
-static java.util.List<String> repeatedWindows(String s, int k) {
-    java.util.Map<Long, Integer> count = new java.util.HashMap<>();
-    java.util.Map<Long, Integer> firstStart = new java.util.HashMap<>();
+static List<String> repeatedWindows(String s, int k) {
+    Map<Long, Integer> count = new HashMap<>();
+    Map<Long, Integer> firstStart = new HashMap<>();
     long full = (1L << (2 * k)) - 1;                            // 2k one-bits, long so k up to 31 is safe
     long window = 0;
     for (int i = 0; i < s.length(); i++) {
@@ -200,17 +201,23 @@ static java.util.List<String> repeatedWindows(String s, int k) {
             firstStart.putIfAbsent(window, i - k + 1);
         }
     }
-    java.util.TreeSet<String> out = new java.util.TreeSet<>();
+    TreeSet<String> out = new TreeSet<>();
     for (var e : count.entrySet()) {
         if (e.getValue() >= 2) out.add(s.substring(firstStart.get(e.getKey()), firstStart.get(e.getKey()) + k));
     }
-    return new java.util.ArrayList<>(out);                      // sorted text order
+    return new ArrayList<>(out);                      // sorted text order
 }
+```
 
+The window method keeps the first start of each mask so it can return the text.
+
+#### Search Graph States
+
+```java
 static int shortestVisitAll(int[][] graph) {
     int n = graph.length, full = (1 << n) - 1;
     int[] dist = new int[n << n];
-    java.util.Arrays.fill(dist, -1);                            // -1 marks an unvisited state
+    Arrays.fill(dist, -1);                            // -1 marks an unvisited state
     int[] queue = new int[n << n];
     int head = 0, tail = 0;
     for (int s = 0; s < n; s++) {
@@ -234,7 +241,7 @@ static int shortestVisitAll(int[][] graph) {
 }
 ```
 
-The window method keeps the first start of each mask so it can return the text. The search method uses arrays of `n << n` slots, so its memory is fixed in advance. The tests `mask == full` and `dist[nextState] == -1` run on integers, with no hashing.
+The search method uses arrays of `n << n` slots, so its memory is fixed in advance. The tests `mask == full` and `dist[nextState] == -1` run on integers, with no hashing.
 
 <!-- stage: applicability -->
 ### When A Mask Fits The Search

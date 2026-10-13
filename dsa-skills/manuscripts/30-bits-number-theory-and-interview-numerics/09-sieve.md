@@ -41,14 +41,14 @@ The test for one number stops early when it finds a divisor. A prime has no divi
 ### Every Prime Costs A Full Square Root
 
 ```predict
-The routine above lists the primes up to 10,000,000. There are 664,579 of them, and each one needs about 3,162 trial divisions. About how many divisions do the primes alone cost?
+The routine above lists the primes up to 10,000,000. There are 664,579 of them, and each prime `x` needs about the square root of `x` trial divisions. About how many divisions do the primes alone cost?
 
-About two billion divisions. The count is 664,579 times 3,162, which is above 2 * 10^9, and the composites add more. The run takes several seconds, although the answer is only a list of numbers.
+About 1.4 billion divisions. Summing the square root of each prime up to 10,000,000 gives about 1.37 * 10^9, and the composites add more. The run takes several seconds, although the answer is only a list of numbers.
 ```
 
 #### Count The Divisions
 
-A prime `x` needs about the square root of `x` divisions, so the whole range costs up to O(n * sqrt(n)) time. For `n = 10,000,000` the primes alone need over two billion divisions. A division is slower than an addition, so the program exceeds a limit of one or two seconds.
+A prime `x` needs about the square root of `x` divisions, so the whole range costs up to O(n * sqrt(n)) time. For `n = 10,000,000` the primes alone need about 1.4 billion divisions (1.37 * 10^9). A division is slower than an addition, so the program exceeds a limit of one or two seconds.
 
 #### Find The Repeated Work
 
@@ -65,7 +65,7 @@ The **sieve of Eratosthenes** turns the question around. It keeps a boolean arra
 
 #### Start At The Square
 
-Take a prime `p`. The multiple `p * k` with `k < p` has the factor `k`, and `k` has a prime factor smaller than `p`. An earlier prime already set the flag of `p * k`. The first multiple that no earlier prime reached is `p * p`. The marking loop therefore uses a **square start**, which means `m` begins at `p * p` and grows by `p`. This skips the `p - 1` smaller multiples of each prime, and it removes all writes once `p * p` is above `n`.
+Take a prime `p`. The multiple `p * k` with `k` from 2 to `p - 1` has the factor `k`, and `k` has a prime factor smaller than `p`. An earlier prime already set the flag of `p * k`. The case `k = 1` gives `p` itself, which is the prime and not a multiple to mark. The first multiple that no earlier prime reached is `p * p`. The marking loop therefore uses a **square start**, which means `m` begins at `p * p` and grows by `p`. This skips the `p - 1` smaller multiples of each prime, and it removes all writes once `p * p` is above `n`.
 
 #### Stop At The Square Root
 
@@ -97,10 +97,10 @@ In a trace, the pointer `p` and the pointer `m` are positions in the list of num
 
 #### Sieve Every Number Up To Thirty
 
-Take `n = 30`. The numbers 2 to 30 are listed below. The scan reaches 2, whose flag is false, so 2 is prime and its multiples 4, 6, up to 30 get marked. That is 14 writes. The scan reaches 3, still unmarked, and starts at 9, because 6 already carries a flag. It marks 9, 15, 21 and 27. The number 5 starts at 25 and marks only 25, because 10, 15 and 20 are already marked. The number 7 has `7 * 7 = 49`, which is above 30, so the loop ends. The unmarked numbers are the 10 primes up to 30.
+Take `n = 30`. The numbers 2 to 30 are listed below. The scan reaches 2, whose flag is false, so 2 is prime and its multiples 4, 6, up to 30 get marked. That is 14 new marks. The scan reaches 3, still unmarked, and starts at 9, because 6 already carries a flag. The loop for 3 writes 8 times, at 9, 12, 15, 18, 21, 24, 27 and 30, but only 9, 15, 21 and 27 are new marks. The number 5 starts at 25 and writes twice, at 25 and 30. Only 25 is a new mark, because 10, 15, 20 and 30 are already marked. Most writes after the first prime hit flags that are already true. The number 7 has `7 * 7 = 49`, which is above 30, so the loop ends. The unmarked numbers are the 10 primes up to 30.
 
 ```trace
-{"cells":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],"pointers":["p","m"],"steps":[{"at":{"p":-1,"m":-1},"vars":{"marks":0},"note":"No number is marked yet. The scan has not reached any candidate."},{"at":{"p":0,"m":2},"vars":{"p":2,"firstMultiple":4,"newMarks":14,"marks":14},"note":"The flag of 2 is false, so 2 is prime. The loop starts at 4 and writes 14 new marks: 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30."},{"at":{"p":1,"m":7},"vars":{"p":3,"firstMultiple":9,"newMarks":4,"marks":18},"note":"The flag of 3 is false, so 3 is prime. The loop starts at 9 and writes 4 new marks: 9, 15, 21, 27."},{"at":{"p":3,"m":23},"vars":{"p":5,"firstMultiple":25,"newMarks":1,"marks":19},"note":"The flag of 5 is false, so 5 is prime. The loop starts at 25 and writes 1 new marks: 25."},{"at":{"p":5,"m":-1},"vars":{"p":7,"square":49,"marks":19},"note":"For p = 7 the square is 49, which is above 30. The loop ends, and every composite up to 30 is marked."},{"at":{"p":-1,"m":-1},"vars":{"primes":10,"marks":19},"note":"The unmarked numbers are the 10 primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29."}]}
+{"cells":[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],"pointers":["p","m"],"steps":[{"at":{"p":-1,"m":-1},"vars":{"marks":0},"note":"No number is marked yet. The scan has not reached any candidate."},{"at":{"p":0,"m":2},"vars":{"p":2,"firstMultiple":4,"newMarks":14,"marks":14},"note":"The flag of 2 is false, so 2 is prime. The loop starts at 4 and adds 14 new marks: 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30."},{"at":{"p":1,"m":7},"vars":{"p":3,"firstMultiple":9,"newMarks":4,"marks":18},"note":"The flag of 3 is false, so 3 is prime. The loop starts at 9 and writes 8 times, at 9, 12, 15, 18, 21, 24, 27 and 30. It adds 4 new marks: 9, 15, 21, 27. The other 4 writes hit flags that are already true."},{"at":{"p":3,"m":23},"vars":{"p":5,"firstMultiple":25,"newMarks":1,"marks":19},"note":"The flag of 5 is false, so 5 is prime. The loop starts at 25 and writes twice, at 25 and 30. It adds 1 new mark: 25. The write at 30 hits a flag that is already true."},{"at":{"p":5,"m":-1},"vars":{"p":7,"square":49,"marks":19},"note":"For p = 7 the square is 49, which is above 30. The loop ends, and every composite up to 30 is marked."},{"at":{"p":-1,"m":-1},"vars":{"primes":10,"marks":19},"note":"The unmarked numbers are the 10 primes: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29."}]}
 ```
 
 #### Split Eighty-Four Into Primes
@@ -156,7 +156,7 @@ Trial division is a false friend. It is the right tool for a single query number
 
 #### Avoid The Java Hazards
 
-Computing `p * p` in `int` wraps for `p` above 46,340 and makes the loop condition true again, so the loop never ends. Cast to `long` first, or compare `p <= n / p`. The flags for 0 and 1 are false in the array, so the final pass must start from 2, and an input `n` below 2 must return an empty result. A `boolean[]` of `n + 1` entries costs `n + 1` bytes, so `n` near 2^31 cannot be allocated at all.
+Computing `p * p` in `int` wraps for `p` above 46,340. The wrapped product is negative, so the condition `p * p <= n` is wrongly true. The start index `p * p` is negative as well, and the first write fails. Cast to `long` first, or compare `p <= n / p`. The flags for 0 and 1 are false in the array, so the final pass must start from 2, and an input `n` below 2 must return an empty result. A `boolean[]` of `n + 1` entries costs `n + 1` bytes, so `n` near 2^31 cannot be allocated at all.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -202,7 +202,7 @@ Computing `p * p` in `int` wraps for `p` above 46,340 and makes the loop conditi
 
 **Changed decision.** The range ends before `n`, and the answer needs a second value taken from the same scan.
 
-#### [Boundary] Zero One And p-Squared Overflow (Author exercise)
+#### [Boundary] p-Squared Overflow (Author exercise)
 <!-- id: bt09-square-overflow -->
 
 **Prerequisites.** The two exercises above and the Java hazards from this lesson.

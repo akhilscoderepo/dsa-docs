@@ -67,7 +67,11 @@ Java stores an `int` in 32 bits using two's complement, and it computes `int` ar
 
 #### Replace Subtraction With A Named Comparison
 
-A comparator must return the sign of the comparison, not the difference. The call `Integer.compare(a, b)` returns a negative number, 0 or a positive number without subtracting, so it never wraps. The same idea covers negation. The value `-Integer.MIN_VALUE` equals `Integer.MIN_VALUE`, because +2,147,483,648 has no `int` representation. For that reason `Math.abs(Integer.MIN_VALUE)` stays negative. The safe form widens first: `Math.abs((long) x)`.
+A comparator must return the sign of the comparison, not the difference. The call `Integer.compare(a, b)` returns a negative number, 0 or a positive number without subtracting, so it never wraps.
+
+#### Widen Before Negating A Value
+
+Negation can wrap in the same way as subtraction. The value `-Integer.MIN_VALUE` equals `Integer.MIN_VALUE`, because +2,147,483,648 has no `int` representation. For that reason `Math.abs(Integer.MIN_VALUE)` stays negative. The safe form widens first: `Math.abs((long) x)`.
 
 #### Test Before The Operation When No Wider Type Exists
 
@@ -156,7 +160,7 @@ Constraints in a problem statement decide the question. A bound such as 10^5 val
 
 #### Watch For The Nearest False Friend
 
-The assignment `long y = a * b` is the false friend. It looks safe because the variable is wide, yet the multiplication already finished as an `int`. A second false friend is the compound assignment `int s += someLong`, which compiles without a warning because Java inserts a narrowing cast. Use `BigInteger` only when no primitive width is enough, since it costs far more per operation than `long`.
+The assignment `long y = a * b` is the false friend. It looks safe because the variable is wide, yet the multiplication already finished as an `int`. A second false friend is the compound assignment `s += someLong;`, where `s` is an `int` declared earlier. It compiles without a warning because Java inserts a narrowing cast. Use `BigInteger` only when no primitive width is enough, since it costs far more per operation than `long`.
 
 #### Avoid The Java Rounding And Cast Traps
 

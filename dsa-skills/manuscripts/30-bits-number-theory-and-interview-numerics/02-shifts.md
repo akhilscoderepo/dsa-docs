@@ -35,7 +35,7 @@ static int countOnes(int x) {
 
 For `x = 180` and `i = 2`, the loop gives 45 after two divisions, and `45 % 2` is 1, which is correct. For small positive values, both methods work. They also spend one loop step per bit position, so a read at position 30 runs 30 divisions.
 
-The next step needs the two's complement form, which Java uses for every `int`. Bit position `p` below 31 has weight 2 raised to the power `p`. The top bit, position 31, has weight negative 2 raised to the power 31. The value is the sum of the weights of the bits that are 1. To negate a number, flip every bit and add 1, so `-x` equals `~x + 1`. For 3, the pattern `0...011` flips to `1...100`, and adding 1 gives `1...101`, which is -3. The top bit contributes -2^31, and positions 2 to 30 add 2^31 - 4, so those bits sum to -4. Bit 0 adds 1 to reach -3. The same sum shows why -3 ends in a 1 bit, because -4 is even and only bit 0 can make the total odd.
+The next step needs the two's complement form, which Java uses for every `int`. To negate a number, flip every bit and add 1, so `-x` equals `~x + 1`. For 3, the pattern `0...011` flips to `1...100`, and adding 1 gives `1...101`, which is -3.
 
 <!-- stage: bottleneck -->
 ### Loops And Negative Remainders

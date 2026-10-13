@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A service stores flags in twelve booleans, a checksum wraps to a negative total and a product loses its remainder. The questions below cover the ten lessons and the closing lesson. Return to this page after the lessons and again after a few days. Each question describes a situation, so decide the answer before you open the explanation.
+A service stores flags in twelve booleans, a checksum wraps to a negative total and a product loses its remainder. The questions below cover the ten lessons and the closing lesson on bits with search state. Return to this page after the lessons and again after a few days. Each question describes a situation, so decide the answer before you open the explanation.
 
 ### Recognition Questions
 
@@ -50,7 +50,15 @@ A service stores flags in twelve booleans, a checksum wraps to a negative total 
 ```
 
 ```quiz
-{"id": "rq30-rev-wrong-trace", "q": "A student traces the clear step `x & (x - 1)` on x = 52, which is 110100. The student writes: Round 1: 52 becomes 48. Round 2: 48 becomes 32. Round 3: 32 becomes 16. Round 4: 16 becomes 0. Which line is wrong?", "options": ["Round 1", "Round 2", "Round 3", "Round 4"], "answer": 2, "explain": "The value 52 has three set bits, so the loop ends after three rounds. In round 3, 32 & 31 is 0, not 16. Rounds 1 and 2 are correct, and there is no round 4."}
+{"id": "rq30-rev-wrong-trace", "q": "A student traces the clear step `x & (x - 1)` on x = 52, which is 110100. The student writes: Round 1: 52 becomes 48. Round 2: 48 becomes 32. Round 3: 32 becomes 16. Round 4: 16 becomes 0. Which line is the first wrong line?", "options": ["Round 1", "Round 2", "Round 3", "Round 4"], "answer": 2, "explain": "The value 52 has three set bits, so the loop ends after three rounds. Rounds 1 and 2 are correct. In round 3, 32 & 31 is 0, not 16, so round 3 is the first wrong line. Round 4 should not exist."}
+```
+
+```quiz
+{"id": "rq30-rev-visited-state", "q": "A search must find the shortest walk that visits every node of a graph and may enter a node many times. Why does a `visited[node]` array give a wrong answer, and what replaces it?", "options": ["It rejects a second visit to a node, even when that visit carries a larger set of seen nodes. Use a `(node, mask)` pair as the state.", "It uses too much memory. Use a `HashSet<Integer>` of nodes instead.", "It cannot hold more than 31 nodes. Use a `long[]` of nodes instead.", "It visits nodes in the wrong order. Sort the adjacency lists first."], "answer": 0, "explain": "The same node with a larger mask of seen nodes is new progress. The array marks the node as done after the first visit and blocks that progress. The pair (node, mask) records everything that affects the future, so each pair is queued once."}
+```
+
+```quiz
+{"id": "rq30-rev-widen-order", "q": "Two `int` lengths `a` and `b` can each reach 100,000. Which expression gives the correct product as a `long`?", "options": ["(long) a * b", "(long) (a * b)", "Math.abs(a * b)", "a * b / 1L"], "answer": 0, "explain": "The cast in (long) a * b applies to a first, so the multiplication runs in long arithmetic. In (long) (a * b) the int product wraps first, and the cast only widens the wrong value."}
 ```
 
 ### Fixing A Wrong Answer

@@ -28,7 +28,7 @@ Each lesson answers one question about how Java stores and combines integers.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a realistic failure. A short direct program follows, and you predict its behavior before the explanation appears. Later parts name the stored quantity, list the variables, follow two traces, show the code and say when the idea stops fitting. Four exercises close each lesson, and each has a hint and a solution that you can open after your own attempt.
+A lesson opens with a realistic failure. A short direct program follows, and you predict its behavior before the explanation appears. Later parts name the stored quantity, list the variables, follow two traces, show the code and say when the idea stops fitting. Each lesson states an invariant, which is a statement that stays true after every step of the loop. Four exercises close each lesson, and each has a hint and a solution that you can open after your own attempt.
 
 ### What You Can Do After This Chapter
 

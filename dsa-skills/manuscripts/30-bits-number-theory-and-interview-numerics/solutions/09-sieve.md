@@ -155,7 +155,7 @@ public final class CountPrimesBelow {
 }
 ```
 
-#### Solution: [Boundary] Zero One And p-Squared Overflow (Author exercise)
+#### Solution: [Boundary] p-Squared Overflow (Author exercise)
 <!-- id: bt09-square-overflow -->
 
 **Approach.** The count comes from one formula, and the square is computed in `long`.

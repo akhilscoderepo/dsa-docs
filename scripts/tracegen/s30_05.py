@@ -131,14 +131,15 @@ def trace_sub():
     steps = [{"at": {"k": -1}, "vars": {"m": m}, "note": "The mask is 11, which is 1011 in binary. The loop starts with sub equal to 11."}]
     for k, s in enumerate(seq):
         if s == 0:
-            txt = "The submask is 0, the empty subset. The loop processes it and then stops."
-            nxt = None
+            txt = "The submask is 0, the empty subset. The loop processes it. The update (0 - 1) & 11 gives 11, which wraps back to the start, so the loop stops here."
+            nxt = (s - 1) & m
+            assert nxt == 11
         else:
             nxt = (s - 1) & m
             txt = f"The submask is {s}, which is {format(s, '04b')} in binary. The update (sub - 1) & 11 computes ({s} - 1) & 11 and gives {nxt}."
             if s - 1 != nxt:
                 txt += f" The subtraction gives {s - 1}, and the AND clears the bits that 11 does not allow."
-        steps.append({"at": {"k": k}, "vars": {"sub": s, "next": nxt if nxt is not None else -1}, "note": txt})
+        steps.append({"at": {"k": k}, "vars": {"sub": s, "next": nxt}, "note": txt})
     return block(seq, ["k"], steps)
 
 def fmt(v):

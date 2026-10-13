@@ -58,13 +58,13 @@ The method `fitsInside` calls `containsAll`, which scans both lists. For lists o
 
 #### Give Every Item One Bit
 
-A **subset mask** is an integer whose bit `i` is 1 exactly when item `i` belongs to the subset. With four items numbered 0 to 3, the mask `1011` in binary, which is 11 in decimal, holds items 0, 1 and 3. The empty subset is the mask 0. The mask with every bit set for `n` items is the **full mask**, and its value is `(1 << n) - 1`. As a plain membership value, an `int` holds up to 31 items and a `long` holds up to 63. A loop that counts from 0 to `(1 << n) - 1` needs `n` of at most 30 for an `int` and at most 62 for a `long`, because `1 << 31` is already negative. The invariant of this lesson is that bit `i` of the mask states whether item `i` is in the subset.
+A **subset mask** is an integer whose bit `i` is 1 exactly when item `i` belongs to the subset. With four items numbered 0 to 3, the mask `1011` in binary, which is 11 in decimal, holds items 0, 1 and 3. The empty subset is the mask 0. The mask with every bit set for `n` items is the **full mask**, and its value is `(1 << n) - 1`. An `int` has 32 bits and a `long` has 64 bits. A loop that counts from 0 to `(1 << n) - 1` stops at `n = 30` for an `int` and at `n = 62` for a `long`, because `1 << 31` is already negative. The invariant of this lesson is that bit `i` of the mask states whether item `i` is in the subset.
 
 <!-- names: subset mask, full mask, submask -->
 
 #### Walk The Counter From Zero To The Full Mask
 
-Every pattern of `n` bits is one subset, and each pattern appears exactly once as the counter counts from 0 to `(1 << n) - 1`. A loop over that range therefore visits every subset once, with no duplicates and no recursion. The test "is item `i` in the subset" is `(mask >> i) & 1`. The subset with item `i` added is `mask | (1 << i)`, and the subset with item `i` removed is `mask & ~(1 << i)`. The test "is subset `a` inside subset `b`" is `(a & b) == a`. Each of these operations costs O(1).
+Every pattern of `n` bits is one subset, and each pattern appears exactly once as the counter counts from 0 to `(1 << n) - 1`. A loop over that range therefore visits every subset once, with no duplicates and no recursion. The test "is item `i` in the subset" is `(mask >> i) & 1`. The subset with item `i` added is `mask | (1 << i)`, and the subset with item `i` removed is `mask & ~(1 << i)`. The test "is subset `a` inside subset `b`" is `(a & b) == a`. Each of these operations costs O(1). The size of a subset is `Integer.bitCount(mask)`, the library form of lesson 3's loop that clears the lowest set bit until the mask is 0.
 
 #### Walk Only The Subsets Of One Mask
 
@@ -81,7 +81,7 @@ Track these items while the loops run.
 - **sub** is the current submask when the loop walks the subsets of one mask `m`.
 - **bit** is the value `1 << i` that selects item `i`.
 
-The loops use `int` when `n` is at most 30 and `long` when `n` can reach 62. The shift `1 << n` on an `int` uses only the low five bits of `n`, so `1 << 32` equals 1 and not 4,294,967,296. A `long` version must write `1L << n`. This lesson keeps `n` at 30 or below, so every enumeration loop works with an `int`.
+The loops use `int` when `n` is at most 30 and `long` when `n` can reach 62, as the capacity rule above states. The shift `1 << n` on an `int` uses only the low five bits of `n`, so `1 << 32` equals 1 and not 4,294,967,296. A `long` version must write `1L << n`. This lesson keeps `n` at 30 or below, so every enumeration loop works with an `int`.
 
 <!-- stage: trace -->
 ### Follow Both Loops On Small Inputs
@@ -98,10 +98,10 @@ The cells hold the masks 0 to 7 in order. Each step reads the bits of the curren
 
 #### Walk The Submasks Of 1011
 
-The mask 11 has three set bits, so it has eight submasks. The loop starts at 11 and repeats the update `sub = (sub - 1) & 11`. The first update turns 11 into 10, because subtracting 1 clears bit 0 and bit 0 is allowed by 11. The update from 8 differs: subtracting 1 from `1000` gives `0111`, which is 7, and the AND with `1011` clears bit 2 and leaves 3. That jump skips 7, 6, 5 and 4, which are not submasks of 11. The loop ends after it processes 0.
+The mask 11 has three set bits, so it has eight submasks. The loop starts at 11 and repeats the update `sub = (sub - 1) & 11`. The first update turns 11 into 10, because subtracting 1 clears bit 0 and bit 0 is allowed by 11. The update from 8 differs: subtracting 1 from `1000` gives `0111`, which is 7, and the AND with `1011` clears bit 2 and leaves 3. That jump skips 7, 6, 5 and 4, which are not submasks of 11. The loop ends after it processes 0, because the update from 0 wraps back to 11.
 
 ```trace
-{"cells":[11,10,9,8,3,2,1,0],"pointers":["k"],"steps":[{"at":{"k":-1},"vars":{"m":11},"note":"The mask is 11, which is 1011 in binary. The loop starts with sub equal to 11."},{"at":{"k":0},"vars":{"sub":11,"next":10},"note":"The submask is 11, which is 1011 in binary. The update (sub - 1) & 11 computes (11 - 1) & 11 and gives 10."},{"at":{"k":1},"vars":{"sub":10,"next":9},"note":"The submask is 10, which is 1010 in binary. The update (sub - 1) & 11 computes (10 - 1) & 11 and gives 9."},{"at":{"k":2},"vars":{"sub":9,"next":8},"note":"The submask is 9, which is 1001 in binary. The update (sub - 1) & 11 computes (9 - 1) & 11 and gives 8."},{"at":{"k":3},"vars":{"sub":8,"next":3},"note":"The submask is 8, which is 1000 in binary. The update (sub - 1) & 11 computes (8 - 1) & 11 and gives 3. The subtraction gives 7, and the AND clears the bits that 11 does not allow."},{"at":{"k":4},"vars":{"sub":3,"next":2},"note":"The submask is 3, which is 0011 in binary. The update (sub - 1) & 11 computes (3 - 1) & 11 and gives 2."},{"at":{"k":5},"vars":{"sub":2,"next":1},"note":"The submask is 2, which is 0010 in binary. The update (sub - 1) & 11 computes (2 - 1) & 11 and gives 1."},{"at":{"k":6},"vars":{"sub":1,"next":0},"note":"The submask is 1, which is 0001 in binary. The update (sub - 1) & 11 computes (1 - 1) & 11 and gives 0."},{"at":{"k":7},"vars":{"sub":0,"next":-1},"note":"The submask is 0, the empty subset. The loop processes it and then stops."}]}
+{"cells":[11,10,9,8,3,2,1,0],"pointers":["k"],"steps":[{"at":{"k":-1},"vars":{"m":11},"note":"The mask is 11, which is 1011 in binary. The loop starts with sub equal to 11."},{"at":{"k":0},"vars":{"sub":11,"next":10},"note":"The submask is 11, which is 1011 in binary. The update (sub - 1) & 11 computes (11 - 1) & 11 and gives 10."},{"at":{"k":1},"vars":{"sub":10,"next":9},"note":"The submask is 10, which is 1010 in binary. The update (sub - 1) & 11 computes (10 - 1) & 11 and gives 9."},{"at":{"k":2},"vars":{"sub":9,"next":8},"note":"The submask is 9, which is 1001 in binary. The update (sub - 1) & 11 computes (9 - 1) & 11 and gives 8."},{"at":{"k":3},"vars":{"sub":8,"next":3},"note":"The submask is 8, which is 1000 in binary. The update (sub - 1) & 11 computes (8 - 1) & 11 and gives 3. The subtraction gives 7, and the AND clears the bits that 11 does not allow."},{"at":{"k":4},"vars":{"sub":3,"next":2},"note":"The submask is 3, which is 0011 in binary. The update (sub - 1) & 11 computes (3 - 1) & 11 and gives 2."},{"at":{"k":5},"vars":{"sub":2,"next":1},"note":"The submask is 2, which is 0010 in binary. The update (sub - 1) & 11 computes (2 - 1) & 11 and gives 1."},{"at":{"k":6},"vars":{"sub":1,"next":0},"note":"The submask is 1, which is 0001 in binary. The update (sub - 1) & 11 computes (1 - 1) & 11 and gives 0."},{"at":{"k":7},"vars":{"sub":0,"next":11},"note":"The submask is 0, the empty subset. The loop processes it. The update (0 - 1) & 11 gives 11, which wraps back to the start, so the loop stops here."}]}
 ```
 
 <!-- stage: code -->
@@ -216,7 +216,7 @@ The expression `1 << n` is an `int` shift, and for `n = 31` it produces the nega
 
 **Example 2.** Input `budget = 1000000000000`, output 34, since 34 * 2^34 = 584,115,552,256 fits and 35 * 2^35 = 1,202,590,842,880 does not.
 
-**Hint.** The product grows with every step of `n`. Start at `n = 0`, compute the next product `(n + 1) * (1L << (n + 1))`, and stop before the first product that exceeds `budget`. For a budget up to 10^12 the largest product the loop forms is near 10^13, so a `long` holds it.
+**Hint.** The product grows with every step of `n`. Start at `n = 0`, compute the next product `(n + 1) * (1L << (n + 1))`, and stop before the first product that exceeds `budget`. For a budget up to 10^12 the largest product the loop forms is about 1.2 * 10^12, so a `long` holds it.
 
 **Changed decision.** The question moves from enumerating subsets to deciding whether enumeration is affordable, so the program compares a step count with a budget.
 

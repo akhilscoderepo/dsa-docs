@@ -85,7 +85,7 @@ Track these items while reading or building a mask.
 - **bit** is `1 << p` for an `int`, or `1L << p` for a `long`, the value with only position `p` set.
 - **wordMask** is the mask for one word, with bit `c - 'a'` set for each letter `c`.
 
-An `int` holds positions 0 to 31, and the position 31 is the sign bit, so a mask that sets it is negative. A `long` holds positions 0 to 63. When a lesson names positions that can pass 31, the code must write `1L << p`. The plain `1 << p` is an `int` expression, and Java reduces its shift distance to the low 5 bits, so `1 << 32` equals 1.
+An `int` holds positions 0 to 31, and the position 31 is the sign bit, so a mask that sets it is negative. A `long` holds positions 0 to 63. A loop that counts up to `1 << n` to visit every mask is different, because `1 << 31` is negative. Such a loop stops at `n = 30` for an `int` and at `n = 62` for a `long`. When a lesson names positions that can pass 31, the code must write `1L << p`. The plain `1 << p` is an `int` expression, and Java reduces its shift distance to the low 5 bits, so `1 << 32` equals 1.
 
 <!-- stage: trace -->
 ### Follow Flag Changes And Word Masks
@@ -94,7 +94,7 @@ Take a flags value with bits 0 and 2 set, which is the number 5. Four operations
 
 #### Change Four Flags
 
-The cells below list bits 0 to 7 of the starting value, and the pointer `b` marks the bit that each operation touches. Setting bit 3 ORs the value with 8, so 5 becomes 13. Clearing bit 0 ANDs with the complement of 1, so 13 becomes 12. Toggling bit 2 XORs with 4, which removes the 4 and gives 8. The test ANDs 8 with 8, and the nonzero result answers yes.
+The cells below list bits 0 to 7 of the starting value. Cell 0 is the lowest bit, bit 0, so the cells read from right to left compared with the binary text. and the pointer `b` marks the bit that each operation touches. Setting bit 3 ORs the value with 8, so 5 becomes 13. Clearing bit 0 ANDs with the complement of 1, so 13 becomes 12. Toggling bit 2 XORs with 4, which removes the 4 and gives 8. The test ANDs 8 with 8, and the nonzero result answers yes.
 
 ```trace
 {"cells":[1,0,1,0,0,0,0,0],"pointers":["b"],"steps":[{"at":{"b":-1},"vars":{"flags":5},"note":"The starting value is 5, so bits 0 and 2 are set and no operation has run."},{"at":{"b":3},"vars":{"flags":13},"note":"Setting bit 3 ORs the value with 8. The value is now 13."},{"at":{"b":0},"vars":{"flags":12},"note":"Clearing bit 0 ANDs the value with the complement of 1. The value is now 12."},{"at":{"b":2},"vars":{"flags":8},"note":"Toggling bit 2 XORs the value with 4. The value is now 8."},{"at":{"b":3},"vars":{"flags":8,"test":8},"note":"Testing bit 3 ANDs the value with 8. The result is 8, which is not 0, so the answer is yes."}]}
@@ -162,7 +162,7 @@ A `HashSet` or `boolean[]` is a false friend when the universe is small. It look
 
 #### Avoid The Java Width Trap
 
-The expression `1 << p` is an `int` even when it is stored into a `long`. A position of 32 or more silently wraps, because Java uses only the low 5 bits of the shift distance for an `int`. Write `1L << p` for any position that can exceed 30. Position 63 of a `long` is the sign bit, so a `long` mask that sets it is negative, and tests must compare with `!= 0` and never with `> 0`.
+The expression `1 << p` is an `int` even when it is stored into a `long`. A position of 32 or more silently wraps, because Java uses only the low 5 bits of the shift distance for an `int`. Write `1L << p` for any position that can exceed 31. Position 63 of a `long` is the sign bit, so a `long` mask that sets it is negative, and tests must compare with `!= 0` and never with `> 0`.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -238,7 +238,7 @@ The expression `1 << p` is an `int` even when it is stored into a `long`. A posi
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given an array `words` of lowercase words, count the index pairs `(i, j)` with `i < j` whose two words share no letter. This lesson changes the contract of LeetCode 318, which asks for the largest product of two word lengths. The later combination lesson of this chapter keeps the original product form, so this version returns a count.
+**Problem.** Given an array `words` of lowercase words, count the index pairs `(i, j)` with `i < j` whose two words share no letter. This lesson changes the contract of LeetCode 318, which asks for the largest product of two word lengths. The later combination lesson returns the product and the pair of indexes, so this version returns a count.
 
 **Constraints.** The limits are:
 - **`words.length`** is an `int` with `0 <= n <= 1,000`.

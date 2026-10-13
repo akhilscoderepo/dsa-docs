@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why Big Divisors And Big Exponents Stall
 
-A job scheduler runs one task every 1,071 seconds and another every 462 seconds. Both start together, and the operator asks when they next start together again. The answer is the least common multiple (LCM) of the two periods, which is the smallest positive time that both periods divide. The greatest common divisor yields the LCM. That divisor is the largest integer that divides both periods, and the LCM equals one period divided by the divisor and multiplied by the other period. A fraction library has the same need, because it reduces 1,071 over 462 by dividing both numbers by that divisor.
+A job scheduler runs one task every 1,071 seconds and another every 462 seconds. Both start together, and the operator asks when they next start together again. The **greatest common divisor** (gcd) of the two periods is the largest integer that divides both. The answer is the least common multiple (LCM), which is the smallest positive time that both periods divide. The LCM equals one period divided by the gcd and multiplied by the other period. A fraction library has the same need, because it reduces 1,071 over 462 by dividing both numbers by that divisor.
 
 A growth model has a different need. It multiplies a value by a constant factor once per step, and the step count can reach two billion. The program must produce a power of the factor, and it must finish in a fraction of a second. This lesson asks how a program finds a common divisor and a large power in steps that follow the number of digits and not the size of the values.
 
@@ -76,8 +76,8 @@ The invariant is that `result * base^e` always equals `x^n`. At the start it hol
 
 The Euclidean loop holds these values.
 
-- **a** is the larger value in the pair, and it receives the old `b` each round.
-- **b** is the smaller value in the pair, and it receives `a % b` each round.
+- **a** is the dividend in the pair, and it receives the old `b` each round.
+- **b** is the divisor in the pair, and it receives `a % b` each round.
 - **r** is the temporary remainder, saved before the pair changes.
 
 The power loop holds these values.
@@ -93,7 +93,7 @@ The test `(e & 1) == 1` reads the lowest bit and `e >>= 1` removes it. Both are 
 
 #### Reduce 1071 And 462
 
-The cells hold the sequence of values that the pair visits. The pointer `a` marks the larger value and the pointer `b` marks the smaller value. The first step takes 1071 divided by 462, which leaves 147. The pair becomes 462 and 147. The next remainder is 21, and then 147 divided by 21 leaves 0. The pair is now 21 and 0, so the loop stops with 21.
+The cells hold the sequence of values that the pair visits. The pointer `a` marks the dividend and the pointer `b` marks the divisor. The first step takes 1071 divided by 462, which leaves 147. The pair becomes 462 and 147. The next remainder is 21, and then 147 divided by 21 leaves 0. The pair is now 21 and 0, so the loop stops with 21.
 
 ```trace
 {"cells":[1071,462,147,21,0],"pointers":["a","b"],"steps":[{"at":{"a":0,"b":1},"vars":{"a":1071,"b":462},"note":"The pair starts as 1071 and 462. The second value is not 0, so another replacement follows."},{"at":{"a":1,"b":2},"vars":{"a":462,"b":147},"note":"The remainder is 147. The pair becomes 462 and 147, which has the same common divisors."},{"at":{"a":2,"b":3},"vars":{"a":147,"b":21},"note":"The remainder is 21. The pair becomes 147 and 21, which has the same common divisors."},{"at":{"a":3,"b":4},"vars":{"a":21,"b":0},"note":"The remainder is 0. The pair becomes 21 and 0, so the loop stops and the answer is 21."}]}

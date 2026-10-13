@@ -89,11 +89,12 @@ def trace_sieve():
     p = 2
     while p * p <= n:
         if p not in marked:
+            all_w = list(range(p * p, n + 1, p))
             new = [m for m in range(p * p, n + 1, p) if m not in marked]
             for m in range(p * p, n + 1, p): marked.add(m)
             total += len(new)
             steps.append({"at": {"p": idx(p), "m": idx(p * p)}, "vars": {"p": p, "firstMultiple": p * p, "newMarks": len(new), "marks": total},
-                          "note": f"The flag of {p} is false, so {p} is prime. The loop starts at {p * p} and writes {len(new)} new marks: {', '.join(map(str, new))}."})
+                          "note": f"The flag of {p} is false, so {p} is prime. The loop starts at {p * p} and writes {len(all_w)} times, at {', '.join(map(str, all_w))}. It adds {len(new)} new mark{'s' if len(new)!=1 else ''}: {', '.join(map(str, new))}. {'The other '+str(len(all_w)-len(new))+' writes hit flags that are already true.' if len(all_w)>len(new) else ''}"})
         p += 1
     steps.append({"at": {"p": idx(7), "m": -1}, "vars": {"p": 7, "square": 49, "marks": total}, "note": "For p = 7 the square is 49, which is above 30. The loop ends, and every composite up to 30 is marked."})
     primes = [x for x in range(2, n + 1) if x not in marked]

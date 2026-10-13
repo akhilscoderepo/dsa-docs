@@ -100,7 +100,7 @@ The array `3, 0, 4, 1` holds four of the five numbers from 0 to 4. The accumulat
 {"cells":[3,0,4,1],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"acc":4},"note":"The accumulator starts at n = 4, the number that has no index."},{"at":{"i":0},"vars":{"acc":7},"note":"The step combines the index 0 and the element 3. The accumulator is 7."},{"at":{"i":1},"vars":{"acc":6},"note":"The step combines the index 1 and the element 0. The accumulator is 6."},{"at":{"i":2},"vars":{"acc":0},"note":"The step combines the index 2 and the element 4. The accumulator is 0."},{"at":{"i":3},"vars":{"acc":2},"note":"The step combines the index 3 and the element 1. The accumulator is 2. The loop ends with the missing number 2."}]}
 ```
 
-The hardest step is the third one. The value of `acc` drops to 0 because the index 2 meets the element 4 and the earlier 4 together. The number 2 is not an element, so after the last step it is the only number left in the accumulator.
+The hardest step is the third one. Before it, `acc` is 6, which equals `4 ^ 3 ^ 1`. The step combines the index 2 and the element 4. The element 4 removes the 4 that `acc` already holds, and the index 2 adds a 2. What remains is `3 ^ 1 ^ 2`, which is 0. That zero comes from the particular values, because `3 ^ 1` happens to equal 2. It does not show that the answer is found. The last step combines the index 3 and the element 1, which removes the 3 and the 1 and leaves 2. The number 2 is not an element, so it is the only number left in the accumulator.
 
 <!-- stage: code -->
 ### Implement The Fold And Split
@@ -146,7 +146,7 @@ Use this method when equal values pair off and one or two of them do not, or whe
 
 #### Name The False Friend
 
-Addition is a false friend for the missing-value task. The sum of `0..n` minus the sum of the array also gives the missing value. Java `int` arithmetic wraps around modulo 2^32, so the difference is still correct after an overflow. The sum method needs care, and a `long` accumulator makes the intermediate totals easy to reason about. The exclusive or has no carries at all, since each bit stays in its own position. Addition is still the right choice when the task needs a total and not a cancellation.
+Addition is a false friend for the missing-value task. The sum of `0..n` minus the sum of the array also gives the missing value. Java `int` arithmetic wraps around modulo 2^32, so the difference is still the right missing value even when the sums overflow. The real differences are elsewhere. The exclusive or needs no wide type and no reasoning about overflow, because each bit stays in its own position. A sum also fails for the task with two unpaired values, because one total cannot recover two unknown numbers. Addition is the right choice when the task needs a total and not a cancellation.
 
 #### Check The Preconditions
 
