@@ -1,0 +1,21 @@
+<!-- section: unlocked-combinations -->
+## Unlocked Combinations
+
+A text editor shows a folded outline of nested items. The user pages forward and back, and the editor saves the outline to disk. Paging needs an iterator that holds its place inside nested lists. Saving needs a codec whose decoder rebuilds the same shape. The two lessons that close this chapter pair those techniques.
+
+### Pairings Taught In This Chapter
+
+| Combination | Teach now | Representative problem |
+| --- | --- | --- |
+| Iterator + Traversal State | Yes | LeetCode 1586 Binary Search Tree Iterator II |
+| Codec + Structural Traversal | Yes | LeetCode 297 Serialize and Deserialize Binary Tree |
+
+The lesson Iterator Traversal State keeps a stack of unfinished positions valid across any order of `peek`, `next` and `prev` calls. The lesson Codec Structural Traversal gives encoding and decoding one shared grammar, so the decoder consumes exactly the tokens that the encoder wrote.
+
+### Pairings Already Covered
+
+| Combination | Status | Owner of the rule |
+| --- | --- | --- |
+| Binary lifting | Covered | Chapters 29 and 30 teach the jump tables that LeetCode 1483 reviews |
+
+This chapter assigns no binary lifting problem. Binary search over a version list reuses the search rules from chapter 6.
