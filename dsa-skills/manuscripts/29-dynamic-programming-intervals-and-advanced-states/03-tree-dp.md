@@ -11,6 +11,8 @@ A manager scores 5 and has two reports who score 4 each. A quick rule picks the 
 
 Formally, the input is a **tree**: a set of nodes joined by edges with one **root** and no cycles. Every node except the root has one **parent**, and the nodes directly below a node are its **children**. A node with no children is a **leaf**. A **subtree** of a node is that node together with everything below it. Each node carries an integer weight. The task is to choose a set of nodes so that no chosen node has a chosen parent, and to return the largest total weight.
 
+The code and traces in this lesson use binary trees, where each node has a `left` and a `right` child. The general form replaces the two children with a sum over all children of the node.
+
 This lesson asks how a parent can decide well when the answer for each child depends on whether the parent is chosen.
 
 <!-- stage: naive -->

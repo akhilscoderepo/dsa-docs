@@ -188,7 +188,7 @@ The first false friend is the cheapest first rule, which passes any test where t
 **Problem.** An array `dims` of length `n + 1` is given. Matrix `i` has `dims[i]` rows and `dims[i + 1]` columns, for `0 <= i < n`. Multiplying a matrix of shape `p x q` by one of shape `q x s` costs `p * q * s` scalar multiplications. Return the least total cost to multiply all `n` matrices in order. Only the grouping may change.
 
 **Constraints.** The limits are:
-- **Length** satisfies `1 <= dims.length <= 150`, so `n` is at most 149.
+- **Length** satisfies `2 <= dims.length <= 150`, so `n` is between 1 and 149.
 - **Dimensions** satisfy `1 <= dims[i] <= 100`.
 - **Result** fits in an `int`, and `n = 1` returns 0.
 - **Mutation** is not allowed.

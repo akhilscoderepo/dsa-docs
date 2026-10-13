@@ -10,7 +10,7 @@ A greedy merge order overpays, a worker assignment misses the cheapest plan and 
 ```
 
 ```quiz
-{"id": "dp29-rev-palindrome-partitions", "q": "A palindrome table says whether s[i..j] is a palindrome. Which condition must hold before the table marks it true when the ends match?", "options": ["The inner range s[i+1..j-1] is already marked true", "The range is longer than 3", "The first letter appears twice", "The whole prefix is a palindrome"], "answer": 0, "explain": "Equal ends make a palindrome only when the inside is one. A range of length one has no second end to match, and a range of length two has an empty inside."}
+{"id": "dp29-rev-palindrome-partitions", "q": "A palindrome table says whether s[i..j] is a palindrome. Which condition must hold before the table marks it true when the ends match?", "options": ["The range is longer than 3", "The first letter appears twice", "The inner range s[i+1..j-1] is already marked true", "The whole prefix is a palindrome"], "answer": 2, "explain": "Equal ends make a palindrome only when the inside is one. A range of length one has no second end to match, and a range of length two has an empty inside."}
 ```
 
 ```quiz
@@ -22,11 +22,11 @@ A greedy merge order overpays, a worker assignment misses the cheapest plan and 
 ```
 
 ```quiz
-{"id": "dp29-rev-submask-aggregation", "q": "What does sub = (sub - 1) & mask produce when sub is a nonempty submask of mask?", "options": ["Always sub - 1", "The next smaller submask of mask in numeric order", "The complement of sub in mask", "A random submask"], "answer": 1, "explain": "Subtracting one flips the lowest set bit and the bits below it. The AND with mask clears any bit that mask does not have."}
+{"id": "dp29-rev-submask-aggregation", "q": "What does sub = (sub - 1) & mask produce when sub is a nonempty submask of mask?", "options": ["Always sub - 1", "The complement of sub in mask", "A random submask", "The next smaller submask of mask in numeric order"], "answer": 3, "explain": "Subtracting one flips the lowest set bit and the bits below it. The AND with mask clears any bit that mask does not have."}
 ```
 
 ```quiz
-{"id": "dp29-rev-digit-dp", "q": "Counting numbers up to a bound N digit by digit, what does the tight flag record?", "options": ["Whether the number is even", "Whether the digits chosen so far equal the leading digits of N, so the next digit is capped", "Whether the number has started", "Whether the digit sum is large"], "answer": 1, "explain": "While the prefix equals N's prefix, the next digit may not pass N's digit at that place. Once it is smaller, any digit is allowed."}
+{"id": "dp29-rev-digit-dp", "q": "Counting numbers up to a bound N digit by digit, what does the tight flag record?", "options": ["Whether the number is even", "Whether the number has started", "Whether the digits chosen so far equal the leading digits of N, so the next digit is capped", "Whether the digit sum is large"], "answer": 2, "explain": "While the prefix equals N's prefix, the next digit may not pass N's digit at that place. Once it is smaller, any digit is allowed."}
 ```
 
 ```quiz
@@ -34,5 +34,5 @@ A greedy merge order overpays, a worker assignment misses the cheapest plan and 
 ```
 
 ```quiz
-{"id": "dp29-rev-dp-advanced-state", "q": "A string problem asks about every piece between two cut positions, and a second problem asks about a set of used items. Which indexes fit?", "options": ["A mask for both", "A range of two ends for the first and a mask for the second", "A prefix length for both", "The value of the answer"], "answer": 1, "explain": "Subproblems that are contiguous pieces need two ends. Subproblems that are subsets of items need a mask."}
+{"id": "dp29-rev-dp-advanced-state", "q": "A string problem asks about a contiguous range whose two ends are fixed, and a second problem asks about a set of used items. Which indexes fit?", "options": ["A mask for both", "A range of two ends for the first and a mask for the second", "A prefix length for both", "The value of the answer"], "answer": 1, "explain": "Subproblems that are contiguous pieces need two ends. Subproblems that are subsets of items need a mask."}
 ```

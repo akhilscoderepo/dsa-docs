@@ -65,7 +65,7 @@ It reads only row 39, and it never reads rows 0 to 38 again. The entry for colum
 
 The prediction shows two separate wastes. The first is memory. Rows 0 to 38 sit in the table, yet no later statement reads them. For R = 100,000 and C = 10,000 the table holds 10^9 entries, and only 2 * 10^4 of them matter at any moment.
 
-The second waste is time. The inner loop over `k` computes a minimum over columns 0 to `j`. The next entry computes a minimum over columns 0 to `j + 1`. Those two ranges share all but one column, so the work for column `j + 1` repeats the work for column `j`. Across a row, the scans cost 1 + 2 + ... + C, which is O(C^2). Across all rows, the total is O(R * C^2), which is 5 * 10^12 steps for the opening input.
+The second waste is time. The inner loop over `k` computes a minimum over columns 0 to `j`. The next entry computes a minimum over columns 0 to `j + 1`. Those two ranges share all but one column, so the work for column `j + 1` repeats the work for column `j`. Across a row, the scans cost 1 + 2 + ... + C, which is O(C^2). Across all rows, the total is O(R * C^2), which is about R * C^2 / 2 = 5 * 10^12 steps for the opening input.
 
 Both wastes have a cheap cure, but each cure carries a risk. Dropping rows is safe only if nothing later reads them. Replacing a scan with a stored value is safe only if the stored value equals the scan result for every column. Writing new values over old ones is safe only if every old value is read before it disappears. The next section turns these three risks into proofs.
 
@@ -86,7 +86,9 @@ The scan computes `min(dp[r - 1][0..j])`. Call this value `m_j`. The next scan c
 
 #### Choose The Update Direction
 
-The two arrays can shrink to one. The new value `dp[r][j]` may overwrite the old value `dp[r - 1][j]` only if no later statement still needs the old value. The running minimum already consumed the old value at column `j`, and later columns need only the running minimum, not the cell. Walking left to right, read the old cell, fold it into the running minimum, and then write the new value. The **update direction** is this order of visiting cells. It is part of the proof. Walking right to left would not destroy any needed cell, because the cells on the left stay unwritten. It fails for another reason. The running minimum for column `j` extends the minimum for column `j - 1` by one cell, so it can only be maintained while columns are visited from left to right.
+The two arrays can shrink to one. The new value `dp[r][j]` may overwrite the old value `dp[r - 1][j]` only if no later statement still needs the old value. The running minimum already consumed the old value at column `j`, and later columns need only the running minimum, not the cell. Walking left to right, read the old cell, fold it into the running minimum, and then write the new value. The **update direction** is this order of visiting cells, and it is part of the proof.
+
+The rule "visit indexes from high to low" applies to recurrences that read old values directly from cells at smaller indexes. This lesson's loop runs from low to high and is still safe, because the running minimum carries the old values of the finished columns forward. No later column reads a cell that an earlier column overwrote. Walking right to left would not destroy any needed cell either, but it fails for another reason. The running minimum for column `j` extends the minimum for column `j - 1` by one cell, so it can only be maintained while columns are visited from left to right.
 
 The same question decides other single-array tables. A recurrence that reads the old value at a smaller index must visit indexes from high to low. A recurrence that must read the new value at a smaller index must visit them from low to high. The invariant for the plan table is that before column `j` is processed, the array holds new values for columns below `j` and old values for columns from `j` on, and the running minimum equals the minimum of the old values below `j`.
 
@@ -211,14 +213,14 @@ This method does not apply when later rows read rows older than the previous one
 
 **Hint.** The set of allowed previous columns for column `j` is columns 0 to `j - 1`. What is that set for column 0, and which old cell joins the minimum next?
 
-**Changed decision.** The range ends one column earlier, so the running minimum folds in the old cell after the new value is written. After row 0, column 0 has an empty range and stays unreachable. Row 0 has no previous pick, so every column of row 0 is reachable.
+**Changed decision.** The range ends one column earlier, so the running minimum folds in the old cell after the new value is written. Row 0 has no previous pick, so every column of row 0 is reachable. For later rows, an empty range is unreachable, which the code stores as the sentinel `Long.MAX_VALUE` in `run`; a result equal to the sentinel stays unreachable and never receives a cost added to it. At each column, read `old = dp[j]`, write `dp[j]` from the `run` of the previous columns, and only then fold `old` into `run`.
 
 #### [Boundary] In-Place Direction Counterexample (Author exercise)
 <!-- id: dp29-direction-counterexample -->
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** An `int[] weights` and an integer `target` are given. The single-array table `ways[s]` counts item subsets with sum `s`. A correct loop visits `s` from `target` down to each weight. A flawed loop visits `s` from each weight up to `target`. Return the flawed count minus the correct count for `ways[target]`.
+**Problem.** An `int[] weights` and an integer `target` are given. The single-array table `ways[s]` counts item subsets with sum `s`. The table starts with `ways[0] = 1` and every other entry 0. For each weight `w` in order, the loop runs `ways[s] += ways[s - w]` over its range of `s`. The correct loop visits `s` from `target` down to `w`. The flawed loop visits `s` from `w` up to `target`. Return the flawed count minus the correct count for `ways[target]`.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= weights.length <= 20`, and the array may be empty.

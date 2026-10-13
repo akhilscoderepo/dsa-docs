@@ -7,7 +7,7 @@
 
 A configuration service stores the enabled feature flags of one customer as the bits of an `int`. The customer has flags 0, 2 and 3 enabled, so the mask is `1101` in binary, which is 13. A test planner must run the product once for every nonempty combination of those three flags. There are 7 combinations: 13, 12, 9, 8, 5, 4 and 1.
 
-A developer writes the obvious scan. It counts `s` from 1 up to the mask and keeps `s` when `s & mask == s`, which means every set bit of `s` is also set in the mask. For the mask 13 the scan makes 13 steps to find 7 combinations, and nobody notices the waste.
+A developer writes the obvious scan. It counts `s` from 1 up to the mask and keeps `s` when `(s & mask) == s`, which means every set bit of `s` is also set in the mask. For the mask 13 the scan makes 13 steps to find 7 combinations, and nobody notices the waste.
 
 The waste appears when the enabled flags sit at high positions. A customer with only flags 0 and 29 enabled has 3 combinations, but the scan counts up to more than half a billion. The same pattern appears in every problem that splits a set of up to about 16 items into two groups.
 
@@ -58,7 +58,7 @@ Name the subsets, then find one operation that moves from a subset to the next s
 
 #### A Submask Is A Subset Of Bits
 
-A **submask** of `mask` is an integer `sub` with `sub & mask == sub`. Every submask is at most `mask`, and the mask itself is its largest submask. If the mask has k set bits, it has exactly 2^k submasks, including 0, because each set bit is either kept or dropped.
+A **submask** of `mask` is an integer `sub` with `(sub & mask) == sub`. Every submask is at most `mask`, and the mask itself is its largest submask. If the mask has k set bits, it has exactly 2^k submasks, including 0, because each set bit is either kept or dropped.
 
 #### The Descending Step
 
@@ -86,7 +86,7 @@ Take n = 2 and `a = [1, 2, 3, 4]`, indexed by masks 0 to 3. Layer 0 visits masks
 These values appear in the loops and tables of this lesson.
 
 - **mask** is the `int` whose set bits form the full set.
-- **sub** is the current submask of `mask`, and `sub & mask == sub` holds at every step.
+- **sub** is the current submask of `mask`, and `(sub & mask) == sub` holds at every step.
 - **rest** is `mask ^ sub`, the part of the mask that `sub` leaves out.
 - **dp** is an `int[1 << n]`; entry `dp[mask]` is the best answer for the items named by `mask`.
 - **f** is a `long[1 << n]` that holds `a` at the start and the sum over submasks at the end.
@@ -187,7 +187,7 @@ The split loop does not apply when n is above about 16, because 3^n is too large
 
 **Prerequisites.** Setting, testing and counting bits from the previous lesson.
 
-**Problem.** An integer `mask` is given. Return all nonempty submasks of `mask` in decreasing order. A submask is an integer `sub` with `sub & mask == sub`.
+**Problem.** An integer `mask` is given. Return all nonempty submasks of `mask` in decreasing order. A submask is an integer `sub` with `(sub & mask) == sub`.
 
 **Constraints.** The limits are:
 - **Value** satisfies `0 <= mask < 2^20`, and `mask` may be 0.

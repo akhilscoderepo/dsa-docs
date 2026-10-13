@@ -21,7 +21,7 @@ Each lesson fixes one question about what an entry remembers.
 
 ### The Closing Lesson
 
-- **DP With Advanced State** compares the three index choices (range, prefix, mask) on one deletion problem, and each of its four exercises uses a range, a prefix, a mask or a pair of them.
+- **DP With Advanced State** compares the three index choices (range, prefix, mask) on one deletion problem, and its four exercises use a range table, a prefix table, a range table and a mask.
 
 ### How To Work Through Each Lesson
 

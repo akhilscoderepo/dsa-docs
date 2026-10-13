@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A scheduler assigns twenty jobs to twenty machines by trying every order, which is about 2.4 * 10^18 orders and never finishes. A table over the set of used machines finishes in milliseconds, but only when the set of used machines is part of the state. This chapter combines a recurrence with a richer state, and each pairing below is a lesson that joins earlier topics.
+Splitting sixteen numbers into equal-sum groups by trying every order takes 16! steps, which is about 2.1 * 10^13 and never finishes. A table over the 2^16 = 65,536 subsets of used numbers finishes in milliseconds, but only when the set of used numbers is part of the state. This chapter pairs a recurrence with a richer state. One pairing is taught in a lesson here, and one is deferred to a later chapter.
 
 ### Pairing Taught In This Chapter
 
