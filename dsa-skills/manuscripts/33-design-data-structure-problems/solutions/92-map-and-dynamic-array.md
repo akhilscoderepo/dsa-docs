@@ -167,13 +167,13 @@ public final class RandomExcluding {
 
         /**
          * Uniform value different from value, or -1 when none exists.
-         * Time: O(1) worst case after the lookup. Space: O(1). Reads state only.
+         * Time: O(1) expected, from the map lookup. Space: O(1). Reads state only.
          */
         int getRandomExcluding(int value) {
             int range = drawRange(value);
             // No qualifying value: empty pool, or the only value is the excluded one.
             if (range == 0) return -1;
-            // Exactly one draw, so no loop and a constant worst case.
+            // Exactly one draw, so there is no loop and the cost stays constant after the lookup.
             return valueForDraw(value, rng.nextInt(range));
         }
     }
@@ -423,8 +423,11 @@ public final class DuplicateValuesPool {
 
         int countOf(int v) { Slots l = map.get(v); return l == null ? 0 : l.n; }
 
-        /** Value drawn with probability count/size. Time O(1). Requires size > 0. */
-        int getRandom() { return items[rng.nextInt(size)]; }
+        /** Value drawn with probability count/size. Time O(1). Throws IllegalStateException when empty. */
+        int getRandom() {
+            if (size == 0) throw new IllegalStateException("empty pool");   // an empty pool has nothing to draw
+            return items[rng.nextInt(size)];
+        }
 
         boolean agrees() {
             int total = 0;
@@ -446,6 +449,9 @@ public final class DuplicateValuesPool {
     public static void main(String[] args) {
         // Example 1: insert 3, 3, 8.
         Pool p = new Pool(5);
+        // An empty pool throws IllegalStateException on getRandom.
+        try { p.getRandom(); throw new AssertionError("empty getRandom must throw"); }
+        catch (IllegalStateException expected) { }
         check(p.insert(3) && !p.insert(3) && p.insert(8), "inserts");
         check(p.countOf(3) == 2 && p.countOf(8) == 1 && p.agrees(), "counts");
         int threes = 0, draws = 30000;

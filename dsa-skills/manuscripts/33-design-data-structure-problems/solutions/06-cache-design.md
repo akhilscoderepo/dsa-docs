@@ -385,7 +385,7 @@ This version stores the links in `int` arrays instead of node objects. Slots `0`
 
 Repeated `get` of the same key is safe because the refresh is detach followed by insert, and detaching a slot always leaves it unlinked before the insert links it again. A refresh that only inserted would add a second link to the same slot and create a cycle. At capacity one the only slot is both the first and the last, so `tail`'s previous slot is that slot. The eviction path detaches it, removes its key from the map, and reuses the same slot for the new key. An overwrite of the stored key never reaches the eviction path, so it keeps size one.
 
-The methods `forwardCount` and `backwardCount` walk each direction and stop with an exception when they pass `capacity` links, so a broken cycle fails the check and cannot loop forever.
+The methods `forwardCount` and `backwardCount` walk each direction and stop with an exception when they visit more than `capacity` data slots. A full legal walk crosses `capacity + 1` links, because `capacity` data slots and two sentinels form a chain of `capacity + 2` nodes. So a broken cycle fails the check and cannot loop forever.
 
 **Complexity.**
 
@@ -475,7 +475,7 @@ public final class SlotCache {
 
     int size() { return size; }
 
-    /** Counts slots reachable forward from head; fails if a walk exceeds capacity links. */
+    /** Counts slots reachable forward from head; fails if a walk visits more than capacity data slots. */
     int forwardCount() {
         int count = 0;
         for (int s = after[head]; s != tail; s = after[s]) {
@@ -484,7 +484,7 @@ public final class SlotCache {
         return count;
     }
 
-    /** Counts slots reachable backward from tail; fails if a walk exceeds capacity links. */
+    /** Counts slots reachable backward from tail; fails if a walk visits more than capacity data slots. */
     int backwardCount() {
         int count = 0;
         for (int s = before[tail]; s != head; s = before[s]) {

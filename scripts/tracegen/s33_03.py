@@ -3,7 +3,7 @@ CH='33-design-data-structure-problems'; F='03-constant-time-composition.md'
 def run(vals, v):
     vals=list(vals); pos={x:i for i,x in enumerate(vals)}
     n=len(vals)
-    def st(slot,last,vars_,note): return {"at":{"slot":slot,"last":last},"vars":vars_,"note":note}
+    def st(slot,last,vars_,note): return {"at":{"slot":slot,"lastSlot":last},"vars":vars_,"note":note}
     s=[]
     def snap(extra=None):
         d={"values":str(vals).replace(" ",""),"slotOf":",".join(f"{k}:{p}" for k,p in pos.items())}
@@ -13,7 +13,7 @@ def run(vals, v):
     s.append(st(-1,-1,snap(),f"Start. The list holds {vals} and slotOf maps each value to its position. The call is remove({v})."))
     s.append(st(slot,lastslot,snap({"slot":slot,"last":last}),f"slotOf.get({v}) gives slot {slot}. The final value is {last}, stored at position {lastslot}."))
     vals[slot]=last
-    s.append(st(slot,lastslot,snap({"slot":slot,"last":last}),f"Copy {last} into slot {slot}. The list now reads {vals}, so a value is stored twice for a moment."))
+    s.append(st(slot,lastslot,snap({"slot":slot,"last":last}),f"Copy {last} into slot {slot}. "+(f"The final value is the removed value, so the copy writes it onto itself and the list still reads {vals}." if v==last else f"The list now reads {vals}, so {last} is stored twice for a moment.")))
     pos[last]=slot
     s.append(st(slot,lastslot,snap({"slot":slot,"last":last}),f"Repair: slotOf.put({last}, {slot}). The entry for {last} now names slot {slot}."))
     del pos[v]
@@ -26,6 +26,6 @@ def run(vals, v):
     return s,vals,moved
 a=[40,17,93,52,8]
 s,v,m=run(a,17); assert v==[40,8,93,52] and m==8
-fill(CH,F,block(a,["slot","last"],s),"@@TRACE1@@")
+fill(CH,F,block(a,["slot","lastSlot"],s),"@@TRACE1@@")
 s,v,m=run(a,8); assert v==[40,17,93,52] and m==-1
-fill(CH,F,block(a,["slot","last"],s),"@@TRACE2@@")
+fill(CH,F,block(a,["slot","lastSlot"],s),"@@TRACE2@@")

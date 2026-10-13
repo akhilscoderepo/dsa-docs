@@ -96,7 +96,7 @@ Start with the pool `[5, 8, 2, 9]`, whose map holds 5 at slot 0, 8 at slot 1, 2 
 The operation copies 9 into slot 1, so the array reads `[5, 9, 2, 9]` for a moment. The map entry for 9 still says slot 3, so the operation rewrites it to slot 1. The operation then deletes the key 8 and lowers `size` to 3. The meaningful part of the array is `[5, 9, 2]`, and the old 9 at slot 3 is a stale leftover that no lookup can reach.
 
 ```trace
-{"cells":[5,8,2,9],"pointers":["removed","last"],"steps":[{"at":{"removed":1,"last":3},"vars":{"items":"[5,8,2,9]","size":4},"note":"remove(8): the map says 8 sits at slot 1, and the last slot is 3 holding 9."},{"at":{"removed":1,"last":3},"vars":{"items":"[5,9,2,9]","size":4},"note":"Copy 9 from slot 3 into slot 1."},{"at":{"removed":1,"last":3},"vars":{"items":"[5,9,2,9]","size":4,"slotOf[9]":1},"note":"Repair the map: 9 now lives at slot 1."},{"at":{"removed":1,"last":3},"vars":{"items":"[5,9,2]","size":3},"note":"Delete the key 8 and lower size to 3. The meaningful array is [5,9,2]."}]}
+{"cells":[5,8,2,9],"pointers":["removed","lastSlot"],"steps":[{"at":{"removed":1,"lastSlot":3},"vars":{"items":"[5,8,2,9]","size":4},"note":"remove(8): the map says 8 sits at slot 1, and the last slot is 3 holding 9."},{"at":{"removed":1,"lastSlot":3},"vars":{"items":"[5,9,2,9]","size":4},"note":"Copy 9 from slot 3 into slot 1."},{"at":{"removed":1,"lastSlot":3},"vars":{"items":"[5,9,2,9]","size":4,"slotOf[9]":1},"note":"Repair the map: 9 now lives at slot 1."},{"at":{"removed":1,"lastSlot":3},"vars":{"items":"[5,9,2]","size":3},"note":"Delete the key 8 and lower size to 3. The meaningful array is [5,9,2]."}]}
 ```
 
 #### Removing The Last Element
@@ -106,7 +106,7 @@ Start with the pool `[4, 7, 1]` and remove 1. The map answers slot 2, and the la
 The copy would write 1 onto itself, which changes nothing. The map repair would set the entry for 1 to slot 2, and the delete that follows removes the key anyway. Everything depends on the order. If the delete ran first and the repair second, the repair would add the key 1 back, and the map would hold one entry too many.
 
 ```trace
-{"cells":[4,7,1],"pointers":["removed","last"],"steps":[{"at":{"removed":2,"last":2},"vars":{"items":"[4,7,1]","size":3},"note":"remove(1): the map says 1 sits at slot 2, and the last slot is 2 holding 1."},{"at":{"removed":2,"last":2},"vars":{"items":"[4,7,1]","size":3},"note":"Copy 1 from slot 2 into slot 2. The copy writes the value onto itself."},{"at":{"removed":2,"last":2},"vars":{"items":"[4,7,1]","size":3,"slotOf[1]":2},"note":"Repair the map: 1 now lives at slot 2."},{"at":{"removed":2,"last":2},"vars":{"items":"[4,7]","size":2},"note":"Delete the key 1 and lower size to 2. The meaningful array is [4,7]."}]}
+{"cells":[4,7,1],"pointers":["removed","lastSlot"],"steps":[{"at":{"removed":2,"lastSlot":2},"vars":{"items":"[4,7,1]","size":3},"note":"remove(1): the map says 1 sits at slot 2, and the last slot is 2 holding 1."},{"at":{"removed":2,"lastSlot":2},"vars":{"items":"[4,7,1]","size":3},"note":"Copy 1 from slot 2 into slot 2. The copy writes the value onto itself."},{"at":{"removed":2,"lastSlot":2},"vars":{"items":"[4,7,1]","size":3,"slotOf[1]":2},"note":"Repair the map: 1 now lives at slot 2."},{"at":{"removed":2,"lastSlot":2},"vars":{"items":"[4,7]","size":2},"note":"Delete the key 1 and lower size to 2. The meaningful array is [4,7]."}]}
 ```
 
 <!-- stage: code -->
@@ -143,8 +143,9 @@ final class IndexedPool {
         return true;
     }
 
-    /** Returns a uniform current value. Time O(1), Space O(1). Requires size > 0. */
+    /** Returns a uniform current value. Time O(1), Space O(1). Throws IllegalStateException when empty. */
     int getRandom() {
+        if (size == 0) throw new IllegalStateException("empty pool");   // nextInt(0) would throw a less clear error
         return items[rng.nextInt(size)];                    // every index below size holds a real value
     }
 }
@@ -206,7 +207,7 @@ The overloads `remove(int index)` and `remove(Object o)` on a list are easy to c
 - **Size** is between 0 and `10^5`.
 - **Mutation** is none; the operation reads state only.
 - **Randomness** comes from the one `java.util.Random` that the pool owns, created from a seed in the constructor.
-- **Cost** is O(1) worst case after the map lookup.
+- **Cost** is O(1) expected, from one map lookup and one random draw.
 
 **Example 1.** Input is the pool 3, 6, 9 and the call `getRandomExcluding(6)`. The output is 3 or 9, each with probability 1/2.
 
@@ -248,7 +249,7 @@ The overloads `remove(int index)` and `remove(Object o)` on a list are easy to c
 - **Values** are `int` values in the range `0..10^9`.
 - **Size** is at most `10^5` occurrences.
 - **Index lists** are plain `int[]` arrays with a count, with no set classes.
-- **getRandom** is called only when `size > 0`.
+- **getRandom** on an empty pool throws `IllegalStateException`.
 - **Cost** is O(1) expected per operation.
 
 **Example 1.** Input is the inserts 3, 3, 8. The output is `countOf(3) = 2`, and `getRandom()` returns 3 with probability 2/3 and 8 with probability 1/3.

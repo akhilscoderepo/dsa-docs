@@ -30,11 +30,11 @@ A cache hands back an evicted entry, a random pick returns a removed value and a
 ```
 
 ```quiz
-{"id": "rq33-rev-peek", "q": "A peeking iterator caches one element from its source. Why does a second `peek()` not advance the source?", "options": ["The cache already holds the element, so the call returns it", "The source has no more elements", "peek always reads the last element", "The source is sorted"], "answer": 0, "explain": "A peek, or the first next after the cache was consumed, moves one element from the source into the cache. The call hasNext never pulls. Later calls read the cache until next hands it out and clears it."}
+{"id": "rq33-rev-peek", "q": "A peeking iterator caches one element from its source. Why does a second `peek()` not advance the source?", "options": ["The cache already holds the element, so the call returns it", "The source has no more elements", "peek always reads the last element", "The source is sorted"], "answer": 0, "explain": "The first peek moves one element from the source into the cache. Every later peek returns the cached element and leaves the source alone. Only next hands the element out and clears the cache."}
 ```
 
 ```quiz
-{"id": "rq33-rev-lru-evict", "q": "An LRU cache of capacity 2 holds keys A then B, with B most recent. A `get(A)` runs, and then `put(C)`. Which key leaves the cache?", "options": ["A", "C", "Nothing", "B"], "answer": 3, "explain": "The get moves A to the front, so B is the least recent key. The put of C evicts B."}
+{"id": "rq33-rev-lru-evict", "q": "An LRU cache of capacity 2 holds keys A then B, with B most recent. A `get(A)` runs, and then `put(C)`. Which key leaves the cache?", "options": ["A", "Both A and B", "Nothing", "B"], "answer": 3, "explain": "The get moves A to the front, so B is the least recent key. The put of C evicts B."}
 ```
 
 ```quiz

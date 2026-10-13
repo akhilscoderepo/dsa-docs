@@ -40,7 +40,7 @@ final class ListCache {
 }
 ```
 
-The behavior is correct. After `put(1, a)`, `put(2, b)` and `get(1)` on a cache of capacity 2, the list reads `[2, 1]`, so a third key evicts key 2.
+The behavior is correct. After `put(1, 10)`, `put(2, 20)` and `get(1)` on a cache of capacity 2, the list reads `[2, 1]`, so a third key evicts key 2.
 
 ```predict
 A cache of capacity 10,000 is full and receives a get for a key that was used a moment ago. How many list slots does the get touch, and does it matter that the hash map answers in constant time?
@@ -114,9 +114,9 @@ When key 3 arrives, both keys sit in bucket 2, and the first key of that bucket 
 ```
 
 <!-- stage: code -->
-### Implementing The Node Moves And Touch
+### Implementing The Cache Moves
 
-The LRU cache needs three private moves: cut a node out, push a node to the front, and evict the oldest node. All three are constant-time link rewrites.
+The LRU cache needs three private moves: cut a node out, push a node to the front, and evict the oldest node. All three are constant-time link rewrites. The LFU cache adds a fourth move, `bump`, after the first code block.
 
 ```java
 import java.util.*;
@@ -165,7 +165,7 @@ final class LfuCore {
 }
 ```
 
-Both moves cost O(1) expected, and neither searches a list.
+All four moves cost O(1) expected, and none of them searches a list.
 
 <!-- stage: applicability -->
 ### Recognizing When A Cache Fits
@@ -240,7 +240,7 @@ The use count is an `int`. It overflows past 2147483647, and a cache that serves
 **Constraints.** The limits are:
 - **Capacity** is an `int` with `1 <= capacity <= 100`.
 - **Keys** and **values** are `int`, and a miss returns -1.
-- **Walk** fails with an exception when it passes `capacity` links, so a duplicate link is detected.
+- **Walk** fails with an exception when it visits more than `capacity` data slots, because a legal walk from one sentinel to the other crosses at most `capacity + 1` links.
 - **Overwrite** of the stored key keeps the size and never evicts.
 
 **Example 1.** Input: capacity 1 and the calls `put(5, 50)`, `get(5)` twice, and `put(6, 60)`. Output: the later `get(5)` is -1, `get(6)` is 60, and both counts are 1.

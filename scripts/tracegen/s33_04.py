@@ -13,16 +13,16 @@ class Peek:
     def next(s):
         v=s.peek(); s.filled=False; return v
 data=[4,7,9]; w=Peek(data)
-st=[{"at":{"pos":-1},"vars":{"slot":"empty","advances":0,"call":"start"},"note":"Start: nothing is pulled, the slot is empty and advances is 0."}]
+st=[{"at":{"pos":-1},"vars":{"lookahead":"empty","advances":0,"call":"start"},"note":"Start: nothing is pulled, lookahead is empty and advances is 0."}]
 script=[("peek",4),("peek",4),("next",4),("hasNext",True),("next",7),("peek",9),("next",9),("hasNext",False)]
 for op,exp in script:
     r={"peek":w.peek,"next":w.next,"hasNext":w.has_next}[op]()
     assert r==exp,(op,r,exp)
     slot=str(w.slot) if w.filled else "empty"
-    if op=="peek": note=f"peek() returns {r}; advances is {w.pos} and the slot holds {slot}."
-    elif op=="next": note=f"next() returns {r}; the slot is now empty and advances is {w.pos}."
+    if op=="peek": note=f"peek() returns {r}; advances is {w.pos} and lookahead holds {slot}."
+    elif op=="next": note=f"next() returns {r}; lookahead is now empty and advances is {w.pos}."
     else: note=f"hasNext() answers {str(r).lower()} without pulling; advances stays {w.pos}."
-    st.append({"at":{"pos":w.pos-1},"vars":{"slot":slot,"advances":w.pos,"call":f"{op}() = {str(r).lower() if isinstance(r,bool) else r}"},"note":note})
+    st.append({"at":{"pos":w.pos-1},"vars":{"lookahead":slot,"advances":w.pos,"call":f"{op}() = {str(r).lower() if isinstance(r,bool) else r}"},"note":note})
 assert w.pos==3
 fill(CH,F,block(data,["pos"],st),"@@TRACE1@@")
 

@@ -80,9 +80,9 @@ The second half of the idea covers failure. Every rejection happens before the f
 <!-- stage: variables -->
 ### Fields That Describe One Collection
 
-The tab strip has five fields, and the invariant ties four of them together. Each entity below has a single job, and only the owner methods write the first three.
+The tab strip has five fields: head, tail, byId, size and capacity. The invariant ties the list between head and tail to byId and size. Each entity below has a single job. The constructor sets head, tail and capacity, and only the owner methods `attach` and `detach` change the links, byId and size afterwards.
 
-- **head and tail** are sentinel nodes that hold no tab and always exist, so a real node always has a neighbour on each side.
+- **head and tail** are sentinel nodes that hold no tab and always exist. The constructor links them to each other, and a real node always has a neighbour on each side.
 - **byId** maps a tab id to its node, so the lookup table holds exactly the ids that appear in the list.
 - **size** counts the real nodes and changes by one inside `attach` and `detach` only.
 - **capacity** is the fixed limit and never changes after construction.

@@ -71,28 +71,28 @@ A source is **exhausted** when `hasNext()` returns false and no element remains.
 <!-- stage: variables -->
 ### Variables The Wrapper Keeps
 
-Four entities hold the traversal state between calls. The two public reads and the one public take all work on these four.
+Three fields of the wrapper hold the traversal state between calls. The two public reads and the one public take all work on these three. A fourth entity, the counter `advances`, is not a field. Only the demonstration harness keeps it, to show how often the source is pulled.
 
 - **source** is the underlying iterator, which only moves forward and which the wrapper pulls from at most once per element.
-- **slot** is the single pulled element that the caller has not taken yet.
-- **filled** is the boolean that says whether `slot` holds a real element.
-- **advances** counts how many times the wrapper called `source.next()`, which equals the taken count plus one when `filled` is true.
+- **lookahead** is the field that holds the single pulled element that the caller has not taken yet.
+- **filled** is the boolean that says whether `lookahead` holds a real element.
+- **advances** counts how many times the wrapper called `source.next()`, which equals the taken count plus one when `filled` is true. The harness keeps this counter, and the wrapper itself has no such field.
 
 <!-- stage: trace -->
 ### Tracing Calls On Three Elements
 
 #### Peeking Without Moving
 
-The first trace wraps `[4, 7, 9]`. The pointer `pos` marks the cell most recently pulled from the source, and -1 means nothing is pulled. The variable `advances` counts the pulls.
+The first trace wraps `[4, 7, 9]`. The pointer `pos` marks the cell most recently pulled from the source, and -1 means nothing is pulled. The variable `advances` counts the pulls, and `lookahead` shows the stored element or `empty`.
 
-At the start nothing has been pulled, so `pos` is -1, `advances` is 0 and the slot is empty. The first `peek()` pulls the 4, moves `pos` to 0, raises `advances` to 1 and fills the slot. The second `peek()` finds the slot full, so it returns 4 again and `advances` stays 1. The call `next()` then returns the stored 4 and empties the slot, still without touching the source.
+At the start nothing has been pulled, so `pos` is -1, `advances` is 0 and `lookahead` is empty. The first `peek()` pulls the 4, moves `pos` to 0, raises `advances` to 1 and fills `lookahead`. The second `peek()` finds `filled` true, so it returns 4 again and `advances` stays 1. The call `next()` then returns the stored 4 and empties `lookahead`, still without touching the source.
 
 #### Taking And Reaching The End
 
-The next `hasNext()` asks the source and answers true without pulling. The following `next()` pulls the 7, fills the slot and empties it again in one call, so `advances` becomes 2. A `peek()` pulls the 9 and `next()` returns it, and the last `hasNext()` answers false because the slot is empty and the source has nothing left.
+The next `hasNext()` asks the source and answers true without pulling. The following `next()` pulls the 7, fills `lookahead` and empties it again in one call, so `advances` becomes 2. A `peek()` pulls the 9 and `next()` returns it, and the last `hasNext()` answers false because `lookahead` is empty and the source has nothing left.
 
 ```trace
-{"cells":[4,7,9],"pointers":["pos"],"steps":[{"at":{"pos":-1},"vars":{"slot":"empty","advances":0,"call":"start"},"note":"Start: nothing is pulled, the slot is empty and advances is 0."},{"at":{"pos":0},"vars":{"slot":"4","advances":1,"call":"peek() = 4"},"note":"peek() returns 4; advances is 1 and the slot holds 4."},{"at":{"pos":0},"vars":{"slot":"4","advances":1,"call":"peek() = 4"},"note":"peek() returns 4; advances is 1 and the slot holds 4."},{"at":{"pos":0},"vars":{"slot":"empty","advances":1,"call":"next() = 4"},"note":"next() returns 4; the slot is now empty and advances is 1."},{"at":{"pos":0},"vars":{"slot":"empty","advances":1,"call":"hasNext() = true"},"note":"hasNext() answers true without pulling; advances stays 1."},{"at":{"pos":1},"vars":{"slot":"empty","advances":2,"call":"next() = 7"},"note":"next() returns 7; the slot is now empty and advances is 2."},{"at":{"pos":2},"vars":{"slot":"9","advances":3,"call":"peek() = 9"},"note":"peek() returns 9; advances is 3 and the slot holds 9."},{"at":{"pos":2},"vars":{"slot":"empty","advances":3,"call":"next() = 9"},"note":"next() returns 9; the slot is now empty and advances is 3."},{"at":{"pos":2},"vars":{"slot":"empty","advances":3,"call":"hasNext() = false"},"note":"hasNext() answers false without pulling; advances stays 3."}]}
+{"cells":[4,7,9],"pointers":["pos"],"steps":[{"at":{"pos":-1},"vars":{"lookahead":"empty","advances":0,"call":"start"},"note":"Start: nothing is pulled, lookahead is empty and advances is 0."},{"at":{"pos":0},"vars":{"lookahead":"4","advances":1,"call":"peek() = 4"},"note":"peek() returns 4; advances is 1 and lookahead holds 4."},{"at":{"pos":0},"vars":{"lookahead":"4","advances":1,"call":"peek() = 4"},"note":"peek() returns 4; advances is 1 and lookahead holds 4."},{"at":{"pos":0},"vars":{"lookahead":"empty","advances":1,"call":"next() = 4"},"note":"next() returns 4; lookahead is now empty and advances is 1."},{"at":{"pos":0},"vars":{"lookahead":"empty","advances":1,"call":"hasNext() = true"},"note":"hasNext() answers true without pulling; advances stays 1."},{"at":{"pos":1},"vars":{"lookahead":"empty","advances":2,"call":"next() = 7"},"note":"next() returns 7; lookahead is now empty and advances is 2."},{"at":{"pos":2},"vars":{"lookahead":"9","advances":3,"call":"peek() = 9"},"note":"peek() returns 9; advances is 3 and lookahead holds 9."},{"at":{"pos":2},"vars":{"lookahead":"empty","advances":3,"call":"next() = 9"},"note":"next() returns 9; lookahead is now empty and advances is 3."},{"at":{"pos":2},"vars":{"lookahead":"empty","advances":3,"call":"hasNext() = false"},"note":"hasNext() answers false without pulling; advances stays 3."}]}
 ```
 
 #### Walking A Stack Of Iterators
@@ -107,6 +107,9 @@ The second trace follows the nested case, where the sequence is `[[1, [2]], [], 
 ### Implementing The Lookahead Wrapper
 
 ```java
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 // Contract: hasNext() never consumes; peek() pulls at most once per element; next() advances exactly once.
 // remove() is deliberately not overridden, so the interface default throws UnsupportedOperationException.
 final class PeekIterator implements Iterator<Integer> {
@@ -246,4 +249,4 @@ The interface method `Iterator.remove()` has a default body that throws `Unsuppo
 
 **Hint.** A list that you enter is a new iterator on top of the stack. When is it safe to remove it?
 
-**Changed decision.** The sequence is now nested, so one saved cursor becomes a stack of unfinished cursors, and the lookahead slot holds the next integer found by a scan.
+**Changed decision.** The sequence is now nested, so one saved cursor becomes a stack of unfinished cursors. The scan is lazy: it runs only inside `next()` or `hasNext()`, and a frame pops only when a scan finds it finished. The lookahead slot holds the integer that scan finds.

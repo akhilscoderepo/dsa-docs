@@ -264,7 +264,7 @@ Use `ArrayDeque` for the stack, because `Stack` is a legacy synchronized class. 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This variation of Zigzag Iterator reads `k` int arrays in turns. Implement `Zigzag(int[][] sources)` with the operations `hasNext()`, `next()` and `rotations()`. The cursor names the source that supplies the next value. Right after each call to `next()`, if values remain, the cursor moves forward one source at a time, wrapping from the last source to the first, until it reaches a source with a value left. The operation `skipExhausted` is this movement, and each single step counts as one rotation. The constructor also moves the cursor from source 0 to the first non-empty source, and those steps count. The operation `rotations()` returns the total so far.
+**Problem.** This variation of Zigzag Iterator reads `k` int arrays in turns. Implement `Zigzag(int[][] sources)` with the operations `hasNext()`, `next()` and `rotations()`. The cursor names the source that supplies the next value. The rotation rule moves the cursor right after each call to `next()` while values remain. The cursor first steps forward one source, wrapping from the last source to the first, so it steps at least once per `next()`. It then keeps stepping one source at a time until it reaches a source with a value left. The second part of the rule is called `skipExhausted`, and it is a part of the rotation rule and not a public operation. Each single step counts as one rotation. The constructor also moves the cursor from source 0 to the first non-empty source, and those steps count. The operation `rotations()` returns the total so far.
 
 **Constraints.** The limits are:
 - **Sources** number `1 <= k <= 1000`, and any source may be empty.
@@ -274,7 +274,7 @@ Use `ArrayDeque` for the stack, because `Stack` is a legacy synchronized class. 
 
 **Example 1.** Input: `[[1,2,3],[],[4],[5,6]]`. Output: the values come out as 1, 4, 5, 2, 6, 3, and `rotations()` is 8 after the last call.
 
-**Example 2.** Input: `[[7,8]]`. Output: the values are 7 and 8, and `rotations()` is 1, because the cursor wraps once after 7 and stops after 8. The input `[[],[]]` has no values and `rotations()` is 0.
+**Example 2.** Input: `[[7,8]]`. Output: the values are 7 and 8, and `rotations()` is 1, because the cursor takes its one required step after 7, which wraps back to source 0, and takes no step after 8. The input `[[],[]]` has no values and `rotations()` is 0.
 
 **Hint.** Which source must the cursor name between two calls, and when does the cursor stop moving?
 

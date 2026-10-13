@@ -68,7 +68,7 @@ An operation is a public method of the structure. Its contract is the promise it
 
 The **failure contract** of an operation is the part of its contract that covers an illegal call. It has two decisions. The first is how the caller learns about the failure, and there are three standard answers. The operation throws an exception, such as `NoSuchElementException`. It returns a **sentinel**, which is a reserved return value outside the range of real answers, so `-1` works only when real answers are never negative. Or the contract states a precondition that the caller must establish, and the operation promises nothing if the caller breaks it. The second decision is whether a failed call changes the state, and the safest answer is that it never does.
 
-Pick one answer for the whole structure. A stack whose `pop` throws and whose `top` returns `-1` forces every caller to remember both rules.
+Pick one answer for the whole structure. A stack whose `pop` throws and whose `top` returns `-1` forces every caller to remember both rules. Choosing one answer still allows two exception types: a structure throws `IndexOutOfBoundsException` for a bad position and `IllegalStateException` for a call that needs data when the structure is empty.
 
 <!-- names: failure contract, sentinel, defensive copy -->
 
