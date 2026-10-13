@@ -14,7 +14,7 @@ The question of this lesson is how a class can hand out the smallest free id qui
 
 Chapter 17 on heaps and priority queues supplied `PriorityQueue`, which removes its smallest element in O(log k) time for k stored elements. It cannot answer the question whether a given element is stored, except by scanning all k elements. Chapter 32 on ordered data supplied `TreeSet`, which keeps elements in sorted order and answers membership, insertion and removal of the smallest element in O(log k) time. Chapter 4 on hash maps and sets supplied `HashSet`, which answers membership in expected O(1) time but has no order.
 
-The chapter on design problems supplied the habit of writing down which fields describe one logical state and which method owns each change. This lesson applies that habit to a new situation. Two collections store overlapping facts about the same ids, so one method must update both and never leave them disagreeing between calls.
+Lesson Trace A Sequence Of Method Calls and the earlier design chapters supplied the habit of writing down which fields describe one logical state and which method owns each change. This lesson applies that habit to a new situation. Two collections store overlapping facts about the same ids, so one method must update both and never leave them disagreeing between calls.
 
 <!-- stage: naive -->
 ### Reusing Ids With One Queue
@@ -179,7 +179,7 @@ Look for a class that needs the next resource by an order, such as smallest id, 
 
 #### The Nearest False Friend
 
-The false friend is the priority queue alone. It returns the right smallest element and passes every test with well-behaved callers, yet it accepts a repeated return and stores the id twice. A scan with `contains` repairs correctness and costs O(k) per call. A second false friend is a boolean array of capacity length. It rejects repeated returns, but it finds the smallest free id by scanning, which costs O(n) per allocation when the free ids lie far to the right.
+The false friend is the priority queue alone. It returns the right smallest element and passes every test with well-behaved callers, yet it accepts a repeated return and stores the id twice. A scan with `contains` repairs correctness and costs O(k) per call. A second false friend is the boolean array of lesson 06 when the capacity is large and few ids are free. It rejects repeated returns, but it finds the smallest free id by scanning, which costs O(capacity) per allocation when the free ids lie far to the right.
 
 #### Choosing Eager Or Lazy Cleanup
 

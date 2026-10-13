@@ -72,13 +72,13 @@ The scan start keeps allocation fast when releases are rare, since the scan read
 <!-- stage: variables -->
 ### State Kept Between Calls
 
-The pool stores three fields that together describe one logical state.
+The pool stores two fields, `free` and `low`, that together describe one logical state.
 
-- **n** is the number of identifiers, fixed by the constructor.
+- **n** is the number of identifiers, equal to `free.length`, so it is not a separate field.
 - **free** is the boolean array where `free[id]` is true when `id` is available.
 - **low** is the scan start, the smallest index that may hold a true flag.
 
-The invariant holds before and after every public call: for every `id` below `low`, `free[id]` is false. An allocation that returns `id` leaves `free[id]` false. A release that returns true leaves `free[id]` true and `low <= id`. A call that returns false changes none of the three fields. A call that returns -1 leaves every flag unchanged and only moves `low` to `free.length`, which the invariant allows because every flag is already false.
+The invariant holds before and after every public call: for every `id` below `low`, `free[id]` is false. An allocation that returns `id` leaves `free[id]` false. A release that returns true leaves `free[id]` true and `low <= id`. A call that returns false changes neither field. A call that returns -1 leaves every flag unchanged and only moves `low` to `free.length`, which the invariant allows because every flag is already false.
 
 <!-- stage: trace -->
 ### Tracing Allocations And Releases
@@ -108,7 +108,7 @@ The following allocations return 1, 2 and 3, each exactly once, and the last all
 
 #### The Pool Class
 
-The class below follows the three fields from the variables stage. The loop in `allocate` starts at `low`, and the guard in `release` implements the idempotent rule.
+The class below follows the two fields from the variables stage. The loop in `allocate` starts at `low`, and the guard in `release` implements the idempotent rule.
 
 ```java
 final class IdPool {

@@ -169,7 +169,7 @@ The expression `(head + size) % slots.length` never overflows for realistic capa
 
 #### Recognizing The Pattern
 
-Look for a class with a fixed capacity, a front and back discipline, and a second question that the array alone cannot answer fast: is this id present, how many entries have this key, or what is the oldest entry. Look also for a phrase such as "return false and leave the state unchanged". The invariant to state is that every queued element sits in one live slot and one index entry, and every public method restores that pair before it returns.
+Look for a class with a fixed capacity, a front and back discipline, and a second question that the array alone cannot answer fast: is this id present, how many entries have this key,. Look also for a phrase such as "return false and leave the state unchanged". The invariant to state is that every queued element sits in one live slot and one index entry, and every public method restores that pair before it returns.
 
 #### The Nearest False Friend
 

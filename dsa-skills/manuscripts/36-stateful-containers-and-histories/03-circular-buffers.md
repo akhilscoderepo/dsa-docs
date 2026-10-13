@@ -111,7 +111,7 @@ The second trace uses a deque with `cap = 3`. An add at the front moves `head` b
 ```
 
 <!-- stage: code -->
-### Writing The Queue With Two Fields
+### Writing The Queue With Three Fields
 
 #### The Class
 

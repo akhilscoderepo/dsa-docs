@@ -26,4 +26,4 @@ Every lesson starts with a class that passes simple tests and then breaks on a l
 
 ### What You Can Do After This Chapter
 
-You can write down the fields of a class and the one fact they must satisfy after every call. You can choose between a direct array, a ring buffer, two halves, a cursor over stored history and a pool that tracks the next never-issued id, and you can say what each call does when it must refuse. Cache designs belong to chapter 33, and concurrency belongs to the separate senior curriculum.
+You can write down the fields of a class and the one fact they must satisfy after every call. You can choose between a direct array, a ring buffer, two halves, a cursor over stored history and a pool that hands out the smallest free id, and you can say what each call does when it must refuse. Cache designs belong to chapter 33, and concurrency belongs to the separate senior curriculum.
