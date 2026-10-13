@@ -14,7 +14,7 @@ Formally, the input is an `int[] a` and a zero-based rank `r` with `0 <= r < n`.
 This lesson asks how to find `v`, `below` and `equal` in expected O(n) time, and how to tell this problem apart from questions that look similar but need the order between pairs of entries.
 
 <!-- stage: contributions -->
-### What Three Earlier Skills Add
+### What Three Earlier Lessons Add
 
 #### Quickselect Adds Discarding One Side
 

@@ -6,11 +6,11 @@
 
 **Approach.** The search partitions the current range into larger entries, equal entries and smaller entries, in that order, so the sorted-descending index of each block is known from counts alone.
 
-The variable `before` counts the entries already discarded on the larger side. If the target index `k - 1` is below `before + big`, the larger block holds it and the search keeps that block. If it is at or past `before + big + same`, the smaller block holds it, and `before` grows by `big + same`. Otherwise the pivot is the answer, the first index of the range is `before + big`, and the last is that value plus `same - 1`. The invariant is that every discarded entry on the larger side is greater than every entry in the range, so `before` is exactly the number of entries above the range.
+The variable `before` counts the entries already discarded on the larger side. If the target index `k - 1` is below `before + big`, the larger block holds it and the search keeps that block. If it is past the equal block, the smaller block holds it, and `before` moves past the larger and equal blocks. Otherwise the pivot is the answer, the first equal index is `before + (big - lo)`, and the last is `before + (small - lo)`. The invariant is that every discarded entry on the larger side is greater than every entry in the range, so `before` is exactly the number of entries above the range.
 
 **Complexity.**
 
-- **Time** is expected O(n), because a random pivot shrinks the range by a constant factor in expectation and each round scans the range once.
+- **Time** is expected O(n), because a three-way split removes the whole equal block and a random pivot shrinks the range by a constant factor in expectation and each round scans the range once.
 - **Space** is O(n) for the working copy, because the input must stay unchanged.
 
 ```java run
@@ -31,7 +31,7 @@ public final class KthRange {
         while (true) {
             // A random pivot index avoids a fixed worst-case input.
             int pivot = a[lo + rnd.nextInt(hi - lo + 1)];
-            // gt..: larger entries go to the front of the range, smaller ones to the back.
+            // Three-way split: larger entries go to the front of the range, smaller ones to the back.
             int big = lo, i = lo, small = hi;
             // One scan of the range costs O(hi - lo + 1).
             while (i <= small) {
@@ -89,7 +89,7 @@ The conversion `(long) x * x` widens before multiplying. Without the cast, `x * 
 
 **Complexity.**
 
-- **Time** is expected O(n), with one pass to build the distances, expected linear selection and one counting pass.
+- **Time** is expected O(n) for mostly distinct distances, and O(n^2) when many distances tie under this two-way partition, with one pass to build the distances, expected linear selection and one counting pass.
 - **Space** is O(n) for the distance array.
 
 ```java run

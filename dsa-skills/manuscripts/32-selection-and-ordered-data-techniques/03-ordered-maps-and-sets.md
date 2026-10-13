@@ -100,7 +100,7 @@ The keys are `2, 7, 11, 16, 22, 27, 31, 40, 44`, and the call is `floor(25)`. Th
 {"cells":[2,7,11,16,22,27,31,40,44],"pointers":["node","best"],"steps":[{"at":{"node":-1,"best":-1},"vars":{"x":25},"note":"The call floor(25) starts at the root with no candidate."},{"at":{"node":4,"best":4},"vars":{"x":25,"key":22,"candidate":22},"note":"22 is at most 25, so it qualifies and becomes the candidate. The search goes right for a better key."},{"at":{"node":6,"best":4},"vars":{"x":25,"key":31,"candidate":22},"note":"31 is above 25, so it does not qualify. The search goes left."},{"at":{"node":5,"best":4},"vars":{"x":25,"key":27,"candidate":22},"note":"27 is above 25, so it does not qualify. The search goes left."},{"at":{"node":-1,"best":4},"vars":{"x":25,"result":22},"note":"The search reaches a missing child, so it stops. The answer is 22."}]}
 ```
 
-The first trace changes the candidate once, at the root, and then moves left past keys that do not qualify. The second trace keeps the root as its candidate while the later nodes fail. Each descent compares only three keys, although the maps hold seven and nine.
+The first trace changes the candidate once, at the root, then moves left once, and then moves right twice. The second trace keeps the root as its candidate while the later nodes fail. Each descent compares only three keys, although the maps hold seven and nine.
 
 <!-- stage: code -->
 ### Use Navigation Calls For Neighbors
@@ -135,7 +135,7 @@ final class OrderedCounts {
 }
 ```
 
-Every call above runs one descent and costs O(log n). The method `keysBetween` also costs O(log n) to create, because it only records two bounds. Iterating the view then costs O(log n + m) for `m` keys in range. A view is **live**, which means it reads the original map each time. A later change to the map shows through the view, and a `put` through the view with a key outside its bounds throws `IllegalArgumentException`. The `descendingMap` and `headMap` calls follow the same rule.
+Every call above runs one descent and costs O(log n). The method `keysBetween` creates the view in O(1), because it only records two bounds. The first step of iterating the view runs one descent, so iteration costs O(log n + m) for `m` keys in range. A view is **live**, which means it reads the original map each time. A later change to the map shows through the view, and a `put` through the view with a key outside its bounds throws `IllegalArgumentException`. The `descendingMap` and `headMap` calls follow the same rule.
 
 <!-- stage: applicability -->
 ### When An Ordered Map Applies

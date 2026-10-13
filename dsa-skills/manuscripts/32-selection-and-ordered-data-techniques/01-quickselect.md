@@ -48,7 +48,7 @@ The extra factor comes from ordering values that cannot affect the answer. A fas
 
 Choose one element of the array and call it the **pivot**. A **partition** step rearranges the array so that every element smaller than the pivot comes before it and every element not smaller comes after it. After the step, the pivot sits at index `p`. That index is the **final rank** of the pivot, which means the index it would have in the sorted array. The pivot is already in its sorted place, and nothing needs to move it again.
 
-The final rank follows from counting. Exactly `p` elements are smaller than the pivot, so exactly `p` elements must come before it in sorted order. The order inside the left group and inside the right group is still unknown, and that is fine.
+The final rank follows from counting. Within a range that starts at index `lo`, exactly `p - lo` elements are smaller than the pivot, so the pivot has rank `p` in the whole array when `lo` is 0 and all values differ. The order inside the left group and inside the right group is still unknown, and that is fine.
 
 <!-- names: quickselect, partition, pivot -->
 

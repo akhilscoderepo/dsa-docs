@@ -10,7 +10,7 @@ The pivot's final rank is exact, because the partition leaves exactly `p - lo` s
 
 **Complexity.**
 
-- **Time** is expected O(n), because each partition scans the current range once and the range shrinks geometrically for typical pivots. A bad pivot sequence costs O(n^2).
+- **Time** is expected O(n) for distinct values, because each partition scans the current range once and the range shrinks geometrically for typical pivots. A bad pivot sequence costs O(n^2). Many equal values also cost O(n^2) with this two-way partition, which the next lesson fixes with a three-way split.
 - **Space** is O(1), because the method swaps inside the input and keeps three integers.
 
 ```java run
@@ -110,7 +110,7 @@ The invariant stays the same: the range `lo..hi` holds the values of sorted posi
 
 **Complexity.**
 
-- **Time** is expected O(n), because each round scans only the surviving range.
+- **Time** is expected O(n) for distinct values, because each round scans only the surviving range. Many equal values degrade it to O(n^2) with this two-way partition.
 - **Space** is O(1), because the partition swaps inside the input array.
 
 ```java run
@@ -285,7 +285,7 @@ A squared distance `x*x + y*y` reaches 2 * 10^18 for coordinates of 10^9, which 
 
 **Complexity.**
 
-- **Time** is expected O(n), because each round scans the surviving range and computes two `long` products per point.
+- **Time** is expected O(n) when distances are mostly distinct, and O(n^2) when many points tie under this two-way partition, because each round scans the surviving range and computes two `long` products per point.
 - **Space** is O(1) extra beyond the returned array of `k` references.
 
 ```java run
