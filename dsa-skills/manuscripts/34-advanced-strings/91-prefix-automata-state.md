@@ -80,7 +80,7 @@ A full match is not a stopping point. At state `m` there is no next pattern char
 
 #### One Array Answers Three Questions
 
-The array `fail` of one string `s` of length `n` also answers questions about `s` alone. The value `fail[n - 1]` is the length of the longest proper prefix that is also a suffix. The smallest **period** of `s` is the smallest `p` such that `s[i] == s[i + p]` wherever both indexes exist, and it equals `n - fail[n - 1]`. When this `p` divides `n` and is less than `n`, the string is `n / p` copies of its first `p` characters. When it does not divide `n`, the whole string is the only repeating unit.
+The array `fail` of one string `s` of length `n` also answers three questions about `s` alone. First, `fail[n - 1]` is the length of the longest proper prefix that is also a suffix. Second, the smallest **period** of `s` is the smallest `p` such that `s[i] == s[i + p]` wherever both indexes exist, and it equals `n - fail[n - 1]`. Third, when this `p` divides `n` and is less than `n`, the string is `n / p` copies of its first `p` characters. When it does not divide `n`, the whole string is the only repeating unit.
 
 <!-- stage: variables -->
 ### State Kept By The Machine
@@ -116,7 +116,7 @@ The words are `ab`, `bab` and `b`. Their trie has nodes 1 and 2 for `ab`, nodes 
 The first `b` reaches node 2 and reports two words, `ab` and `b`. The next `a` has no child under node 2, so the transition goes through the failure target, node 3, and lands on node 4. The second `b` reaches node 5 and reports three words in one lookup. The following `b` finds no child under node 5. The transitions follow the failure chain to node 3 and report only `b`. The counts for the whole stream are `0, 2, 0, 3, 1, 0, 3`, and no query looked at an earlier character.
 
 ```trace
-{"cells":["a","b","a","b","b","a","b"],"pointers":["v"],"steps":[{"at":{"v":0},"vars":{"count":0},"note":"Start: the state is the root, node 0."},{"at":{"v":1},"vars":{"letter":"a","count":0},"note":"Letter 'a': the node has a child for this letter, so the state moves from node 0 to node 1. Exactly 0 stored word(s) end here."},{"at":{"v":2},"vars":{"letter":"b","count":2},"note":"Letter 'b': the node has a child for this letter, so the state moves from node 1 to node 2. Exactly 2 stored word(s) end here."},{"at":{"v":4},"vars":{"letter":"a","count":0},"note":"Letter 'a': the transition follows the failure chain, so the state moves from node 2 to node 4. Exactly 0 stored word(s) end here."},{"at":{"v":5},"vars":{"letter":"b","count":3},"note":"Letter 'b': the node has a child for this letter, so the state moves from node 4 to node 5. Exactly 3 stored word(s) end here."},{"at":{"v":3},"vars":{"letter":"b","count":1},"note":"Letter 'b': the transition follows the failure chain, so the state moves from node 5 to node 3. Exactly 1 stored word(s) end here."},{"at":{"v":4},"vars":{"letter":"a","count":0},"note":"Letter 'a': the node has a child for this letter, so the state moves from node 3 to node 4. Exactly 0 stored word(s) end here."},{"at":{"v":5},"vars":{"letter":"b","count":3},"note":"Letter 'b': the node has a child for this letter, so the state moves from node 4 to node 5. Exactly 3 stored word(s) end here."}]}
+{"cells":["a","b","a","b","b","a","b"],"pointers":["v"],"steps":[{"at":{"v":0},"vars":{"count":0},"note":"Start: the state is the root, node 0."},{"at":{"v":1},"vars":{"letter":"a","count":0},"note":"Letter 'a': the node has a child for this letter, so the state moves from node 0 to node 1. Exactly 0 stored words end here."},{"at":{"v":2},"vars":{"letter":"b","count":2},"note":"Letter 'b': the node has a child for this letter, so the state moves from node 1 to node 2. Exactly 2 stored words end here."},{"at":{"v":4},"vars":{"letter":"a","count":0},"note":"Letter 'a': the transition follows the failure chain, so the state moves from node 2 to node 4. Exactly 0 stored words end here."},{"at":{"v":5},"vars":{"letter":"b","count":3},"note":"Letter 'b': the node has a child for this letter, so the state moves from node 4 to node 5. Exactly 3 stored words end here."},{"at":{"v":3},"vars":{"letter":"b","count":1},"note":"Letter 'b': the transition follows the failure chain, so the state moves from node 5 to node 3. Exactly 1 stored word ends here."},{"at":{"v":4},"vars":{"letter":"a","count":0},"note":"Letter 'a': the node has a child for this letter, so the state moves from node 3 to node 4. Exactly 0 stored words end here."},{"at":{"v":5},"vars":{"letter":"b","count":3},"note":"Letter 'b': the node has a child for this letter, so the state moves from node 4 to node 5. Exactly 3 stored words end here."}]}
 ```
 
 <!-- stage: code -->
@@ -171,7 +171,7 @@ The call `failArray(pat)` relies on `advance` reading `fail[state - 1]` only for
 
 #### Many Words With A Persistent State
 
-The class below builds the trie once, fills `go`, `fail` and `hits` in one level-order pass, and keeps one `state` between calls. The array `made` marks which `go` entries are real trie edges, because the fill later writes fallback results into the same table and a plain `0` cannot tell the two apart.
+The class below builds the trie once, fills `go`, `fail` and `hits` in one level-order pass, and keeps one `state` between calls. The array `made` marks which `go` entries are real trie edges, because the fill later writes fallback results into the same table and a plain `0` cannot tell the two apart. The array `hits` replaces the `link` and `id` arrays of the lesson Match Many Patterns In One Pass, because it stores the number of words that end at a node or along its failure chain, so a query reads one value and walks no output links.
 
 ```java
 final class WordStream {
@@ -222,7 +222,7 @@ final class WordStream {
 #### Cost And Java Details
 
 - **failArray** costs O(m) time and O(m) space, because the state rises at most once per character.
-- **allStarts** costs O(n + m) time and O(m + z) space for z matches, because the text index never moves back.
+- **allStarts** costs O(n + m) time, because the text index never moves back, and O(n + m) space, because the result buffer has one slot per text character.
 - **WordStream** builds in O(L * 26) time and space for total word length L, and each `query` costs O(1) time with no growth in memory.
 
 The expression `letter - 'a'` has type `int`, so it indexes the table directly, and a letter outside `a` to `z` would throw an `ArrayIndexOutOfBoundsException` instead of reading a wrong column. The code never calls `substring`, because every comparison uses an index.

@@ -90,7 +90,7 @@ def trace_two(words, stream, expect):
         direct = ch in go[v]
         how = "the node has a child for this letter" if direct else "the transition follows the failure chain"
         st.append({"at": {"v": nv}, "vars": {"letter": ch, "count": cnt[nv]},
-                   "note": f"Letter '{ch}': {how}, so the state moves from node {v} to node {nv}. Exactly {cnt[nv]} stored word(s) end here."})
+                   "note": f"Letter '{ch}': {how}, so the state moves from node {v} to node {nv}. Exactly {cnt[nv]} stored {'word ends' if cnt[nv]==1 else 'words end'} here."})
         v = nv
     assert got == expect, got
     assert got == [sum(1 for w in words if stream[:i + 1].endswith(w)) for i in range(len(stream))]

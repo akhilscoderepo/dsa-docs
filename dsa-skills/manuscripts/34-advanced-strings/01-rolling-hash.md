@@ -44,7 +44,7 @@ The longest duplicate substring problem makes the cost worse, because the window
 
 #### The Repeated Work
 
-Two neighbouring windows share all characters except one at each end. The window at start 4 of `"abcdabc"` is `"abc"` and the window at start 5 would be `"bc?"`, so `k - 1` of the `k` characters are the same. The direct method reads those shared characters again for every new window. That repeated reading is the named waste. A better method must produce the summary of the next window from the summary of the current window and the two characters that differ, in constant time.
+Two neighbouring windows share all characters except one at each end. In `"abcdabc"` with `k = 3`, the window at start 0 is `"abc"` and the window at start 1 is `"bcd"`, so `k - 1 = 2` of the 3 characters are the same. The direct method reads those shared characters again for every new window. That repeated reading is the named waste. A better method must produce the summary of the next window from the summary of the current window and the two characters that differ, in constant time.
 
 <!-- stage: insight -->
 ### Updating The Summary Letter By Letter
@@ -161,7 +161,7 @@ Equal hash values are a false friend of equal windows. They prove a difference w
 
 #### When Another Method Fits Better
 
-A hash needs equal-length windows, so a single comparison of two unrelated strings is better done with `String.equals` or `regionMatches`. When the alphabet is tiny and the window short, as with 10 DNA letters, an exact 2-bit code replaces the modulus and the check disappears. When a guarantee against adversarial input matters more than speed, because the cost of a long run of collisions is quadratic, the suffix structures covered later in this chapter give a worst-case bound without any randomness. Treat the hash as a fast filter whose output is verified, and do not use it where an unverified answer would corrupt data.
+A hash needs equal-length windows, so a single comparison of two unrelated strings is better done with `String.equals` or `regionMatches`. When the alphabet is tiny and the window short, as with 10 DNA letters, an exact 2-bit code replaces the modulus and the check disappears. When a guarantee against adversarial input matters more than speed, because the cost of a long run of collisions is quadratic, the suffix structures covered later in this chapter give a worst-case bound that does not depend on a lucky choice of base and modulus. Treat the hash as a fast filter whose output is verified, and do not use it where an unverified answer would corrupt data.
 
 <!-- stage: exercises -->
 ### Exercises

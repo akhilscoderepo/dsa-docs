@@ -79,7 +79,7 @@ Construction and the LCP pass keep a short list of arrays and counters.
 
 - **s** is the text, read by `charAt` and never copied.
 - **sa** holds start indexes in sorted order, so `sa[r]` is the start of the suffix with sorted position `r`.
-- **rank** holds one integer per start index; `rank[i]` orders suffix `i` by its first `k` characters, and after the last round it equals the sorted position of suffix `i`.
+- **rank** holds one integer per start index; `rank[i]` orders suffix `i` by its first `k` characters, and after the round with compared length `k` it orders suffixes by their first `2k` characters, and after the last round it equals the sorted position of suffix `i`.
 - **order** lists the start indexes sorted by the current ranks, and after the last round it equals `sa`.
 - **k** is the compared length, which starts at 1 and doubles each round.
 - **lcp** holds `lcp[r]`, the common prefix length of the suffixes at sorted positions `r - 1` and `r`.
@@ -95,7 +95,7 @@ The text is `banana`. The pointers `first` and `last` mark the start index of th
 The round with `k = 1` sorts by pairs of the first two characters and gives ranks `[2, 1, 3, 1, 3, 0]`. Two ties remain. The suffixes at 1 and 3 tie because both begin with `an`, and the suffixes at 2 and 4 tie because both begin with `na`. Sorted order so far is `[5, 1, 3, 0, 2, 4]`. The round with `k = 2` compares four characters, and the ties break because `ana` ends while `anana` continues. Ranks become `[3, 2, 5, 1, 4, 0]`, all distinct, and the array is `[5, 3, 1, 0, 4, 2]`. The loop stops after two rounds.
 
 ```trace
-{"cells":["b","a","n","a","n","a"],"pointers":["first","last"],"steps":[{"at":{"first":-1,"last":-1},"vars":{"k":0,"rank":"[98,97,110,97,110,97]"},"note":"k = 0, before any round: the rank of each suffix is the code of its first character."},{"at":{"first":5,"last":4},"vars":{"k":1,"rank":"[2,1,3,1,3,0]","order":"[5,1,3,0,2,4]"},"note":"Round with k = 1 sorts by pairs of ranks, so it orders by 2 characters. Ties remain, so another round follows."},{"at":{"first":5,"last":2},"vars":{"k":2,"rank":"[3,2,5,1,4,0]","order":"[5,3,1,0,4,2]"},"note":"Round with k = 2 sorts by pairs of ranks, so it orders by 4 characters. All ranks are distinct, so the loop stops."}]}
+{"cells":["b","a","n","a","n","a"],"pointers":["first","last"],"steps":[{"at":{"first":-1,"last":-1},"vars":{"rank":"[98,97,110,97,110,97]"},"note":"Before any round, the rank of each suffix is the code of its first character."},{"at":{"first":5,"last":4},"vars":{"k":1,"rank":"[2,1,3,1,3,0]","order":"[5,1,3,0,2,4]"},"note":"Round with k = 1 sorts by pairs of ranks, so it orders by 2 characters. Ties remain, so another round follows."},{"at":{"first":5,"last":2},"vars":{"k":2,"rank":"[3,2,5,1,4,0]","order":"[5,3,1,0,4,2]"},"note":"Round with k = 2 sorts by pairs of ranks, so it orders by 4 characters. All ranks are distinct, so the loop stops."}]}
 ```
 
 #### Kasai Pass On banana

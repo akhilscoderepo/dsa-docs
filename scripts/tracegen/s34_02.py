@@ -29,7 +29,7 @@ for i,c in enumerate(text):
         old=k; k=pi[k-1]
         st.append({"at":{"i":i,"k":k},"vars":{"matched":k},"note":f"i = {i}: p[{old}] is '{pat[old]}' but the text holds '{c}'. One fallback replaces {old} by pi[{old-1}] = {k}, and the same text index is compared again."})
     if c==pat[k]:
-        k+=1; msg=f"i = {i}: text character '{c}' agrees with p[{k-1}], so the match is now {k} characters long."
+        k+=1; msg=f"i = {i}: text character '{c}' agrees with p[{k-1}], so the match is now {k} {'character' if k==1 else 'characters'} long."
     else:
         msg=f"i = {i}: text character '{c}' cannot begin the pattern, so the match length remains 0."
     st.append({"at":{"i":i,"k":k},"vars":{"matched":k},"note":msg})

@@ -70,7 +70,7 @@ The link is safe because of one fact. After the text ends with `s`, any partial 
 
 The **goto transition** `go[v][c]` is the node reached from `v` after reading the character `c`. If `v` has a child on `c`, that child is the answer. Otherwise the answer is `go[fail[v]][c]`, which means the automaton falls back to the longest useful suffix and tries again there. At the root, a missing child leaves the state at the root.
 
-Filling the full table in advance lets the scan do one array lookup per text character, with no retry loop. The fill runs in level order, the BFS from chapter 16. When the loop handles a node at depth `d`, the failure targets of all nodes at depth `d - 1` and above are known, and their table rows are complete. The failure link of a child `u` of `v` on character `c` is then `go[fail[v]][c]`, one lookup in a finished row.
+Filling the full table in advance lets the scan do one array lookup per text character, with no retry loop. The fill runs in level order, the BFS from chapter 16, and the level-order fill code appears below. When the loop handles a node at depth `d`, the failure targets of all nodes at depth `d - 1` and above are known, and their table rows are complete. The failure link of a child `u` of `v` on character `c` is then `go[fail[v]][c]`, one lookup in a finished row.
 
 #### An Output Link Reports Every Match
 
@@ -280,7 +280,7 @@ Do not use the table when the alphabet is large, such as arbitrary Unicode text.
 
 **Prerequisites.** The multi-pattern scan and suffix matches above.
 
-**Problem.** Design a class `StreamChecker`. Its constructor takes an array `words` of distinct non-empty strings over `a` to `z`. Its method `query(char letter)` appends `letter` to the end of an internal stream, which starts empty and is never cleared. It returns `true` exactly when some word in `words` is a suffix of the whole stream so far, and `false` otherwise. The method returns one boolean and does not say which word matched or how many did. The automaton state must persist between calls to `query`.
+**Problem.** The later lesson Stream Matching With Failure Links revisits this problem and asks for counts. Here, design a class `StreamChecker`. Its constructor takes an array `words` of distinct non-empty strings over `a` to `z`. Its method `query(char letter)` appends `letter` to the end of an internal stream, which starts empty and is never cleared. It returns `true` exactly when some word in `words` is a suffix of the whole stream so far, and `false` otherwise. The method returns one boolean and does not say which word matched or how many did. The automaton state must persist between calls to `query`.
 
 **Constraints.** The limits are:
 - **Words** satisfy `1 <= words.length <= 2000`, all distinct, with total length at most 10^4.
