@@ -12,7 +12,7 @@ Nothing crashed, and the heap did exactly what a heap does. The bug lies in the 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
 
-The heap lessons supplied the bounded heap. A min-heap of size k keeps the k largest values, and its root is the k-th largest. The lessons on ordered sets supplied the count map, where a `TreeMap` from value to count gives the smallest and the largest value in O(log n). The design chapter supplied the habit of keeping one table that holds the truth about every key, so that a second structure is only an index over it. The first lessons of this chapter supplied the window queue, where the oldest value expires from the front. They also supplied the rule that an API states its time and its inclusive edges.
+The heaps chapter (chapter 17) supplied the bounded heap. A min-heap of size k keeps the k largest values, and its root is the k-th largest. The lessons on ordered sets supplied the count map, where a `TreeMap` from value to count gives the smallest and the largest value in O(log n). The design chapter (chapter 33) supplied the habit of keeping one table that holds the truth about every key, so that a second structure is only an index over it. The first lessons of this chapter supplied the window queue, where the oldest value expires from the front. They also supplied the rule that an API states its time and its inclusive edges.
 
 This lesson joins them. The new work is a way to decide which structure fits each kind of stream. An append-only fixed-rank stream needs a bounded heap. A correctable stream needs an index that can be wrong in a controlled way. An expiring stream needs both a queue of arrival order and an ordered split of the live values. The Java rule that goes with all three is simple: `PriorityQueue.remove(Object)` scans the whole heap, so a hot path never calls it.
 
@@ -202,7 +202,7 @@ A change of rank by d moves d values, so it costs O(d log n).
 
 #### Dead Marks For A Window Median
 
-The Median Of The Last W Values exercise keeps a lower max-heap and an upper min-heap, as in the median lesson. The oldest value may sit deep inside either heap, so the code marks its entry dead and lowers the live count of its side. A dead entry waits until it reaches a root. Each side keeps a live count, and the balance rule uses live counts only.
+The Median Of The Last W Values exercise keeps a lower max-heap and an upper min-heap, as in the median lesson. The oldest value may sit deep inside either heap, so the code marks its entry dead and lowers the live count of its side. A dead entry waits until it reaches a root. A dead entry below a live root never reaches one, so a rebuild drops all dead entries when the heaps hold more than `2 * w + 2` entries. Each side keeps a live count, and the balance rule uses live counts only.
 
 ```java
 final class WindowMedianSketch {
@@ -236,6 +236,12 @@ final class WindowMedianSketch {
         }
         while (lowLive > highLive + 1) { E r = liveLow(); low.poll(); r.inLow = false; high.add(r); lowLive--; highLive++; }
         while (highLive > lowLive) { E r = liveHigh(); high.poll(); r.inLow = true; low.add(r); highLive--; lowLive++; }
+        if (low.size() + high.size() > 2 * w + 2) rebuild();              // dead entries below live roots never surface
+    }
+
+    private void rebuild() {
+        low.removeIf(e -> e.dead);                                         // O(w) pass keeps only live entries
+        high.removeIf(e -> e.dead);
     }
 
     long median() {
@@ -250,6 +256,22 @@ final class WindowMedianSketch {
 - **TopKHeap** costs O(log k) per addition and O(k) space.
 - **LazyMaxHeap** costs O(log n) amortized per event, because each entry enters the heap once and leaves it at most once.
 - **Memory** of `LazyMaxHeap` grows with the number of events unless a rebuild from `truth` runs when the heap holds more than twice the live count.
+
+- **WindowMedianSketch** costs O(log w) amortized per addition. The rebuild costs O(w) and runs after at least w additions, so space stays O(w).
+
+The rebuild in the sketch drops the dead entries of each heap in one pass.
+
+```java
+final class RebuildSnippet {
+    static <T> void rebuild(java.util.PriorityQueue<T> low, java.util.PriorityQueue<T> high,
+                            java.util.function.Predicate<T> dead, int w) {
+        if (low.size() + high.size() > 2 * w + 2) {   // total entries, live and dead
+            low.removeIf(dead);                       // keeps live entries, heap order stays valid
+            high.removeIf(dead);
+        }
+    }
+}
+```
 
 The comparison `live == top.value()` unboxes the `Long` before it compares, so the value 1000 does not fail the way two boxed `Long` objects can under `==`. The comparator uses `Long.compare`, since the difference of two large `long` values can overflow.
 

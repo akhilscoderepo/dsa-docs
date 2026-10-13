@@ -79,7 +79,7 @@ The second class in this lesson is an authentication manager. It hands out token
 A method that counts live entries needs more than validation, because a scan of all entries costs O(size). When every entry gets the same time to live and the clock never moves backward, the deadlines appear in the order of the latest touch. A map that keeps insertion order then holds the earliest deadline at its front. A purge removes entries from the front until it finds one that is live, and the size after the purge is the exact count. When time to live differs per entry, the order breaks, and the min-heap takes over.
 
 <!-- stage: variables -->
-### Fields Of The Rate Limiter
+### Fields Of Both Maps
 
 The trace follows a rate limiter with `gap` 10 and then an authentication manager with a fixed time to live.
 
@@ -168,10 +168,39 @@ final class AuthManager {
 }
 ```
 
+#### A Heap Of Deadlines
+
+When each key has its own time to live, the front of an ordered map no longer holds the smallest expiry. The Expiring Key Store exercise adds a min-heap of end-time records. The map stays the truth, and a heap record counts only when it matches the map.
+
+```java
+final class StoreSketch {
+    private final java.util.HashMap<String, long[]> map = new java.util.HashMap<>();   // key to {value, end}
+    private final java.util.PriorityQueue<Object[]> heap =
+        new java.util.PriorityQueue<>((a, b) -> Long.compare((long) a[0], (long) b[0]));   // {end, key}
+
+    void put(String key, long value, long ttl, long now) {
+        map.put(key, new long[]{value, now + ttl});        // the newest entry replaces the old one
+        heap.add(new Object[]{now + ttl, key});            // the old heap record stays and goes stale
+    }
+
+    int liveCount(long now) {
+        while (!heap.isEmpty() && (long) heap.peek()[0] <= now) {   // records at or below now have ended
+            Object[] r = heap.poll();
+            long[] e = map.get((String) r[1]);
+            if (e != null && e[1] == (long) r[0]) map.remove((String) r[1]);   // delete only a matching record
+        }
+        return map.size();
+    }
+}
+```
+
+A stale record names an end time that differs from the map, so the check skips it. Each record leaves the heap once, which gives O(log n) amortized time per call.
+
 #### Cost
 
 - **RateLogger.shouldPrint** costs O(1) expected time. Memory is O(d) for `d` distinct texts until a purge runs.
 - **AuthManager** costs O(1) amortized time per call, because each entry is removed once, and O(t) space for `t` live tokens.
+- **StoreSketch** costs O(log n) amortized time per `put`, since each heap record is added and removed once.
 
 <!-- stage: applicability -->
 ### When To Store A Deadline

@@ -157,7 +157,7 @@ final class AlertScore {
 
 #### Array With A Head Index
 
-The Counts Over Several Window Lengths exercise needs a binary search over the live events. An `ArrayDeque` has no indexed access, so that exercise keeps an array and a head index. The live events sit in positions `head` to `tail - 1`, and eviction only moves `head` forward.
+Queries with varying span need a binary search over the live events. An `ArrayDeque` has no indexed access, so this code keeps an array and a head index. The live events sit in positions `head` to `tail - 1`, and eviction only moves `head` forward.
 
 ```java
 final class IndexedWindow {
@@ -255,7 +255,7 @@ If events can arrive out of time order, the front of the queue is no longer the 
 
 **Prerequisites.** The Counts Over Several Window Lengths exercise above. The stream is now correctable at its newest entry, and the exact border decides whether a correction is allowed. This exercise changes the contract of LeetCode 362: events carry a weight, and the newest one can be replaced.
 
-**Problem.** Design the class `ByteMeter` with a constructor that receives a `long` called `span`. The method `add(time, bytes)` appends an entry. The method `total(time)` returns the sum of `bytes` over the entries with a timestamp greater than `time - span`. The method `amend(bytes)` replaces the byte count of the most recently added entry. It throws `IllegalStateException` when no entry was added, or when that entry is outside the window at the latest time given to `add` or `total`.
+**Problem.** Design the class `AmendableMeter` with a constructor that receives a `long` called `span`. The method `add(time, bytes)` appends an entry. The method `total(time)` returns the sum of `bytes` over the entries with a timestamp greater than `time - span`. The method `amend(bytes)` replaces the byte count of the most recently added entry. It throws `IllegalStateException` when no entry was added, or when that entry is outside the window at the latest time given to `add` or `total`.
 
 **Constraints.** The limits are:
 - **span** is a `long` from 1 to 10^12, and **bytes** is a `long` from 0 to 10^12.

@@ -224,12 +224,12 @@ public final class LargeSumWindowBoundary {
         a.record(5, 100);
         a.record(15, -30);
         if (a.total(15) != 70 || a.total(16) != -30) throw new AssertionError("example 1");
-        // Example 2: timestamps near the long limit with a span of 9e18.
+        // Example 2: timestamps near the long limit with a span just below 9e18.
         long big = 9_000_000_000_000_000_000L;
-        TimedSum b = new TimedSum(big);
+        TimedSum b = new TimedSum(big - 1);
         b.record(0, 5_000_000_000_000L);
-        b.record(big, 5_000_000_000_000L);
-        if (b.total(big) != 10_000_000_000_000L || b.total(big + 1) != 5_000_000_000_000L)
+        b.record(big - 1, 5_000_000_000_000L);
+        if (b.total(big - 1) != 10_000_000_000_000L || b.total(big) != 5_000_000_000_000L)
             throw new AssertionError("example 2");
         // The forbidden sum overflows a long, while the cutoff stays in range.
         if (big + big >= 0 || big - big != 0) throw new AssertionError("overflow premise");

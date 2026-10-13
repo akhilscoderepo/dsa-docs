@@ -98,8 +98,10 @@ The index and one query share these quantities, and the traces below follow them
 - **n** is the number of stored events, so valid positions run from 0 to `n - 1`.
 - **lo** and **hi** are the ends of the binary-search window, and the answer position lies between them.
 - **from**, **to** and **size** are the query ends and the bucket width, with `from <= to` and `size >= 1`.
-- **b** is the bucket number of the event under the pointer, computed as `(times[i] - from) / size`.
-- **i** is the position of the event the walk is looking at, from `lowerBound(from)` up to `n`.
+- **mid** is the position that one binary-search step compares with the target, and -1 means no comparison is running.
+- **target** is the time that the binary search looks for.
+- **bucket** is the bucket number of the event under the pointer, computed as `(times[i] - from) / size`.
+- **i** is the position of the event the walk is looking at, from the binary-search result for `from` up to `n`.
 
 The invariant for the search is that every position below `lo` holds a time smaller than the target. Every position at or after `hi` holds a time at least as large.
 
@@ -171,10 +173,10 @@ final class BucketWalk {
         }
         int i = lo;                                                 // first event inside the query
         while (i < n && times[i] <= to) {                           // stops at the first event after the query
-            long b = (times[i] - from) / size;                      // bucket number of this event
+            long bucket = (times[i] - from) / size;                      // bucket number of this event
             int start = i;
-            while (i < n && times[i] <= to && (times[i] - from) / size == b) i++;   // same bucket, same pair
-            out.add(new long[]{from + b * size, i - start});        // bucket start and its count
+            while (i < n && times[i] <= to && (times[i] - from) / size == bucket) i++;   // same bucket, same pair
+            out.add(new long[]{from + bucket * size, i - start});        // bucket start and its count
         }
         return out;                                                 // empty buckets are absent, so their count is 0
     }
@@ -216,6 +218,22 @@ final class PrefixKeys {
     }
 }
 ```
+
+#### A Tree Map For Out-Of-Order Times
+
+The Tweet Counts Per Frequency exercise accepts readings in any order, so a sorted array cannot append them. A `TreeMap` from time to count keeps them sorted, and `subMap` returns the entries of an inclusive range.
+
+```java
+final class RangeViews {
+    static void demo() {
+        java.util.TreeMap<Long, Integer> byTime = new java.util.TreeMap<>(java.util.Map.of(5L, 2, 70L, 1, 130L, 3));
+        java.util.SortedMap<Long, Integer> inRange = byTime.subMap(5L, true, 70L, true);   // keys 5 and 70, both ends inclusive
+        java.util.SortedMap<Long, Integer> before = byTime.headMap(70L, false);            // keys below 70: only key 5
+    }
+}
+```
+
+The view `inRange` holds the counts 2 and 1. Its sum is 3, and the loop over a view costs O(log n + m) for `m` entries.
 
 #### Cost
 
@@ -267,7 +285,7 @@ If events expire, change or disappear, a plain sorted array no longer shows the 
 
 **Prerequisites.** The Log Storage System exercise above. This exercise keeps one sorted index for each key and turns a time range into a list of bucket counts.
 
-**Problem.** Design the class `ReadingCounter`. The method `record(sensor, time)` stores one reading of a named sensor at an integer second `time`. The method `counts(sensor, unit, from, to)` takes `unit` equal to `minute`, `hour` or `day`, with widths 60, 3600 and 86400 seconds. It returns a list in which entry `b` counts the readings of that sensor with time in `[from + b * width, from + (b + 1) * width)`. The last bucket ends at `to` and may be shorter. The list has exactly `(to - from) / width + 1` entries.
+**Problem.** Design the class `ReadingCounter`. The method `record(sensor, time)` stores one reading of a named sensor at an integer second `time`. The method `counts(sensor, unit, from, to)` takes `unit` equal to `minute`, `hour` or `day`, with widths 60, 3600 and 86400 seconds. It returns a list in which entry `b` counts the readings of that sensor with time in `[from, to]`, both ends included, and in `[from + b * width, from + (b + 1) * width)`. The last bucket ends at `to` and may be shorter. The list has exactly `(to - from) / width + 1` entries.
 
 **Constraints.** The limits are:
 - **Calls** number at most 10^4 per object.

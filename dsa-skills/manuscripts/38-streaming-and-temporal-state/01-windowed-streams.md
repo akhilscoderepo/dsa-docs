@@ -80,7 +80,7 @@ The invariant is that the queue holds exactly the entries inside the window at t
 <!-- stage: variables -->
 ### Queue, Sum, And Clock
 
-The two classes in this lesson share the same few pieces of state.
+The three classes in this lesson, `CountWindow`, `TimeWindow` and `SlotSketch`, share the same few pieces of state.
 
 - **window** is the queue of entries in arrival order, with the oldest at the front.
 - **sum** is the `long` total of the values in `window`, and it equals 0 when `window` is empty.
@@ -170,10 +170,17 @@ final class SlotSketch {
         if (tag[i] != t) { tag[i] = t; hits[i] = 0; }      // an old second is overwritten
         hits[i]++;
     }
+
+    int count(int t) {
+        int sum = 0;
+        for (int i = 0; i < span; i++)                     // slots whose second lies in (t - span, t] count
+            if (tag[i] > t - span && tag[i] <= t) sum += hits[i];
+        return sum;
+    }
 }
 ```
 
-After hits at seconds 4, 4 and 5, slot 1 holds tag 4 with 2 hits and slot 2 holds tag 5 with 1 hit. A hit at second 7 lands in slot 1, sees tag 4, and resets the slot to tag 7 with 1 hit. The old count never needs a timer.
+After hits at seconds 4, 4 and 5, slot 1 holds tag 4 with 2 hits and slot 2 holds tag 5 with 1 hit. A hit at second 7 lands in slot 1, sees tag 4, and resets the slot to tag 7 with 1 hit. The old count never needs a timer. The call `count(5)` adds the slots with a tag in the range 3 to 5.
 
 #### Cost
 
@@ -257,7 +264,7 @@ If timestamps can arrive out of order, the front of the queue is not the oldest 
 
 **Example 1.** Input calls `["TimedSum","record","record","total","total"]` with arguments `[[10],[5,100],[15,-30],[15],[16]]`, output `[null,null,null,70,-30]`.
 
-**Example 2.** Input calls `["TimedSum","record","record","total","total"]` with arguments `[[9000000000000000000],[0,5000000000000],[9000000000000000000,5000000000000],[9000000000000000000],[9000000000000000001]]`, output `[null,null,null,10000000000000,5000000000000]`.
+**Example 2.** Input calls `["TimedSum","record","record","total","total"]` with arguments `[[8999999999999999999],[0,5000000000000],[8999999999999999999,5000000000000],[8999999999999999999],[9000000000000000000]]`, output `[null,null,null,10000000000000,5000000000000]`.
 
 **Hint.** Why can `time + span` overflow a `long` when both are near 9 * 10^18, and which rewriting avoids it?
 

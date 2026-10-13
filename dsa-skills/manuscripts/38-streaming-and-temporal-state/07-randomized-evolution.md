@@ -216,7 +216,7 @@ If the output must resist an adversary, as in a card game with money at stake, `
 #### [Boundary] Repeated Reset And Shuffle (Author exercise)
 <!-- id: st38-reset-shuffle-cycles -->
 
-**Prerequisites.** The Shuffle An Array exercise above. This exercise changes one decision: the class keeps one working array across calls, so shuffles continue from the current order.
+**Prerequisites.** The Shuffle An Array exercise above. This exercise changes one decision: the class adds `current()` and copies on every read and write, so callers never touch the working array.
 
 **Problem.** Design the class `Deck` with a constructor that receives an `int[] initial` and an `IntUnaryOperator pick`. The method `shuffle()` applies one Fisher-Yates pass to the current order and returns a copy of the new order. The method `current()` returns a copy of the current order. The method `reset()` sets the current order to the initial order and returns a copy of it. The initial order is the content of `initial` at construction time.
 
@@ -232,7 +232,7 @@ If the output must resist an adversary, as in a card game with money at stake, `
 
 **Hint.** How many separate arrays does the class need, and which of them does the caller ever receive?
 
-**Changed decision.** Shuffles now compound, because each pass starts from the order the last call left. The new method `current()` reads that order, so the class must copy on every read and write and keep the initial order apart.
+**Changed decision.** The new decision is `current()` plus copy-on-read, which means copy in and copy out. The class copies `initial` at construction and copies every array it returns. It keeps the initial order apart from the working order.
 
 #### [Recognize] Streaming Sample Review (Author exercise)
 <!-- id: st38-streaming-sample-review -->

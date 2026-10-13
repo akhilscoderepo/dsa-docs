@@ -83,7 +83,7 @@ Entries with equal values are different entries when they belong to different ke
 <!-- stage: variables -->
 ### State In Both Classes
 
-The lesson uses two small classes, and the trace follows the first fields of each.
+The lesson uses three small classes, `LatencyMedian`, `PeakTracker` and `PriceCounts`. The trace follows the fields of the first two.
 
 - **lower** is the max-heap of the smaller values, and its root is the lower middle value.
 - **upper** is the min-heap of the larger values, and its size is never larger than the size of `lower`.
@@ -192,6 +192,8 @@ The Trimmed Mean exercise builds on the same idea, but a window adds one more st
 Each region is an ordered multiset like `PriceCounts`. A `long` variable holds the sum of the middle region, so the average costs one division. A queue holds the values in arrival order, because the oldest value must leave by value.
 
 A new value enters the region that matches its rank. Then one value crosses each boundary that became too large. For example, the largest value of the low region moves into the middle region, and its amount moves into the sum. When the window already holds `m` values, the queue gives the oldest value, which leaves its region first. A move across one boundary repairs the region sizes again.
+
+Take `m = 5` and `k = 1`, with the values 6, 2, 9, 4 and 7 in arrival order. The low region holds 2, the middle region holds 4, 6 and 7 with sum 17, and the high region holds 9. The value 1 arrives. The queue gives the oldest value, 6, which leaves the middle region, so the sum becomes 11. The value 1 is below 2, so it enters the low region, which now holds two values. The largest low value, 2, crosses into the middle region, and the sum becomes 13. The regions are 1, then 2, 4 and 7, then 9, and the middle average is 13 / 3.
 
 #### Cost
 

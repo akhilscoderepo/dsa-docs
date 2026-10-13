@@ -64,12 +64,12 @@ The inverse fails when the value has no inverse. Division by zero is undefined, 
 
 #### Append-Only Is The Condition
 
-This plan needs the stream to be append-only. A stored total includes every earlier entry, so changing or expiring entry `j` would change every `sums[i]` with `i > j`. The stored numbers would cost O(n) to repair. The invariant of this method is that `sums[i]` always equals the fold of the first `i` entries, and each new entry extends that fold by exactly one step.
+This plan needs the stream to be append-only. A stored total includes every earlier entry, so changing or expiring entry `j` would change every `sums[i]` with `i > j`. The stored numbers would cost O(n) to repair. The invariant of this method is that `sums[i]` always equals the fold of the first `i` entries (a **fold** combines entries one at a time with an operation such as + or *), and each new entry extends that fold by exactly one step.
 
 <!-- stage: variables -->
 ### Fields Behind Both Streams
 
-The lesson uses two small classes. The trace follows the first fields of each.
+The lesson uses two small classes. The trace follows the first fields of each. The second trace below shows the logical list `products` from slot `base` on. The old slots before `base` stay in the array.
 
 - **sums** is the `long` array of stored totals, with `sums[0] = 0`.
 - **n** is the number of entries recorded so far, and `sums[n]` is the total of all of them.
@@ -77,6 +77,7 @@ The lesson uses two small classes. The trace follows the first fields of each.
 - **products** is the `long` array of stored products, where the empty product 1 sits in slot `base`.
 - **base** is the slot that holds the empty product after the latest zero.
 - **last** is the index of the newest entry in the traces, so it equals `n - 1` and is -1 before any entry.
+- **zero** is the position in the stream of the latest zero entry, or -1 before any zero. It appears only in the trace.
 - **top** is the slot of the product of every entry since that zero, so `top - base` counts those entries.
 
 The invariant for sums is `sums[i] = entry 0 + ... + entry i - 1` for every `i` from 0 to `n`. The invariant for products is the same statement with multiplication, restricted to the entries after the last zero.
@@ -243,7 +244,7 @@ If entries change after they arrive, every stored number after the changed posit
 
 **Example 2.** Input calls `["ModProductStream","append","append","append","append","product","product","product"]` with arguments `[[],[7],[1000000000],[1000000000],[5],[2],[3],[4]]`, output `[null,null,null,null,null,999999972,245,1715]`.
 
-**Hint.** Which intermediate value is the largest, the answer or a product of two stored numbers, and what primitive type must hold it? A **modular inverse** of `a` is a number `b` with `a * b` leaving remainder 1 after division by the modulus. For the prime 1000000007, Fermat's little theorem gives `b = a^(1000000005) mod 1000000007`, which fast exponentiation computes in about 30 steps.
+**Hint.** A **modular inverse** of `a` is a number `b` with `a * b` leaving remainder 1 after division by the modulus. Take the prime 7. The inverse of 3 is 5, since 3 * 5 = 15 leaves remainder 1. Fermat's little theorem gives the same number as 3^5 mod 7 = 243 mod 7 = 5. To divide 6 by 3 modulo 7, multiply 6 by 5. The product 30 leaves remainder 2, which equals 6 / 3. For the prime 1000000007, the inverse is `b = a^(1000000005) mod 1000000007`, which fast exponentiation computes in about 30 steps. Which intermediate value is the largest, the answer or a product of two stored numbers, and what primitive type must hold it?
 
 **Changed decision.** Division is no longer exact integer division. The stored list divides by multiplying with a modular inverse, and every product of two residues needs a `long` even though each residue fits in an `int`.
 

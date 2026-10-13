@@ -9,7 +9,7 @@ A support team watches a dashboard that shows the first error code that has appe
 
 A second service has the opposite flaw. It tracks how many users have performed exactly three failed logins, so it can flag them. It keeps a map from each user to a login count and a separate figure for how many users have three. When a user's record is deleted, the map shrinks but the separate figure does not, and the page flags a user who no longer exists. Both services answer questions about multiplicity. How many times has a value appeared? Is any value present exactly `f` times? Which value is still unique? Were the last `k` inputs all the same? This lesson asks how to answer such questions after every update without rereading the stream and without letting two pieces of bookkeeping disagree.
 
-The stream matters before the structure does. A stream is **append-only** when values only arrive, **correctable** when earlier arrivals can be withdrawn, and **expiring** when values leave on their own after a time. The first two problems in this lesson are append-only. The tracker in the third is correctable. No problem here expires, because expiry is the topic of other lessons in this chapter.
+The stream matters before the structure does. A stream is **append-only** when values only arrive, **correctable** when earlier arrivals can be withdrawn, and **expiring** when values leave on their own after a time. The classes `PairSumStore` and `UniqueReader` are append-only, and so is `RunCounter`, the lesson version of the suffix run exercise. The lesson class `FrequencyBook`, which backs the `FrequencyTracker` exercise, is the correctable one. No class here expires, because expiry is the topic of other lessons in this chapter.
 
 <!-- stage: naive -->
 ### Keep Every Value And Recount
@@ -242,7 +242,7 @@ If values expire after a time, a count that only rises or falls by explicit upda
 
 **Hint.** What does the queue hold after a value arrives a second time, and who removes that entry?
 
-**Changed decision.** The queue gains entries on first arrival only and loses them lazily at the front. A new counter, `uniqueCount`, moves when a value goes from 1 to 2.
+**Changed decision.** The queue gains entries on first arrival only and loses them lazily at the front. A new counter, `uniqueCount`, moves when a value goes from 1 to 2. The lesson class `UniqueReader` has no constructor that takes an `int[]`, so the constructor here passes each initial value through the same step as `add`. The lesson names that step `add`, and the exercise names it `append`.
 
 #### [Boundary] Count Of Counts (LeetCode 2671)
 <!-- id: st38-count-of-counts -->

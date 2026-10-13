@@ -255,14 +255,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public final class ByteMeterBoundary {
-    static final class ByteMeter {
+public final class AmendableMeterBoundary {
+    static final class AmendableMeter {
         private final long span;
         private final ArrayDeque<long[]> queue = new ArrayDeque<>(); // entries {time, bytes}, oldest first
         private long sum;                                            // bytes inside the window, as long
         private long seen = Long.MIN_VALUE;                          // latest time given to add or total
 
-        ByteMeter(long span) { this.span = span; }
+        AmendableMeter(long span) { this.span = span; }
 
         /**
          * Moves the clock and evicts entries at or before seen - span.
@@ -335,7 +335,7 @@ public final class ByteMeterBoundary {
 
     public static void main(String[] args) {
         // Example 1: a correction while live, one after the entry expired through total.
-        ByteMeter m = new ByteMeter(5);
+        AmendableMeter m = new AmendableMeter(5);
         boolean first = false;
         try { m.amend(1); } catch (IllegalStateException e) { first = true; }
         m.add(3, 10);
@@ -348,7 +348,7 @@ public final class ByteMeterBoundary {
         m.add(8, 2); m.add(8, 0); m.amend(5);
         if (m.total(8) != 7) throw new AssertionError("equal times, newest only");
         // Example 2: corrections move the total, and the final amend sees an evicted entry.
-        ByteMeter n = new ByteMeter(10);
+        AmendableMeter n = new AmendableMeter(10);
         n.add(2, 50); n.add(6, 30);
         if (n.total(8) != 80) throw new AssertionError("before amend");
         n.amend(45);
@@ -359,14 +359,14 @@ public final class ByteMeterBoundary {
         try { n.amend(1); } catch (IllegalStateException e) { third = true; }
         if (!third) throw new AssertionError("third");
         // Large values stay exact in long.
-        ByteMeter big = new ByteMeter(100);
+        AmendableMeter big = new AmendableMeter(100);
         for (int i = 0; i < 5; i++) big.add(i, 1_000_000_000_000L);
         if (big.total(4) != 5_000_000_000_000L) throw new AssertionError("long total");
         // Random operation mixes against the oracle.
         Random rnd = new Random(362);
         for (int trial = 0; trial < 3000; trial++) {
             long span = 1 + rnd.nextInt(8);
-            ByteMeter a = new ByteMeter(span);
+            AmendableMeter a = new AmendableMeter(span);
             Oracle o = new Oracle(span);
             long time = rnd.nextInt(3);
             for (int step = 0; step < 50; step++) {
