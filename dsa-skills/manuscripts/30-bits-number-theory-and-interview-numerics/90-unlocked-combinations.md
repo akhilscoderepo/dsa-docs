@@ -9,4 +9,4 @@ The lesson Bits With Search State joins the mask from lessons 01 and 05 with enu
 
 ### Pairings Already Covered
 
-Dynamic programming over assignments and profiles is taught in the chapter on advanced dynamic programming states, which includes its own mask primer. This chapter gives the general bit mechanics that primer uses and assigns no assignment or profile problems.
+Dynamic programming over assignments and profiles is taught in Chapter 29, dynamic programming with intervals and advanced states, which includes its own mask primer. This chapter gives the general bit mechanics that primer uses and assigns no assignment or profile problems.

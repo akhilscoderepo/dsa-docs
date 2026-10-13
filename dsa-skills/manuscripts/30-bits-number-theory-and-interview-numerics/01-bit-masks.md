@@ -46,7 +46,7 @@ About 5 * 10^11 comparisons. There are about 500,000 pairs, and each pair needs 
 
 #### Count The Comparisons
 
-Let `n` be the number of words and `L` the length of the longest word. One pair costs O(L * L) comparisons. The program tests O(n * n) pairs, so the total is O(n * n * L * L). For `n = L = 1,000` the product reaches 10^12 in the worst case.
+Let `n` be the number of words and `L` the length of the longest word. One pair costs O(L * L) comparisons. The program tests O(n * n) pairs, so the total is O(n * n * L * L). For `n = L = 1,000` the product is 10^12 when every ordered pair is tested. Testing each unordered pair once halves it to the 5 * 10^11 of the guess above.
 
 #### Spot The Repeated Work
 
@@ -194,7 +194,7 @@ The expression `1 << p` is an `int` even when it is stored into a `long`. A posi
 
 **Prerequisites.** The flag operations exercise above.
 
-**Problem.** Five named permissions have fixed bit positions: `READ` is 0, `WRITE` is 1, `EXECUTE` is 2, `DELETE` is 3 and `ADMIN` is 4. A user receives every permission in a list `grants` and then loses every permission in a list `revokes`. A name can repeat inside a list. Given a list `required`, return `true` exactly when the user ends with every required permission.
+**Problem.** Five named permissions have fixed bit positions: `READ` is 0, `WRITE` is 1, `DELETE` is 2, `EXECUTE` is 3 and `ADMIN` is 4. A user receives every permission in a list `grants` and then loses every permission in a list `revokes`. A name can repeat inside a list. Given a list `required`, return `true` exactly when the user ends with every required permission.
 
 **Constraints.** The limits are:
 - **Names** are always one of the five permission names above.

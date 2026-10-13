@@ -158,84 +158,66 @@ public final class CountPrimesBelow {
 #### Solution: [Boundary] Zero One And p-Squared Overflow (Author exercise)
 <!-- id: bt09-square-overflow -->
 
-**Approach.** The solution marks composites only inside the window, using marker primes up to the square root of `hi`.
+**Approach.** The count comes from one formula, and the square is computed in `long`.
 
-A first sieve finds the primes up to 46,341, which is enough for every `hi` that fits in an `int`. For each marker prime `p` with `p * p <= hi`, the window loop starts at the larger of `p * p` and the first multiple of `p` that is at least `lo`. Starting at `p * p` keeps `p` itself unmarked when `p` lies in the window. All arithmetic on squares and starts uses `long`. With `int`, the product `46341 * 46341` wraps to a negative number, the test `p * p <= hi` succeeds again, and a loop that should stop keeps running. The final scan counts unmarked numbers from `max(lo, 2)`, so 0 and 1 never count. The invariant is that after the loop for `p`, every composite in the window with a prime factor at most `p` is marked.
+The marking loop for `p` writes `p * p`, `p * p + p`, and so on up to `n`. When `p * p > n`, it writes nothing. Otherwise the writes form an arithmetic sequence, and their count is `(n - p * p) / p + 1` with integer division. The square of a prime above 46,340 does not fit in an `int`. For `p = 46,341`, the `int` product wraps to a negative number, so the test `p * p > n` is false and the formula returns a huge wrong count. The `long` product is exact, because `p` is below 2^31 and so `p * p` is below 2^62. The case `n < 4` needs no branch, since `p * p >= 4` is already above `n`. The invariant is that the returned count equals the number of loop writes.
 
 **Complexity.**
 
-- **Time** is O(sqrt(hi) log log hi + w log log w), where `w = hi - lo + 1`, because the marker sieve and the window marking each follow the sieve cost.
-- **Space** is O(sqrt(hi) + w), for the marker flags and the window flags.
+- **Time** is O(q) for `q` queries, because each query is one formula.
+- **Space** is O(q), for the result array.
 
 ```java run
 import java.util.Random;
 
 public final class SquareOverflow {
     /**
-     * Counts primes in the closed window lo..hi, where hi may equal Integer.MAX_VALUE.
-     * Time: O(sqrt(hi) log log hi + w log log w) for window size w.
-     * Space: O(sqrt(hi) + w).
-     * Invariant: after the loop for p, every composite in the window with a prime factor at most p is marked.
+     * Returns the number of writes the marking loop for each prime makes in a sieve of size n.
+     * Time: O(q) for q queries.
+     * Space: O(q) for the result.
+     * Invariant: out[k] equals the number of values p*p, p*p+p, ... that are at most n.
      */
-    static int countWindow(int lo, int hi) {
-        // The window has hi - lo + 1 numbers, computed in long to stay safe.
-        int size = (int) ((long) hi - lo + 1);
-        boolean[] gone = new boolean[size];
-        // Marker primes must reach 46,341 because 46,341 squared exceeds Integer.MAX_VALUE.
-        int limit = 46_341;
-        boolean[] composite = new boolean[limit + 1];
-        // Each marker p is processed in increasing order, with the square held in long.
-        for (int p = 2; p <= limit; p++) {
-            if (composite[p]) continue;
-            // Mark composites among the markers themselves with the usual loop.
-            for (long m = (long) p * p; m <= limit; m += p) composite[(int) m] = true;
-            long square = (long) p * p;
-            // A square above hi ends the work, and the wrapped int value would not.
-            if (square > hi) continue;
-            // First multiple of p that is at least lo, then lifted to the square if smaller.
-            long start = ((lo + (long) p - 1) / p) * p;
-            if (start < square) start = square;
-            // Marking cost is about size / p writes for this marker.
-            for (long m = start; m <= hi; m += p) gone[(int) (m - lo)] = true;
+    static int[] writes(int n, int[] primes) {
+        int[] out = new int[primes.length];
+        for (int k = 0; k < primes.length; k++) {
+            // The square is held in long, so it cannot wrap.
+            long square = (long) primes[k] * primes[k];
+            // A square above n means the loop body never runs.
+            if (square > n) continue;
+            // The writes are square, square + p, ... up to n.
+            out[k] = (int) ((n - square) / primes[k] + 1);
         }
-        int count = 0;
-        // Numbers 0 and 1 are skipped, so a window that begins at 0 stays correct.
-        for (long x = Math.max(lo, 2); x <= hi; x++) if (!gone[(int) (x - lo)]) count++;
-        return count;
+        return out;
     }
 
-    /** Oracle that trial-divides each window number with long arithmetic. */
-    static int oracle(int lo, int hi) {
+    /** Oracle: runs the real marking loop on a small bound, with long arithmetic. */
+    static int loopWrites(int n, int p) {
         int count = 0;
-        for (long x = Math.max(lo, 2); x <= hi; x++) {
-            boolean prime = true;
-            for (long d = 2; d * d <= x; d++) if (x % d == 0) { prime = false; break; }
-            if (prime) count++;
-        }
+        for (long m = (long) p * p; m <= n; m += p) count++;
         return count;
     }
 
     public static void main(String[] args) {
-        // Example 1: zero and one are not prime.
-        if (countWindow(0, 1) != 0) throw new AssertionError("example 1");
-        // Example 2: the window ending at Integer.MAX_VALUE, checked against the oracle and the known count.
-        if (countWindow(2147483600, 2147483647) != 2) throw new AssertionError("example 2");
-        if (countWindow(2147483600, 2147483647) != oracle(2147483600, 2147483647)) throw new AssertionError("example 2 oracle");
-        // A single-number window on the largest int, which is prime.
-        if (countWindow(Integer.MAX_VALUE, Integer.MAX_VALUE) != 1) throw new AssertionError("max value");
-        // Small windows including 0, 1 and 2 as the first values.
-        if (countWindow(2, 2) != 1 || countWindow(1, 1) != 0 || countWindow(0, 2) != 1) throw new AssertionError("small");
-        // Random windows with a fixed seed, near zero and near the top of the range.
+        // Example 1: the square of 46,341 is above the largest int.
+        int[] a = writes(Integer.MAX_VALUE, new int[]{46340, 46341, Integer.MAX_VALUE});
+        if (a[0] != 2 || a[1] != 0 || a[2] != 0) throw new AssertionError("example 1");
+        // Example 2: the small sieve of size 30.
+        int[] b = writes(30, new int[]{2, 3, 5, 7});
+        if (b[0] != 14 || b[1] != 8 || b[2] != 2 || b[3] != 0) throw new AssertionError("example 2");
+        // Checks the Java fact behind the trap: the int square of 46,341 is negative.
+        if (46341 * 46341 >= 0) throw new AssertionError("int square wraps");
+        // Checks tiny bounds, including 0 and 1.
+        if (writes(0, new int[]{2})[0] != 0 || writes(1, new int[]{2})[0] != 0 || writes(4, new int[]{2})[0] != 1) throw new AssertionError("small");
+        // Checks random small bounds against the real marking loop with a fixed seed.
         Random rnd = new Random(3011);
-        for (int round = 0; round < 300; round++) {
-            int lo = rnd.nextInt(400);
-            int hi = lo + rnd.nextInt(400);
-            if (countWindow(lo, hi) != oracle(lo, hi)) throw new AssertionError("low " + lo + " " + hi);
+        for (int round = 0; round < 2000; round++) {
+            int n = rnd.nextInt(5000);
+            int p = 2 + rnd.nextInt(100);
+            if (writes(n, new int[]{p})[0] != loopWrites(n, p)) throw new AssertionError("n " + n + " p " + p);
         }
-        for (int round = 0; round < 12; round++) {
-            int hi = Integer.MAX_VALUE - rnd.nextInt(5000);
-            int lo = hi - rnd.nextInt(3000);
-            if (countWindow(lo, hi) != oracle(lo, hi)) throw new AssertionError("high " + lo + " " + hi);
+        // Checks large bounds with primes near the square root of the largest int.
+        for (int p = 46330; p <= 46350; p++) {
+            if (writes(Integer.MAX_VALUE, new int[]{p})[0] != loopWrites(Integer.MAX_VALUE, p)) throw new AssertionError("big " + p);
         }
     }
 }

@@ -6,7 +6,7 @@
 
 **Approach.** The loop replaces the pair `(a, b)` by `(b, a % b)` until `b` is 0, and then returns `a`.
 
-The replacement keeps the set of common divisors unchanged. A common divisor of `a` and `b` divides `a - q * b`, which is the remainder, and a common divisor of `b` and the remainder divides `q * b + remainder`, which is `a`. The remainder is smaller than `b`, so `b` strictly decreases and the loop must end. When `b` is 0, every integer divides it, so the answer is `a`. The case `gcd(0, 0)` returns 0 through the same loop without a branch. The checks below also confirm the Java facts from the lesson: `Math.abs(Integer.MIN_VALUE)` stays negative, `%` keeps the sign of the left side, and 31-bit inputs need at most 44 replacements in the slowest case, which consecutive Fibonacci numbers produce.
+The replacement keeps the set of common divisors unchanged. A common divisor of `a` and `b` divides `a - q * b`, which is the remainder, and a common divisor of `b` and the remainder divides `q * b + remainder`, which is `a`. The remainder is smaller than `b`, so `b` strictly decreases and the loop must end. When `b` is 0, every integer divides it, so the answer is `a`. The case `gcd(0, 0)` returns 0 through the same loop without a branch. Three Java facts apply here: `Math.abs(Integer.MIN_VALUE)` stays negative, `%` keeps the sign of the left side, and 31-bit inputs need at most 44 replacements in the slowest case, which consecutive Fibonacci numbers produce.
 
 **Complexity.**
 

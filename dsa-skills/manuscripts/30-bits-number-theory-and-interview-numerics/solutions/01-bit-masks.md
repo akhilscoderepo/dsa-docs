@@ -113,8 +113,8 @@ public final class PermissionSet {
         return switch (name) {
             case "READ" -> 0;
             case "WRITE" -> 1;
-            case "EXECUTE" -> 2;
-            case "DELETE" -> 3;
+            case "DELETE" -> 2;
+            case "EXECUTE" -> 3;
             default -> 4;
         };
     }

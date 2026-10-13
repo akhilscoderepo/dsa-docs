@@ -9,18 +9,18 @@ A maintenance robot must inspect up to 12 stations that are joined by corridors.
 
 Each task asks about a small set of items. The set is a group of stations, a group of flags, a group of letters, or a window of ten letters. Collections of objects make the sets heavy to copy, to compare and to use as keys. The question for this lesson is how one integer can carry such a set through enumeration, a sliding window, a pairwise test and a graph search.
 
-Formally, the input is a small list, a short string over a small alphabet, or an undirected graph with at most 12 nodes. The tasks are to list all subsets, to find repeated windows, to maximize a product over disjoint pairs, and to find a shortest walk that visits every node.
+Formally, the input is a small list, a short string over a small alphabet, or an undirected graph with at most 12 nodes. The tasks are to list all subsets, to find repeated windows, to maximize a product over disjoint pairs, and to find a shortest walk that visits every node. The four tasks are independent, so you can read them one at a time.
 
 <!-- stage: contributions -->
 ### What Earlier Lessons Contribute
 
 #### Bit Masks Supply Set Membership
 
-The bit-masks lesson stored a set of up to 31 items in one `int`. Bit `i` is 1 when item `i` belongs to the set. The expression `1 << i` builds a one-item set, `|` joins sets and `&` finds the common items. Two sets share nothing when the `&` of their integers is 0. This lesson relies on that exact encoding, because equal sets always have equal integers.
+The bit-masks lesson stored a set of up to 31 items in one `int` for membership tests, and up to 63 items in one `long`. Bit `i` is 1 when item `i` belongs to the set. The expression `1 << i` builds a one-item set, `|` joins sets and `&` finds the common items. Two sets share nothing when the `&` of their integers is 0. This lesson relies on that exact encoding, because equal sets always have equal integers.
 
 #### Shifts Supply Fixed Windows
 
-The shifts lesson showed that `x << b` moves every bit left by `b` places and that an `&` with a mask of ones cuts the result to a fixed width. A window of `k` letters, with two bits per letter, fits in `2k` bits. Moving to the next window shifts the old window left by two bits, adds the new letter and cuts the extra bits. This turns each window into one number without building a string.
+The shifts lesson showed that `x << b` moves every bit left by `b` positions and that an `&` with a mask of ones cuts the result to a fixed width. A window of `k` letters, with two bits per letter, fits in `2k` bits. Moving to the next window shifts the old window left by two bits, adds the new letter and cuts the extra bits. This turns each window into one number without building a string.
 
 #### Subset Masks Supply Enumeration
 
@@ -86,7 +86,7 @@ The information in each set is small. A set of 12 nodes needs 12 bits, a window 
 
 #### Encode Items In A Membership Mask
 
-A **membership mask** is an integer whose bit `i` is 1 exactly when item `i` is in the set. The empty set is 0, adding item `i` is `mask | (1 << i)`, and testing item `i` is `(mask & (1 << i)) != 0`. Two sets are disjoint when `(a & b) == 0`. Counting from 0 to `(1 << n) - 1` visits every subset once, and `Integer.bitCount(mask)` gives its size. Because the encoding is exact, two masks are equal exactly when their sets are equal, so a mask is also a safe map key.
+A **membership mask** is an integer whose bit `i` is 1 exactly when item `i` is in the set. The empty set is 0, adding item `i` is `mask | (1 << i)`, and testing item `i` is `(mask & (1 << i)) != 0`. Two sets are disjoint when `(a & b) == 0`. Counting from 0 to `(1 << n) - 1` visits every subset once, for `n` up to 30 with an `int` and up to 62 with a `long`, and `Integer.bitCount(mask)` gives its size. Because the encoding is exact, two masks are equal exactly when their sets are equal, so a mask is also a safe map key.
 
 <!-- names: membership mask, window mask, state key -->
 
@@ -107,13 +107,13 @@ Subset listing costs O(n * 2^n) with the size filter. The window scan costs O(N)
 
 Lesson 91 uses these five quantities in all four methods.
 
-- **mask** is the membership mask, an `int` for up to 31 items and a `long` beyond that.
+- **mask** is the membership mask, an `int` for up to 30 items and a `long` for up to 62 items when a loop counts through every mask.
 - **full** is the mask with every low bit set, which is `(1 << n) - 1` for `n` items.
 - **window** is the window mask of the last `k` letters, kept as a `long`.
 - **node** is the current graph node in a search state.
 - **state** is the state key `(node << n) | mask`, and `dist[state]` is its distance, or -1 when unvisited.
 
-In the first trace, a **level** is the set of states at one distance from the start. The code uses the names `mask` and `full`, and the prose uses membership mask and full mask for the same values. In the second trace, `window` is the value of the window mask after each letter, shown as a decimal number.
+In the first trace, a **level** is the set of states at one distance from the start. In the code, the variable `mask` holds a membership mask, and `full` holds the full mask with every item present. In the second trace, `window` is the value of the window mask after each letter, shown as a decimal number.
 
 <!-- stage: trace -->
 ### Follow One Search And One Scan
@@ -130,13 +130,15 @@ Level 0 holds the four start states, one per node, each with only its own bit se
 
 #### Scan Windows Of Three Letters
 
+The window scan handles the genome task, and it does not use the graph above. It starts from a new string.
+
 Take the string `ACGACGTACGT` and windows of 3 letters, with A, C, G and T coded as 0, 1, 2 and 3. The first window `ACG` has codes 0, 1 and 2, so its mask is `0*16 + 1*4 + 2 = 6`. Each later step multiplies the mask by 4, adds the new code and keeps only 6 bits. The window `CGA` has mask 24, and the trace shows each later value in the same way. A mask seen before marks a repeated window. The mask 6 appears three times and the mask for `CGT` twice.
 
 ```trace
 {"cells":[0,1,2,0,1,2,3,0,1,2,3],"pointers":["i"],"steps":[{"at":{"i":-1},"vars":{"window":0},"note":"No letter is read yet. The window mask is 0."},{"at":{"i":0},"vars":{"window":0},"note":"The letter A fills the window. Fewer than 3 letters are present, so no window is complete."},{"at":{"i":1},"vars":{"window":1},"note":"The letter C fills the window. Fewer than 3 letters are present, so no window is complete."},{"at":{"i":2},"vars":{"window":6},"note":"The window is ACG with mask 6. The mask is new."},{"at":{"i":3},"vars":{"window":24},"note":"The window is CGA with mask 24. The mask is new."},{"at":{"i":4},"vars":{"window":33},"note":"The window is GAC with mask 33. The mask is new."},{"at":{"i":5},"vars":{"window":6},"note":"The window is ACG with mask 6. The mask has now occurred 2 times, so ACG is a repeat."},{"at":{"i":6},"vars":{"window":27},"note":"The window is CGT with mask 27. The mask is new."},{"at":{"i":7},"vars":{"window":44},"note":"The window is GTA with mask 44. The mask is new."},{"at":{"i":8},"vars":{"window":49},"note":"The window is TAC with mask 49. The mask is new."},{"at":{"i":9},"vars":{"window":6},"note":"The window is ACG with mask 6. The mask has now occurred 3 times, so ACG is a repeat."},{"at":{"i":10},"vars":{"window":27},"note":"The window is CGT with mask 27. The mask has now occurred 2 times, so CGT is a repeat."}]}
 ```
 
-The hardest step is the cut `& 63`. After `ACGA` the raw value would have 8 bits, and the extra top bits belong to the first letter that has left the window. The cut removes them, so the mask for `CGA` has only the letters C, G and A.
+The hardest step is the cut `& 63`. It first matters at `GAC`. The raw value is `24 * 4 + 1 = 97`, which is `1100001` in binary and has 7 bits. The top bit belongs to the letter C that has left the window. The cut removes it, so the mask for `GAC` is 33 and holds only the letters G, A and C.
 
 <!-- stage: code -->
 ### Implement Four Mask Methods
@@ -182,6 +184,8 @@ static long[] bestWordPair(String[] words) {
 The subset method visits `2^n` masks once for each size. The word method keeps the first pair that reaches the best product, because only a strictly larger product replaces it.
 
 #### Scan Windows And Search States
+
+The next two methods handle the genome windows and the robot search. They do not call the two methods above.
 
 ```java
 static java.util.List<String> repeatedWindows(String s, int k) {

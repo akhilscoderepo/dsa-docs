@@ -58,7 +58,7 @@ The method `fitsInside` calls `containsAll`, which scans both lists. For lists o
 
 #### Give Every Item One Bit
 
-A **subset mask** is an integer whose bit `i` is 1 exactly when item `i` belongs to the subset. With four items numbered 0 to 3, the mask `1011` in binary, which is 11 in decimal, holds items 0, 1 and 3. The empty subset is the mask 0. The mask with every bit set for `n` items is the **full mask**, and its value is `(1 << n) - 1`. A single `int` holds up to 31 items safely, and a `long` holds up to 63 items. The invariant of this lesson is that bit `i` of the mask states whether item `i` is in the subset.
+A **subset mask** is an integer whose bit `i` is 1 exactly when item `i` belongs to the subset. With four items numbered 0 to 3, the mask `1011` in binary, which is 11 in decimal, holds items 0, 1 and 3. The empty subset is the mask 0. The mask with every bit set for `n` items is the **full mask**, and its value is `(1 << n) - 1`. As a plain membership value, an `int` holds up to 31 items and a `long` holds up to 63. A loop that counts from 0 to `(1 << n) - 1` needs `n` of at most 30 for an `int` and at most 62 for a `long`, because `1 << 31` is already negative. The invariant of this lesson is that bit `i` of the mask states whether item `i` is in the subset.
 
 <!-- names: subset mask, full mask, submask -->
 
@@ -81,7 +81,7 @@ Track these items while the loops run.
 - **sub** is the current submask when the loop walks the subsets of one mask `m`.
 - **bit** is the value `1 << i` that selects item `i`.
 
-The loops use `int` when `n` is at most 30 and `long` when `n` can reach 62. The shift `1 << n` on an `int` uses only the low five bits of `n`, so `1 << 32` equals 1 and not 4,294,967,296. A `long` version must write `1L << n`. The lesson keeps `n` small enough that the full mask fits in an `int`.
+The loops use `int` when `n` is at most 30 and `long` when `n` can reach 62. The shift `1 << n` on an `int` uses only the low five bits of `n`, so `1 << 32` equals 1 and not 4,294,967,296. A `long` version must write `1L << n`. This lesson keeps `n` at 30 or below, so every enumeration loop works with an `int`.
 
 <!-- stage: trace -->
 ### Follow Both Loops On Small Inputs
@@ -208,35 +208,36 @@ The expression `1 << n` is an `int` shift, and for `n = 31` it produces the nega
 **Problem.** A program enumerates every subset of `n` items and spends `n` basic steps on each subset, so the total is `n * 2^n` steps. Given a step budget `budget`, return the largest integer `n >= 0` such that `n * 2^n <= budget`. The product for `n = 0` is 0.
 
 **Constraints.** The limits are:
-- **`budget`** is a `long` with `1 <= budget <= 10^18`.
-- **Return** is an `int` with `0 <= n <= 62`.
-- **Overflow** of `n * 2^n` in a `long` must not change the answer.
+- **`budget`** is a `long` with `1 <= budget <= 10^12`.
+- **Return** is an `int` with `0 <= n <= 40`.
+- **Arithmetic** uses `long` values, and `1L << n` gives `2^n`.
 
 **Example 1.** Input `budget = 1000`, output 7, since 7 * 128 = 896 fits and 8 * 256 = 2,048 does not.
 
-**Example 2.** Input `budget = 1000000000000000000`, output 54. Here 55 * 2^55 is about 1.98 * 10^18, so the answer stops at 54, and a naive long product for larger `n` would overflow.
+**Example 2.** Input `budget = 1000000000000`, output 34, since 34 * 2^34 = 584,115,552,256 fits and 35 * 2^35 = 1,202,590,842,880 does not.
 
-**Hint.** Which comparison tests `n * 2^n <= budget` without computing the product?
+**Hint.** The product grows with every step of `n`. Start at `n = 0`, compute the next product `(n + 1) * (1L << (n + 1))`, and stop before the first product that exceeds `budget`. For a budget up to 10^12 the largest product the loop forms is near 10^13, so a `long` holds it.
 
-**Changed decision.** The question moves from enumerating subsets to deciding whether enumeration is affordable, so the arithmetic itself must not overflow.
+**Changed decision.** The question moves from enumerating subsets to deciding whether enumeration is affordable, so the program compares a step count with a budget.
 
 #### [Recognize] Shortest Path Visiting All Nodes (LeetCode 847)
 <!-- id: bt05-walk-all-nodes -->
 
-**Prerequisites.** All three exercises above and breadth-first search on a graph.
+**Prerequisites.** The first three exercises above.
 
-**Problem.** LeetCode 847 lets the walk start at any node. This version fixes the start. An undirected connected graph has nodes `0` to `n - 1`, given as adjacency lists. Given a start node `s`, return the smallest number of edges in a walk that begins at `s` and visits every node at least once. A walk may reuse nodes and edges.
+**Problem.** LeetCode 847 asks for the shortest walk that visits every node of a graph. That task needs a search over visited sets, which a later lesson teaches. This version changes the contract to a mask-only check. An undirected graph has nodes `0` to `n - 1`. The array `adj` holds one mask per node, and bit `j` of `adj[i]` is 1 exactly when nodes `i` and `j` share an edge. Given a candidate route, a list of nodes, return `true` exactly when every two consecutive nodes of the route share an edge and the route visits every node at least once.
 
 **Constraints.** The limits are:
-- **`n`** is an `int` with `1 <= n <= 12`.
-- **Graph** is connected, has no self-loop and has no repeated edge.
-- **`s`** is an `int` with `0 <= s < n`.
-- **Return** is an `int`, and a single node returns 0.
+- **`n`** is an `int` with `1 <= n <= 30`.
+- **`adj`** is symmetric, and bit `i` of `adj[i]` is 0.
+- **Route** holds between 1 and 1,000 nodes, each in `0` to `n - 1`.
+- **Repeats** of nodes and edges inside the route are allowed.
+- **Return** is a `boolean`.
 
-**Example 1.** Input `graph = [[1,2,3],[0],[0],[0]]` and `s = 1`, output 4, from the walk 1, 0, 2, 0, 3.
+**Example 1.** Input `adj = [14,1,1,1]`, a star whose center is node 0, and `route = [1,0,2,0,3]`, output `true`. The route `[1,0,2]` gives `false`, because node 3 is never visited.
 
-**Example 2.** Input `graph = [[]]` and `s = 0`, output 0, because the start node is the only node and counts as visited.
+**Example 2.** Input `adj = [2,1,0]`, where nodes 0 and 1 share an edge and node 2 is alone, and `route = [0,1,0]`, output `false`. The steps are valid, but node 2 is missing from the visited set.
 
-**Hint.** Which two facts must one search state record, and which state ends the search?
+**Hint.** Keep one visited mask and one test per step. Which AND tells whether the next node is a neighbor of the current node, and which comparison tells that the visited mask is full?
 
-**Changed decision.** The state is a node plus the set of visited nodes, stored as a mask, and the search starts from one fixed state.
+**Changed decision.** The task checks one given route and does not search for the best one, so the state is a single visited mask and no queue is needed.

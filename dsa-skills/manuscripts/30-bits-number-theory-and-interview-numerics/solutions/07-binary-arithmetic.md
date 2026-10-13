@@ -115,7 +115,7 @@ public final class SumWithRounds {
 
 **Approach.** The same loop works on negative inputs, because two's complement addition is addition modulo 2^32.
 
-The shift `<< 1` discards a bit that leaves column 31, and the plus operator discards the same bit when the sum overflows. So the loop computes the plus result for every pair of `int` values, wraparound included. Termination follows from the lowest set bit of the carry word. It moves up at least one column per round, and after 32 rounds no column is left, so the loop ends in at most 32 rounds. The pair `-1` and `1` needs all 32 rounds, because the carry travels through every column. The program also checks three Java facts that the lesson states: the shift discards the top bit, `a & b << 1` parses with the shift first, and a `long` loop does not wrap at 32 bits.
+The shift `<< 1` discards a bit that leaves column 31, and the plus operator discards the same bit when the sum overflows. So the loop computes the plus result for every pair of `int` values, wraparound included. Termination follows from the lowest set bit of the carry word. It moves up at least one column per round, and after 32 rounds no column is left, so the loop ends in at most 32 rounds. The pair `-1` and `1` needs all 32 rounds, because the carry travels through every column. Three Java facts apply: the shift discards the top bit, `a & b << 1` parses with the shift first, and a `long` loop does not wrap at 32 bits.
 
 **Complexity.**
 

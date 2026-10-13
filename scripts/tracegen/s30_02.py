@@ -55,12 +55,12 @@ for _ in range(600):
 def trace_digits():
     x = 180
     cells = [(x >> i) & 1 for i in range(8)]
-    steps = [{"at": {"i": -1}, "vars": {"x": x}, "note": "The cells show places 0 to 7 of 180, and no read has run."}]
+    steps = [{"at": {"i": -1}, "vars": {"x": x}, "note": "The cells show positions 0 to 7 of 180, and no read has run."}]
     for i in (2, 3, 7):
         sh = x >> i
         assert sh & 1 == cells[i] == bit_brute(x, i)
-        steps.append({"at": {"i": i}, "vars": {"shifted": sh, "digit": sh & 1},
-                      "note": f"The shift 180 >> {i} gives {sh}. The AND with 1 keeps only the lowest digit, which is {sh & 1}."})
+        steps.append({"at": {"i": i}, "vars": {"shifted": sh, "bit": sh & 1},
+                      "note": f"The shift 180 >> {i} gives {sh}. The AND with 1 keeps only the lowest bit, which is {sh & 1}."})
     return block(cells, ["i"], steps)
 
 def trace_shifts():
@@ -68,32 +68,32 @@ def trace_shifts():
     dist = [0, 4, 8, 12, 16, 20, 24, 28, 31]
     steps = []
     for k, s in enumerate(dist):
-        a, z = sar(x, s), shr(x, s)
-        assert a == x >> s and z == (x & M) >> s
+        a, z = sar(x, s), s32(shr(x, s))   # zero fill on the pattern, shown as a Java int
+        assert a == x >> s and z == s32((x & M) >> s)
         if s == 0: note = "With distance 0 both shifts return -16."
-        elif s == 4: note = f"The signed shift copies the sign into the top places and gives {a}. The zero-fill shift puts zeros there and gives {z}."
-        elif s == 31: note = f"The signed shift stays at {a}. The zero-fill shift reaches {z}, the sign digit alone."
+        elif s == 4: note = f"The signed shift copies the sign into the top positions and gives {a}. The zero-fill shift puts zeros there and gives {z}."
+        elif s == 31: note = f"The signed shift stays at {a}. The zero-fill shift reaches {z}, the sign bit alone."
         else: note = f"The signed shift stays at {a}. The zero-fill shift gives {z}."
         steps.append({"at": {"s": k}, "vars": {"signed": a, "zeroFill": z}, "note": note})
-    assert sar(x, 4) == -1 and shr(x, 4) == 268435455 and shr(x, 31) == 1
+    assert sar(x, 4) == -1 and shr(x, 4) == 268435455 and shr(x, 31) == 1 and s32(shr(x, 0)) == -16
     return block(dist, ["s"], steps)
 
 def fmt(v): return json.dumps(v, separators=(",", ":"))
 ex = {}
 x1, i1 = 180, 2; x2, i2 = -2 ** 31 + 5, 31
 assert bit_at(x1, i1) == 1; assert bit_at(x2, i2) == 1 == bit_brute(x2, i2)
-ex["@@EX_E1@@"] = f"Input `x = {x1}` and `i = {i1}`, output {bit_at(x1, i1)}, because `180 >> 2` is 45 and the lowest digit of 45 is 1."
-ex["@@EX_E2@@"] = f"Input `x = {x2}` and `i = {i2}`, output {bit_at(x2, i2)}, because place 31 is the sign digit of a negative `int`."
+ex["@@EX_E1@@"] = f"Input `x = {x1}` and `i = {i1}`, output {bit_at(x1, i1)}, because `180 >> 2` is 45 and the lowest bit of 45 is 1."
+ex["@@EX_E2@@"] = f"Input `x = {x2}` and `i = {i2}`, output {bit_at(x2, i2)}, because position 31 is the sign bit of a negative `int`."
 
 r1 = 43261596; r2 = -3; e1 = reverse_loop(r1); e2 = reverse_loop(r2)
 assert e1 == reverse_brute(r1) == 964176192 and e2 == reverse_brute(r2) == -1073741825
-ex["@@EX_R1@@"] = f"Input `n = {r1}`, output {e1}, because the 32-digit pattern `{format(r1 & M, '032b')}` reverses to `{format(e1 & M, '032b')}`."
-ex["@@EX_R2@@"] = f"Input `n = {r2}`, output {e2}, because the pattern `{format(r2 & M, '032b')}` reverses to `{format(e2 & M, '032b')}` and has a 0 only at place 30."
+ex["@@EX_R1@@"] = f"Input `n = {r1}`, output {e1}, because the 32-bit pattern `{format(r1 & M, '032b')}` reverses to `{format(e1 & M, '032b')}`."
+ex["@@EX_R2@@"] = f"Input `n = {r2}`, output {e2}, because the pattern `{format(r2 & M, '032b')}` reverses to `{format(e2 & M, '032b')}` and has a 0 only at position 30."
 
 n1, n2 = -8, -2 ** 31
 assert count_loop(n1) == count_brute(n1) == 29 and count_loop(n2) == 1
 ex["@@EX_N1@@"] = f"Input `x = {n1}`, output {count_loop(n1)}, because the pattern `{format(n1 & M, '032b')}` has 29 ones."
-ex["@@EX_N2@@"] = f"Input `x = Integer.MIN_VALUE`, output {count_loop(n2)}, because only the sign digit is 1, and a loop with `>>` would stay at -1 forever."
+ex["@@EX_N2@@"] = f"Input `x = Integer.MIN_VALUE`, output {count_loop(n2)}, because only the sign bit is 1, and a loop with `>>` would stay at -1 forever."
 
 recs1 = [(4095, 7), (1, 1048575), (0, 0)]; q1 = [(0, 0), (0, 1), (1, 1)]
 recs2 = [(2, 5)]; q2 = [(0, 0), (0, 1)]

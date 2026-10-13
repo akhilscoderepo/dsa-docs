@@ -33,6 +33,26 @@ A service stores flags in twelve booleans, a checksum wraps to a negative total 
 {"id": "rq30-rev-mod-negative", "q": "Java evaluates `-7 % 3`. What is the result, and how do you get a non-negative remainder?", "options": ["2, with no fix needed", "-1, and ((a % m) + m) % m gives 2", "1, and a % m is already fine", "-2, and Math.abs gives 2"], "answer": 1, "explain": "Java keeps the sign of the dividend, so -7 % 3 is -1. Adding m before a second remainder gives 2."}
 ```
 
+```quiz
+{"id": "rq30-rev-add-words", "q": "A program adds a = 6 and b = 3 with the sum word and carry word method. What are `a ^ b` and `(a & b) << 1` after the first round?", "options": ["5 and 4", "9 and 0", "7 and 4", "5 and 2"], "answer": 0, "explain": "In binary, 6 is 110 and 3 is 011. The XOR is 101, which is 5. The AND is 010, and the shift moves it to 100, which is 4. The next round adds 5 and 4 and reaches 9."}
+```
+
+```quiz
+{"id": "rq30-rev-gcd-lcm", "q": "Euclid's loop finds gcd(84, 36). What does the program then compute for the least common multiple of 84 and 36 as `a / gcd * b`?", "options": ["252", "3024", "12", "126"], "answer": 0, "explain": "The loop gives 84 % 36 = 12 and 36 % 12 = 0, so the gcd is 12. The least common multiple is 84 / 12 * 36 = 252. Dividing first also keeps the product small."}
+```
+
+```quiz
+{"id": "rq30-rev-sieve-start", "q": "A sieve runs with n = 100. At which number does the marking loop for the prime 7 start writing flags?", "options": ["14", "49", "7", "56"], "answer": 1, "explain": "The multiples 14, 21, 28, 35 and 42 each have a prime factor below 7, so earlier primes already marked them. The first new multiple is 7 * 7 = 49."}
+```
+
+```quiz
+{"id": "rq30-rev-submask-walk", "q": "A program walks the submasks of m = 10 (binary 1010) with `sub = (sub - 1) & m`, starting at `sub = m`. Which values does it visit?", "options": ["10, 8, 2, 0", "10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0", "10, 8, 2", "10, 2, 8, 0"], "answer": 0, "explain": "The updates give (10 - 1) & 10 = 8, (8 - 1) & 10 = 2 and (2 - 1) & 10 = 0. The loop must process 0 before it stops, and the walk is in descending order."}
+```
+
+```quiz
+{"id": "rq30-rev-wrong-trace", "q": "A student traces the clear step `x & (x - 1)` on x = 52, which is 110100. The student writes: Round 1: 52 becomes 48. Round 2: 48 becomes 32. Round 3: 32 becomes 16. Round 4: 16 becomes 0. Which line is wrong?", "options": ["Round 1", "Round 2", "Round 3", "Round 4"], "answer": 2, "explain": "The value 52 has three set bits, so the loop ends after three rounds. In round 3, 32 & 31 is 0, not 16. Rounds 1 and 2 are correct, and there is no round 4."}
+```
+
 ### Fixing A Wrong Answer
 
 Open the lesson whose topic the question covers, such as Low Bit, Overflow or Modular Arithmetic, and reread its variables list and its applicability part. Then rerun its first trace by hand on a smaller input.

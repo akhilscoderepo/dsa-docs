@@ -52,7 +52,7 @@ A prime `x` needs about the square root of `x` divisions, so the whole range cos
 
 #### Find The Repeated Work
 
-The routine also repeats itself. The number 91 is tested by dividing it by 2, 3, 4, 5, 6 and 7. The test at 7 finds the answer, but the divisions by 4 and 6 add nothing, because 2 had already shown that every multiple of 4 or 6 is even. The tests for 14, 21 and 28 rediscover that 7 divides them. One divisor found once could settle all of its multiples at the same time. The target is a method whose total cost is close to O(n), and not O(n * sqrt(n)).
+The routine also repeats itself. The numbers 49, 77 and 91 are all multiples of 7 with no smaller prime divisor. Each test divides by 2, 3, 4, 5 and 6 without success and then finds 7. The divisions by 4 and 6 add nothing, because 2 had already shown that every multiple of 4 or 6 is even. The tests rediscover that 7 divides each of the three numbers. One divisor found once could settle all of its multiples at the same time. The target is a method whose total cost is close to O(n), and not O(n * sqrt(n)).
 
 <!-- stage: insight -->
 ### Cross Out Multiples Once
@@ -65,7 +65,7 @@ The **sieve of Eratosthenes** turns the question around. It keeps a boolean arra
 
 #### Start At The Square
 
-Take a prime `p`. The multiple `p * k` with `k < p` has the factor `k`, and `k` has a prime factor smaller than `p`. An earlier prime already set the flag of `p * k`. The first multiple that no earlier prime reached is `p * p`. The marking loop therefore uses a **square start**, which means `m` begins at `p * p` and grows by `p`. This skips about half of the writes for small primes and removes all writes for large ones.
+Take a prime `p`. The multiple `p * k` with `k < p` has the factor `k`, and `k` has a prime factor smaller than `p`. An earlier prime already set the flag of `p * k`. The first multiple that no earlier prime reached is `p * p`. The marking loop therefore uses a **square start**, which means `m` begins at `p * p` and grows by `p`. This skips the `p - 1` smaller multiples of each prime, and it removes all writes once `p * p` is above `n`.
 
 #### Stop At The Square Root
 
@@ -77,7 +77,7 @@ Prime `p` writes about `n / p` flags. The sum of `n / p` over the primes up to `
 
 #### Store A Factor Instead Of A Flag
 
-Some questions need the factors and not only the primality. Replace the boolean array by an `int[]` named `spf`, where `spf[x]` is the **smallest prime factor** of `x`. A marking loop writes `p` into `spf[m]` only if `spf[m]` is still 0. A prime `x` keeps `spf[x] = x` after a final pass. A number then splits into primes by repeating `x = x / spf[x]`, one step per prime factor, so a factorization costs O(log x).
+Some questions need the factors and not only the primality. Replace the boolean array by an `int[]` named `spf`, where `spf[x]` is the **smallest prime factor** of `x`. A marking loop writes `p` into `spf[m]` only if `spf[m]` is still 0. The outer loop assigns `spf[x] = x` when it reaches a prime `x`, because that entry is still 0. A number then splits into primes by repeating `x = x / spf[x]`, one step per prime factor, so a factorization costs O(log x).
 
 <!-- stage: variables -->
 ### Quantities The Sieve Tracks
@@ -205,23 +205,23 @@ Computing `p * p` in `int` wraps for `p` above 46,340 and makes the loop conditi
 #### [Boundary] Zero One And p-Squared Overflow (Author exercise)
 <!-- id: bt09-square-overflow -->
 
-**Prerequisites.** The two exercises above.
+**Prerequisites.** The two exercises above and the Java hazards from this lesson.
 
-**Problem.** Given integers `lo` and `hi`, count the primes `p` with `lo <= p <= hi`. The bound `hi` may be as large as `Integer.MAX_VALUE`, which is too large for one array of flags. Mark composites only inside the window from `lo` to `hi`, using the primes up to the square root of `hi` as markers.
+**Problem.** A sieve of size `n` has flags for the numbers 0 to `n`. For a prime `p`, its marking loop writes the flags at `p * p`, `p * p + p`, and so on, up to `n`. Given `n` and a list of primes, return for each prime the number of writes its marking loop makes. A write counts even when the flag is already true. The loop makes no write when `p * p` is above `n`. The array of flags is not built.
 
 **Constraints.** The limits are:
-- **`lo`** and **`hi`** are `int` values with `0 <= lo <= hi <= 2,147,483,647`.
-- **Window** size satisfies `hi - lo <= 1,000,000`.
-- **Zero and one** are not prime and must never be counted.
-- **Return** is an `int`.
+- **`n`** is an `int` with `0 <= n <= 2,147,483,647`.
+- **Primes** are `int` values with `2 <= p <= 2,147,483,647`, and at most 100,000 queries.
+- **Small `n`** with `n < 4` gives 0 for every prime.
+- **Return** is an `int[]` with one count per query.
 
-**Example 1.** Input `lo = 0` and `hi = 1`, output 0, because neither 0 nor 1 is prime.
+**Example 1.** Input `n = 2147483647` and primes `[46340, 46341, 2147483647]`, output `[2, 0, 0]`. The square of 46,341 is above `n`, but in `int` arithmetic it wraps to a negative number.
 
-**Example 2.** Input `lo = 2147483600` and `hi = 2147483647`, output 2, and the largest value `2147483647` is among the primes.
+**Example 2.** Input `n = 30` and primes `[2, 3, 5, 7]`, output `[14, 8, 2, 0]`, because the loop for 3 writes 9, 12, 15, 18, 21, 24, 27 and 30.
 
-**Hint.** What does `p * p` become in `int` when `p` is 46,341, and which first multiple inside the window does a prime `p` mark?
+**Hint.** What does `p * p` become in `int` when `p` is 46,341, and which type keeps the square exact? The loop writes `p * p` first, so the count is `(n - p * p) / p + 1` when `p * p <= n`.
 
-**Changed decision.** The largest legal bound makes the square overflow, so the loop condition needs wider arithmetic.
+**Changed decision.** The largest legal bound makes the square overflow, so the start index needs wider arithmetic.
 
 #### [Recognize] Smallest Prime Factor Sieve (Author exercise)
 <!-- id: bt09-prime-factor-queries -->

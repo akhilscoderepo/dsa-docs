@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why A Correct Total Turns Negative
 
-A billing job adds 100,000 order amounts, each stored as an `int` number of cents. Every single amount is below 2.2 million. The job stores the total in a `long` variable, so the programmer expects room for any realistic sum. In production the report shows a negative revenue figure for one busy day, and no exception appears in the logs.
+A billing job adds 100,000 order amounts, each stored as an `int` number of cents. Every single amount is below 2.2 million. The job keeps the running total in an `int` and returns it as a `long`, so the programmer expects the wide return type to leave room for any realistic sum. In production the report shows a negative revenue figure for one busy day, and no exception appears in the logs.
 
 The program ran without error and still produced a wrong number. Java does not report an arithmetic result that is too large for its type. It silently keeps only the bits that fit. The question for this lesson is where in an expression the type of the result is decided, and how a program protects every step that can exceed it.
 

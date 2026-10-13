@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Why Big Divisors And Big Exponents Stall
 
-A job scheduler runs one task every 1,071 seconds and another every 462 seconds. Both start together, and the operator asks when they next start together again. The answer needs the greatest common divisor of the two periods, which is the largest integer that divides both. A fraction library has the same need, because it reduces 1,071 over 462 by dividing both numbers by that divisor.
+A job scheduler runs one task every 1,071 seconds and another every 462 seconds. Both start together, and the operator asks when they next start together again. The answer is the least common multiple (LCM) of the two periods, which is the smallest positive time that both periods divide. The greatest common divisor yields the LCM. That divisor is the largest integer that divides both periods, and the LCM equals one period divided by the divisor and multiplied by the other period. A fraction library has the same need, because it reduces 1,071 over 462 by dividing both numbers by that divisor.
 
 A growth model has a different need. It multiplies a value by a constant factor once per step, and the step count can reach two billion. The program must produce a power of the factor, and it must finish in a fraction of a second. This lesson asks how a program finds a common divisor and a large power in steps that follow the number of digits and not the size of the values.
 

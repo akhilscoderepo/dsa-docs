@@ -68,10 +68,10 @@ def trace1():
 def trace2():
     n = 8
     ans = table(n)
-    steps = [{"at": {"i": 0}, "vars": {"prev": 0, "ans": 0}, "note": "The entry for 0 is 0 and serves as the base case."}]
+    steps = [{"at": {"i": 0}, "vars": {"cleared": 0, "before": 0, "ans": 0}, "note": "The entry for 0 is 0 and serves as the base case."}]
     for i in range(1, n + 1):
         p = i & (i - 1)
-        steps.append({"at": {"i": i}, "vars": {"prev": p, "ans": ans[i]},
+        steps.append({"at": {"i": i}, "vars": {"cleared": p, "before": ans[p], "ans": ans[i]},
                       "note": f"The number {i} is {i:b} in binary. Clearing its lowest set bit gives {p}, whose entry is {ans[p]}, so the entry for {i} is {ans[i]}."})
     assert ans == [0, 1, 1, 2, 1, 2, 2, 3, 1]
     return block(ans, ["i"], steps)

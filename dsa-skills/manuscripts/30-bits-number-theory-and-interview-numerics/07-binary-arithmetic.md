@@ -53,11 +53,11 @@ A **half adder** is the circuit that adds two single bits. It produces a sum bit
 
 #### Add Every Column At Once
 
-An `int` holds 32 columns, and the half adder rule applies to all of them in parallel. The expression `a ^ b` holds the sum bit of every column, and it ignores incoming carries. The expression `(a & b) << 1` is the **carry word**. It holds the carry bit of every column, moved one column to the left, because a carry belongs to the next column. The true total equals `(a ^ b)` plus the carry word. That statement is the same addition problem with different operands.
+An `int` holds 32 columns, and the half adder rule applies to all of them in parallel. The expression `a ^ b` holds the sum bit of every column, and it ignores incoming carries. The expression `(a & b) << 1` is the **carry word**. It holds the carry bit of every column, moved one column to the left, because a carry belongs to the next column. The true total equals `(a ^ b)` plus the carry word. That statement is the same addition problem with different operands. For 3 + 1, the sum word `a ^ b` is `10`, which is 2, and the carry word is also `10`. The two words add up to 4, which is the true total.
 
 #### Repeat Until The Carry Word Is Zero
 
-Assign `a = a ^ b` and `b = (a & b) << 1`, with the old `a` used on the right side of both. Repeat. The invariant is that `a + b` keeps the same value after each round. When `b` becomes 0, nothing is left to add, and `a` holds the answer.
+Compute the new sum word `a ^ b` and the new carry word `(a & b) << 1` from the current `a` and `b`. Then store the sum word in `a` and the carry word in `b`, so the carry word still uses the old `a`. Repeat. The invariant is that `a + b` keeps the same value after each round. When `b` becomes 0, nothing is left to add, and `a` holds the answer.
 
 The loop terminates because every round pushes the carry word upward. Let `p` be the position of the lowest set bit of `b`. The new carry word comes from `a & b`, which has set bits only where `b` has set bits, and the shift moves each one more column left. So the lowest set bit of the new `b` sits at position `p + 1` or higher. After at most 32 rounds the carry word has no bits left.
 
@@ -96,7 +96,7 @@ The same carry idea works on text digits. Align the strings on the right and vis
 {"cells":[1,0,1,1],"pointers":["i"],"steps":[{"at":{"i":4},"vars":{"carry":0},"note":"No column is read yet, so the carry is 0 and the pointer sits past the last digit."},{"at":{"i":3},"vars":{"xDigit":1,"yDigit":0,"total":1,"carry":0},"note":"Column 1 adds the digits 1 and 0 to the incoming carry 0, which gives 1. The output digit is 1 and the new carry is 0."},{"at":{"i":2},"vars":{"xDigit":1,"yDigit":1,"total":2,"carry":1},"note":"Column 2 adds the digits 1 and 1 to the incoming carry 0, which gives 2. The output digit is 0 and the new carry is 1."},{"at":{"i":1},"vars":{"xDigit":0,"yDigit":1,"total":2,"carry":1},"note":"Column 3 adds the digits 0 and 1 to the incoming carry 1, which gives 2. The output digit is 0 and the new carry is 1."},{"at":{"i":0},"vars":{"xDigit":1,"yDigit":0,"total":2,"carry":1},"note":"Column 4 adds the digits 1 and 0 to the incoming carry 1, which gives 2. The output digit is 0 and the new carry is 1."},{"at":{"i":-1},"vars":{"carry":1},"note":"Every column is read and the carry is still 1, so it becomes the leading digit. The result reads 10001."}]}
 ```
 
-The hardest step is the third column of the string trace. The two digits plus the incoming carry give 2, so the output digit is 0 and the carry stays 1. The word loop meets the same case when a carry lands on a column where both inputs already hold a 1.
+The hardest step is the third column of the string trace. The two digits plus the incoming carry give 2, so the output digit is 0 and the carry stays 1. The word loop meets the same case whenever a carry meets a 1 in the other word. That column's sum bit becomes 0, and a new carry moves one column left.
 
 <!-- stage: code -->
 ### Implement The Loop And The String Sum
@@ -124,12 +124,15 @@ final class BinaryArithmetic {
             out.append((char) ('0' + (total & 1)));      // the low bit of the total is the digit
             carry = total >> 1;                          // the high bit is the next carry
         }
-        return out.reverse().toString();                 // digits were appended from the right
+        int k = 0;
+        String sum = out.reverse().toString();           // digits were appended from the right
+        while (k < sum.length() - 1 && sum.charAt(k) == '0') k++;   // skip leading zeros, keep one digit
+        return sum.substring(k);
     }
 }
 ```
 
-The word loop saves the carry word first because the next line overwrites `a`. The string loop runs while any input digit or a carry remains, so one extra pass appends the leading 1 for a sum such as `1` plus `1`. Both methods give the same result as the plus operator for the stated inputs. The string method reads one character per column, so it costs O(max(x, y)) time. The word method runs at most 32 rounds, which makes it O(1) for an `int`.
+The word loop saves the carry word first because the next line overwrites `a`. The string loop runs while any input digit or a carry remains, so one extra pass appends the leading 1 for a sum such as `1` plus `1`. Inputs with leading zeros, such as `0` plus `000`, produce extra zeros at the front, so the last lines skip them and keep one digit. Both methods give the same result as the plus operator for the stated inputs. The string method reads one character per column, so it costs O(max(x, y)) time. The word method runs at most 32 rounds, which makes it O(1) for an `int`.
 
 <!-- stage: applicability -->
 ### When To Use Bitwise Addition

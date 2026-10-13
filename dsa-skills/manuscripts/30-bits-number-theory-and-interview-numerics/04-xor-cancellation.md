@@ -66,6 +66,8 @@ Start with `acc = 0` and compute `acc ^= v` for every element `v`. Because order
 
 The same law finds a missing value. Combine every array element with every index that should be present. A value that appears in both groups cancels. The one value that appears in only one group survives. When the unpaired values are `p` and `q`, the fold gives `p ^ q`, which is nonzero because `p` and `q` differ. Any set bit of `p ^ q` is a **split bit**: one of `p` and `q` has it and the other does not. Folding the elements with that bit set, and then the elements without it, recovers `p` and `q` separately.
 
+Take the unpaired values 4 and 9, with the pairs 6 and 2 also in the array. In binary, 4 is `0100` and 9 is `1001`, so `p ^ q` is `1101`, which is 13. The lowest set bit of 13 is bit 0. Of the two unpaired values, only 9 has that bit set. Each pair has two equal values, so both copies fall in the same group and cancel. Folding the elements with bit 0 set gives 9, and `13 ^ 9` gives 4.
+
 <!-- stage: variables -->
 ### Quantities To Track In The Fold
 
@@ -128,7 +130,8 @@ static int[] twoSingles(int[] nums) {
     for (int v : nums) {
         if ((v & split) != 0) p ^= v;     // the group with the split bit set holds p only
     }
-    return new int[]{p, diff ^ p};        // q is the exclusive or of diff and p
+    int q = diff ^ p;                     // q is the exclusive or of diff and p
+    return new int[]{Math.min(p, q), Math.max(p, q)}; // the smaller value comes first
 }
 ```
 
@@ -143,7 +146,7 @@ Use this method when equal values pair off and one or two of them do not, or whe
 
 #### Name The False Friend
 
-Addition is a false friend for the missing-value task. The sum of `0..n` minus the sum of the array also gives the missing value, but the sum can overflow an `int` for large `n`. The exclusive or never overflows, since each bit stays in its own position. Addition is still the right choice when the task needs a total and not a cancellation.
+Addition is a false friend for the missing-value task. The sum of `0..n` minus the sum of the array also gives the missing value. Java `int` arithmetic wraps around modulo 2^32, so the difference is still correct after an overflow. The sum method needs care, and a `long` accumulator makes the intermediate totals easy to reason about. The exclusive or has no carries at all, since each bit stays in its own position. Addition is still the right choice when the task needs a total and not a cancellation.
 
 #### Check The Preconditions
 

@@ -41,7 +41,7 @@ It returns a number that looks valid but is wrong. Java wraps the product around
 
 #### Count The Digits
 
-The true product of `n` numbers near 10^9 has about 9n digits, so the exact value needs O(n) digits and each multiplication on such a number costs O(n). Computing the exact product with `BigInteger` therefore costs O(n^2) time for the whole array. A `long` has only 19 digits, so it overflows after two numbers of size 10^9.
+The true product of `n` numbers near 10^9 has about 9n digits, so the exact value needs O(n) digits and each multiplication on such a number costs O(n). Computing the exact product with `BigInteger` therefore costs O(n^2) time for the whole array. A `long` has only 19 digits. Two numbers of size 10^9 multiply to 10^18, which still fits, and the third factor makes the product overflow.
 
 #### Locate The Silent Failure
 
@@ -158,7 +158,7 @@ Reach for modular arithmetic when a statement says "return the answer modulo `m`
 
 #### Watch For The Nearest False Friend
 
-Comparison is a false friend. A reduced value says nothing about the size of the exact value, so a program cannot test "is the exact total larger than the limit" from a remainder. Division is another false friend, because `a / b` modulo `m` is not the remainder of `a` divided by `b` as integers. Division needs a modular inverse, which a later number-theory topic covers. For problems that need both size and exactness, keep the size check in `long` or `BigInteger`.
+Comparison is a false friend. A reduced value says nothing about the size of the exact value, so a program cannot test "is the exact total larger than the limit" from a remainder. Division is another false friend, because `a / b` modulo `m` is not the remainder of `a` divided by `b` as integers. Division needs a modular inverse, which is beyond this chapter. For problems that need both size and exactness, keep the size check in `long` or `BigInteger`.
 
 #### Avoid The Java Hazards
 
@@ -248,6 +248,6 @@ Java `%` returns negative results for negative left operands, so subtraction nee
 
 **Example 2.** Input `nums = [3, 3, 6, 8]`, `target = 9` and `m = 1000000007`, output 6. The same input with `m = 1` returns 0.
 
-**Hint.** Sort the array. For a fixed smallest element, how many subsequences use it as the minimum with a valid largest element, and which table gives that count in O(1)?
+**Hint.** Plan in three parts. First, build the table `pow[i]` of `2^i` modulo `m` for `i` up to `n`. Second, sort `nums` and set a left pointer `l` at the start and a right pointer `r` at the end. Third, while `l <= r`, test `nums[l] + nums[r] <= target`. If it holds, `nums[l]` is the minimum of `2^(r - l)` subsequences, because each element between the pointers is in or out. Add `pow[r - l]` and move `l` right. Otherwise move `r` left.
 
 **Changed decision.** Powers of two modulo `m` come from a precomputed table, and a modulus of 1 turns every count into 0.

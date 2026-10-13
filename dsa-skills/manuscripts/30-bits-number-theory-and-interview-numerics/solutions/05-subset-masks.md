@@ -138,13 +138,13 @@ public final class SubsetsInsideMask {
 #### Solution: [Boundary] Exponential Budget (Author exercise)
 <!-- id: bt05-exponential-budget -->
 
-**Approach.** The loop tests `n * 2^n <= budget` as `2^n <= budget / n`, which never overflows.
+**Approach.** The loop grows `n` from 0 and stops before the first product that exceeds the budget.
 
-The product `n * 2^n` grows with `n`, so the answer is the last `n` before the first failure. For `n = 0` the product is 0 and always fits. For `n >= 1` the condition `n * 2^n <= budget` is equivalent to `2^n <= floor(budget / n)`, because `2^n` is an integer. The right side is at most `10^18`, and the left side `1L << n` stays below 2^63 for `n <= 62`. The product itself would overflow `long` around `n = 58`, which is why the program never forms it. The shift uses `1L`, since `1 << 32` on an `int` equals 1.
+The product `n * 2^n` grows with `n`, so the answer is the last `n` whose product fits. For `n = 0` the product is 0 and always fits. The loop tests the next candidate `n + 1` by forming `(n + 1) * (1L << (n + 1))` and comparing it with `budget`. The budget is at most 10^12, and the loop stops by `n = 34`, so the largest product it forms is the one for 35, which is about 1.2 * 10^12. That value fits in a `long` with a wide margin. The shift uses `1L`, since `1 << 32` on an `int` equals 1.
 
 **Complexity.**
 
-- **Time** is O(1), because the loop stops by `n = 55` for any budget up to `10^18`.
+- **Time** is O(1), because the loop stops by `n = 35` for any budget up to `10^12`.
 - **Space** is O(1), as the loop keeps one counter.
 
 ```java run
@@ -153,15 +153,15 @@ import java.util.Random;
 
 public final class ExponentialBudget {
     /**
-     * Returns the largest n with n * 2^n <= budget.
-     * Time: O(1), at most 62 iterations.
+     * Returns the largest n with n * 2^n <= budget, for budget up to 10^12.
+     * Time: O(1), at most 36 iterations.
      * Space: O(1).
-     * Invariant: every n below the loop counter satisfies n * 2^n <= budget.
+     * Invariant: every n up to the loop counter satisfies n * 2^n <= budget.
      */
     static int largest(long budget) {
         int n = 0;
-        // The next candidate is n + 1; test it without forming the product.
-        while (n + 1 <= 62 && (1L << (n + 1)) <= budget / (n + 1)) {
+        // The next candidate is n + 1; its product is small enough for a long.
+        while ((long) (n + 1) * (1L << (n + 1)) <= budget) {
             n++;
         }
         return n;
@@ -170,7 +170,7 @@ public final class ExponentialBudget {
     /** Oracle: exact product with BigInteger. */
     static int oracle(long budget) {
         int best = 0;
-        for (int n = 0; n <= 70; n++) {
+        for (int n = 0; n <= 60; n++) {
             BigInteger p = BigInteger.valueOf(n).shiftLeft(n);
             if (p.compareTo(BigInteger.valueOf(budget)) <= 0) best = n;
         }
@@ -180,17 +180,18 @@ public final class ExponentialBudget {
     public static void main(String[] args) {
         // Checks Example 1 and Example 2.
         if (largest(1000L) != 7) throw new AssertionError("example 1");
-        if (largest(1_000_000_000_000_000_000L) != 54) throw new AssertionError("example 2");
+        if (largest(1_000_000_000_000L) != 34) throw new AssertionError("example 2");
         // Checks the smallest budgets.
         if (largest(1L) != 0 || largest(2L) != 1) throw new AssertionError("small budgets");
-        // Checks the two Java facts the approach relies on.
+        // Checks the Java fact the approach relies on.
         if ((1 << 32) != 1) throw new AssertionError("int shift uses five bits");
-        if (58L * (1L << 58) >= 0) throw new AssertionError("the long product overflows for n = 58");
+        // Checks that the largest product the loop forms fits in a long.
+        if (35L * (1L << 35) <= 0) throw new AssertionError("product fits");
         // Checks random budgets of every magnitude against the BigInteger oracle.
         Random rnd = new Random(3025);
         for (int round = 0; round < 2000; round++) {
-            long b = 1 + (rnd.nextLong() >>> 1) % (1L << (1 + rnd.nextInt(59)));
-            if (b > 1_000_000_000_000_000_000L) b = 1_000_000_000_000_000_000L;
+            long b = 1 + (rnd.nextLong() >>> 1) % (1L << (1 + rnd.nextInt(40)));
+            if (b > 1_000_000_000_000L) b = 1_000_000_000_000L;
             if (largest(b) != oracle(b)) throw new AssertionError("budget " + b);
         }
     }
@@ -200,99 +201,88 @@ public final class ExponentialBudget {
 #### Solution: [Recognize] Shortest Path Visiting All Nodes (LeetCode 847)
 <!-- id: bt05-walk-all-nodes -->
 
-**Approach.** Breadth-first search runs over states made of a node and a visited mask.
+**Approach.** One pass over the route keeps a visited mask and tests each step against an adjacency mask.
 
-One state is the pair `(node, mask)`, where bit `i` of `mask` is 1 when node `i` has been visited. The start state is `(s, 1 << s)` at distance 0. A move along an edge to neighbor `v` produces `(v, mask | (1 << v))` at distance plus 1. All moves cost one edge, so breadth-first search reaches each state first at its smallest distance. The first state with `mask` equal to the full mask `(1 << n) - 1` gives the answer. A `seen` table keyed by node and mask keeps each of the `n * 2^n` states from entering the queue twice. A single node starts with the full mask, so the answer is 0.
+The visited mask starts with the bit of the first route node. For each later node `v`, the previous node `u` must satisfy `(adj[u] >> v) & 1`, which reads the edge bit. A failed test makes the route invalid. Otherwise the loop sets bit `v` with OR. After the last node, the route is valid exactly when the visited mask equals the full mask `(1 << n) - 1`. The invariant is that bit `i` of the visited mask is 1 exactly when node `i` appears in the prefix read so far. A route of one node has no steps, and it is valid only for a graph with one node.
 
 **Complexity.**
 
-- **Time** is O(2^n * (n + E)) for `E` edges, because each of the `n * 2^n` states expands over its node's neighbors.
-- **Space** is O(n * 2^n) for the `seen` table and the queue.
+- **Time** is O(r) for a route of `r` nodes, because each step costs two bit operations.
+- **Space** is O(1), since the program keeps one visited mask.
 
 ```java run
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public final class WalkAllNodes {
     /**
-     * Returns the fewest edges in a walk from s that visits every node.
-     * Time: O(2^n * (n + E)).
-     * Space: O(n * 2^n).
-     * Invariant: a state (node, mask) is queued at most once, at its smallest distance.
+     * Returns true when the route follows edges and visits every node.
+     * Time: O(r) for a route of r nodes.
+     * Space: O(1).
+     * Invariant: bit i of visited is 1 exactly when node i appears in the prefix read so far.
      */
-    static int shortest(int[][] graph, int s) {
-        int n = graph.length;
+    static boolean validRoute(int[] adj, int[] route) {
+        int n = adj.length;
         int full = (1 << n) - 1;
-        // seen[node][mask] marks states that were already queued.
-        boolean[][] seen = new boolean[n][1 << n];
-        ArrayDeque<int[]> queue = new ArrayDeque<>();
-        // The start state has only the start node visited.
-        queue.add(new int[]{s, 1 << s, 0});
-        seen[s][1 << s] = true;
-        while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            // The first full mask in breadth-first order is the shortest walk.
-            if (cur[1] == full) return cur[2];
-            for (int next : graph[cur[0]]) {
-                // Moving to next marks bit next as visited.
-                int mask = cur[1] | (1 << next);
-                if (!seen[next][mask]) {
-                    seen[next][mask] = true;
-                    queue.add(new int[]{next, mask, cur[2] + 1});
-                }
-            }
+        // The first node starts the visited mask.
+        int visited = 1 << route[0];
+        for (int k = 1; k < route.length; k++) {
+            // The step needs an edge bit between the previous node and this one.
+            if (((adj[route[k - 1]] >> route[k]) & 1) == 0) return false;
+            // OR records the node and never removes another.
+            visited |= 1 << route[k];
         }
-        // A connected graph always reaches the full mask before the queue empties.
-        throw new AssertionError("graph is not connected");
+        // Equality with the full mask means no node is missing.
+        return visited == full;
     }
 
-    /** Oracle: grow the set of reachable (node, visited set) pairs one edge at a time. */
-    static int oracle(int[][] graph, int s) {
-        int n = graph.length;
-        Set<List<Integer>> cur = new HashSet<>();
-        cur.add(List.of(s, 1 << s));
-        for (int len = 0; len < 60; len++) {
-            for (List<Integer> st : cur) if (st.get(1) == (1 << n) - 1) return len;
-            Set<List<Integer>> nxt = new HashSet<>();
-            for (List<Integer> st : cur) {
-                for (int v : graph[st.get(0)]) nxt.add(List.of(v, st.get(1) | (1 << v)));
+    /** Oracle: matrix and boolean array. */
+    static boolean oracle(int[] adj, int[] route) {
+        int n = adj.length;
+        boolean[] seen = new boolean[n];
+        seen[route[0]] = true;
+        for (int k = 1; k < route.length; k++) {
+            boolean edge = false;
+            for (int j = 0; j < n; j++) {
+                if (j == route[k] && (adj[route[k - 1]] & (1 << j)) != 0) edge = true;
             }
-            cur = nxt;
+            if (!edge) return false;
+            seen[route[k]] = true;
         }
-        throw new AssertionError("no walk");
+        for (boolean b : seen) if (!b) return false;
+        return true;
     }
 
     public static void main(String[] args) {
-        // Checks Example 1 on a star graph and Example 2 on a single node.
-        if (shortest(new int[][]{{1, 2, 3}, {0}, {0}, {0}}, 1) != 4) throw new AssertionError("example 1");
-        if (shortest(new int[][]{{}}, 0) != 0) throw new AssertionError("example 2");
-        // Checks random connected graphs against the oracle with a fixed seed.
+        // Checks Example 1 on a star graph, including the route that misses node 3.
+        int[] star = {14, 1, 1, 1};
+        if (!validRoute(star, new int[]{1, 0, 2, 0, 3})) throw new AssertionError("example 1a");
+        if (validRoute(star, new int[]{1, 0, 2})) throw new AssertionError("example 1b");
+        // Checks Example 2, where node 2 is isolated.
+        if (validRoute(new int[]{2, 1, 0}, new int[]{0, 1, 0})) throw new AssertionError("example 2");
+        // Checks a single node graph.
+        if (!validRoute(new int[]{0}, new int[]{0})) throw new AssertionError("single node");
+        // Checks random graphs and routes against the oracle with a fixed seed.
         Random rnd = new Random(3085);
-        for (int round = 0; round < 300; round++) {
-            int n = 1 + rnd.nextInt(7);
-            List<List<Integer>> adj = new ArrayList<>();
-            for (int i = 0; i < n; i++) adj.add(new ArrayList<>());
-            // A random tree keeps the graph connected; extra edges follow.
-            for (int v = 1; v < n; v++) {
-                int u = rnd.nextInt(v);
-                adj.get(u).add(v);
-                adj.get(v).add(u);
-            }
-            for (int k = rnd.nextInt(n + 1); k > 0; k--) {
-                int a = rnd.nextInt(n), b = rnd.nextInt(n);
-                if (a != b && !adj.get(a).contains(b)) {
-                    adj.get(a).add(b);
-                    adj.get(b).add(a);
+        for (int round = 0; round < 3000; round++) {
+            int n = 1 + rnd.nextInt(6);
+            int[] adj = new int[n];
+            for (int a = 0; a < n; a++) {
+                for (int b = a + 1; b < n; b++) {
+                    if (rnd.nextInt(3) > 0) {
+                        adj[a] |= 1 << b;
+                        adj[b] |= 1 << a;
+                    }
                 }
             }
-            int[][] graph = new int[n][];
-            for (int i = 0; i < n; i++) graph[i] = adj.get(i).stream().mapToInt(Integer::intValue).toArray();
-            int s = rnd.nextInt(n);
-            if (shortest(graph, s) != oracle(graph, s)) throw new AssertionError("round " + round);
+            int[] route = new int[1 + rnd.nextInt(10)];
+            route[0] = rnd.nextInt(n);
+            for (int k = 1; k < route.length; k++) {
+                // Mostly pick a neighbor so that some routes stay valid.
+                int next = rnd.nextInt(n);
+                for (int tries = 0; tries < 4 && ((adj[route[k - 1]] >> next) & 1) == 0; tries++) next = rnd.nextInt(n);
+                route[k] = next;
+            }
+            if (validRoute(adj, route) != oracle(adj, route)) throw new AssertionError("round " + round);
         }
     }
 }
