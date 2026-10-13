@@ -55,12 +55,12 @@ A middle push inserts at index `s / 2`, which is the end of the left half. A mid
 <!-- stage: variables -->
 ### State Kept In The Two Halves
 
-The structure keeps two fields and no counters, because `ArrayDeque.size()` already reports each length in constant time.
+The structure keeps two fields, `left` and `right`, and no counters, because `ArrayDeque.size()` already reports each length in constant time.
 
 - **left** is the deque that holds the first `s / 2` elements, in sequence order.
 - **right** is the deque that holds the last `s - s / 2` elements, in sequence order.
-- **s** is the total size, equal to `left.size() + right.size()`.
-- **boundary** is the index `left.size()`, the first index that belongs to the right half.
+- **s** is a derived total size, equal to `left.size() + right.size()`.
+- **boundary** is a derived index `left.size()`, the first index that belongs to the right half.
 
 The state invariant is that `right.size() - left.size()` is 0 or 1 after every public call returns. During a call the difference can be off by one for a moment, and only the private rebalance method repairs it. No public method moves elements between the halves on its own, which keeps that repair in one place.
 

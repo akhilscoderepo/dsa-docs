@@ -12,7 +12,7 @@ The question of this lesson is how a class can hand out the smallest free id qui
 <!-- stage: contributions -->
 ### What The Earlier Chapters Contribute
 
-The chapter on heaps and priority queues supplied `PriorityQueue`, which removes its smallest element in O(log k) time for k stored elements. It cannot answer the question whether a given element is stored, except by scanning all k elements. The chapter on ordered data supplied `TreeSet`, which keeps elements in sorted order and answers membership, insertion and removal of the smallest element in O(log k) time. The chapter on hash maps and sets supplied `HashSet`, which answers membership in expected O(1) time but has no order.
+Chapter 17 on heaps and priority queues supplied `PriorityQueue`, which removes its smallest element in O(log k) time for k stored elements. It cannot answer the question whether a given element is stored, except by scanning all k elements. Chapter 32 on ordered data supplied `TreeSet`, which keeps elements in sorted order and answers membership, insertion and removal of the smallest element in O(log k) time. Chapter 4 on hash maps and sets supplied `HashSet`, which answers membership in expected O(1) time but has no order.
 
 The chapter on design problems supplied the habit of writing down which fields describe one logical state and which method owns each change. This lesson applies that habit to a new situation. Two collections store overlapping facts about the same ids, so one method must update both and never leave them disagreeing between calls.
 
@@ -50,7 +50,7 @@ Both of the last two calls return 1. The queue holds two copies of 1 after the r
 ```
 
 <!-- stage: bottleneck -->
-### Order Without Membership Costs O(n)
+### Order Without Membership Costs O(k)
 
 The queue gives the right order for allocation, but it gives no cheap answer to the question that release needs: is this id already waiting in the queue? Calling `contains` on a `PriorityQueue` scans its array, so each release costs O(k) for k waiting ids. A pool with 10^5 ids and 10^5 releases then performs about 10^10 element comparisons in the worst case.
 
@@ -77,14 +77,14 @@ An allocated id is defined by absence. An id below the frontier that is not in t
 
 #### The Policy For A Stale Entry
 
-A **stale entry** is an element that one collection still holds although the other collection has already dropped it. The queue cannot remove an arbitrary element cheaply, so a design must pick a policy and state it. The eager policy never creates a stale entry. Every method changes the queue and the set together, so both always hold the same ids. The lazy policy lets a stale entry stay and discards it when it reaches the front. The eager policy is correct here because allocation removes from the front of both stores, and release adds to both.
+A **stale entry** is an element that one collection still holds although the other collection has already dropped it. The queue cannot remove an arbitrary element cheaply, so a design must pick a policy and state it. The eager policy never creates a stale entry. Every method changes the queue and the set together, so both always hold the same ids. The lazy policy lets a stale entry stay and discards it when it reaches the front. The eager policy is correct here because allocation removes the smallest id from both stores, and release adds the id to both.
 
 The invariant has three parts. The queue and the set contain identical ids. Every one of those ids is below the frontier. No id appears twice in either one. A release that would break a part is rejected before any field changes, so a rejected call leaves the pool unchanged.
 
 <!-- stage: variables -->
 ### Fields That Describe One Pool
 
-The pool uses five fields, and every public method reads or changes them together.
+The pool stores four fields, and every public method reads or changes them together. A fifth item, `state(id)`, is derived from them.
 
 - **capacity** is the number of ids, fixed at construction, so valid ids run from 0 to `capacity - 1`.
 - **frontier** is the smallest never-issued id, from 0 to `capacity`.

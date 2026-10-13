@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A queue class passes every test that adds three items and removes three items. In production it reports "full" when it holds one item, because `head` and `tail` met after a wraparound and the code cannot tell full from empty. Class-shaped problems fail at the seams between calls, not inside one method. This chapter teaches how to keep one stored state valid across any legal sequence of public calls.
+A queue class passes every test that adds three items and removes three items. In production it treats a full queue as empty, because `head` and `tail` meet after a wraparound and equal indices cannot separate the two states. Class-shaped problems fail at the seams between calls, not inside one method. This chapter teaches how to keep one stored state valid across any legal sequence of public calls.
 
 ### Prerequisites
 
@@ -26,4 +26,4 @@ Every lesson starts with a class that passes simple tests and then breaks on a l
 
 ### What You Can Do After This Chapter
 
-You can write down the fields of a class and the one fact they must satisfy after every call. You can choose between a direct array, a ring buffer, two halves, a cursor over stored history and a pool with a frontier, and you can say what each call does when it must refuse. Cache designs belong to chapter 33, and concurrency belongs to the separate senior curriculum.
+You can write down the fields of a class and the one fact they must satisfy after every call. You can choose between a direct array, a ring buffer, two halves, a cursor over stored history and a pool that tracks the next never-issued id, and you can say what each call does when it must refuse. Cache designs belong to chapter 33, and concurrency belongs to the separate senior curriculum.

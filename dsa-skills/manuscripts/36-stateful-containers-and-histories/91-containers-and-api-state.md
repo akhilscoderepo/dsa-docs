@@ -12,9 +12,9 @@ Each method reads correctly when viewed alone. The defect appears only in a sequ
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
 
-The lesson Operation Traces supplied the habit of judging a class by its call sequence. A constructor and a list of calls produce a list of return values, and every call must leave a state that the next call can use. A rejected call is part of that sequence, so it needs a defined effect on the state.
+The lesson Trace A Sequence Of Method Calls supplied the habit of judging a class by its call sequence. A constructor and a list of calls produce a list of return values, and every call must leave a state that the next call can use. A rejected call is part of that sequence, so it needs a defined effect on the state.
 
-The lesson Circular Buffers supplied the array with `head` and `size`, where the slot of the i-th element is `(head + i) % capacity`. The lesson Direct Stores supplied the hash set as a second collection that answers membership in constant expected time. This lesson joins the three ideas. The new work is a rule about which fields exist, which call may write them, and in what order, so that the array and the hash set always list the same elements.
+The lesson Circular Buffers supplied the array with `head` and `size`, where the slot of the i-th element is `(head + i) % capacity`. The lesson Store Keys In Direct Slots supplied the hash set as a second collection that answers membership in constant expected time. This lesson joins the three ideas. The new work is a rule about which fields exist, which call may write them, and in what order, so that the array and the hash set always list the same elements.
 
 <!-- stage: naive -->
 ### Keeping The Queue In A List
@@ -248,7 +248,7 @@ Do not build the ring and the set by hand when the capacity is unbounded or when
 #### [Recognize] Implement Router (LeetCode 3508)
 <!-- id: cs-router-expiry-index -->
 
-**Prerequisites.** The first three exercises above and the lesson Direct Stores. This exercise adds a packet identity set and a destination index to a ring that evicts its oldest packet.
+**Prerequisites.** The first three exercises above and the lesson Store Keys In Direct Slots. This exercise adds a packet identity set and a destination index to a ring that evicts its oldest packet.
 
 **Problem.** Design a class `Router` with a constructor `Router(int memoryLimit)`. The method `boolean addPacket(int source, int destination, int timestamp)` rejects a packet whose three values equal a stored packet, returning false. Otherwise it removes the oldest stored packet when the router holds `memoryLimit` packets, stores the new packet, and returns true. The method `int[] forwardPacket()` removes and returns `[source, destination, timestamp]` of the oldest packet, or an empty array. The method `int getCount(int destination, int startTime, int endTime)` counts stored packets for that destination with `startTime <= timestamp <= endTime`.
 

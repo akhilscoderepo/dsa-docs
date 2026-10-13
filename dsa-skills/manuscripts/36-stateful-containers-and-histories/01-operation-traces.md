@@ -69,7 +69,7 @@ The constructor must produce a legal state. Every other method must satisfy a se
 <!-- stage: variables -->
 ### Fields And The Trace Row
 
-The bounded counter keeps two fields, and the reader of a trace tracks them after every call.
+The bounded counter keeps two fields, `limit` and `count`. A trace table adds two columns, `call` and `result`, that the reader tracks after every call.
 
 - **limit** is the capacity, fixed by the constructor and never changed afterward.
 - **count** is the number of accepted increments since the last reset.

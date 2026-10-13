@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A circular queue says it is full after one insert, a browser history keeps pages that should be gone, and an ID pool hands out the same number twice. The questions below cover the six lessons and the two closing lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+A circular queue cannot tell full from empty, a browser history keeps pages that should be gone, and an ID pool hands out the same number twice. The questions below cover the six lessons and the two closing lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
 
 ### Recognition Questions
 
@@ -18,15 +18,15 @@ A circular queue says it is full after one insert, a browser history keeps pages
 ```
 
 ```quiz
-{"id": "rq36-rev-modular-tail", "q": "A ring buffer has capacity 5, `head = 3` and `size = 4`. Which slot holds the newest item?", "options": ["Slot 2", "Slot 0", "Slot 1", "Slot 7"], "answer": 0, "explain": "The newest item sits at `(head + size - 1) % capacity`, which is `(3 + 4 - 1) % 5 = 1`. Slot 1 holds it, and slot 2 is the next free slot."}
+{"id": "rq36-rev-modular-tail", "q": "A ring buffer has capacity 5, `head = 3` and `size = 4`. Which slot holds the newest item?", "options": ["Slot 2", "Slot 0", "Slot 1", "Slot 7"], "answer": 2, "explain": "The newest item sits at `(head + size - 1) % capacity`, which is `(3 + 4 - 1) % 5 = 1`. Slot 1 holds it, and slot 2 is the next free slot."}
 ```
 
 ```quiz
-{"id": "rq36-rev-split-middle", "q": "Two halves hold 3 and 3 elements and the rule removes the front middle. After one remove from the middle, what keeps the halves within one element?", "options": ["Nothing; the sizes already differ by one.", "A rebalance that moves one element between halves when sizes differ by two.", "Always clearing the back half.", "Rebuilding both halves from scratch."], "answer": 1, "explain": "Removing from one half can make the size gap two. One element moves across the boundary to restore a gap of at most one."}
+{"id": "rq36-rev-split-middle", "q": "Two halves hold 3 and 3 elements and the rule removes the front middle. After one remove from the middle, what keeps the halves within one element?", "options": ["Nothing; the sizes still differ by at most one.", "A rebalance that moves one element between halves.", "Always clearing the back half.", "Rebuilding both halves from scratch."], "answer": 0, "explain": "Removing the front middle of 3 and 3 takes the last element of the left half, leaving 2 and 3. The right half exceeds the left by one, which the rule allows, so no element moves."}
 ```
 
 ```quiz
-{"id": "rq36-rev-history-cut", "q": "A browser sits on page 2 of pages 0 to 4 and visits a new page. What happens to pages 3 and 4?", "options": ["They stay and the new page goes after them.", "They are dropped, and the new page follows page 2.", "They move before page 2.", "They are kept until back is called."], "answer": 1, "explain": "A new visit invalidates the forward history, so the stored pages end at the cursor plus the new page."}
+{"id": "rq36-rev-history-cut", "q": "A browser sits on page 2 of pages 0 to 4 and visits a new page. What happens to pages 3 and 4?", "options": ["They stay and the new page goes after them.", "They are hidden from the visible history, and the new page follows page 2.", "They move before page 2.", "They are kept until back is called."], "answer": 1, "explain": "A new visit invalidates the forward history, so the visible pages end at the cursor plus the new page, whether or not the old slots are physically cleared."}
 ```
 
 ```quiz
