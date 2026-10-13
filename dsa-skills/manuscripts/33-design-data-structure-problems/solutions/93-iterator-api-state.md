@@ -315,10 +315,10 @@ public final class CountingPeekerDemo {
 <!-- id: ds-bounded-flatten -->
 
 **Approach.**
-The constructor first checks the depth. A recursive check stops as soon as a list deeper than `maxDepth` appears, so it never recurses more than `maxDepth` levels and throws `IllegalArgumentException` before the iterator exists. The iteration then keeps a stack of Java iterators, one for each list that still has unread entries, plus a cached integer `head`. The operation `hasNext()` loops while no integer is cached. It pops finished iterators, which are empty lists or finished lists, pushes the iterator of any nested list it meets, and stores the first integer it reaches. Moving past empty lists removes no integer from the sequence, and repeating the call finds the cached integer at once, so `hasNext()` is idempotent. The invariant is that the integers not yet returned are the cached one, if any, followed by what the stacked iterators will produce. The operation `next()` calls `hasNext()`, clears the cache and returns it.
+The constructor only stores the top-level iterator, so it costs O(1) and reads nothing. The iteration keeps a stack of Java iterators, one for each list that still has unread entries, plus a cached integer `head`. The operation `hasNext()` loops while no integer is cached. It pops finished iterators, which are empty lists or finished lists, pushes the iterator of any nested list it meets, and stores the first integer it reaches. The stack size is the depth of the list on top, so before it pushes a nested list it compares the new depth with `maxDepth`. A list that is too deep sets a failed flag and throws `IllegalArgumentException`, and every later call throws again. Moving past empty lists removes no integer from the sequence, and repeating the call finds the cached integer at once, so `hasNext()` is idempotent. The invariant is that the integers not yet returned are the cached one, if any, followed by what the stacked iterators will produce. The operation `next()` calls `hasNext()`, clears the cache and returns it.
 
 **Complexity.**
-- **Time** is O(N) in total for N entries, including integers and lists, because each entry is read once. The depth check also visits each list once.
+- **Time** is O(N) in total for N entries, including integers and lists, because each entry is read once. The depth comparison costs O(1) per list.
 - **Space** is O(d) for the stack, where d is at most `maxDepth`, plus O(1) for the cache.
 
 ```java run
@@ -349,22 +349,19 @@ public final class BoundedFlattenDemo {
         private final ArrayDeque<Iterator<Nest>> stack = new ArrayDeque<>();
         private int head;
         private boolean hasHead = false;
+        private boolean failed = false;
+        private final int maxDepth;
 
         FlatIterator(List<Nest> top, int maxDepth) {
-            // Reject too-deep input before any operation can run.
-            check(top, 1, maxDepth);
+            // The constructor reads nothing; the depth limit is checked during the scan.
+            this.maxDepth = maxDepth;
             stack.push(top.iterator());
-        }
-
-        /** Throws when a list sits deeper than the limit; recursion never exceeds maxDepth + 1 frames. */
-        private static void check(List<Nest> list, int depth, int maxDepth) {
-            // The depth of this list is compared first so the recursion stops at the limit.
-            if (depth > maxDepth) throw new IllegalArgumentException("depth " + depth + " exceeds " + maxDepth);
-            for (Nest n : list) if (!n.isInt()) check(n.items, depth + 1, maxDepth);
         }
 
         /** Time: O(1) amortized. Space: O(d). Skips empty lists and caches the next integer; removes nothing. */
         boolean hasNext() {
+            // A list that was too deep keeps the iterator failed for every later call.
+            if (failed) throw new IllegalArgumentException("depth exceeds " + maxDepth);
             // Keep going until an integer is cached or every iterator is finished.
             while (!hasHead && !stack.isEmpty()) {
                 Iterator<Nest> top = stack.peek();
@@ -378,6 +375,11 @@ public final class BoundedFlattenDemo {
                         head = n.value;
                         hasHead = true;
                     } else {
+                        // The stack size is the depth of the top list, so the nested list sits one deeper.
+                        if (stack.size() + 1 > maxDepth) {
+                            failed = true;
+                            throw new IllegalArgumentException("depth " + (stack.size() + 1) + " exceeds " + maxDepth);
+                        }
                         // A nested list becomes the new top cursor.
                         stack.push(n.items.iterator());
                     }
@@ -430,10 +432,16 @@ public final class BoundedFlattenDemo {
         try { it.next(); } catch (NoSuchElementException e) { threw = true; }
         if (!threw) throw new AssertionError("next must throw");
 
-        // Example 2: the same list with a limit of 2 fails in the constructor.
+        // Example 2: with a limit of 2 the first next returns 1, and the following hasNext throws.
+        FlatIterator shallow = new FlatIterator(top, 2);
+        if (shallow.next() != 1) throw new AssertionError("value before the deep list");
         boolean rejected = false;
-        try { new FlatIterator(top, 2); } catch (IllegalArgumentException e) { rejected = true; }
+        try { shallow.hasNext(); } catch (IllegalArgumentException e) { rejected = true; }
         if (!rejected) throw new AssertionError("depth limit");
+        // Every later call throws again.
+        rejected = false;
+        try { shallow.next(); } catch (IllegalArgumentException e) { rejected = true; }
+        if (!rejected) throw new AssertionError("sticky failure");
 
         // Only empty lists: no values at all.
         FlatIterator hollow = new FlatIterator(Arrays.asList(Nest.list(Nest.list())), 3);
@@ -450,7 +458,9 @@ public final class BoundedFlattenDemo {
             int depth = depthOf(input, 1);
             if (depth > limit) {
                 boolean bad = false;
-                try { new FlatIterator(input, limit); } catch (IllegalArgumentException e) { bad = true; }
+                FlatIterator deep = new FlatIterator(input, limit);
+                // A full drain enters every list, so it must reach the deep one.
+                try { while (deep.hasNext()) deep.next(); } catch (IllegalArgumentException e) { bad = true; }
                 if (!bad) throw new AssertionError("limit should reject depth " + depth);
                 continue;
             }

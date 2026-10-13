@@ -12,7 +12,7 @@ steps=[{"at":{"next":0},"vars":{"stack":str(st),"depth":len(st)},"note":f"The co
 out=[]
 for k in range(len(cells)):
     top=st.pop(); out.append(top); spine(T[top][1],st)
-    nxt=k+1
+    nxt=k+1 if k+1<len(cells) else -1
     note=f"next() pops {top} and pushes the left spine of its right child. Returned so far: {out}."
     steps.append({"at":{"next":nxt},"vars":{"returned":top,"stack":str(st),"depth":len(st)},"note":note})
 assert out==cells and st==[] and steps[-1]["vars"]["depth"]==0
@@ -20,9 +20,9 @@ fill(CH,F,block(cells,["next"],steps),"@@TRACE1@@")
 
 # Trace 2: cached head over a source holding 4, 7, 9.
 src=[4,7,9]; pulled=0; head=None; calls=0
-steps=[{"at":{"pulled":0},"vars":{"head":"empty","calls":0},"note":"Start: the slot is empty and the source has not been called."}]
+steps=[{"at":{"pulled":-1},"vars":{"head":"empty","calls":0},"note":"Start: the slot is empty and the source has not been called."}]
 def snap(op,note,res):
-    steps.append({"at":{"pulled":pulled},"vars":{"op":op,"result":res,"head":"empty" if head is None else head,"calls":calls},"note":note})
+    steps.append({"at":{"pulled":pulled-1},"vars":{"op":op,"result":res,"head":"empty" if head is None else head,"calls":calls},"note":note})
 def peek():
     global pulled,head,calls
     if head is None:

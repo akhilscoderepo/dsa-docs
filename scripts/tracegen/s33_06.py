@@ -39,13 +39,13 @@ def lfu(cap, ops):
             else:
                 note = f"put({k}) adds key {k} with count 1."
                 if len(cnt) == cap:
-                    ev = min(cnt, key=lambda x: (cnt[x], stamp[x])); note = f"put({k}) finds the cache full, so key {ev} with count {cnt[ev]} leaves from the back of its bucket, then key {k} enters with count 1."
+                    ev = min(cnt, key=lambda x: (cnt[x], stamp[x])); note = f"put({k}) finds the cache full, so key {ev} with count {cnt[ev]} leaves from the start of its bucket, then key {k} enters with count 1."
                     del cnt[ev]; del stamp[ev]
                 cnt[k] = 1; stamp[k] = clock
         else:
             cnt[k] += 1; stamp[k] = clock; note = f"get({k}) raises its count to {cnt[k]}."
         mn = min(cnt.values())
-        st.append({"at": {"op": i}, "vars": {"counts": str(dict(sorted(cnt.items()))).replace(" ", ""), "minFreq": mn}, "note": note + f" The minimum frequency is {mn}."})
+        st.append({"at": {"op": i}, "vars": {"counts": str(dict(sorted(cnt.items()))).replace(" ", ""), "smallest": mn}, "note": note + f" The minimum frequency is {mn}."})
     return st, cnt
 
 ops = [('put',1),('put',2),('get',2),('get',1),('put',3),('put',4)]

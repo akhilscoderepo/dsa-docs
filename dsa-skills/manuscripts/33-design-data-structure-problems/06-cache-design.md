@@ -60,7 +60,7 @@ So `get`, `put` and eviction each cost O(n), even though the cache was built to 
 
 #### Using One Map And One Recency List
 
-The least recent use order needs a structure where removing a known element is O(1). A doubly linked list gives that, because a node knows both neighbors and can unlink itself by rewriting four links. The list is not searched, because the hash map takes the key straight to its node.
+The least recent use order needs a structure where removing a known element is O(1). A doubly linked list gives that, because a node knows both neighbors and can unlink itself by rewriting two links. The list is not searched, because the hash map takes the key straight to its node.
 
 A **recency list** is a doubly linked list ordered from most recently used at the front to least recently used at the back. A use of key `k` finds the node through the map, detaches it and reinserts it at the front. An eviction detaches the node at the back and deletes its key from the map.
 
@@ -70,22 +70,25 @@ A **sentinel** is a dummy node at each end of the list that never holds a key. W
 
 <!-- names: recency list, sentinel, frequency bucket -->
 
-The least frequently used rule evicts the key with the fewest uses. Among keys with the same count, it evicts the one used longest ago. A **frequency bucket** is the recency list of all keys that currently share one use count, kept in a map from count to bucket.
+The least frequently used rule evicts the key with the fewest uses. Among keys with the same count, it evicts the one used longest ago. A **frequency bucket** is the set of all keys that currently share one use count, ordered from least recent at its start to most recent at its end. A map goes from each count to its bucket.
 
-A use of key `k` with count `f` moves its node from bucket `f` to the front of bucket `f + 1`. An integer called the minimum frequency names the smallest count that has a non-empty bucket. Eviction takes the back node of that bucket. When bucket `f` empties and `f` was the minimum, the moved node is now in bucket `f + 1`, so the minimum becomes `f + 1`. A brand-new key sets the minimum to 1.
+A use of key `k` with count `f` moves the key from bucket `f` to the end of bucket `f + 1`. An integer called the minimum frequency names the smallest count that has a non-empty bucket. Eviction takes the first key of that bucket. When bucket `f` empties and `f` was the minimum, the moved node is now in bucket `f + 1`, so the minimum becomes `f + 1`. A brand-new key sets the minimum to 1.
 
 <!-- stage: variables -->
 ### State The Two Caches Keep
 
 Each design keeps a small set of fields, and the operations must restore the same facts after every call.
 
-- **index** is the map from a key to its node, so no operation searches a list.
-- **head** and **tail** are the two sentinels, and `head.next` is the most recent node.
+- **byKey** is the map from a key to its node, so no operation searches a list.
+- **first** and **last** are the two sentinels, and `first.after` is the most recent node.
 - **capacity** is the fixed maximum number of keys, and eviction runs only when a new key arrives at that size.
-- **buckets** is the LFU map from a use count to its list of nodes.
-- **minFreq** is the smallest count that has a non-empty bucket.
+- **countOf** is the LFU map from a key to its use count.
+- **bucketOf** is the LFU map from a use count to its bucket of keys.
+- **smallest** is the minimum frequency, the smallest count that has a non-empty bucket.
 
 The invariant for the LRU cache is that the map and the list hold exactly the same keys, each once. For the LFU cache, each key also sits in exactly one bucket, the bucket of its count.
+
+The traces use shorter labels. The label `order` shows the LRU list from `first.after` toward `last`, and the label `counts` shows `countOf`.
 
 <!-- stage: trace -->
 ### Tracing An LRU And An LFU Cache
@@ -104,10 +107,10 @@ When key 3 arrives, the cache is full and key 2 is at the back, so key 2 leaves.
 
 The second trace uses an LFU cache with capacity 2 and the keys `[1, 2, 2, 1, 3, 4]`. Steps one and two put keys 1 and 2. Step three is `get(2)` and step four is `get(1)`, so both keys reach count 2, and key 2 reached it first. Step five puts key 3 and step six puts key 4.
 
-When key 3 arrives, both keys sit in bucket 2, and the back of that bucket is key 2, so key 2 leaves and key 3 enters bucket 1. The minimum becomes 1. When key 4 arrives, bucket 1 holds only key 3, so key 3 leaves.
+When key 3 arrives, both keys sit in bucket 2, and the first key of that bucket is key 2, so key 2 leaves and key 3 enters bucket 1. The minimum becomes 1. When key 4 arrives, bucket 1 holds only key 3, so key 3 leaves.
 
 ```trace
-{"cells":[1,2,2,1,3,4],"pointers":["op"],"steps":[{"at":{"op":0},"vars":{"counts":"{1:1}","minFreq":1},"note":"put(1) adds key 1 with count 1. The minimum frequency is 1."},{"at":{"op":1},"vars":{"counts":"{1:1,2:1}","minFreq":1},"note":"put(2) adds key 2 with count 1. The minimum frequency is 1."},{"at":{"op":2},"vars":{"counts":"{1:1,2:2}","minFreq":1},"note":"get(2) raises its count to 2. The minimum frequency is 1."},{"at":{"op":3},"vars":{"counts":"{1:2,2:2}","minFreq":2},"note":"get(1) raises its count to 2. The minimum frequency is 2."},{"at":{"op":4},"vars":{"counts":"{1:2,3:1}","minFreq":1},"note":"put(3) finds the cache full, so key 2 with count 2 leaves from the back of its bucket, then key 3 enters with count 1. The minimum frequency is 1."},{"at":{"op":5},"vars":{"counts":"{1:2,4:1}","minFreq":1},"note":"put(4) finds the cache full, so key 3 with count 1 leaves from the back of its bucket, then key 4 enters with count 1. The minimum frequency is 1."}]}
+{"cells":[1,2,2,1,3,4],"pointers":["op"],"steps":[{"at":{"op":0},"vars":{"counts":"{1:1}","smallest":1},"note":"put(1) adds key 1 with count 1. The minimum frequency is 1."},{"at":{"op":1},"vars":{"counts":"{1:1,2:1}","smallest":1},"note":"put(2) adds key 2 with count 1. The minimum frequency is 1."},{"at":{"op":2},"vars":{"counts":"{1:1,2:2}","smallest":1},"note":"get(2) raises its count to 2. The minimum frequency is 1."},{"at":{"op":3},"vars":{"counts":"{1:2,2:2}","smallest":2},"note":"get(1) raises its count to 2. The minimum frequency is 2."},{"at":{"op":4},"vars":{"counts":"{1:2,3:1}","smallest":1},"note":"put(3) finds the cache full, so key 2 with count 2 leaves from the start of its bucket, then key 3 enters with count 1. The minimum frequency is 1."},{"at":{"op":5},"vars":{"counts":"{1:2,4:1}","smallest":1},"note":"put(4) finds the cache full, so key 3 with count 1 leaves from the start of its bucket, then key 4 enters with count 1. The minimum frequency is 1."}]}
 ```
 
 <!-- stage: code -->
@@ -202,7 +205,7 @@ The use count is an `int`. It overflows past 2147483647, and a cache that serves
 
 **Example 2.** Input: the list `[1, 3]` and a call of `moveToFront` on the node of key 1, which is already first. Output: `frontToBack()` stays `[1, 3]` and `backToFront()` is `[3, 1]`.
 
-**Hint.** Which four links change when a node leaves, and which four change when it enters? Does the order of the two steps matter when the node is already first?
+**Hint.** Which two links change when a node leaves, and which four change when it enters? Does the order of the two steps matter when the node is already first?
 
 **Changed decision.** First exercise in the sequence: introduces the sentinel list and the detach-then-insert move without any map.
 
@@ -265,6 +268,6 @@ The use count is an `int`. It overflows past 2147483647, and a cache that serves
 
 **Example 2.** Input: capacity 2 and the calls `put(1, 10)`, `put(2, 20)`, `get(2)`, `get(1)` and `put(3, 30)`. Output: both old keys have count 2 and key 2 was used first, so a later `get(2)` is -1 and `get(1)` is 10.
 
-**Hint.** When the list of keys with the smallest count empties, which count becomes the smallest? Which key sits at the back of its bucket after several uses?
+**Hint.** When the list of keys with the smallest count empties, which count becomes the smallest? Which key sits at the start of its bucket after several uses?
 
 **Changed decision.** Eviction depends on use counts first and recency second, so one list becomes one list per count plus a pointer to the smallest count.

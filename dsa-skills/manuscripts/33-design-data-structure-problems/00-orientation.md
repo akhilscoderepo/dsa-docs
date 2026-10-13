@@ -5,7 +5,7 @@ A cache returns a stale value after an eviction. A random-pick service returns a
 
 ### Prerequisites
 
-You should know hash maps and sets from the chapter on hash maps and sets, dynamic arrays and doubly linked lists from the chapters on arrays and linked lists, stacks from the stack chapter, and the in-order walk of a binary search tree. A **contract** is the promise an operation makes about its input, its mutation of state, its output and its failure behavior. An **invariant** is a fact about the stored fields that holds again at the end of each operation.
+You should know hash maps and sets from the chapter on hash maps and sets, dynamic arrays and doubly linked lists from the chapters on arrays and linked lists, stacks from the stack chapter, and the in-order walk of a binary search tree. A **contract** is the promise an operation makes about its legal input, its output, its mutation of state, its failure behavior and its cost. An **invariant** is a fact about the stored fields that holds again at the end of each operation.
 
 ### The Six Lessons
 

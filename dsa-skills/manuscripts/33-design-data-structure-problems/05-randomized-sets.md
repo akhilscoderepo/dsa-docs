@@ -56,11 +56,11 @@ The array holds exactly the current values, one per slot. A random pick draws an
 <!-- stage: variables -->
 ### State The Set Keeps
 
-The class needs three fields. The contract also fixes who supplies the random source.
+The class needs two fields. The contract also fixes who supplies the random source, which is a parameter and not a field.
 
 - **values** is the dynamic array holding exactly the current values, with no gaps and no stale slots.
 - **index** is the map from each current value to its slot in `values`.
-- **rng** is a `java.util.Random` that the caller passes into `getRandom`, so a test can seed it.
+- **rng** is a `java.util.Random` that the caller passes into `getRandom`, so a test can seed it. The class does not store it.
 
 The invariant ties the fields together. For every slot `i` in `0..values.size() - 1`, `index.get(values.get(i))` equals `i`. The map holds no other key. Every operation must restore this fact before it returns.
 
@@ -81,7 +81,7 @@ The index map says 20 sits in slot 1, and the last slot is 3 and holds 40. The o
 
 Start with the array `[10, 20, 40]` and remove 40, which sits in the last slot. Here the removed slot and the last slot are the same slot.
 
-The copy step writes 40 into the slot that already holds 40. The repair step records slot 2 for 40, which re-creates the entry that the operation is about to delete. The operation then drops the last slot. Only the final step, which deletes the entry for 40, makes the map correct. The order of those steps matters, as the second trace shows.
+The copy step writes 40 into the slot that already holds 40. The repair step records slot 2 for 40, which rewrites the entry with the value it already has. That entry is the one the operation is about to delete. The operation then drops the last slot. Only the final step, which deletes the entry for 40, makes the map correct. The order of those steps matters, as the second trace shows.
 
 ```trace
 {"cells":[10,20,40],"pointers":["slot","last"],"steps":[{"at":{"slot":-1,"last":2},"vars":{"array":"[10, 20, 40]","map":"10->0, 20->1, 40->2"},"note":"Start: remove 40. The array is [10, 20, 40] and the last slot is 2."},{"at":{"slot":2,"last":2},"vars":{"array":"[10, 20, 40]","map":"10->0, 20->1, 40->2"},"note":"The map gives slot 2 for 40. The last slot 2 holds 40."},{"at":{"slot":2,"last":2},"vars":{"array":"[10, 20, 40]","map":"10->0, 20->1, 40->2"},"note":"Copy 40 into slot 2. The array reads [10, 20, 40]."},{"at":{"slot":2,"last":2},"vars":{"array":"[10, 20, 40]","map":"10->0, 20->1, 40->2"},"note":"Record slot 2 for 40 in the map."},{"at":{"slot":2,"last":2},"vars":{"array":"[10, 20]","map":"10->0, 20->1, 40->2"},"note":"Drop the last slot. The array reads [10, 20]."},{"at":{"slot":2,"last":2},"vars":{"array":"[10, 20]","map":"10->0, 20->1"},"note":"Delete the entry for 40 as the final step. The map agrees with the array again."}]}
@@ -225,7 +225,7 @@ Three Java details cause real bugs here. First, `Random.nextInt(bound)` throws `
 
 **Example 1.** Input `insert(4)`, `insert(4)`, `insert(6)`, `insert(4)`, then `remove(4)`, output `true`, `false`, `true`, `false`, and `2`, with the array `[4, 4, 6]`.
 
-**Example 2.** Input the same collection, then `remove(4)`, `remove(9)`, output `1` and `-1`, with the array `[4, 6]`.
+**Example 2.** Input the collection that Example 1 leaves, which holds the array `[4, 4, 6]`, then `remove(4)`, `remove(9)`, output `1` and `-1`, with the array `[4, 6]`.
 
 **Hint.** Which index leaves the array when the greatest index of the value is removed? When is that index equal to the last slot, and what does that say about the moved value?
 

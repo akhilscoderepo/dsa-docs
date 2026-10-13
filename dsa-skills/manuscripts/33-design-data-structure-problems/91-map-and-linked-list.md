@@ -55,7 +55,7 @@ A hash map alone has the opposite weakness. It finds a key in O(1) average time,
 
 #### Sharing Node Identity
 
-The fix is to keep two structures over the same objects. The map goes from each key to a node object, and the doubly linked list is made of those same node objects. The map does not store a copy of the node, and it does not store an index into a list. Because of this shared **node identity**, a map lookup returns the exact node that sits inside the list. That node already holds `prev` and `next`, so removing it needs no search, only four pointer writes.
+The fix is to keep two structures over the same objects. The map goes from each key to a node object, and the doubly linked list is made of those same node objects. The map does not store a copy of the node, and it does not store an index into a list. Because of this shared **node identity**, a map lookup returns the exact node that sits inside the list. That node already holds `prev` and `next`, so removing it needs no search, only two pointer writes.
 
 Moving a node to the hot end is a detach followed by an insert. The detach connects the old neighbours to each other. The insert connects the node to the head and to the old first node.
 
@@ -72,7 +72,7 @@ The **combined invariant** says three things at once. The key set of the map equ
 <!-- stage: variables -->
 ### State Held By The Combined Cache
 
-The class holds five pieces of state. The first four are reachable from the public operations, and the last one is private to the repair methods.
+The class holds four fields and one private node class. The fields are reachable from the public operations, and the node class is the element type of the list.
 
 - **index** is a `HashMap<Integer, Node>` that maps each key to its node.
 - **head** is the sentinel before the hottest node, so `head.next` is the freshest entry.
@@ -104,7 +104,7 @@ The second trace uses capacity 3 and calls `get 1` twice in a row. The first cal
 ```
 
 <!-- stage: code -->
-### Implementing The Cache With Four Pointer Writes
+### Implementing The Cache With Two Repair Methods
 
 ```java
 final class LruCache {
@@ -149,6 +149,7 @@ final class LruCache {
     }
 
     void put(int key, int value) {
+        if (capacity == 0) return;   // a cache of capacity 0 stores nothing; without this guard eviction would detach a sentinel
         Node n = index.get(key);
         if (n != null) {            // update counts as a use
             n.value = value;
@@ -168,7 +169,7 @@ final class LruCache {
 }
 ```
 
-The `get` and `put` operations each run in O(1) average time, because the map lookup is O(1) average and the pointer writes are O(1). The space is O(capacity) for the nodes plus the map. The two private methods are the only code that changes `prev` and `next`, which is the rule from One Method Repairs Each Link.
+The `get` and `put` operations each run in O(1) average time, because the map lookup is O(1) average and the pointer writes are O(1). The space is O(capacity) for the nodes plus the map. A detach rewrites two links and an insert at the front rewrites four. The `put` guard for capacity 0 matters because eviction would otherwise detach a sentinel and corrupt the list. The two private methods are the only code that changes `prev` and `next`, which is the rule from One Method Repairs Each Link.
 
 <!-- stage: applicability -->
 ### Recognizing When A Map Needs A List

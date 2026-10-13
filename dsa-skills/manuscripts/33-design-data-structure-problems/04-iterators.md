@@ -64,7 +64,7 @@ An operation is **idempotent** when calling it twice leaves the same state as ca
 
 #### Handling An Exhausted Source
 
-A source is **exhausted** when `hasNext()` returns false and no element remains. A `peek()` or `next()` on an exhausted wrapper must throw `NoSuchElementException`. The check comes before any assignment, so the failed call leaves the slot and the flag as they were. The flag is a separate boolean because the slot value alone cannot say whether it is empty. A sequence of boxed `Integer` values may legitimately contain `null`, and a design that treats `null` as empty would pull a second element.
+A source is **exhausted** when `hasNext()` returns false and no element remains. A `peek()` or `next()` on an exhausted wrapper must throw `NoSuchElementException`. The check comes before any assignment, so the failed call leaves the slot and the flag as they were. The flag is a separate boolean because the slot is an `int`, and every `int` value is a legal element. No value of the slot can mean empty, so the flag alone says whether the lookahead is filled.
 
 <!-- names: lookahead slot, idempotent, exhausted -->
 
@@ -83,24 +83,24 @@ Four entities hold the traversal state between calls. The two public reads and t
 
 #### Peeking Without Moving
 
-The first trace wraps `[4, 7, 9]`. The pointer `pos` marks how far the source has advanced, which is the index of the next element it would give away.
+The first trace wraps `[4, 7, 9]`. The pointer `pos` marks the cell most recently pulled from the source, and -1 means nothing is pulled. The variable `advances` counts the pulls.
 
-At the start nothing has been pulled, so `pos` is 0 and the slot is empty. The first `peek()` pulls the 4, moves `pos` to 1 and fills the slot. The second `peek()` finds the slot full, so it returns 4 again and `pos` stays 1. The call `next()` then returns the stored 4 and empties the slot, still without touching the source.
+At the start nothing has been pulled, so `pos` is -1, `advances` is 0 and the slot is empty. The first `peek()` pulls the 4, moves `pos` to 0, raises `advances` to 1 and fills the slot. The second `peek()` finds the slot full, so it returns 4 again and `advances` stays 1. The call `next()` then returns the stored 4 and empties the slot, still without touching the source.
 
 #### Taking And Reaching The End
 
-The next `hasNext()` asks the source and answers true without pulling. The following `next()` pulls the 7, fills the slot and empties it again in one call, so `pos` becomes 2. A `peek()` pulls the 9 and `next()` returns it, and the last `hasNext()` answers false because the slot is empty and the source has nothing left.
+The next `hasNext()` asks the source and answers true without pulling. The following `next()` pulls the 7, fills the slot and empties it again in one call, so `advances` becomes 2. A `peek()` pulls the 9 and `next()` returns it, and the last `hasNext()` answers false because the slot is empty and the source has nothing left.
 
 ```trace
-{"cells":[4,7,9],"pointers":["pos"],"steps":[{"at":{"pos":0},"vars":{"slot":"empty","call":"start"},"note":"Start: nothing is pulled, the slot is empty and pos is 0."},{"at":{"pos":1},"vars":{"slot":"4","call":"peek() = 4"},"note":"peek() returns 4; pos is 1 and the slot holds 4."},{"at":{"pos":1},"vars":{"slot":"4","call":"peek() = 4"},"note":"peek() returns 4; pos is 1 and the slot holds 4."},{"at":{"pos":1},"vars":{"slot":"empty","call":"next() = 4"},"note":"next() returns 4; the slot is now empty and pos is 1."},{"at":{"pos":1},"vars":{"slot":"empty","call":"hasNext() = true"},"note":"hasNext() answers true without pulling; pos stays 1."},{"at":{"pos":2},"vars":{"slot":"empty","call":"next() = 7"},"note":"next() returns 7; the slot is now empty and pos is 2."},{"at":{"pos":3},"vars":{"slot":"9","call":"peek() = 9"},"note":"peek() returns 9; pos is 3 and the slot holds 9."},{"at":{"pos":3},"vars":{"slot":"empty","call":"next() = 9"},"note":"next() returns 9; the slot is now empty and pos is 3."},{"at":{"pos":3},"vars":{"slot":"empty","call":"hasNext() = false"},"note":"hasNext() answers false without pulling; pos stays 3."}]}
+{"cells":[4,7,9],"pointers":["pos"],"steps":[{"at":{"pos":-1},"vars":{"slot":"empty","advances":0,"call":"start"},"note":"Start: nothing is pulled, the slot is empty and advances is 0."},{"at":{"pos":0},"vars":{"slot":"4","advances":1,"call":"peek() = 4"},"note":"peek() returns 4; advances is 1 and the slot holds 4."},{"at":{"pos":0},"vars":{"slot":"4","advances":1,"call":"peek() = 4"},"note":"peek() returns 4; advances is 1 and the slot holds 4."},{"at":{"pos":0},"vars":{"slot":"empty","advances":1,"call":"next() = 4"},"note":"next() returns 4; the slot is now empty and advances is 1."},{"at":{"pos":0},"vars":{"slot":"empty","advances":1,"call":"hasNext() = true"},"note":"hasNext() answers true without pulling; advances stays 1."},{"at":{"pos":1},"vars":{"slot":"empty","advances":2,"call":"next() = 7"},"note":"next() returns 7; the slot is now empty and advances is 2."},{"at":{"pos":2},"vars":{"slot":"9","advances":3,"call":"peek() = 9"},"note":"peek() returns 9; advances is 3 and the slot holds 9."},{"at":{"pos":2},"vars":{"slot":"empty","advances":3,"call":"next() = 9"},"note":"next() returns 9; the slot is now empty and advances is 3."},{"at":{"pos":2},"vars":{"slot":"empty","advances":3,"call":"hasNext() = false"},"note":"hasNext() answers false without pulling; advances stays 3."}]}
 ```
 
 #### Walking A Stack Of Iterators
 
-The second trace follows the nested case, where the sequence is `[[1, [2]], [], 3]`. The pointer `out` counts the integers already taken, and `frames` is the number of unfinished iterators on the stack. Each `next()` first scans forward through the nested lists until it finds an integer. It pushes an iterator when it enters a list and pops one when that list has no element left. The empty list `[]` is entered and popped without producing anything.
+The second trace follows the nested case, where the sequence is `[[1, [2]], [], 3]`. The pointer `out` marks the last integer taken, and -1 means none is taken. The variable `frames` is the number of unfinished iterators on the stack. Each `next()` first scans forward through the nested lists until it finds an integer. It pushes an iterator when it enters a list and pops one when that list has no element left. The empty list `[]` is entered and popped without producing anything.
 
 ```trace
-{"cells":[1,2,3],"pointers":["out"],"steps":[{"at":{"out":0},"vars":{"frames":1,"value":"none"},"note":"Start: only the top-level list is on the stack, so frames is 1."},{"at":{"out":1},"vars":{"frames":2,"value":1},"note":"next() enters a list, finds 1 and returns 1; frames is 2."},{"at":{"out":2},"vars":{"frames":3,"value":2},"note":"next() enters a list, finds 2 and returns 2; frames is 3."},{"at":{"out":3},"vars":{"frames":1,"value":3},"note":"next() pops a finished list, pops a finished list, enters an empty list, pops a finished list, finds 3 and returns 3; frames is 1."},{"at":{"out":3},"vars":{"frames":0,"value":"none"},"note":"hasNext() pops a finished list and answers false; frames is 0."}]}
+{"cells":[1,2,3],"pointers":["out"],"steps":[{"at":{"out":-1},"vars":{"frames":1,"value":"none"},"note":"Start: only the top-level list is on the stack, so frames is 1."},{"at":{"out":0},"vars":{"frames":2,"value":1},"note":"next() enters a list, finds 1 and returns 1; frames is 2."},{"at":{"out":1},"vars":{"frames":3,"value":2},"note":"next() enters a list, finds 2 and returns 2; frames is 3."},{"at":{"out":2},"vars":{"frames":1,"value":3},"note":"next() pops a finished list, pops a finished list, enters an empty list, pops a finished list, finds 3 and returns 3; frames is 1."},{"at":{"out":2},"vars":{"frames":0,"value":"none"},"note":"hasNext() pops a finished list and answers false; frames is 0."}]}
 ```
 
 <!-- stage: code -->
@@ -237,7 +237,7 @@ The interface method `Iterator.remove()` has a default body that throws `Unsuppo
 - **Depth** of list nesting is at most 1000.
 - **Values** are `int`.
 - **Empty** lists are allowed at any depth, including the top level.
-- **Frames** counted by `liveFrames()` include the top-level list, and a frame is removed only when `hasNext()` finds it empty.
+- **Frames** counted by `liveFrames()` include the top-level list, and a frame is removed when a scan finds it has no element left, and both `hasNext()` and `next()` run that scan.
 - **Failure** is `NoSuchElementException` from `next()` when no integer remains.
 
 **Example 1.** Input `[[1,[2]],[],3]`, output `1, 2, 3`, and `liveFrames()` reads `2, 3, 1` right after each `next()`.

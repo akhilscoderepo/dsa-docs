@@ -6,7 +6,7 @@ def run(vals, v):
     def st(slot,last,vars_,note): return {"at":{"slot":slot,"last":last},"vars":vars_,"note":note}
     s=[]
     def snap(extra=None):
-        d={"values":str(vals).replace(" ",""),"slotOf":",".join(f"{k}:{pos[k]}" for k in vals)}
+        d={"values":str(vals).replace(" ",""),"slotOf":",".join(f"{k}:{p}" for k,p in pos.items())}
         if extra: d.update(extra)
         return d
     slot=pos[v]; lastslot=n-1; last=vals[-1]
@@ -18,10 +18,10 @@ def run(vals, v):
     s.append(st(slot,lastslot,snap({"slot":slot,"last":last}),f"Repair: slotOf.put({last}, {slot}). The entry for {last} now names slot {slot}."))
     del pos[v]
     # note: if v == last the entry for v is gone now
-    s.append(st(slot,lastslot,{"values":str(vals).replace(" ",""),"slotOf":",".join(f"{k}:{pos[k]}" for k in sorted(pos,key=lambda k:pos[k]))},f"Delete the entry for {v}. "+("It was also the final value, so the repair write disappears with it." if v==last else f"Only the entry for {v} is removed.")))
+    s.append(st(slot,lastslot,{"values":str(vals).replace(" ",""),"slotOf":",".join(f"{k}:{p}" for k,p in pos.items())},f"Delete the entry for {v}. "+("It was also the final value, so the repair write disappears with it." if v==last else f"Only the entry for {v} is removed.")))
     vals.pop()
     moved=-1 if v==last else last
-    s.append(st(slot if slot<len(vals) else len(vals),len(vals)-1 if vals else -1,{"values":str(vals).replace(" ",""),"slotOf":",".join(f"{k}:{pos[k]}" for k in sorted(pos,key=lambda k:pos[k])),"moved":moved},f"Drop the final position. The list reads {vals} and the call returns {moved}."))
+    s.append(st(slot if slot<len(vals) else len(vals),len(vals)-1 if vals else -1,{"values":str(vals).replace(" ",""),"slotOf":",".join(f"{k}:{p}" for k,p in pos.items()),"moved":moved},f"Drop the final position. The list reads {vals} and the call returns {moved}."))
     assert sorted(pos)==sorted(vals) and all(vals[pos[k]]==k for k in pos)
     return s,vals,moved
 a=[40,17,93,52,8]

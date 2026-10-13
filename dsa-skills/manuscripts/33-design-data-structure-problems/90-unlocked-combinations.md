@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A product team needs a session cache that drops the oldest idle session, a raffle that draws a uniform winner and lets entrants withdraw, and a reader that pages through a nested menu one item at a time. Each need pairs two structures from this chapter. Three pairings are taught below, and one waits for a later chapter.
+A product team needs a session cache that drops the oldest idle session, a raffle that draws a uniform winner and lets entrants withdraw, and a reader that pages through a nested menu one item at a time. Each of these three needs pairs two structures from this chapter. Three pairings are taught below. Use from several threads at once waits for a later chapter.
 
 ### Pairings Taught In This Chapter
 

@@ -143,6 +143,12 @@ final class AccountCounter {
     /** Output: count of key, 0 when absent. Mutation: none. Failure: none. Cost: O(1) expected. */
     int count(String key) { return counts.getOrDefault(key, 0); }
 
+    /** Output: number of keys with a positive count. Mutation: none. Failure: none. Cost: O(1). */
+    int distinct() { return counts.size(); }
+
+    /** Output: sum of all counts. Mutation: none. Failure: none. Cost: O(1). */
+    int total() { return total; }
+
     /** Output: independent copy of the counts. Mutation: none. Cost: O(k) time and space. */
     Map<String, Integer> snapshot() { return new HashMap<>(counts); }
 }

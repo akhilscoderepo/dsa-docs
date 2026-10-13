@@ -77,7 +77,7 @@ Swap-with-last moves one value to a new position, so the map entry of the moved 
 <!-- stage: variables -->
 ### State The Pool Keeps
 
-The pool owns three fields, and the invariant ties them together. No caller reads these fields directly, so every operation can restore the invariant before it returns.
+The pool owns four fields, and the invariant ties them together. No caller reads these fields directly, so every operation can restore the invariant before it returns.
 
 - **items** is the int array of current values, and positions `0..size-1` are meaningful.
 - **size** is the count of current values and the first unused index.
@@ -205,14 +205,14 @@ The overloads `remove(int index)` and `remove(Object o)` on a list are easy to c
 - **Values** are distinct `int` values in the range `0..10^9`, so `-1` never collides with a stored value.
 - **Size** is between 0 and `10^5`.
 - **Mutation** is none; the operation reads state only.
-- **Randomness** comes from one injected `java.util.Random`.
+- **Randomness** comes from the one `java.util.Random` that the pool owns, created from a seed in the constructor.
 - **Cost** is O(1) worst case after the map lookup.
 
 **Example 1.** Input is the pool 3, 6, 9 and the call `getRandomExcluding(6)`. The output is 3 or 9, each with probability 1/2.
 
 **Example 2.** Input is the pool holding only 4 and the call `getRandomExcluding(4)`. The output is `-1`.
 
-**Hint.** Draw an index from a range that is one shorter than the number of qualifying values. If the draw hits the excluded index, which other index has not yet been offered?
+**Hint.** When `value` is present, draw an index from a range one shorter than `size`. If the draw hits the slot of `value`, which other index has not yet been offered? When `value` is absent, every current value qualifies, so draw from the full range.
 
 **Changed decision.** The output contract changes from any current value to any value except one, so the random index range shrinks and one index is redirected.
 

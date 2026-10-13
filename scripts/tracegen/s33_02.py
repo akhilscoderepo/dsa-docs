@@ -30,7 +30,7 @@ c,st,lst,size=run(False); assert lst==[4,9,5] and size==3
 assert all(s["vars"]["size"]==s["vars"]["nodes"] for s in st)
 steps1=st
 c2,st2,lst2,size2=run(True); assert lst2==[4,9] and size2==4
-st2.append({"at":{"op":6},"vars":st2[-1]["vars"],"note":"Done. The last open 5 threw although only two tabs are open, because the counter reads 3. The drift is permanent."})
-st.append({"at":{"op":6},"vars":st[-1]["vars"],"note":"Done. The strip holds 4, 9 and 5, and size, nodes and the table all agree at 3."})
+st2.append({"at":{"op":5},"vars":st2[-1]["vars"],"note":"Done. The last open 5 threw although only two tabs are open, because the counter reads 3. The drift is permanent."})
+st.append({"at":{"op":5},"vars":st[-1]["vars"],"note":"Done. The strip holds 4, 9 and 5, and size, nodes and the table all agree at 3."})
 fill(CH,F,block(c,["op"],steps1),"@@TRACE1@@")
 fill(CH,F,block(c2,["op"],st2),"@@TRACE2@@")

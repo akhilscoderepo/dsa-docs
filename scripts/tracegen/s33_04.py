@@ -13,16 +13,16 @@ class Peek:
     def next(s):
         v=s.peek(); s.filled=False; return v
 data=[4,7,9]; w=Peek(data)
-st=[{"at":{"pos":0},"vars":{"slot":"empty","call":"start"},"note":"Start: nothing is pulled, the slot is empty and pos is 0."}]
+st=[{"at":{"pos":-1},"vars":{"slot":"empty","advances":0,"call":"start"},"note":"Start: nothing is pulled, the slot is empty and advances is 0."}]
 script=[("peek",4),("peek",4),("next",4),("hasNext",True),("next",7),("peek",9),("next",9),("hasNext",False)]
 for op,exp in script:
     r={"peek":w.peek,"next":w.next,"hasNext":w.has_next}[op]()
     assert r==exp,(op,r,exp)
     slot=str(w.slot) if w.filled else "empty"
-    if op=="peek": note=f"peek() returns {r}; pos is {w.pos} and the slot holds {slot}."
-    elif op=="next": note=f"next() returns {r}; the slot is now empty and pos is {w.pos}."
-    else: note=f"hasNext() answers {str(r).lower()} without pulling; pos stays {w.pos}."
-    st.append({"at":{"pos":w.pos},"vars":{"slot":slot,"call":f"{op}() = {str(r).lower() if isinstance(r,bool) else r}"},"note":note})
+    if op=="peek": note=f"peek() returns {r}; advances is {w.pos} and the slot holds {slot}."
+    elif op=="next": note=f"next() returns {r}; the slot is now empty and advances is {w.pos}."
+    else: note=f"hasNext() answers {str(r).lower()} without pulling; advances stays {w.pos}."
+    st.append({"at":{"pos":w.pos-1},"vars":{"slot":slot,"advances":w.pos,"call":f"{op}() = {str(r).lower() if isinstance(r,bool) else r}"},"note":note})
 assert w.pos==3
 fill(CH,F,block(data,["pos"],st),"@@TRACE1@@")
 
@@ -42,12 +42,12 @@ def scan():
         else:
             stack.append(iter(item)); acts.append("enters a list" if item else "enters an empty list")
     return acts
-st=[{"at":{"out":0},"vars":{"frames":len(stack),"value":"none"},"note":"Start: only the top-level list is on the stack, so frames is 1."}]
+st=[{"at":{"out":-1},"vars":{"frames":len(stack),"value":"none"},"note":"Start: only the top-level list is on the stack, so frames is 1."}]
 for k in range(3):
     acts=scan(); v=pending[0]; pending[0]=None; out.append(v)
-    st.append({"at":{"out":len(out)},"vars":{"frames":len(stack),"value":v},"note":f"next() {', '.join(acts)} and returns {v}; frames is {len(stack)}."})
+    st.append({"at":{"out":len(out)-1},"vars":{"frames":len(stack),"value":v},"note":f"next() {', '.join(acts)} and returns {v}; frames is {len(stack)}."})
 acts=scan(); assert pending[0] is None and not stack
-st.append({"at":{"out":3},"vars":{"frames":0,"value":"none"},"note":f"hasNext() {', '.join(acts)} and answers false; frames is 0."})
+st.append({"at":{"out":2},"vars":{"frames":0,"value":"none"},"note":f"hasNext() {', '.join(acts)} and answers false; frames is 0."})
 assert out==[1,2,3]
 assert [s["vars"]["frames"] for s in st]==[1,2,3,1,0]
 fill(CH,F,block(out,["out"],st),"@@TRACE2@@")
