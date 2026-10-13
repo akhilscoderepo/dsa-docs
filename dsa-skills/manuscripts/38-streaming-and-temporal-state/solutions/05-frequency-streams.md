@@ -67,8 +67,8 @@ public final class PairSumStoreBuild {
         if (t.find(-10)) throw new AssertionError("one copy cannot pair with itself");
         t.add(-5);
         if (!t.find(-10)) throw new AssertionError("two copies pair");
-        t.add(2000000000);
-        if (!t.find(1999999995L)) throw new AssertionError("example 2");
+        t.add(1000000000);
+        if (!t.find(999999995L)) throw new AssertionError("example 2");
         // An empty store has no pair, and a target beyond int range stays exact.
         if (new PairSumStore().find(0)) throw new AssertionError("empty store");
         PairSumStore big = new PairSumStore();

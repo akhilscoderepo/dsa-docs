@@ -50,7 +50,7 @@ The class holds all one million timestamps, although at most 100 of them can mat
 
 After `n` calls the naive class stores `n` timestamps and scans `n` entries on the next call. A single call costs O(n) time, a run of `n` calls costs O(n^2) time in total, and the memory is O(n). The average method scans only the last `k` entries, so a call costs O(k) time. That cost still repeats work, because two neighboring calls add up almost the same `k` numbers. Only one number leaves and one number enters between them.
 
-Both methods also keep entries that are certain to be useless. Once the clock passes `t + span`, a timestamp `t` can never count again, because later calls only move the clock forward. Once more than `k` values arrive after a value, that value can never enter an average again. The program holds on to data whose future effect is zero.
+Both methods also keep entries that are certain to be useless. Once the clock passes `t + span`, a timestamp `t` can never count again, because later calls only move the clock forward. Once `k` values have arrived after a value, that value can never enter an average again. The program holds on to data whose future effect is zero.
 
 A better design must meet three needs. It must store only the entries that can still change an answer, so memory depends on the window and not on `n`. It must update the answer from the change between two calls, and not from a fresh scan. It must remove an entry at the moment it stops counting, and the moment must come from a written rule.
 
@@ -153,6 +153,28 @@ final class TimeWindow {
 }
 ```
 
+#### The Slot Array
+
+The slot array is the second design that the Hit Counter exercise asks for. It keeps one slot per time unit, and each slot remembers which second it holds. The sketch below uses `span = 3`.
+
+```java
+final class SlotSketch {
+    private final int span;
+    private final int[] tag;     // the second that each slot holds
+    private final int[] hits;    // the hits counted for that second
+
+    SlotSketch(int span) { this.span = span; tag = new int[span]; hits = new int[span]; }
+
+    void hit(int t) {
+        int i = t % span;                                  // seconds 4 and 7 share slot 1
+        if (tag[i] != t) { tag[i] = t; hits[i] = 0; }      // an old second is overwritten
+        hits[i]++;
+    }
+}
+```
+
+After hits at seconds 4, 4 and 5, slot 1 holds tag 4 with 2 hits and slot 2 holds tag 5 with 1 hit. A hit at second 7 lands in slot 1, sees tag 4, and resets the slot to tag 7 with 1 hit. The old count never needs a timer.
+
 #### Cost
 
 - **CountWindow** costs O(1) time per call and O(k) space.
@@ -228,16 +250,16 @@ If timestamps can arrive out of order, the front of the queue is not the oldest 
 **Problem.** Design the class `TimedSum` with a constructor that receives a `long` named `span`. The method `record(time, value)` stores an event. The method `total(now)` returns the sum of the values of recorded events with `now - span <= time <= now`. Both ends of the range count. The `time` and `now` arguments of all calls, taken together in call order, never decrease.
 
 **Constraints.** The limits are:
-- **Span and times** are `long` values from 0 to 4 * 10^18.
+- **Span and times** are `long` values from 0 to 9 * 10^18.
 - **Values** are `long` values from -10^12 to 10^12, and 0 is allowed.
 - **Calls** number at most 10^5 per object.
 - **Clock** is always an argument, and the class never reads a system clock.
 
 **Example 1.** Input calls `["TimedSum","record","record","total","total"]` with arguments `[[10],[5,100],[15,-30],[15],[16]]`, output `[null,null,null,70,-30]`.
 
-**Example 2.** Input calls `["TimedSum","record","record","total","total"]` with arguments `[[4000000000000000000],[0,5000000000000],[4000000000000000000,5000000000000],[4000000000000000000],[4000000000000000001]]`, output `[null,null,null,10000000000000,5000000000000]`.
+**Example 2.** Input calls `["TimedSum","record","record","total","total"]` with arguments `[[9000000000000000000],[0,5000000000000],[9000000000000000000,5000000000000],[9000000000000000000],[9000000000000000001]]`, output `[null,null,null,10000000000000,5000000000000]`.
 
-**Hint.** Which side of the comparison can overflow if the program writes `time + span`, and which rewriting avoids it?
+**Hint.** Why can `time + span` overflow a `long` when both are near 9 * 10^18, and which rewriting avoids it?
 
 **Changed decision.** Both ends are inclusive, a query alone can expire entries, the total needs `long`, and the cutoff `now - span` is computed instead of `time + span`.
 

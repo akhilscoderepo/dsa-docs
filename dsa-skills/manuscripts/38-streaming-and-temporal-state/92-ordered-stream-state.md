@@ -14,7 +14,7 @@ Nothing crashed, and the heap did exactly what a heap does. The bug lies in the 
 
 The heap lessons supplied the bounded heap. A min-heap of size k keeps the k largest values, and its root is the k-th largest. The lessons on ordered sets supplied the count map, where a `TreeMap` from value to count gives the smallest and the largest value in O(log n). The design chapter supplied the habit of keeping one table that holds the truth about every key, so that a second structure is only an index over it. The first lessons of this chapter supplied the window queue, where the oldest value expires from the front. They also supplied the rule that an API states its time and its inclusive edges.
 
-This lesson joins them. The new work is a way to decide which structure fits each kind of stream. An append-only stream needs a bounded heap. A correctable stream needs an index that can be wrong in a controlled way. An expiring stream needs both a queue of arrival order and an ordered split of the live values. The Java rule that goes with all three is simple: `PriorityQueue.remove(Object)` scans the whole heap, so a hot path never calls it.
+This lesson joins them. The new work is a way to decide which structure fits each kind of stream. An append-only fixed-rank stream needs a bounded heap. A correctable stream needs an index that can be wrong in a controlled way. An expiring stream needs both a queue of arrival order and an ordered split of the live values. The Java rule that goes with all three is simple: `PriorityQueue.remove(Object)` scans the whole heap, so a hot path never calls it.
 
 <!-- stage: naive -->
 ### Keep Everything And Sort On Demand
@@ -88,12 +88,11 @@ The structures below are small, and each piece of state has one owner and one ru
 
 - **truth** is the map from key to live value, and every correction and deletion changes it first.
 - **top** is the min-heap of the k largest values. Its root is the boundary and the k-th largest value.
-- **rest** is the max-heap of the other values, used when k may grow later.
+- **rest** is the max-heap of the other values, used by the rank sketch when k changes.
 - **heap** is the lazy max-heap of entries, and an entry stays in it after the truth moves on.
 - **k** is the rank. In the first example it never changes. The exercises let it change.
-- **now** is the current time, and it is a parameter of every call that depends on time. A test passes any value of `now` it wants, and no method reads the system clock.
 
-Sums and timestamps use `long`. A sum of 10^5 values near 10^9 reaches 10^14, which an `int` cannot hold. The state changes in one order: first update the truth, then push at most one new entry, then repair the sizes, and only then read a root.
+Values in the lazy heap use `long`, so a comparison never overflows. The state changes in one order: first update the truth, then push at most one new entry, then repair the sizes, and only then read a root.
 
 <!-- stage: trace -->
 ### Admitting Values And Discarding Stale Roots
@@ -108,7 +107,7 @@ The stream is append-only, and the question is always the third largest value. T
 
 #### Correcting And Deleting With A Lazy Heap
 
-The stream is correctable. The pointer `op` marks the operation that was just applied. The table `truth` is always right, and the heap `heap` may contain stale entries. The correction of key b to 20 leaves the entry 50 in the heap. The next maximum query meets that entry at the root, finds that the truth for b is 20, and discards it. The root is then 30, which matches the truth for key a, so the answer is 30. The deletion of a leaves its entry stale in the same way. The final query discards it and returns 20. After a new value arrives for key a, the new entry becomes the root.
+The stream is correctable. The pointer `op` marks the operation that was just applied. The table `truth` is always right, and the heap `heap` may contain stale entries. The correction of key b to 20 leaves the entry 50 in the heap. The next maximum query meets that entry at the root, finds that the truth for b is 20, and discards it. The root is then 30, which matches the truth for key a, so the answer is 30. The deletion of a leaves its entry stale in the same way. The next query discards it and returns 20. A new value 25 for key a then arrives, and its new entry becomes the root. The final query discards nothing and returns 25.
 
 ```trace
 {"cells":["set a 30","set b 50","set b 20","max","erase a","max","set a 25","max"],"pointers":["op"],"steps":[{"at":{"op":-1},"vars":{"truth":"{}","heap":"[]"},"note":"Start: no key has a value and the heap is empty."},{"at":{"op":0},"vars":{"truth":"{a=30}","heap":"[30a]"},"note":"The truth for a becomes 30, and one new entry is pushed. Any older entry for a is now stale."},{"at":{"op":1},"vars":{"truth":"{a=30,b=50}","heap":"[50b,30a]"},"note":"The truth for b becomes 50, and one new entry is pushed. Any older entry for b is now stale."},{"at":{"op":2},"vars":{"truth":"{a=30,b=20}","heap":"[50b,30a,20b]"},"note":"The truth for b becomes 20, and one new entry is pushed. Any older entry for b is now stale."},{"at":{"op":3},"vars":{"truth":"{a=30,b=20}","heap":"[30a,20b]","answer":"30"},"note":"The query discards the stale root 50b and finds the live root 30, which agrees with the truth."},{"at":{"op":4},"vars":{"truth":"{b=20}","heap":"[30a,20b]"},"note":"The key a leaves the truth. Its entries stay in the heap and are now stale."},{"at":{"op":5},"vars":{"truth":"{b=20}","heap":"[20b]","answer":"20"},"note":"The query discards the stale root 30a and finds the live root 20, which agrees with the truth."},{"at":{"op":6},"vars":{"truth":"{a=25,b=20}","heap":"[25a,20b]"},"note":"The truth for a becomes 25, and one new entry is pushed. Any older entry for a is now stale."},{"at":{"op":7},"vars":{"truth":"{a=25,b=20}","heap":"[25a,20b]","answer":"25"},"note":"The root 25 agrees with the truth, so nothing is discarded."}]}
@@ -175,6 +174,77 @@ final class LazyMaxHeap {
 }
 ```
 
+#### Moving The Boundary For A New Rank
+
+The Kth Largest With Changing Rank exercise keeps two heaps. The min-heap `top` holds the k largest values, and the max-heap `rest` holds all others. A change of rank moves values across the boundary until `top` has k values again.
+
+```java
+final class RankSketch {
+    private int k;
+    private final java.util.PriorityQueue<Integer> top = new java.util.PriorityQueue<>();   // k largest, root is the boundary
+    private final java.util.PriorityQueue<Integer> rest =
+        new java.util.PriorityQueue<>(java.util.Comparator.reverseOrder());                 // all other values
+
+    RankSketch(int k) { this.k = k; }
+
+    void add(int v) { top.add(v); repair(); }
+    void setRank(int newK) { k = newK; repair(); }
+    Integer kth() { return top.size() == k ? top.peek() : null; }
+
+    private void repair() {
+        while (top.size() > k) rest.add(top.poll());                       // the smallest of top crosses down
+        while (top.size() < k && !rest.isEmpty()) top.add(rest.poll());    // the largest of rest crosses up
+    }
+}
+```
+
+A change of rank by d moves d values, so it costs O(d log n).
+
+#### Dead Marks For A Window Median
+
+The Median Of The Last W Values exercise keeps a lower max-heap and an upper min-heap, as in the median lesson. The oldest value may sit deep inside either heap, so the code marks its entry dead and lowers the live count of its side. A dead entry waits until it reaches a root. Each side keeps a live count, and the balance rule uses live counts only.
+
+```java
+final class WindowMedianSketch {
+    private static final class E {
+        final long value; boolean inLow, dead;
+        E(long value) { this.value = value; }
+    }
+
+    private final int w;
+    private int lowLive, highLive;                                         // live counts decide the balance
+    private final java.util.ArrayDeque<E> window = new java.util.ArrayDeque<>();   // arrival order
+    private final java.util.PriorityQueue<E> low =
+        new java.util.PriorityQueue<>((a, b) -> Long.compare(b.value, a.value));
+    private final java.util.PriorityQueue<E> high =
+        new java.util.PriorityQueue<>((a, b) -> Long.compare(a.value, b.value));
+
+    WindowMedianSketch(int w) { this.w = w; }
+
+    private E liveLow() { while (!low.isEmpty() && low.peek().dead) low.poll(); return low.peek(); }
+    private E liveHigh() { while (!high.isEmpty() && high.peek().dead) high.poll(); return high.peek(); }
+
+    void add(long x) {
+        E e = new E(x);
+        window.addLast(e);
+        if (lowLive == 0 || x <= liveLow().value) { e.inLow = true; low.add(e); lowLive++; }
+        else { high.add(e); highLive++; }
+        if (window.size() > w) {                                           // the oldest value expires by a mark
+            E old = window.pollFirst();
+            old.dead = true;
+            if (old.inLow) lowLive--; else highLive--;
+        }
+        while (lowLive > highLive + 1) { E r = liveLow(); low.poll(); r.inLow = false; high.add(r); lowLive--; highLive++; }
+        while (highLive > lowLive) { E r = liveHigh(); high.poll(); r.inLow = true; low.add(r); highLive--; lowLive++; }
+    }
+
+    long median() {
+        if (lowLive == 0) throw new IllegalStateException();
+        return liveLow().value;                                            // the lower root is the lower median
+    }
+}
+```
+
 #### Cost And Java Details
 
 - **TopKHeap** costs O(log k) per addition and O(k) space.
@@ -196,7 +266,7 @@ A bounded heap that keeps the k largest values is a false friend for the median 
 
 #### When Not To Use It
 
-If the questions ask for arbitrary ranks, such as the 10th and the 90th percentile together, two regions with one boundary are not enough. A Fenwick tree over compressed values answers any rank in O(log n). If the values are small integers, a counting array does the same without a heap. If corrections are rare and the stream is short, the sorted list of the first design is the clearest code. A lazy heap then adds complexity without a gain.
+If the questions ask for arbitrary ranks, such as the 10th and the 90th percentile together, two regions with one boundary are not enough. A tree of counts over the sorted values answers any rank in O(log n), and chapter 31 covers it. If the values are small integers, a counting array does the same without a heap. If corrections are rare and the stream is short, the sorted list of the first design is the clearest code. A lazy heap then adds complexity without a gain.
 
 <!-- stage: exercises -->
 ### Exercises

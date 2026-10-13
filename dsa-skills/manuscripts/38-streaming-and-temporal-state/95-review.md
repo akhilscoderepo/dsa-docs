@@ -3,7 +3,7 @@
 
 A window that disagrees with its spec at one instant, a heap root that was corrected away, and a shuffle that hands out its own array all pass short tests. The questions below cover all nine lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
 
-### Recognition Questions
+### Check Your Recall
 
 ```quiz
 {"id": "rq38-rev-boundary", "q": "A window covers the last 60 seconds and a call arrives at time 100. A record has time 40. Under the half-open range (t-60, t], what happens to it?", "options": ["It still counts, because 100 - 40 = 60 is not more than 60.", "It is expired, because the range excludes the instant 40.", "It counts only if the stream is correctable.", "It counts once and is then deleted."], "answer": 1, "explain": "The range (40, 100] excludes 40. Under the inclusive range [40, 100] the same record would count, so the contract must say which range applies."}

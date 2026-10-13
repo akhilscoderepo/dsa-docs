@@ -9,7 +9,7 @@ A support team watches a dashboard that shows the first error code that has appe
 
 A second service has the opposite flaw. It tracks how many users have performed exactly three failed logins, so it can flag them. It keeps a map from each user to a login count and a separate figure for how many users have three. When a user's record is deleted, the map shrinks but the separate figure does not, and the page flags a user who no longer exists. Both services answer questions about multiplicity. How many times has a value appeared? Is any value present exactly `f` times? Which value is still unique? Were the last `k` inputs all the same? This lesson asks how to answer such questions after every update without rereading the stream and without letting two pieces of bookkeeping disagree.
 
-The stream matters before the structure does. A stream is **append-only** when values only arrive, **correctable** when earlier arrivals can be withdrawn, and **expiring** when values leave on their own after a time. The first three problems in this lesson are append-only. The tracker in the third is correctable. No problem here expires, because expiry is the topic of other lessons in this chapter.
+The stream matters before the structure does. A stream is **append-only** when values only arrive, **correctable** when earlier arrivals can be withdrawn, and **expiring** when values leave on their own after a time. The first two problems in this lesson are append-only. The tracker in the third is correctable. No problem here expires, because expiry is the topic of other lessons in this chapter.
 
 <!-- stage: naive -->
 ### Keep Every Value And Recount
@@ -81,7 +81,7 @@ The invariant of this lesson is that a container may hold stale values only when
 <!-- stage: variables -->
 ### State Kept By Each Structure
 
-The lesson builds one tracker class and one run recognizer. The trace follows the state of the first and the queue of the second.
+The lesson builds three classes: `FrequencyBook` for counts, `UniqueReader` for first-unique queries and `RunCounter` for runs of one value. The traces follow `FrequencyBook` and `UniqueReader`, and `RunCounter` keeps one integer.
 
 - **counts** maps a value to its current number of occurrences, and it holds no entry with count 0.
 - **tally** maps a count to the number of values that currently have it, and it holds no entry for count 0.
@@ -96,10 +96,10 @@ The invariant is that `tally[c]` equals the number of values with `counts[v] == 
 
 #### The Tracker With Corrections
 
-The first trace applies nine operations to the counts and the tally. The pointer `op` marks the operation just applied. After `add 4`, `add 7` and `add 4`, the map holds `4:2` and `7:1`, so the tally holds `1:1` and `2:1`. The query `has 2` reads `tally[2]`, finds 1 and answers `true`. The operation `del 4` lowers the count of 4 from 2 to 1, so the tally moves one entry from 2 to 1 and `tally[2]` disappears. The next `has 2` answers `false`. The operation `del 7` takes the count of 7 from 1 to 0, so the map removes the key. The tally loses its entry for 1 and gains no entry for 0. The second `del 7` finds no key and changes nothing. The final `has 1` answers `true` because the value 4 still has count 1.
+The first trace applies nine operations to the counts and the tally. The pointer `op` marks the operation just applied. After `add 4`, `add 7` and `add 4`, the map holds `4:2` and `7:1`, so the tally holds `1:1` and `2:1`. The query `has 2` reads `tally[2]`, finds 1 and answers `true`. The operation `removeOne 4` lowers the count of 4 from 2 to 1, so the tally moves one entry from 2 to 1 and `tally[2]` disappears. The next `has 2` answers `false`. The operation `removeOne 7` takes the count of 7 from 1 to 0, so the map removes the key. The tally lowers `tally[1]` from 2 to 1 and gains no entry for 0. The second `removeOne 7` finds no key and changes nothing. The final `has 1` answers `true` because the value 4 still has count 1.
 
 ```trace
-{"cells":["add 4","add 7","add 4","has 2","del 4","has 2","del 7","del 7","has 1"],"pointers":["op"],"steps":[{"at":{"op":-1},"vars":{"counts":"empty","tally":"empty","answer":"none"},"note":"Start: both maps are empty."},{"at":{"op":0},"vars":{"counts":"4:1","tally":"1:1","answer":"none"},"note":"add 4 moves its count from 0 to 1 in both maps."},{"at":{"op":1},"vars":{"counts":"4:1 7:1","tally":"1:2","answer":"none"},"note":"add 7 moves its count from 0 to 1 in both maps."},{"at":{"op":2},"vars":{"counts":"4:2 7:1","tally":"1:1 2:1","answer":"none"},"note":"add 4 moves its count from 1 to 2 in both maps."},{"at":{"op":3},"vars":{"counts":"4:2 7:1","tally":"1:1 2:1","answer":"true"},"note":"has 2 reads tally[2], which is 1, so the answer is true."},{"at":{"op":4},"vars":{"counts":"4:1 7:1","tally":"1:2","answer":"none"},"note":"del 4 moves its count from 2 to 1 in both maps."},{"at":{"op":5},"vars":{"counts":"4:1 7:1","tally":"1:2","answer":"false"},"note":"has 2 reads tally[2], which is 0, so the answer is false."},{"at":{"op":6},"vars":{"counts":"4:1","tally":"1:1","answer":"none"},"note":"del 7 moves its count from 1 to 0 and removes the key, with no tally entry for 0."},{"at":{"op":7},"vars":{"counts":"4:1","tally":"1:1","answer":"none"},"note":"del 7 finds no key, so nothing changes."},{"at":{"op":8},"vars":{"counts":"4:1","tally":"1:1","answer":"true"},"note":"has 1 reads tally[1], which is 1, so the answer is true."}]}
+{"cells":["add 4","add 7","add 4","has 2","removeOne 4","has 2","removeOne 7","removeOne 7","has 1"],"pointers":["op"],"steps":[{"at":{"op":-1},"vars":{"counts":"empty","tally":"empty","answer":"none"},"note":"Start: both maps are empty."},{"at":{"op":0},"vars":{"counts":"4:1","tally":"1:1","answer":"none"},"note":"add 4 moves its count from 0 to 1 in both maps."},{"at":{"op":1},"vars":{"counts":"4:1 7:1","tally":"1:2","answer":"none"},"note":"add 7 moves its count from 0 to 1 in both maps."},{"at":{"op":2},"vars":{"counts":"4:2 7:1","tally":"1:1 2:1","answer":"none"},"note":"add 4 moves its count from 1 to 2 in both maps."},{"at":{"op":3},"vars":{"counts":"4:2 7:1","tally":"1:1 2:1","answer":"true"},"note":"has 2 reads tally[2], which is 1, so the answer is true."},{"at":{"op":4},"vars":{"counts":"4:1 7:1","tally":"1:2","answer":"none"},"note":"removeOne 4 moves its count from 2 to 1 in both maps."},{"at":{"op":5},"vars":{"counts":"4:1 7:1","tally":"1:2","answer":"false"},"note":"has 2 reads tally[2], which is 0, so the answer is false."},{"at":{"op":6},"vars":{"counts":"4:1","tally":"1:1","answer":"none"},"note":"removeOne 7 moves its count from 1 to 0 and removes the key, with no tally entry for 0."},{"at":{"op":7},"vars":{"counts":"4:1","tally":"1:1","answer":"none"},"note":"removeOne 7 finds no key, so nothing changes."},{"at":{"op":8},"vars":{"counts":"4:1","tally":"1:1","answer":"true"},"note":"has 1 reads tally[1], which is 1, so the answer is true."}]}
 ```
 
 #### First Unique With A Lazy Queue
@@ -217,7 +217,7 @@ If values expire after a time, a count that only rises or falls by explicit upda
 
 **Example 1.** Input calls `["PairSumStore","add","add","add","find","find","find","find"]` with arguments `[[],[3],[7],[3],[6],[10],[14],[9]]`, output `[null,null,null,null,true,true,false,false]`.
 
-**Example 2.** Input calls `["PairSumStore","add","find","add","find","add","find"]` with arguments `[[],[-5],[-10],[-5],[-10],[2000000000],[1999999995]]`, output `[null,null,false,null,true,null,true]`.
+**Example 2.** Input calls `["PairSumStore","add","find","add","find","add","find"]` with arguments `[[],[-5],[-10],[-5],[-10],[1000000000],[999999995]]`, output `[null,null,false,null,true,null,true]`.
 
 **Hint.** When the partner of `x` equals `x` itself, which extra fact about the count of `x` must hold?
 

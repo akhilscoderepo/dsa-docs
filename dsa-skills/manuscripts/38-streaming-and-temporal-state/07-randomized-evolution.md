@@ -211,7 +211,7 @@ If the output must resist an adversary, as in a card game with money at stake, `
 
 **Hint.** Which array does each call start from, and which of the arrays that the class holds may the call write into?
 
-**Changed decision.** The single step becomes a loop over a moving frontier. The class also keeps a private snapshot, so a shuffle can run on a copy and reset can run at any time.
+**Changed decision.** The single step becomes a loop over a moving frontier. The class also keeps a private snapshot, so no shuffle writes into it and reset can run at any time.
 
 #### [Boundary] Repeated Reset And Shuffle (Author exercise)
 <!-- id: st38-reset-shuffle-cycles -->
@@ -232,17 +232,17 @@ If the output must resist an adversary, as in a card game with money at stake, `
 
 **Hint.** How many separate arrays does the class need, and which of them does the caller ever receive?
 
-**Changed decision.** The shuffle no longer starts from the snapshot. It starts from whatever order the last call left, so the class must copy on input, copy on output and still reach every order from any starting order.
+**Changed decision.** Shuffles now compound, because each pass starts from the order the last call left. The new method `current()` reads that order, so the class must copy on every read and write and keep the initial order apart.
 
 #### [Recognize] Streaming Sample Review (Author exercise)
 <!-- id: st38-streaming-sample-review -->
 
 **Prerequisites.** The Repeated Reset And Shuffle exercise above. This exercise changes the kind of state: values arrive one at a time and the set grows, so there is no array to shuffle.
 
-**Problem.** Design the class `StreamPicker` with a constructor that receives an `IntUnaryOperator pick`. The method `add(int value)` records the next value of the stream. The method `pick()` returns one of the values added so far, chosen so that each added value has the same probability. The class stores a constant number of values and never keeps the whole stream. Each call to `add` calls `pick.applyAsInt(t)` once, where `t` is the number of values added so far including the new one, and a result of 0 replaces the stored value with the new value.
+**Problem.** Design the class `StreamPicker` with a constructor that receives a `LongUnaryOperator pick`. The method `add(int value)` records the next value of the stream. The method `pick()` returns one of the values added so far, chosen so that each added value has the same probability. The class stores a constant number of values and never keeps the whole stream. Each call to `add` calls `pick.applyAsLong(t)` once, where `t` is the number of values added so far including the new one, and a result of 0 replaces the stored value with the new value.
 
 **Constraints.** The limits are:
-- **Stream** length is from 0 to 10^12 values, so the counter uses `long`.
+- **Stream** length is from 0 to 10^12 values, so the counter and the draw bound use `long`.
 - **Values** are `int` values that may repeat.
 - **Empty** stream means `pick()` throws `NoSuchElementException`.
 - **Memory** is O(1) and does not depend on the number of values added.

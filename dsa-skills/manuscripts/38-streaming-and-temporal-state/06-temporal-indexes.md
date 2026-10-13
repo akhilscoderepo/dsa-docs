@@ -43,7 +43,7 @@ final class NaiveEventLog {
 }
 ```
 
-With events at times 2, 2, 9, 31, 33 and 58, the call `countsPerInterval(0, 59, 10)` returns `{3, 0, 0, 2, 0, 1}`, and `countBetween(9, 33)` returns 4. Both answers are correct.
+With events at times 2, 2, 9, 31, 33 and 58, the call `countsPerInterval(0, 59, 10)` returns `{3, 0, 0, 2, 0, 1}`, and `countBetween(9, 33)` returns 3. Both answers are correct.
 
 ```predict
 A caller appends 3 events and then calls countsPerInterval(0, 1000000000000L, 1). What happens, and which counters hold a nonzero value?
@@ -111,7 +111,7 @@ The invariant for the search is that every position below `lo` holds a time smal
 The first trace stores the times 3, 3, 8, 14, 15, 15, 27 and 40, and asks for the events in `[8, 28)`. The search for 8 starts with the window `[0, 8)`. The middle position 4 holds 15, which is at least 8, so `hi` moves to 4. Position 2 holds 8, so `hi` moves to 2. Position 1 holds 3, which is below 8, so `lo` moves to 2 and the window closes at position 2. The second search, for 28, closes at position 7, because 27 sits at position 6 and 40 sits at position 7. The count is 7 minus 2, which is 5. The pointer `mid` shows which position each step compares, and the value -1 means that no comparison is running.
 
 ```trace
-{"cells":[3,3,8,14,15,15,27,40],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":8,"mid":-1},"vars":{"target":8,"result":"open"},"note":"Start of query [8, 28): search the first index whose time is at least 8. The window is [0, 8)."},{"at":{"lo":0,"hi":4,"mid":4},"vars":{"target":8,"result":"open"},"note":"a[4] is 15, at least 8, so hi moves to 4."},{"at":{"lo":0,"hi":2,"mid":2},"vars":{"target":8,"result":"open"},"note":"a[2] is 8, at least 8, so hi moves to 2."},{"at":{"lo":2,"hi":2,"mid":1},"vars":{"target":8,"result":"first = 2"},"note":"a[1] is 3, below 8, so lo moves to 2."},{"at":{"lo":0,"hi":8,"mid":-1},"vars":{"target":28,"result":"open"},"note":"End of query [8, 28): search the first index whose time is at least 28. The window is [0, 8)."},{"at":{"lo":5,"hi":8,"mid":4},"vars":{"target":28,"result":"open"},"note":"a[4] is 15, below 28, so lo moves to 5."},{"at":{"lo":7,"hi":8,"mid":6},"vars":{"target":28,"result":"open"},"note":"a[6] is 27, below 28, so lo moves to 7."},{"at":{"lo":7,"hi":7,"mid":7},"vars":{"target":28,"result":"stop = 7"},"note":"a[7] is 40, at least 28, so hi moves to 7."},{"at":{"lo":2,"hi":7,"mid":-1},"vars":{"target":"none","result":"count = 5"},"note":"The events at indexes 2 through 6 lie inside [8, 28), so the count is 7 minus 2, which is 5."}]}
+{"cells":[3,3,8,14,15,15,27,40],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":8,"mid":-1},"vars":{"target":8,"result":"open"},"note":"Start of query [8, 28): search the first index whose time is at least 8. The window is [0, 8)."},{"at":{"lo":0,"hi":4,"mid":4},"vars":{"target":8,"result":"open"},"note":"times[4] is 15, at least 8, so hi moves to 4."},{"at":{"lo":0,"hi":2,"mid":2},"vars":{"target":8,"result":"open"},"note":"times[2] is 8, at least 8, so hi moves to 2."},{"at":{"lo":2,"hi":2,"mid":1},"vars":{"target":8,"result":"first = 2"},"note":"times[1] is 3, below 8, so lo moves to 2."},{"at":{"lo":0,"hi":8,"mid":-1},"vars":{"target":28,"result":"open"},"note":"End of query [8, 28): search the first index whose time is at least 28. The window is [0, 8)."},{"at":{"lo":5,"hi":8,"mid":4},"vars":{"target":28,"result":"open"},"note":"times[4] is 15, below 28, so lo moves to 5."},{"at":{"lo":7,"hi":8,"mid":6},"vars":{"target":28,"result":"open"},"note":"times[6] is 27, below 28, so lo moves to 7."},{"at":{"lo":7,"hi":7,"mid":7},"vars":{"target":28,"result":"stop = 7"},"note":"times[7] is 40, at least 28, so hi moves to 7."},{"at":{"lo":2,"hi":7,"mid":-1},"vars":{"target":"none","result":"count = 5"},"note":"The events at indexes 2 through 6 lie inside [8, 28), so the count is 7 minus 2, which is 5."}]}
 ```
 
 #### A Walk Skips Empty Buckets
@@ -119,7 +119,7 @@ The first trace stores the times 3, 3, 8, 14, 15, 15, 27 and 40, and asks for th
 The second trace stores the times 2, 2, 9, 31, 33 and 58, and asks for counts with width 10 over the inclusive range 0 to 59. That range holds 6 buckets. One search finds the first event at or after 0. The walk then takes the events 2, 2 and 9, which all have bucket number 0, and records the pair of bucket start 0 and count 3. The next event, 31, has bucket number 3, so the walk jumps over buckets 1 and 2 without touching them. Events 31 and 33 form the pair 30 and 2. The event 58 forms the pair 50 and 1. The result lists only three pairs, and the three missing buckets have count 0 by definition.
 
 ```trace
-{"cells":[2,2,9,31,33,58],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"bucket":"none","nonEmpty":"[]"},"note":"Binary search places i on the first event at or after time 0. The query has 6 buckets of width 10."},{"at":{"i":3},"vars":{"bucket":0,"nonEmpty":"[0:3]"},"note":"Events 0 through 2 share bucket 0, which starts at 0. The walk records 3 and jumps to index 3."},{"at":{"i":5},"vars":{"bucket":3,"nonEmpty":"[0:3,30:2]"},"note":"Events 3 through 4 share bucket 3, which starts at 30. The walk records 2 and jumps to index 5."},{"at":{"i":6},"vars":{"bucket":5,"nonEmpty":"[0:3,30:2,50:1]"},"note":"Events 5 through 5 share bucket 5, which starts at 50. The walk records 1 and jumps to index 6."},{"at":{"i":6},"vars":{"bucket":"none","nonEmpty":"[0:3,30:2,50:1]"},"note":"The walk touched 3 buckets and no empty one. Buckets 1, 2 and 4 are absent from the list, so each of them has count 0."}]}
+{"cells":[2,2,9,31,33,58],"pointers":["i"],"steps":[{"at":{"i":0},"vars":{"bucket":"none","nonEmpty":"[]"},"note":"Binary search places i on the first event at or after time 0. The query has 6 buckets of width 10."},{"at":{"i":3},"vars":{"bucket":0,"nonEmpty":"[0:3]"},"note":"Positions 0 through 2 share bucket 0, which starts at 0. The walk records 3 and jumps to index 3."},{"at":{"i":5},"vars":{"bucket":3,"nonEmpty":"[0:3,30:2]"},"note":"Positions 3 through 4 share bucket 3, which starts at 30. The walk records 2 and jumps to index 5."},{"at":{"i":6},"vars":{"bucket":5,"nonEmpty":"[0:3,30:2,50:1]"},"note":"Position 5 alone shares bucket 5, which starts at 50. The walk records 1 and jumps to index 6."},{"at":{"i":6},"vars":{"bucket":"none","nonEmpty":"[0:3,30:2,50:1]"},"note":"The walk touched 3 buckets and no empty one. Buckets 1, 2 and 4 are absent from the list, so each of them has count 0."}]}
 ```
 
 <!-- stage: code -->
@@ -183,12 +183,36 @@ final class BucketWalk {
 
 #### Cutting A Timestamp To A Granularity
 
-For fixed-width text, the granularity is a prefix length. The two query ends are cut to the same length and compared inclusively with each stored text cut to that length.
+For fixed-width text, the granularity is a prefix length. The format `YYYY:MM:DD:hh:mm:ss` gives each unit a fixed length that includes the colons before it.
+
+- **Year** keeps 4 characters.
+- **Month** keeps 7 characters.
+- **Day** keeps 10 characters.
+- **Hour** keeps 13 characters.
+- **Minute** keeps 16 characters.
+- **Second** keeps 19 characters, the whole text.
+
+The two query ends are cut to the unit length and compared inclusively with each stored text cut to the same length.
 
 ```java
 final class PrefixKeys {
+    static int length(String unit) {
+        return switch (unit) {
+            case "Year" -> 4;  case "Month" -> 7;  case "Day" -> 10;       // lengths for YYYY:MM:DD:hh:mm:ss
+            case "Hour" -> 13; case "Minute" -> 16; case "Second" -> 19;
+            default -> throw new IllegalArgumentException(unit);
+        };
+    }
+
     static String prefixKey(String timestamp, int digits) {
         return timestamp.substring(0, digits);       // fixed width, so text order equals time order
+    }
+
+    static boolean inRange(String stamp, String start, String end, String unit) {
+        int len = length(unit);
+        String key = prefixKey(stamp, len);                                   // the stored text cut to the unit
+        return key.compareTo(prefixKey(start, len)) >= 0                      // inclusive lower end
+            && key.compareTo(prefixKey(end, len)) <= 0;                       // inclusive upper end
     }
 }
 ```
@@ -197,7 +221,7 @@ final class PrefixKeys {
 
 - **append** costs O(1) amortized time and O(1) extra space per event.
 - **countBetween** costs O(log n) time and O(1) extra space.
-- **nonEmptyBuckets** costs O(log n + m) time, where `m` is the number of events inside the query, and O(k) space for the `k` nonempty buckets it returns.
+- **BucketWalk.nonEmpty** costs O(log n + m) time, where `m` is the number of events inside the query, and O(k) space for the `k` nonempty buckets it returns.
 
 <!-- stage: applicability -->
 ### When To Index By Time

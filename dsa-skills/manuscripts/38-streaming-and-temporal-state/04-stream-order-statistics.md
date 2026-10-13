@@ -88,7 +88,7 @@ The lesson uses two small classes, and the trace follows the first fields of eac
 - **lower** is the max-heap of the smaller values, and its root is the lower middle value.
 - **upper** is the min-heap of the larger values, and its size is never larger than the size of `lower`.
 - **version** maps a sensor name to the number of readings recorded for it, and the newest reading carries that number.
-- **heap** holds one entry for every reading ever recorded, each with its value, sensor name and version.
+- **heap** holds one entry for every reading not yet polled, each with its value, sensor name and version.
 
 The size relation is `lower.size() == upper.size()` or `lower.size() == upper.size() + 1`. Every value in `lower` is at most every value in `upper`. An entry in `heap` counts only when its version equals `version.get(sensor)`.
 
@@ -164,6 +164,35 @@ final class PeakTracker {
 }
 ```
 
+#### Counts In An Ordered Map
+
+The Stock Price Corrections exercise needs the smallest and largest current price, with no stale entries left behind. A `TreeMap` from price to the number of timestamps that hold that price gives this. The sketch below shows the ordered counts alone.
+
+```java
+final class PriceCounts {
+    private final java.util.TreeMap<Integer, Integer> counts = new java.util.TreeMap<>();   // price mapped to its number of timestamps
+
+    void add(int price) { counts.merge(price, 1, Integer::sum); }
+
+    void remove(int price) {
+        if (counts.merge(price, -1, Integer::sum) == 0) counts.remove(price);   // the last timestamp with this price leaves the map
+    }
+
+    int smallest() { return counts.firstKey(); }   // O(log n) for the smallest current price
+    int largest() { return counts.lastKey(); }     // O(log n) for the largest current price
+}
+```
+
+A correction calls `remove` with the old price and `add` with the new price. A price shared by two timestamps stays in the map until both timestamps change.
+
+#### Three Regions For The Last m Values
+
+The Trimmed Mean exercise builds on the same idea, but a window adds one more step. Split the last `m` values into three regions by sorted rank. The low region holds the `k` smallest values, the high region holds the `k` largest values, and the middle region holds the other `m - 2k` values.
+
+Each region is an ordered multiset like `PriceCounts`. A `long` variable holds the sum of the middle region, so the average costs one division. A queue holds the values in arrival order, because the oldest value must leave by value.
+
+A new value enters the region that matches its rank. Then one value crosses each boundary that became too large. For example, the largest value of the low region moves into the middle region, and its amount moves into the sum. When the window already holds `m` values, the queue gives the oldest value, which leaves its region first. A move across one boundary repairs the region sizes again.
+
 #### Cost
 
 - **LatencyMedian** costs O(log n) time per `add` and O(1) time per `lowerMedian`, with O(n) space for the stored readings.
@@ -182,7 +211,7 @@ A bounded heap that keeps the k largest values is a false friend. It answers the
 
 #### When The Method Does Not Apply
 
-If the caller asks for arbitrary ranks, such as the 10th and the 90th percentile together, two halves with one dividing line are not enough. A Fenwick tree over compressed values, or a balanced tree with subtree sizes, answers any rank in O(log n). If every value is a small integer, a counting array answers any rank with a scan of the array. This lesson also assumes one caller, so it does not cover concurrent updates.
+If the caller asks for arbitrary ranks, such as the 10th and the 90th percentile together, two halves with one dividing line are not enough. A balanced tree with subtree sizes, or a tree of counts over the sorted values, answers any rank in O(log n). The counts tree is covered in chapter 31. If every value is a small integer, a counting array answers any rank with a scan of the array. This lesson also assumes one caller, so it does not cover concurrent updates.
 
 <!-- stage: exercises -->
 ### Exercises

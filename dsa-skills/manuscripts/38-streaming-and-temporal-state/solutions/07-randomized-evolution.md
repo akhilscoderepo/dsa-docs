@@ -365,7 +365,7 @@ public final class RepeatedResetShuffleBoundary {
 <!-- id: st38-streaming-sample-review -->
 
 **Approach.**
-The class stores one held value and a `long` count `seen`. Each `add` increments the count to `t`, draws from the bound `t`, and replaces the held value when the draw is 0. The probability that value number `t` replaces the held one is `1 / t`. A value that arrived earlier survives each later step `s` with probability `(s - 1) / s`. These factors telescope, so after `m` additions every value is held with probability `1 / m`. The invariant is that, given `m` values added, the held value is each of them with probability `1 / m`, and the count equals `m`.
+The class stores one held value and a `long` count `seen`. Each `add` increments the count to `t`, draws from the bound `t`, which is a `long`, and replaces the held value when the draw is 0. The probability that value number `t` replaces the held one is `1 / t`. A value that arrived earlier survives each later step `s` with probability `(s - 1) / s`. These factors telescope, so after `m` additions every value is held with probability `1 / m`. The invariant is that, given `m` values added, the held value is each of them with probability `1 / m`, and the count equals `m`.
 
 The program verifies the claim by enumeration, as in the shuffle exercises. For stream lengths 1 to 7 it feeds every combination of draws to a scripted source. A combination is one draw below `t` for each step `t`, which gives `m!` combinations. It requires that every position of the stream is held in exactly `(m - 1)!` combinations, and that the held value matches a model that records the last step whose draw was 0. It also checks the empty case and a count beyond the `int` range.
 
@@ -376,15 +376,15 @@ The program verifies the claim by enumeration, as in the shuffle exercises. For 
 ```java run
 import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.function.IntUnaryOperator;
+import java.util.function.LongUnaryOperator;
 
 public final class StreamingSampleReviewRecognize {
     static final class StreamPicker {
-        private final IntUnaryOperator pick;
+        private final LongUnaryOperator pick;
         private int held;
         private long seen;
 
-        StreamPicker(IntUnaryOperator pick) { this.pick = pick; }
+        StreamPicker(LongUnaryOperator pick) { this.pick = pick; }
 
         /**
          * Records one value and decides whether it replaces the held value.
@@ -395,7 +395,7 @@ public final class StreamingSampleReviewRecognize {
             // The count includes the new value, so t is the stream length after this call.
             seen++;
             // Draw 0 out of t outcomes happens with probability 1/t, the share the newcomer needs.
-            if (pick.applyAsInt((int) Math.min(seen, Integer.MAX_VALUE)) == 0) held = value;
+            if (pick.applyAsLong(seen) == 0) held = value;
         }
 
         /**

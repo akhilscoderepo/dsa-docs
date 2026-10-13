@@ -161,7 +161,7 @@ public final class RecentCounterVary {
 <!-- id: st38-large-sum-window -->
 
 **Approach.**
-The class stores each recorded event as a pair of a time and a value in two parallel `long` queues, and keeps a `long` total of the values in the queue. A recorded event enters at the back and adds to the total. A query first computes the cutoff `now - span`. Both arguments are at least 0 and at most 4 * 10^18, so the difference lies between -4 * 10^18 and 4 * 10^18 and cannot overflow. The sum `time + span` could reach 8 * 10^18 in the worst case, which is why the code never forms it. The query removes front events with `time < cutoff` and subtracts their values, then returns the total.
+The class stores each recorded event as a pair of a time and a value in two parallel `long` queues, and keeps a `long` total of the values in the queue. A recorded event enters at the back and adds to the total. A query first computes the cutoff `now - span`. Both arguments are at least 0 and at most 9 * 10^18, so the difference lies between -9 * 10^18 and 9 * 10^18 and cannot overflow. The sum `time + span` could reach 1.8 * 10^19, which exceeds the largest `long`, which is why the code never forms it. The query removes front events with `time < cutoff` and subtracts their values, then returns the total.
 
 The invariant is that after a query at `now` the queue holds exactly the events with `now - span <= time <= now`. A query also expires events, which is correct because no later call has a smaller time. The program checks both examples and compares with a scan on random streams, including a huge span.
 
@@ -206,7 +206,7 @@ public final class LargeSumWindowBoundary {
          * Invariant: afterwards the queue holds exactly the events in the range.
          */
         long total(long now) {
-            // Subtraction of two non-negative longs below 4e18 cannot overflow, unlike time + span.
+            // Subtraction of two non-negative longs below 9e18 cannot overflow, unlike time + span.
             long cutoff = now - span;
             // Events strictly older than the cutoff expire; the loop stops at the first live event.
             while (!times.isEmpty() && times.peekFirst() < cutoff) {
@@ -224,13 +224,15 @@ public final class LargeSumWindowBoundary {
         a.record(5, 100);
         a.record(15, -30);
         if (a.total(15) != 70 || a.total(16) != -30) throw new AssertionError("example 1");
-        // Example 2: timestamps near the long limit with a span of 4e18.
-        long big = 4_000_000_000_000_000_000L;
+        // Example 2: timestamps near the long limit with a span of 9e18.
+        long big = 9_000_000_000_000_000_000L;
         TimedSum b = new TimedSum(big);
         b.record(0, 5_000_000_000_000L);
         b.record(big, 5_000_000_000_000L);
         if (b.total(big) != 10_000_000_000_000L || b.total(big + 1) != 5_000_000_000_000L)
             throw new AssertionError("example 2");
+        // The forbidden sum overflows a long, while the cutoff stays in range.
+        if (big + big >= 0 || big - big != 0) throw new AssertionError("overflow premise");
         // A sum of 10^5 events of 10^12 is 10^17, which fits a long but not an int.
         TimedSum c = new TimedSum(big);
         for (int i = 0; i < 100000; i++) c.record(i, 1_000_000_000_000L);
@@ -244,9 +246,10 @@ public final class LargeSumWindowBoundary {
         Random rnd = new Random(3803L);
         for (int t = 0; t < 3000; t++) {
             long span = rnd.nextInt(8);
+            if (t % 10 == 0) span = 9_000_000_000_000_000_000L - rnd.nextInt(8);
             TimedSum real = new TimedSum(span);
             List<long[]> all = new ArrayList<>();
-            long now = rnd.nextInt(3);
+            long now = t % 10 == 0 ? 9_000_000_000_000_000_000L - 40 + rnd.nextInt(3) : rnd.nextInt(3);
             for (int step = rnd.nextInt(25); step > 0; step--) {
                 now += rnd.nextInt(4);
                 if (rnd.nextBoolean()) {

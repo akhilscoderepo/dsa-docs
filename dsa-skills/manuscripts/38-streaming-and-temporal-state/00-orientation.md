@@ -23,7 +23,7 @@ Each lesson names one fact that every call must keep true.
 
 ### Reading Order
 
-Every lesson opens with a class that passes short tests and fails on a longer call sequence. You predict the failure before the reasoning appears. Two traces follow the fields call by call, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a design that looks like the pattern but breaks its precondition. Solutions check each class against a brute-force **oracle**, a slow but obviously correct version, on random inputs.
+Every lesson opens with a class that passes short tests but is slow, wrong or unsafe on longer ones. You predict the failure before the reasoning appears. Two traces follow the fields call by call, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a design that looks like the pattern but breaks its precondition. Solutions check each class against a brute-force **oracle**, a slow but obviously correct version, on random inputs.
 
 ### What You Can Do After This Chapter
 

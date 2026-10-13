@@ -72,7 +72,9 @@ Every method that reads an entry compares its deadline with `now` first. A metho
 
 Validation alone fixes the wrong answers but not the memory. Entries for texts that never return stay in the map. A **purge** is the physical removal of entries that are not live. The class may purge in any of three ways. It may do nothing, as validation already keeps answers correct. It may purge on a cadence, such as every `k` calls. It may purge exactly when time passes a deadline, with a min-heap of deadlines. All three produce identical answers, and they differ only in how much memory they hold and when the work happens.
 
-#### Keys That Count As Live Together
+#### Counting Live Entries Without A Scan
+
+The second class in this lesson is an authentication manager. It hands out tokens that expire after a fixed time to live, called `ttl`. The method `generate` creates a token, `renew` extends a live token, and `count` reports how many tokens are still live.
 
 A method that counts live entries needs more than validation, because a scan of all entries costs O(size). When every entry gets the same time to live and the clock never moves backward, the deadlines appear in the order of the latest touch. A map that keeps insertion order then holds the earliest deadline at its front. A purge removes entries from the front until it finds one that is live, and the size after the purge is the exact count. When time to live differs per entry, the order breaks, and the min-heap takes over.
 

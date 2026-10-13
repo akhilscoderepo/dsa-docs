@@ -5,9 +5,9 @@
 <!-- stage: context -->
 ### Why The Alert Fires Minutes Late
 
-A monitoring service pages the on-call engineer when more than 500 requests fail within the last 60 seconds. A developer implements the check in the obvious way. Every failure is appended to a list with its timestamp, and the check runs after each failure and counts the entries from the last minute. In the first week of testing, the alert fires within a second of the real spike. In production, traffic runs at 20,000 failures per second during an incident. After an hour the list holds 72 million entries, and the process spends more time counting than the next failure takes to arrive. The check falls behind its input, and the page reaches the engineer several minutes after the outage began. The heap also grows until the garbage collector stalls the whole service.
+A monitoring service pages the on-call engineer when the alert score of the last 60 seconds exceeds 500. Each failure adds a weight to the score, which is 1 for an ordinary failure and larger for a severe one. A developer implements the check in the obvious way. Every failure is appended to a list with its timestamp and weight, and the check runs after each failure and adds up the entries from the last minute. In the first week of testing, the alert fires within a second of the real spike. In production, traffic runs at 20,000 failures per second during an incident. After an hour the list holds 72 million entries, and the process spends more time summing than the next failure takes to arrive. The check falls behind its input, and the page reaches the engineer several minutes after the outage began. The heap also grows until the garbage collector stalls the whole service.
 
-Nothing in the logic is wrong, because every count is correct. The cost grows with the age of the process and not with the length of the window. This lesson asks how to keep exactly the entries of the last `span` time units, and how to say precisely which entry on the border belongs to the window.
+Nothing in the logic is wrong, because every score is correct. The cost grows with the age of the process and not with the length of the window. This lesson asks how to keep exactly the entries of the last `span` time units, and how to say precisely which entry on the border belongs to the window.
 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
@@ -89,6 +89,8 @@ The score object stores four fields besides the argument `now` that each call re
 - **sum** is the running sum of the weights in `queue`, as a `long`.
 - **last** is the latest time passed to any call, used to reject a time that moves backward.
 
+In the traces, the pointer `head` marks the index of the oldest live event among the cells, and `tail` marks the index of the newest event added. The queue holds `tail - head + 1` events, and an empty queue has `head` equal to `tail + 1`.
+
 The invariant is that after every call, `queue` holds exactly the events with a timestamp greater than `last - span`, in non-decreasing time order, and `sum` equals the sum of their weights.
 
 <!-- stage: trace -->
@@ -96,10 +98,10 @@ The invariant is that after every call, `queue` holds exactly the events with a 
 
 #### Eviction On Each Call
 
-The span is 10. Six events arrive over time, and the cells below list them in arrival order. The pointer `head` marks the oldest live event, and the pointer `tail` marks the newest event added so far. When `head` equals the number of cells, the queue is empty. The first three adds all fit inside the window, so `head` stays at the first cell and the running sum grows to 10. A score at time 11 has the cutoff 1, so nothing leaves. The add at time 12 has the cutoff 2, and the event at time 2 is at or before it, so it leaves before the new event joins. Later calls repeat the pattern. A score at time 20 removes the event at time 9 without any add, and the last add removes the event at time 12.
+The span is 10. Six events arrive over time, and the cells below list them in arrival order. The pointer `head` marks the index of the oldest live event, and the pointer `tail` marks the newest event added so far. When the queue is empty, `head` equals `tail + 1`. The first three adds all fit inside the window, so `head` stays at the first cell and the running sum grows to 10. A score at time 11 has the cutoff 1, so nothing leaves. The add at time 12 has the cutoff 2, and the event at time 2 is at or before it, so it leaves before the new event joins. Later calls repeat the pattern. A score at time 20 removes the event at time 9 without any add, and the last add removes the event at time 12.
 
 ```trace
-{"cells":["t2 w5","t4 w3","t9 w2","t12 w4","t14 w1","t22 w6"],"pointers":["head","tail"],"steps":[{"at":{"head":6,"tail":-1},"vars":{"call":"new(span=10)","result":"none","queue":"[]","sum":0},"note":"Start: the queue is empty, the sum is 0, and no event has arrived."},{"at":{"head":0,"tail":0},"vars":{"call":"add(2,5)","result":"none","queue":"[t2]","sum":5},"note":"The first event joins the empty queue. The sum becomes 5."},{"at":{"head":0,"tail":1},"vars":{"call":"add(4,3)","result":"none","queue":"[t2,t4]","sum":8},"note":"The cutoff is -6, so nothing leaves. The event joins the back and the sum becomes 8."},{"at":{"head":0,"tail":2},"vars":{"call":"add(9,2)","result":"none","queue":"[t2,t4,t9]","sum":10},"note":"The cutoff is -1, so the queue is unchanged. The sum becomes 10."},{"at":{"head":0,"tail":2},"vars":{"call":"score(11)","result":10,"queue":"[t2,t4,t9]","sum":10},"note":"The cutoff is 1. The oldest event has time 2, which is greater, so nothing leaves and the score is the stored sum."},{"at":{"head":1,"tail":3},"vars":{"call":"add(12,4)","result":"none","queue":"[t4,t9,t12]","sum":9},"note":"The cutoff is 2. The event at time 2 is at or before it and leaves first, so the sum drops by 5. Then the new event joins."},{"at":{"head":2,"tail":4},"vars":{"call":"add(14,1)","result":"none","queue":"[t9,t12,t14]","sum":7},"note":"The cutoff is 4. The event at time 4 is on the border and leaves. The new event joins."},{"at":{"head":3,"tail":4},"vars":{"call":"score(20)","result":5,"queue":"[t12,t14]","sum":5},"note":"The cutoff is 10. The event at time 9 leaves, and the events at times 12 and 14 stay."},{"at":{"head":4,"tail":5},"vars":{"call":"add(22,6)","result":"none","queue":"[t14,t22]","sum":7},"note":"The cutoff is 12. The event at time 12 is on the border and leaves, so the queue holds the events at times 14 and 22."}]}
+{"cells":["t2 w5","t4 w3","t9 w2","t12 w4","t14 w1","t22 w6"],"pointers":["head","tail"],"steps":[{"at":{"head":0,"tail":-1},"vars":{"call":"new(span=10)","result":"none","queue":"[]","sum":0},"note":"Start: the queue is empty, the sum is 0, and no event has arrived."},{"at":{"head":0,"tail":0},"vars":{"call":"add(2,5)","result":"none","queue":"[t2]","sum":5},"note":"The first event joins the empty queue. The sum becomes 5."},{"at":{"head":0,"tail":1},"vars":{"call":"add(4,3)","result":"none","queue":"[t2,t4]","sum":8},"note":"The cutoff is -6, so nothing leaves. The event joins the back and the sum becomes 8."},{"at":{"head":0,"tail":2},"vars":{"call":"add(9,2)","result":"none","queue":"[t2,t4,t9]","sum":10},"note":"The cutoff is -1, so the queue is unchanged. The sum becomes 10."},{"at":{"head":0,"tail":2},"vars":{"call":"score(11)","result":10,"queue":"[t2,t4,t9]","sum":10},"note":"The cutoff is 1. The oldest event has time 2, which is greater, so nothing leaves and the score is the stored sum."},{"at":{"head":1,"tail":3},"vars":{"call":"add(12,4)","result":"none","queue":"[t4,t9,t12]","sum":9},"note":"The cutoff is 2. The event at time 2 is at or before it and leaves first, so the sum drops by 5. Then the new event joins."},{"at":{"head":2,"tail":4},"vars":{"call":"add(14,1)","result":"none","queue":"[t9,t12,t14]","sum":7},"note":"The cutoff is 4. The event at time 4 is on the border and leaves. The new event joins."},{"at":{"head":3,"tail":4},"vars":{"call":"score(20)","result":5,"queue":"[t12,t14]","sum":5},"note":"The cutoff is 10. The event at time 9 leaves, and the events at times 12 and 14 stay."},{"at":{"head":4,"tail":5},"vars":{"call":"add(22,6)","result":"none","queue":"[t14,t22]","sum":7},"note":"The cutoff is 12. The event at time 12 is on the border and leaves, so the queue holds the events at times 14 and 22."}]}
 ```
 
 #### Border, Equal Times And Bad Input
@@ -107,7 +109,7 @@ The span is 10. Six events arrive over time, and the cells below list them in ar
 The second trace uses the span 5. Two events arrive at the same time 3, which the queue stores as separate entries. A score at time 8 has the cutoff 3, so both entries at time 3 are at or before it and leave together. This is the exact border: the events are five units old, and the half-open range excludes them. A late score finds the queue empty, and the sum is 0. An add with a time smaller than the latest time is rejected, and it changes neither the queue nor the sum.
 
 ```trace
-{"cells":["t3 w4","t3 w6","t8 w1","t21 w7"],"pointers":["head","tail"],"steps":[{"at":{"head":4,"tail":-1},"vars":{"call":"new(span=5)","result":"none","queue":"[]","sum":0},"note":"Start: the queue is empty, the sum is 0, and no event has arrived."},{"at":{"head":0,"tail":0},"vars":{"call":"add(3,4)","result":"none","queue":"[t3]","sum":4},"note":"The first event at time 3 joins the queue."},{"at":{"head":0,"tail":1},"vars":{"call":"add(3,6)","result":"none","queue":"[t3,t3]","sum":10},"note":"An equal time is allowed. The second event at time 3 joins the back, and the sum is 10."},{"at":{"head":4,"tail":1},"vars":{"call":"score(8)","result":0,"queue":"[]","sum":0},"note":"The cutoff is 3. Both events at time 3 are at or before it, so both leave and the sum is 0."},{"at":{"head":2,"tail":2},"vars":{"call":"add(8,1)","result":"none","queue":"[t8]","sum":1},"note":"The queue is empty, so nothing leaves. The event at time 8 joins and the sum is 1."},{"at":{"head":4,"tail":2},"vars":{"call":"score(20)","result":0,"queue":"[]","sum":0},"note":"The cutoff is 15. The event at time 8 leaves, the queue is empty and the score is 0."},{"at":{"head":4,"tail":2},"vars":{"call":"add(10,9)","result":"throws","queue":"[]","sum":0},"note":"Time 10 is smaller than the latest time 20, so the call throws. The queue and the sum do not change."},{"at":{"head":3,"tail":3},"vars":{"call":"add(21,7)","result":"none","queue":"[t21]","sum":7},"note":"The queue is empty. The event at time 21 joins and the sum is 7."}]}
+{"cells":["t3 w4","t3 w6","t8 w1","t21 w7"],"pointers":["head","tail"],"steps":[{"at":{"head":0,"tail":-1},"vars":{"call":"new(span=5)","result":"none","queue":"[]","sum":0},"note":"Start: the queue is empty, the sum is 0, and no event has arrived."},{"at":{"head":0,"tail":0},"vars":{"call":"add(3,4)","result":"none","queue":"[t3]","sum":4},"note":"The first event at time 3 joins the queue."},{"at":{"head":0,"tail":1},"vars":{"call":"add(3,6)","result":"none","queue":"[t3,t3]","sum":10},"note":"An equal time is allowed. The second event at time 3 joins the back, and the sum is 10."},{"at":{"head":2,"tail":1},"vars":{"call":"score(8)","result":0,"queue":"[]","sum":0},"note":"The cutoff is 3. Both events at time 3 are at or before it, so both leave and the sum is 0."},{"at":{"head":2,"tail":2},"vars":{"call":"add(8,1)","result":"none","queue":"[t8]","sum":1},"note":"The queue is empty, so nothing leaves. The event at time 8 joins and the sum is 1."},{"at":{"head":3,"tail":2},"vars":{"call":"score(20)","result":0,"queue":"[]","sum":0},"note":"The cutoff is 15. The event at time 8 leaves, the queue is empty and the score is 0."},{"at":{"head":3,"tail":2},"vars":{"call":"add(10,9)","result":"throws","queue":"[]","sum":0},"note":"Time 10 is smaller than the latest time 20, so the call throws. The queue and the sum do not change."},{"at":{"head":3,"tail":3},"vars":{"call":"add(21,7)","result":"none","queue":"[t21]","sum":7},"note":"The queue is empty. The event at time 21 joins and the sum is 7."}]}
 ```
 
 <!-- stage: code -->
@@ -115,7 +117,9 @@ The second trace uses the span 5. Two events arrive at the same time 3, which th
 
 #### The Class
 
-The class below stores each event as a two-element array and takes the time as an argument. Both public methods call the private method `evict`, so the border rule exists in one place. The method `add` rejects a backward time before it changes anything.
+The class `AlertScore` stores each event as a two-element array of time and weight, and it takes the time as an argument. Both public methods call the private method `evict`, so the border rule exists in one place. The method `add` rejects a backward time before it changes anything.
+
+An ordinary failure passes weight 1, so the running sum counts failures and the alert fires when `score` exceeds 500. A severe failure passes a larger weight and moves the score faster. The invariant is that the queue is sorted by time and holds exactly the events inside the half-open window, and that the sum matches it after every call.
 
 ```java
 final class AlertScore {
@@ -151,9 +155,34 @@ final class AlertScore {
 }
 ```
 
-#### One Rule For The Alert Score
+#### Array With A Head Index
 
-The class `AlertScore` keeps the arrival queue, the running sum and the latest time. The invariant is that the queue is sorted by time and holds exactly the events inside the half-open window, and that the sum matches it after every call.
+The Counts Over Several Window Lengths exercise needs a binary search over the live events. An `ArrayDeque` has no indexed access, so that exercise keeps an array and a head index. The live events sit in positions `head` to `tail - 1`, and eviction only moves `head` forward.
+
+```java
+final class IndexedWindow {
+    private long[] times = new long[16];
+    private int head, tail;                              // live events occupy [head, tail)
+
+    void record(long now, long maxSpan) {
+        while (head < tail && times[head] <= now - maxSpan) head++;   // evict by the widest border
+        if (tail == times.length) {                                   // compact the live part to the front
+            times = java.util.Arrays.copyOfRange(times, head, head + Math.max(16, 2 * (tail - head)));
+            tail -= head; head = 0;
+        }
+        times[tail++] = now;
+    }
+
+    int count(long now, long span) {
+        int lo = head, hi = tail;                        // search the first live event newer than now - span
+        while (lo < hi) {
+            int mid = (lo + hi) >>> 1;
+            if (times[mid] <= now - span) lo = mid + 1; else hi = mid;
+        }
+        return tail - lo;                                // a narrower window is a suffix of the live part
+    }
+}
+```
 
 #### Cost
 
@@ -217,7 +246,7 @@ If events can arrive out of time order, the front of the queue is no longer the 
 
 **Example 2.** Input: with `maxSpan = 4`, calls `count(3,4)`, `record(3)`, `record(3)`, `count(3,1)`, `count(7,4)`, `count(7,1)`; output `[0, null, null, 2, 0, 0]`.
 
-**Hint.** Which cutoff may the structure use to drop events for good, and how can a narrower query find its first live event without scanning?
+**Hint.** Which cutoff may the structure use to drop events for good, and how can a narrower query find its first live event without scanning? Binary search needs indexed access, so keep an array and a head index.
 
 **Changed decision.** Eviction uses the widest cutoff and never a query's cutoff, because a later query may be wider than an earlier one. A narrower query counts a suffix of the live events, found by binary search.
 
@@ -259,6 +288,6 @@ If events can arrive out of time order, the front of the queue is no longer the 
 
 **Example 2.** Input: with `idle = 3` and `maxLife = 3`, calls `open("x",1)`, `renew("x",3)`, `liveCount(3)`, `renew("x",4)`, `open("x",4)`, `liveCount(6)`, `liveCount(7)`; output `[null, true, 1, false, null, 1, 0]`.
 
-**Hint.** A renewal changes the order of expiry by idleness. Which second order keeps the expiry by age sorted?
+**Hint.** A renewal changes the order of expiry by idleness. Which second order keeps the expiry by age sorted? Two insertion-ordered maps over the same keys give one order by last touch and one by start.
 
 **Changed decision.** One queue becomes two ordered collections over the same keys, one by last touch and one by start. A key that fails either rule leaves both.
