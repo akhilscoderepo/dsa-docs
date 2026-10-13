@@ -36,14 +36,14 @@ final class NaiveSnapshots {
 
 Every call returns the right answer. With 3 settings and 2 checkpoints, a test reads the stored copies and finds the expected numbers, so the class looks finished.
 
-<!-- stage: bottleneck -->
-### Counting The Copied Cells
-
 ```predict
 The array has 100 000 cells and the program takes 50 000 snapshots. Between two snapshots exactly 3 cells change. How many numbers does the naive class store, and how many of them carry new information?
 
 The naive class stores 100 000 times 50 000, which is 5 billion numbers, and about 40 GB for 8-byte values. Only 3 times 50 000, which is 150 000 numbers, carry new information. The rest repeat a value that an earlier copy already holds.
 ```
+
+<!-- stage: bottleneck -->
+### Counting The Copied Cells
 
 The naive `snap` costs O(n) time and O(n) space for every call, where `n` is the array length. After `s` snapshots the memory is O(n * s). A workload with long arrays and frequent checkpoints exhausts memory long before it exhausts time.
 
@@ -60,7 +60,7 @@ A **version history** is the list of changes to one cell, written as pairs of a 
 
 #### Answer A Query With A Floor Search
 
-A query names a version `v`. The correct answer is the value of the latest change whose version is at most `v`, because a change with a larger version had not happened yet. Finding that change is a **floor search**: among sorted keys, find the largest key that is less than or equal to the target. The history is sorted. Binary search therefore finds the change in O(log k) time for `k` changes. Binary search for the first version greater than `v` and step back one position. When that first position is 0, no change is at or before `v`, and the query returns the default value of the contract.
+A query names a version `v`. The correct answer is the value of the latest change whose version is at most `v`, because a change with a larger version had not happened yet. Finding that change is a **floor search**: among sorted keys, find the largest key that is less than or equal to the target. The history is sorted, so binary search finds the first version greater than `v` in O(log k) time for `k` changes. The answer is the pair one position before it. When that first position is 0, no change is at or before `v`, and the query returns the starting value.
 
 #### Merge Writes That Share A Version
 
@@ -73,32 +73,37 @@ The invariant says that the versions inside each history are strictly increasing
 <!-- stage: variables -->
 ### What One History Stores
 
-The class keeps one history per cell and one counter for the current version. A query adds a target version.
+The class keeps one history per cell and one counter for the snapshots. A query adds a target version.
 
 - **versions** is the sorted array of version numbers in one history, held as `long`.
 - **values** is the array of values in the same order, so `values[k]` belongs to `versions[k]`.
-- **current** is the version that new writes receive, and for a snapshot array it equals the number of snapshots taken so far.
-- **target** is the version named by a query.
-- **position** is the first index in `versions` with a version greater than `target`, and `position - 1` is the answer slot.
+- **size** is the number of pairs in use in one history.
+- **target** is the version named by a query, and the trace shows it as `target`.
+- **fallback** is the value that a query returns when no change is at or before `target`.
+- **lo, hi and mid** bound the search window, and after the loop `lo` is the first index with a version above `target`, so `lo - 1` is the answer slot.
+- **start** is the starting value of every cell in the snapshot array.
+- **cells** holds one `TreeMap` history for each index, and it is null until the index first changes. The trace shows these as `c0`, `c1` and `c2` in the variable `histories`.
+- **pending** holds the writes of the current interval, with one entry for each index.
+- **snaps** is the number of snapshots taken so far, and it is also the id of the next snapshot.
 
-The invariant is `versions[0] < versions[1] < ...` in every history, and a query with `position == 0` returns the default value.
+The invariant is `versions[0] < versions[1] < ...` in every history, and a query with `lo == 0` returns `fallback`.
 
 <!-- stage: trace -->
 ### Tracing A Search And A Snapshot Run
 
 #### A Floor Search In One History
 
-The first trace searches the history of one cell. The versions are 2, 5, 9, 14 and 20, with values 30, 10, 40, 20 and 50. The query asks for version 11. The pointers `lo` and `hi` bound the search window, and `mid` is the index that the step inspects.
+The first trace searches the history of one cell. The versions are 2, 5, 9, 14 and 20, with values 30, 10, 40, 20 and 50. The query asks for `target` 11. The pointers `lo` and `hi` bound the search window, and `mid` is the index that the step inspects.
 
 The window starts as the whole history, from 0 to 5. The middle index 2 holds version 9, which is not above 11, so the first greater version lies to the right and `lo` moves to 3. The next middle index 4 holds version 20, which is above 11, so `hi` moves to 4. Index 3 holds version 14, which is also above 11, so `hi` moves to 3. The window is now empty. The first greater version sits at index 3, the answer slot is index 2, and the value is 40. The change at version 9 is the latest one that happened by version 11.
 
 ```trace
-{"cells":["2","5","9","14","20"],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":5,"mid":-1},"vars":{"query":11},"note":"Start: the window covers all 5 versions, and the query asks for version 11."},{"at":{"lo":0,"hi":5,"mid":2},"vars":{"query":11,"version":9},"note":"Version 9 at index 2 is at most 11, so the first greater version lies to the right and lo becomes 3."},{"at":{"lo":3,"hi":5,"mid":4},"vars":{"query":11,"version":20},"note":"Version 20 at index 4 is above 11, so the first greater version is at index 4 or earlier and hi becomes 4."},{"at":{"lo":3,"hi":4,"mid":3},"vars":{"query":11,"version":14},"note":"Version 14 at index 3 is above 11, so the first greater version is at index 3 or earlier and hi becomes 3."},{"at":{"lo":3,"hi":3,"mid":3},"vars":{"query":11,"answer":40},"note":"The window is empty. The first greater version is at index 3, so the answer slot is index 2 and the value is 40."}]}
+{"cells":["2","5","9","14","20"],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":5,"mid":-1},"vars":{"target":11},"note":"Start: the window covers all 5 versions, and the query asks for version 11."},{"at":{"lo":0,"hi":5,"mid":2},"vars":{"target":11,"versions[mid]":9},"note":"Version 9 at index 2 is at most 11, so the first greater version lies to the right and lo becomes 3."},{"at":{"lo":3,"hi":5,"mid":4},"vars":{"target":11,"versions[mid]":20},"note":"Version 20 at index 4 is above 11, so the first greater version is at index 4 or earlier and hi becomes 4."},{"at":{"lo":3,"hi":4,"mid":3},"vars":{"target":11,"versions[mid]":14},"note":"Version 14 at index 3 is above 11, so the first greater version is at index 3 or earlier and hi becomes 3."},{"at":{"lo":3,"hi":3,"mid":3},"vars":{"target":11,"answer":40},"note":"The window is empty. The first greater version is at index 3, so the answer slot is index 2 and the value is 40."}]}
 ```
 
 #### A Snapshot Array With Pending Writes
 
-The second trace runs a snapshot array of length 3 whose cells start at 0. A write goes to a pending table and a snapshot moves each pending entry into the history of its cell. The pointer `op` marks the operation that just finished.
+The second trace runs a snapshot array of length 3 whose cells start at 0. The writes are 5 and then 6 to cell 0, and 4 to cell 1. A write goes to a pending table and a snapshot moves each pending entry into the history of its cell. The pointer `op` marks the operation that just finished.
 
 Two writes to cell 0 leave one pending entry, because the second write replaces the first. The first `snap` returns id 0 and moves the entry into the history of cell 0 as the pair (0, 6). A write to cell 1 and a second `snap` give id 1 and the pair (1, 4) in cell 1. Cell 2 never changes, so its history stays empty and every query on it returns the starting value 0. A query for cell 1 at id 0 searches a history whose first version is 1, finds no version at or before 0 and returns the starting value. The same query at id 1 returns 4.
 
@@ -145,7 +150,7 @@ final class CellHistory {
 
 #### The Snapshot Array
 
-The array class keeps a pending table for the current interval and one history per index that has ever changed. Here each history is a `TreeMap` from snapshot id to value, and its `floorEntry` method is the floor search from the previous section. The table holds at most one entry per index, so `snap` costs time proportional to the number of distinct indices written since the last snapshot.
+The array class keeps a pending table for the current interval and one history per index that has ever changed. Here each history is a `TreeMap` from snapshot id to value, and its `floorEntry` method is the floor search from the previous section. The table holds at most one entry per index, so `snap` makes one `TreeMap.put` for each distinct index written since the last snapshot. Each `put` costs O(log k) time.
 
 ```java
 final class ChangeLogArray {
@@ -185,7 +190,7 @@ final class ChangeLogArray {
 
 - **add** costs O(1) amortized time and O(1) space per change.
 - **valueAt** and the `floorEntry` call cost O(log k) time and O(1) space for a history of `k` changes.
-- **snap** costs O(w) time, where `w` is the number of distinct indices written since the previous snapshot.
+- **snap** costs O(w log k) time, where `w` is the number of distinct indices written since the previous snapshot and `k` is the size of the largest history among them.
 
 <!-- stage: applicability -->
 ### When A Query Names An Earlier Version
@@ -247,7 +252,7 @@ A query before the first change must return the declared default and must not re
 
 **Changed decision.** Each cell owns a history, and the version of a saved write is the id of the snapshot that saves it.
 
-#### [Boundary] Repeated Writes Before Snap (Author exercise)
+#### [Boundary] Equal Versions Replace (Author exercise)
 <!-- id: it37-version-histories-repeated-writes -->
 
 **Prerequisites.** The Versioned Integer and Snapshot Array exercises above.

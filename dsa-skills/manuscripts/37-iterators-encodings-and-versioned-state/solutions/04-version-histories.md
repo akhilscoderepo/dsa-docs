@@ -270,7 +270,7 @@ public final class SnapshotArrayVary {
 }
 ```
 
-#### Solution: [Boundary] Repeated Writes Before Snap (Author exercise)
+#### Solution: [Boundary] Equal Versions Replace (Author exercise)
 <!-- id: it37-version-histories-repeated-writes -->
 
 **Approach.**

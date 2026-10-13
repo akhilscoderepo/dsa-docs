@@ -6,20 +6,20 @@ F = '04-version-histories.md'
 def floor_trace(versions, values, q):
     n = len(versions)
     lo, hi = 0, n
-    st = [{"at": {"lo": 0, "hi": n, "mid": -1}, "vars": {"query": q},
+    st = [{"at": {"lo": 0, "hi": n, "mid": -1}, "vars": {"target": q},
            "note": f"Start: the window covers all {n} versions, and the query asks for version {q}."}]
     while lo < hi:
         mid = (lo + hi) // 2
         if versions[mid] <= q:
-            st.append({"at": {"lo": lo, "hi": hi, "mid": mid}, "vars": {"query": q, "version": versions[mid]},
+            st.append({"at": {"lo": lo, "hi": hi, "mid": mid}, "vars": {"target": q, "versions[mid]": versions[mid]},
                        "note": f"Version {versions[mid]} at index {mid} is at most {q}, so the first greater version lies to the right and lo becomes {mid + 1}."})
             lo = mid + 1
         else:
-            st.append({"at": {"lo": lo, "hi": hi, "mid": mid}, "vars": {"query": q, "version": versions[mid]},
+            st.append({"at": {"lo": lo, "hi": hi, "mid": mid}, "vars": {"target": q, "versions[mid]": versions[mid]},
                        "note": f"Version {versions[mid]} at index {mid} is above {q}, so the first greater version is at index {mid} or earlier and hi becomes {mid}."})
             hi = mid
     ans = values[lo - 1] if lo else -1
-    st.append({"at": {"lo": lo, "hi": hi, "mid": lo}, "vars": {"query": q, "answer": ans},
+    st.append({"at": {"lo": lo, "hi": hi, "mid": lo}, "vars": {"target": q, "answer": ans},
                "note": f"The window is empty. The first greater version is at index {lo}, so the answer slot is index {lo - 1} and the value is {ans}."})
     return block([str(v) for v in versions], ["lo", "hi", "mid"], st), ans
 

@@ -7,7 +7,7 @@ text = "1,2,3,null,null,4,5"
 tok = text.split(",")
 idx = 1
 queue = ["1"]
-steps = [{"at": {"idx": 1}, "vars": {"queue": "[1]", "built": "root 1"}, "note": "The first token creates the root 1, and the queue holds the root. The index moves to the next unread token."}]
+steps = [{"at": {"in": 1}, "vars": {"queue": "[1]", "built": "root 1"}, "note": "The first token creates the root 1, and the queue holds the root. The index moves to the next unread token."}]
 built = {"1": []}
 tree = {}
 while queue:
@@ -15,20 +15,20 @@ while queue:
     kids = {}
     for side in ("left", "right"):
         if idx >= len(tok):
-            steps.append({"at": {"idx": idx}, "vars": {"queue": "[" + ",".join(queue) + "]", "owner": n, "slot": side}, "note": f"No token is left, so the {side} slot of node {n} counts as empty."})
+            steps.append({"at": {"in": idx}, "vars": {"queue": "[" + ",".join(queue) + "]", "owner": n, "slot": side}, "note": f"No token is left, so the {side} slot of node {n} counts as empty."})
             continue
         t = tok[idx]
         idx += 1
         if t == "null":
-            steps.append({"at": {"idx": idx}, "vars": {"queue": "[" + ",".join(queue) + "]", "owner": n, "slot": side}, "note": f"The token null leaves the {side} slot of node {n} empty."})
+            steps.append({"at": {"in": idx}, "vars": {"queue": "[" + ",".join(queue) + "]", "owner": n, "slot": side}, "note": f"The token null leaves the {side} slot of node {n} empty."})
         else:
             queue.append(t)
             kids[side] = t
-            steps.append({"at": {"idx": idx}, "vars": {"queue": "[" + ",".join(queue) + "]", "owner": n, "slot": side}, "note": f"The token {t} fills the {side} slot of node {n}, and the new node joins the back of the queue."})
+            steps.append({"at": {"in": idx}, "vars": {"queue": "[" + ",".join(queue) + "]", "owner": n, "slot": side}, "note": f"The token {t} fills the {side} slot of node {n}, and the new node joins the back of the queue."})
     tree[n] = kids
 assert idx == len(tok)
 assert tree == {"1": {"left": "2", "right": "3"}, "2": {}, "3": {"left": "4", "right": "5"}, "4": {}, "5": {}}
-fill(CH, NAME, block(tok, ["idx"], steps), "@@TRACE1@@")
+fill(CH, NAME, block(tok, ["in"], steps), "@@TRACE1@@")
 
 # Trace 2: encode the forest [1[2,3],4] as one binary tree, then walk it in preorder.
 class N:

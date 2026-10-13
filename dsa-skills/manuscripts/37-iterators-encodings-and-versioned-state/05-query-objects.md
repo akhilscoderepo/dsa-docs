@@ -36,14 +36,14 @@ final class NaiveDistance {
 
 Each answer is correct. For a short text with two or three queries the class looks finished.
 
-<!-- stage: bottleneck -->
-### Counting The Repeated Scans
-
 ```predict
 The text has 200 000 words and the service answers 50 000 queries. One of the two query words appears only 3 times in the text. How many words does the naive class examine, and how many of them can matter?
 
 The naive class examines 200 000 times 50 000, which is 10 billion words. Only the 3 occurrences of the rare word and the occurrences of the other word can change the answer. Every other word is read and ignored.
 ```
+
+<!-- stage: bottleneck -->
+### Counting The Repeated Scans
 
 The naive `shortest` costs O(n) time per query for a text of `n` words, so `q` queries cost O(n * q). The cost does not depend on how rare the query words are. The scan pays for the whole text even when a word occurs three times.
 
@@ -76,9 +76,11 @@ The invariant says that preprocessing keeps exactly the information that the que
 The constructor builds one map. Each query reads a few entries from it.
 
 - **positions** maps a key, such as a word or a number, to its sorted array of indices.
-- **a** and **b** are the position lists of the two query words in a distance query.
-- **i** and **j** are the cursors into those lists during a merge walk.
+- **pa** and **pb** are the position lists of the two query words in a distance query.
+- **i** and **j** are the cursors into `pa` and `pb` during a merge walk.
+- **gap** is the difference between `pa[i]` and `pb[j]` at one comparison.
 - **best** is the smallest gap seen so far, or -1 when no pair exists.
+- **lo, hi and mid** bound one binary search, and **target** is the value that the search looks for.
 - **left** and **right** are the inclusive text positions of a range query, and the search looks for `left` and `right + 1`.
 
 The invariant is that every list is strictly increasing, so a cursor never needs to move backward.
@@ -88,12 +90,12 @@ The invariant is that every list is strictly increasing, so a cursor never needs
 
 #### A Merge Walk On Two Position Lists
 
-The first trace answers a distance query on the text `a c b c a c b b c a`. The word `a` occurs at positions 0, 4 and 9. The word `b` occurs at positions 2, 6 and 7. The pointers `a` and `b` mark the text positions that the two cursors currently point to, and the variable `best` shows the smallest gap so far.
+The first trace answers a distance query on the text `a c b c a c b b c a`. The word `a` occurs at positions 0, 4 and 9. The word `b` occurs at positions 2, 6 and 7. The position list of `a` is `pa` and that of `b` is `pb`. The pointers `pa[i]` and `pb[j]` mark the text positions under the two cursors `i` and `j` before the step moves one of them. The variable `best` shows the smallest gap so far.
 
 The first comparison sets 0 against 2 with gap 2. The smaller position is 0, so the cursor of `a` moves to 4. Position 4 against 2 gives gap 2, and now the smaller position belongs to `b`, so that cursor moves to 6. Position 4 against 6 gives gap 2 again, and the cursor of `a` moves to 9. Position 9 against 6 gives gap 3, which does not improve the best value, so the cursor of `b` moves to 7. Position 9 against 7 gives gap 2. The cursor of `b` then moves past its last entry and the walk ends with the answer 2.
 
 ```trace
-{"cells":["a","c","b","c","a","c","b","b","c","a"],"pointers":["a","b"],"steps":[{"at":{"a":0,"b":2},"vars":{"best":"none"},"note":"Start: the cursors point to position 0 of a and position 2 of b."},{"at":{"a":4,"b":2},"vars":{"gap":2,"best":2},"note":"The gap is 2, so best is 2. The cursor of a has the smaller position and moves forward."},{"at":{"a":4,"b":6},"vars":{"gap":2,"best":2},"note":"The gap is 2, so best is 2. The cursor of b has the smaller position and moves forward."},{"at":{"a":9,"b":6},"vars":{"gap":2,"best":2},"note":"The gap is 2, so best is 2. The cursor of a has the smaller position and moves forward."},{"at":{"a":9,"b":7},"vars":{"gap":3,"best":2},"note":"The gap is 3, so best is 2. The cursor of b has the smaller position and moves forward."},{"at":{"a":9,"b":10},"vars":{"gap":2,"best":2},"note":"The gap is 2, so best is 2. The cursor of b has the smaller position and moves forward. A list is now exhausted, so the walk ends."}]}
+{"cells":["a","c","b","c","a","c","b","b","c","a"],"pointers":["pa[i]","pb[j]"],"steps":[{"at":{"pa[i]":0,"pb[j]":2},"vars":{"i":0,"j":0,"gap":2,"best":2},"note":"Compare 0 with 2. The gap is 2, so best is 2. pa[i] is the smaller position, so i moves forward."},{"at":{"pa[i]":4,"pb[j]":2},"vars":{"i":1,"j":0,"gap":2,"best":2},"note":"Compare 4 with 2. The gap is 2, so best is 2. pb[j] is the smaller position, so j moves forward."},{"at":{"pa[i]":4,"pb[j]":6},"vars":{"i":1,"j":1,"gap":2,"best":2},"note":"Compare 4 with 6. The gap is 2, so best is 2. pa[i] is the smaller position, so i moves forward."},{"at":{"pa[i]":9,"pb[j]":6},"vars":{"i":2,"j":1,"gap":3,"best":2},"note":"Compare 9 with 6. The gap is 3, so best is 2. pb[j] is the smaller position, so j moves forward."},{"at":{"pa[i]":9,"pb[j]":7},"vars":{"i":2,"j":2,"gap":2,"best":2},"note":"Compare 9 with 7. The gap is 2, so best is 2. pb[j] is the smaller position, so j moves forward."},{"at":{},"vars":{"i":2,"j":3,"best":2},"note":"A list is exhausted, so the walk ends and returns best, which is 2."}]}
 ```
 
 #### Two Lower Bounds For A Range Count
@@ -103,7 +105,7 @@ The second trace counts how often the value 3 occurs in positions 2 to 6 of the 
 The first search looks for the lower bound of 2. The middle entry 4 is at least 2, so the window shrinks to the left. The next middle entry 3 is also at least 2. The entry at index 0 is position 1, which is below 2, so the window closes at index 1. The second search looks for the lower bound of 7. The middle entry 4 is below 7, so the window moves right. Entry 8 is at least 7, and entry 6 is below 7, so the window closes at index 4. The count is 4 minus 1, which is 3. The positions 3, 4 and 6 lie in the range.
 
 ```trace
-{"cells":["1","3","4","6","8"],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":5,"mid":-1},"vars":{"target":2},"note":"Search one: find the first position at least 2."},{"at":{"lo":0,"hi":5,"mid":2},"vars":{"target":2,"entry":4},"note":"Entry 4 is at least 2, so hi becomes 2."},{"at":{"lo":0,"hi":2,"mid":1},"vars":{"target":2,"entry":3},"note":"Entry 3 is at least 2, so hi becomes 1."},{"at":{"lo":0,"hi":1,"mid":0},"vars":{"target":2,"entry":1},"note":"Entry 1 is below 2, so lo becomes 1."},{"at":{"lo":1,"hi":1,"mid":1},"vars":{"target":2,"index":1},"note":"The window closes at index 1."},{"at":{"lo":0,"hi":5,"mid":-1},"vars":{"target":7},"note":"Search two: find the first position at least 7."},{"at":{"lo":0,"hi":5,"mid":2},"vars":{"target":7,"entry":4},"note":"Entry 4 is below 7, so lo becomes 3."},{"at":{"lo":3,"hi":5,"mid":4},"vars":{"target":7,"entry":8},"note":"Entry 8 is at least 7, so hi becomes 4."},{"at":{"lo":3,"hi":4,"mid":3},"vars":{"target":7,"entry":6},"note":"Entry 6 is below 7, so lo becomes 4."},{"at":{"lo":4,"hi":4,"mid":4},"vars":{"target":7,"index":4},"note":"The window closes at index 4."},{"at":{"lo":1,"hi":4,"mid":1},"vars":{"count":3},"note":"The count is 4 minus 1, which is 3."}]}
+{"cells":["1","3","4","6","8"],"pointers":["lo","hi","mid"],"steps":[{"at":{"lo":0,"hi":5,"mid":-1},"vars":{"target":2},"note":"Search one: find the first position at least 2."},{"at":{"lo":0,"hi":5,"mid":2},"vars":{"target":2,"entry":4},"note":"Entry 4 is at least 2, so hi becomes 2."},{"at":{"lo":0,"hi":2,"mid":1},"vars":{"target":2,"entry":3},"note":"Entry 3 is at least 2, so hi becomes 1."},{"at":{"lo":0,"hi":1,"mid":0},"vars":{"target":2,"entry":1},"note":"Entry 1 is below 2, so lo becomes 1."},{"at":{"lo":1,"hi":1,"mid":1},"vars":{"target":2,"index":1},"note":"The window closes at index 1."},{"at":{"lo":0,"hi":5,"mid":-1},"vars":{"target":7},"note":"Search two: find the first position at least 7."},{"at":{"lo":0,"hi":5,"mid":2},"vars":{"target":7,"entry":4},"note":"Entry 4 is below 7, so lo becomes 3."},{"at":{"lo":3,"hi":5,"mid":4},"vars":{"target":7,"entry":8},"note":"Entry 8 is at least 7, so hi becomes 4."},{"at":{"lo":3,"hi":4,"mid":3},"vars":{"target":7,"entry":6},"note":"Entry 6 is below 7, so lo becomes 4."},{"at":{"lo":4,"hi":4,"mid":4},"vars":{"target":7,"index":4},"note":"The window closes at index 4."},{"at":{},"vars":{"count":3},"note":"The count is 4 minus 1, which is 3."}]}
 ```
 
 <!-- stage: code -->

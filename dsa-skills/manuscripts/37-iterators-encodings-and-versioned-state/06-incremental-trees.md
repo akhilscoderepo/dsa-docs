@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Adding Nodes To A Live Tree
 
-A job scheduler stores its pending tasks in a binary heap built from linked node objects. A binary heap is a complete binary tree: every level is full except possibly the last, and the last level fills from left to right. Each `add` call must place the new task in the first free slot of the bottom level. A service adds 100 000 tasks while it also reads the tree. Every `add` starts at the root and walks the levels until it meets a node that still lacks a child. The service slows down as the heap grows, and a profiler shows that most of the time goes into walking nodes that were already full.
+A job scheduler stores its pending tasks in a complete binary tree of linked node objects. In a complete binary tree every level is full except possibly the last, and the last level fills from left to right. Each `add` call must place the new task in the first free slot of the bottom level. A service adds 100 000 tasks while it also reads the tree. Every `add` starts at the root and walks the levels until it meets a node that still lacks a child. The service slows down as the heap grows, and a profiler shows that most of the time goes into walking nodes that were already full.
 
 The walk repeats work that the previous `add` call finished moments ago. That call already knew which node would receive the next child. The lesson asks two questions. What should a class remember about its tree between calls so that each call avoids the walk? And how does the class keep that memory correct after every change to the tree?
 
@@ -48,14 +48,14 @@ final class NaiveInserter {
 
 On a tree with 3 nodes the walk visits the root, finds it full, and then stops at the next node, which has no children. The result is correct on every call.
 
-<!-- stage: bottleneck -->
-### Counting The Repeated Searches
-
 ```predict
 A complete tree has 10 nodes in level order, numbered 0 to 9. The naive insert runs once. How many nodes does the walk examine, and which node receives the new child?
 
 The walk examines 5 nodes, the nodes numbered 0 to 4. Node 4 already has a left child, node 9, and lacks a right child, so the new node becomes its right child. In general the new node gets number n, and its parent has number (n - 1) / 2 rounded down, so the walk examines about n / 2 nodes.
 ```
+
+<!-- stage: bottleneck -->
+### Counting The Repeated Searches
 
 The walk cannot skip the full nodes in front of the target, because the class keeps no record of them. When the tree holds `n` nodes, one insert examines about `n / 2` nodes. After `m` inserts starting from one node, the total is about `m^2 / 4` node visits. For `m = 100 000` that is about 2.5 billion visits, so the whole run costs O(m^2) time, although each insert changes only one node.
 
@@ -70,28 +70,24 @@ The **frontier** is the queue of nodes that still have fewer than two children, 
 
 <!-- names: frontier, parent link, visit history -->
 
-#### The Parent Link
+#### Two Facts For Later Exercises
 
-A **parent link** is a stored reference from a node, or an index that stands for a node, to the node above it. Some questions about a tree look upward. A lock rule that depends on ancestors needs to climb from a node to the root without a search from the root. A parent array of size `n` supports that climb in O(depth) time. The class creates the link when the node joins the tree. The link stays fixed unless a method that moves the node rewrites it.
+A **parent link** is a stored reference from a node to the node above it, and the Operations On Tree exercise uses it to climb to the root. A **visit history** is the sequence of values that an iterator already returned, and the Binary Search Tree Iterator II exercise uses it to move backward.
 
-#### The Visit History
+#### One Rule For Stored Facts
 
-A **visit history** is the sequence of values that an iterator has already returned, kept so that the iterator can move backward. An iterator over a search tree produces values in sorted order from a stack of unfinished nodes. A step backward cannot recompute the previous value from that stack, because the stack only describes what remains. The class therefore stores the values it produced and a position inside them. Moving backward changes only the position, and moving forward past the stored end resumes the stack.
-
-#### One Rule For All Three
-
-Each of the three stores describes a fact about the tree that a later call needs. The invariant of this lesson says that after every public method returns, each stored structure agrees with the current tree. A method that changes the tree must change the stored structure in the same call. A method that only reads must leave both unchanged. The constructor has a separate duty. It builds the stored structure from the tree it receives. It may do that work once, because the cost then spreads across all later calls.
+A stored structure describes a fact about the tree that a later call needs. The frontier is the example here. The invariant of this lesson says that after every public method returns, each stored structure agrees with the current tree. A method that changes the tree must change the stored structure in the same call. A method that only reads must leave both unchanged. The constructor has a separate duty. It builds the stored structure from the tree it receives. It may do that work once, because the cost then spreads across all later calls.
 
 <!-- stage: variables -->
 ### Tree, Frontier And Return Value
 
 The inserter keeps one tree and one queue. The trace below also records what each call returns.
 
-- **tree** is the set of linked nodes, written as its level-order list of values.
+- **root** is the top node of the linked tree. The trace variable `root` shows the level-order values of the tree below it.
 - **frontier** is the queue of nodes with fewer than two children, written from head to back.
-- **head** is the position, in level order, of the parent that the call uses, which is the node at the head of the frontier when the call starts.
-- **new** is the position, in level order, of the node that the current call adds.
-- **returned** is the value of the parent that the current call reports to its caller.
+- **parent** is the node at the head of the frontier when the call starts. The trace pointer `parent` marks its position in level order.
+- **fresh** is the node that the current call adds. The trace pointer `fresh` marks its position in level order.
+- **result** is the value `parent.val` that the call returns to its caller.
 
 The invariant is that the frontier lists exactly the nodes with fewer than two children, in level order, after the constructor and after every insert.
 
@@ -100,12 +96,12 @@ The invariant is that the frontier lists exactly the nodes with fewer than two c
 
 #### A Correct Inserter
 
-The first trace starts with the complete tree `1, 2, 3`, in which node 1 has two children and nodes 2 and 3 have none. The constructor therefore builds the frontier `2, 3`. The pointer `head` marks the parent that the call used, which is the node at the front of the frontier when the call starts. The pointer `new` marks the node that the call just added. The cells list the level order of the final tree, so a cell to the right of `new` does not exist yet.
+The first trace starts with the complete tree `1, 2, 3`, in which node 1 has two children and nodes 2 and 3 have none. The constructor therefore builds the frontier `2, 3`. The pointer `parent` marks the node that the call used, which is the node at the front of the frontier when the call starts. The pointer `fresh` marks the node that the call just added. The cells list the level order of the final tree, so a cell to the right of `fresh` does not exist yet.
 
-The first insert places 4 as the left child of node 2 and leaves node 2 at the head, because node 2 still has an open right slot. The second insert places 5 as the right child of node 2. Node 2 is now full, so the insert removes it and the head moves to node 3. The next two inserts fill node 3 the same way, and the last insert starts node 4. Every insert adds the new node at the back of the frontier, so the order of the frontier always matches the level order of the tree. At each step the pointer `head` therefore sits on the parent that the call reports.
+The first insert places 4 as the left child of node 2 and leaves node 2 at the head, because node 2 still has an open right slot. The second insert places 5 as the right child of node 2. Node 2 is now full, so the insert removes it and the head moves to node 3. The next two inserts fill node 3 the same way, and the last insert starts node 4. Every insert adds the new node at the back of the frontier, so the order of the frontier always matches the level order of the tree. At each step the pointer `parent` therefore sits on the node whose value the call returns.
 
 ```trace
-{"cells":["1","2","3","4","5","6","7","8"],"pointers":["head","new"],"steps":[{"at":{"head":1,"new":-1},"vars":{"frontier":"2,3","tree":"1,2,3","returned":"none"},"note":"The constructor reads the tree 1, 2, 3 once. Nodes 2 and 3 have no children, so the frontier is 2, 3 and its head is node 2."},{"at":{"head":1,"new":3},"vars":{"frontier":"2,3,4","tree":"1,2,3,4","returned":2},"note":"Insert 4: the head is node 2, whose left slot is open. The call attaches 4 as its left child, keeps node 2 in the frontier and appends node 4. The call returns 2."},{"at":{"head":1,"new":4},"vars":{"frontier":"3,4,5","tree":"1,2,3,4,5","returned":2},"note":"Insert 5: the head is node 2, whose left slot is taken. The call attaches 5 as its right child, removes node 2 because it is full and appends node 5. The call returns 2."},{"at":{"head":2,"new":5},"vars":{"frontier":"3,4,5,6","tree":"1,2,3,4,5,6","returned":3},"note":"Insert 6: the head is node 3, whose left slot is open. The call attaches 6 as its left child, keeps node 3 in the frontier and appends node 6. The call returns 3."},{"at":{"head":2,"new":6},"vars":{"frontier":"4,5,6,7","tree":"1,2,3,4,5,6,7","returned":3},"note":"Insert 7: the head is node 3, whose left slot is taken. The call attaches 7 as its right child, removes node 3 because it is full and appends node 7. The call returns 3."},{"at":{"head":3,"new":7},"vars":{"frontier":"4,5,6,7,8","tree":"1,2,3,4,5,6,7,8","returned":4},"note":"Insert 8: the head is node 4, whose left slot is open. The call attaches 8 as its left child, keeps node 4 in the frontier and appends node 8. The call returns 4."}]}
+{"cells":["1","2","3","4","5","6","7","8"],"pointers":["parent","fresh"],"steps":[{"at":{"parent":1,"fresh":-1},"vars":{"frontier":"2,3","root":"1,2,3","result":"none"},"note":"The constructor reads the tree 1, 2, 3 once. Nodes 2 and 3 have no children, so the frontier is 2, 3 and parent will be node 2."},{"at":{"parent":1,"fresh":3},"vars":{"frontier":"2,3,4","root":"1,2,3,4","result":2},"note":"Insert 4: parent is node 2, the head of the frontier, and its left slot is open. The call attaches 4 as its left child, keeps node 2 in the frontier and appends node 4. The call returns 2."},{"at":{"parent":1,"fresh":4},"vars":{"frontier":"3,4,5","root":"1,2,3,4,5","result":2},"note":"Insert 5: parent is node 2, the head of the frontier, and its left slot is taken. The call attaches 5 as its right child, removes node 2 because it is full and appends node 5. The call returns 2."},{"at":{"parent":2,"fresh":5},"vars":{"frontier":"3,4,5,6","root":"1,2,3,4,5,6","result":3},"note":"Insert 6: parent is node 3, the head of the frontier, and its left slot is open. The call attaches 6 as its left child, keeps node 3 in the frontier and appends node 6. The call returns 3."},{"at":{"parent":2,"fresh":6},"vars":{"frontier":"4,5,6,7","root":"1,2,3,4,5,6,7","result":3},"note":"Insert 7: parent is node 3, the head of the frontier, and its left slot is taken. The call attaches 7 as its right child, removes node 3 because it is full and appends node 7. The call returns 3."},{"at":{"parent":3,"fresh":7},"vars":{"frontier":"4,5,6,7,8","root":"1,2,3,4,5,6,7,8","result":4},"note":"Insert 8: parent is node 4, the head of the frontier, and its left slot is open. The call attaches 8 as its left child, keeps node 4 in the frontier and appends node 8. The call returns 4."}]}
 ```
 
 #### A Frontier That Is Not Updated
@@ -113,7 +109,7 @@ The first insert places 4 as the left child of node 2 and leaves node 2 at the h
 The second trace replays the same start on a class that forgets to remove a full node from the frontier. The first two inserts behave as before. After the second insert, node 2 has two children but remains at the head. The third insert reads the head, finds both slots of node 2 occupied, and writes to the right slot anyway. That write replaces node 5 with node 6. The class still reports success and its counter says 6 nodes exist, but only 5 nodes are reachable from the root. The stored frontier no longer agrees with the tree, and the error destroys data in a call that looks harmless.
 
 ```trace
-{"cells":["1","2","3","4","5","6"],"pointers":["head","new"],"steps":[{"at":{"head":1,"new":-1},"vars":{"frontier":"2,3","tree":"1,2,3","returned":"none"},"note":"The constructor reads the tree 1, 2, 3 once. Nodes 2 and 3 have no children, so the frontier is 2, 3 and its head is node 2."},{"at":{"head":1,"new":3},"vars":{"frontier":"2,3,4","tree":"1,2,3,4","returned":2},"note":"Insert 4: the head is node 2 with an open left slot. The call attaches 4 and appends node 4. The class does not remove full nodes, so node 2 stays at the head."},{"at":{"head":1,"new":4},"vars":{"frontier":"2,3,4,5","tree":"1,2,3,4,5","returned":2},"note":"Insert 5: the head is node 2 with an open right slot. The call attaches 5 and appends node 5. The class does not remove full nodes, so node 2 stays at the head."},{"at":{"head":1,"new":5},"vars":{"frontier":"2,3,4,5,6","tree":"1,2,3,4,6","returned":2},"note":"Insert 6: the head is still node 2, which already has two children. The call overwrites its right child 5 with 6. The class returns 2 and counts 6 nodes, but only 5 nodes are reachable from the root."}]}
+{"cells":["1","2","3","4","5","6"],"pointers":["parent","fresh"],"steps":[{"at":{"parent":1,"fresh":-1},"vars":{"frontier":"2,3","root":"1,2,3","result":"none"},"note":"The constructor reads the tree 1, 2, 3 once. Nodes 2 and 3 have no children, so the frontier is 2, 3 and parent will be node 2."},{"at":{"parent":1,"fresh":3},"vars":{"frontier":"2,3,4","root":"1,2,3,4","result":2},"note":"Insert 4: parent is node 2, the head of the frontier, with an open left slot. The call attaches 4 and appends node 4. The class does not remove full nodes, so node 2 stays at the head."},{"at":{"parent":1,"fresh":4},"vars":{"frontier":"2,3,4,5","root":"1,2,3,4,5","result":2},"note":"Insert 5: parent is node 2, the head of the frontier, with an open right slot. The call attaches 5 and appends node 5. The class does not remove full nodes, so node 2 stays at the head."},{"at":{"parent":1,"fresh":5},"vars":{"frontier":"2,3,4,5,6","root":"1,2,3,4,6","result":2},"note":"Insert 6: parent is still node 2, the head of the frontier, which already has two children. The call overwrites its right child 5 with 6. The class returns 2 and counts 6 nodes, but only 5 nodes are reachable from the root."}]}
 ```
 
 <!-- stage: code -->
@@ -232,7 +228,7 @@ The frontier queue works only because a complete tree fills in level order. A tr
 #### [Boundary] Find Elements In A Contaminated Binary Tree (LeetCode 1261)
 <!-- id: it37-contaminated-tree-find -->
 
-**Prerequisites.** The Complete Binary Tree Inserter exercise above and the parent and child numbering of a tree stored in an array.
+**Prerequisites.** The Complete Binary Tree Inserter exercise above and the parent and child numbering of a tree stored in an array. It belongs here because the numbering comes from the tree shape alone, a fact that the constructor can compute once and keep.
 
 **Problem.** A binary tree once had value 0 at the root. A node with value `x` had a left child with value `2x + 1` and a right child with value `2x + 2`. Every stored value has since been overwritten with -1, but the shape is intact. Design the class `FindElements`. The constructor receives the contaminated tree, given as a level-order list with `null` for absent children. The call `find(target)` returns `true` exactly when some node held the value `target` before the contamination.
 

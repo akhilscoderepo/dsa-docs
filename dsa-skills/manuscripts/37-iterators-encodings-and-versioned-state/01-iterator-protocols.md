@@ -54,7 +54,7 @@ The constructor is not the only weak point. The look-ahead works by taking an el
 A correct design therefore needs three properties. It must answer every call in time that does not depend on the counts. It must look at the next element without taking it. It must define the call after the last element in the documentation, not by accident.
 
 <!-- stage: insight -->
-### Four Separate Questions
+### Three Methods Cover Four Questions
 
 #### One Cursor Marks The Next Element
 
@@ -64,15 +64,15 @@ A **cursor** is the small group of fields that identifies the next element to ha
 
 #### Observation, Availability, Consumption And Exhaustion
 
-An iterator protocol answers four questions, and each question gets its own method with its own effect on the cursor. **Observation** means reading the next element without moving the cursor. `peek()` performs it, and calling it twice returns the same element twice. Availability is the question whether an element exists, and `hasNext()` answers it with no effect on the cursor, however often the caller repeats it. **Consumption** means returning the next element and moving the cursor past it exactly once. `next()` performs it.
+An iterator protocol answers four questions with three methods, and each method has its own effect on the cursor. **Observation** means reading the next element without moving the cursor. `peek()` performs it, and calling it twice returns the same element twice. **Availability** is the question whether an element exists. `hasNext()` answers it and changes no logical state, however often the caller repeats it. **Consumption** means returning the next element and moving the cursor past it exactly once. `next()` performs it.
 
-**Exhaustion** is the state in which the cursor lies past the last element. This lesson fixes one rule for it. A call to `next()` or `peek()` in that state throws `NoSuchElementException`, the exception that the Java `Iterator` interface documents, and it changes no field. A caller that wants to avoid the exception checks `hasNext()` first.
+**Exhaustion** is the state in which the cursor lies past the last element. It is a state, not a method, and this lesson fixes one rule for it. A call to `next()` or `peek()` in that state throws `NoSuchElementException`, the exception that the Java `Iterator` interface documents, and it changes no logical state. A caller that wants to avoid the exception checks `hasNext()` first.
 
 #### Skipping Without Expanding
 
-A run of count zero, or a run that the cursor has fully used, holds no element. The cursor moves past such runs lazily, inside the call that needs the next element. The move is a loop over run boundaries, so it costs time proportional to the runs it skips and never to the counts. Counts are stored as `long` values, because a count near 10^9 is legal and a sum of counts exceeds `int`.
+A run of count zero, or a run that the cursor has fully used, holds no element. The cursor moves past such runs lazily, inside the call that needs the next element. The move is a loop over run boundaries, so it costs time proportional to the runs it skips and never to the counts. Counts are stored as `long` values, because a count with 15 digits can exceed `Integer.MAX_VALUE`, and a sum of counts can exceed it even when each count fits.
 
-The invariant of the protocol is that observation never moves the cursor, consumption moves it exactly once, and the cursor never points past the end of the data.
+The invariant of the protocol is that observation never changes the observable sequence, consumption moves it exactly once, and the cursor never points past the end of the data.
 
 <!-- stage: variables -->
 ### Cursor Fields In Both Classes
@@ -120,11 +120,11 @@ final class TokenReader {
 
     TokenReader(String[] tokens) { this.tokens = tokens; }
 
-    boolean hasNext() { return pos < tokens.length; }          // availability, no side effect
+    boolean hasNext() { return pos < tokens.length; }          // availability, no change to the observable sequence
 
     String peek() {
         if (pos == tokens.length) throw new java.util.NoSuchElementException();   // exhausted
-        return tokens[pos];                                    // observation, pos unchanged
+        return tokens[pos];                                    // observation, pos unchanged and sequence unchanged
     }
 
     String next() {
@@ -149,7 +149,7 @@ final class RunReader {
     RunReader(char[] symbols, long[] counts) { this.symbols = symbols; this.counts = counts; }
 
     private void settle() {
-        while (run < counts.length && used == counts[run]) { run++; used = 0; }   // skips used-up and empty runs
+        while (run < counts.length && used == counts[run]) { run++; used = 0; }   // skips used-up and empty runs, sequence unchanged
     }
 
     boolean hasNext() { settle(); return run < counts.length; }
@@ -173,7 +173,7 @@ final class RunReader {
 
 #### Recognizing The Pattern
 
-Use this method when a class hands out one logical sequence over many calls and the sequence is large, compressed or produced on demand. The words `hasNext`, `next` and `peek` in a problem statement signal it. Before coding, write down the cursor fields, say which method moves them, and decide what the call after the last element does. The invariant to keep is that only the consuming method moves the cursor, and it moves it once.
+Use this method when a class hands out one logical sequence over many calls and the sequence is large, compressed or produced on demand. The words `hasNext`, `next` and `peek` in a problem statement signal it. Before coding, write down the cursor fields, say which method moves them, and decide what the call after the last element does. The invariant to keep is that only the consuming method changes the observable sequence, and it changes it once. Skipping empty runs may write fields but never changes that sequence.
 
 #### A False Friend
 
@@ -196,7 +196,7 @@ If the caller always reads the whole sequence once and the sequence fits in memo
 **Constraints.** The limits are:
 - **Length** of the array is from 0 to 10^5, and elements are `int` values.
 - **Calls** number at most 10^5 per object.
-- **Exhaustion** means `next()` throws `NoSuchElementException` and changes no field.
+- **Exhaustion** means `next()` throws `NoSuchElementException` and changes no logical state (the observable sequence).
 - **Mutation** of the array by the caller after construction does not happen.
 
 **Example 1.** Input calls `["ArrayIterator","hasNext","next","next","hasNext","next"]` with arguments `[[[4,7]],[],[],[],[],[]]`, output `[null,true,4,7,false,"NoSuchElementException"]`.
@@ -217,7 +217,7 @@ If the caller always reads the whole sequence once and the sequence fits in memo
 **Constraints.** The limits are:
 - **Elements** are `Integer` values from -10^9 to 10^9, and 0 is an ordinary value.
 - **Calls** number at most 1000 per object.
-- **Exhaustion** means `peek()` and `next()` throw `NoSuchElementException` and change no field.
+- **Exhaustion** means `peek()` and `next()` throw `NoSuchElementException` and change no logical state (the observable sequence).
 - **Source** may be any iterator, and the class does not read ahead of one element.
 
 **Example 1.** Input calls `["PeekingIterator","next","peek","next","peek","next","hasNext"]` with arguments `[[[1,2,3]],[],[],[],[],[],[]]`, output `[null,1,2,2,3,3,false]`.
@@ -239,7 +239,7 @@ If the caller always reads the whole sequence once and the sequence fits in memo
 - **Length** of the compressed string is from 2 to 1000 characters.
 - **Letters** are lowercase English letters, and each is followed by 1 to 15 decimal digits.
 - **Counts** may be 0 and may exceed `Integer.MAX_VALUE`.
-- **Exhaustion** means `next()` throws `NoSuchElementException` and changes no field.
+- **Exhaustion** means `next()` throws `NoSuchElementException` and changes no logical state (the observable sequence).
 
 **Example 1.** Input calls `["StringIterator","next","next","next","hasNext"]` with arguments `[["a2b0c13"],[],[],[],[]]`, output `[null,"a","a","c",true]`.
 

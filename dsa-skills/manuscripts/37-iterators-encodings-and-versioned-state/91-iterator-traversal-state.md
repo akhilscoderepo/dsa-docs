@@ -12,7 +12,7 @@ The defect comes from one stored value that tries to stand for a history. The qu
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
 
-The lesson Iterator Protocols supplied the four separate questions: observation, availability, consumption and exhaustion. It also supplied the rule that a cursor holds only what identifies the next element, and that a call after the last element has one documented behavior. This lesson keeps that rule and applies it to the exercises that peek, skip by a count and run backward.
+The lesson Iterator Protocols supplied the four questions of observation, availability, consumption and exhaustion. It also supplied the rule that a cursor holds only what identifies the next element, and that a call after the last element has one documented behavior. This lesson keeps that rule and applies it to the exercises that peek, skip by a count and run backward.
 
 The lesson Nested Iteration supplied the repair method that moves a position past empty sources before an answer, and it supplied the stack of cursors that replaces recursion. A binary search tree traversal is the same shape: the stack holds one cursor for each ancestor whose left subtree was entered.
 
@@ -51,7 +51,7 @@ For the tree with keys 3, 7, 9, 15 and 20, the calls `next()`, `next()`, `prev()
 ```predict
 A tree has 1000000 nodes in a straight left chain, and the caller presses Next twice and then closes the browser. What does the constructor cost, and what happens to the walk method?
 
-The constructor visits all 1000000 nodes and stores all 1000000 keys before the first call, although the caller reads two. The walk method calls itself once for each level of the chain, so a depth of one million exhausts the call stack and throws StackOverflowError before any key is stored. The browser never opens.
+The walk method calls itself once for each level of the chain, so a depth of one million exhausts the call stack. The constructor throws StackOverflowError before it stores any key, and the browser never opens. On a balanced tree with the same node count, the recursion succeeds, but the constructor still visits and stores all 1000000 keys before the first call, although the caller reads two.
 ```
 
 <!-- stage: bottleneck -->
@@ -59,20 +59,20 @@ The constructor visits all 1000000 nodes and stores all 1000000 keys before the 
 
 If the tree has `n` nodes and height `h`, the constructor costs O(n) time and O(n) memory, and the recursion needs O(h) call-stack frames. A skewed tree has `h = n`, so the recursion fails for a tree of a few tens of thousands of nodes. The caller who reads two keys pays for all of them.
 
-The common repair is the stack-based lazy walk from the earlier lesson. It stores O(h) nodes on the heap and produces each key on demand. That walk gives up the reverse direction. When it pops a node and hands out its key, the node leaves the stack, and nothing in the stack describes the keys already handed out. A Previous call has no data to read.
+The common repair is a lazy walk with an explicit stack. The constructor pushes the root and every left child below it, down to a leaf, and this chain is the left spine. Each `next` pops the top node, hands out its key and pushes the left spine of its right child. The stack holds O(h) nodes on the heap and produces each key on demand. That walk gives up the reverse direction. When it pops a node and hands out its key, the node leaves the stack, and nothing in the stack describes the keys already handed out. A Previous call has no data to read.
 
 A correct design must therefore meet three requirements. Next must remain lazy, so the work is proportional to the keys that the caller reaches. Previous must return the key before the current one without any traversal. The two directions must agree after any sequence of calls. A Next after a Previous must repeat the key the caller saw before, and it must not read the tree again.
 
 <!-- stage: insight -->
 ### Unread Keys And Read Keys
 
-#### Two Stores For Two Directions
+#### Two Stores And One Position
 
 <!-- names: pending stack, visited list, history position -->
 
 The iterator keeps the unread keys in a **pending stack**: the stack of tree nodes that the lazy in-order walk has entered and not yet handed out. Its top is the smallest unread key. It keeps the keys already handed out in a **visited list**, in the order they were handed out, which is ascending order. A **history position** is one integer that names the key on screen, as an index into the visited list. It starts at -1, before the first key.
 
-The three fields describe one sequence. The visited list holds the prefix of the in-order sequence that the iterator has reached so far. The pending stack describes the rest of the sequence, from the smallest unread key onward. The history position says where inside the prefix the caller stands.
+The two stores and the position describe one sequence. The visited list holds the prefix of the in-order sequence that the iterator has reached so far. The pending stack describes the rest of the sequence, from the smallest unread key onward. The history position says where inside the prefix the caller stands.
 
 #### Next Replays Or Extends
 
@@ -82,14 +82,10 @@ A call to `next` first looks at the history position. When a visited key lies af
 
 A call to `prev` needs no tree access. If the position is above 0, the iterator subtracts 1 and returns the key at the new position. Otherwise no key lies before the current one, and the call throws `NoSuchElementException` without changing the position. The visited list is never shortened, because the caller may press Next again, and the replay path returns those keys from memory.
 
-#### One Rule For All Four Iterators
-
-The same split appears in every exercise of this lesson. A lookahead iterator keeps the read-ahead elements in a small buffer and pulls from the source only when the buffer is too short. A run skipper keeps a cursor of run index and used count and jumps by subtraction. A nested iterator keeps a stack of open lists. A bounded tree iterator keeps the pending stack and the visited list. The invariant is that the stored history and the stored cursor always describe one position in one sequence, and extending the history never skips or repeats a key.
-
 <!-- stage: variables -->
 ### Fields Of The Tree Browser
 
-The lesson's browser stores three fields besides the tree. Each lookahead or skipping exercise keeps the matching small cursor.
+The lesson's browser stores two stores and one position besides the tree. Each lookahead or skipping exercise keeps the matching small cursor.
 
 - **pending** is the stack of nodes entered by the walk and not yet handed out, with the smallest unread key on top.
 - **visited** is the list of keys handed out so far, in ascending order, and it never shrinks.
@@ -156,6 +152,10 @@ final class TreeBrowser {
     }
 }
 ```
+
+#### One Rule For All Four Iterators
+
+The same split appears in every exercise below. A lookahead iterator keeps the read-ahead elements in a small buffer and pulls from the source only when the buffer is too short. A run skipper keeps a cursor of run index and used count and jumps by subtraction. A nested iterator keeps a stack of open lists. A bounded tree iterator keeps the pending stack and the visited list. The invariant is that the stored history and the stored cursor always describe one position in one sequence, and extending the history never skips or repeats a key.
 
 #### Cost
 

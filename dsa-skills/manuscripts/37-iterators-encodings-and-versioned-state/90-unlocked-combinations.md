@@ -11,11 +11,3 @@ A text editor shows a folded outline of nested items. The user pages forward and
 | Codec + Structural Traversal | Yes | LeetCode 297 Serialize and Deserialize Binary Tree |
 
 The lesson Iterator Traversal State keeps a stack of unfinished positions valid across any order of `peek`, `next` and `prev` calls. The lesson Codec Structural Traversal gives encoding and decoding one shared grammar, so the decoder consumes exactly the tokens that the encoder wrote.
-
-### Pairings Already Covered
-
-| Combination | Status | Owner of the rule |
-| --- | --- | --- |
-| Binary lifting | Covered | Chapters 29 and 30 teach the jump tables that LeetCode 1483 reviews |
-
-This chapter assigns no binary lifting problem. Binary search over a version list reuses the search rules from chapter 6.

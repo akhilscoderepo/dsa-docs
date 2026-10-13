@@ -80,6 +80,8 @@ The page iterator and the nested iterator keep these fields.
 - **page** is the index of the page that holds the next element, and it equals the page count at the end.
 - **col** is the index of the next unread string inside page `page`.
 - **stack** holds one iterator for each open list, with the innermost list on top.
+- **depth** is the number of iterators on `stack`, and the trace shows it.
+- **outer** is the number of items taken from the outermost list, and only the trace shows it.
 - **ready** holds the next string once `hasNext()` found it, and it is empty otherwise.
 
 The invariant is that `col` is less than the size of page `page` after `settle`, or `page` equals the page count. For the nested iterator, `ready` is either empty or holds the next string, and the stack contains only lists that may still hold elements.
@@ -97,10 +99,10 @@ The pointer `page` marks the page that holds the next element, and `col` is the 
 
 #### Descending Into Inner Lists
 
-The second trace reads the nested input `["x", [], [["y"], "z"]]`. The pointer `top` counts the items taken from the outermost list, and the variable `depth` counts the cursors on the stack. The first `hasNext()` takes `x` from the outer list, stores it in `ready` and returns `true`, and `next()` hands it out. The second `hasNext()` takes the empty list, pushes a cursor for it, finds nothing, and pops it again. It then takes the list `[["y"], "z"]`, pushes it, takes `["y"]`, pushes that too, and finds `y` at depth 3. The call `next()` returns `y`. The third `hasNext()` pops the exhausted cursor of `["y"]`, finds `z` at depth 2, and `next()` returns it. The last `hasNext()` pops both remaining cursors, reaches depth 0 and returns `false`.
+The second trace reads the nested input `["x", [], [["y"], "z"]]`. The pointer `outer` counts the items taken from the outermost list, and the variable `depth` counts the cursors on the stack, which is the stack size in the code. The first `hasNext()` takes `x` from the outer list, stores it in `ready` and returns `true`, and `next()` hands it out. The second `hasNext()` takes the empty list, pushes a cursor for it, finds nothing, and pops it again. It then takes the list `[["y"], "z"]`, pushes it, takes `["y"]`, pushes that too, and finds `y` at depth 3. The call `next()` returns `y`. The third `hasNext()` pops the exhausted cursor of `["y"]`, finds `z` at depth 2, and `next()` returns it. The last `hasNext()` pops both remaining cursors, reaches depth 0 and returns `false`.
 
 ```trace
-{"cells":["x","[]","[[y],z]"],"pointers":["top"],"steps":[{"at":{"top":0},"vars":{"depth":1,"ready":"none","call":"new","result":"none"},"note":"Start: the stack holds one cursor for the outer list, and nothing is taken."},{"at":{"top":1},"vars":{"depth":1,"ready":"x","call":"hasNext()","result":"true"},"note":"hasNext takes x from the outer list, stores it in ready and returns true."},{"at":{"top":1},"vars":{"depth":1,"ready":"none","call":"next()","result":"x"},"note":"next returns x and clears ready."},{"at":{"top":3},"vars":{"depth":3,"ready":"y","call":"hasNext()","result":"true"},"note":"hasNext opens the empty list and pops it, then opens [[y],z] and [y], and finds y at depth 3. It returns true."},{"at":{"top":3},"vars":{"depth":3,"ready":"none","call":"next()","result":"y"},"note":"next returns y and clears ready."},{"at":{"top":3},"vars":{"depth":2,"ready":"z","call":"hasNext()","result":"true"},"note":"hasNext pops the finished cursor of [y] and finds z at depth 2. It returns true."},{"at":{"top":3},"vars":{"depth":2,"ready":"none","call":"next()","result":"z"},"note":"next returns z and clears ready."},{"at":{"top":3},"vars":{"depth":0,"ready":"none","call":"hasNext()","result":"false"},"note":"hasNext pops the two remaining cursors, reaches depth 0 and returns false."}]}
+{"cells":["x","[]","[[y],z]"],"pointers":["outer"],"steps":[{"at":{"outer":0},"vars":{"depth":1,"ready":"none","call":"new","result":"none"},"note":"Start: the stack holds one cursor for the outer list, and nothing is taken."},{"at":{"outer":1},"vars":{"depth":1,"ready":"x","call":"hasNext()","result":"true"},"note":"hasNext takes x from the outer list, stores it in ready and returns true."},{"at":{"outer":1},"vars":{"depth":1,"ready":"none","call":"next()","result":"x"},"note":"next returns x and clears ready."},{"at":{"outer":3},"vars":{"depth":3,"ready":"y","call":"hasNext()","result":"true"},"note":"hasNext opens the empty list and pops it, then opens [[y],z] and [y], and finds y at depth 3. It returns true."},{"at":{"outer":3},"vars":{"depth":3,"ready":"none","call":"next()","result":"y"},"note":"next returns y and clears ready."},{"at":{"outer":3},"vars":{"depth":2,"ready":"z","call":"hasNext()","result":"true"},"note":"hasNext pops the finished cursor of [y] and finds z at depth 2. It returns true."},{"at":{"outer":3},"vars":{"depth":2,"ready":"none","call":"next()","result":"z"},"note":"next returns z and clears ready."},{"at":{"outer":3},"vars":{"depth":0,"ready":"none","call":"hasNext()","result":"false"},"note":"hasNext pops the two remaining cursors, reaches depth 0 and returns false."}]}
 ```
 
 <!-- stage: code -->
@@ -125,7 +127,7 @@ final class PageIterator {
 
     String next() {
         settle();
-        if (page == pages.size()) throw new java.util.NoSuchElementException();   // exhausted: no field changes
+        if (page == pages.size()) throw new java.util.NoSuchElementException();   // exhausted: the sequence is unchanged
         return pages.get(page).get(col++);                                         // reads one string and advances col
     }
 }

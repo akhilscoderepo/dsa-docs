@@ -7,20 +7,18 @@ def merge_trace(text, wa, wb):
     pa = [i for i, w in enumerate(text) if w == wa]
     pb = [i for i, w in enumerate(text) if w == wb]
     i = j = 0; best = None
-    st = [{"at": {"a": pa[0], "b": pb[0]}, "vars": {"best": "none"},
-           "note": f"Start: the cursors point to position {pa[0]} of {wa} and position {pb[0]} of {wb}."}]
+    st = []
     while i < len(pa) and j < len(pb):
         gap = abs(pa[i] - pb[j])
         best = gap if best is None else min(best, gap)
-        mover = "a" if pa[i] < pb[j] else "b"
-        if mover == "a": i += 1
+        mover = "pa" if pa[i] < pb[j] else "pb"
+        st.append({"at": {"pa[i]": pa[i], "pb[j]": pb[j]}, "vars": {"i": i, "j": j, "gap": gap, "best": best},
+                   "note": f"Compare {pa[i]} with {pb[j]}. The gap is {gap}, so best is {best}. {mover}[{'i' if mover == 'pa' else 'j'}] is the smaller position, so {'i' if mover == 'pa' else 'j'} moves forward."})
+        if mover == "pa": i += 1
         else: j += 1
-        na = pa[i] if i < len(pa) else len(text)
-        nb = pb[j] if j < len(pb) else len(text)
-        done = i >= len(pa) or j >= len(pb)
-        st.append({"at": {"a": na, "b": nb}, "vars": {"gap": gap, "best": best},
-                   "note": f"The gap is {gap}, so best is {best}. The cursor of {wa if mover == 'a' else wb} has the smaller position and moves forward." + (" A list is now exhausted, so the walk ends." if done else "")})
-    return block(text, ["a", "b"], st), best
+    st.append({"at": {}, "vars": {"i": i, "j": j, "best": best},
+               "note": f"A list is exhausted, so the walk ends and returns best, which is {best}."})
+    return block(text, ["pa[i]", "pb[j]"], st), best
 
 
 def lb_trace(plist, left, right):
@@ -37,7 +35,7 @@ def lb_trace(plist, left, right):
         st.append({"at": {"lo": lo, "hi": hi, "mid": lo}, "vars": {"target": x, "index": lo}, "note": f"The window closes at index {lo}."})
         return lo
     a = lb(left, "one"); b = lb(right + 1, "two")
-    st.append({"at": {"lo": a, "hi": b, "mid": a}, "vars": {"count": b - a}, "note": f"The count is {b} minus {a}, which is {b - a}."})
+    st.append({"at": {}, "vars": {"count": b - a}, "note": f"The count is {b} minus {a}, which is {b - a}."})
     return block([str(p) for p in plist], ["lo", "hi", "mid"], st), b - a
 
 

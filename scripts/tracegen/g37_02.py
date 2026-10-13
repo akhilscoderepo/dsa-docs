@@ -34,7 +34,7 @@ def nested_trace():
     stack = [[root, 0]]  # [list, index of next item]
     ready = None
     cells = ["x", "[]", "[[y],z]"]
-    st = [{"at": {"top": 0}, "vars": {"depth": 1, "ready": "none", "call": "new", "result": "none"}, "note": "Start: the stack holds one cursor for the outer list, and nothing is taken."}]
+    st = [{"at": {"outer": 0}, "vars": {"depth": 1, "ready": "none", "call": "new", "result": "none"}, "note": "Start: the stack holds one cursor for the outer list, and nothing is taken."}]
     def has():
         nonlocal ready
         while ready is None and stack:
@@ -50,8 +50,8 @@ def nested_trace():
         nonlocal ready
         assert has(); r = ready; ready = None; return r
     def log(call, res, note):
-        top = stack[0][1] if stack else len(root)
-        st.append({"at": {"top": top}, "vars": {"depth": len(stack), "ready": ready if ready else "none", "call": call, "result": res}, "note": note})
+        outer = stack[0][1] if stack else len(root)
+        st.append({"at": {"outer": outer}, "vars": {"depth": len(stack), "ready": ready if ready else "none", "call": call, "result": res}, "note": note})
     r = has(); log("hasNext()", str(r).lower(), "hasNext takes x from the outer list, stores it in ready and returns true.")
     r = nxt(); log("next()", r, "next returns x and clears ready.")
     r = has(); log("hasNext()", str(r).lower(), "hasNext opens the empty list and pops it, then opens [[y],z] and [y], and finds y at depth 3. It returns true.")
@@ -62,7 +62,7 @@ def nested_trace():
     r = nxt(); log("next()", r, "next returns z and clears ready.")
     r = has(); log("hasNext()", str(r).lower(), "hasNext pops the two remaining cursors, reaches depth 0 and returns false.")
     assert not r and not stack
-    return block(cells, ["top"], st)
+    return block(cells, ["outer"], st)
 
 fill(CH, NAME, page_trace(), "@@TRACE1@@")
 fill(CH, NAME, nested_trace(), "@@TRACE2@@")

@@ -86,7 +86,7 @@ The crosswalk assigns 18 Design-tag problems here, in addition to iterator, seri
 
 - **Build - Author exercise: Versioned Integer.** Append `(version,value)` changes.
 - **Vary - LC 1146 Snapshot Array.** Store only changed indices per snapshot.
-- **Boundary - Author exercise: Repeated Writes Before Snap.** Coalesce writes with the same version.
+- **Boundary - Author exercise: Equal Versions Replace.** Coalesce writes with the same version.
 - **Recognize - LC 981 Time Based Key-Value Store.** Binary-search per-key timestamp histories.
 
 ### Query Objects

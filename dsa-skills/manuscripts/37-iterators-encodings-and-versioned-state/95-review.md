@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-An iterator that moves when it only looks, a codec that gives two lists the same text, and a version query that reads the wrong state all pass short tests. The questions below cover the six lessons and the two closing lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+An iterator that moves when it only looks, a codec that gives two lists the same text, and a version query that reads the wrong state all pass short tests. The questions below cover all eight lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
 
 ### Recognition Questions
 
@@ -18,7 +18,7 @@ An iterator that moves when it only looks, a codec that gives two lists the same
 ```
 
 ```quiz
-{"id": "rq37-rev-run-skip", "q": "An RLE iterator has counts up to 10^9 and thousands of runs. What does `next(n)` use to skip n elements?", "options": ["A loop that consumes one element at a time.", "Subtraction on the current run's remaining count, run by run.", "Binary search over a flattened array.", "A copy of the encoded array."], "answer": 1, "explain": "Each run is consumed in one step by subtracting its remaining count, so the cost depends on the number of runs touched and not on n."}
+{"id": "rq37-rev-run-skip", "q": "An RLE iterator has counts up to 10^9 and thousands of runs. What does `skip(n)` use to skip n elements?", "options": ["A loop that consumes one element at a time.", "Subtraction on the current run's remaining count, run by run.", "Binary search over a flattened array.", "A copy of the encoded array."], "answer": 1, "explain": "Each run is consumed in one step by subtracting its remaining count, so the cost depends on the number of runs touched and not on n."}
 ```
 
 ```quiz
@@ -36,3 +36,16 @@ An iterator that moves when it only looks, a codec that gives two lists the same
 ```quiz
 {"id": "rq37-rev-query-object", "q": "A class answers many `frequency(left, right, value)` queries on one array. Where should the work go?", "options": ["Into each query, scanning the range.", "Into the constructor, which stores a sorted index list per value for binary search.", "Into a recursive call per element.", "Into a static counter."], "answer": 1, "explain": "The constructor spends O(n) once, and each query binary searches two positions in the value's list. Repeated queries then cost O(log n)."}
 ```
+
+```quiz
+{"id": "rq37-rev-frontier", "q": "A complete-tree inserter keeps a queue of nodes that still have a free child slot. After it adds a child, what happens to the parent?", "options": ["It always leaves the queue.", "It leaves the queue only when both child slots are full.", "It moves to the back of the queue.", "It is never stored again."], "answer": 1, "explain": "The first node in the queue is the parent that gets the next child. It leaves the queue once its second child is attached, so the queue head is always the next insertion point."}
+```
+
+```quiz
+{"id": "rq37-rev-prev-next", "q": "A bidirectional tree iterator supports `next` and `prev`. Why keep the values already produced?", "options": ["The tree cannot be walked a second time.", "Moving back must return values already seen, and re-walking a lazy stack cannot go backward.", "Sorting needs them.", "They make `hasNext` faster."], "answer": 1, "explain": "A forward-only stack walk discards visited nodes. Keeping produced values lets `prev` step back and lets a later `next` replay them in the same order."}
+```
+
+```quiz
+{"id": "rq37-rev-shared-grammar", "q": "Why must a tree decoder read the same token grammar that the encoder wrote?", "options": ["Decoding must stop at exactly the tokens of one tree, so shape markers and order must match.", "Decoders run faster that way.", "The tree has to be sorted.", "Java requires it."], "answer": 0, "explain": "The decoder consumes tokens in the encoder's order and ends when the markers close the root's subtrees, so any change in grammar breaks the rebuild."}
+```
+
