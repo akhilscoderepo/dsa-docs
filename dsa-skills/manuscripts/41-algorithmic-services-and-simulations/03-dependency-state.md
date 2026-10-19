@@ -43,7 +43,7 @@ The call returns 7, because the sum was saved when c was set and nothing touched
 <!-- stage: bottleneck -->
 ### Stale Results Or Full Recomputation
 
-The design gives a wrong answer, so correctness is the first problem. Two quick repairs exist, and each has a cost. The first repair stores only the formulas and evaluates the whole chain on every read. A read then costs O(n) for a chain of n formula cells. With multiplicities, such as a cell that sums the same neighbor twice, a read can even visit the same cell many times.
+The design gives a wrong answer, so correctness is the first problem. Two quick repairs exist, and each has a cost. The first repair stores only the formulas and evaluates the whole chain on every read. A read costs O(n) for a chain of n formula cells only while no cell is referenced twice. Repeated references make the read revisit cells, such as a cell that sums the same neighbor twice, and the visits multiply along a long chain.
 
 The second repair recomputes every formula cell after each edit. An edit then costs O(n) even when it touches one cell that nothing reads. A sheet with thousands of formulas and mostly local edits wastes nearly all of that work.
 
@@ -56,7 +56,7 @@ Keep the formula of every cell as authoritative data, and keep two derived struc
 
 #### Propagating An Edit
 
-When a cell changes, the sheet visits its dependents, then their dependents, and so on. It recomputes each visited cell once, and it does so in an order where every cell comes after all the cells it reads. A depth-first search over the dependents map gives that order when the search records each cell after its dependents and the sheet reverses the list. The cost of an edit is the size of the affected region, not the size of the sheet.
+When a cell changes, the sheet visits its dependents, then their dependents, and so on. It recomputes each visited cell once, and it does so in an order where every cell comes after all the cells it reads. A depth-first search over the dependents map gives that order when the search records each cell after its dependents and the sheet reverses the list. After the cycle check, the cost of propagating an edit is the size of the affected region, not the size of the sheet.
 
 #### Rejecting A Bad Formula First
 
@@ -93,7 +93,7 @@ The first trace edits a sheet with the formula cells `c` and `d`. The pointer `c
 {"cells":["a=3","b=4","c=a+b","d=c+a","a=10","b=1"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"values":"a=3","recomputed":"none"},"note":"Call 0: the sheet stores 3 in a, and it recomputes no formula cells."},{"at":{"call":1},"vars":{"values":"a=3 b=4","recomputed":"none"},"note":"Call 1: the sheet stores 4 in b, and it recomputes no formula cells."},{"at":{"call":2},"vars":{"values":"a=3 b=4 c=7","recomputed":"c"},"note":"Call 2: the sheet gives c the formula a+b, and it recomputes c."},{"at":{"call":3},"vars":{"values":"a=3 b=4 c=7 d=10","recomputed":"d"},"note":"Call 3: the sheet gives d the formula c+a, and it recomputes d."},{"at":{"call":4},"vars":{"values":"a=10 b=4 c=14 d=24","recomputed":"c,d"},"note":"Call 4: the sheet stores 10 in a, and it recomputes c,d."},{"at":{"call":5},"vars":{"values":"a=10 b=1 c=11 d=21","recomputed":"c,d"},"note":"Call 5: the sheet stores 1 in b, and it recomputes c,d."}]}
 ```
 
-The fifth call changes `a`, which both `c` and `d` read. The sheet recomputes `c` first and `d` second, so `d` reads the fresh value of `c`.
+Call 4 changes `a`, which both `c` and `d` read. The sheet recomputes `c` first and `d` second, so `d` reads the fresh value of `c`.
 
 #### Replacing And Rejecting Formulas
 
@@ -103,7 +103,7 @@ The second trace shows a repeated reference, a rejected formula and a replaced f
 {"cells":["a=2","b=5","e=a+a","a=e","e=b","a=9","b=6"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"values":"a=2","dependents of a":"{}","result":"true"},"note":"Call 0: the literal 2 goes into a, and the sheet recomputes no formula cells."},{"at":{"call":1},"vars":{"values":"a=2 b=5","dependents of a":"{}","result":"true"},"note":"Call 1: the literal 5 goes into b, and the sheet recomputes no formula cells."},{"at":{"call":2},"vars":{"values":"a=2 b=5 e=4","dependents of a":"{e}","result":"true"},"note":"Call 2: e gets the formula a+a, and the sheet recomputes e."},{"at":{"call":3},"vars":{"values":"a=2 b=5 e=4","dependents of a":"{e}","result":"false"},"note":"Call 3: e already reads a, so the cycle check rejects the formula and nothing changes."},{"at":{"call":4},"vars":{"values":"a=2 b=5 e=5","dependents of a":"{}","result":"true"},"note":"Call 4: e gets the formula b, and the sheet recomputes e."},{"at":{"call":5},"vars":{"values":"a=9 b=5 e=5","dependents of a":"{}","result":"true"},"note":"Call 5: the literal 9 goes into a, and the sheet recomputes no formula cells."},{"at":{"call":6},"vars":{"values":"a=9 b=6 e=6","dependents of a":"{}","result":"true"},"note":"Call 6: the literal 6 goes into b, and the sheet recomputes e."}]}
 ```
 
-The fourth call asks `a` to read `e`, which already reads `a`. The cycle check finds that loop and the call returns false with no change. The fifth call replaces the formula of `e`, so `e` leaves the dependents of `a`. The sixth call then edits `a` and recomputes nothing.
+Call 3 asks `a` to read `e`, which already reads `a`. The cycle check finds that loop and the call returns false with no change. Call 4 replaces the formula of `e`, so `e` leaves the dependents of `a`. Call 5 then edits `a` and recomputes nothing.
 
 <!-- stage: code -->
 ### A Sheet That Refreshes Dependents
@@ -170,7 +170,7 @@ final class LiveSheet {
 }
 ```
 
-A read costs O(1). An edit costs O(k + A) for k named cells and for A affected cells and their formula entries. The space is O(n + e) for n cells and e formula entries.
+A read costs O(1). A formula edit first runs the cycle check, and `reaches` walks every cell upstream of the named cells. The worst case is O(n + e) for n cells and e formula entries. The refresh then adds O(A) for A affected cells and their formula entries. The space is O(n + e).
 
 <!-- stage: applicability -->
 ### Values Computed From Other Values
@@ -258,7 +258,7 @@ A cache without dependents looks fast and returns stale values, so it is a false
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This contract is written from the title, so the LeetCode statement may differ. Design a class `Spreadsheet` built from `rows`, with columns `A` to `Z`. All cells start at 0. The call `setCell(cell, v)` stores the number. The call `resetCell(cell)` sets the cell to 0 and returns the value it held. The call `getValue(formula)` takes a string `=X+Y` where each of `X` and `Y` is a nonnegative integer or a cell name, and returns the sum of the current values. The formula is a question and the sheet does not store it.
+**Problem.** Design a class `Spreadsheet` built from `rows`, with columns `A` to `Z`. All cells start at 0. The call `setCell(cell, v)` stores the number. The call `resetCell(cell)` sets the cell to 0 and returns the value it held. The call `getValue(formula)` takes a string `=X+Y` where each of `X` and `Y` is a nonnegative integer or a cell name, and returns the sum of the current values. The formula is a question and the sheet does not store it.
 
 **Constraints.** The limits are:
 - **Rows** are integers from 1 to 1000, and cell names such as `B17` are valid.

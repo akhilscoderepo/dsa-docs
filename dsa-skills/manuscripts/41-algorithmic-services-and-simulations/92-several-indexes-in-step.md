@@ -18,7 +18,7 @@ This lesson asks how to build a class whose calls change one stored record and s
 
 The lesson Move Pieces On A Board supplied the idea that a count kept per line replaces a scan of the whole board. It also supplied the order of legality checks: reject the move first, then write. This lesson keeps both rules and asks what happens to the counters when a move is taken back.
 
-#### One Complete Before And After
+#### Separate A Plan From A Commit
 
 The lesson Apply Transactions Without Partial Changes supplied the rule that a failed call changes nothing and that an open journey is state like any other record. This lesson uses that rule to separate a plan from a commit, and it adds a derived ranking of routes that the commit must repair.
 
@@ -129,7 +129,7 @@ The transfer at call 3 moves the two units of b from A1 to A2. The totals change
 
 #### Rejected Calls Change Nothing
 
-The second trace shows calls that fail validation. Each rejected call returns `false` and leaves all three structures as they were.
+The second trace shows calls that fail validation. Each rejected call returns `false` and leaves all three structures as they were. A transfer is rejected when the sku is unknown or the item already sits in the target aisle, because that move would change nothing.
 
 ```trace
 {"cells":["receive(x,A1,3)","receive(y,A1,3)","ship(x,5)","ship(x,3)","transfer(y,A1)","transfer(z,A2)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"lowest":"x:3","totals":"A1=3","result":"true"},"note":"Call 0: replace inserts the new record x with 3 units into A1."},{"at":{"call":1},"vars":{"lowest":"x:3 y:3","totals":"A1=6","result":"true"},"note":"Call 1: replace inserts the new record y with 3 units into A1."},{"at":{"call":2},"vars":{"lowest":"x:3 y:3","totals":"A1=6","result":"false"},"note":"Call 2: the check fails before any write, so all three structures stay as they were."},{"at":{"call":3},"vars":{"lowest":"y:3","totals":"A1=3","result":"true"},"note":"Call 3: all 3 units leave, so replace removes x from every structure."},{"at":{"call":4},"vars":{"lowest":"y:3","totals":"A1=3","result":"false"},"note":"Call 4: the check fails before any write, so all three structures stay as they were."},{"at":{"call":5},"vars":{"lowest":"y:3","totals":"A1=3","result":"false"},"note":"Call 5: the check fails before any write, so all three structures stay as they were."}]}
@@ -163,6 +163,21 @@ final class Shelf {
         }
     }
 
+    boolean receive(String sku, String aisle, int n) {
+        if (n <= 0) return false;                                   // validate before any write
+        Item old = items.get(sku);
+        String where = old == null ? aisle : old.aisle();           // a known sku keeps its aisle
+        replace(old, new Item(sku, where, (old == null ? 0 : old.qty()) + n));
+        return true;
+    }
+
+    boolean transfer(String sku, String aisle) {
+        Item old = items.get(sku);
+        if (old == null || old.aisle().equals(aisle)) return false; // unknown sku or same aisle: nothing to move
+        replace(old, new Item(sku, aisle, old.qty()));
+        return true;
+    }
+
     boolean ship(String sku, int n) {
         Item old = items.get(sku);
         if (old == null || n <= 0 || old.qty() < n) return false;   // validate before any write
@@ -187,7 +202,7 @@ A call that takes back an earlier change does not need special code when the wri
 
 #### False Friends And Limits
 
-Recomputing a summary from the record on demand looks like a false friend when queries are rare, since it needs no writer. It costs O(n) per query, so it fails when queries are frequent. A lazy heap with stale entries is a valid alternative for a single ranking, but it fails for totals and counters, because those need exact decrements. Skip a summary when no call reads it, because it costs memory and one repair per write.
+Recomputing a summary from the record on demand is valid when queries are rare, since it needs no writer. It becomes a false friend when queries are frequent at O(n) each. A lazy heap with stale entries is a valid alternative for a single ranking, but it fails for totals and counters, because those need exact decrements. Skip a summary when no call reads it, because it costs memory and one repair per write.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -239,7 +254,9 @@ Recomputing a summary from the record on demand looks like a false friend when q
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Design a class `FeedDesk`. The call `post(user, tweet)` publishes a tweet with a distinct id, and recency is the order of the post calls. The calls `follow(a, b)` and `unfollow(a, b)` change who a follows, and the calls `mute(viewer, author)` and `unmute(viewer, author)` change which followed authors the viewer hides. The call `delete(tweet)` hides a tweet for everyone and returns `true`, or returns `false` if it is unknown or already deleted. The call `feed(user, k)` returns a `Feed` of the tweet ids and a source count. The ids are the `k` newest tweets that the user can see, newest first. A tweet is visible if its author is the user, or if the user follows the author and has not muted the author, and the tweet is not deleted. The source count is the number of distinct authors among the returned ids.
+**Problem.** Design a class `FeedDesk`. The call `post(user, tweet)` publishes a tweet with a distinct id, and recency is the order of the post calls. The calls `follow(a, b)` and `unfollow(a, b)` change who a follows, and the calls `mute(viewer, author)` and `unmute(viewer, author)` change which followed authors the viewer hides. The call `delete(tweet)` hides a tweet for everyone and returns `true`, or returns `false` if it is unknown or already deleted.
+
+The call `feed(user, k)` returns a `Feed` of the tweet ids and a source count. The ids are the `k` newest tweets that the user can see, newest first. A tweet is visible if its author is the user, or if the user follows the author and has not muted the author, and the tweet is not deleted. The source count is the number of distinct authors among the returned ids.
 
 **Constraints.** The limits are:
 - **Users** and **tweet ids** are integers, and tweet ids are distinct.
@@ -260,7 +277,11 @@ Recomputing a summary from the record on demand looks like a false friend when q
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This chapter states the contract below itself, and it can differ in detail from LeetCode. Design a class `RideDesk` on a line of integer positions. The call `addDriver(id, pos)` registers a free driver and returns `true`, or returns `false` if the id was used before. The call `goOffline(id)` retires a free driver for good and returns `true`, or returns `false` otherwise. The call `request(rider, pos, dest)` adds a waiting rider and returns `true`, or returns `false` if the id was used before. The call `cancel(rider)` ends a waiting rider and returns `true`, or returns `false` otherwise. The call `match()` takes the longest-waiting rider and the free driver with the smallest distance to the rider's position, with the smaller driver id winning ties, marks both as riding, and returns the array `{rider, driver}`. It returns an empty array and changes nothing if no rider waits or no driver is free. The call `finish(rider)` ends a riding trip, frees the driver at the rider's destination and returns `true`, or returns `false` if the rider is not riding.
+**Problem.** This chapter states the contract below itself, and it can differ in detail from LeetCode. Design a class `RideDesk` on a line of integer positions. The call `addDriver(id, pos)` registers a free driver and returns `true`, or returns `false` if the id was used before. The call `goOffline(id)` retires a free driver for good and returns `true`, or returns `false` otherwise.
+
+The call `request(rider, pos, dest)` adds a waiting rider and returns `true`, or returns `false` if the id was used before. The call `cancel(rider)` ends a waiting rider and returns `true`, or returns `false` otherwise.
+
+The call `match()` takes the longest-waiting rider and the free driver with the smallest distance to the rider's position, with the smaller driver id winning ties. It marks both as riding and returns the array `{rider, driver}`. It returns an empty array and changes nothing if no rider waits or no driver is free. The call `finish(rider)` ends a riding trip, frees the driver at the rider's destination and returns `true`, or returns `false` if the rider is not riding.
 
 **Constraints.** The limits are:
 - **Positions** and **destinations** satisfy `0 <= x <= 10^9`.

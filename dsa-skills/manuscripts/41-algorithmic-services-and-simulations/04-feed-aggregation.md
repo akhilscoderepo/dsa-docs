@@ -63,7 +63,7 @@ Every account stores its posts in time order, so the newest post of an account i
 
 #### The Merge With A Heap
 
-Store the frontier entries in a **heap**, a priority queue that returns the entry with the newest time in O(log f) for f entries. Remove the top entry and append its post to the answer. Then push the next older post of the same account, if one exists, as the new frontier entry of that account. After `k` removals the answer is complete. This is a k-way merge, and the query reads at most `k` posts plus one starting post per account.
+Store the frontier entries in a **heap**, a priority queue that returns the entry with the newest time in O(log f) for f entries. Remove the top entry and append its post to the answer. Then push the next older post of the same account, if one exists, as the new frontier entry of that account. After `k` removals the answer is complete. This is a merge of f sorted lists, and the query reads at most `k` posts plus one starting post per account.
 
 #### Where The Rules Run
 
@@ -105,7 +105,7 @@ The second trace follows calls on a service. Account 1 follows account 2, tries 
 {"cells":["post(2,20)","post(1,10)","follow(1,2)","follow(1,1)","feed(1,5)","deleteUser(2)","feed(1,5)","unfollow(1,2)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"follows":"{}","result":"true"},"note":"Call 0: account 2 is live, so the post is stored."},{"at":{"call":1},"vars":{"follows":"{}","result":"true"},"note":"Call 1: account 1 is live, so the post is stored."},{"at":{"call":2},"vars":{"follows":"{2}","result":"true"},"note":"Call 2: both accounts are live and the edge is new, so account 1 follows account 2."},{"at":{"call":3},"vars":{"follows":"{2}","result":"false"},"note":"Call 3: the ids are equal, so the call returns false and the follow set does not change."},{"at":{"call":4},"vars":{"follows":"{2}","result":"10,20"},"note":"Call 4: the visibility check admits account 1 and account 2, so the merge returns 10,20."},{"at":{"call":5},"vars":{"follows":"{2}","result":"true"},"note":"Call 5: account 2 joins the deleted set, and no follow set changes."},{"at":{"call":6},"vars":{"follows":"{2}","result":"10"},"note":"Call 6: the visibility check admits account 1, so the merge returns 10."},{"at":{"call":7},"vars":{"follows":"{}","result":"true"},"note":"Call 7: the stale edge to the deleted account 2 is removed from the follow set."}]}
 ```
 
-The self-follow call returns false and changes nothing, so the post of account 1 appears once in the feed. After the deletion the follow set still holds account 2, which is a stale entry. The second feed call skips it through the visibility check, and the unfollow call finally removes the entry.
+Call 3 is the self-follow. It returns false and changes nothing, so the post of account 1 appears once in the feed. After the deletion in call 5 the follow set still holds account 2, which is a stale entry. Call 6 skips it through the visibility check, and call 7 finally removes the entry.
 
 <!-- stage: code -->
 ### The Merge With A Visibility Check
@@ -119,9 +119,23 @@ final class FeedService {
     private final Set<Integer> deleted = new HashSet<>();
     private int clock = 0;
 
-    void post(int user, int id) {
+    boolean post(int user, int id) {
+        if (deleted.contains(user)) return false;                     // a deleted account cannot post
         posts.computeIfAbsent(user, x -> new ArrayList<>()).add(new int[] {clock++, id});
+        return true;
     }
+
+    boolean follow(int a, int b) {
+        if (a == b || deleted.contains(a) || deleted.contains(b)) return false;   // self-follow and deleted accounts are refused
+        return follows.computeIfAbsent(a, x -> new HashSet<>()).add(b);
+    }
+
+    boolean unfollow(int a, int b) {
+        Set<Integer> set = follows.get(a);
+        return !deleted.contains(a) && set != null && set.remove(b);   // a stale edge to a deleted b still goes
+    }
+
+    boolean deleteUser(int u) { return deleted.add(u); }              // O(1): follow sets stay untouched
 
     List<Integer> feed(int user, int k) {
         List<Integer> out = new ArrayList<>();
@@ -151,7 +165,7 @@ final class FeedService {
 }
 ```
 
-A query costs O(f + k log f) for f eligible accounts. The space is O(f) for the heap and the author list.
+A query costs O((f + k) log f) for f eligible accounts, because f pushes and at most k pops each cost O(log f). The space is O(f) for the heap and the author list.
 
 <!-- stage: applicability -->
 ### Queries That Return The Newest Few
@@ -166,7 +180,7 @@ Write down the tie policy, such as the smaller source index first when two items
 
 #### False Friends
 
-Sorting the union and cutting it at `k` looks like the same answer, and it is a false friend whenever the sources are large. Applying the limit first and the filter second is a false friend of the correct order, because the answer shrinks below `k`. Removing a deleted account from every follower set on delete looks tidy, yet it costs time proportional to the number of followers, while a check at query time costs nothing extra. A single source needs no heap, because its own list is already the answer.
+Sorting the union and cutting it at `k` looks like the same answer, and it is a false friend whenever the sources are large. Applying the limit first and the filter second is a false friend of the correct order, because the answer shrinks below `k`. Removing a deleted account from every follower set on delete looks tidy, yet it costs time proportional to the number of followers. The check at query time costs one set lookup per followee. A single source needs no heap, because its own list is already the answer.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -239,7 +253,9 @@ Sorting the union and cutting it at `k` looks like the same answer, and it is a 
 
 **Prerequisites.** Priority queues and the three exercises above.
 
-**Problem.** This contract is written from the title and is the chapter's own, so it can differ from LeetCode. Design a class `Videos`. The call `upload(video)` stores a digit string and returns the smallest id not held by a stored video, counting from 0. The call `remove(id)` deletes a stored video and returns `true`, and the id becomes free. The call `watch(id, start, end)` returns the characters at positions `start` through `min(end, length - 1)` and adds one view, but it returns `"-1"` and changes nothing when the id is not stored or `start >= length`. The calls `like(id)` and `dislike(id)` add one to the matching counter of a stored video and do nothing otherwise. The call `getLikesAndDislikes(id)` returns `[likes, dislikes]`, or `[-1]` for an unknown id. The call `getViews(id)` returns the view count, or -1 for an unknown id. A video that reuses a freed id starts with zero views, likes and dislikes.
+**Problem.** Design a class `Videos`. The call `upload(video)` stores a digit string and returns the smallest id not held by a stored video, counting from 0. The call `remove(id)` deletes a stored video and returns `true`, and the id becomes free. A video that reuses a freed id starts with zero views, likes and dislikes.
+
+The call `watch(id, start, end)` returns the characters at positions `start` through `min(end, length - 1)` and adds one view. It returns `"-1"` and changes nothing when the id is not stored or `start >= length`. The calls `like(id)` and `dislike(id)` add one to the matching counter of a stored video and do nothing otherwise. The call `getLikesAndDislikes(id)` returns `[likes, dislikes]`, or `[-1]` for an unknown id. The call `getViews(id)` returns the view count, or -1 for an unknown id.
 
 **Constraints.** The limits are:
 - **Video** strings have from 1 to 10^5 digits, and their total length is at most 10^5.
@@ -253,4 +269,4 @@ Sorting the union and cutting it at `k` looks like the same answer, and it is a 
 
 **Hint.** Which structure returns the smallest freed id, and when does the counter for a new id advance?
 
-**Changed decision.** This is a transfer of the lesson: the id pool replaces the follow state and a removed video carries no stale index, so reuse must reset every counter. The contract is the chapter's own and need not match LeetCode.
+**Changed decision.** The shared idea is authoritative state kept against an index that reuses ids. The map of stored videos is authoritative, and the heap of freed ids is the index that hands an id out again. A removed video must leave no counter behind, so a reused id starts every counter at zero.

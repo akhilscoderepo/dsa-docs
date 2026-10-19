@@ -20,7 +20,7 @@ The lesson Answer Prefix Queries With A Trie supplied the trie walk. A query fol
 
 #### A Bound And A Tie Rule
 
-The lesson Merge Feeds From Many Sources supplied the rule that a ranked answer keeps only a bounded number of candidates, and that the order of equal candidates is fixed before the bound cuts anything. A feed applies that rule to a merge of several sources. This lesson applies it to the words below one prefix.
+The lesson Merge Feeds From Many Sources supplied the rule that a filter runs before a limit, so the limit counts only eligible items. A feed applies that rule to a merge of several sources. This lesson applies it to the words below one prefix, where the limit is three words. This lesson adds its own tie rule: the smaller word comes first when two counts are equal, and the rule applies before the list is cut to three.
 
 #### The Choice This Lesson Adds
 
@@ -103,7 +103,7 @@ A query for a prefix that has no node returns an empty list. A query for the emp
 
 #### Words Moving Inside A List
 
-The first trace records five words and then asks for the prefix `te`. The pointer `call` moves along the calls in order. The columns show every count, the list at the node for `t` and the list at the node for `te`.
+The first trace makes five record calls on four words and then asks for the prefix `te`. The pointer `call` moves along the calls in order. The columns show every count, the list at the node for `t` and the list at the node for `te`.
 
 ```trace
 {"cells":["record(tea)","record(ten)","record(tea)","record(team)","record(tent)","query(te)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"counts":"tea:1","list(t)":"[tea]","list(te)":"[tea]","result":"null"},"note":"Call 0: the count of tea becomes 1, and the call repairs the list of every prefix node on the path of tea."},{"at":{"call":1},"vars":{"counts":"tea:1 ten:1","list(t)":"[tea,ten]","list(te)":"[tea,ten]","result":"null"},"note":"Call 1: the count of ten becomes 1, and the call repairs the list of every prefix node on the path of ten."},{"at":{"call":2},"vars":{"counts":"tea:2 ten:1","list(t)":"[tea,ten]","list(te)":"[tea,ten]","result":"null"},"note":"Call 2: the count of tea becomes 2, and the call repairs the list of every prefix node on the path of tea."},{"at":{"call":3},"vars":{"counts":"tea:2 team:1 ten:1","list(t)":"[tea,team,ten]","list(te)":"[tea,team,ten]","result":"null"},"note":"Call 3: the count of team becomes 1, and the call repairs the list of every prefix node on the path of team."},{"at":{"call":4},"vars":{"counts":"tea:2 team:1 ten:1 tent:1","list(t)":"[tea,team,ten]","list(te)":"[tea,team,ten]","result":"null"},"note":"Call 4: the count of tent becomes 1, and the call repairs the list of every prefix node on the path of tent."},{"at":{"call":5},"vars":{"counts":"tea:2 team:1 ten:1 tent:1","list(t)":"[tea,team,ten]","list(te)":"[tea,team,ten]","result":"[tea,team,ten]"},"note":"Call 5: the query walks to the node for 'te'. The node exists, so the call copies its list."}]}
@@ -176,11 +176,11 @@ final class WordRanker {
 A record call costs O(L * K), because it repairs L + 1 lists of at most K entries. A query costs O(L + K). The space is O(S * K), where S is the number of trie nodes.
 
 <!-- stage: applicability -->
-### Bounded Answers Under Change
+### Keep Ranked Lists After Updates
 
 #### When A Short List Is Enough
 
-A short list per node stays exact only when every change moves a word up the ranking. Counts that only grow, and indexes that only grow, both qualify. A word that falls out of a list cannot return unless it is recorded again, and a record call visits that list. The invariant is that each list equals the best K words below its prefix after every call.
+A short list per node stays exact only when every change moves a word up the ranking. Counts that only grow qualify. A stored index qualifies when a later word always replaces it with a larger one, as in the exercise on prefix and suffix filters. A word that falls out of a list cannot return unless it is recorded again, and a record call visits that list. The invariant is that each list equals the best K words below its prefix after every call.
 
 #### False Friends And Limits
 
@@ -265,7 +265,7 @@ Skip the lists when queries are rare and writes are frequent, because the repair
 - **Sentences** hold lowercase letters and spaces, with length 1 to 30, and `#` follows at least one character.
 - **Last use** is the order of commits, and `retract` leaves it unchanged.
 - **Calls** number at most `10^4`.
-- **Count** of uses reaches zero when a sentence is removed.
+- **Sentence** is removed when its count reaches zero.
 
 **Example 1.** Input calls `go#`, `gone#`, `go#`, `ga#` typed one character at a time, then `type(g)`, `type(o)`, `type(#)`, output `[go, ga, gone]`, then `[go, gone]`, then `[]`.
 

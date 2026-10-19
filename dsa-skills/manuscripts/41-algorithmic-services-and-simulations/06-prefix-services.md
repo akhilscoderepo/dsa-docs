@@ -57,7 +57,7 @@ A **trie** is a tree in which every edge carries one character. The path from th
 
 #### Counters On The Path
 
-The query needs a number that is ready when the walk ends. Each node stores that number for its prefix. The number is a sum of values for Map Sum, or a **pass count**, which is how many stored words go through the node. Insert walks the key once and adds to the number on every node of the path, so insert also costs O(p).
+The query needs a number that is ready when the walk ends. Each node stores that number for its prefix. The number is a sum of values, or a **pass count**, which is how many stored words go through the node. Insert walks the key once and adds to the number on every node of the path, so insert also costs O(p).
 
 #### Changing A Value With A Delta
 
@@ -65,7 +65,7 @@ An overwrite must not add the new value on top of the old one. The call needs th
 
 #### Branching And Ranking
 
-A magic-dictionary search follows the word and, at most once, leaves the word to try every other child. A ranked search stores at each node only the words that pass through it. It reads the current counts from the authoritative map when it sorts, so a rank is never stale.
+A search for words one letter away follows the query word and, at most once, leaves it to try every other child. A ranked search stores at each node only the words that pass through it. It reads the current counts from the authoritative map when it sorts, so a rank is never stale.
 
 The invariant is that every node holds the exact aggregate of the live words under its prefix, and every public call applies all its node changes or none.
 
@@ -94,7 +94,7 @@ The first trace follows the sums stored on the nodes of the path to "apple". The
 {"cells":["insert(apple,3)","insert(app,2)","sum(ap)","insert(apple,5)","insert(app,2)","sum(ap)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"sums":"a:3 ap:3 app:3 appl:3 apple:3","delta":"3","result":"-1"},"note":"Call 0: the word is new, so the delta is 3 and every node on the path to apple gains 3."},{"at":{"call":1},"vars":{"sums":"a:5 ap:5 app:5 appl:3 apple:3","delta":"2","result":"-1"},"note":"Call 1: the word is new, so the delta is 2 and every node on the path to app gains 2."},{"at":{"call":2},"vars":{"sums":"a:5 ap:5 app:5 appl:3 apple:3","delta":"-","result":"5"},"note":"Call 2: the walk reads the node for ap and returns 5."},{"at":{"call":3},"vars":{"sums":"a:7 ap:7 app:7 appl:5 apple:5","delta":"2","result":"3"},"note":"Call 3: the old value is 3, so the delta is 2 and every node on the path to apple changes by 2."},{"at":{"call":4},"vars":{"sums":"a:7 ap:7 app:7 appl:5 apple:5","delta":"0","result":"2"},"note":"Call 4: the old value is 2 and the new value is the same, so the delta is 0 and no node changes."},{"at":{"call":5},"vars":{"sums":"a:7 ap:7 app:7 appl:5 apple:5","delta":"-","result":"7"},"note":"Call 5: the walk reads the node for ap and returns 7."}]}
 ```
 
-Call 3 overwrites "apple" from 3 to 5, so the delta is 2 and the prefix "ap" rises from 5 to 7. The word "app" keeps its value of 2 on its own node. Call 4 repeats the value 2 for "app", so the delta is 0 and no node changes.
+Call 3 overwrites "apple" from 3 to 5, so the delta is 2 and the prefix "ap" rises from 5 to 7. The word map keeps app=2 while the sum on the app node rises to 7, because the path to apple passes through that node. Call 4 repeats the value 2 for "app", so the delta is 0 and no node changes.
 
 #### Erasing A Word
 
@@ -209,7 +209,7 @@ A sorted set with `ceiling` and `floor` looks like a prefix tool. It is a false 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** The rules are written from the title and need not match LeetCode. Design a class `TrieCounts`. The call `insert(word)` adds one copy of `word`. The call `countEqual(word)` returns how many copies of `word` are stored. The call `countPrefix(prefix)` returns how many stored copies start with `prefix`. The call `erase(word)` removes one copy and returns `true`, or returns `false` and changes nothing when no copy is stored.
+**Problem.** Design a class `TrieCounts`. The call `insert(word)` adds one copy of `word`. The call `countEqual(word)` returns how many copies of `word` are stored. The call `countPrefix(prefix)` returns how many stored copies start with `prefix`. The call `erase(word)` removes one copy and returns `true`, or returns `false` and changes nothing when no copy is stored.
 
 **Constraints.** The limits are:
 - **Words and prefixes** are strings of 1 to 50 lowercase letters.
@@ -240,7 +240,7 @@ A sorted set with `ceiling` and `floor` looks like a prefix tool. It is a false 
 
 **Example 1.** Input `["i love you","island","iroman","i love leetcode"]` with times `[5,3,2,2]`, then `input(i)`, `input( )`, `input(a)`, `input(#)`, output the lists `[i love you, island, i love leetcode]`, `[i love you, i love leetcode]`, `[]` and `[]`.
 
-**Example 2.** Input the same start, then `input(i)`, `input( )`, `input(a)`, `input(#)`, `input(i)`, `input( )`, output the same four lists, then `[i love you, i love leetcode, i a]` for the last call.
+**Example 2.** Input the same start, then `input(i)`, `input( )`, `input(a)`, `input(#)`, `input(i)`, `input( )`, output the same four lists, then `[i love you, island, i love leetcode]` and `[i love you, i love leetcode, i a]`.
 
 **Hint.** Where does the order of the matches come from when the counts change after a build?
 

@@ -21,7 +21,7 @@ def tree_trace():
             rd=ready(); r=str(rd[0] if rd else -1); outs.append(int(r))
             note=f"Call {k}: the first job in the ready set is job {r}, and the call writes nothing."
         rd=ready()
-        view=" ".join(f"{i}p{prio[i]}" for i in rd) or "empty"
+        view=" ".join(f"id{i} p{prio[i]}" for i in rd) or "empty"
         steps.append({"at":{"call":k},"vars":{"ready":view,"result":r},"note":note})
     assert outs==[3,1], outs
     return cells,steps
@@ -31,13 +31,13 @@ def heap_trace():
     cells=[c[0]+"("+",".join(map(str,c[1:]))+")" for c in calls]
     table={}; h=[]; steps=[]; outs=[]
     def key(e): return (-e[0],e[1])
-    def show(): return " ".join(f"{e[1]}@{e[0]} v{e[2]}" for e in sorted(h,key=key)) or "empty"
+    def show(): return " ".join(f"id{e[1]} p{e[0]} v{e[2]}" for e in sorted(h,key=key)) or "empty"
     def pend(): return sum(1 for j in table.values() if j["s"]=="PENDING")
     for k,c in enumerate(calls):
         op=c[0]
         if op=="add":
             table[c[1]]={"p":c[2],"v":0,"s":"PENDING"}; h.append((c[2],c[1],0)); r="true"
-            note=f"Call {k}: job {c[1]} enters the table and the heap gets the entry {c[1]}@{c[2]} v0."
+            note=f"Call {k}: job {c[1]} enters the table and the heap gets the entry id{c[1]} p{c[2]} v0."
         elif op=="setPriority":
             j=table[c[1]]; assert j["s"]=="PENDING"; j["p"]=c[2]; j["v"]+=1; h.append((c[2],c[1],j["v"])); r="true"
             note=f"Call {k}: the table records priority {c[2]} and version {j['v']} for job {c[1]}, and the heap gets a second entry while the old one stays."
@@ -51,13 +51,13 @@ def heap_trace():
                 e=min(h,key=key); j=table[e[1]]
                 if j["s"]=="PENDING" and j["v"]==e[2]:
                     res=e[1]; h.remove(e); j["s"]="DONE"; break
-                h.remove(e); skipped.append(f"{e[1]}@{e[0]} v{e[2]}")
+                h.remove(e); skipped.append(f"id{e[1]} p{e[0]} v{e[2]}")
             outs.append(res); r=str(res)
-            sk=("It discards the stale entries "+", ".join(skipped)+" and ") if skipped else "It finds the top entry matching the table and "
+            sk=("the take call discards the stale entries "+", ".join(skipped)+" and ") if skipped else "the take call finds the top entry matching the table and "
             note=f"Call {k}: {sk}returns job {res}." if res!=-1 else f"Call {k}: the heap is empty, so the call returns -1."
         steps.append({"at":{"call":k},"vars":{"heap":show(),"pending":str(pend()),"result":r},"note":note})
     assert outs==[3,2], outs
     return cells,steps
 
-c,s=tree_trace(); fill(CH,F,block(c,["call"],s),"@@TRACE1@@")
-c,s=heap_trace(); fill(CH,F,block(c,["call"],s),"@@TRACE2@@")
+c,s=tree_trace(); refill(CH,F,block(c,["call"],s),0)
+c,s=heap_trace(); refill(CH,F,block(c,["call"],s),1)

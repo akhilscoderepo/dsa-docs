@@ -34,7 +34,8 @@ final class NaiveRunner {
         Job best = null;
         for (Job j : jobs) {                                    // visits finished and cancelled jobs too
             if (!j.state.equals("PENDING")) continue;
-            if (best == null || j.priority > best.priority) best = j;
+            if (best == null || j.priority > best.priority
+                    || (j.priority == best.priority && j.id < best.id)) best = j;   // the smaller id wins a tie
         }
         return best == null ? -1 : best.id;
     }
@@ -91,23 +92,23 @@ The service keeps five pieces of state, and each has one owner.
 
 #### Tree Set With Exact Removal
 
-The first trace uses a tree set, so each cancel and each completion removes the job from the ready set at once. The pointer `call` sits on the latest call. The ready set is shown from the best job to the worst, with each job written as id and priority.
+The first trace uses a tree set, so each cancel and each completion removes the job from the ready set at once. The pointer `call` sits on the latest call. The ready set is shown from the best job to the worst, with each job written as `id1 p5` for id 1 with priority 5.
 
 ```trace
-{"cells":["add(1,5)","add(2,9)","add(3,9)","cancel(2)","next()","complete(3)","cancel(3)","next()"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"ready":"1p5","result":"true"},"note":"Call 0: job 1 with priority 5 enters the status table and the ready set."},{"at":{"call":1},"vars":{"ready":"2p9 1p5","result":"true"},"note":"Call 1: job 2 with priority 9 enters the status table and the ready set."},{"at":{"call":2},"vars":{"ready":"2p9 3p9 1p5","result":"true"},"note":"Call 2: job 3 with priority 9 enters the status table and the ready set."},{"at":{"call":3},"vars":{"ready":"3p9 1p5","result":"true"},"note":"Call 3: job 2 is PENDING, so the table records CANCELLED and the job leaves the ready set."},{"at":{"call":4},"vars":{"ready":"3p9 1p5","result":"3"},"note":"Call 4: the first job in the ready set is job 3, and the call writes nothing."},{"at":{"call":5},"vars":{"ready":"1p5","result":"true"},"note":"Call 5: job 3 is PENDING, so the table records DONE and the job leaves the ready set."},{"at":{"call":6},"vars":{"ready":"1p5","result":"false"},"note":"Call 6: job 3 is DONE, which cannot become CANCELLED, so the call returns false and writes nothing."},{"at":{"call":7},"vars":{"ready":"1p5","result":"1"},"note":"Call 7: the first job in the ready set is job 1, and the call writes nothing."}]}
+{"cells":["add(1,5)","add(2,9)","add(3,9)","cancel(2)","next()","complete(3)","cancel(3)","next()"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"ready":"id1 p5","result":"true"},"note":"Call 0: job 1 with priority 5 enters the status table and the ready set."},{"at":{"call":1},"vars":{"ready":"id2 p9 id1 p5","result":"true"},"note":"Call 1: job 2 with priority 9 enters the status table and the ready set."},{"at":{"call":2},"vars":{"ready":"id2 p9 id3 p9 id1 p5","result":"true"},"note":"Call 2: job 3 with priority 9 enters the status table and the ready set."},{"at":{"call":3},"vars":{"ready":"id3 p9 id1 p5","result":"true"},"note":"Call 3: job 2 is PENDING, so the table records CANCELLED and the job leaves the ready set."},{"at":{"call":4},"vars":{"ready":"id3 p9 id1 p5","result":"3"},"note":"Call 4: the first job in the ready set is job 3, and the call writes nothing."},{"at":{"call":5},"vars":{"ready":"id1 p5","result":"true"},"note":"Call 5: job 3 is PENDING, so the table records DONE and the job leaves the ready set."},{"at":{"call":6},"vars":{"ready":"id1 p5","result":"false"},"note":"Call 6: job 3 is DONE, which cannot become CANCELLED, so the call returns false and writes nothing."},{"at":{"call":7},"vars":{"ready":"id1 p5","result":"1"},"note":"Call 7: the first job in the ready set is job 1, and the call writes nothing."}]}
 ```
 
 Jobs 2 and 3 share priority 9, so the smaller id 2 comes first. After job 2 is cancelled, the pick returns job 3. The last cancel names job 3 after it is done, which is not a legal move, so the call returns false and the ready set stays unchanged.
 
 #### Heap With Stale Entries
 
-The second trace uses a heap, so the status table and the heap can disagree. Each heap entry is written as id, priority and the version it was pushed with. The pending count comes from the status table.
+The second trace uses a heap, so the status table and the heap can disagree. Each heap entry is written as `id1 p5 v0` for id 1, priority 5 and the version it was pushed with. The pending count comes from the status table.
 
 ```trace
-{"cells":["add(1,5)","add(2,9)","setPriority(2,1)","cancel(1)","add(3,4)","take()","take()"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"heap":"1@5 v0","pending":"1","result":"true"},"note":"Call 0: job 1 enters the table and the heap gets the entry 1@5 v0."},{"at":{"call":1},"vars":{"heap":"2@9 v0 1@5 v0","pending":"2","result":"true"},"note":"Call 1: job 2 enters the table and the heap gets the entry 2@9 v0."},{"at":{"call":2},"vars":{"heap":"2@9 v0 1@5 v0 2@1 v1","pending":"2","result":"true"},"note":"Call 2: the table records priority 1 and version 1 for job 2, and the heap gets a second entry while the old one stays."},{"at":{"call":3},"vars":{"heap":"2@9 v0 1@5 v0 2@1 v1","pending":"1","result":"true"},"note":"Call 3: the table records CANCELLED for job 1, and its heap entry stays in place."},{"at":{"call":4},"vars":{"heap":"2@9 v0 1@5 v0 3@4 v0 2@1 v1","pending":"2","result":"true"},"note":"Call 4: job 3 enters the table and the heap gets the entry 3@4 v0."},{"at":{"call":5},"vars":{"heap":"2@1 v1","pending":"1","result":"3"},"note":"Call 5: It discards the stale entries 2@9 v0, 1@5 v0 and returns job 3."},{"at":{"call":6},"vars":{"heap":"empty","pending":"0","result":"2"},"note":"Call 6: It finds the top entry matching the table and returns job 2."}]}
+{"cells":["add(1,5)","add(2,9)","setPriority(2,1)","cancel(1)","add(3,4)","take()","take()"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"heap":"id1 p5 v0","pending":"1","result":"true"},"note":"Call 0: job 1 enters the table and the heap gets the entry id1 p5 v0."},{"at":{"call":1},"vars":{"heap":"id2 p9 v0 id1 p5 v0","pending":"2","result":"true"},"note":"Call 1: job 2 enters the table and the heap gets the entry id2 p9 v0."},{"at":{"call":2},"vars":{"heap":"id2 p9 v0 id1 p5 v0 id2 p1 v1","pending":"2","result":"true"},"note":"Call 2: the table records priority 1 and version 1 for job 2, and the heap gets a second entry while the old one stays."},{"at":{"call":3},"vars":{"heap":"id2 p9 v0 id1 p5 v0 id2 p1 v1","pending":"1","result":"true"},"note":"Call 3: the table records CANCELLED for job 1, and its heap entry stays in place."},{"at":{"call":4},"vars":{"heap":"id2 p9 v0 id1 p5 v0 id3 p4 v0 id2 p1 v1","pending":"2","result":"true"},"note":"Call 4: job 3 enters the table and the heap gets the entry id3 p4 v0."},{"at":{"call":5},"vars":{"heap":"id2 p1 v1","pending":"1","result":"3"},"note":"Call 5: the take call discards the stale entries id2 p9 v0, id1 p5 v0 and returns job 3."},{"at":{"call":6},"vars":{"heap":"empty","pending":"0","result":"2"},"note":"Call 6: the take call finds the top entry matching the table and returns job 2."}]}
 ```
 
-The priority change pushes a second entry for job 2 and leaves the old one. The cancel of job 1 leaves its entry too. The first take pops the entries `2@9 v0` and `1@5 v0`, finds both stale and discards them. The next entry, `3@4 v0`, matches the table, so the call returns job 3. The second take returns job 2 from the entry `2@1 v1`. The pending count stays correct throughout, even while the heap holds more entries than there are live jobs.
+The priority change pushes a second entry for job 2 and leaves the old one. The cancel of job 1 leaves its entry too. The first take pops the entries `id2 p9 v0` and `id1 p5 v0`, finds both stale and discards them. The next entry, `id3 p4 v0`, matches the table, so the call returns job 3. The second take returns job 2 from the entry `id2 p1 v1`. The pending count stays correct throughout, even while the heap holds more entries than there are live jobs.
 
 <!-- stage: code -->
 ### The Runner With Table And Heap
@@ -120,6 +121,7 @@ final class Runner {
     private static final class Job { int priority; int version; boolean pending = true; }
 
     private final java.util.Map<Integer, Job> table = new java.util.HashMap<>();
+    private int pendingCount;                                   // live jobs only; the heap size also counts stale entries
     private final java.util.PriorityQueue<Entry> ready = new java.util.PriorityQueue<>(
         (a, b) -> a.priority() != b.priority() ? Integer.compare(b.priority(), a.priority())
                                                 : Integer.compare(a.id(), b.id()));
@@ -129,8 +131,32 @@ final class Runner {
         Job j = new Job(); j.priority = priority;
         table.put(id, j);
         ready.add(new Entry(priority, id, 0));                  // O(log n) push
+        pendingCount++;
         return true;
     }
+
+    boolean setPriority(int id, int priority) {
+        Job j = table.get(id);
+        if (j == null || !j.pending) return false;
+        j.priority = priority; j.version++;                     // every older entry of this job is now stale
+        ready.add(new Entry(priority, id, j.version));
+        return true;
+    }
+
+    boolean cancel(int id) {
+        Job j = table.get(id);
+        if (j == null || !j.pending) return false;
+        j.pending = false; pendingCount--;                      // the heap entry stays and goes stale
+        return true;
+    }
+
+    int take() {
+        int id = next();                                        // the top entry is live after next() returns
+        if (id >= 0) { table.get(id).pending = false; pendingCount--; ready.poll(); }
+        return id;
+    }
+
+    int pending() { return pendingCount; }
 
     int next() {
         while (!ready.isEmpty()) {
@@ -190,7 +216,7 @@ A boolean flag inside the queued object looks like a complete answer. It is a fa
 
 **Prerequisites.** The task exercise above and tree sets.
 
-**Problem.** This contract is written from the title and may differ from LeetCode. Design a class `Todo`. The call `addTask(user, due, tags)` creates a pending task for the user, where `tags` is an array of strings, and returns the task id. Ids start at 1 and increase by 1 across all users. Repeated tags in one call count once. The call `complete(user, taskId)` marks the task done and returns `true` when the task exists, belongs to that user and is pending, and otherwise returns `false`. The call `pending(user)` returns the user's pending task ids ordered by `due`, then by id. The call `pendingWithTag(user, tag)` returns the same order, limited to tasks that carry the tag. The call `doneWithTag(user, tag)` returns how many of the user's done tasks carry the tag.
+**Problem.** Design a class `Todo`. The call `addTask(user, due, tags)` creates a pending task for the user, where `tags` is an array of strings, and returns the task id. Ids start at 1 and increase by 1 across all users. Repeated tags in one call count once. The call `complete(user, taskId)` marks the task done and returns `true` when the task exists, belongs to that user and is pending, and otherwise returns `false`. The call `pending(user)` returns the user's pending task ids ordered by `due`, then by id. The call `pendingWithTag(user, tag)` returns the same order, limited to tasks that carry the tag. The call `doneWithTag(user, tag)` returns how many of the user's done tasks carry the tag.
 
 **Constraints.** The limits are:
 - **Users** are integers from 1 to 10^4, and `due` is an integer from 1 to 10^9.
@@ -232,7 +258,11 @@ A boolean flag inside the queued object looks like a complete answer. It is a fa
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This contract is written for the chapter, so the LeetCode statement may differ in detail. Design a class `Rides` with separate id spaces for riders and drivers. The call `addRider(riderId)` puts a rider in state `WAITING`, and `addDriver(driverId)` puts a driver in state `AVAILABLE`. Each returns `false` if that id was ever used. The call `cancelRider(riderId)` moves a `WAITING` rider to `CANCELLED`. The call `removeDriver(driverId)` moves an `AVAILABLE` driver to `OFFLINE`. The call `finishTrip(driverId)` moves a `BUSY` driver back to `AVAILABLE`. Each of these three returns `true` when the move is legal and `false` otherwise. The call `match()` pairs the rider who has waited longest with the `AVAILABLE` driver of smallest id, marks the rider `MATCHED` and the driver `BUSY`, and returns `[driverId, riderId]`. If either side has nobody, it returns `[-1, -1]` and changes nothing. The calls `waiting()` and `available()` return the two live counts.
+**Problem.** This contract is written for the chapter, so the LeetCode statement may differ in detail. Design a class `Rides` with separate id spaces for riders and drivers. The call `addRider(riderId)` puts a rider in state `WAITING`, and `addDriver(driverId)` puts a driver in state `AVAILABLE`. Each returns `false` if that id was ever used.
+
+The call `cancelRider(riderId)` moves a `WAITING` rider to `CANCELLED`. The call `removeDriver(driverId)` moves an `AVAILABLE` driver to `OFFLINE`. The call `finishTrip(driverId)` moves a `BUSY` driver back to `AVAILABLE`. Each of these three returns `true` when the move is legal and `false` otherwise.
+
+The call `match()` pairs the rider who has waited longest with the `AVAILABLE` driver of smallest id, marks the rider `MATCHED` and the driver `BUSY`, and returns `[driverId, riderId]`. If either side has nobody, it returns `[-1, -1]` and changes nothing. The calls `waiting()` and `available()` return the two live counts.
 
 **Constraints.** The limits are:
 - **Ids** are integers from 1 to 10^5 in each id space.

@@ -70,9 +70,9 @@ A service must **normalize** each incoming string before it does anything else. 
 
 Store a node for every location. A node holds its value and a map from a child name to the child node. A node is reachable only through its parent, so a node cannot exist without a parent that exists. Resolving a path means starting at the root and following one map lookup per component. The cost is O(d) lookups for a path of depth d.
 
-#### Ownership Gives Subtree Operations
+#### Count Or Remove A Whole Subtree
 
-The children of one node form its **subtree** together with everything below them. Listing a directory reads one map, and a sorted map yields the names in lexicographic order. Counting or removing a subtree starts at one node and never scans unrelated paths. Extra data such as a count per node is a derived value. It changes in the same call that changes the tree.
+A **subtree** is a node, its children and everything below them. Listing a directory reads one map, and a sorted map yields the names in lexicographic order. Counting or removing a subtree starts at one node and never scans unrelated paths. Extra data such as a count per node is a derived value. It changes in the same call that changes the tree.
 
 The invariant is that every stored node is reachable from the root by its list of components, and each node has exactly one parent.
 
@@ -101,7 +101,7 @@ The first trace runs six calls on a small tree. The pointer `call` marks the lat
 {"cells":["create(/a,1)","create(/a/b,2)","create(/c/d,3)","create(/a,5)","get(/a/b)","get(/a/x)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"tree":"/a=1","result":"true"},"note":"Call 0: the parent exists and /a is new, so the walk adds the node with value 1."},{"at":{"call":1},"vars":{"tree":"/a=1 /a/b=2","result":"true"},"note":"Call 1: the parent exists and /a/b is new, so the walk adds the node with value 2."},{"at":{"call":2},"vars":{"tree":"/a=1 /a/b=2","result":"false"},"note":"Call 2: the walk stops because /c is missing, so the call returns false and writes nothing."},{"at":{"call":3},"vars":{"tree":"/a=1 /a/b=2","result":"false"},"note":"Call 3: the path /a exists already, so the call returns false and keeps the old value 1."},{"at":{"call":4},"vars":{"tree":"/a=1 /a/b=2","result":"2"},"note":"Call 4: the walk reaches /a/b, so the call returns 2."},{"at":{"call":5},"vars":{"tree":"/a=1 /a/b=2","result":"-1"},"note":"Call 5: the walk cannot reach /a/x, so the call returns -1."}]}
 ```
 
-The third call names `/c/d`. The walk stops at the root because `c` is missing, so the call returns false and writes nothing. The fourth call fails for a different reason: the full path exists already.
+Call 2 names `/c/d`. The walk stops at the root because `c` is missing, so the call returns false and writes nothing. Call 3 fails for a different reason: the full path exists already.
 
 #### Many Spellings, One Location
 
@@ -212,7 +212,7 @@ A flat map from full path to value is a false friend. It passes the creation tes
 
 **Example 2.** Input calls `mkdir(/m)`, `mkdir(/b)`, `addContentToFile(/z,q)`, `mkdir(/z/y)`, `ls(/)`, `ls(/z/y)`, output `true`, `true`, `true`, `false`, the list b, m, z, the empty list.
 
-**Hint.** What can the walk find at the first missing name that it cannot find before it?
+**Hint.** Before anything is created, is any name on the path already a file?
 
 **Changed decision.** A node is now a directory or a file, and directories keep children in a sorted map. A read-only walk checks the kinds first, and the second pass creates missing directories.
 
@@ -226,7 +226,7 @@ A flat map from full path to value is a false friend. It passes the creation tes
 **Constraints.** The limits are:
 - **Path** has length from 1 to 200 and contains lowercase letters, `.` and `/`.
 - **Value** is an integer from 1 to 10^9.
-- **Calls** number at most 10^4, and `below` must cost O(depth), not O(stored paths).
+- **Calls** number at most 10^4.
 - **Names** such as `...` and `a.` are valid, because only `.` and `..` alone are rejected.
 
 **Example 1.** Input calls `add(//a//,1)`, `add(/a/b/,2)`, `get(/a///b)`, `add(/,5)`, `below(/)`, `below(a)`, output `true`, `true`, 2, `false`, 2, 0.

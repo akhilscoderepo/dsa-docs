@@ -92,7 +92,7 @@ The first trace runs a bank with three accounts that start at 10, 100 and 20. Th
 {"cells":["transfer(2,3,40)","transfer(1,4,5)","withdraw(3,50)","deposit(1,15)","transfer(1,2,30)","transfer(2,1,60)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"balances":"10,60,60","result":"true"},"note":"Call 0: the transfer of 40 from account 2 to account 3 passes both tests, so the commit writes both balances."},{"at":{"call":1},"vars":{"balances":"10,60,60","result":"false"},"note":"Call 1: the call names account 4, which does not exist, so the first block refuses it and no balance changes."},{"at":{"call":2},"vars":{"balances":"10,60,10","result":"true"},"note":"Call 2: account 3 holds enough for 50, so the commit lowers its balance."},{"at":{"call":3},"vars":{"balances":"25,60,10","result":"true"},"note":"Call 3: account 1 exists, so the commit adds 15."},{"at":{"call":4},"vars":{"balances":"25,60,10","result":"false"},"note":"Call 4: the call asks for 30 from an account that holds 25, so the first block refuses it and no balance changes."},{"at":{"call":5},"vars":{"balances":"85,0,10","result":"true"},"note":"Call 5: the transfer of 60 from account 2 to account 1 passes both tests, so the commit writes both balances."}]}
 ```
 
-The second call names account 4, which does not exist, so the first block refuses it before any write. The fifth call asks for 30 from an account that holds 25, and it is refused for the same reason.
+Call 1 names account 4, which does not exist, so the first block refuses it before any write. Call 4 asks for 30 from an account that holds 25, so the balance is too low and the first block refuses it for the same reason.
 
 #### Trips With A Stale Check-Out
 
@@ -102,7 +102,7 @@ The second trace follows an underground service. A rider id may hold at most one
 {"cells":["checkIn(1,a,3)","checkIn(1,b,5)","checkIn(2,a,4)","checkOut(1,b,10)","checkOut(1,b,11)","checkOut(2,b,12)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"active":"1@a","stats":"-","result":"true"},"note":"Call 0: rider 1 has no open trip, so the commit stores station a and time 3."},{"at":{"call":1},"vars":{"active":"1@a","stats":"-","result":"false"},"note":"Call 1: rider 1 already has an open trip, so the first block refuses the call and nothing changes."},{"at":{"call":2},"vars":{"active":"1@a,2@a","stats":"-","result":"true"},"note":"Call 2: rider 2 has no open trip, so the commit stores station a and time 4."},{"at":{"call":3},"vars":{"active":"2@a","stats":"a>b:7/1","result":"true"},"note":"Call 3: the commit closes the trip of rider 1 and adds 7 to route a>b."},{"at":{"call":4},"vars":{"active":"2@a","stats":"a>b:7/1","result":"false"},"note":"Call 4: rider 1 has no open trip, so the first block refuses the call and the active map and stats stay as they were."},{"at":{"call":5},"vars":{"active":"-","stats":"a>b:15/2","result":"true"},"note":"Call 5: the commit closes the trip of rider 2 and adds 8 to route a>b."}]}
 ```
 
-The second call reuses a rider id that is already inside a trip, so it changes nothing. The fifth call tries to check out a rider whose trip is not open, and it leaves both the active map and the stats untouched.
+Call 1 reuses a rider id that is already inside a trip, so it changes nothing. Call 4 tries to check out a rider whose trip is not open, and it leaves both the active map and the stats untouched.
 
 <!-- stage: code -->
 ### The Bank With Checks Before Writes
@@ -210,7 +210,7 @@ A try-catch block around the writes looks like protection. It is a false friend 
 
 **Hint.** Which map answers whether an id is active, and when does an entry leave it?
 
-**Changed decision.** The same id is refused while it is active, even for a different account, and accepted again after it ends. Both ends of the lifecycle update the reservation map and the held total together.
+**Changed decision.** The same id is refused while it is active, even for a different account, and accepted again after it ends. Both ends of the lifecycle update the reservation map and the sum of active reservations together.
 
 #### [Recognize] Apply Discount Every n Orders (LeetCode 1357)
 <!-- id: sv-cashier-discount -->

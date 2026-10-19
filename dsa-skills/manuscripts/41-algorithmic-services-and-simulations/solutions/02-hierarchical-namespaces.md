@@ -336,7 +336,7 @@ The invariant is that each node's count equals the number of stored nodes in its
 
 **Complexity.**
 
-- **Time** is O(L) per call for a string of length L, because normalizing reads each character and the walk and the count update touch at most one node per name.
+- **Time** is O(L) per call for a string of length L, because normalizing reads each character. The walk and the count update touch at most one node per name. The call `below` reads the stored count of one node, so it costs O(depth) and not O(stored paths).
 - **Space** is O(N + L) for N stored nodes and the names of one call.
 
 ```java run

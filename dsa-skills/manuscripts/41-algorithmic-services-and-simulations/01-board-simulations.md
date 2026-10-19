@@ -112,7 +112,7 @@ The first trace plays tic-tac-toe on a 3 by 3 board. The pointer `call` sits on 
 {"cells":["(1,1) p1","(1,1) p2","(0,0) p2","(0,1) p1","(2,2) p2","(2,1) p1","(1,0) p2"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"rows":"0,1,0","cols":"0,1,0","diag":"1","anti":"1","result":"0"},"note":"Call 0: player 1 marks (1,1), which changes the row 1 and column 1 sums and the main diagonal sum and the anti-diagonal sum. The call returns 0."},{"at":{"call":1},"vars":{"rows":"0,1,0","cols":"0,1,0","diag":"1","anti":"1","result":"-1"},"note":"Call 1: cell (1,1) already holds a mark, so the call returns -1 and every sum stays as it was."},{"at":{"call":2},"vars":{"rows":"-1,1,0","cols":"-1,1,0","diag":"0","anti":"1","result":"0"},"note":"Call 2: player 2 marks (0,0), which changes the row 0 and column 0 sums and the main diagonal sum. The call returns 0."},{"at":{"call":3},"vars":{"rows":"0,1,0","cols":"-1,2,0","diag":"0","anti":"1","result":"0"},"note":"Call 3: player 1 marks (0,1), which changes the row 0 and column 1 sums. The call returns 0."},{"at":{"call":4},"vars":{"rows":"0,1,-1","cols":"-1,2,-1","diag":"-1","anti":"1","result":"0"},"note":"Call 4: player 2 marks (2,2), which changes the row 2 and column 2 sums and the main diagonal sum. The call returns 0."},{"at":{"call":5},"vars":{"rows":"0,1,0","cols":"-1,3,-1","diag":"-1","anti":"1","result":"1"},"note":"Call 5: player 1 marks (2,1), which changes the row 2 and column 1 sums. The call returns 1. A sum reaches 3 in absolute value, so player 1 wins."},{"at":{"call":6},"vars":{"rows":"0,1,0","cols":"-1,3,-1","diag":"-1","anti":"1","result":"-1"},"note":"Call 6: the game is already won, so the call returns -1 and every sum stays as it was."}]}
 ```
 
-The second call targets the cell that player 1 already holds, so it returns -1 and every sum stays as it was. The fifth call leaves the main diagonal sum at -1, because player 2 owns two corners and player 1 owns the center. The sixth call completes column 1 and wins, and the seventh call returns -1 because the game is over.
+Call 1 targets the cell that player 1 already holds, so it returns -1 and every sum stays as it was. Call 4 leaves the main diagonal sum at -1, because player 2 owns two corners and player 1 owns the center. Call 5 completes column 1 and wins, and call 6 returns -1 because the game is over.
 
 #### A Snake That Follows Its Tail
 
@@ -122,12 +122,12 @@ The second trace moves a snake on a 3 by 3 grid with three pieces of food. Each 
 {"cells":["R","D","L","U","D","R"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"body":"00 01","score":"1","result":"1"},"note":"Call 0: the head enters the food cell (0,1), the tail stays and the score becomes 1."},{"at":{"call":1},"vars":{"body":"00 01 11","score":"2","result":"2"},"note":"Call 1: the head enters the food cell (1,1), the tail stays and the score becomes 2."},{"at":{"call":2},"vars":{"body":"00 01 11 10","score":"3","result":"3"},"note":"Call 2: the head enters the food cell (1,0), the tail stays and the score becomes 3."},{"at":{"call":3},"vars":{"body":"01 11 10 00","score":"3","result":"3"},"note":"Call 3: the head enters (0,0), where the tail was. The move does not eat, so the tail leaves first and the move is legal."},{"at":{"call":4},"vars":{"body":"01 11 10 00","score":"3","result":"-1"},"note":"Call 4: the head would enter (1,0), which a body segment other than a released tail holds, so the game ends and the body stays as it was."},{"at":{"call":5},"vars":{"body":"01 11 10 00","score":"3","result":"-1"},"note":"Call 5: the game is over, so the call returns -1 and writes nothing."}]}
 ```
 
-The fourth call moves the head onto the cell that the tail holds. The move does not eat, so the tail leaves first and the move is legal. The fifth call aims at a cell held by a middle body segment, so it ends the game and writes nothing. The sixth call returns -1 because the game is over.
+Call 3 moves the head onto the cell that the tail holds. The move does not eat, so the tail leaves first and the move is legal. Call 4 aims at a cell held by a middle body segment, so it ends the game and writes nothing. Call 5 returns -1 because the game is over.
 
 <!-- stage: code -->
 ### Moves That Check Before Writing
 
-The first class keeps one signed counter per line and decides the winner from at most four of them.
+The first class keeps one signed counter per line and decides the winner from at most four of them. In the code, `line` holds the line counters and `used` holds the owner grid, reduced to a flag because this class only asks whether a cell is taken.
 
 ```java
 final class LineCounts {
@@ -190,6 +190,34 @@ final class SnakeMove {
 
 Each call costs O(1) expected time. The snake class stores the body twice, so its space is O(L) for a snake of length L.
 
+The robot needs only a loop index and a moved flag, so its calls also cost O(1).
+
+```java
+final class LoopRobot {
+    private final int w, h, cycle;
+    private int pos;                                          // loop index counted from the start corner
+    private boolean moved;                                    // direction at index 0 depends on this flag
+
+    LoopRobot(int w, int h) { this.w = w; this.h = h; this.cycle = 2 * (w + h) - 4; }
+
+    void step(int num) {
+        if (num == 0) return;                                 // step(0) changes nothing
+        moved = true;
+        pos = (int) ((pos + (long) num) % cycle);             // one position index covers any number of laps
+    }
+
+    String dir() {
+        if (pos == 0) return moved ? "South" : "East";        // back at the start corner after a lap
+        if (pos <= w - 1) return "East";
+        if (pos <= w + h - 2) return "North";
+        if (pos <= 2 * w + h - 3) return "West";
+        return "South";
+    }
+}
+```
+
+The direction is the part that needs the flag. The cell follows from the same index ranges, and the exercise asks for it.
+
 <!-- stage: applicability -->
 ### Commands That Change Positions
 
@@ -203,7 +231,7 @@ Run every check that can fail first, using only reads. Then apply the writes in 
 
 #### False Friends
 
-Removing the tail from the occupancy set before checking the head looks natural. It is a false friend, because a failed move then leaves the tail missing from the set. Taking the remainder of the step count by the board size is another false friend for the robot, because the robot walks the edge loop and not a line of that length. A sorted index over layer counts needs care too. Remove the old key before the count changes, because a key that changes while it sits in a `TreeSet` breaks the ordering. Skip the derived views when the board is tiny and called rarely, since a direct scan is simpler and fast enough.
+Removing the tail from the occupancy set before checking the head looks natural. It is a false friend, because a failed move then leaves the tail missing from the set. Taking the remainder of the step count by the board size is another false friend for the robot, because the robot walks the edge loop and not a line of that length. Skip the derived views when the board is tiny and called rarely, since a direct scan is simpler and fast enough.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -276,7 +304,7 @@ Removing the tail from the occupancy set before checking the head looks natural.
 
 **Prerequisites.** All three exercises above and tree sets.
 
-**Problem.** The rules below are written from the problem title, and the LeetCode statement may differ in detail. Design a class `Cube` for an n by n by n binary matrix that starts with every cell 0. The layer x is the set of n * n cells with first coordinate x. The call `setCell(x, y, z)` sets the cell to 1 and returns `true` if the value changed, or `false` otherwise. The call `unsetCell(x, y, z)` sets the cell to 0 and returns `true` if the value changed, or `false` otherwise. The call `largestLayer()` returns the layer with the most ones, and it returns the largest x among tied layers.
+**Problem.** Design a class `Cube` for an n by n by n binary matrix that starts with every cell 0. The layer x is the set of n * n cells with first coordinate x. The call `setCell(x, y, z)` sets the cell to 1 and returns `true` if the value changed, or `false` otherwise. The call `unsetCell(x, y, z)` sets the cell to 0 and returns `true` if the value changed, or `false` otherwise. The call `largestLayer()` returns the layer with the most ones, and it returns the largest x among tied layers.
 
 **Constraints.** The limits are:
 - **Size** satisfies `1 <= n <= 100`.
@@ -288,6 +316,6 @@ Removing the tail from the occupancy set before checking the head looks natural.
 
 **Example 2.** Input n = 2, calls `setCell(1,0,0)`, `setCell(1,1,1)`, `setCell(0,0,0)`, `largestLayer()`, `unsetCell(1,0,0)`, `unsetCell(1,1,1)`, `largestLayer()`, `unsetCell(0,0,0)`, `largestLayer()`, output true, true, true, 1, true, true, 0, true, 1.
 
-**Hint.** What must happen to a layer's key in the ordered set before its count changes?
+**Hint.** What must happen to a layer's key in the ordered set before its count changes? A key that changes while it sits in a `TreeSet` breaks the ordering, so remove the old key first.
 
 **Changed decision.** Each layer has an ordered key made from its count, so a repeated set or unset call returns before touching the index, and a real change removes the old key first.
