@@ -47,7 +47,7 @@ Every call sorts all three scores again and returns 90, so the same ordering is 
 
 A top query reads `k` entries, yet it pays for sorting all n. The sort repeats work whenever two queries arrive without an update between them, and even one update changes only one position in the order.
 
-A tree set that stays sorted fixes the repeated work. An update then costs O(log n) and a top query costs O(k + log n). The tree set brings two new risks.
+A tree set that stays sorted fixes the repeated work. An update then costs O(log n) and a top query costs O(k). The tree set brings two new risks.
 
 The first risk is a comparator that sees two players as equal. A tree set treats entries that compare equal as the same entry, so a second player with the same score silently disappears. The second risk is a score change. The old entry sits in the tree under its old score. A removal that uses the new score does not find it, and the old row stays in the ranking.
 
@@ -84,7 +84,7 @@ The top query reads from `board` and never writes to either structure.
 
 #### Scores That Add Up
 
-The first trace follows six calls. Here the pointer `call` names the latest call, and each step lists the board from best to worst as `score:id`.
+The first trace follows seven calls. Here the pointer `call` names the latest call, and each step lists the board from best to worst as `score:id`.
 
 ```trace
 {"cells":["add(1,30)","add(2,30)","add(1,15)","add(3,40)","top(2)","reset(1)","top(2)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"board":"30:1","result":"null"},"note":"Call 0: player 1 is new, so the board gains 30:1."},{"at":{"call":1},"vars":{"board":"30:1 30:2","result":"null"},"note":"Call 1: player 2 is new, so the board gains 30:2."},{"at":{"call":2},"vars":{"board":"45:1 30:2","result":"null"},"note":"Call 2: the board removes 30:1 and inserts 45:1."},{"at":{"call":3},"vars":{"board":"45:1 40:3 30:2","result":"null"},"note":"Call 3: player 3 is new, so the board gains 40:3."},{"at":{"call":4},"vars":{"board":"45:1 40:3 30:2","result":"85"},"note":"Call 4: top(2) adds the first 2 rows of the board and returns 85."},{"at":{"call":5},"vars":{"board":"40:3 30:2 0:1","result":"null"},"note":"Call 5: the board removes 45:1 and inserts 0:1."},{"at":{"call":6},"vars":{"board":"40:3 30:2 0:1","result":"70"},"note":"Call 6: top(2) adds the first 2 rows of the board and returns 70."}]}
@@ -122,6 +122,13 @@ final class Leaderboard {
         long now = (old == null ? 0 : old) + points;
         scoreOf.put(id, now);
         board.add(new Entry(now, id));                        // then the new key
+    }
+
+    void reset(int id) {
+        Long old = scoreOf.get(id);
+        if (old != null) board.remove(new Entry(old, id));    // exact old key first
+        scoreOf.put(id, 0L);
+        board.add(new Entry(0L, id));
     }
 
     long top(int k) {

@@ -7,7 +7,7 @@
 
 A task service keeps every pending task in two views. Operators open a user's page and run that user's most urgent task. A background worker runs the most urgent task of the whole system. Both views read the same tasks. On a quiet afternoon an operator runs a task from a user's page, and a minute later the worker runs the same task again. The customer receives two emails.
 
-Neither view is slow, and neither holds a wrong priority. The operator's path removed the task from the user's view and forgot the system view. A task can leave the service through two doors, and only one door cleaned up behind it.
+Neither view is slow, and neither holds a wrong priority. The operator's path removed the task from the user's view and forgot the system view. A task can leave the service through two execute calls and one remove call, and only one path cleaned up behind it.
 
 This lesson combines the record map, the sorted index and the all-or-nothing call from earlier lessons. It asks how to design a class where several calls can remove or change one record, and every call leaves every view agreeing.
 
@@ -24,11 +24,11 @@ The lesson Dynamic Rankings supplied the comparator rule. Every field that break
 
 #### Plans Before Writes
 
-The lesson Transaction Lifecycles supplied the plan and commit split. This lesson uses it to make sure that a removal through any door reaches every sorted set.
+The lesson Transaction Lifecycles supplied the rule that one commit step writes every structure. This lesson applies that rule with one helper, so a removal through any call reaches every sorted set.
 
 #### The Choice This Lesson Adds
 
-The new work is the number of exits. Each earlier lesson had one place where a record left the structure. Here a record leaves through the global exit, through the per-user exit and through an explicit remove call. All three must run the same repair.
+The new work is the number of exits. No earlier lesson had a second sorted index that every removal had to repair. Here a task leaves through the global execute call, through the per-user execute call and through an explicit remove call. All three must run the same repair.
 
 <!-- stage: naive -->
 ### Two Sorted Sets Repaired By Hand
@@ -86,7 +86,7 @@ The class keeps three structures. The map from task id to task is the record tha
 
 #### The Single Place That Writes
 
-A **removal helper** takes one task, removes it from the record, from the global index and from the owner index, and deletes an owner set that becomes empty. A matching insert helper does the reverse. No public call touches a structure directly. Add calls insert, edit calls remove and insert, a remove call removes, and both execute calls pick a task from one index and then call the helper.
+A **removal helper** (named `drop` in the code) takes one task, removes it from the record, from the global index and from the owner index, and deletes an owner set that becomes empty. A matching insert helper does the reverse. No public call touches a structure directly. Add calls insert, edit calls remove and insert, a remove call removes, and both execute calls pick a task from one index and then call the helper.
 
 #### Why The Order Of Steps Matters
 
@@ -113,7 +113,7 @@ An owner set that becomes empty is removed from `perUser`, so a query for an unk
 
 #### Running A Task From A User's Page
 
-The first trace adds three tasks and runs one through each door. The pointer `call` marks the call that just ran. The columns show the task ids in the global order, then the ids of each user.
+The first trace adds three tasks and runs a task through each execute call. The pointer `call` marks the call that just ran. The columns show the task ids in the global order, then the ids of each user.
 
 ```trace
 {"cells":["add(1,101,5)","add(1,102,7)","add(2,103,7)","execUser(1)","execGlobal()","execGlobal()"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"global":"101","users":"u1:[101]","result":"null"},"note":"Call 0: task 101 enters the record, the global index and the list of user 1."},{"at":{"call":1},"vars":{"global":"102 101","users":"u1:[102,101]","result":"null"},"note":"Call 1: task 102 enters the record, the global index and the list of user 1."},{"at":{"call":2},"vars":{"global":"103 102 101","users":"u1:[102,101] u2:[103]","result":"null"},"note":"Call 2: task 103 enters the record, the global index and the list of user 2."},{"at":{"call":3},"vars":{"global":"103 101","users":"u1:[101] u2:[103]","result":"102"},"note":"Call 3: the best task of user 1 is 102. The helper removes it from all three structures."},{"at":{"call":4},"vars":{"global":"101","users":"u1:[101]","result":"103"},"note":"Call 4: the best task overall is 103. The helper removes it from all three structures."},{"at":{"call":5},"vars":{"global":"empty","users":"empty","result":"101"},"note":"Call 5: the best task overall is 101. The helper removes it from all three structures."}]}
@@ -183,7 +183,7 @@ A sorted set compares the fields of its entries, so an edit must remove the old 
 
 #### False Friends And Limits
 
-A lazy heap with version checks looks like a way to avoid the helper. It is a false friend when two heaps exist for the same records, because a version number in one heap says nothing about the other heap. Skip the owner index when no call asks about one user, because the second index then costs memory and gives nothing back.
+A lazy heap with version checks is a valid alternative here, because the version in the record can validate entries in both heaps. It leaves stale entries in both heaps, so the helper that removes the exact entry is simpler. Skip the owner index when no call asks about one user, because the second index then costs memory and gives nothing back.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -251,7 +251,7 @@ A lazy heap with version checks looks like a way to avoid the helper. It is a fa
 
 **Changed decision.** Each copy carries a state, and one move helper changes the state and both views.
 
-#### [Recognize] Task Desk With Two Exits (LeetCode 3408)
+#### [Recognize] Task Desk With Three Exits (LeetCode 3408)
 <!-- id: ci40-task-desk -->
 
 **Prerequisites.** All three exercises above.
@@ -264,7 +264,7 @@ A lazy heap with version checks looks like a way to avoid the helper. It is a fa
 - **Users** are integers from 1 to 10^5.
 - **Return** of both execute calls is an `int`.
 
-**Example 1.** Input tasks `{1,101,5}`, `{1,102,7}`, `{2,103,7}` and the calls `execUser(1)`, `execGlobal()`, `execGlobal()`, output 102, 103 and 101.
+**Example 1.** Input calls `add(1,101,5)`, `add(1,102,7)`, `add(2,103,7)` and then `execUser(1)`, `execGlobal()`, `execGlobal()`, output 102, 103 and 101.
 
 **Example 2.** Input the calls `execUser(3)`, `add(3,200,1)`, `execGlobal()`, `execUser(3)`, output -1, then 200, then -1.
 

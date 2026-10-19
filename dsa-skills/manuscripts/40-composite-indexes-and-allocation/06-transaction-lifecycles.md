@@ -189,7 +189,7 @@ A try-catch block around the writes looks like a safe design. It is a false frie
 
 **Hint.** Which two indexes change when an order moves from one state to the next?
 
-**Changed decision.** Each move changes the record and two indexes, so a helper moves all three in one step after the legality check.
+**Changed decision.** Each move changes the record and two indexes, so a helper moves the record and both indexes in one step after the legality check.
 
 #### [Boundary] Failed Transition Rollback (Author exercise)
 <!-- id: ci40-failed-rollback -->
@@ -223,12 +223,12 @@ A try-catch block around the writes looks like a safe design. It is a false frie
 - **Ids** are integers from 1 to 10^5, and times satisfy `0 <= time <= 10^9`.
 - **States** are the strings `SCHEDULED`, `CANCELLED` and `DONE`.
 - **Calls** number at most `2 * 10^5`.
-- **Return** types are `boolean`, `int` or `int` as named above.
+- **Return** types are `boolean` for `create`, `reschedule` and `cancel`, and `int` for `runNext` and `count`.
 
 **Example 1.** Input calls `create(1,50)`, `create(2,30)`, `create(3,30)`, `runNext()`, `reschedule(3,60)`, `runNext()`, output 2 for the first `runNext`, `true` for `reschedule`, then 1.
 
 **Example 2.** Input calls `create(5,10)`, `cancel(5)`, `reschedule(5,20)`, `runNext()`, `count(CANCELLED)`, output `true` for `cancel`, `false` for `reschedule`, then -1 and 1.
 
-**Hint.** Which of the three views holds only scheduled events, and which call removes an event from it?
+**Hint.** Which view holds only scheduled events, and which call removes an event from it?
 
 **Changed decision.** Only scheduled events live in the time index, so every move out of that state removes the event from the index.

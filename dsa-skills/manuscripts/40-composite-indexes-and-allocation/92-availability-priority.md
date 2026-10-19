@@ -7,7 +7,7 @@
 
 An online exam service assigns seats in a long virtual row of one billion positions. Each arriving student must sit as far as possible from every student already seated. Students also leave, and their seats open up again. A developer lists all free seats in a set at start-up, and the service runs out of memory before the first student sits down.
 
-A second developer keeps only the occupied seats and scans every pair of neighbors to find the widest gap. That works for 100 students. With 100,000 students in the room, each new arrival scans 100,000 pairs, and the service handles about ten arrivals per second.
+A second developer keeps only the occupied seats and scans every pair of neighbors to find the widest gap. That works for 100 students. With 100,000 students in the room, each new arrival scans 100,000 pairs, and each arrival costs 100,000 steps, a cost that grows with every student.
 
 Both designs answer the same question. The first stores too much, and the second recomputes too much. This lesson asks how to store only what exists, how to find the best option without a scan, and how to make sure that an option computed earlier still describes the room now.
 
@@ -16,7 +16,7 @@ Both designs answer the same question. The first stores too much, and the second
 
 #### Free And Held Items In One Partition
 
-The lesson Resource Allocation supplied the rule that every resource is free or held and never both, and that a release call checks the held side first. This lesson keeps that rule for seats whose numbers are too large to list.
+The lesson Resource Allocation supplied the rule that every resource is free or held and never both. This lesson keeps that rule for seats whose numbers are too large to list, and the first exercise adds the held-side check that the code below leaves out.
 
 #### Candidates That Are Checked Later
 
@@ -93,14 +93,14 @@ The invariant is that every current gap has a candidate in the heap, and a candi
 <!-- stage: variables -->
 ### Counters, Links And Heaps
 
-Two small designs share one idea. The first holds three pieces of state, and the second holds four.
+Two small designs share one idea. The first holds two pieces of state, and the second holds three.
 
 - **next** is the next-unused counter, and it only grows.
 - **released** is a min-heap of seats that were handed out and returned, and a release call adds to it.
 - **nextOf** and **prevOf** map each occupied seat to its neighbors, and a seat or leave call rewires them.
 - **heap** holds gap candidates ordered by larger distance and then smaller seat, and every call that creates a gap adds one.
 
-A candidate holds only its two end seats, and the sentinel values `-1` and `n` stand for the two ends of the row.
+A candidate holds only its two end seats, and the sentinel values `-1` and `n` stand for the two ends of the row. The left-end candidate `(-1, b)` offers seat 0 at distance `b`. The right-end candidate `(a, n)` offers seat `n - 1` at distance `n - 1 - a`. In the trace, `(a,b)` reads as left seat then right seat.
 
 <!-- stage: trace -->
 ### Following Candidates Through A Room
@@ -120,7 +120,7 @@ The fifth call returns seat 2, because the released heap holds 2 and the counter
 The second trace seats students in a row of eight seats. Two leave calls then merge gaps, and older gaps in the heap stop being current.
 
 ```trace
-{"cells":["seat","seat","seat","seat","leave(3)","leave(5)","seat","seat"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"occupied":"{0}","heapSize":1,"result":"0"},"note":"Call 0: the room is empty, so the first student takes seat 0 and the candidate (0,8) enters the heap."},{"at":{"call":1},"vars":{"occupied":"{0,7}","heapSize":1,"result":"7"},"note":"Call 1: the current candidate (0,8) gives seat 7. Its two halves (0,7) and (7,8) enter the heap."},{"at":{"call":2},"vars":{"occupied":"{0,3,7}","heapSize":2,"result":"3"},"note":"Call 2: the current candidate (0,7) gives seat 3. Its two halves (0,3) and (3,7) enter the heap."},{"at":{"call":3},"vars":{"occupied":"{0,3,5,7}","heapSize":3,"result":"5"},"note":"Call 3: the current candidate (3,7) gives seat 5. Its two halves (3,5) and (5,7) enter the heap."},{"at":{"call":4},"vars":{"occupied":"{0,5,7}","heapSize":4,"result":"null"},"note":"Call 4: seat 3 leaves, so its neighbors 0 and 5 form the new candidate (0,5). The old candidates that name seat 3 stay in the heap."},{"at":{"call":5},"vars":{"occupied":"{0,7}","heapSize":5,"result":"null"},"note":"Call 5: seat 5 leaves, so its neighbors 0 and 7 form the new candidate (0,7). The old candidates that name seat 5 stay in the heap."},{"at":{"call":6},"vars":{"occupied":"{0,3,7}","heapSize":6,"result":"3"},"note":"Call 6: the current candidate (0,7) gives seat 3. Its two halves (0,3) and (3,7) enter the heap."},{"at":{"call":7},"vars":{"occupied":"{0,3,5,7}","heapSize":6,"result":"5"},"note":"Call 7: the call drops 1 stale candidate, then the current candidate (3,7) gives seat 5. Its two halves (3,5) and (5,7) enter the heap."}]}
+{"cells":["seat","seat","seat","seat","leave(3)","leave(5)","seat","seat"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"occupied":"{0}","heapSize":1,"result":"0"},"note":"Call 0: the room is empty, so the first student takes seat 0 and the candidate (0,8) enters the heap."},{"at":{"call":1},"vars":{"occupied":"{0,7}","heapSize":1,"result":"7"},"note":"Call 1: the current candidate (0,8) gives seat 7. Its halves (0,7) and (7,8) enter the heap, except a half with no free seat."},{"at":{"call":2},"vars":{"occupied":"{0,3,7}","heapSize":2,"result":"3"},"note":"Call 2: the current candidate (0,7) gives seat 3. Its halves (0,3) and (3,7) enter the heap, except a half with no free seat."},{"at":{"call":3},"vars":{"occupied":"{0,3,5,7}","heapSize":3,"result":"5"},"note":"Call 3: the current candidate (3,7) gives seat 5. Its halves (3,5) and (5,7) enter the heap, except a half with no free seat."},{"at":{"call":4},"vars":{"occupied":"{0,5,7}","heapSize":4,"result":"null"},"note":"Call 4: seat 3 leaves, so its neighbors 0 and 5 form the new candidate (0,5). The old candidates that name seat 3 stay in the heap."},{"at":{"call":5},"vars":{"occupied":"{0,7}","heapSize":5,"result":"null"},"note":"Call 5: seat 5 leaves, so its neighbors 0 and 7 form the new candidate (0,7). The old candidates that name seat 5 stay in the heap."},{"at":{"call":6},"vars":{"occupied":"{0,3,7}","heapSize":6,"result":"3"},"note":"Call 6: the current candidate (0,7) gives seat 3. Its halves (0,3) and (3,7) enter the heap, except a half with no free seat."},{"at":{"call":7},"vars":{"occupied":"{0,3,5,7}","heapSize":6,"result":"5"},"note":"Call 7: the call drops 1 stale candidate, then the current candidate (3,7) gives seat 5. Its halves (3,5) and (5,7) enter the heap, except a half with no free seat."}]}
 ```
 
 The last call drops one candidate before it finds a current one. The dropped candidate (0,5) names seat 5, which left the room, so the two seats are no longer neighbors.

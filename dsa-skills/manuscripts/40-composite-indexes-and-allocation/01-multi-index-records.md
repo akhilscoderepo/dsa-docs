@@ -41,7 +41,7 @@ After `change(1, 10)` and then `change(1, 20)`, the call `find(10)` still return
 ```predict
 The class passes a test that changes each index only once. What breaks when an index is changed twice, and how much work does each find call do after n changes?
 
-The list keeps the first pair for the index, so find reports an index for a number that the index no longer holds. Each find scans every pair ever added, so it costs O(n) and the list also grows with every change instead of with the number of live indexes.
+The list keeps the old pair for the index, so find reports an index for a number that the index no longer holds. Each find scans every pair ever added, so it costs O(n) and the list also grows with every change instead of with the number of live indexes.
 ```
 
 <!-- stage: bottleneck -->
@@ -161,7 +161,7 @@ A cache that stores each value twice under two keys looks like a multi-index rec
 
 **Constraints.** The limits are:
 - **Calls** number at most 10^5 in total.
-- **Index** and **number** satisfy `1 <= value <= 10^9`.
+- **Index** satisfies `0 <= index <= 10^9`, and **number** satisfies `1 <= number <= 10^9`.
 - **Return** is a single `int`.
 - **Mutation** happens only in `change`.
 
@@ -223,7 +223,7 @@ A cache that stores each value twice under two keys looks like a multi-index rec
 **Problem.** A chain has `n` shops, and each shop owns at most one copy of each movie at a fixed price. Design a class `MovieRental` built from entries `{shop, movie, price}`. The call `search(movie)` returns up to 5 shops that hold an unrented copy, ordered by price and then shop number. The call `rent(shop, movie)` marks that copy rented. The call `drop(shop, movie)` marks it unrented. The call `report()` returns up to 5 rented copies as `{shop, movie}`, ordered by price, then shop, then movie.
 
 **Constraints.** The limits are:
-- **Shops** satisfy `1 <= n <= 3 * 10^5`.
+- **Shops** are numbered 0 to `n - 1`, with `1 <= n <= 3 * 10^5`.
 - **Entries** number at most `10^5`, each `{shop, movie}` pair appears once.
 - **Calls** number at most `10^5`, and `rent` and `drop` use existing and valid copies.
 - **Price** is an `int` from 1 to 10^4.

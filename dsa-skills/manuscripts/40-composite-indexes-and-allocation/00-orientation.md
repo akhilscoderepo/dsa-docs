@@ -7,7 +7,7 @@ This chapter teaches classes in which one logical record appears in several inde
 
 ### Prerequisites
 
-You should know hash maps, tree sets and tree maps, priority queues, doubly linked lists and the basic cache designs of the earlier design chapter. A **secondary index** is a structure that holds the same facts as the main record in another order. A **stale entry** is an index entry that no longer matches the record. A **call** is one public method of a class, and the **workload** is the mix of calls the class must serve. Every exercise lists the indexes that each call changes before it shows code.
+You should know hash maps, tree sets and tree maps, priority queues, doubly linked lists and the cache designs of chapter 33. A **secondary index** is a structure that holds the same facts as the main record in another order. A **stale entry** is an index entry that no longer matches the record. An **invariant** is a statement that every call must leave true. A **call** is one public method of a class, and the **workload** is the mix of calls the class must serve.
 
 ### What Each Lesson Protects
 

@@ -300,7 +300,7 @@ public final class MovieDeskSolution {
 }
 ```
 
-#### Solution: [Recognize] Task Desk With Two Exits (LeetCode 3408)
+#### Solution: [Recognize] Task Desk With Three Exits (LeetCode 3408)
 <!-- id: ci40-task-desk -->
 
 **Approach.** A hash map from task id to an immutable task is the record that decides. The global index is a tree set of all tasks, and the owner index is a map from user to a tree set of that user's tasks. Both sets order by higher priority and then larger task id. Two private helpers write every structure. The insert helper writes the record and both indexes. The drop helper removes the task from the record and both indexes, and deletes an owner set that becomes empty.

@@ -141,7 +141,7 @@ Look for calls that take the best available resource under a stated rule and ret
 
 #### Sorted Set Or Counter
 
-A resource pool that grows without bound and never receives repeated returns needs less. A counter for the next unused number plus a heap of returned numbers is enough, and the lesson Availability Priority later in this chapter shows it. A fixed pool of at most about 10^5 resources fits the sorted set above.
+A resource pool that grows without bound and never receives repeated returns needs less. A counter for the next unused number plus a heap of returned numbers is enough, and the lesson Pick The Best Free Resource later in this chapter shows it. A fixed pool of at most about 10^5 resources fits the sorted set above.
 
 #### False Friends And Limits
 

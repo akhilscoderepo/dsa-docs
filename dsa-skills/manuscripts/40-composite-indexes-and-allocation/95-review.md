@@ -6,7 +6,7 @@ A price that changes in one structure only, a seat that two customers hold, and 
 ### Check Your Recall
 
 ```quiz
-{"id": "rq40-rev-record", "q": "A number moves from index 4 to index 9 in a container with a map and a sorted set per number. Which step comes first?", "options": ["Insert 9 into the new set.", "Remove 4 from the set of the old number.", "Rebuild every set.", "Sort the map."], "answer": 1, "explain": "A sorted set finds an entry by its fields, so the old entry must leave while it still carries the old fields. The insertion follows."}
+{"id": "rq40-rev-record", "q": "Index 4 changes from holding 7 to holding 9, with a map and a sorted set of indexes per number. Which step comes first?", "options": ["Insert 9 into the new set.", "Remove index 4 from the set of number 7.", "Rebuild every set.", "Sort the map."], "answer": 1, "explain": "A sorted set finds an entry by its fields, so the old entry must leave while it still carries the old fields. The insertion follows."}
 ```
 
 ```quiz

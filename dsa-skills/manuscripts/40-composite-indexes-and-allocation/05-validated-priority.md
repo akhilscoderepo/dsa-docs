@@ -64,7 +64,7 @@ The map from job id to its current priority is the **authoritative record**. The
 
 #### Telling Candidates Apart
 
-Each call that creates a candidate also tags it with a **version**, which is a counter value that grows with every call. The record stores the version of the newest candidate for each job. A candidate is current only when its version equals the stored version. Comparing priorities is not enough, because a job can be cancelled and added again with the same priority, and the old candidate would look correct while it is not.
+Each call that creates a candidate also tags it with a **version**, which is a counter value that grows with every set call. The record stores the version of the newest candidate for each job. A candidate is current only when its version equals the stored version. Comparing priorities is not enough, because a job can be cancelled and added again with the same priority, and the old candidate would look correct while it is not.
 
 #### Discarding At The Top
 
@@ -106,7 +106,7 @@ The second trace cancels a job and adds it again with the same priority.
 {"cells":["set(3,7)","cancel(3)","set(3,7)","poll()","poll()"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"heap":"7:3@1","result":"null"},"note":"Call 0: the record for job 3 becomes priority 7 with version 1, and the heap gains an entry. Older entries for job 3 stay in the heap."},{"at":{"call":1},"vars":{"heap":"7:3@1","result":"null"},"note":"Call 1: job 3 leaves the record. Its heap entries stay and now fail the version check."},{"at":{"call":2},"vars":{"heap":"7:3@1 7:3@2","result":"null"},"note":"Call 2: the record for job 3 becomes priority 7 with version 2, and the heap gains an entry. Older entries for job 3 stay in the heap."},{"at":{"call":3},"vars":{"heap":"empty","result":"3"},"note":"Call 3: entry 7:3@1 fails the version check, so poll drops it; then entry 7:3@2 matches the record, so poll returns job 3."},{"at":{"call":4},"vars":{"heap":"empty","result":"-1"},"note":"Call 4: the heap is empty, so poll returns -1."}]}
 ```
 
-Both entries for job 3 show priority 7. The first one has version 1, and the record holds version 3. The version check separates them, and a priority check would not.
+Both entries for job 3 show priority 7. The first one has version 1, and the record holds version 2. The version check separates them, and a priority check would not.
 
 <!-- stage: code -->
 ### A Job Queue With Version Checks
@@ -143,7 +143,7 @@ final class JobQueue {
 }
 ```
 
-A set call costs O(log n). A poll call costs O(log n) per entry it drops and per entry it returns. Each entry is dropped at most once, so the cost of dropping is O(log n) amortized per set call. The space is O(total set calls) until the heap is rebuilt.
+A set call costs O(log n). A poll call costs O(log n) per entry it drops and per entry it returns. Each entry is dropped at most once, so the cost of dropping is O(log n) amortized per set call. The space is O(total set calls) until a rebuild, which the exercise on repeated corrections implements.
 
 <!-- stage: applicability -->
 ### When Stale Entries Are Cheaper Than Removal
@@ -158,7 +158,7 @@ Stale entries accumulate in the heap between polls. If the workload makes millio
 
 #### False Friends
 
-A sorted set with an exact removal is a false friend of this design when the entries are small and immutable. It supports removal in O(log n), and it needs no versions, so it is the simpler choice. A second false friend is a priority change that only ever raises a priority in a minimum heap, as in shortest paths, where a duplicate entry is harmless and a plain distance check is enough. Skip versions when the heap must also answer "what is the k-th best" for large `k`, because stale entries distort that answer.
+A sorted set with exact removal is a simpler alternative when the entries are small and immutable. Choose the heap when the structure offers only a heap interface or when an entry cannot be re-keyed in place. A second false friend is a shortest-path search, where a distance only ever decreases, so a duplicate entry is harmless and a plain distance comparison replaces versions. Skip versions when the heap must also answer "what is the k-th best" for large `k`, because stale entries distort that answer.
 
 <!-- stage: exercises -->
 ### Exercises

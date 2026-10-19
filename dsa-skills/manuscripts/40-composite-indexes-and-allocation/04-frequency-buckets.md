@@ -46,7 +46,7 @@ The scan reads a million entries per query. Only five different counts exist. Th
 
 The scan costs O(n) per query, because keys with the same count are interchangeable for a max or min question and the scan still reads each one. A count changes by 1 per call. The key that moves leaves one group of equal counts and joins the group of the next count.
 
-The number of distinct counts is small compared with the number of keys, since counts above c need at least c increments each. A structure that groups keys by count can answer a max query by looking at the group with the largest count, and the group changes only at its neighbors.
+The number of distinct counts is small compared with the number of keys. Reaching d distinct counts takes at least d(d+1)/2 increments, so d is at most about the square root of twice the increments. A structure that groups keys by count can answer a max query by looking at the group with the largest count, and an update touches only the two adjacent groups.
 
 The grouping brings a new job. When a key moves from count 2 to count 3, the group for count 2 may become empty. An empty group must disappear, or the max and min queries read a group that holds no key.
 
@@ -145,7 +145,7 @@ With increments only, the largest count never drops, so one integer tracks it. W
 
 #### False Friends
 
-A sorted map from count to key looks like the same design. It is a false friend when several keys share a count, because the map keeps only one of them. A priority queue holds the largest count at its root, but it gives no way to move a key by one step without a search. Skip buckets when counts jump by large amounts, because a jump creates many new buckets and a sorted structure costs the same.
+A sorted map from count to key looks like the same design. It is a false friend when several keys share a count, because the map keeps only one of them. A priority queue holds the largest count at its root, but it gives no way to move a key by one step without a search. Skip the list of buckets when counts jump by large amounts. A new bucket then lies far from its neighbors and needs a search to place, which breaks the O(1) splice.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -197,7 +197,7 @@ A sorted map from count to key looks like the same design. It is a false friend 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Design a class `CountLedger` with the calls `inc(key)`, `dec(key)` and `getMaxKey()` of the previous exercise, and a call `bucketCount()` that returns the number of distinct positive counts held by live keys. The call `getMaxKey()` returns the smallest key among those with the largest count, or an empty string when no key exists. The structure must keep no empty bucket after any call.
+**Problem.** Design a class `CountLedger` with the calls `inc(key)`, `dec(key)` and `getMaxKey()` of the previous exercise, and a call `bucketCount()` that returns the number of distinct positive counts held by live keys. Unlike the previous exercise, `getMaxKey()` returns the smallest key among those with the largest count, or an empty string when no key exists. The structure must keep no empty bucket after any call.
 
 **Constraints.** The limits are:
 - **Keys** are lowercase strings of length 1 to 10.
@@ -209,7 +209,7 @@ A sorted map from count to key looks like the same design. It is a false friend 
 
 **Example 2.** Input calls `inc(x)`, `inc(y)`, `inc(x)`, `inc(y)`, `bucketCount()`, `dec(y)`, `bucketCount()`, output 1 and then 2.
 
-**Hint.** What does the structure hold for count 3 right after the last key with count 3 moves down?
+**Hint.** What does the structure hold for count 2 right after the last key with count 2 moves down?
 
 **Changed decision.** The check for an empty bucket moves into every call that removes a key from a bucket.
 
