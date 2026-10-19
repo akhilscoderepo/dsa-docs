@@ -216,7 +216,7 @@ Recomputing a summary from the record on demand looks like a false friend when q
 #### [Vary] Underground System With Cancel (LeetCode 1396)
 <!-- id: sv-ix-underground-slow -->
 
-**Prerequisites.** The Build exercise above and the plan-then-commit rule.
+**Prerequisites.** The first exercise above and the rule that checks run before writes.
 
 **Problem.** Design a class `Metro` for stations named by lowercase strings. The call `checkIn(card, station, t)` opens a trip and returns `true`, and returns `false` if the card already has an open trip. The call `checkOut(card, station, t)` closes the open trip, records its duration `t - startTime` for the route from the check-in station to this station, and returns `true`. It returns `false`, and leaves the trip open, if the card has no open trip or if `t` is less than the check-in time. The call `cancel(card)` discards an open trip without recording a duration and returns `true`, or returns `false` if none is open. The call `average(start, end)` returns the mean duration of recorded trips on that route, or -1.0 if none. The call `slowest()` returns the route written `start>end` with the largest mean duration, with the smaller route string winning ties, or the empty string if no trip is recorded.
 
