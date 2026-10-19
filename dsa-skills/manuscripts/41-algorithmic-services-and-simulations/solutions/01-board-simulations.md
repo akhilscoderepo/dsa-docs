@@ -12,7 +12,7 @@ The invariant is that each sum equals the signed number of marks on its line, an
 
 **Complexity.**
 
-- **Time** is O(1) per call, because a move reads and writes at most four sums.
+- **Time** per call is O(1), since a move touches at most four sums.
 - **Space** is O(n^2) for the owner array plus O(n) for the sums.
 
 ```java run
@@ -123,7 +123,7 @@ The invariant is that the occupancy set holds exactly the cells of the body dequ
 
 **Complexity.**
 
-- **Time** is O(1) per call, because a move does a constant number of deque and bit set operations.
+- **Time** per call is O(1), since a move runs a fixed number of deque and bit set operations.
 - **Space** is O(width * height + F) for the bit set and the F food cells, plus O(L) for a body of length L.
 
 ```java run
@@ -251,7 +251,7 @@ The invariant is that the loop index equals the total number of steps modulo the
 
 **Complexity.**
 
-- **Time** is O(1) per call, because the update is one addition and one remainder.
+- **Time** per call is O(1), since the update is one addition and one remainder.
 - **Space** is O(1), because the state is the index, the flag and the grid size.
 
 ```java run

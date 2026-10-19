@@ -3,7 +3,7 @@
 ## Move Pieces On A Board
 
 <!-- stage: context -->
-### A Win Check That Reads The Whole Board
+### A Win Check That Rereads The Board
 
 A server hosts tic-tac-toe on a 1000 by 1000 board, and a player wins by filling one row, column or diagonal with their marks. After every move the server rereads the board to decide whether the game ended. Each move makes it read about four million cells, and almost none of them changed since the last move.
 
@@ -276,7 +276,7 @@ Removing the tail from the occupancy set before checking the head looks natural.
 
 **Prerequisites.** All three exercises above and tree sets.
 
-**Problem.** This contract is written for the chapter from the problem title, so the LeetCode statement may differ in detail. Design a class `Cube` for an n by n by n binary matrix that starts with every cell 0. The layer x is the set of n * n cells with first coordinate x. The call `setCell(x, y, z)` sets the cell to 1 and returns `true` if the value changed, or `false` otherwise. The call `unsetCell(x, y, z)` sets the cell to 0 and returns `true` if the value changed, or `false` otherwise. The call `largestLayer()` returns the layer with the most ones, and it returns the largest x among tied layers.
+**Problem.** The rules below are written from the problem title, and the LeetCode statement may differ in detail. Design a class `Cube` for an n by n by n binary matrix that starts with every cell 0. The layer x is the set of n * n cells with first coordinate x. The call `setCell(x, y, z)` sets the cell to 1 and returns `true` if the value changed, or `false` otherwise. The call `unsetCell(x, y, z)` sets the cell to 0 and returns `true` if the value changed, or `false` otherwise. The call `largestLayer()` returns the layer with the most ones, and it returns the largest x among tied layers.
 
 **Constraints.** The limits are:
 - **Size** satisfies `1 <= n <= 100`.
