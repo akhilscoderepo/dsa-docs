@@ -230,7 +230,7 @@ A sorted set with `ceiling` and `floor` looks like a prefix tool. It is a false 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This contract is written for the chapter and may differ from LeetCode, which is a premium problem. Design a class `Autocomplete` built from arrays `sentences` and `times` that give each starting sentence and its count. The call `input(c)` receives one character. A letter or a space extends the typed text and returns the best three stored sentences that start with the typed text, ordered by larger count first and then by smaller `String.compareTo`. The character `#` ends the typed text, adds one to the count of that text, and returns an empty list. An empty typed text at `#` changes nothing.
+**Problem.** LeetCode marks this problem as premium, so the contract below is the one this lesson checks and may differ in detail. Design a class `Autocomplete` built from arrays `sentences` and `times` that give each starting sentence and its count. The call `input(c)` receives one character. A letter or a space extends the typed text and returns the best three stored sentences that start with the typed text, ordered by larger count first and then by smaller `String.compareTo`. The character `#` ends the typed text, adds one to the count of that text, and returns an empty list. An empty typed text at `#` changes nothing.
 
 **Constraints.** The limits are:
 - **Characters** are lowercase letters, the space, and `#`.

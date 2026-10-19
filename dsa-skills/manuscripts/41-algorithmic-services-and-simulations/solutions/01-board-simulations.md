@@ -75,7 +75,7 @@ public final class TicTacToeSolution {
                 for (int i = 0; i < n; i++) {
                     boolean rf = true, cf = true;
                     for (int j = 0; j < n; j++) { if (g[i][j] != q) rf = false; if (g[j][i] != q) cf = false; }
-                    if (rf || cf) { over = true; return p == q ? q : q; }
+                    if (rf || cf) { over = true; return q; }
                     if (g[i][i] != q) d = false;
                     if (g[i][n - 1 - i] != q) a = false;
                 }
