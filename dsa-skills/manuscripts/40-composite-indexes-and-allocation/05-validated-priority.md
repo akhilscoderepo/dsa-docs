@@ -189,7 +189,7 @@ A sorted set with an exact removal is a false friend of this design when the ent
 
 **Prerequisites.** The versioned heap exercise above.
 
-**Problem.** A chain has shops that each own at most one copy of a movie at a fixed price. Design a class `RentalReport` built from entries `{shop, movie, price}`, with all copies unrented. The call `rent(shop, movie)` marks a copy rented. The call `drop(shop, movie)` marks it unrented. The call `report()` lists the 5 cheapest rented copies as `{shop, movie}`, or all of them when fewer exist, with ties broken by shop and then movie. A copy may be rented, dropped and rented again.
+**Problem.** Shops of a rental chain own at most one copy per movie, each with a fixed price. Write a class `RentalReport` built from entries `{shop, movie, price}`, with all copies unrented. The call `rent(shop, movie)` marks a copy rented. The call `drop(shop, movie)` marks it unrented. The call `report()` lists the 5 cheapest rented copies as `{shop, movie}`, or all of them when fewer exist, with ties broken by shop and then movie. A copy may be rented, dropped and rented again.
 
 **Constraints.** The limits are:
 - **Entries** number at most `10^5`, each `{shop, movie}` pair appears once, and prices are `int` values from 1 to 10^4.

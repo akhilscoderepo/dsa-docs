@@ -212,7 +212,7 @@ A lazy heap with version checks looks like a way to avoid the helper. It is a fa
 #### [Vary] Food Ratings With Retirement (LeetCode 2353)
 <!-- id: ci40-food-retire -->
 
-**Prerequisites.** The Build exercise above.
+**Prerequisites.** The first exercise above.
 
 **Problem.** Design a class `FoodMenu` built from arrays `foods`, `cuisines` and `ratings`. The call `changeRating(food, rating)` sets a rating. The call `retire(food)` removes a food from the menu for good. The call `topTwo(cuisine)` returns the names of up to two foods of that cuisine, in order of higher rating first and smaller name second.
 
@@ -235,7 +235,7 @@ A lazy heap with version checks looks like a way to avoid the helper. It is a fa
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A chain has shops with at most one copy of each movie at a fixed price. Design a class `MovieDesk` built from entries `{shop, movie, price}`, all unrented. The call `rent(shop, movie)` returns `true` and marks the copy rented if the copy exists and is unrented, and returns `false` otherwise. The call `drop(shop, movie)` returns `true` and marks it unrented if the copy is rented, and returns `false` otherwise. The call `search(movie)` returns up to 3 shops with an unrented copy, ordered by price and then shop. The call `rentedCount()` returns the number of rented copies.
+**Problem.** Each shop of a chain owns at most one copy of a movie, sold at a fixed price. Write a class `MovieDesk` built from entries `{shop, movie, price}`, all unrented. The call `rent(shop, movie)` returns `true` and marks the copy rented if the copy exists and is unrented, and returns `false` otherwise. The call `drop(shop, movie)` returns `true` and marks it unrented if the copy is rented, and returns `false` otherwise. The call `search(movie)` returns up to 3 shops with an unrented copy, ordered by price and then shop. The call `rentedCount()` returns the number of rented copies.
 
 **Constraints.** The limits are:
 - **Entries** number at most `10^5`, with one copy per pair of shop and movie.
