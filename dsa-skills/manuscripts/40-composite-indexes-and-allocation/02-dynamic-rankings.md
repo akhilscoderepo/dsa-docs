@@ -223,7 +223,7 @@ A tree map keyed by score alone looks like a ranking, but it is a false friend, 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This chapter defines the contract below, and it may differ in detail from the LeetCode statement. Design a class `TaskManager` built from tasks `{userId, taskId, priority}`. The call `add(userId, taskId, priority)` adds a task with a new `taskId`. The call `edit(taskId, newPriority)` changes the priority of an existing task. The call `rmv(taskId)` deletes a task. The call `execTop()` removes the task with the highest priority, breaking ties by the larger `taskId`, and returns its `userId`, or -1 when no task exists.
+**Problem.** The contract below belongs to this chapter and can differ from the LeetCode text in detail. Design a class `TaskManager` built from tasks `{userId, taskId, priority}`. The call `add(userId, taskId, priority)` adds a task with a new `taskId`. The call `edit(taskId, newPriority)` changes the priority of an existing task. The call `rmv(taskId)` deletes a task. The call `execTop()` removes the task with the highest priority, breaking ties by the larger `taskId`, and returns its `userId`, or -1 when no task exists.
 
 **Constraints.** The limits are:
 - **Tasks** number at most `10^5` at any time, and each `taskId` is unique among live tasks.
