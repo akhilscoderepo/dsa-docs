@@ -17,7 +17,7 @@ def update(vals,t,p,v):
         nxt=i+low(i)
         st.append({"at":{"node":i-1},"vars":{"delta":d,"tree":ts(t)},"note":f"Entry {i} owns a range that contains position {p}, so it gains {d} and becomes {t[i]}. The next entry is {i} + {low(i)} = {nxt}."})
         i=nxt
-    st.append({"at":{"node":n},"vars":{"delta":d,"tree":ts(t)},"note":f"Entry {i} lies past the last entry {n}, so the walk stops. Only entries on the path changed."})
+    st.append({"at":{"node":n-1},"vars":{"delta":d,"tree":ts(t)},"note":f"Entry {i} lies past the last entry {n}, so the walk stops. Only entries on the path changed."})
     return st
 def prefix(t,end,tag):
     s=0; i=end; st=[]
@@ -34,5 +34,5 @@ tt=build(vals); assert t==tt
 fill(CH,F,block([str(v) for v in vals],["node"],st1),"@@TRACE1@@")
 a,s1=prefix(t,5,"hi"); b,s2=prefix(t,1,"lo")
 assert (a,b)==(20,3) and a-b==sum(vals[1:5])==17
-s2.append({"at":{"node":6},"vars":{"hi":a,"lo":b,"sum":a-b,"tree":ts(t)},"note":f"The range sum is {a} - {b} = {a-b}, which equals 1 + 10 + 1 + 5."})
+s2.append({"at":{"node":4},"vars":{"hi":a,"lo":b,"sum":a-b,"tree":ts(t)},"note":f"The range sum is {a} - {b} = {a-b}, which equals 1 + 10 + 1 + 5."})
 fill(CH,F,block([str(v) for v in vals],["node"],s1+s2),"@@TRACE2@@")
