@@ -183,6 +183,8 @@ public final class RangeModuleSolution {
          * Space: O(1), because nothing is allocated.
          */
         boolean queryRange(long left, long right) {
+            // An empty or reversed range holds no integer, so it is trivially tracked.
+            if (left >= right) return true;
             // Disjoint merged entries leave the floor entry of left as the only candidate.
             Map.Entry<Long, Long> f = ends.floorEntry(left);
             // The range is tracked only when that entry reaches right (end is exclusive).
@@ -201,6 +203,8 @@ public final class RangeModuleSolution {
         if (!t.queryRange(5, 10)) throw new AssertionError("touching ranges merge");
         t.removeRange(8, 9);
         if (t.queryRange(5, 10)) throw new AssertionError("removal breaks the run");
+        // Checks that an empty range is covered even on an empty module.
+        if (!new RangeModule().queryRange(5, 5) || !m.queryRange(7, 7) || !m.queryRange(9, 3)) throw new AssertionError("empty range");
         // Checks coordinates near 10^9, which stay in long arithmetic.
         RangeModule b = new RangeModule();
         b.addRange(1, 1_000_000_000);

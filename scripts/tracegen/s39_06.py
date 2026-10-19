@@ -18,16 +18,16 @@ def run(n, edges, ops):
         else:
             _,a,b,w=o; ch=0
             nd=[[min(d[i][j],d[i][a]+w+d[b][j]) for j in range(n)] for i in range(n)]
-            ch=sum(nd[i][j]<d[i][j] for i in range(n) for j in range(n)); d=nd
+            ch=sum(nd[i][j]<d[i][j] for i in range(n) for j in range(n)); c0=sum(nd[0][j]<d[0][j] for j in range(n)); d=nd
             res.append(ch>0)
-            note=(f"addEdge({a}, {b}, {w}) repairs every pair and lowers {ch} cells." if ch else
-                  f"addEdge({a}, {b}, {w}) offers no cheaper route, so the repair changes no cell.")
+            note=(f"addEdge({a}, {b}, {w}) repairs every pair and lowers {ch} {'pair' if ch==1 else 'pairs'} in the whole table, {c0} of them in row 0." if ch else
+                  f"addEdge({a}, {b}, {w}) offers no cheaper route, so the repair changes no pair.")
             vars_={"row0":row(),"changed":str(ch)}
         st.append({"at":{"a":o[1],"b":o[2]},"vars":vars_,"note":note})
     return st,res
 st,res=run(4,[(0,1,5),(1,2,4),(2,3,1)],[('q',0,3),('a',0,2,6),('q',0,3),('a',0,3,9),('q',0,3)])
 assert res==[10,True,7,False,7]
-fill(CH,F,block([str(i) for i in range(4)],["a","b"],st),"@@TRACE1@@")
+refill(CH,F,block([str(i) for i in range(4)],["a","b"],st),0)
 st,res=run(3,[(0,1,3)],[('q',0,2),('a',1,2,2),('q',0,2),('a',1,2,7),('a',0,2,5),('a',0,2,4),('q',0,2)])
 assert res==[-1,True,5,False,False,True,4]
-fill(CH,F,block([str(i) for i in range(3)],["a","b"],st),"@@TRACE2@@")
+refill(CH,F,block([str(i) for i in range(3)],["a","b"],st),1)

@@ -17,10 +17,13 @@ def walk(node, k):
         node = PAR[node]
     return node
 
+def pl(c, word):
+    return f"{c} {word}" + ("" if c == 1 else "s")
+
 def query(node, k, st):
     start, cur = node, node
     st.append({"at": {"node": cur}, "vars": {"query": f"kth({start},{k})", "bit": "-", "left": k, "result": "start"},
-               "note": f"Query kth({start}, {k}). The binary form of {k} is {k:b}, so the loop reads {bin(k).count('1')} set bits."})
+               "note": f"Query kth({start}, {k}). The binary form of {k} is {k:b}, so the loop reads {pl(bin(k).count('1'), 'set bit')}."})
     j = 0
     while k >> j and cur != -1:
         if k >> j & 1:
@@ -28,7 +31,7 @@ def query(node, k, st):
             rest = k >> (j + 1) << (j + 1)
             where = f"node {nxt}" if nxt != -1 else "outside the tree"
             st.append({"at": {"node": nxt}, "vars": {"query": f"kth({start},{k})", "bit": j, "left": rest, "result": "pending"},
-                       "note": f"Bit {j} is set, so one read of the table row {j} moves the node {2**j} steps up, to {where}."})
+                       "note": f"Bit {j} is set, so one read of the table row {j} moves the query {pl(2**j, 'step')} up, to {where}."})
             cur = nxt
         else:
             pass
@@ -59,6 +62,20 @@ def msf_summary(es):
         if a != b:
             d[a] = b; comps -= 1; tot += w
     return comps, tot
+def bottleneck(es, u, v):
+    d = list(range(n))
+    def f(x):
+        while d[x] != x:
+            d[x] = d[d[x]]; x = d[x]
+        return x
+    if u == v:
+        return 0
+    for a, b, w in sorted(es, key=lambda e: e[2]):
+        d[f(a)] = f(b)
+        if f(u) == f(v):
+            return w
+    return None
+
 def reach(es, p, q, lim):
     d = list(range(n))
     def f(x):
@@ -77,14 +94,19 @@ res = []
 for o in ops:
     if o[0] == 'a':
         _, u, v, w = o
-        before = msf_summary(edges); edges.append((u, v, w)); after = msf_summary(edges)
+        before = msf_summary(edges); bn = bottleneck(edges, u, v); edges.append((u, v, w)); after = msf_summary(edges)
+        dmg = bn is None or w < bn
+        assert dmg == (before != after)
         if stale:
             note = f"addEdge({u},{v},{w}) only stores the edge, because the index is already stale and the next query rebuilds."
-        elif before != after:
+        elif bn is None:
             stale = True
-            note = f"addEdge({u},{v},{w}) joins two trees or beats the heaviest edge on the tree path, so the index becomes stale."
+            note = f"addEdge({u},{v},{w}) joins two different trees of the forest, because no stored path connects {u} and {v}, so the index becomes stale."
+        elif dmg:
+            stale = True
+            note = f"addEdge({u},{v},{w}) is lighter than {bn}, the heaviest forest edge between {u} and {v}, so the index becomes stale."
         else:
-            note = f"addEdge({u},{v},{w}) is not lighter than the tree path between its ends, so the index stays fresh."
+            note = f"addEdge({u},{v},{w}) is not lighter than {bn}, the heaviest forest edge between {u} and {v}, so the index stays fresh."
         st.append({"at": {"p": u, "q": v}, "vars": {"call": f"add({u},{v},{w})", "result": "none", "stale": str(stale).lower(), "rebuilds": rb}, "note": note})
     else:
         _, p, q, lim = o

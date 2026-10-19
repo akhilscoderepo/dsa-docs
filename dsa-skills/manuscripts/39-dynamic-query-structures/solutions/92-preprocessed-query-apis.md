@@ -119,7 +119,7 @@ public final class KthAncestorSolution {
 <!-- id: dq39-value-range-count -->
 
 **Approach.**
-A position list per value answers a single value, but a value range would need one binary search per distinct value inside the range. The structure here keeps the positions together instead. The constructor builds a tree over the index range, and each node stores the values of its index segment in sorted order. A query splits `[left, right]` into O(log n) nodes whose segments lie fully inside the range, and each such node counts values in `[lo, hi]` with two binary searches.
+A position list per value answers a single value, but a value range would need one binary search per distinct value inside the range. The structure here keeps the positions together instead. The constructor builds a merge-sort tree over the index range, and each node stores the values of its index segment in sorted order. A query splits `[left, right]` into O(log n) nodes whose segments lie fully inside the range, and each such node counts values in `[lo, hi]` with two binary searches.
 
 The invariant is that every node holds exactly the values of its segment, sorted, so the count inside a node is the difference of an upper bound and a lower bound. A merge of the two children builds the node in linear time, so each level of the tree costs O(n). The oracle scans the range for each query on random arrays with duplicates and negative values.
 
@@ -486,7 +486,7 @@ public final class GrowingLimitedPathsSolution {
 }
 ```
 
-#### Solution: [Recognize] Edge Cost Decreases With A Fixed Source (LeetCode 2642)
+#### Solution: [Recognize] Fixed Source Costs After Edge Decreases (LeetCode 2642)
 <!-- id: dq39-source-decrease -->
 
 **Approach.**

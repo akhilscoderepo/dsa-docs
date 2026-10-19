@@ -5,7 +5,7 @@
 <!-- stage: context -->
 ### Find The Nearest Score Below A Limit
 
-A game server keeps player scores and must answer one question many times per second. What is the highest stored score that does not exceed 1500? New scores arrive all the time, and old ones leave. The target runtime offers arrays, linked nodes and integers, with no ready-made sorted set.
+A game server keeps player scores and must answer one question many times per second. What is the highest stored score that does not exceed 1500? New scores arrive all the time, and old ones leave. Lesson 02 used a library sorted map. This exercise sets a standalone constraint instead: the runtime offers only arrays, linked nodes and integers, so the sorted structure must be built by hand.
 
 A sorted array answers the question with binary search, but every insertion shifts half of the array. A linked chain inserts in constant time once the position is known. Finding that position means visiting nodes one by one. This lesson asks how to build search that stays fast while both insertions and removals keep happening.
 
@@ -88,12 +88,12 @@ The comparison against the target is strict for insert, erase and exact search, 
 
 #### Search For A Floor
 
-Take the eight keys 3, 7, 12, 18, 25, 31, 40 and 52 at indexes 0 to 7. Index i occupies one level plus the number of trailing zero bits of i + 1. The heights are therefore 1, 2, 1, 3, 1, 2, 1 and 4. Only key 52 reaches level 3.
+Take the eight keys 3, 7, 12, 18, 25, 31, 40 and 52 at indexes 0 to 7. Index i occupies one level plus the number of trailing zero bits of i + 1. This rule is a deterministic stand-in for the coin flips, so every run of the trace repeats exactly. The heights are therefore 1, 2, 1, 3, 1, 2, 1 and 4. Only key 52 reaches level 3.
 
-The first trace answers the floor of 31. At level 3 the next key from the head is 52, which fails, so the search drops. At level 2 the cursor moves to key 18, then key 52 fails and the search drops. At level 1 the cursor moves to key 31, and key 52 fails again. At level 0 the next key is 40, which fails, so the cursor rests on index 5. That is eight comparisons for eight keys, so the saving is small here and grows with n.
+The first trace answers the floor of 31. At level 3 the next key from the head is 52, which fails, so the search drops. At level 2 the cursor moves to key 18, then key 52 fails and the search drops. At level 1 the cursor moves to key 31, and key 52 fails again. At level 0 the next key is 40, which fails, so the cursor rests on index 5. That is six comparisons, against seven for the linear walk over the same chain, so the saving is small here and grows with n.
 
 ```trace
-{"cells":["3","7","12","18","25","31","40","52"],"pointers":["cur","probe"],"steps":[{"at":{"cur":-1,"probe":7},"vars":{"level":3,"cmp":"52 <= 31 false"},"note":"Level 3: key 52 <= 31 fails, so the search drops one level."},{"at":{"cur":-1,"probe":3},"vars":{"level":2,"cmp":"18 <= 31"},"note":"Level 2: key 18 <= 31 holds, so the cursor moves to index 3."},{"at":{"cur":3,"probe":7},"vars":{"level":2,"cmp":"52 <= 31 false"},"note":"Level 2: key 52 <= 31 fails, so the search drops one level."},{"at":{"cur":3,"probe":5},"vars":{"level":1,"cmp":"31 <= 31"},"note":"Level 1: key 31 <= 31 holds, so the cursor moves to index 5."},{"at":{"cur":5,"probe":7},"vars":{"level":1,"cmp":"52 <= 31 false"},"note":"Level 1: key 52 <= 31 fails, so the search drops one level."},{"at":{"cur":5,"probe":6},"vars":{"level":0,"cmp":"40 <= 31 false"},"note":"Level 0: key 40 <= 31 fails, so the search drops one level."},{"at":{"cur":5,"probe":5},"vars":{"level":0,"answer":31},"note":"The cursor rests on index 5, so floor(31) is key 31."}]}
+{"cells":["3","7","12","18","25","31","40","52"],"pointers":["cur","probe"],"steps":[{"at":{"cur":-1,"probe":7},"vars":{"level":3,"cmp":"52 <= 31 false"},"note":"Level 3: key 52 <= 31 fails, so the search drops one level."},{"at":{"cur":-1,"probe":3},"vars":{"level":2,"cmp":"18 <= 31"},"note":"Level 2: key 18 <= 31 holds, so the cursor moves to index 3."},{"at":{"cur":3,"probe":7},"vars":{"level":2,"cmp":"52 <= 31 false"},"note":"Level 2: key 52 <= 31 fails, so the search drops one level."},{"at":{"cur":3,"probe":5},"vars":{"level":1,"cmp":"31 <= 31"},"note":"Level 1: key 31 <= 31 holds, so the cursor moves to index 5."},{"at":{"cur":5,"probe":7},"vars":{"level":1,"cmp":"52 <= 31 false"},"note":"Level 1: key 52 <= 31 fails, so the search drops one level."},{"at":{"cur":5,"probe":6},"vars":{"level":0,"cmp":"40 <= 31 false"},"note":"Level 0: key 40 <= 31 fails, so the search stops here."},{"at":{"cur":5,"probe":5},"vars":{"level":0,"answer":31},"note":"The cursor rests on index 5, so floor(31) is key 31."}]}
 ```
 
 #### Erase A Present Key
@@ -101,7 +101,7 @@ The first trace answers the floor of 31. At level 3 the next key from the head i
 The second trace erases key 18 with a strict comparison, so it stops before any key equal to 18. Level 3 and level 2 leave the cursor at the head. Level 1 moves to key 7. Level 0 moves to key 12. The predecessor on each level is therefore head, head, index 1 and index 2. The level 0 successor of index 2 is key 18, so the node is present. Erase unlinks it on levels 0, 1 and 2, the three levels it occupies.
 
 ```trace
-{"cells":["3","7","12","18","25","31","40","52"],"pointers":["cur","probe"],"steps":[{"at":{"cur":-1,"probe":7},"vars":{"level":3,"cmp":"52 < 18 false"},"note":"Level 3: key 52 < 18 fails, so the search drops one level."},{"at":{"cur":-1,"probe":3},"vars":{"level":2,"cmp":"18 < 18 false"},"note":"Level 2: key 18 < 18 fails, so the search drops one level."},{"at":{"cur":-1,"probe":1},"vars":{"level":1,"cmp":"7 < 18"},"note":"Level 1: key 7 < 18 holds, so the cursor moves to index 1."},{"at":{"cur":1,"probe":3},"vars":{"level":1,"cmp":"18 < 18 false"},"note":"Level 1: key 18 < 18 fails, so the search drops one level."},{"at":{"cur":1,"probe":2},"vars":{"level":0,"cmp":"12 < 18"},"note":"Level 0: key 12 < 18 holds, so the cursor moves to index 2."},{"at":{"cur":2,"probe":3},"vars":{"level":0,"cmp":"18 < 18 false"},"note":"Level 0: key 18 < 18 fails, so the search drops one level."},{"at":{"cur":2,"probe":3},"vars":{"level":0,"unlink":"levels 0,1,2"},"note":"The level 0 successor of index 2 is index 3 with key 18, so erase unlinks index 3 on levels 0, 1 and 2."}]}
+{"cells":["3","7","12","18","25","31","40","52"],"pointers":["cur","probe"],"steps":[{"at":{"cur":-1,"probe":7},"vars":{"level":3,"cmp":"52 < 18 false"},"note":"Level 3: key 52 < 18 fails, so the search drops one level."},{"at":{"cur":-1,"probe":3},"vars":{"level":2,"cmp":"18 < 18 false"},"note":"Level 2: key 18 < 18 fails, so the search drops one level."},{"at":{"cur":-1,"probe":1},"vars":{"level":1,"cmp":"7 < 18"},"note":"Level 1: key 7 < 18 holds, so the cursor moves to index 1."},{"at":{"cur":1,"probe":3},"vars":{"level":1,"cmp":"18 < 18 false"},"note":"Level 1: key 18 < 18 fails, so the search drops one level."},{"at":{"cur":1,"probe":2},"vars":{"level":0,"cmp":"12 < 18"},"note":"Level 0: key 12 < 18 holds, so the cursor moves to index 2."},{"at":{"cur":2,"probe":3},"vars":{"level":0,"cmp":"18 < 18 false"},"note":"Level 0: key 18 < 18 fails, so the search stops here."},{"at":{"cur":2,"probe":3},"vars":{"level":0,"unlink":"levels 0,1,2"},"note":"The level 0 successor of index 2 is index 3 with key 18, so erase unlinks index 3 on levels 0, 1 and 2."}]}
 ```
 
 <!-- stage: code -->
@@ -143,17 +143,37 @@ final class Layers {
         }
         top = Math.max(top, height);
     }
+
+    // Unlinks one node holding key, or returns false when the key is absent.
+    boolean erase(int key) {
+        Node[] update = new Node[MAX];
+        java.util.Arrays.fill(update, head);
+        Node hit = descend(key, update);              // hit is the first node with key >= target
+        if (hit == null || hit.key != key) return false;
+        for (int l = 0; l < hit.next.length; l++) update[l].next[l] = hit.next[l]; // bypass on each level
+        return true;
+    }
+
+    // Largest stored key at most limit, or -1 when none; keys are non-negative here.
+    int floor(int limit) {
+        Node cur = head;
+        for (int l = top - 1; l >= 0; l--)
+            while (cur.next[l] != null && cur.next[l].key <= limit) cur = cur.next[l]; // closed comparison
+        return cur == head ? -1 : cur.key;
+    }
 }
 ```
 
-The array is pre-filled with the head, so levels above the current top need no special case. The height argument comes from a caller-supplied source, which is a seeded random generator in production and a constant in a test. The strict comparison places an equal key before its existing copies, which is a valid and consistent choice.
+The array is pre-filled with the head, so levels above the current top need no special case. The height argument comes from a caller-supplied source, which is a seeded random generator in production and a constant in a test. The strict comparison places an equal key before its existing copies, which is a valid and consistent choice. Erase removes the first copy that the descent reaches.
+
+The expected search cost is O(log n), because each level holds about half the nodes of the level below, so a search crosses about two nodes per level over about log n levels. A run of unlucky coin flips costs O(n) time but still returns a correct answer, because the answer comes from comparing keys.
 
 <!-- stage: applicability -->
 ### Check Order And Reachability
 
 #### Decide When To Use It
 
-Reach for a layered search when the design needs nearest-key queries with frequent updates and no sorted-set class is available. Typical cases are an interview setting without library collections, an embedded runtime, or a store that must expose its own range scan. Real systems use the same idea, for example the sorted sets of an in-memory database.
+Reach for a layered search when the design needs nearest-key queries with frequent updates and no sorted-set class is available, which is the standalone constraint of this lesson. Typical cases are an interview setting without library collections, an embedded runtime, or a store that must expose its own range scan. Real systems use the same idea, for example the sorted sets of an in-memory database.
 
 #### Guard The Invariant
 
@@ -161,7 +181,9 @@ The invariant to guard is that every level stays sorted and every node on a high
 
 #### Avoid Two False Friends
 
-A false friend is the belief that randomness makes results random. The coin flips change only the speed, because the answer comes from comparing keys. A bad run costs O(n) time but still returns the correct answer. A second false friend is a balanced tree: it gives worst-case guarantees, but it costs rotations, and a skip list needs only link splices.
+Binary search over a linked chain looks like the pattern, because jumping to the middle node halves the range. It breaks the precondition of random access. Reaching the middle node costs a walk of n / 2 links, so the search is O(n) again.
+
+A skip list with a fixed promotion rule, such as every second node of a level, also looks like the pattern. The rule needs evenly spaced nodes, and insertions and removals destroy that spacing. After enough updates one level holds long stretches with no shortcut, and searches fall back toward O(n).
 
 Choose a different tool when keys are small integers in a fixed range, since a Fenwick tree then answers count and rank queries without pointers. Also prefer an ordered map from the library when one exists.
 
@@ -232,12 +254,12 @@ Choose a different tool when keys are small integers in a fixed range, since a F
 
 **Changed decision.** Duplicates become a count on one node, so removal must tell apart lowering a count from unlinking a node.
 
-#### [Recognize] Ordered Multiset API (Author exercise)
+#### [Recognize] Nearest Keys In A Multiset (Author exercise)
 <!-- id: dq39-ordered-multiset-api -->
 
 **Prerequisites.** The duplicate key policy exercise above.
 
-**Problem.** Design `OrderedMultiset` with a fixed capacity of distinct keys and a caller-supplied height source. The method `add(x)` adds one copy. The method `removeOne(x)` removes one copy and returns whether it existed. The method `count(x)` returns the multiplicity. The method `lower(x)` returns the largest stored key strictly below `x`, and `floor(x)` returns the largest stored key at most `x`. Both return `-1` when no such key exists. Use arrays and slot indexes instead of node objects. Queries outnumber updates about three to one, calls arrive online, and no library sorted set is available.
+**Problem.** Recognize that `lower(x)` and `floor(x)` are the same descent with limits `x` and `x + 1`, then build `OrderedMultiset` on that single descent. The structure has a fixed capacity of distinct keys and a caller-supplied height source. The method `add(x)` adds one copy. The method `removeOne(x)` removes one copy and returns whether it existed. The method `count(x)` returns the multiplicity. The method `lower(x)` returns the largest stored key strictly below `x`, and `floor(x)` returns the largest stored key at most `x`. Both return `-1` when no such key exists. Store the nodes in parallel arrays addressed by slot index, so the capacity bound is exact. Queries outnumber updates about three to one, calls arrive online, and no library sorted set is available.
 
 **Constraints.** The limits are:
 - **Capacity** is at most `10^5` distinct keys at any time.

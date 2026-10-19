@@ -78,7 +78,7 @@ The crosswalk assigns 10 problems here and reuses Chapters 23, 24, 29, 31, and 3
 - **Build - Author exercise: Layered Linked Search.** Search through promoted levels.
 - **Vary - LC 1206 Design Skiplist.** Add randomized promotion, insertion, and erase.
 - **Boundary - Author exercise: Duplicate Key Policy.** State whether nodes or multiplicities represent duplicates.
-- **Recognize - Author exercise: Ordered Multiset API.** Add counts and predecessor queries.
+- **Recognize - Author exercise: Nearest Keys In A Multiset.** Add counts and predecessor queries.
 
 ### Deferred Transforms
 

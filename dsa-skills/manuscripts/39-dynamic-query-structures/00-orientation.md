@@ -5,7 +5,7 @@ A leaderboard service precomputes prefix sums so that any range total costs one 
 
 ### Prerequisites
 
-You should know prefix sums, Fenwick and segment trees, ordered maps, intervals, binary lifting, union-find and shortest paths. A **mutation** is a call that changes stored state. A **query** is a call that reads an answer from that state. The **update-to-query ratio** is how many mutations the workload makes for each query. Every exercise states that ratio and says whether the calls are known before the first one runs, because both facts decide the design.
+You should know prefix sums, Fenwick and segment trees, ordered maps, intervals, binary lifting, union-find and shortest paths. Four ideas appear without a full teaching pass. The lessons introduce a **modular inverse** (the number that undoes a multiplication modulo a prime), **lazy propagation** (a node stores a pending change for its whole range and applies it to children only when a call needs them) and **skip lists** (sorted linked lists stacked in levels). They expect you to recall **Kruskal's algorithm**, which builds a minimum spanning forest by adding the cheapest edge that joins two components, and the **Boyer-Moore majority vote**, which finds a candidate that may hold more than half the votes. A **mutation** is a call that changes stored state. A **query** is a call that reads an answer from that state. The **update-to-query ratio** is how many mutations the workload makes for each query. Every exercise states that ratio and says whether the calls are known before the first one runs, because both facts decide the design.
 
 ### What Each Lesson Protects
 
@@ -13,7 +13,7 @@ Each lesson names one fact that every public call must leave true.
 
 - **Mutable Range Queries** keeps every tree entry equal to the sum of the range it owns.
 - **Interval Unions** keeps stored ranges disjoint, ordered and written with one endpoint rule.
-- **Ordered Structures** keeps keys sorted and every key reachable from the top level.
+- **Ordered Structures** keeps keys sorted and every higher-level node also present on level 0.
 - **Deferred Transforms** keeps pending operations composed in call order.
 - **Query Planning** keeps a summary that answers every query without rereading the original data.
 - **Dynamic Graph Queries** keeps every returned distance consistent with all accepted edges.

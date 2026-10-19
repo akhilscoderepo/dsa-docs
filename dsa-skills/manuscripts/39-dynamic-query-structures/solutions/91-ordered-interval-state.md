@@ -6,7 +6,7 @@
 
 **Approach.** The class keeps each group of seen values as a closed pair of smallest and largest value, in two parallel arrays sorted by smallest value. The invariant is that groups are disjoint and that the distance from one group's largest value to the next group's smallest value exceeds `gap + 1`, so each group is maximal.
 
-A new value `v` first runs a hand-written predecessor search that returns the last group starting at or before `v`. If that group's largest value reaches `v`, the value lies inside the group, and nothing changes because neither the smallest nor the largest value moves. Otherwise `v` is compared with two neighbours only: the found group on its left and the next group on its right. When both are within `gap + 1`, the value bridges them, and the left group takes over the right group's largest value. When only one is close enough, that group stretches to include `v`. When neither is close, `v` opens a new group. Distances are computed in `long`, so values near `2^31 - 1` and gaps up to `10^9` cannot overflow.
+A new value `v` first runs a hand-written predecessor search that returns the last group starting at or before `v`, which is the group just left of the first start above `v`. If that group's largest value reaches `v`, the value lies inside the group, and nothing changes because neither the smallest nor the largest value moves. Otherwise `v` is compared with two neighbours only: the found group on its left and the next group on its right. When both are within `gap + 1`, the value bridges them, and the left group takes over the right group's largest value. When only one is close enough, that group stretches to include `v`. When neither is close, `v` opens a new group. Distances are computed in `long`, so values near `2^31 - 1` and gaps up to `10^9` cannot overflow.
 
 **Complexity.**
 
@@ -262,7 +262,7 @@ public final class GapModule {
 #### Solution: [Boundary] Counting Covered Integers On A Huge Line (LeetCode 2276)
 <!-- id: dq39-huge-line-coverage -->
 
-**Approach.** The class uses a dynamic segment tree whose root owns the half-open range from 0 up to `limit`. Each node stores how many integers of its range are covered. The invariant is that a node is full exactly when its count equals its range size, that a full node has no children, and that every other node's count is the sum of its two children.
+**Approach.** The class uses a dynamic segment tree whose root owns the half-open range from 0 up to `limit`. Each node stores how many integers of its range are covered. The invariant is that a node is full exactly when its count equals its range size, that an add never descends into a full node, and that every node with children has a count equal to the sum of its two children. A node that becomes full through its children keeps them, and dropped nodes are not reclaimed from any array.
 
 An add converts the closed pair into the half-open range from `left` to `right + 1`, which cannot overflow because `right` is below `limit`. A node that is already full returns immediately. A node inside the new range becomes full and drops both children, and that drop is the multi-interval merge: every smaller covered run below the node is swallowed in constant time, and the count stays exact because the node's own count is set to its size. A node that only overlaps creates its two children on first use, recurses into the halves that the range reaches, and recomputes its count from them. The midpoint is `lo + (hi - lo) / 2`, which stays correct for ranges up to `10^18`. A window count adds the stored count of every node inside the window and, for a full node that only overlaps, the size of the overlap.
 
@@ -295,7 +295,7 @@ public final class HugeLine {
         /**
          * Covers the closed range [left, right]. Time: O(log limit), because every level visits at most two partial nodes.
          * Space: O(log limit) new nodes per call, and fully covered nodes drop their subtrees.
-         * Invariant: a node is full exactly when covered equals its size, and a full node has no children.
+         * Invariant: a node is full exactly when covered equals its size, and a full node is never descended into.
          */
         void add(long left, long right) {
             if (left < 0 || right >= limit || left > right) throw new IllegalArgumentException("range");

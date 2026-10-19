@@ -155,7 +155,15 @@ A plain running total of additions looks like enough, and for addition alone it 
 
 #### Know When It Stops Working
 
-The design needs a prime modulus and a nonzero multiplier, since division is replaced by the inverse. It also needs every operation to hit all entries. An operation that affects only a range of entries cannot live in one global pair. That case needs a tag per segment, which the last exercise develops.
+The design needs a prime modulus and a nonzero multiplier, since division is replaced by the inverse. It also needs every operation to hit all entries. An operation that affects only a range of entries cannot live in one global pair. That case needs a tag per segment, which the next sub-section previews and the last exercise builds.
+
+#### Preview Lazy Propagation For Ranges
+
+A segment tree node owns a segment and stores its sum. **Lazy propagation** adds a pending pair `(mul, add)` to the node. The pair applies to the whole segment, but the node's children have not received it yet. Three rules keep the tree correct.
+
+First, applying `(b, c)` to a node of length `len` sets `sum = b * sum + c * len`, because every one of the `len` entries is scaled by `b` and then gains `c`. Second, the same call composes the pending pair into `(b * mul, b * add + c)`, since the older pair runs first. Third, before a call descends into a node, a push-down hands the node's pair to both children by the first two rules and resets the node to `(1, 0)`.
+
+Take the segment holding values 2 and 3 with sum 5. Applying `(2, 1)` gives `2 * 5 + 1 * 2 = 12`, and the node stores the pair `(2, 1)`. Applying `(3, 2)` next gives `3 * 12 + 2 * 2 = 40` and the pair `(6, 5)`. A push-down to the leaf holding 2 then gives `6 * 2 + 5 * 1 = 17`, which equals `3 * (2 * 2 + 1) + 2`. The last exercise is a full build of this tree and not a small change to the global pair.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -171,7 +179,7 @@ The design needs a prime modulus and a nonzero multiplier, since division is rep
 - **Calls** number at most `10^5` in total, and they arrive online one at a time.
 - **Update/query ratio** is about 2 to 1, with appends and `addAll` calls outnumbering `get` calls.
 - **`v` and `d`** are `long` values with absolute value at most `10^9`.
-- **`i`** satisfies `0 <= i < size()`, otherwise `get` throws `IndexOutOfBoundsException`.
+- **`i`** is any `int`, and `get` returns -1 when `i < 0` or `i >= size()`. A stored value of -1 looks the same, so a caller compares `i` with `size()` first.
 - **Sums** stay below `10^15` in absolute value, so `long` is enough.
 
 **Example 1.** Input the calls `append(5)`, `addAll(3)`, `append(10)`, get(0), get(1), output `8, 10`.
@@ -229,7 +237,7 @@ The design needs a prime modulus and a nonzero multiplier, since division is rep
 #### [Recognize] Affine Lazy Segment Tree (Author exercise)
 <!-- id: dq39-affine-lazy-segment-tree -->
 
-**Prerequisites.** The Zero Multiplier exercise above and a segment tree with range sum queries.
+**Prerequisites.** The Zero Multiplier exercise above, a segment tree with range sum queries and the lazy propagation preview at the end of this lesson. The exercise is a full build, not a small variation.
 
 **Problem.** Maintain an array `a` of `n` integers modulo `M = 1_000_000_007`. The call `apply(l, r, b, c)` replaces `a[i]` by `(b * a[i] + c) mod M` for every `i` with `l <= i < r`. The call `sum(l, r)` returns the sum of `a[i]` for `l <= i < r`, modulo `M`. Both ranges are half-open, so `r` is excluded and an empty range with `l = r` is allowed. State which fact breaks the single global pair of this lesson and which structure replaces it.
 

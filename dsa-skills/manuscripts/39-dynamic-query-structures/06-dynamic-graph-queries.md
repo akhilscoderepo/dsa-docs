@@ -85,16 +85,16 @@ A query returns -1 when `dist[from][to]` is still `INF`. The diagonal `dist[i][i
 <!-- stage: trace -->
 ### Follow Edge Insertions Through Queries
 
-The first trace uses four nodes with edges 0 to 1 at cost 5, 1 to 2 at cost 4 and 2 to 3 at cost 1. The cells are the nodes, and each step shows the distances from node 0 to every node, with `INF` for unreachable nodes. The first query from 0 to 3 reads the table and returns 10. Inserting edge 0 to 2 at cost 6 gives route 0, 2, 3 with cost 6 + 1 = 7, so the repair lowers `dist[0][2]` from 9 to 6 and `dist[0][3]` from 10 to 7. The next query returns 7. Inserting edge 0 to 3 at cost 9 offers a route costlier than 7, so the repair changes no cell.
+The first trace uses four nodes with edges 0 to 1 at cost 5, 1 to 2 at cost 4 and 2 to 3 at cost 1. The cells are the nodes, and each step shows the distances from node 0 to every node, with `INF` for unreachable nodes. The first query from 0 to 3 reads the table and returns 10. Inserting edge 0 to 2 at cost 6 gives route 0, 2, 3 with cost 6 + 1 = 7, so the repair lowers `dist[0][2]` from 9 to 6 and `dist[0][3]` from 10 to 7. Each step reports how many pairs the repair changed in the whole table, and how many of them lie in the displayed row 0. The next query returns 7. Inserting edge 0 to 3 at cost 9 offers a route costlier than 7, so the repair changes no cell.
 
 ```trace
-{"cells":["0","1","2","3"],"pointers":["a","b"],"steps":[{"at":{"a":0,"b":3},"vars":{"row0":"0,5,9,10","result":"10"},"note":"query(0, 3) reads dist[0][3] and returns 10."},{"at":{"a":0,"b":2},"vars":{"row0":"0,5,6,7","changed":"2"},"note":"addEdge(0, 2, 6) repairs every pair and lowers 2 cells."},{"at":{"a":0,"b":3},"vars":{"row0":"0,5,6,7","result":"7"},"note":"query(0, 3) reads dist[0][3] and returns 7."},{"at":{"a":0,"b":3},"vars":{"row0":"0,5,6,7","changed":"0"},"note":"addEdge(0, 3, 9) offers no cheaper route, so the repair changes no cell."},{"at":{"a":0,"b":3},"vars":{"row0":"0,5,6,7","result":"7"},"note":"query(0, 3) reads dist[0][3] and returns 7."}]}
+{"cells":["0","1","2","3"],"pointers":["a","b"],"steps":[{"at":{"a":0,"b":3},"vars":{"row0":"0,5,9,10","result":"10"},"note":"query(0, 3) reads dist[0][3] and returns 10."},{"at":{"a":0,"b":2},"vars":{"row0":"0,5,6,7","changed":"2"},"note":"addEdge(0, 2, 6) repairs every pair and lowers 2 pairs in the whole table, 2 of them in row 0."},{"at":{"a":0,"b":3},"vars":{"row0":"0,5,6,7","result":"7"},"note":"query(0, 3) reads dist[0][3] and returns 7."},{"at":{"a":0,"b":3},"vars":{"row0":"0,5,6,7","changed":"0"},"note":"addEdge(0, 3, 9) offers no cheaper route, so the repair changes no pair."},{"at":{"a":0,"b":3},"vars":{"row0":"0,5,6,7","result":"7"},"note":"query(0, 3) reads dist[0][3] and returns 7."}]}
 ```
 
-The second trace uses three nodes with a single edge 0 to 1 at cost 3. A query from 0 to 2 returns -1 because no path exists. Inserting edge 1 to 2 at cost 2 creates the path with cost 5. A second edge between the same pair at cost 7 is a duplicate that costs more, so nothing changes. An edge 0 to 2 at cost 5 ties the stored value, and the strict comparison leaves it alone. A final edge 0 to 2 at cost 4 improves the pair.
+The second trace uses three nodes and a single edge 0 to 1 at cost 3. A query from 0 to 2 returns -1 because no path exists. Inserting edge 1 to 2 at cost 2 creates the path with cost 5. A second edge between the same pair at cost 7 is a duplicate that costs more, so nothing changes. An edge 0 to 2 at cost 5 ties the stored value, and the strict comparison leaves it alone. A final edge 0 to 2 at cost 4 improves the pair.
 
 ```trace
-{"cells":["0","1","2"],"pointers":["a","b"],"steps":[{"at":{"a":0,"b":2},"vars":{"row0":"0,3,INF","result":"-1"},"note":"query(0, 2) reads dist[0][2] and returns -1."},{"at":{"a":1,"b":2},"vars":{"row0":"0,3,5","changed":"2"},"note":"addEdge(1, 2, 2) repairs every pair and lowers 2 cells."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,5","result":"5"},"note":"query(0, 2) reads dist[0][2] and returns 5."},{"at":{"a":1,"b":2},"vars":{"row0":"0,3,5","changed":"0"},"note":"addEdge(1, 2, 7) offers no cheaper route, so the repair changes no cell."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,5","changed":"0"},"note":"addEdge(0, 2, 5) offers no cheaper route, so the repair changes no cell."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,4","changed":"1"},"note":"addEdge(0, 2, 4) repairs every pair and lowers 1 cells."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,4","result":"4"},"note":"query(0, 2) reads dist[0][2] and returns 4."}]}
+{"cells":["0","1","2"],"pointers":["a","b"],"steps":[{"at":{"a":0,"b":2},"vars":{"row0":"0,3,INF","result":"-1"},"note":"query(0, 2) reads dist[0][2] and returns -1."},{"at":{"a":1,"b":2},"vars":{"row0":"0,3,5","changed":"2"},"note":"addEdge(1, 2, 2) repairs every pair and lowers 2 pairs in the whole table, 1 of them in row 0."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,5","result":"5"},"note":"query(0, 2) reads dist[0][2] and returns 5."},{"at":{"a":1,"b":2},"vars":{"row0":"0,3,5","changed":"0"},"note":"addEdge(1, 2, 7) offers no cheaper route, so the repair changes no pair."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,5","changed":"0"},"note":"addEdge(0, 2, 5) offers no cheaper route, so the repair changes no pair."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,4","changed":"1"},"note":"addEdge(0, 2, 4) repairs every pair and lowers 1 pair in the whole table, 1 of them in row 0."},{"at":{"a":0,"b":2},"vars":{"row0":"0,3,4","result":"4"},"note":"query(0, 2) reads dist[0][2] and returns 4."}]}
 ```
 
 <!-- stage: code -->
@@ -145,7 +145,7 @@ Use repeated search when queries are rare, when the graph is sparse or when the 
 
 #### Watch The False Friend
 
-Re-running Floyd-Warshall after each insert looks safe and is a false friend, because it recomputes what the old table already knows and costs O(V^3) per insert. A second false friend is repair with removals. The repair formula handles only edges that get cheaper or appear, so deleting an edge or raising a cost forces a rebuild. Negative costs also break the single-crossing argument.
+Re-running Floyd-Warshall after each insert looks safe and is a false friend, because it recomputes what the old table already knows and costs O(V^3) per insert. A second false friend is repair with removals. The repair formula handles only edges that get cheaper or appear, so deleting an edge or raising a cost forces a rebuild. Negative cycles also break the single-crossing argument, because a route that crosses the new edge repeatedly keeps getting cheaper.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -207,7 +207,7 @@ Re-running Floyd-Warshall after each insert looks safe and is a false friend, be
 
 **Example 1.** Input `n = 3`, no edges, then `addEdge(0, 1, 3)`, `addEdge(0, 1, 7)`, `addEdge(0, 1, 3)`, output true, false, false.
 
-**Example 2.** Input the same graph, then `addEdge(1, 2, 2)`, `shortestPath(0, 2)`, `addEdge(1, 1, 0)`, `addEdge(0, 2, 4)`, output true, 5, false, true.
+**Example 2.** Continuing from the final state of Example 1, where edge 0 to 1 costs 3, input `addEdge(1, 2, 2)`, `shortestPath(0, 2)`, `addEdge(1, 1, 0)`, `addEdge(0, 2, 4)`, output true, 5, false, true.
 
 **Hint.** If the new edge does not beat the current `dist[a][b]`, can any other pair improve through it?
 
@@ -218,18 +218,18 @@ Re-running Floyd-Warshall after each insert looks safe and is a false friend, be
 
 **Prerequisites.** The three exercises above.
 
-**Problem.** A workload has `n` nodes, `m` initial edges, `U` edge insertions, `Q` queries, and a flag `batched` that is true when every insertion is known before the first query. Compare three strategies by operation count. `DIJKSTRA` costs `Q * (m + U + n) * L`, where `L` is the number of bits in `n`. `FLOYD_REBUILD` costs `n^3 * (batched ? 1 : 1 + U) + Q`. `FLOYD_INCREMENTAL` costs `n^3 + U * n^2 + Q`. Return the name of the cheapest strategy. On a tie, prefer the earlier name in the order listed.
+**Problem.** A shortest-path service has `n` nodes, `U` edge insertions and `Q` queries. A flag `removals` is true when some call removes an edge or raises a cost. A flag `batched` is true when every update precedes the first query. A value `memory` is the number of `long` cells the service may store. Return one strategy name by applying the first matching rule in this order. The table needs `n * n` cells, so `REPEATED_SEARCH` when `n * n > memory`. The table build costs about `n^3` and each repeated search costs about `n^2` on a dense graph, so `REPEATED_SEARCH` also when `Q < n`. Next, `REBUILD_ONCE` when `batched` is true or `U` is 0, since one build then serves every query. Next, `REBUILD_EACH` when `removals` is true, because repair handles only cheaper edges. Otherwise `REPAIR_TABLE`.
 
 **Constraints.** The limits are:
-- **`n`** is an `int` with `1 <= n <= 300`, and `0 <= m <= n * (n - 1)`.
+- **`n`** is an `int` with `1 <= n <= 300`.
 - **`U` and `Q`** are `int` values with `0 <= U, Q <= 10^5`.
-- **Costs** need `long` arithmetic.
-- **Return value** is one of the three names.
+- **`memory`** is a `long` with `0 <= memory <= 10^9`.
+- **Return value** is one of the four names.
 
-**Example 1.** Input `n = 100, m = 300, U = 10, Q = 5, batched = false`, output `DIJKSTRA`.
+**Example 1.** Input `n = 100, U = 10, Q = 5, removals = false, batched = false, memory = 10^6`, output `REPEATED_SEARCH`.
 
-**Example 2.** Input `n = 100, m = 300, U = 1000, Q = 100000, batched = false`, output `FLOYD_INCREMENTAL`.
+**Example 2.** Input `n = 100, U = 1000, Q = 100000, removals = false, batched = false, memory = 10^6`, output `REPAIR_TABLE`.
 
-**Hint.** Which strategy has the cheapest insert, and which has the cheapest query?
+**Hint.** Which fact rules out the table entirely, and which fact makes repair unsafe?
 
-**Changed decision.** The choice is now driven by the counts of calls, so the update-to-query ratio and the batching flag select the strategy.
+**Changed decision.** The choice is now a structure and not a number, so memory, removals, batching and the update-to-query ratio each select a different strategy.

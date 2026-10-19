@@ -21,13 +21,13 @@ def walk(x,strict):
             if ok:
                 st.append({"at":{"cur":cur,"probe":j},"vars":{"level":l,"cmp":f"{KEYS[j]} {op} {x}"},"note":f"Level {l}: key {KEYS[j]} {op} {x} holds, so the cursor moves to index {j}."}); cur=j
             else:
-                st.append({"at":{"cur":cur,"probe":j},"vars":{"level":l,"cmp":f"{KEYS[j]} {op} {x} false"},"note":f"Level {l}: key {KEYS[j]} {op} {x} fails, so the search drops one level."}); break
+                st.append({"at":{"cur":cur,"probe":j},"vars":{"level":l,"cmp":f"{KEYS[j]} {op} {x} false"},"note":f"Level {l}: key {KEYS[j]} {op} {x} fails, so the search drops one level." if l else f"Level 0: key {KEYS[j]} {op} {x} fails, so the search stops here."}); break
         upd[l]=cur
     return cur,st,upd
 cur,st,_=walk(31,False)
 assert cur==5 and KEYS[cur]==31
 st.append({"at":{"cur":cur,"probe":cur},"vars":{"level":0,"answer":KEYS[cur]},"note":"The cursor rests on index 5, so floor(31) is key 31."})
-fill(CH,F,block([str(k) for k in KEYS],["cur","probe"],st),"@@TRACE1@@")
+refill(CH,F,block([str(k) for k in KEYS],["cur","probe"],st),0)
 cur,st,upd=walk(18,True)
 assert upd=={3:-1,2:-1,1:1,0:2}
 target=nxt(cur,0); assert KEYS[target]==18 and LV[target]==3
@@ -35,4 +35,4 @@ st.append({"at":{"cur":cur,"probe":target},"vars":{"level":0,"unlink":"levels 0,
 # simulate the unlink and check the survivors on each level
 keep=[i for i in range(len(KEYS)) if i!=3]
 assert [i for i in keep if LV[i]>1]==[1,5,7] and [i for i in keep if LV[i]>2]==[7]
-fill(CH,F,block([str(k) for k in KEYS],["cur","probe"],st),"@@TRACE2@@")
+refill(CH,F,block([str(k) for k in KEYS],["cur","probe"],st),1)

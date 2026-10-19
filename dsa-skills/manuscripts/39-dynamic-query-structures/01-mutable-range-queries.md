@@ -54,7 +54,7 @@ About ten billion additions. Each of the 100,000 updates rebuilds 100,000 entrie
 
 Count the work per call. A query executes one subtraction, which is O(1). An update executes `n` additions, which is O(n). A workload with `u` updates and `q` queries therefore costs `u * n + q`. When `u` is close to `n`, the total is O(n^2), and the cheap queries no longer matter.
 
-The opposite design makes the same mistake in the other direction. Reading the values directly makes an update O(1) and a query O(n), because each query adds the whole range. Both designs put the full cost on one side. The update and query ratio is an input to the design, so a workload with many calls of both kinds needs a structure where neither call touches the whole array.
+The opposite design makes the same mistake in the other direction. Reading the values directly makes an update O(1) and a query O(n), because each query adds the whole range. Both designs put the full cost on one side. The update-to-query ratio is an input to the design, so a workload with many calls of both kinds needs a structure where neither call touches the whole array.
 
 <!-- stage: insight -->
 ### Share The Cost Between Updates And Queries
@@ -78,6 +78,24 @@ The update walk adds a **delta** to each entry on its path, where delta is the n
 #### Extend The Same Rule To Two Dimensions
 
 A matrix uses one Fenwick walk nested inside another. The outer walk moves over rows and the inner walk moves over columns, and entry `(r, c)` covers a rectangle of cells. An update visits O(log m * log n) entries. A rectangle sum combines four prefix queries by inclusion and exclusion. The invariant stays the same: after every call, each entry equals the exact sum over the cells it owns.
+
+The static prefix array `p` shows the four-term rule that the nested walk keeps under updates. It has one extra row and column of zeros, and `p[r][c]` sums the cells whose row is below `r` and whose column is below `c`.
+
+```java
+// p has (m + 1) rows and (n + 1) columns, row 0 and column 0 stay zero
+static void fill(long[][] p, int[][] a, int m, int n) {
+    for (int r = 1; r <= m; r++)
+        for (int c = 1; c <= n; c++)
+            p[r][c] = a[r - 1][c - 1] + p[r - 1][c] + p[r][c - 1] - p[r - 1][c - 1];
+}
+
+// rectangle rows r1..r2-1, columns c1..c2-1: add, subtract twice, add back
+static long rect(long[][] p, int r1, int c1, int r2, int c2) {
+    return p[r2][c2] - p[r1][c2] - p[r2][c1] + p[r1][c1];
+}
+```
+
+Take the 3 by 3 matrix with rows 1 2 3, 4 5 6 and 7 8 9, and ask for the 2 by 2 block in the lower right corner, so `r1 = 1`, `c1 = 1`, `r2 = 3` and `c2 = 3`. The whole matrix sums to 45, the top row to 6, the left column to 12 and the top-left cell to 1. The block sum is 45 - 6 - 12 + 1 = 28, which equals 5 + 6 + 8 + 9. The subtraction removes the top row and the left column, and the top-left cell was removed twice, so it is added back once.
 
 <!-- stage: variables -->
 ### Fix The Meaning Of Each Index
@@ -149,7 +167,7 @@ The delta is a `long`, so subtracting two `int`-sized values cannot wrap. The tr
 
 #### Match The Structure To The Calls
 
-Reach for this structure when updates and queries interleave and both are frequent. If all updates come before all queries, one prefix array built once is simpler and faster. If calls are known in advance, sorting them offline can also remove the need for a dynamic structure. Each of those choices depends on the update and query ratio, so state it before choosing.
+Reach for this structure when updates and queries interleave and both are frequent. If all updates come before all queries, one prefix array built once is simpler and faster. If calls are known in advance, sorting them offline can also remove the need for a dynamic structure. Each of those choices depends on the update-to-query ratio, so state it before choosing.
 
 #### Check The Operation Has An Inverse
 

@@ -6,7 +6,7 @@
 
 **Approach.** The structure keeps one number, `offset`, that records the sum of every `addAll` argument so far. Each stored raw value is the visible value minus the offset in force when it was appended. A read adds the current offset back to the raw value.
 
-The invariant is that the true value of entry `i` equals `raw[i] + offset` after every call. An `addAll(d)` raises `offset` by `d`, so every existing entry rises by `d` at once. A value appended later subtracts the offset at its arrival, so it does not receive additions that happened before it existed. The harness compares every read with a brute-force list that applies each addition to each entry, and it asserts that a bad index throws.
+The invariant is that the true value of entry `i` equals `raw[i] + offset` after every call. An `addAll(d)` raises `offset` by `d`, so every existing entry rises by `d` at once. A value appended later subtracts the offset at its arrival, so it does not receive additions that happened before it existed. The harness compares every read with a brute-force list that applies each addition to each entry, and it asserts that a bad index returns -1.
 
 **Complexity.**
 
@@ -49,8 +49,8 @@ public final class GlobalAddSequence {
      * Invariant: raw.get(i) + offset is the true value of entry i.
      */
     long get(int i) {
-        // Reject indices outside the sequence, as the contract requires.
-        if (i < 0 || i >= raw.size()) throw new IndexOutOfBoundsException("index " + i);
+        // Return -1 for indices outside the sequence, as the contract requires.
+        if (i < 0 || i >= raw.size()) return -1;
         // Add the offset back to the raw value to recover the visible value.
         return raw.get(i) + offset;
     }
@@ -62,10 +62,8 @@ public final class GlobalAddSequence {
         if (s.get(0) != 8 || s.get(1) != 10) throw new AssertionError("example 1");
         s.addAll(-4);
         if (s.get(0) != 4 || s.get(1) != 6) throw new AssertionError("example 2");
-        // Check that an invalid index throws, since the contract promises an exception.
-        boolean thrown = false;
-        try { s.get(2); } catch (IndexOutOfBoundsException e) { thrown = true; }
-        if (!thrown) throw new AssertionError("index 2 must throw");
+        // Check that an invalid index returns -1, since the contract promises it.
+        if (s.get(2) != -1 || s.get(-1) != -1) throw new AssertionError("bad index must return -1");
         // Compare against a brute-force list on random call sequences.
         Random rnd = new Random(1);
         for (int round = 0; round < 300; round++) {

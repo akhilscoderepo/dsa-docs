@@ -70,7 +70,7 @@ The lookup tool is the **floor entry**, the entry with the greatest start that i
 
 #### Pay For Merges Only Once
 
-Each add creates at most one entry, and the structure deletes each absorbed entry once. The total number of deletions never exceeds the total number of creations. The walk over absorbed entries is therefore amortized O(1) per call. Remove can split one range into two, which creates one extra entry and keeps the same argument valid.
+Each add creates at most one entry, and the structure deletes each absorbed entry once. The total number of deletions never exceeds the total number of creations. The walk over absorbed entries absorbs O(1) entries per call on average, so each call costs amortized O(log n) including its tree lookups. Remove can split one range into two, which creates one extra entry and keeps the same argument valid.
 
 <!-- stage: variables -->
 ### Fields The Structure Keeps
@@ -141,6 +141,7 @@ final class IntervalSet {
     }
 
     boolean covers(long l, long r) {
+        if (l >= r) return true; // an empty range holds no integer, so every integer in it is covered
         Map.Entry<Long, Long> e = ends.floorEntry(l);
         return e != null && e.getValue() >= r;
     }
@@ -162,7 +163,7 @@ final class IntervalSet {
 }
 ```
 
-Add absorbs everything that overlaps or touches `[l, r)`, and remove cuts everything that overlaps it. The helper `drop` keeps `total` in step with the map, and `cut` reinserts the pieces that survive on each side. A query on a non-empty range needs only the floor entry of `l`, because disjoint sorted entries leave no other candidate.
+Add absorbs everything that overlaps or touches `[l, r)`, and remove cuts everything that overlaps it. The helper `drop` keeps `total` in step with the map, and `cut` reinserts the pieces that survive on each side. A query on an empty range returns true before any lookup, because it holds no integer. A query on a non-empty range needs only the floor entry of `l`, because disjoint sorted entries leave no other candidate.
 
 <!-- stage: applicability -->
 ### Check The Endpoint Convention First

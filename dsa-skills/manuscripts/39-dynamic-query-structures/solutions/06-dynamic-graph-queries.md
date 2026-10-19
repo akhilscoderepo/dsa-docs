@@ -431,55 +431,43 @@ public final class DominatedEdges {
 #### Solution: [Recognize] Update-Frequency Tradeoff (Author exercise)
 <!-- id: dq39-update-frequency -->
 
-**Approach.** The three costs are closed formulas, so the choice is an evaluation and a minimum. The Dijkstra cost grows with `Q` and with the final edge count `m + U`, and it adds nothing per insert. The rebuild cost grows with `n^3` per rebuild, and one rebuild suffices when every insertion precedes the first query, which `batched` states. The incremental cost pays `n^3` once and `n^2` per insert, and each query is a table read.
+**Approach.** The task is a chain of tests, each tied to a fact from the lesson. The table needs `n * n` cells, so a memory limit below that rules it out. On a dense graph one search costs about `n^2` and the build costs about `n^3`, so fewer than `n` queries never repay the build. When every update precedes the first query, or no update exists, one build serves all queries. Repair handles only edges that get cheaper or appear, so a removal forces a rebuild after each change. Everything else is the insert-only, online case that the incremental repair serves.
 
-The code uses `long` throughout, because `n^3 * (1 + U)` reaches about `2.7 * 10^12`. The comparison is strict, so a tie keeps the earlier name in the listed order. Because rebuild with `batched` false costs at least as much as incremental, the unbatched rebuild never wins strictly. The harness checks formulas against `BigInteger` arithmetic, checks counted relaxations of real Floyd-Warshall code, and confirms that real answers agree across strategies.
+The first matching rule wins, so the order of the tests is part of the answer. The harness compares the picker with a second implementation that scores each rule in a table. It then backs the two key claims with real code. A repair after a cost increase gives a wrong distance that a rebuild corrects, and an insert-only stream of repairs matches a full rebuild. Counted relaxations confirm `n^3` for the build and `n^2` for one repair.
 
 **Complexity.**
 
-- **Time** is O(1), because the method evaluates three closed formulas.
-- **Space** is O(1), because it stores three `long` values.
+- **Time** is O(1), because the method evaluates at most five comparisons.
+- **Space** is O(1), because it stores no collection.
 
 ```java run
-import java.math.BigInteger;
 import java.util.*;
 
 public final class UpdateFrequency {
     /**
-     * Picks the cheapest strategy by operation count.
+     * Picks a strategy name from the workload facts.
      * Time: O(1). Space: O(1).
-     * Invariant: costs are exact long values, and a tie keeps the earlier strategy name.
+     * Invariant: the first rule that matches decides, in the order memory, query count, batching, removals.
      */
-    static String choose(long n, long m, long u, long q, boolean batched) {
-        // L is the bit length of n, standing in for the log factor of the heap.
-        long bits = 64 - Long.numberOfLeadingZeros(n);
-        // Dijkstra: no insert cost, a full search per query over all m + u edges.
-        long dijkstra = q * (m + u + n) * bits;
-        // Rebuild: one Floyd-Warshall per insert unless every insert is known before the first query.
-        long rebuild = n * n * n * (batched ? 1 : 1 + u) + q;
-        // Incremental: one Floyd-Warshall, then n^2 per insert, then O(1) per query.
-        long incremental = n * n * n + u * n * n + q;
-        // Start from the first name in the tie order.
-        String best = "DIJKSTRA";
-        long bestCost = dijkstra;
-        // A strictly smaller cost replaces it, so ties keep the earlier name.
-        if (rebuild < bestCost) { best = "FLOYD_REBUILD"; bestCost = rebuild; }
-        if (incremental < bestCost) { best = "FLOYD_INCREMENTAL"; }
-        // Return the winner.
-        return best;
+    static String choose(int n, int u, int q, boolean removals, boolean batched, long memory) {
+        // The table needs n * n cells; computing in long avoids overflow for any n.
+        if ((long) n * n > memory) return "REPEATED_SEARCH";
+        // Fewer than n queries never repay the n^3 build against n^2 per search.
+        if (q < n) return "REPEATED_SEARCH";
+        // One build serves all queries when updates come first or never come.
+        if (batched || u == 0) return "REBUILD_ONCE";
+        // Repair handles only cheaper or new edges, so removals need a rebuild per change.
+        if (removals) return "REBUILD_EACH";
+        // Insert-only and online: repair each insert in n^2.
+        return "REPAIR_TABLE";
     }
 
-    /** Oracle: the same formulas in BigInteger, so long overflow cannot hide. */
-    static String oracle(int n, int m, int u, int q, boolean batched) {
-        BigInteger N = BigInteger.valueOf(n), cube = N.pow(3), sq = N.pow(2);
-        BigInteger dij = BigInteger.valueOf(q).multiply(BigInteger.valueOf((long) m + u + n))
-            .multiply(BigInteger.valueOf(Integer.toBinaryString(n).length()));
-        BigInteger reb = cube.multiply(batched ? BigInteger.ONE : BigInteger.valueOf(1L + u)).add(BigInteger.valueOf(q));
-        BigInteger inc = cube.add(sq.multiply(BigInteger.valueOf(u))).add(BigInteger.valueOf(q));
-        String best = "DIJKSTRA"; BigInteger bc = dij;
-        if (reb.compareTo(bc) < 0) { best = "FLOYD_REBUILD"; bc = reb; }
-        if (inc.compareTo(bc) < 0) best = "FLOYD_INCREMENTAL";
-        return best;
+    /** Second implementation: lists the rules as data and scans them in order. */
+    static String oracle(int n, int u, int q, boolean removals, boolean batched, long memory) {
+        String[] name = {"REPEATED_SEARCH", "REPEATED_SEARCH", "REBUILD_ONCE", "REBUILD_EACH", "REPAIR_TABLE"};
+        boolean[] fires = {(long) n * n > memory, q < n, batched || u == 0, removals, true};
+        for (int i = 0; i < fires.length; i++) if (fires[i]) return name[i];
+        throw new AssertionError("unreachable");
     }
 
     static long relaxations; // counts inner-loop executions of the real code below
@@ -503,25 +491,22 @@ public final class UpdateFrequency {
 
     public static void main(String[] args) {
         // Checks Example 1 and Example 2.
-        if (!choose(100, 300, 10, 5, false).equals("DIJKSTRA")) throw new AssertionError("example 1");
-        if (!choose(100, 300, 1000, 100000, false).equals("FLOYD_INCREMENTAL")) throw new AssertionError("example 2");
-        // Checks batching: all inserts first, many queries, so one rebuild ties or beats repairs.
-        if (!choose(50, 100, 500, 100000, true).equals("FLOYD_REBUILD")) throw new AssertionError("batched");
-        // Checks the extreme limits do not overflow long.
-        if (!choose(300, 0, 100000, 100000, false).equals("FLOYD_INCREMENTAL")) throw new AssertionError("limits");
-        // Checks the long formulas against BigInteger on random workloads.
+        if (!choose(100, 10, 5, false, false, 1_000_000).equals("REPEATED_SEARCH")) throw new AssertionError("example 1");
+        if (!choose(100, 1000, 100000, false, false, 1_000_000).equals("REPAIR_TABLE")) throw new AssertionError("example 2");
+        // Checks each remaining name once.
+        if (!choose(100, 1000, 100000, false, true, 1_000_000).equals("REBUILD_ONCE")) throw new AssertionError("batched");
+        if (!choose(100, 1000, 100000, true, false, 1_000_000).equals("REBUILD_EACH")) throw new AssertionError("removals");
+        if (!choose(300, 1000, 100000, false, false, 89_999).equals("REPEATED_SEARCH")) throw new AssertionError("memory");
+        // Checks the boundary: memory exactly n * n allows the table.
+        if (!choose(300, 1000, 100000, false, false, 90_000).equals("REPAIR_TABLE")) throw new AssertionError("memory edge");
+        // Checks the picker against the rule-table oracle on random workloads.
         Random rnd = new Random(5);
         for (int t = 0; t < 20000; t++) {
-            int n = 1 + rnd.nextInt(300);
-            int m = rnd.nextInt(Math.min(n * (n - 1), 100000) + 1);
-            int u = rnd.nextInt(100001), q = rnd.nextInt(100001);
-            boolean batched = rnd.nextBoolean();
-            if (!choose(n, m, u, q, batched).equals(oracle(n, m, u, q, batched))) throw new AssertionError("formula mismatch");
-        }
-        // Checks that unbatched rebuild wins only on a tie, where u = 0 or n = 1 makes both cost the same.
-        for (int t = 0; t < 5000; t++) {
-            int n = 1 + rnd.nextInt(300), u = rnd.nextInt(100001), q = rnd.nextInt(100001);
-            if (n > 1 && u > 0 && choose(n, 0, u, q, false).equals("FLOYD_REBUILD")) throw new AssertionError("rebuild beat incremental");
+            int n = 1 + rnd.nextInt(300), u = rnd.nextInt(3) == 0 ? 0 : rnd.nextInt(100001), q = rnd.nextInt(100001);
+            long memory = rnd.nextInt(3) == 0 ? (long) n * n + rnd.nextInt(3) - 1 : rnd.nextInt(1_000_000_001);
+            boolean removals = rnd.nextBoolean(), batched = rnd.nextBoolean();
+            if (!choose(n, u, q, removals, batched, Math.max(0, memory)).equals(oracle(n, u, q, removals, batched, Math.max(0, memory))))
+                throw new AssertionError("rule mismatch");
         }
         // Checks the counted work: n^3 for the build and n^2 per insert.
         int n = 9;
@@ -534,7 +519,7 @@ public final class UpdateFrequency {
         relaxations = 0;
         repair(n, d, 1, 2, 4);
         if (relaxations != (long) n * n) throw new AssertionError("n^2 repair");
-        // Checks that repair equals a full rebuild on the same edge list, so strategies agree on answers.
+        // Checks that repair equals a full rebuild on an insert-only stream.
         for (int t = 0; t < 200; t++) {
             int k = 2 + rnd.nextInt(6);
             long[][] inc = new long[k][k], all = new long[k][k];
@@ -551,6 +536,20 @@ public final class UpdateFrequency {
                 all = copy;
             }
         }
+        // Checks that repair after a cost increase is wrong: edge 0->1 costs 1, then rises to 5.
+        long[][] g = new long[2][2];
+        for (long[] row : g) Arrays.fill(row, Long.MAX_VALUE / 4);
+        g[0][0] = g[1][1] = 0;
+        repair(2, g, 0, 1, 1);
+        // The repair formula takes a minimum, so a raised cost of 5 cannot raise the stored 1.
+        repair(2, g, 0, 1, 5);
+        if (g[0][1] != 1) throw new AssertionError("stale value expected");
+        long[][] fresh = new long[2][2];
+        for (long[] row : fresh) Arrays.fill(row, Long.MAX_VALUE / 4);
+        fresh[0][0] = fresh[1][1] = 0;
+        fresh[0][1] = 5;
+        floyd(2, fresh);
+        if (fresh[0][1] != 5 || g[0][1] == fresh[0][1]) throw new AssertionError("rebuild must differ");
     }
 }
 ```

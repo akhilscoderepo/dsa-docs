@@ -7,3 +7,11 @@ def fill(ch, name, trace, ph="@@TRACE@@"):
     t = p.read_text()
     assert ph in t, "no placeholder " + ph
     p.write_text(t.replace(ph, trace, 1))
+def refill(ch, name, trace, idx):
+    # replace the idx-th (0-based) already filled trace block with a regenerated one
+    import re
+    p = ROOT / ch / name
+    t = p.read_text()
+    spans = [m.span() for m in re.finditer(r"```trace\n.*?\n```", t, re.S)]
+    a, b = spans[idx]
+    p.write_text(t[:a] + trace + t[b:])

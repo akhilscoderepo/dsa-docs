@@ -472,7 +472,7 @@ public final class CountedSkiplist {
 }
 ```
 
-#### Solution: [Recognize] Ordered Multiset API (Author exercise)
+#### Solution: [Recognize] Nearest Keys In A Multiset (Author exercise)
 <!-- id: dq39-ordered-multiset-api -->
 
 **Approach.**

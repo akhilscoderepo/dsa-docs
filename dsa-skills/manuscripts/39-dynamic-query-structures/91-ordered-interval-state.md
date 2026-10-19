@@ -7,18 +7,28 @@
 
 A backup client uploads a 2 TB file in chunks over eight parallel connections. Chunks arrive out of order, and a few of them fail the checksum and must be thrown away. When the network drops, the client asks the server which byte ranges of the file it still lacks, so that it can resend only those. A developer stores every chunk the server accepted as a pair of offsets in a list. To answer the question, the code sorts the whole list and sweeps it from left to right.
 
-With 100 chunks the answer is instant. With a 64 KB chunk size the file has 31 million chunks, and the status page asks the same question every few seconds while uploads continue. Each answer sorts millions of pairs again, although only a handful of byte ranges are really missing. The status request takes longer than the interval between two requests, and the server spends its time answering questions about work it already did.
+With 100 chunks the answer is instant. With a 64 KB chunk size the file has about 33.5 million chunks, and the status page asks the same question every few seconds while uploads continue. Each answer sorts millions of pairs again, although only a handful of byte ranges are really missing. The status request takes longer than the interval between two requests, and the server spends its time answering questions about work it already did.
 
 The list grows with the number of chunks ever received, and the answer depends only on the few ranges that remain. This lesson asks what the server should store so that adding a chunk, discarding a corrupt chunk and reporting the received bytes each cost far less than a pass over all chunks. It also asks what changes when the offsets are so large that no array can index them.
 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
 
+#### Rules For Stored Runs
+
 The lesson Interval Unions supplied the canonical shape of the stored state. Ranges are half-open, stored in sorted order, disjoint, and never touching, so one run of covered integers has exactly one entry. It also supplied the floor lookup that finds the one stored range which can contain or touch a new range, and the rule that an add merges on equality while a removal does not.
 
-The lesson Ordered Structures supplied the idea that a sorted sequence needs a search routine written down, and not only a library class. A search that stops on the last key at or below a limit serves insertion, removal and lookup alike. That lesson also showed what a layered skip list costs, which lets this lesson compare a sorted array with a skip list honestly.
+#### A Descent That Records Predecessors
 
-The lesson Mutable Range Queries supplied the segment tree, where each node summarizes a range it owns and a change updates only the nodes along one root-to-leaf path. This lesson reuses that idea for coordinates up to 10^18. The new work is the choice between the two states. A sorted run array stays small while the covered set has few runs, and it cannot answer a count over a sub-range without walking runs. A tree that creates nodes only where calls touch answers both questions in logarithmic time, and it pays for that with memory per call.
+The lesson Ordered Structures supplied a descent that records the predecessor, which is the last stored key before a limit. One such search serves insertion, removal and lookup alike, and the comparison is strict for insert and erase. That lesson also showed what a layered skip list costs, which lets this lesson compare a sorted array with a skip list honestly.
+
+#### Ranges That Nodes Own
+
+The lesson Mutable Range Queries supplied the Fenwick tree, where each entry owns a range of positions and an update touches only the entries whose owned range contains the changed position. This lesson reuses the owned-range idea for coordinates up to 10^18. It adds a segment tree, in which each node owns a range that splits at its midpoint, and a change updates the nodes along root-to-leaf paths.
+
+#### The Choice This Lesson Adds
+
+The new work is the choice between two states. A sorted run array stays small while the covered set has few runs, and it cannot answer a count over a sub-range without walking runs. A tree that creates nodes only where calls touch answers both questions in logarithmic time, and it pays for that with memory per call.
 
 <!-- stage: naive -->
 ### Keeping Every Chunk In A List
@@ -48,9 +58,9 @@ final class NaiveCoverage {
 With `add(0, 10)`, `add(20, 30)` and `add(5, 25)`, the call `received()` returns 30, because the three chunks merge into one range from 0 to 30. The class is correct on every small test, and it has no way to discard a corrupt chunk without finding the right entries in the list and splitting them.
 
 ```predict
-A file has 31 million chunks and the status page calls received() once per second while chunks keep arriving. About how many comparisons does one call spend on sorting, and how many distinct byte ranges does the answer actually depend on if 99 percent of the file has arrived in order?
+A file has 33.5 million chunks and the status page calls received() once per second while chunks keep arriving. About how many comparisons does one call spend on sorting, and how many distinct byte ranges does the answer actually depend on if 99 percent of the file has arrived in order?
 
-One sort of 31 million pairs needs about 31 million times 25, which is nearly 800 million comparisons per call. If the chunks arrived mostly in order, the merged state is a few long runs, perhaps a few dozen. The answer therefore depends on tens of ranges, while the work depends on millions of entries. Memory also grows with every chunk, because the list keeps ranges that a merge would have absorbed long ago.
+One sort of 33.5 million pairs needs about 33.5 million times 25, which is roughly 840 million comparisons per call. If the chunks arrived mostly in order, the merged state is a few long runs, perhaps a few dozen. The answer therefore depends on tens of ranges, while the work depends on millions of entries. Memory also grows with every chunk, because the list keeps ranges that a merge would have absorbed long ago.
 ```
 
 <!-- stage: bottleneck -->
@@ -58,7 +68,7 @@ One sort of 31 million pairs needs about 31 million times 25, which is nearly 80
 
 Let `n` be the number of calls so far and `k` the number of maximal runs of received bytes. One call to `received` costs O(n log n) time, and the list costs O(n) memory. The useful state has only `k` entries. In a healthy upload, `k` stays small while `n` reaches millions.
 
-The repeated work has a clear shape. Each call re-derives the same merged runs from the same chunks, and every new chunk changes at most a few runs. A stored list of merged runs would avoid this, but a plain list does not search. To add a range, the code must still scan from the front to find the runs that touch it, which costs O(k) per call. For a fragmented state with 10^5 runs, that scan is still too slow for a call that happens thousands of times per second.
+The repeated work has a clear shape. Each call re-derives the same merged runs from the same chunks, and every new chunk changes at most a few runs. A stored list of merged runs would avoid this, but a plain list does not search. To add a range, the code must still scan from the front to find the runs that touch it, which costs O(k) per call. For a fragmented state with 10^5 runs, that scan compares up to 10^5 entries one by one, where a binary search needs about 17 probes. A scan of that size is too slow for a call that happens thousands of times per second.
 
 A second weakness appears when positions are huge. A sorted run list stays small while the number of runs is small, but a question such as "how many bytes in offsets 10^17 through 10^17 + 10^9 are received?" must visit every run in that window. A good design needs three things. Neighbours of a range must be found in O(log k). Updates must adjust a stored total without a rescan. A choice must exist for the workloads where counting over a sub-range matters more than keeping memory proportional to `k`.
 
@@ -67,9 +77,9 @@ A second weakness appears when positions are huge. A sorted run list stays small
 
 #### Find Neighbours With An Explicit Search
 
-Store the merged runs in two sorted arrays, one for starts and one for ends. Both arrays increase together, because runs are disjoint and do not touch. The routine **predecessor search** is a binary search over the starts that returns the position of the last run whose start is at most a given offset. A new range needs only that run and its right neighbours, so one search replaces the scan from the front.
+Store the merged runs in two sorted arrays, one for starts and one for ends. Both arrays increase together, because runs are disjoint and do not touch. The routine **predecessor search** is a binary search over the starts that returns the first index whose start is above a given offset. The runs just left of that index are the predecessors, and the caller walks left from it over the runs that reach the new range. The code names this search `firstStartAbove`. One search and a short walk replace the scan from the front.
 
-An explicit search is worth writing when no ordered map fits. A sorted array answers the search in O(log k) with no per-entry object, and an insertion shifts the tail with one `System.arraycopy`. That shift costs O(k) per update, but it is a straight memory copy, and it stays fast for tens of thousands of runs. A skip list from the lesson Ordered Structures removes the shift at the price of pointers and random levels, and a `TreeMap` hides the same search behind a library class. All three give the same answers, and the choice is a cost question.
+An explicit search is worth writing when no ordered map fits. A sorted array answers the search in O(log k) with no per-entry object, and an insertion shifts the tail with one `System.arraycopy`. That shift costs O(k) per update, but it is a straight memory copy with no comparison. At 10^4 runs one shift moves at most 160 KB across the two arrays. At 10^5 runs it moves 1.6 MB, and a few thousand updates per second then move gigabytes per second. The lesson accepts the shift only because `k` stays near tens of thousands. A skip list from the lesson Ordered Structures removes the shift at the price of pointers and random levels, and a `TreeMap` hides the same search behind a library class. All three give the same answers, and the choice is a cost question.
 
 #### Keep The Covered Length Beside The Runs
 
@@ -81,11 +91,11 @@ The **covered length** is the number of integers inside the stored runs, kept in
 
 The run arrays cannot count the integers inside a sub-range faster than they can visit the runs there. A **dynamic segment tree** answers that count in O(log D) for a coordinate domain of size D. The root owns the whole domain. A node creates its two children only when a call needs to descend below it, so memory follows the touched paths and not the domain size. A node stores how many integers it covers, and a node is full when that number equals the size of its range.
 
-A full node needs no children. When an add covers a node completely, the node becomes full and drops its subtree, and that drop is the merge of every smaller run that the add swallowed. The invariant says that a node is full exactly when its count equals its range size, that a full node has no children, and that every other node's count is the sum of its two children.
+A full node needs no children. When an add covers a node completely, the node becomes full and drops its subtree, and that drop is the merge of every smaller run that the add swallowed. A node can also become full through its children, for instance after `add(0, 8)` and then `add(8, 16)`, and it then keeps them. The invariant says that a node is full exactly when its count equals its range size, that a call never descends into a full node, and that every node with children has a count equal to the sum of its two children. Dropped nodes leave their array slots behind, because the arrays never reclaim slots.
 
 #### Choose The State From The Workload
 
-Three facts decide the state. The domain size says whether any array over coordinates is possible. The operation set says whether a count over a sub-range is needed. The expected number of runs says whether a sorted array stays small. The sorted run state keeps memory proportional to the runs and answers the total in O(1). The tree answers every count in O(log D) and uses up to O(log D) nodes per call.
+Three facts decide the state. The domain size says whether any array over coordinates is possible. The operation set says whether a count over a sub-range is needed. The expected number of runs says whether a sorted array stays small. The sorted run state keeps memory proportional to the runs and answers the total in O(1). The tree answers every count in O(log D) and uses up to O(log D) nodes per call. When the domain is at most 64 integers, neither is needed: a single `long` used as a bitmask holds one bit per integer. An add sets a window of bits, a removal clears it, and `Long.bitCount` counts the covered bits in O(1).
 
 <!-- stage: variables -->
 ### Fields Of The Two States
@@ -106,10 +116,10 @@ The invariant for the run arrays is that after every call the runs are sorted, d
 
 #### Sorted Runs With Explicit Search
 
-Each call first runs the predecessor search to find the index of the first run that starts after the right edge of the range. It then walks left over the runs that reach the range. The first three adds build one run: the third add touches the runs on both sides of its range, so the two stored runs and the new range fuse into the single run from 2 up to but excluding 12. The removal from 4 to 10 cuts that run into two pieces, and the covered length falls from 10 to 4. The add at 14 creates a separate run. The last removal clears a stretch that spans a whole run and part of two others, and only the pieces outside it remain.
+Each call first runs the predecessor search to find the index of the first run that starts above the right edge of the range. It then walks left from that index over the runs that reach the range. The first three adds build one run: the third add touches the runs on both sides of its range, so the two stored runs and the new range fuse into the single run from 2 up to but excluding 12. The removal from 4 to 10 cuts that run into two pieces, and the covered length falls from 10 to 4. The add at 14 creates a separate run. The last removal clears a stretch that spans a whole run and part of two others, and only the pieces outside it remain.
 
 ```trace
-{"cells":["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"pointers":["l","r"],"steps":[{"at":{"l":2,"r":6},"vars":{"call":"add(2,6)","runs":"[2,6)","covered":4},"note":"add [2,6). The search returns index 0, and no run on its left reaches 2, so no stored run is touched. The new range becomes its own run."},{"at":{"l":9,"r":12},"vars":{"call":"add(9,12)","runs":"[2,6) [9,12)","covered":7},"note":"add [9,12). The search returns index 1, and no run on its left reaches 9, so no stored run is touched. The new range becomes its own run."},{"at":{"l":6,"r":9},"vars":{"call":"add(6,9)","runs":"[2,12)","covered":10},"note":"add [6,9). The search returns index 2, and the walk to the left stops at index 0. The 2 run(s) [2,6) [9,12) touch or overlap the range, so they fuse with it into [2,12)."},{"at":{"l":4,"r":10},"vars":{"call":"remove(4,10)","runs":"[2,4) [10,12)","covered":4},"note":"remove [4,10). The search returns index 1, and the walk to the left stops at index 0. The run(s) [2,12) overlap the cut, so the array keeps [2,4) [10,12)."},{"at":{"l":14,"r":16},"vars":{"call":"add(14,16)","runs":"[2,4) [10,12) [14,16)","covered":6},"note":"add [14,16). The search returns index 2, and no run on its left reaches 14, so no stored run is touched. The new range becomes its own run."},{"at":{"l":3,"r":15},"vars":{"call":"remove(3,15)","runs":"[2,3) [15,16)","covered":2},"note":"remove [3,15). The search returns index 3, and the walk to the left stops at index 0. The run(s) [2,4) [10,12) [14,16) overlap the cut, so the array keeps [2,3) [15,16)."}]}
+{"cells":["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"pointers":["l","r"],"steps":[{"at":{"l":2,"r":6},"vars":{"call":"add(2,6)","runs":"[2,6)","covered":4},"note":"add [2,6). The search returns index 0, and no run on its left reaches 2, so no stored run is touched. The new range becomes its own run."},{"at":{"l":9,"r":12},"vars":{"call":"add(9,12)","runs":"[2,6) [9,12)","covered":7},"note":"add [9,12). The search returns index 1, and no run on its left reaches 9, so no stored run is touched. The new range becomes its own run."},{"at":{"l":6,"r":9},"vars":{"call":"add(6,9)","runs":"[2,12)","covered":10},"note":"add [6,9). The search returns index 2, and the walk to the left stops at index 0. The 2 runs [2,6) [9,12) touch or overlap the range, so they fuse with it into [2,12)."},{"at":{"l":4,"r":10},"vars":{"call":"remove(4,10)","runs":"[2,4) [10,12)","covered":4},"note":"remove [4,10). The search returns index 1, and the walk to the left stops at index 0. The run [2,12) overlaps the cut, so the array keeps [2,4) [10,12)."},{"at":{"l":14,"r":16},"vars":{"call":"add(14,16)","runs":"[2,4) [10,12) [14,16)","covered":6},"note":"add [14,16). The search returns index 2, and no run on its left reaches 14, so no stored run is touched. The new range becomes its own run."},{"at":{"l":3,"r":15},"vars":{"call":"remove(3,15)","runs":"[2,3) [15,16)","covered":2},"note":"remove [3,15). The search returns index 3, and the walk to the left stops at index 0. The 3 runs [2,4) [10,12) [14,16) overlap the cut, so the array keeps [2,3) [15,16)."}]}
 ```
 
 #### Tree Nodes Appear And Disappear
@@ -117,7 +127,7 @@ Each call first runs the predecessor search to find the index of the first run t
 The domain is the sixteen integers 0 to 15. The first add creates nodes only on the paths to the touched leaves, and the add from 4 to 8 fills the node that owns exactly those integers. The add from 2 to 6 fills the node that owns 2 and 3, discards its two leaf children, and stops at the node for 4 to 8 because that node is already full. The add from 8 to 12 fills one more node. The final add covers the root completely, so the root becomes full and every other node disappears. The covered count reads 16 from the root alone, and the tree is back to one node.
 
 ```trace
-{"cells":["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"pointers":["l","r"],"steps":[{"at":{"l":1,"r":3},"vars":{"call":"add(1,3)","covered":2,"nodes":11},"note":"add [1,3). [1,2) lies inside the range, so it becomes full. [2,3) lies inside the range, so it becomes full. The tree now holds 11 node(s) and the covered count is 2."},{"at":{"l":4,"r":8},"vars":{"call":"add(4,8)","covered":6,"nodes":11},"note":"add [4,8). [4,8) lies inside the range, so it becomes full. The tree now holds 11 node(s) and the covered count is 6."},{"at":{"l":2,"r":6},"vars":{"call":"add(2,6)","covered":7,"nodes":9},"note":"add [2,6). [2,4) lies inside the range, so it becomes full and drops 2 node(s) below it. [4,8) is already full, so the call stops there. The tree now holds 9 node(s) and the covered count is 7."},{"at":{"l":8,"r":12},"vars":{"call":"add(8,12)","covered":11,"nodes":11},"note":"add [8,12). [8,12) lies inside the range, so it becomes full. The tree now holds 11 node(s) and the covered count is 11."},{"at":{"l":0,"r":16},"vars":{"call":"add(0,16)","covered":16,"nodes":1},"note":"add [0,16). [0,16) lies inside the range, so it becomes full and drops 10 node(s) below it. The tree now holds 1 node(s) and the covered count is 16."}]}
+{"cells":["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],"pointers":["l","r"],"steps":[{"at":{"l":1,"r":3},"vars":{"call":"add(1,3)","covered":2,"nodes":11},"note":"add [1,3). [1,2) lies inside the range, so it becomes full. [2,3) lies inside the range, so it becomes full. The tree now holds 11 nodes and the covered count is 2."},{"at":{"l":4,"r":8},"vars":{"call":"add(4,8)","covered":6,"nodes":11},"note":"add [4,8). [4,8) lies inside the range, so it becomes full. The tree now holds 11 nodes and the covered count is 6."},{"at":{"l":2,"r":6},"vars":{"call":"add(2,6)","covered":7,"nodes":9},"note":"add [2,6). [2,4) lies inside the range, so it becomes full and drops 2 nodes below it. [4,8) is already full, so the call stops there. The tree now holds 9 nodes and the covered count is 7."},{"at":{"l":8,"r":12},"vars":{"call":"add(8,12)","covered":11,"nodes":11},"note":"add [8,12). [8,12) lies inside the range, so it becomes full. The tree now holds 11 nodes and the covered count is 11."},{"at":{"l":0,"r":16},"vars":{"call":"add(0,16)","covered":16,"nodes":1},"note":"add [0,16). [0,16) lies inside the range, so it becomes full and drops 10 nodes below it. The tree now holds 1 node and the covered count is 16."}]}
 ```
 
 <!-- stage: code -->
@@ -134,7 +144,7 @@ final class RunStore {
     private int size;
     private long covered;
 
-    // Returns the first index whose start is greater than x, or size when none is.
+    // Predecessor search: returns the first index whose start is greater than x, or size when none is.
     private int firstStartAbove(long x) {
         int lo = 0, hi = size;
         while (lo < hi) {
@@ -158,6 +168,7 @@ final class RunStore {
     }
 
     void add(long l, long r) {
+        if (l >= r) return;                        // an empty range changes nothing
         int j = firstStartAbove(r);                // runs before j start at or before r
         int i = j;
         while (i > 0 && ends[i - 1] >= l) i--;     // walk left while the run reaches l
@@ -169,6 +180,7 @@ final class RunStore {
     }
 
     void remove(long l, long r) {
+        if (l >= r) return;                        // an empty cut changes nothing
         int j = firstStartAbove(r - 1);            // runs before j start before r
         int i = j;
         while (i > 0 && ends[i - 1] > l) i--;      // walk left while the run reaches past l
@@ -186,9 +198,13 @@ final class RunStore {
 }
 ```
 
+In `add`, the call `firstStartAbove(r)` gives `j`, so every run before `j` starts at or before `r` and every run from `j` on starts too far right to touch. The loop then lowers `i` while `ends[i - 1] >= l`. A run touches or overlaps the new range exactly when its end reaches `l`, so the test uses `>=` and the equal case fuses touching runs. The block `i` through `j - 1` is empty when `i == j`, and the code reads `starts[i]` and `ends[j - 1]` only when `i < j`. The fused run takes the smaller start and the larger end of the new range and that block.
+
+In `remove`, two tests differ. The search uses `r - 1`, so `j` counts the runs that start below `r`, and a run that starts exactly at `r` stays. The loop uses `ends[i - 1] > l`, because a run that only touches the cut shares no integer with it. Only the first run of the block can leave a left piece, when `starts[i] < l`, and only the last can leave a right piece, when `ends[j - 1] > r`. Both pieces are non-empty by those tests, so the guard at the top is the only place that rejects empty input.
+
 #### The Dynamic Segment Tree
 
-The class `DynamicCover` stores nodes in three parallel arrays and uses index 0 for the root. A child index of 0 means no child, which is safe because the root is never a child. The method `add` ends early on a full node, and it drops the children of a node that the new range covers completely.
+The class `DynamicCover` stores nodes in three parallel arrays and uses index 0 for the root. A child index of 0 means no child, which is safe because the root is never a child. The method `add` ends early on a full node, and it drops the children of a node that the new range covers completely. The methods `remove` and `countIn` are explained after the listing.
 
 ```java
 final class DynamicCover {
@@ -215,7 +231,7 @@ final class DynamicCover {
         if (l <= lo && hi <= r) {                               // the range swallows the node
             count[node] = hi - lo;
             left[node] = 0;
-            right[node] = 0;                                    // children are abandoned, which merges their runs
+            right[node] = 0;                                    // children are abandoned, which merges their runs; their slots are not reclaimed
             return;
         }
         long mid = lo + (hi - lo) / 2;
@@ -225,9 +241,42 @@ final class DynamicCover {
         count[node] = count[left[node]] + count[right[node]];   // recompute from the children
     }
 
+    void remove(long l, long r) { if (l < r) remove(0, 0, limit, l, r); }
+
+    private void remove(int node, long lo, long hi, long l, long r) {
+        if (count[node] == 0) return;                           // nothing covered below
+        if (l <= lo && hi <= r) {                               // the cut swallows the node
+            count[node] = 0;
+            left[node] = 0;
+            right[node] = 0;
+            return;
+        }
+        long mid = lo + (hi - lo) / 2;
+        if (left[node] == 0) {                                  // a full node without children must split before a partial cut
+            int a = create(); int b = create(); left[node] = a; right[node] = b;
+            count[a] = mid - lo; count[b] = hi - mid;           // both halves inherit the full state
+        }
+        if (l < mid) remove(left[node], lo, mid, l, r);
+        if (r > mid) remove(right[node], mid, hi, l, r);
+        count[node] = count[left[node]] + count[right[node]];
+    }
+
+    // Covered integers inside [l, r), found from stored counts without visiting runs.
+    long countIn(long l, long r) { return l < r ? countIn(0, 0, limit, l, r) : 0; }
+
+    private long countIn(int node, long lo, long hi, long l, long r) {
+        if (count[node] == 0 || r <= lo || hi <= l) return 0;   // empty node or disjoint range
+        if (l <= lo && hi <= r) return count[node];             // the query swallows the node
+        if (left[node] == 0) return Math.min(hi, r) - Math.max(lo, l); // a childless non-empty node is full
+        long mid = lo + (hi - lo) / 2;
+        return countIn(left[node], lo, mid, l, r) + countIn(right[node], mid, hi, l, r);
+    }
+
     long covered() { return count[0]; }
 }
 ```
+
+The method `countIn` visits at most two partial nodes per level and reads the stored count of every node inside the range, so it costs O(log D). The method `remove` mirrors `add`, but a full node without children first splits into two full halves, so a partial cut can leave one half covered.
 
 <!-- stage: applicability -->
 ### When Ordered State Fits
@@ -250,7 +299,7 @@ If every range is a single point and the questions are about rank or order stati
 #### [Build] Gap-Tolerant Stream Summary (LeetCode 352)
 <!-- id: dq39-gap-tolerant-stream -->
 
-**Prerequisites.** The sorted run arrays and the predecessor search from this lesson. This exercise changes the contract of LeetCode 352: runs also merge across a small gap of missing values.
+**Prerequisites.** The sorted run arrays and the predecessor search from this lesson, where the last group starting at or before a value sits just left of the returned index. This exercise changes the contract of LeetCode 352: runs also merge across a small gap of missing values.
 
 **Problem.** Design a class `GapSummary` with a constructor that receives an `int` called `gap`. The method `addNum(v)` records the integer `v` as seen, and recording a value twice has no further effect. The method `getIntervals()` groups the seen values in sorted order. Two neighbouring seen values `a < b` belong to the same group exactly when `b - a <= gap + 1`. The method returns one closed pair `[smallest, largest]` per group, sorted by smallest value. The pair covers the missing values inside the group without marking them as seen. Search the stored groups with a hand-written binary search, not with `TreeMap`.
 
@@ -293,7 +342,7 @@ If every range is a single point and the questions are about rank or order stati
 #### [Boundary] Counting Covered Integers On A Huge Line (LeetCode 2276)
 <!-- id: dq39-huge-line-coverage -->
 
-**Prerequisites.** The dynamic segment tree from this lesson. This exercise changes LeetCode 2276: the line is far too large for a map of merged runs to answer sub-range counts, and the class also counts inside a window.
+**Prerequisites.** The dynamic segment tree from this lesson. This exercise changes LeetCode 2276: the line is far too large for a boolean array, a list of merged runs must visit every run in the window to answer a sub-range count, and the class also counts inside a window.
 
 **Problem.** Design a class `CoverageTree` with a constructor that receives a `long` called `limit`, so the valid integers are `0` through `limit - 1`. The method `add(left, right)` marks every integer from `left` to `right` inclusive as covered. The method `count()` returns how many distinct integers are covered. The method `countIn(left, right)` returns how many covered integers lie from `left` to `right` inclusive. Implement the class with a dynamic segment tree whose nodes exist only along touched paths.
 
@@ -317,12 +366,12 @@ If every range is a single point and the questions are about rank or order stati
 
 **Prerequisites.** The three exercises above and the choice rules from this lesson.
 
-**Problem.** Design a class `DynamicCoverage` with a constructor that receives a `long` called `domain` and a `boolean` called `rangeCounts`, where valid integers are `0` through `domain - 1` and `rangeCounts` states whether `coveredIn` will ever be called. The methods `add(l, r)` and `remove(l, r)` cover or uncover the half-open range `[l, r)`, and an empty range changes nothing. The method `total()` returns the covered count, and `coveredIn(l, r)` returns the covered count inside `[l, r)`. The method `backend()` returns the name of the stored state. The name is `"mask"` when `domain <= 64`, otherwise `"runs"` when `rangeCounts` is false, otherwise `"tree"`. Calling `coveredIn` on the `"runs"` state throws `UnsupportedOperationException`.
+**Problem.** Design a class `DynamicCoverage` with a constructor that receives a `long` called `domain` and a `boolean` called `rangeCounts`, where valid integers are `0` through `domain - 1` and `rangeCounts` states whether `coveredIn` will ever be called. The methods `add(l, r)` and `remove(l, r)` cover or uncover the half-open range `[l, r)`, and an empty range changes nothing. The method `total()` returns the covered count, and `coveredIn(l, r)` returns the covered count inside `[l, r)`. The method `backend()` returns the name of the stored state. The name is `"mask"`, the 64-bit bitmask from the lesson, when `domain <= 64`, otherwise `"runs"` when `rangeCounts` is false, otherwise `"tree"`. Calling `coveredIn` on the `"runs"` state throws `UnsupportedOperationException`.
 
 **Constraints.** The limits are:
 - **`domain`** is a `long` with `1 <= domain <= 10^18`.
 - **`l` and `r`** are `long` values with `0 <= l <= r <= domain`, and any other range throws `IllegalArgumentException`.
-- **Calls** number at most `10^5`, and they arrive online, but the caller knows its query set when it builds the object.
+- **Calls** number at most `10^5`, and they arrive online, but the constructor flag `rangeCounts` is fixed when the object is built.
 - **Update/query ratio** is about 3 to 1.
 - **Return values** of `total` and `coveredIn` are `long`.
 
