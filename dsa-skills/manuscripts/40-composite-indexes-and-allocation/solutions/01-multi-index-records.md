@@ -12,7 +12,7 @@ The invariant is that index `i` appears in the set of number `v` exactly when th
 
 **Complexity.**
 
-- **Time** is O(log n) per call, because each call does one hash lookup and at most three tree operations on a set of at most n indexes.
+- **Time** is O(log n) for both calls. One hash lookup and at most three tree operations touch a set of at most n indexes.
 - **Space** is O(n), because each index appears once in the map and once in one set.
 
 ```java run
@@ -98,7 +98,7 @@ The invariant is that every food has exactly one entry in its cuisine set, and t
 
 **Complexity.**
 
-- **Time** is O(log n) per call, because each call does hash lookups and tree operations on a set of at most n entries. The constructor adds O(n log n).
+- **Time** is O(log n) for a change call and for a query. Each runs hash lookups and tree operations on at most n entries. The constructor adds O(n log n).
 - **Space** is O(n), because each food owns one record and one entry.
 
 ```java run
@@ -199,7 +199,7 @@ The invariant is that each counter equals the size of its set. An update that sk
 
 **Complexity.**
 
-- **Time** is O(log n) per call, because each call does hash lookups and at most two tree operations.
+- **Time** per call is O(log n), which comes from two hash lookups and at most two tree operations.
 - **Space** is O(n), because each player appears once in the map and once in one set.
 
 ```java run

@@ -104,7 +104,7 @@ The invariant is that `returned` holds the best `i - 1` entries overall, and its
 
 **Complexity.**
 
-- **Time** is O(log n) per call, because each call does at most three tree operations.
+- **Time** per call is O(log n). Each call performs at most three tree operations.
 - **Space** is O(n), because each entry sits in exactly one of the two sets.
 
 ```java run
@@ -287,7 +287,7 @@ The invariant is that the map and the set hold the same tasks. Execute updates b
 
 **Complexity.**
 
-- **Time** is O(log n) per call, because each call does at most one hash operation and two tree operations.
+- **Time** per call is O(log n). A call costs one hash operation plus two tree operations at most.
 - **Space** is O(n), because each live task owns one map slot and one tree entry.
 
 ```java run

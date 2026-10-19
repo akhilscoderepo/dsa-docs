@@ -86,7 +86,7 @@ The call removes an empty set from indexesOf. A find call then treats a missing 
 
 #### Changing An Index Twice
 
-The first trace uses five calls. The pointer `call` marks the call in progress. Each step shows the two maps after the call finishes, with the index-to-number map first.
+The first trace uses five calls. The pointer `call` points at the call that just ran. Each step shows both maps after that call, with the map from index to number first.
 
 ```trace
 {"cells":["change(2,10)","change(1,10)","change(1,20)","find(10)","find(20)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"numberAt":"2:10","indexesOf":"10:{2}","result":"null"},"note":"Call 0: index 2 is new, so there is no old entry to remove, and number 10 gains index 2."},{"at":{"call":1},"vars":{"numberAt":"1:10,2:10","indexesOf":"10:{1,2}","result":"null"},"note":"Call 1: index 1 is new, so there is no old entry to remove, and number 10 gains index 1."},{"at":{"call":2},"vars":{"numberAt":"1:20,2:10","indexesOf":"10:{2} 20:{1}","result":"null"},"note":"Call 2: index 1 holds 20 now. The old number 10 loses index 1."},{"at":{"call":3},"vars":{"numberAt":"1:20,2:10","indexesOf":"10:{2} 20:{1}","result":"2"},"note":"Call 3: find(10) reads the set for 10 and returns 2."},{"at":{"call":4},"vars":{"numberAt":"1:20,2:10","indexesOf":"10:{2} 20:{1}","result":"1"},"note":"Call 4: find(20) reads the set for 20 and returns 1."}]}
