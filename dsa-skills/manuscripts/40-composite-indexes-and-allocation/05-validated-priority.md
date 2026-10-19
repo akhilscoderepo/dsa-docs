@@ -64,7 +64,7 @@ The map from job id to its current priority is the **authoritative record**. The
 
 #### Telling Candidates Apart
 
-Each call that creates a candidate also stamps it with a **version**, which is a counter value that grows with every call. The record stores the version of the newest candidate for each job. A candidate is current only when its version equals the stored version. Comparing priorities is not enough, because a job can be cancelled and added again with the same priority, and the old candidate would look correct while it is not.
+Each call that creates a candidate also tags it with a **version**, which is a counter value that grows with every call. The record stores the version of the newest candidate for each job. A candidate is current only when its version equals the stored version. Comparing priorities is not enough, because a job can be cancelled and added again with the same priority, and the old candidate would look correct while it is not.
 
 #### Discarding At The Top
 

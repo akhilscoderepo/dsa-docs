@@ -109,14 +109,14 @@ The crosswalk assigns 16 problems here, while LRU, LFU, randomized sets, and ord
 
 ## Released Combination Lessons
 
-### Map Ordered Index
+### Look Up By ID And By Order
 
 - **Build - LC 2349 Design a Number Container System.** Synchronize direct and ordered lookup.
 - **Vary - LC 2353 Design a Food Rating System.** Add mutable scores and ties.
 - **Boundary - LC 1912 Design Movie Rental System.** Move records between availability states.
 - **Recognize - LC 3408 Design Task Manager.** Execute and remove the globally best live record.
 
-### Availability Priority
+### Pick The Best Free Resource
 
 - **Build - LC 1845 Seat Reservation Manager.** Choose the smallest available resource.
 - **Vary - LC 855 Exam Room.** Derive priority from gaps rather than resource IDs.
