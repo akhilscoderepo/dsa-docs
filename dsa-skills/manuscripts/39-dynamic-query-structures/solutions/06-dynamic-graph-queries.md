@@ -490,7 +490,7 @@ public final class UpdateFrequency {
     }
 
     public static void main(String[] args) {
-        // Checks Example 1 and Example 2.
+        // Checks Example 1 and Example 2, including the first example's batched variant and the second example's removals variant.
         if (!choose(100, 10, 5, false, false, 1_000_000).equals("REPEATED_SEARCH")) throw new AssertionError("example 1");
         if (!choose(100, 1000, 100000, false, false, 1_000_000).equals("REPAIR_TABLE")) throw new AssertionError("example 2");
         // Checks each remaining name once.

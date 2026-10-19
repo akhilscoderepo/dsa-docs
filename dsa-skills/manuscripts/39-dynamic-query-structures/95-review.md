@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A prefix sum that ignores a correction, two touching ranges that stay split, and a division by a multiplier of zero all pass small tests. The ten questions below cover all eight lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+A prefix sum that ignores a correction, two touching ranges that stay split, and a division by a multiplier of zero all pass small tests. The eleven questions below cover all eight lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
 
 ### Check Your Recall
 
@@ -35,6 +35,10 @@ A prefix sum that ignores a correction, two touching ranges that stay split, and
 
 ```quiz
 {"id": "rq39-rev-lift", "q": "A binary lifting table is built once. How many table jumps find the 25th ancestor of a node?", "options": ["25 jumps, one per level.", "One jump, because 25 is stored.", "Three jumps, one per set bit of 25.", "Five jumps, one per bit position."], "answer": 2, "explain": "25 is 11001 in binary, so jumps of 16, 8 and 1 levels reach the ancestor after the constructor has paid for the table."}
+```
+
+```quiz
+{"id": "rq39-rev-relax", "q": "A distance matrix is correct. A new directed edge a to b with cost w arrives. Which cell value does incremental relaxation compare with the old dist[i][j]?", "options": ["dist[i][a] + w + dist[b][j]", "dist[i][j] + w", "dist[a][b] + w", "w + dist[a][j]"], "answer": 0, "explain": "A new shortest route uses the new edge once, so it runs from i to a, crosses the edge and then runs from b to j. The repair keeps the smaller of that sum and the old cell."}
 ```
 
 ```quiz

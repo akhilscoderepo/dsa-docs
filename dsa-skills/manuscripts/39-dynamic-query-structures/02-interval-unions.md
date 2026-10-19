@@ -163,7 +163,7 @@ final class IntervalSet {
 }
 ```
 
-Add absorbs everything that overlaps or touches `[l, r)`, and remove cuts everything that overlaps it. The helper `drop` keeps `total` in step with the map, and `cut` reinserts the pieces that survive on each side. A query on an empty range returns true before any lookup, because it holds no integer. A query on a non-empty range needs only the floor entry of `l`, because disjoint sorted entries leave no other candidate.
+Add absorbs everything that overlaps or touches `[l, r)`, and remove cuts everything that overlaps it. The helper `drop` keeps `total` in step with the map, and `cut` reinserts the pieces that survive on each side. A query on an empty range returns true before any lookup, because it holds no integer. A query on a non-empty range needs only the floor entry of `l`, because disjoint sorted entries leave no other candidate. The number of maximal runs of covered integers equals `ends.size()`, because each entry is one run and touching runs are already merged.
 
 <!-- stage: applicability -->
 ### Check The Endpoint Convention First
@@ -246,7 +246,7 @@ Touching ranges merge in a range module, but a booking calendar often must keep 
 
 **Example 2.** Input operations `add [0,4)`, `remove [0,4)`, `add [2,2)`, `remove [1,3)`, output run counts `[1,0,0,0]`.
 
-**Hint.** What should the touching test compare for an add, and what should it compare for a remove? Why do these two tests differ by an equality?
+**Hint.** After each operation, the run count is the number of map entries, `ends.size()`. What should the touching test compare for an add, and what should it compare for a remove? Why do these two tests differ by an equality?
 
 **Changed decision.** Empty ranges and touching ends appear together, so add merges on equality while remove does not, and the empty range exits early.
 

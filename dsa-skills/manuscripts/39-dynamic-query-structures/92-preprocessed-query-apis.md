@@ -7,7 +7,7 @@
 
 An internal directory service stores a company org chart with 100,000 employees. Each employee record holds one pointer to a direct manager. A reporting tool asks questions such as who sits 25 levels above an employee, and it asks them all day, 100,000 times per run. The first version walks the manager pointer once per level. On the test data the chart is shallow, and the answers return instantly. In a company that grew by promoting one chain of managers, the chart is 50,000 levels deep. A single question then walks tens of thousands of pointers, and a full run of 100,000 questions spends about 5 billion pointer reads on a chart that never changed.
 
-Every answer is correct, so no test fails. The cost comes from repeating the same climb for each question. A second problem appears when the data does change. The same service also stores approval links between employees, each with a cost, and another tool asks whether two employees connect through links that all cost less than a limit. New links arrive all day. If the service stores extra data to speed up either question, a promotion or a new link can make that data wrong. This lesson asks what the constructor should store once, and how the number of constructor calls, updates and queries decides whether that stored data pays for itself.
+Every answer is correct, so no test fails. The cost comes from repeating the same climb for each question. A second problem appears when the data does change. The same service also stores approval links between employees, each with a cost, and another tool asks whether two employees connect through links that all cost less than a limit. New links arrive all day. If the service stores extra data to speed up either question, a new link can make that data wrong. A change to a manager pointer would also invalidate the jump data, and this lesson handles it by building the data again. This lesson asks what the constructor should store once, and how the number of constructor calls, updates and queries decides whether that stored data pays for itself.
 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
@@ -65,7 +65,7 @@ Every distance k is a sum of distinct powers of two, which is the binary form of
 
 <!-- names: binary lifting, call mix, stale index -->
 
-The table has a row `j` for each power. Row 0 is the parent array. Row `j` comes from row `j - 1`, because `2^j` levels are two jumps of `2^(j-1)` levels. A node lacking an ancestor that far holds `-1`, and no jump starts from `-1`. Building about `log n` rows of `n` entries costs O(n log n), and each query costs O(log k). With `n = 100000` the table has 17 rows, which is 1.7 million entries, and the run of 100,000 questions reads at most 1.7 million of them.
+The table has a row `j` for each power. Row 0 is the parent array. Row `j` comes from row `j - 1`, because `2^j` levels are two jumps of `2^(j-1)` levels. A node lacking an ancestor that far holds `-1`, and no jump starts from `-1`. Building about `log n` rows of `n` entries costs O(n log n), and each query costs O(log k). With `n = 100000` the table has 17 rows, which is 1.7 million entries. One question reads at most 17 of them, so 100,000 questions read at most 1.7 million entries.
 
 #### The Call Mix Decides
 
@@ -160,11 +160,7 @@ final class LiftTable {
 
 #### The Forest Behind Limit Queries
 
-The class `BottleneckForest` builds the minimum spanning forest with Kruskal's method, roots each tree and fills the same kind of jump table as `LiftTable`. A second table `heavy` stores the heaviest edge on each jump. A query lifts the deeper vertex to the depth of the other, then lifts both until their parents agree, and keeps the largest edge it crosses. It returns `Integer.MAX_VALUE` when the two vertices lie in different trees. The code of both classes follows the next paragraph.
-
-
-
-The class `LazyIndex` wraps a real `BottleneckForest`. It stores every edge, keeps the forest built from them and sets the stale mark only for an update that can lower a bottleneck. The query rebuilds the forest first when the mark is set. In the directory, `addEdge` is a new approval link, `query` is the question about a cost limit, and a rebuild reruns Kruskal's method on all stored links.
+The class `BottleneckForest` builds the minimum spanning forest with Kruskal's method, roots each tree and fills the same kind of jump table as `LiftTable`. A second table `heavy` stores the heaviest edge on each jump. It returns `Integer.MAX_VALUE` when the two vertices lie in different trees.
 
 ```java
 final class BottleneckForest {
@@ -246,8 +242,15 @@ final class BottleneckForest {
         return Math.max(best, Math.max(heavy[0][p], heavy[0][q]));
     }
 }
+```
 
-final class LazyIndex {
+The method `bottleneck` works in three steps. The first loop lifts the deeper vertex to the depth of the other and keeps the largest edge on the jumps. If the two vertices now coincide, one was an ancestor of the other. The second loop lifts both vertices together, from the largest jump to the smallest, and only while their ancestors differ, so they stop just below their common ancestor. The last line crosses the two final edges, or reports `Integer.MAX_VALUE` when the vertices have no common parent.
+
+#### The Lazy Index
+
+The class `LazyIndex` wraps a real `BottleneckForest`. It stores every edge, keeps the forest built from them and sets the stale mark only for an update that can lower a bottleneck. The query rebuilds the forest first when the mark is set. In the directory, `addEdge` is a new approval link, `query` is the question about a cost limit, and a rebuild reruns Kruskal's method on all stored links.
+
+```javafinal class LazyIndex {
     private final int n;
     private final java.util.List<int[]> edges = new java.util.ArrayList<>();
     private BottleneckForest forest;
@@ -285,10 +288,11 @@ final class LazyIndex {
 
 #### Cost
 
-- **Constructor** costs O(n log n) time for the table of `n log n` entries.
-- **Forest build** sorts the `E` edges and fills two tables, so it costs O(E log E + n log n) time.
-- **Query** costs O(log k) time and O(1) extra memory.
-- **Update** costs O(1) when a rebuild is pending, O(log n) for the damage check otherwise, and one full forest build is charged to the next query.
+Let `n` be the number of nodes or vertices and `E` the number of stored edges.
+
+- **LiftTable** costs O(n log n) time and memory to build, and each query costs O(log n) time with O(1) extra memory.
+- **BottleneckForest** costs O(E log E + n log n) time to build, because it sorts the edges and fills two tables, and each bottleneck query costs O(log n) time.
+- **LazyIndex** costs O(1) per update while a rebuild is pending and O(log n) for the damage check otherwise, and one full forest build is charged to the next query.
 
 <!-- stage: applicability -->
 ### When A Maintained Index Pays Off
@@ -299,11 +303,13 @@ Use a maintained index when the data is read far more often than it changes, and
 
 #### False Friends
 
-A rebuild on a timer looks like a repair rule, and it is a false friend. Between two ticks the index is stale, so the answers depend on when the timer last ran. A second false friend is a larger index for a smaller workload. A jump table for a chart of 100,000 employees stores 1.7 million entries, while 1,000 queries on a chart of depth 30 walk at most 30,000 pointers, so the naive loop wins.
+A rebuild on a timer looks like a repair rule, and it is a false friend. Between two ticks the index is stale, so the answers depend on when the timer last ran. A second false friend is a larger index for a smaller workload. A jump table for a chart of 100,000 employees stores 1.7 million entries in memory, while 1,000 queries on a chart of depth 30 walk at most 30,000 pointers, so the naive loop wins.
 
 #### When The Method Does Not Apply
 
-If every update damages the index and queries are rare, the lazy rebuild runs once per query and costs more than a direct search. The design then drops the index. If the updates can be repaired locally, as in the distance array of the last exercise, a repair that touches only the affected entries beats a rebuild, and the object keeps the index without any stale mark.
+If every update damages the index and queries are rare, a query follows nearly every damaging update, so the lazy rebuild runs about once per update and costs more than a direct search. The design then drops the index. If the updates can be repaired locally, as in the distance array of the last exercise, a repair that touches only the affected entries beats a rebuild, and the object keeps the index without any stale mark.
+
+The repair works outward from the changed edge. Suppose the stored distances from the source are 0, 6, 11 and 13 along a chain of directed edges, and the first edge drops its cost from 6 to 1. The distance of node 1 falls to 1, so the code relaxes the outgoing edges of node 1. Node 2 improves from 11 to 6 and node 3 improves from 13 to 8, and each improved node relaxes its own outgoing edges in turn. A node whose distance does not improve stops the spread, so the repair touches only the nodes whose answers changed.
 
 <!-- stage: exercises -->
 ### Exercises
@@ -332,7 +338,7 @@ If every update damages the index and queries are rare, the lazy rebuild runs on
 #### [Vary] Counting Values In A Range (LeetCode 2080)
 <!-- id: dq39-value-range-count -->
 
-**Prerequisites.** The Kth Ancestor exercise above and the sorted position lists of the lesson Query Planning. The structure is a merge-sort tree, a segment tree whose every node keeps the values of its index segment in sorted order. This exercise changes the contract of LeetCode 2080: a query counts every value inside a value range and not one fixed value.
+**Prerequisites.** The Kth Ancestor exercise above and the sorted position lists of the lesson Query Planning. The structure is a merge-sort tree, a segment tree whose every node keeps the values of its index segment in sorted order. This exercise is a variant of LeetCode 2080 and changes its contract: a query counts every value inside a value range and not one fixed value.
 
 **Problem.** Design a class `RangeValueCount`. Its constructor receives an integer array `arr`. The method `count(left, right, lo, hi)` returns the number of indices `i` with `left <= i <= right` and `lo <= arr[i] <= hi`. Both pairs of bounds are inclusive, and `lo > hi` returns 0. The array never changes, so the workload has zero updates and many queries. The queries arrive one at a time and are not known in advance, so sorting them is not available.
 
@@ -353,7 +359,7 @@ If every update damages the index and queries are rare, the lazy rebuild runs on
 #### [Boundary] Limit Queries On A Growing Graph (LeetCode 1724)
 <!-- id: dq39-growing-limited-paths -->
 
-**Prerequisites.** The Vary exercise above, the minimum spanning forest from the lesson Query Planning and the stale mark from this lesson. This exercise changes the contract of LeetCode 1724: edges can be added after construction, and the answers must always reflect every edge added so far.
+**Prerequisites.** The Kth Ancestor exercise above, which supplies the jump table, and the Recognize exercise of the lesson Query Planning, which supplies the minimum spanning forest. The stale mark comes from this lesson. This exercise is a variant of LeetCode 1724 and changes its contract: edges can be added after construction, and the answers must always reflect every edge added so far.
 
 **Problem.** Design a class `GrowingPaths`. Its constructor receives `n` vertices numbered `0` to `n - 1` and an initial list of undirected edges `{u, v, w}`. The method `addEdge(u, v, w)` inserts one edge. The method `query(p, q, limit)` returns `true` when a path from `p` to `q` exists that uses only edges with weight strictly less than `limit`, and `false` otherwise. The method `rebuildCount()` returns how many times the index was rebuilt after the constructor. The index rebuilds exactly once inside a `query` call whenever an `addEdge` since the previous rebuild, made while the index was not stale, either joined two different trees of the minimum spanning forest or was strictly lighter than the heaviest forest edge between its endpoints. An insertion made while the index is already stale only stores the edge. The workload mixes insertions and queries in any order, and calls arrive one at a time.
 
@@ -374,7 +380,7 @@ If every update damages the index and queries are rare, the lazy rebuild runs on
 #### [Recognize] Fixed Source Costs After Edge Decreases (LeetCode 2642)
 <!-- id: dq39-source-decrease -->
 
-**Prerequisites.** The Boundary exercise above and the incremental relaxation from the lesson Dynamic Graph Queries. This exercise keeps the theme of LeetCode 2642 but changes its contract: edges are only lowered and never added, a query asks for the cost from one fixed source, and `lower` reports whether any distance improved. All queries start at one source, and an update only lowers the cost of an existing edge.
+**Prerequisites.** The Boundary exercise above and the incremental relaxation from the lesson Dynamic Graph Queries. This exercise is a variant of LeetCode 2642 and changes its contract: edges are only lowered and never added, a query asks for the cost from one fixed source, and `lower` reports whether any distance improved. All queries start at one source, and an update only lowers the cost of an existing edge.
 
 **Problem.** Design a class `SourceCosts`. Its constructor receives `n`, a source vertex `source` and a list of directed edges `{from, to, cost}` with no parallel edges and no self-loops. The method `lower(a, b, newCost)` lowers the cost of the existing edge from `a` to `b` to `newCost` when `newCost` is smaller than its current cost, and returns `true` exactly when at least one shortest distance from the source gets smaller. The method `cost(target)` returns the minimum total cost of a directed path from the source to `target`, or `-1` when none exists. The workload has many decreases and many queries in unknown order. Choose between an all-pairs table, a fresh search per query and one maintained distance array, and justify the choice by the update and query counts.
 

@@ -79,23 +79,31 @@ The update walk adds a **delta** to each entry on its path, where delta is the n
 
 A matrix uses one Fenwick walk nested inside another. The outer walk moves over rows and the inner walk moves over columns, and entry `(r, c)` covers a rectangle of cells. An update visits O(log m * log n) entries. A rectangle sum combines four prefix queries by inclusion and exclusion. The invariant stays the same: after every call, each entry equals the exact sum over the cells it owns.
 
-The static prefix array `p` shows the four-term rule that the nested walk keeps under updates. It has one extra row and column of zeros, and `p[r][c]` sums the cells whose row is below `r` and whose column is below `c`.
+The nested loops below keep `tree` with `m + 1` rows and `n + 1` columns, where row 0 and column 0 stay unused. The update applies the delta to every pair of one row entry and one column entry on the two walks. The prefix query visits the same pairs in the downward direction. The rectangle then combines four prefixes.
 
 ```java
-// p has (m + 1) rows and (n + 1) columns, row 0 and column 0 stay zero
-static void fill(long[][] p, int[][] a, int m, int n) {
-    for (int r = 1; r <= m; r++)
-        for (int c = 1; c <= n; c++)
-            p[r][c] = a[r - 1][c - 1] + p[r - 1][c] + p[r][c - 1] - p[r - 1][c - 1];
+static void set(long[][] tree, long[][] val, int m, int n, int r, int c, long v) {
+    long delta = v - val[r][c];                          // change from the stored cell value
+    val[r][c] = v;
+    for (int i = r + 1; i <= m; i += i & -i)             // outer walk over rows
+        for (int j = c + 1; j <= n; j += j & -j)         // inner walk over columns
+            tree[i][j] += delta;
+}
+
+static long prefix(long[][] tree, int rEnd, int cEnd) {  // sum of rows [0, rEnd) and columns [0, cEnd)
+    long sum = 0;
+    for (int i = rEnd; i > 0; i -= i & -i)
+        for (int j = cEnd; j > 0; j -= j & -j) sum += tree[i][j];
+    return sum;
 }
 
 // rectangle rows r1..r2-1, columns c1..c2-1: add, subtract twice, add back
-static long rect(long[][] p, int r1, int c1, int r2, int c2) {
-    return p[r2][c2] - p[r1][c2] - p[r2][c1] + p[r1][c1];
+static long rect(long[][] tree, int r1, int c1, int r2, int c2) {
+    return prefix(tree, r2, c2) - prefix(tree, r1, c2) - prefix(tree, r2, c1) + prefix(tree, r1, c1);
 }
 ```
 
-Take the 3 by 3 matrix with rows 1 2 3, 4 5 6 and 7 8 9, and ask for the 2 by 2 block in the lower right corner, so `r1 = 1`, `c1 = 1`, `r2 = 3` and `c2 = 3`. The whole matrix sums to 45, the top row to 6, the left column to 12 and the top-left cell to 1. The block sum is 45 - 6 - 12 + 1 = 28, which equals 5 + 6 + 8 + 9. The subtraction removes the top row and the left column, and the top-left cell was removed twice, so it is added back once.
+Take the 3 by 3 matrix with rows 1 2 3, 4 5 6 and 7 8 9, and ask for the 2 by 2 block in the lower right corner, so `r1 = 1`, `c1 = 1`, `r2 = 3` and `c2 = 3`. The whole matrix sums to 45, the top row to 6, the left column to 12 and the top-left cell to 1. The four prefixes give 45, 6, 12 and 1, so the block sum is 45 - 6 - 12 + 1 = 28, which equals 5 + 6 + 8 + 9. The subtraction removes the top row and the left column, and the top-left cell was removed twice, so it is added back once.
 
 <!-- stage: variables -->
 ### Fix The Meaning Of Each Index
@@ -120,7 +128,7 @@ The first trace sets zero-based position 2 from 4 to 10. The delta is 6. The wal
 The second trace queries the half-open range `[1, 5)`. It computes `prefix(5) - prefix(1)`. The prefix at 5 adds entry 5, jumps to entry 4, adds it and jumps to entry 0. The prefix at 1 reads entry 1 only. The results are 20 and 3, so the range sum is 17, which equals `1 + 10 + 1 + 5`. Each walk touches at most three entries in an array of six.
 
 ```trace
-{"cells":["3","1","10","1","5","9"],"pointers":["node"],"steps":[{"at":{"node":2},"vars":{"delta":6,"tree":"3,4,4,9,5,14"},"note":"Set position 2 to 10. The delta is 6, and the walk starts at entry 3."},{"at":{"node":2},"vars":{"delta":6,"tree":"3,4,10,9,5,14"},"note":"Entry 3 owns a range that contains position 2, so it gains 6 and becomes 10. The next entry is 3 + 1 = 4."},{"at":{"node":3},"vars":{"delta":6,"tree":"3,4,10,15,5,14"},"note":"Entry 4 owns a range that contains position 2, so it gains 6 and becomes 15. The next entry is 4 + 4 = 8."},{"at":{"node":5},"vars":{"delta":6,"tree":"3,4,10,15,5,14"},"note":"The next entry would be 4 + 4 = 8, which lies past the last entry 6, so the walk stops. Only entries on the path changed."}]}
+{"cells":["3","1","10","1","5","9"],"pointers":["node"],"steps":[{"at":{"node":2},"vars":{"delta":6,"tree":"3,4,4,9,5,14"},"note":"Set position 2 to 10. The delta is 6, and the walk starts at entry 3."},{"at":{"node":2},"vars":{"delta":6,"tree":"3,4,10,9,5,14"},"note":"Entry 3 owns a range that contains position 2, so it gains 6 and becomes 10. The next entry is 3 + 1 = 4."},{"at":{"node":3},"vars":{"delta":6,"tree":"3,4,10,15,5,14"},"note":"Entry 4 owns a range that contains position 2, so it gains 6 and becomes 15. The next entry is 4 + 4 = 8."},{"at":{"node":3},"vars":{"delta":6,"tree":"3,4,10,15,5,14"},"note":"The next entry is 8, which lies past the last entry 6, so the walk stops after entry 4. Only entries on the path changed."}]}
 ```
 
 ```trace

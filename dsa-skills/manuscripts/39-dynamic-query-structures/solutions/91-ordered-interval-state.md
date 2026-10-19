@@ -6,7 +6,7 @@
 
 **Approach.** The class keeps each group of seen values as a closed pair of smallest and largest value, in two parallel arrays sorted by smallest value. The invariant is that groups are disjoint and that the distance from one group's largest value to the next group's smallest value exceeds `gap + 1`, so each group is maximal.
 
-A new value `v` first runs a hand-written predecessor search that returns the last group starting at or before `v`, which is the group just left of the first start above `v`. If that group's largest value reaches `v`, the value lies inside the group, and nothing changes because neither the smallest nor the largest value moves. Otherwise `v` is compared with two neighbours only: the found group on its left and the next group on its right. When both are within `gap + 1`, the value bridges them, and the left group takes over the right group's largest value. When only one is close enough, that group stretches to include `v`. When neither is close, `v` opens a new group. Distances are computed in `long`, so values near `2^31 - 1` and gaps up to `10^9` cannot overflow.
+A new value `v` first runs a hand-written upper-bound search that finds the first group starting above `v`. The group just left of that index is the last group starting at or before `v`. If that group's largest value reaches `v`, the value lies inside the group, and nothing changes because neither the smallest nor the largest value moves. Otherwise `v` is compared with two neighbours only: the found group on its left and the next group on its right. When both are within `gap + 1`, the value bridges them, and the left group takes over the right group's largest value. When only one is close enough, that group stretches to include `v`. When neither is close, `v` opens a new group. Distances are computed in `long`, so values near `2^31 - 1` and gaps up to `10^9` cannot overflow.
 
 **Complexity.**
 
@@ -32,7 +32,7 @@ public final class GapStream {
         }
 
         /**
-         * Predecessor search: the index of the last cluster whose lo is at most v, or -1 when none exists.
+         * Upper-bound search, minus one: the index of the last cluster whose lo is at most v, or -1 when none exists.
          * Time: O(log n) because each probe halves the candidate range.
          * Space: O(1).
          */
@@ -390,13 +390,13 @@ public final class HugeLine {
 #### Solution: [Recognize] Dynamic Coverage API (Author exercise)
 <!-- id: dq39-dynamic-coverage-api -->
 
-**Approach.** The public class holds one internal state and picks it in the constructor from the two facts the caller knows: the domain size and whether sub-range counts will be asked. A domain of at most 64 integers fits in one `long`, where a range is a bit window and a count is a population count. Any larger domain with no sub-range counts uses an ordered map of runs, whose memory follows the number of runs and whose total is a stored field. A larger domain with sub-range counts uses the dynamic segment tree, because the map cannot count inside a window without visiting every run there.
+**Approach.** The public class holds one internal state and picks it in the constructor from the two facts the caller knows: the domain size and whether sub-range counts will be asked. A domain of at most 64 integers fits in one `long`, where a range is a bit window and a count is a population count. Any larger domain with no sub-range counts uses an ordered map of runs, whose memory follows the number of runs and whose total is a stored field. A stray `coveredIn` call on that state still answers, by walking the runs that overlap the window. A larger domain with sub-range counts uses the dynamic segment tree, because the map cannot count inside a window without visiting every run there.
 
 Each state keeps its own invariant through removal. The mask clears a window with a bitwise complement. The map first cuts the range out of every overlapping run, keeps the left and right pieces, and only then fuses a new range with touching neighbours when the call is an add. The tree assigns a uniform value to a node that the range covers completely, and when a partial change reaches a uniform node, it splits the node into two children that inherit the uniform value. After the recursion, a node whose count is zero or its full size collapses back to a childless node, which keeps the tree in one canonical shape. The shift by 64 in the mask case is handled separately, because Java reduces a long shift distance modulo 64.
 
 **Complexity.**
 
-- **Time** is O(1) for the mask, O(log n) plus the number of runs cut for the map, and O(log domain) for the tree, per call.
+- **Time** is O(1) for the mask, O(log n) plus the number of runs cut for the map and, for `coveredIn`, the runs in the window, and O(log domain) for the tree, per call.
 - **Space** is O(1) for the mask, O(n) for the map with `n` runs, and O(calls * log domain) nodes for the tree in the worst case.
 
 ```java run
@@ -473,7 +473,13 @@ public final class DynamicCoverageApi {
         }
 
         public long covered(long l, long r) {
-            throw new UnsupportedOperationException("range counts need the tree state"); // a map walk would cost O(runs)
+            long sum = 0;                                           // walk only the runs that overlap [l, r), which costs O(runs in the window)
+            Map.Entry<Long, Long> before = runs.lowerEntry(l);      // a run starting before l may reach into the window
+            if (before != null && before.getValue() > l) sum += Math.min(before.getValue(), r) - l;
+            for (Map.Entry<Long, Long> e : runs.subMap(l, true, r, false).entrySet()) {
+                sum += Math.min(e.getValue(), r) - e.getKey();      // clip the last run at r
+            }
+            return sum;
         }
 
         public long total() { return total; }
@@ -561,12 +567,10 @@ public final class DynamicCoverageApi {
         DynamicCoverage a = new DynamicCoverage(40, true);
         a.add(3, 10); a.add(8, 20); a.remove(5, 6);
         if (!a.backend().equals("mask") || a.total() != 16 || a.coveredIn(0, 8) != 4) throw new AssertionError("example 1a");
-        // Example 1b: no range counts on a large domain uses runs, and a range count is rejected.
+        // Example 1b: no range counts promised on a large domain uses runs, and a range count still walks them.
         DynamicCoverage b = new DynamicCoverage(1_000_000_000L, false);
         b.add(100, 200); b.add(200, 300); b.remove(150, 250); b.add(1000, 1000);
-        boolean threw = false;
-        try { b.coveredIn(0, 10); } catch (UnsupportedOperationException ex) { threw = true; }
-        if (!b.backend().equals("runs") || b.total() != 100 || !threw) throw new AssertionError("example 1b");
+        if (!b.backend().equals("runs") || b.total() != 100 || b.coveredIn(120, 260) != 40) throw new AssertionError("example 1b");
         // Example 2: range counts on a huge domain use the tree.
         long t12 = 1_000_000_000_000L;
         DynamicCoverage c = new DynamicCoverage(t12, true);
@@ -592,11 +596,9 @@ public final class DynamicCoverageApi {
                 int total = 0;
                 for (boolean x : on) if (x) total++;
                 if (d.total() != total) throw new AssertionError("total, trial " + trial);
-                if (!d.backend().equals("runs")) {
-                    int ql = rnd.nextInt(domain + 1), qr = ql + rnd.nextInt(domain - ql + 1), part = 0;
-                    for (int x = ql; x < qr; x++) if (on[x]) part++;
-                    if (d.coveredIn(ql, qr) != part) throw new AssertionError("coveredIn, trial " + trial);
-                }
+                int ql = rnd.nextInt(domain + 1), qr = ql + rnd.nextInt(domain - ql + 1), part = 0;
+                for (int x = ql; x < qr; x++) if (on[x]) part++;
+                if (d.coveredIn(ql, qr) != part) throw new AssertionError("coveredIn, trial " + trial);
             }
         }
     }

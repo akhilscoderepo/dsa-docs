@@ -3,9 +3,9 @@
 ## Ordered Structures
 
 <!-- stage: context -->
-### Find The Nearest Score Below A Limit
+### Find The Highest Score Within A Limit
 
-A game server keeps player scores and must answer one question many times per second. What is the highest stored score that does not exceed 1500? New scores arrive all the time, and old ones leave. Lesson 02 used a library sorted map. This exercise sets a standalone constraint instead: the runtime offers only arrays, linked nodes and integers, so the sorted structure must be built by hand.
+A game server keeps player scores and must answer one question many times per second. What is the highest stored score that does not exceed 1500? New scores arrive all the time, and old ones leave. The Interval Unions lesson used a library sorted map. This lesson sets a standalone constraint instead: the runtime offers only arrays, linked nodes and integers, so the sorted structure must be built by hand. A firmware build for a game console, for example, can ship without `java.util.TreeMap`, and then the sorted structure is the program's own code.
 
 A sorted array answers the question with binary search, but every insertion shifts half of the array. A linked chain inserts in constant time once the position is known. Finding that position means visiting nodes one by one. This lesson asks how to build search that stays fast while both insertions and removals keep happening.
 
@@ -88,7 +88,7 @@ The comparison against the target is strict for insert, erase and exact search, 
 
 #### Search For A Floor
 
-Take the eight keys 3, 7, 12, 18, 25, 31, 40 and 52 at indexes 0 to 7. Index i occupies one level plus the number of trailing zero bits of i + 1. This rule is a deterministic stand-in for the coin flips, so every run of the trace repeats exactly. The heights are therefore 1, 2, 1, 3, 1, 2, 1 and 4. Only key 52 reaches level 3.
+In both traces the pointer `cur` holds an index into the key row, and `cur = -1` stands for the head sentinel that precedes index 0. The pointer `probe` marks the key that the current comparison tests. Take the eight keys 3, 7, 12, 18, 25, 31, 40 and 52 at indexes 0 to 7. Index i occupies one level plus the number of trailing zero bits of i + 1. This rule is a deterministic stand-in for the coin flips, so every run of the trace repeats exactly. The heights are therefore 1, 2, 1, 3, 1, 2, 1 and 4. Only key 52 reaches level 3.
 
 The first trace answers the floor of 31. At level 3 the next key from the head is 52, which fails, so the search drops. At level 2 the cursor moves to key 18, then key 52 fails and the search drops. At level 1 the cursor moves to key 31, and key 52 fails again. At level 0 the next key is 40, which fails, so the cursor rests on index 5. That is six comparisons, against seven for the linear walk over the same chain, so the saving is small here and grows with n.
 
@@ -166,12 +166,50 @@ final class Layers {
 
 The array is pre-filled with the head, so levels above the current top need no special case. The height argument comes from a caller-supplied source, which is a seeded random generator in production and a constant in a test. The strict comparison places an equal key before its existing copies, which is a valid and consistent choice. Erase removes the first copy that the descent reaches.
 
+Slot arrays replace the node objects when a problem fixes the capacity. Slot 0 is the head, each slot owns one row of forward links, and the value -1 ends a level. The same descent runs on array indexes, and a fresh slot comes from a counter.
+
+```java
+final class ArrayLayers {
+    static final int MAX = 16;
+    final int[] key;
+    final int[][] next;                          // next[slot][level], slot 0 is the head
+    int top = 1, used = 1;
+
+    ArrayLayers(int capacity) {
+        key = new int[capacity + 1];
+        next = new int[capacity + 1][MAX];
+        java.util.Arrays.fill(next[0], -1);      // an empty head has no successor on any level
+    }
+
+    int descend(int target, int[] update) {      // strict search, update[l] = last slot below target
+        int cur = 0;
+        for (int l = top - 1; l >= 0; l--) {
+            while (next[cur][l] != -1 && key[next[cur][l]] < target) cur = next[cur][l];
+            update[l] = cur;
+        }
+        return next[cur][0];
+    }
+
+    void insert(int k, int height) {
+        int[] update = new int[MAX];             // untouched levels hold 0, which is the head
+        descend(k, update);
+        int slot = used++;
+        key[slot] = k;
+        for (int l = 0; l < height; l++) {
+            next[slot][l] = next[update[l]][l];
+            next[update[l]][l] = slot;
+        }
+        top = Math.max(top, height);
+    }
+}
+```
+
 The expected search cost is O(log n), because each level holds about half the nodes of the level below, so a search crosses about two nodes per level over about log n levels. A run of unlucky coin flips costs O(n) time but still returns a correct answer, because the answer comes from comparing keys.
 
 <!-- stage: applicability -->
-### Check Order And Reachability
+### When A Skip List Fits
 
-#### Decide When To Use It
+#### Spot The Workload That Fits
 
 Reach for a layered search when the design needs nearest-key queries with frequent updates and no sorted-set class is available, which is the standalone constraint of this lesson. Typical cases are an interview setting without library collections, an embedded runtime, or a store that must expose its own range scan. Real systems use the same idea, for example the sorted sets of an in-memory database.
 
@@ -179,9 +217,9 @@ Reach for a layered search when the design needs nearest-key queries with freque
 
 The invariant to guard is that every level stays sorted and every node on a higher level also sits on level 0. A bug that links a node on level 2 without linking it on level 0 makes it reachable by some searches and invisible to others. Test with fixed heights, including all heights equal to one and all at the maximum.
 
-#### Avoid Two False Friends
+#### Reject Two Look-Alike Designs
 
-Binary search over a linked chain looks like the pattern, because jumping to the middle node halves the range. It breaks the precondition of random access. Reaching the middle node costs a walk of n / 2 links, so the search is O(n) again.
+The first false friend is binary search over a linked chain. It looks like the pattern, because jumping to the middle node halves the range. It breaks the precondition of random access. Reaching the middle node costs a walk of n / 2 links, so the search is O(n) again.
 
 A skip list with a fixed promotion rule, such as every second node of a level, also looks like the pattern. The rule needs evenly spaced nodes, and insertions and removals destroy that spacing. After enough updates one level holds long stretches with no shortcut, and searches fall back toward O(n).
 

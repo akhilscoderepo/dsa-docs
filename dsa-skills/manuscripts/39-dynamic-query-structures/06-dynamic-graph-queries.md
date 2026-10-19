@@ -143,6 +143,8 @@ Every returned distance must reflect all accepted edges, so the invariant belong
 
 Use repeated search when queries are rare, when the graph is sparse or when the node count is large. The table needs V squared longs, which is too much memory for a large graph. Use the table with incremental repair when both inserts and queries are frequent and V is small, as in a limit of a few hundred nodes. Use one rebuild when every insert is known before the first query.
 
+The thresholds come from counting. The table holds `n * n` longs, so it fits only when the memory limit is at least `n * n`. One search on a dense graph examines about `n^2` edges, and constructing the table costs about `n^3` steps. The table pays for itself only when the query count `Q` exceeds `n^3 / n^2 = n`, so fewer than `n` queries favor repeated search. One construction serves every query when no update follows the first query. A removal or a cost increase breaks the repair formula, which handles only cheaper edges, so each such change forces a rebuild.
+
 #### Watch The False Friend
 
 Re-running Floyd-Warshall after each insert looks safe and is a false friend, because it recomputes what the old table already knows and costs O(V^3) per insert. A second false friend is repair with removals. The repair formula handles only edges that get cheaper or appear, so deleting an edge or raising a cost forces a rebuild. Negative cycles also break the single-crossing argument, because a route that crosses the new edge repeatedly keeps getting cheaper.
@@ -159,7 +161,7 @@ Re-running Floyd-Warshall after each insert looks safe and is a false friend, be
 
 **Constraints.** The limits are:
 - **`n`** is an `int` with `1 <= n <= 100`.
-- **Edges** number at most `n * (n - 1)`, with `0 <= cost <= 10^6`, and repeated pairs are allowed.
+- **Edge calls** number at most `10^4`, with `0 <= cost <= 10^6`, and repeated pairs are allowed.
 - **Queries** number at most `10^5`, and `a` may equal `b`, which returns `0`.
 - **Return value** is a `long`.
 
@@ -226,9 +228,9 @@ Re-running Floyd-Warshall after each insert looks safe and is a false friend, be
 - **`memory`** is a `long` with `0 <= memory <= 10^9`.
 - **Return value** is one of the four names.
 
-**Example 1.** Input `n = 100, U = 10, Q = 5, removals = false, batched = false, memory = 10^6`, output `REPEATED_SEARCH`.
+**Example 1.** Input `n = 100, U = 10, Q = 5, removals = false, batched = false, memory = 10^6`, output `REPEATED_SEARCH`, because `Q < n`. With `U = 1000`, `Q = 100000` and `batched = true`, the output is `REBUILD_ONCE`.
 
-**Example 2.** Input `n = 100, U = 1000, Q = 100000, removals = false, batched = false, memory = 10^6`, output `REPAIR_TABLE`.
+**Example 2.** Input `n = 100, U = 1000, Q = 100000, removals = false, batched = false, memory = 10^6`, output `REPAIR_TABLE`. With `removals = true` and the other values unchanged, the output is `REBUILD_EACH`.
 
 **Hint.** Which fact rules out the table entirely, and which fact makes repair unsafe?
 

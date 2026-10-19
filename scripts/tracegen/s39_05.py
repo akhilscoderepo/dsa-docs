@@ -13,7 +13,7 @@ def run(pos, left, right):
                 nlo, nhi, why = lo, mid, f"{pos[mid]} is at least {x}, so hi moves to {mid}."
             st.append({"at":{"lo":nlo,"hi":nhi,"mid":mid},"vars":{"target":x,"search":label},"note":f"mid = {mid} holds {pos[mid]}. {why}"})
             lo, hi = nlo, nhi
-        st.append({"at":{"lo":lo,"hi":hi,"mid":-1},"vars":{"target":x,"search":label,"first":lo},"note":f"lo equals hi at {lo}, so {lo} {'entry is' if lo==1 else 'entries are'} below {x}."})
+        st.append({"at":{"lo":lo,"hi":hi,"mid":-1},"vars":{"target":x,"search":label,"first":lo},"note":f"lo equals hi at {lo}, so first = {lo}, the list index of the first stored position that is at least {x}."})
         return lo
     a = lb(left, "lower end")
     b = lb(right+1, "upper end")

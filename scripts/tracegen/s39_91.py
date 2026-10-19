@@ -13,7 +13,7 @@ def refill(ch, name, trace, ph):
     p.write_text(t[:m.start()] + trace + t[m.end():])
 def fmt(runs): return " ".join(f"[{s},{e})" for s,e in runs) or "empty"
 
-# ---- trace 1: sorted run array with explicit predecessor search ----
+# ---- trace 1: sorted run array with explicit upper-bound search ----
 def first_start_above(runs,x):
     lo,hi=0,len(runs)
     while lo<hi:

@@ -165,6 +165,8 @@ First, applying `(b, c)` to a node of length `len` sets `sum = b * sum + c * len
 
 Take the segment holding values 2 and 3 with sum 5. Applying `(2, 1)` gives `2 * 5 + 1 * 2 = 12`, and the node stores the pair `(2, 1)`. Applying `(3, 2)` next gives `3 * 12 + 2 * 2 = 40` and the pair `(6, 5)`. A push-down to the leaf holding 2 then gives `6 * 2 + 5 * 1 = 17`, which equals `3 * (2 * 2 + 1) + 2`. The last exercise is a full build of this tree and not a small change to the global pair.
 
+Now run the call `apply(1, 3, 2, 1)` on the array 1, 2, 3, 4, held in a tree whose root owns `[0, 4)` with sum 10. The root covers the range only partly, so the call descends. The child `[0, 2)` also covers it partly, and its leaf for index 1 lies inside the range, so that leaf becomes `2 * 2 + 1 = 5`. The leaf for index 0 stays 1, so the child sum becomes 6. The child `[2, 4)` splits the same way: its leaf for index 2 becomes `2 * 3 + 1 = 7`, and its sum becomes 11. The root recomputes `6 + 11 = 17`. A tag appears only when a node lies completely inside the range, which happens here at the two leaves, and a deeper tree would park the pair on the highest such node.
+
 <!-- stage: exercises -->
 ### Exercises
 
@@ -237,7 +239,7 @@ Take the segment holding values 2 and 3 with sum 5. Applying `(2, 1)` gives `2 *
 #### [Recognize] Affine Lazy Segment Tree (Author exercise)
 <!-- id: dq39-affine-lazy-segment-tree -->
 
-**Prerequisites.** The Zero Multiplier exercise above, a segment tree with range sum queries and the lazy propagation preview at the end of this lesson. The exercise is a full build, not a small variation.
+**Prerequisites.** The Zero Multiplier exercise above, a segment tree with range sum queries and the lazy propagation preview at the end of this lesson. The exercise is a stretch build and not a small variation, so attempt it after the three exercises above and the worked tree example at the end of this lesson.
 
 **Problem.** Maintain an array `a` of `n` integers modulo `M = 1_000_000_007`. The call `apply(l, r, b, c)` replaces `a[i]` by `(b * a[i] + c) mod M` for every `i` with `l <= i < r`. The call `sum(l, r)` returns the sum of `a[i]` for `l <= i < r`, modulo `M`. Both ranges are half-open, so `r` is excluded and an empty range with `l = r` is allowed. State which fact breaks the single global pair of this lesson and which structure replaces it.
 
