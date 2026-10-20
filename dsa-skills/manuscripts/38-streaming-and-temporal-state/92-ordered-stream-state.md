@@ -7,7 +7,7 @@
 
 A market dashboard shows the highest price of each instrument for the current day. The service keeps every price in a max-heap, and the root is the answer. At 10:02 a feed sends a tick with price 9100 for an instrument that trades near 910. At 10:05 the exchange sends a correction for that timestamp with price 910. The service writes the new price into its table of timestamps and prices, but the old tick still sits inside the heap. The dashboard shows 9100 as the daily high until the service restarts.
 
-Nothing crashed, and the heap did exactly what a heap does. The bug lies in the contract. The stream is correctable, and the structure fits only a stream that grows. The question of this lesson is how to keep an ordered answer correct. The answer can be a maximum, a k-th largest value or a median, and values arrive, change, disappear and expire.
+Nothing crashed, and the heap did exactly what a heap does. The bug lies in the contract. The stream is correctable, and the structure fits only a stream that grows. This lesson asks how to keep an ordered answer correct. The answer can be a maximum, a k-th largest value or a median, and values arrive, change, disappear and expire.
 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute

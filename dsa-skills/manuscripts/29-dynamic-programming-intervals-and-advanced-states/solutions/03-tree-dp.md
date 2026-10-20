@@ -7,7 +7,7 @@
 **Approach.**
 Two arrays `take` and `skip` hold one pair for each node. Entry `take[v]` is the largest valid total in the subtree of `v` when `v` is chosen, and `skip[v]` is the same total when `v` is left out. Every node starts with `take[v] = w[v]` and `skip[v] = 0`, which is the pair of a leaf. The loop then visits nodes from `n - 1` down to 1. Because `parent[i] < i`, every child has a larger index than its parent, so each node is finished before the loop reaches its parent. A finished child adds `skip[v]` to `take[p]`, since a chosen parent blocks the child. It adds `max(take[v], skip[v])` to `skip[p]`, since a free parent lets the child choose.
 
-The invariant is that when the loop reaches node `v`, all of its children have already pushed their contributions, so `take[v]` and `skip[v]` are final. The method never recurses, so a chain of 100000 nodes needs no stack depth.
+The invariant is that all children of node `v` have pushed their contributions before the loop reaches `v`, so `take[v]` and `skip[v]` are final. The method never recurses, so a chain of 100000 nodes needs no stack depth.
 
 **Complexity.**
 - **Time** is O(n), because the loop visits each node once and does constant work for it.

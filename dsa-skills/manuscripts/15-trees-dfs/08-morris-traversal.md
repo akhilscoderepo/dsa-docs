@@ -49,7 +49,7 @@ The tree is a chain of n nodes where each node has only a left child. What is th
 All n nodes wait at once, because the left spine is the whole tree. The extra memory is O(n), which is the same as the height h of the chain.
 ```
 
-The time is O(n), and the extra memory is O(h). A recursive method has the same O(h) cost in its call stack. For a balanced tree the height is small, and for a chain it equals n. A routine with no allocation cannot pay O(h) in any form.
+The traversal takes O(n) time and needs O(h) extra memory. A recursive method has the same O(h) cost in its call stack. For a balanced tree the height is small, and for a chain it equals n. A routine with no allocation cannot pay O(h) in any form.
 
 The waiting nodes carry one piece of information: after the left subtree of a node is finished, the walk must return to that node. The node that finishes the left subtree is its last node in inorder, and that node has no right child. Its empty `right` reference is unused space inside the tree, and it can store the way back.
 

@@ -132,7 +132,7 @@ public final class Increment2536 {
 <!-- id: ps-bottom-right-edge -->
 
 **Approach.**
-A rectangle that ends at row `m - 1` writes its cancelling delta in row `m`, and a rectangle that ends at column `n - 1` writes in column `n`. The difference matrix has `m + 1` rows and `n + 1` columns, so these indexes exist and no guard is needed. The final pass reads only the first `m` rows and `n` columns, so the extra entries never become cell values. A matrix of exactly `m` by `n` would throw an `ArrayIndexOutOfBoundsException` on the first edge update.
+A rectangle that ends at row `m - 1` writes its cancelling delta in row `m`, and a rectangle that ends at column `n - 1` writes in column `n`. The difference matrix is `m + 1` by `n + 1`, with one extra row and one extra column, so every index the code reaches exists and needs no guard. The final pass reads only the first `m` rows and `n` columns, so the extra entries never become cell values. A matrix of exactly `m` by `n` would throw an `ArrayIndexOutOfBoundsException` on the first edge update.
 
 **Complexity.**
 - **Time** is O(m * n + u), because each update costs four writes and the pass visits each cell once.

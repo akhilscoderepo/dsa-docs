@@ -7,7 +7,7 @@
 
 A log viewer has a feature that highlights the longest palindromic run in each line, meaning the longest stretch of characters that reads the same forward and backward. The feature works well on ordinary lines. Then a customer opens a file in which one line holds 100,000 copies of the same padding character, and the viewer freezes for many seconds. The feature tests every position as the middle of a possible palindrome, and on this line each test walks almost as far as the line allows.
 
-This lesson answers one question: how can a program find the palindromes around every center in time proportional to the line length, so the padding line costs no more than any other line of the same size? Centers come in two kinds. A character is the center of a palindrome with odd length, and the gap between two neighbouring characters is the center of a palindrome with even length. The answer must handle both kinds.
+One question drives this lesson. How can a program find the palindromes around every center in time proportional to the line length, so that the padding line costs no more than any other line of the same size? Centers come in two kinds. A character is the center of a palindrome with odd length, and the gap between two neighbouring characters is the center of a palindrome with even length. The answer must handle both kinds.
 
 <!-- stage: naive -->
 ### Expanding Outward From Each Center
@@ -49,7 +49,7 @@ Each center expands until it reaches the nearer end of the line, so the total is
 
 #### Where The Cost Comes From
 
-Every center scans on its own and forgets what earlier centers learned. On a line of `n` identical characters, the odd center at index `i` makes about `min(i, n - 1 - i)` successful comparisons, and the sum over all indexes is about `n^2 / 4`. The even centers add the same amount, so the total is about `n^2 / 2`, which is O(n^2). For `n = 100,000` that is about 5 * 10^9 comparisons, which explains the frozen viewer. A line of `n` distinct characters costs only O(n), so the method hides its worst case until the input is repetitive.
+Every center scans on its own and forgets what earlier centers learned. On a line of `n` identical characters, the odd center at index `i` makes about `min(i, n - 1 - i)` successful comparisons, and the sum over all indexes is about `n^2 / 4`. The even centers add the same amount, so the total is O(n^2), about `n^2 / 2`. For `n = 100,000` that is about 5 * 10^9 comparisons, which explains the frozen viewer. A line of `n` distinct characters costs only O(n), so the method hides its worst case until the input is repetitive.
 
 #### The Repeated Work
 

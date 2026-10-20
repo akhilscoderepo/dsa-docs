@@ -65,7 +65,7 @@ The method appends position `r` on step `r`. It then removes from the front whil
 
 **Complexity.**
 
-- **Time** is O(n), because each position is appended once and expired at most once.
+- **Time** is O(n), as a position joins the deque once and can expire only once.
 - **Space** is O(n), for the deque and the output array.
 
 ```java run
@@ -115,7 +115,7 @@ A range of length `k` ending at `right` holds the positions `right - k + 1` thro
 
 **Complexity.**
 
-- **Time** is O(n), because each position is appended once and removed at most once.
+- **Time** is O(n), as each position enters once and leaves at most once.
 - **Space** is O(k), because the deque never holds more than `k` positions after the age test.
 
 ```java run

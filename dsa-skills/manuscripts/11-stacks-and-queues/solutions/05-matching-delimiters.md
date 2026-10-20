@@ -80,7 +80,7 @@ public final class OneBracketType {
 <!-- id: sq-three-delimiter-types -->
 
 **Approach.**
-The stack now stores the opening characters themselves. Each closing symbol pops the newest opening and the method compares it with the partner of the closing symbol. An empty stack or a different partner makes the text invalid. The invariant is that the stack holds the pending openings in nesting order, newest on top. The harness confirms that two boxed `Character` values from `valueOf` compare equal with `equals` and that the method compares primitive `char` values, which avoids identity comparison of objects.
+The stack now stores the opening characters themselves. Each closing symbol pops the newest opening and the method compares it with the partner of the closing symbol. An empty stack or a different partner makes the text invalid. The invariant is that the stack contains the pending openings in nesting order, with the newest on top. The harness confirms that two boxed `Character` values from `valueOf` compare equal with `equals` and that the method compares primitive `char` values, which avoids identity comparison of objects.
 
 **Complexity.**
 - **Time** is O(n), because each character causes at most one push or pop.

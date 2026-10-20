@@ -11,7 +11,7 @@ After the shift by `i`, the bit that started at position `i` sits at position 0.
 **Complexity.**
 
 - **Time** is O(1), because the method does one shift and one AND.
-- **Space** is O(1), because the method keeps no extra storage.
+- **Space** is O(1), as the method keeps no extra storage.
 
 ```java run
 import java.util.Random;
@@ -66,7 +66,7 @@ In each round, the result moves up by one position with a left shift. This frees
 **Complexity.**
 
 - **Time** is O(1) for a fixed width of 32, because the loop runs 32 times with constant work per round.
-- **Space** is O(1), because the method keeps the result and the shifted copy of `n`.
+- **Space** is O(1), as the method holds only the result and the shifted copy of `n`.
 
 ```java run
 import java.util.Random;
@@ -128,7 +128,7 @@ The zero-fill shift puts a 0 into the top position in every round. After at most
 **Complexity.**
 
 - **Time** is O(1) for a fixed width of 32, because the loop runs at most 32 rounds.
-- **Space** is O(1), because the method keeps one counter and the shifted value.
+- **Space** is O(1), as the method holds just one counter and the shifted value.
 
 ```java run
 import java.util.Random;

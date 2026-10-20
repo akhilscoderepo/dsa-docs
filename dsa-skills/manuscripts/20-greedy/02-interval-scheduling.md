@@ -116,7 +116,7 @@ static int maxMeetings(int[][] meetings) {
 
 The method differs from the start-order version in one line, the comparator. The comparator uses `Integer.compare` and never subtracts, so extreme values do not overflow. The variable `lastEnd` is a `long` that starts at the smallest value, so the first interval is always accepted. The method clones the outer array so the caller keeps its order.
 
-- **Time** is O(n log n) for the sort, and the scan adds O(n).
+- **Time** is O(n log n), which comes from the sort, and the linear scan adds O(n) more.
 - **Space** is O(n) for the sorted copy of the references.
 
 <!-- stage: applicability -->

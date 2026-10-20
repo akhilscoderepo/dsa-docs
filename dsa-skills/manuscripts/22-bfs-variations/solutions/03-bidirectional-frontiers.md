@@ -246,7 +246,7 @@ public final class CrossingNeighbor {
 **Approach.**
 The method answers the equal case first, because the minimum edge count from a vertex to itself is 0. Without that line, both arrays hold the same vertex at 0. The second round then generates a neighbor that the opposite array holds at distance 1, and the method returns 2 for any vertex that has a neighbor. After that, the method builds `adj`, creates two separate distance arrays, and runs rounds from queues of each side.
 
-A round uses `queue.size()` as the layer width, so vertices added during the round wait for the next one. Each side expands the queue with fewer vertices. When a side has no vertex left, the two origins are in different components, and the method returns -1. The invariant is that each array holds exact distances from its own origin for every discovered vertex. The code asserts that `ArrayDeque.poll` returns `null` on an empty queue, which is why the loop checks `isEmpty` first.
+A round uses `queue.size()` as the layer width, so vertices added during the round wait for the next one. Each side expands the queue with fewer vertices. A side that runs out of vertices proves that the two origins sit in different components, so the method gives -1. The invariant is that each array holds exact distances from its own origin for every discovered vertex. The code asserts that `ArrayDeque.poll` returns `null` on an empty queue, which is why the loop checks `isEmpty` first.
 
 **Complexity.**
 - **Time** is O(V + E), because each vertex enters each side at most once and each adjacency entry is read at most twice.

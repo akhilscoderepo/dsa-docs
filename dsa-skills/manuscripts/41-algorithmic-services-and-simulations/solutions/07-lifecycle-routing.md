@@ -12,7 +12,7 @@ The invariant is that the tree set holds exactly the ids whose table state is `P
 
 **Complexity.**
 
-- **Time** is O(log n) per call, because each call does one hash lookup and at most one tree operation. The call `next()` reads the first key.
+- **Time** is O(log n) per call, since a call does one hash lookup and at most one tree operation. The call `next()` reads the first key.
 - **Space** is O(n), because each task owns one record and at most one key.
 
 ```java run
@@ -240,7 +240,7 @@ The invariant is that the record alone decides which jobs are live, every pendin
 
 **Complexity.**
 
-- **Time** is O(log n) amortized per call, because each entry is pushed once and popped at most once.
+- **Time** is O(log n) amortized per call, since every entry is pushed a single time and popped no more than once.
 - **Space** is O(n + p) for n jobs and p priority changes, because stale entries stay until a `take` reaches them.
 
 ```java run

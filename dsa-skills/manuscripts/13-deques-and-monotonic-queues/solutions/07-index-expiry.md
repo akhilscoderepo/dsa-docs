@@ -66,7 +66,7 @@ The age test compares the front with the supplied bound for the current position
 
 **Complexity.**
 
-- **Time** is O(n), because each position is appended once and expires at most once.
+- **Time** is O(n), since every position goes in once and expires at most once.
 - **Space** is O(n) when the bound never moves, since every position then stays eligible.
 
 ```java run

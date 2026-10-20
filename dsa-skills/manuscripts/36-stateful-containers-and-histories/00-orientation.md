@@ -22,7 +22,7 @@ Each lesson names one fact that every public call must leave true.
 
 ### Reading Order
 
-Every lesson starts with a class that passes simple tests and then breaks on a longer call sequence. You predict the failure before the reasoning appears. Two traces follow the fields call by call, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A LeetCode problem that appears twice carries a changed contract, and its text says what changed.
+Every lesson starts with a class that passes simple tests and then breaks on a longer call sequence. You predict the failure before the reasoning appears. Two traces follow the fields call by call, then Java code and the limits of the idea. The four exercises rise from a basic build through a variation and an edge case to a recognition problem. When a LeetCode problem appears twice, its contract has changed, and the text says how.
 
 ### What You Can Do After This Chapter
 

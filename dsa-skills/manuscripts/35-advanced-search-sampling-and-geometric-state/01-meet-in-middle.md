@@ -44,7 +44,7 @@ The loop needs 2^40, about 1.1 x 10^12, checks. At one per nanosecond that is ro
 
 #### Repeated Work In The Loop
 
-The loop costs O(2^n * n) time and O(1) extra space. The `2^n` factor is the real problem. Look at what happens inside it. Take two patterns that agree on the first 20 items and differ only on the last 20. The loop adds up the same first 20 items for both patterns, then adds different last items. Across all patterns, the same 2^20 partial totals of the first group are rebuilt 2^20 times each.
+The plain loop takes O(2^n * n) time, and its extra space is O(1). The `2^n` factor is the real problem. Look at what happens inside it. Take two patterns that agree on the first 20 items and differ only on the last 20. The loop adds up the same first 20 items for both patterns, then adds different last items. Across all patterns, the same 2^20 partial totals of the first group are rebuilt 2^20 times each.
 
 The patterns also have a structure that the loop ignores. Choosing a subset of 40 items is the same as choosing a subset of the first 20 and, independently, a subset of the last 20. The final total is the sum of two numbers, one from each side, and the choices on the two sides never interact. The loop pairs every first-group choice with every last-group choice one at a time, and that pairing is where the 2^40 comes from.
 
@@ -238,7 +238,7 @@ If the objective does not split into a sum, as in a product with sign changes or
 
 **Prerequisites.** The Duplicates And Long Sums exercise above.
 
-**Problem.** Given an integer array `nums` and an integer `goal`, choose a subsequence of `nums`, which is any set of positions kept in their original order and possibly empty. Return the minimum possible value of `|sum - goal|`, where `sum` is the sum of the chosen elements.
+**Problem.** Given the integer `goal` and an integer array `nums`, pick a subsequence of `nums`. A subsequence is any set of positions kept in their original order, and it may be empty. Return the minimum possible value of `|sum - goal|`, where `sum` is the sum of the chosen elements.
 
 **Constraints.** The limits are:
 - **Length** of `nums` is from 1 to 40.

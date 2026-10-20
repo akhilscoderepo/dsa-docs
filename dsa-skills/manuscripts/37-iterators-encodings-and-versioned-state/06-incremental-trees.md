@@ -157,7 +157,7 @@ final class FrontierInserter {
 
 #### Cost
 
-- **Constructor** costs O(n) time and O(n) space for a tree of `n` nodes.
+- **Constructor** takes O(n) time and O(n) space for a tree of `n` nodes.
 - **insert** costs O(1) time and adds one entry to the frontier.
 - **getRoot** costs O(1) time and O(1) space.
 

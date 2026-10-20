@@ -7,7 +7,7 @@
 
 A chat server hands each new connection the smallest unused session id, so a client table can be a plain array. When a connection closes, the server returns its id for reuse. A network retry then delivers the close message for session 3 twice. The server puts the id 3 into its reuse queue two times. The next two connections both receive id 3, and they now read and overwrite the same slot of the client table. Nothing crashes, and every call returns a plausible number, so the fault shows up only later as messages delivered to the wrong person.
 
-The question of this lesson is how a class can hand out the smallest free id quickly, reject a repeated return of the same id, and prove that each id is in exactly one place at all times.
+This lesson asks how a class can hand out the smallest free id quickly, reject a repeated return of the same id, and prove that each id is in exactly one place at all times.
 
 <!-- stage: contributions -->
 ### What The Earlier Chapters Contribute

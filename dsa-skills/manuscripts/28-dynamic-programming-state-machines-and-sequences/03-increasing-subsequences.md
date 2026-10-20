@@ -31,7 +31,7 @@ static int longestRun(int[] nums) {
 }
 ```
 
-The method runs in O(n) time and uses O(1) memory. It answers a different question, which is the longest increasing block of adjacent elements. A subsequence may skip elements, so the block answer is never larger than the true answer and is often smaller.
+The method takes O(n) time and keeps O(1) memory. It answers a different question, which is the longest increasing block of adjacent elements. A subsequence may skip elements, so the block answer is never larger than the true answer and is often smaller.
 
 ```predict
 Run longestRun on 5, 1, 6, 2, 7, 3, 8. What does it return, and what is the true longest strictly increasing subsequence?
@@ -220,7 +220,7 @@ The first false friend is the longest increasing block of adjacent elements, whi
 
 **Prerequisites.** The two exercises above and the tails list from this lesson.
 
-**Problem.** An array `nums` of integers may contain equal values. Return an `int[]` of length 2. Entry 0 is the length of the longest strictly increasing subsequence. Entry 1 is the length of the longest non-decreasing subsequence, where each kept element is at least the one before it.
+**Problem.** An array `nums` of integers may contain equal values. The result is an `int[]` with exactly 2 entries. Entry 0 is the length of the longest strictly increasing subsequence. Entry 1 is the length of the longest non-decreasing subsequence, where each kept element is at least the one before it.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 100000`.

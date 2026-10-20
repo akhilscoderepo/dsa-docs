@@ -141,7 +141,7 @@ public final class NearbyDuplicate {
 <!-- id: hm-first-index-wins -->
 
 **Approach.**
-The build loop stores a value only when the map does not hold it yet, so each value keeps the smallest index. Each query then needs one lookup, and `getOrDefault(query, -1)` returns -1 for a value that does not occur. A build loop that always calls `put` would keep the largest index, which answers a different question. The invariant is that after index `i`, each value of `nums[0..i]` maps to its smallest index.
+The build loop stores a value only when the map does not hold it yet, so each value keeps the smallest index. Each query then needs one lookup, and `getOrDefault(query, -1)` returns -1 for a value that does not occur. A build loop that always calls `put` would keep the largest index, which answers a different question. Invariant: once index `i` is processed, every value of `nums[0..i]` maps to the smallest index where it occurs.
 
 **Complexity.**
 - **Time** is O(n + q) on average for n values and q queries, because the build and the queries each use expected constant-time operations.

@@ -174,7 +174,7 @@ All four moves cost O(1) expected, and none of them searches a list.
 
 Use this design when a lookup by key and an eviction by usage must both be constant time. The invariant is a fact that every operation must restore before it returns. Here it states that the map and the list hold the same keys once each, the list order matches the order of use, and the minimum frequency, when present, matches a non-empty bucket.
 
-A false friend is a technique that looks right for the job and breaks one promise of the contract. A `TreeMap` from timestamp to key finds the oldest entry, but each refresh costs O(log n) and two uses in the same tick collide. A priority queue keyed by count makes ties arbitrary and cannot remove an arbitrary key in constant time.
+A false friend is a technique that seems right for the job but breaks one promise of the contract. A `TreeMap` from timestamp to key finds the oldest entry, but each refresh costs O(log n) and two uses in the same tick collide. A priority queue keyed by count makes ties arbitrary and cannot remove an arbitrary key in constant time.
 
 #### Checking The Java Library Shortcut
 

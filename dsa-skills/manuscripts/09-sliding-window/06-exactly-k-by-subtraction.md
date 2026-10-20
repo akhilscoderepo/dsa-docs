@@ -153,7 +153,7 @@ Return 0 for a negative limit at the top of the helper. Count in a `long`. Test 
 
 **Prerequisites.** The at-most count and the subtraction identity of this lesson.
 
-**Problem.** Given an integer array `nums`, return the number of contiguous subarrays that contain exactly one odd number. Compute it as `atMost(1) - atMost(0)`, where `atMost(x)` is the number of subarrays with at most `x` odd numbers.
+**Problem.** For an integer array `nums`, count the contiguous subarrays that hold exactly one odd number. Compute it as `atMost(1) - atMost(0)`, where `atMost(x)` is the number of subarrays with at most `x` odd numbers.
 
 **Constraints.**
 - **Length** satisfies `1 <= nums.length <= 10^5`.
@@ -196,7 +196,7 @@ Return 0 for a negative limit at the top of the helper. Count in a `long`. Test 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given an integer array `nums` and an integer `k` with `k >= 0`, return the number of contiguous subarrays that contain exactly `k` odd numbers. For `k = 0`, the subarrays have no odd number. Define `atMost(-1)` as 0, so the same subtraction covers `k = 0`.
+**Problem.** For an integer `k >= 0` and an integer array `nums`, count the contiguous subarrays with exactly `k` odd numbers inside. For `k = 0`, the subarrays have no odd number. Define `atMost(-1)` as 0, so the same subtraction covers `k = 0`.
 
 **Constraints.**
 - **Length** satisfies `1 <= nums.length <= 10^5`.

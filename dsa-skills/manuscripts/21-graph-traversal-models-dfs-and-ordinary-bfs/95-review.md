@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A course scheduler accepts two courses that wait for each other, and a map counter reports three islands for one connected landmass. Each failure matches a question below. Return to this page after the lessons, and again after a few days. Each question describes a situation and hides the lesson name. Choose an answer before you read the explanation.
+A course scheduler accepts two courses that wait for each other, and a map counter reports three islands for one connected landmass. Each failure matches a question below. Spend time on this page after the lessons and again after a few days. Each question lays out a situation and keeps the lesson name hidden. Choose an answer before you read the explanation.
 
 ### Recognition Questions
 

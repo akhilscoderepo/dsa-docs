@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Return to this page after the lessons and again a few days later. Each question describes a situation and hides the lesson name. Commit to an answer before you open the explanation.
+Return to this page after the lessons and again a few days later. A question states a situation, and the lesson that fits it stays unnamed. Fix your own answer first, then open the explanation.
 
 ### Recognition Questions
 

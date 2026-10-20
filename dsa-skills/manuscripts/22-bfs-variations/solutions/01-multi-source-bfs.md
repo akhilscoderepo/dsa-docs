@@ -296,7 +296,7 @@ public final class NoSourceAllSources {
 **Approach.**
 Every rotten orange is a source, and one minute is one layer of the search. The method scans the grid once. It puts each rotten cell into the queue and counts the fresh oranges in `fresh`. It then runs the loop while the queue is not empty and `fresh` is positive.
 
-Each pass reads `size = queue.size()` and removes that many cells. A fresh neighbor becomes rotten at once, which also serves as its visited mark, and `fresh` drops by one. After the pass, `minutes` grows by one. The loop stops as soon as `fresh` reaches 0, so the method does not count a layer that rots nothing. If `fresh` is still positive when the queue runs empty, some orange has no path to a rotten one, and the method returns -1. The invariant is that `minutes` equals the number of completed layers. The method changes `grid` in place, which the stated contract allows, because the caller passes a grid that it does not reuse.
+Each pass reads `size = queue.size()` and removes that many cells. A fresh neighbor becomes rotten at once, which also serves as its visited mark, and `fresh` drops by one. After the pass, `minutes` grows by one. The loop stops as soon as `fresh` reaches 0, so the method does not count a layer that rots nothing. If `fresh` is still positive after the queue empties, some orange cannot be reached from a rotten one, and the answer is -1. The invariant is that `minutes` equals the number of completed layers. The method changes `grid` in place, which the stated contract allows, because the caller passes a grid that it does not reuse.
 
 **Complexity.**
 - **Time** is O(m * n), because each cell enters the queue at most once and reads four neighbors.

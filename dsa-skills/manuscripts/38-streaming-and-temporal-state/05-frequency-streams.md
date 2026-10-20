@@ -181,7 +181,7 @@ final class RunCounter {
 #### Cost
 
 - **FrequencyBook** costs O(1) expected time per call and O(d) space for `d` distinct values.
-- **UniqueReader** costs O(1) amortized time per call, because each value is pushed once and popped at most once, and O(d) space.
+- **UniqueReader** takes O(1) amortized time per call and O(d) space, because each value is pushed one time and popped one time at most.
 - **RunCounter** costs O(1) time per call and O(1) space.
 
 <!-- stage: applicability -->

@@ -7,7 +7,7 @@
 **Approach.**
 The method runs the row loop and keeps one `long` accumulator for each pass. At the top of a pass it reads `queue.size()` and stores it. The inner loop removes exactly that many nodes, adds each value to the accumulator, and queues the non-null children. When the inner loop ends, the accumulator holds the sum of one depth, and the method appends it to the result and starts the next pass with a fresh accumulator. The accumulator is a `long`, because a row of 10^5 values near 10^9 reaches 10^14, which is far outside the `int` range. A recursive version fails on a very tall chain, while the loop keeps its nodes in a heap-based queue.
 
-The invariant is that the queue holds exactly one depth at the top of each pass, and the accumulator starts at 0 for that depth.
+The invariant is that each pass starts with a queue of exactly one depth and an accumulator of 0 for that depth.
 
 **Complexity.**
 - **Time** is O(n), because each node is queued once and removed once.
@@ -315,7 +315,7 @@ public final class RightViewK {
 **Approach.**
 The row loop does not change for an N-ary tree, and only the step that adds children changes. A node holds a list of children, so after removing a node the method calls `queue.addAll(node.children)`, which appends every child in list order. The stored size still marks the row boundary, because all children are added behind the current row. A null root returns an empty list before any queue exists. A node with no children adds nothing, and a node with many children adds all of them in one call.
 
-The invariant is the same as in the binary case: the queue holds one depth at the top of each pass, and the children of the removed nodes land behind it in discovery order.
+This invariant matches the binary case: each pass starts with a queue of one depth, and the children of the removed nodes land behind it in discovery order.
 
 **Complexity.**
 - **Time** is O(n), because each node is queued and removed once and each child link is read once.

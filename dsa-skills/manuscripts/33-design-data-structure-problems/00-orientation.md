@@ -28,7 +28,7 @@ Each closing lesson joins earlier parts into one structure and names what each p
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a failing sequence of calls. A direct implementation follows, and you predict where it breaks before the explanation appears. Later parts name the invariant, list the state, follow two traces, show the code and say when the idea stops fitting. Each exercise set runs from the basic structure through a variation and an edge case to a recognition problem. Several LeetCode problems return with a changed contract, and the problem text says what changed.
+A lesson opens with a failing sequence of calls. A direct implementation follows, and you predict where it breaks before the explanation appears. Later parts name the invariant and list the state. Two traces, the code and the limits of the idea follow. Each exercise set runs from the basic structure through a variation and an edge case to a recognition problem. Several LeetCode problems return with a changed contract, and the problem text says what changed.
 
 ### What You Can Do After This Chapter
 

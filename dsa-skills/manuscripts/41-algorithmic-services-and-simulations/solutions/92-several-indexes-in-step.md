@@ -395,7 +395,7 @@ The invariant says that a driver has a spot exactly when the driver is free, and
 
 **Complexity.**
 
-- **Time** is O(log n) per call, because each call runs a constant number of hash, set and tree operations.
+- **Time** is O(log n) per call, since a call runs a constant number of hash, set and tree operations.
 - **Space** is O(n), since each driver and rider holds one record and at most one index entry.
 
 ```java run

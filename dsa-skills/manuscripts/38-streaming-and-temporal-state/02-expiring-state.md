@@ -199,7 +199,7 @@ A stale record names an end time that differs from the map, so the check skips i
 #### Cost
 
 - **RateLogger.shouldPrint** costs O(1) expected time. Memory is O(d) for `d` distinct texts until a purge runs.
-- **AuthManager** costs O(1) amortized time per call, because each entry is removed once, and O(t) space for `t` live tokens.
+- **AuthManager** takes O(1) amortized time per call, because each entry is removed once, and O(t) space for `t` live tokens.
 - **StoreSketch** costs O(log n) amortized time per `put`, since each heap record is added and removed once.
 
 <!-- stage: applicability -->

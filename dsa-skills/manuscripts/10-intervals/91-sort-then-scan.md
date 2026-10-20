@@ -153,7 +153,7 @@ static int[] arrowPositions(int[][] balloons) {
 }
 ```
 
-In both scans the sort sets the cost at O(n log n) time, and the clone takes O(n) space. The loop itself adds O(n) time and O(1) extra space, apart from the output array of the second method.
+In both scans the sort sets the cost at O(n log n) time, and the clone takes O(n) space. The scan loop itself takes O(n) time and keeps O(1) extra space. The output array of the second method is not counted.
 
 <!-- stage: applicability -->
 ### Choosing The Order For A New Question

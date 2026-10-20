@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A service stores flags in twelve booleans, a checksum wraps to a negative total and a product loses its remainder. The questions below cover the ten lessons and the closing lesson on bits with search state. Return to this page after the lessons and again after a few days. Each question describes a situation, so decide the answer before you open the explanation.
+A service stores flags in twelve booleans, a checksum wraps to a negative total and a product loses its remainder. The questions below cover the ten lessons and the closing lesson on bits with search state. Try this page after the lessons and try it once more after a few days. Each question describes a situation, so decide the answer before you open the explanation.
 
 ### Recognition Questions
 

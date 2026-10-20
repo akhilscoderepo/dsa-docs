@@ -186,7 +186,7 @@ The remove method keeps a `prev` reference because a singly linked chain cannot 
 
 #### Recognizing The Shape
 
-Reach for this design when the prompt forbids a library map or set, or when it states a small key range such as 0 to 10^6. A request to implement `put`, `get` and `remove` from scratch, or a list with head, tail and index operations, has the same shape. The invariant to state before coding is that each key has one deterministic place, and each update or removal changes only the fields that own that place.
+Reach for this design when the prompt forbids a library map or set, or when it states a small key range such as 0 to 10^6. A request to implement `put`, `get` and `remove` from scratch, or a list with head, tail and index operations, has the same shape. Before coding, state the invariant that each key has one deterministic place, and that each update or removal changes only the fields that own that place.
 
 #### Choosing Between The Layouts
 

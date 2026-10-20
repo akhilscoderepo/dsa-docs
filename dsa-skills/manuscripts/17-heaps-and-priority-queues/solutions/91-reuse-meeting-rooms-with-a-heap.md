@@ -5,7 +5,7 @@
 <!-- id: hp-meeting-rooms -->
 
 **Approach.**
-The method sorts a copy of the intervals by start time. After the sort, a conflict can only appear between neighbors. Suppose a meeting overlaps a later one. Its end then lies beyond the start of the next meeting in sorted order, because that next start is no larger than the later start. The loop therefore compares the end of each meeting with the start of the next. An end that is larger than the next start is a conflict. An end equal to the next start is allowed, because the intervals are half-open.
+The method first orders a copy of the intervals by start time. After the sort, a conflict can only appear between neighbors. Suppose a meeting overlaps a later one. Its end then lies beyond the start of the next meeting in sorted order, because that next start is no larger than the later start. The loop therefore compares the end of each meeting with the start of the next. An end that is larger than the next start is a conflict. An end equal to the next start is allowed, because the intervals are half-open.
 
 The invariant is that every meeting before the current position ends at or before the start of the current meeting.
 

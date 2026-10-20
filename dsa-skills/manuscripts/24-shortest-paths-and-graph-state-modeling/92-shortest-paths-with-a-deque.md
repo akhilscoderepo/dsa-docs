@@ -175,7 +175,7 @@ The false friend is ordinary BFS with a visited flag. It gives the right answer 
 
 **Prerequisites.** The deque search of this lesson.
 
-**Problem.** A directed graph has the vertices `0` to `n - 1`. The list `edges` holds triples `[a, b, w]`, each an edge from `a` to `b` with weight `w`, where `w` is 0 or 1. Given a source vertex `src`, return an `int[]` of length `n`. Entry `v` is the minimum total weight of a path from `src` to `v`, or `-1` when no path exists.
+**Problem.** A directed graph runs over the vertices `0` to `n - 1`, and the list `edges` holds triples `[a, b, w]`, each an edge from `a` to `b` with weight `w`, where `w` is 0 or 1. Given a source vertex `src`, return an `int[]` of length `n`. Entry `v` is the minimum total weight of a path from `src` to `v`, or `-1` when no path exists.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.

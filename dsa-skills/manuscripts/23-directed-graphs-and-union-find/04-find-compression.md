@@ -233,7 +233,7 @@ The false friend is a shortest-path or enumeration task that sounds similar. The
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** There are `n` cities. The matrix `isConnected` has `isConnected[i][j] = 1` when cities `i` and `j` are directly connected, and 0 otherwise. A province is a maximal set of cities where any two cities have a direct or indirect connection. Return the number of provinces.
+**Problem.** There are `n` cities. The matrix `isConnected` has `isConnected[i][j] = 1` when cities `i` and `j` are directly connected, and 0 otherwise. A province is a largest possible set of cities in which every two cities connect directly or through other cities. Return the number of provinces.
 
 **Constraints.** The limits are:
 - **Cities** satisfy `1 <= n <= 200`.

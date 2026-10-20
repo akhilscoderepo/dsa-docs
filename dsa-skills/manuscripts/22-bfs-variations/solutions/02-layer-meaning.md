@@ -7,7 +7,7 @@
 **Approach.**
 The method builds the adjacency list `adj` with both directions per edge and starts a queue with the source. Each pass copies `queue.size()` into `size`, removes exactly `size` vertices and appends their unvisited neighbors. The removed vertices form one layer, so the method stores them in one list and sorts it. The appended vertices form the next layer.
 
-The invariant is that at the start of every pass the queue holds all vertices of one distance and no other vertex. The first pass satisfies it with the source alone. A vertex enters the queue at its first discovery, which comes from a vertex one layer closer, so the next pass again holds a single distance. The loop ends when the queue is empty, and unreachable vertices never enter a row. The code asserts the Java fact that a copied `size` stays fixed while `queue.size()` grows.
+The invariant is that every pass starts with a queue of all vertices at one distance and no other vertex. The first pass satisfies it with the source alone. A vertex enters the queue at its first discovery, which comes from a vertex one layer closer, so the next pass again holds a single distance. The loop ends when the queue is empty, and unreachable vertices never enter a row. The code asserts the Java fact that a copied `size` stays fixed while `queue.size()` grows.
 
 **Complexity.**
 - **Time** is O(V + E + V log V), because each adjacency entry is read once and the sorting of rows costs at most V log V in total.
@@ -293,7 +293,7 @@ public final class InitiallyComplete {
 **Approach.**
 The method puts every rotten cell into one queue, because all of them spread at the same time. Each pass copies the queue size, removes that many rotten cells and turns every fresh edge neighbor rotten at the moment it is discovered. The number of cells turned in the pass is one minute's count. The method appends this count to the result only when it is positive.
 
-The invariant is that at the start of each pass the queue holds exactly the oranges that became rotten in the previous minute, or the initial rotten oranges in the first pass. Marking a neighbor rotten at discovery stops a second discovery in the same minute. A fresh orange with no path to a rotten orange is never discovered, so it stays fresh and is not counted. A grid with no rotten orange, or with no fresh orange next to one, gives an empty array. The code asserts that an empty `int[]` has length 0.
+The invariant is that each pass starts with a queue of exactly the oranges that rotted in the previous minute, or the initial rotten oranges in the first pass. Marking a neighbor rotten at discovery stops a second discovery in the same minute. A fresh orange with no path to a rotten orange is never discovered, so it stays fresh and is not counted. A grid with no rotten orange, or with no fresh orange next to one, gives an empty array. The code asserts that an empty `int[]` has length 0.
 
 **Complexity.**
 - **Time** is O(m * n), because each cell is queued at most once and has four neighbors.

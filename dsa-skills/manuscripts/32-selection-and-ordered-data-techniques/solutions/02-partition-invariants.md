@@ -11,7 +11,7 @@ The pivot value is read from `a[hi]` before any swap. The pointer `i` starts at 
 **Complexity.**
 
 - **Time** is O(hi - lo + 1), since the scan visits each slot of the range once and does constant work per slot.
-- **Space** is O(1), because the method keeps two indexes and the pivot value.
+- **Space** is O(1), as the method holds two indexes and the pivot value.
 
 ```java run
 import java.util.Arrays;
@@ -93,7 +93,7 @@ The pointers start at `lt = 0`, `i = 0` and `gt = n - 1`, so only the unresolved
 **Complexity.**
 
 - **Time** is O(n), because each step either advances `i` or lowers `gt`, so the unresolved range loses one slot per step.
-- **Space** is O(1), because the method keeps three indexes.
+- **Space** is O(1), as the method holds three indexes.
 
 ```java run
 import java.util.Arrays;

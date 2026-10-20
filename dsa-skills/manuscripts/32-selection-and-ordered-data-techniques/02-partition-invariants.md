@@ -7,7 +7,7 @@
 
 A billing service holds one million order amounts in an array. A report needs the orders below a price limit first, then the orders exactly at the limit, then the orders above it. The amounts inside each group may stay in any order. The service has little spare memory, so it must rearrange the array it already has.
 
-Sorting would produce this layout, but sorting does far more work than the report needs. A hand-written loop is faster, and it is also easy to get wrong. A swap in the wrong place loses an order, a pointer that never moves hangs the program, and a pointer that moves too far skips a value. The question for this lesson is how a program splits an array into three groups in place and knows at every moment which part of the array is already correct.
+Sorting would produce this layout, but sorting does far more work than the report needs. A hand-written loop is faster, and it is also easy to get wrong. A swap in the wrong place loses an order, a pointer that never moves hangs the program, and a pointer that moves too far skips a value. This lesson asks how a program can split an array into three groups in place while it knows at every moment which part is already correct.
 
 <!-- stage: naive -->
 ### Copying Values Into Three Lists
@@ -239,7 +239,7 @@ Define `lo`, `hi` and the pivot before the first swap. Pass the bounds to a recu
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Given an `int` array `nums` and an integer `k`, return the `k`-th largest value in sorted order, counting repeated values separately. The input array must not be modified. Use partition with index bounds and discard the ranges that cannot contain the answer.
+**Problem.** Given an `int` array `nums` and an integer `k`, find the `k`-th largest value, where each repeated value counts as its own entry in the sorted order. The input array must not be modified. Use partition with index bounds and discard the ranges that cannot contain the answer.
 
 **Constraints.** The limits are:
 - **Length** of `nums` is an `int` with `1 <= n <= 10^5`.

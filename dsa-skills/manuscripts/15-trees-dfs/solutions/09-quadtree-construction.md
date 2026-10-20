@@ -5,7 +5,7 @@
 <!-- id: qt-uniform -->
 
 **Approach.**
-The method reads the cell at the top-left corner of the region and compares every other cell of the region with it. The first cell that differs ends the scan and returns `false`. If the scan reaches the last cell, every cell agreed, and the method returns `true`. The invariant is that at the start of each comparison, all cells already read are equal to the first cell.
+The method reads the cell at the top-left corner of the region and compares every other cell of the region with it. The first cell that differs ends the scan and returns `false`. If the scan reaches the last cell, every cell agreed, and the method returns `true`. The invariant is that every cell read before a comparison starts equals the first cell.
 
 A check of the four corners would not be enough. Two corners can agree while a cell between them differs, and the section below confirms this with a grid.
 

@@ -216,7 +216,7 @@ Do not use a left pointer when the range can also move backward, because the deq
 
 **Prerequisites.** Both deque kinds and the left pointer from this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `limit`, find the longest contiguous range in which the difference between the largest and the smallest value is at most `limit`. Return the length of that range.
+**Problem.** For an array `nums` of integers and an integer `limit`, find the longest contiguous range in which the largest value minus the smallest value is at most `limit`. Return the length of that range.
 
 **Constraints.** The limits are:
 - **Length** is between 1 and 100,000.

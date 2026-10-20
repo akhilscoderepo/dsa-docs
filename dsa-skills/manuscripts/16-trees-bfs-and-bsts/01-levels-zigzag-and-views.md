@@ -141,7 +141,7 @@ final class LevelOrder {
 
 The code never adds `null` to the queue, because `ArrayDeque.add(null)` throws a `NullPointerException`. The guard on each child and the early return for an empty root keep every queued value real.
 
-- **Time** is O(n), because each node is added once and removed once.
+- **Time** is O(n), since each node enters the queue once and leaves it once.
 - **Space** is O(w), where `w` is the widest level, because the queue never holds more than two adjacent levels. The result needs another O(n) for the n values.
 
 <!-- stage: applicability -->
@@ -167,7 +167,7 @@ The false friend is the recursive walk with a depth argument. Both give the same
 
 **Prerequisites.** The queue and the stored level size from this lesson.
 
-**Problem.** Given the root of a binary tree, return a list of lists. The list at position `d` holds the values of all nodes at depth `d`, ordered from left to right. The root has depth 0. Capture the number of queued nodes before removing any node of a level.
+**Problem.** For the root of a binary tree, return a list with one inner list of values for each depth. The list at position `d` holds the values of all nodes at depth `d`, ordered from left to right. The root has depth 0. Capture the number of queued nodes before removing any node of a level.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 2000.

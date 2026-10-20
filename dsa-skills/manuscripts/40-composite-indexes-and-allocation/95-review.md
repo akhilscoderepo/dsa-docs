@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A price that changes in one structure only, a seat that two customers hold, and a failed withdrawal that still removes cash all pass small tests. The questions below cover the eight lessons. Try them after the lessons and again after a few days, and commit to an answer before you open the explanation.
+A price that changes in one structure only, a seat that two customers hold, and a failed withdrawal that still removes cash all pass small tests. The questions below span the eight lessons. Try them as the lessons end and after a few more days, and lock in an answer before you open the explanation.
 
 ### Check Your Recall
 

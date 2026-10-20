@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A circular queue cannot tell full from empty, a browser history keeps pages that should be gone, and an ID pool hands out the same number twice. The questions below cover the six lessons and the two closing lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+A circular queue cannot tell full from empty, a browser history keeps pages that should be gone, and an ID pool hands out the same number twice. The questions below cover the six lessons and the two closing lessons. Try them when the lessons end and again after several days, and decide on an answer before you open the explanation.
 
 ### Recognition Questions
 

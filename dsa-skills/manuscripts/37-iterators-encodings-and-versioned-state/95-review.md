@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-An iterator that moves when it only looks, a codec that gives two lists the same text, and a version query that reads the wrong state all pass short tests. The questions below cover all eight lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+An iterator that moves when it only looks, a codec that gives two lists the same text, and a version query that reads the wrong state all pass short tests. The questions below cover all eight lessons. Try them after finishing the lessons and again later in the week, and fix your answer before you open the explanation.
 
 ### Recognition Questions
 

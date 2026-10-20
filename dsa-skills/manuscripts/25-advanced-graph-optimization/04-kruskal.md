@@ -183,7 +183,7 @@ The invariant is a statement that stays true before and after every loop step. H
 
 #### Avoiding The False Friend
 
-A false friend is a plausible method that gives a wrong answer on some input. The false friend here is the touched rule of the naive stage, which tests vertices and not groups. It passes on graphs where the cheapest edges happen to form a tree. A second false friend is a shortest path tree from one source. That tree minimizes each distance from the source, and it can cost more in total than a cheapest spanning tree. A third mistake is to skip the cycle test when all weights are distinct and assume no cycle can form. Distinct weights do not prevent a cycle among cheap edges.
+A false friend is a plausible method that gives a wrong answer on some input. The false friend here is the touched rule of the naive stage, which tests vertices and not groups. It passes on graphs where the cheapest edges happen to form a tree. The second false friend is a shortest path tree from one source. That tree minimizes each distance from the source, and it can cost more in total than a cheapest spanning tree. A third mistake is to skip the cycle test when all weights are distinct and assume no cycle can form. Distinct weights do not prevent a cycle among cheap edges.
 
 <!-- stage: exercises -->
 ### Exercises

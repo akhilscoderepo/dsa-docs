@@ -5,7 +5,7 @@
 <!-- id: hm-contains-duplicate -->
 
 **Approach.**
-One pass keeps a set of the values read so far. For each value, the call `add` stores it and reports whether it was new, so a `false` result proves that an earlier index holds the same value. The invariant is that after index `i`, the set holds exactly the distinct values of `nums[0..i]`. If the loop finishes, no index repeated a value. The harness also asserts three Java facts from the lesson. The call `add` returns false for a stored value. The call `contains` finds a value that another `Integer` object boxed. The class `LinkedHashSet` keeps insertion order.
+One pass keeps a set of the values read so far. For each value, the call `add` stores it and reports whether it was new, so a `false` result proves that an earlier index holds the same value. Invariant: once index `i` is processed, the set equals the distinct values of `nums[0..i]`. If the loop finishes, no index repeated a value. The harness also asserts three Java facts from the lesson. The call `add` returns false for a stored value. The call `contains` finds a value that another `Integer` object boxed. The class `LinkedHashSet` keeps insertion order.
 
 **Complexity.**
 - **Time** is O(n) on average, because the loop makes n calls to `add` that each take expected constant time.
@@ -71,7 +71,7 @@ public final class ContainsDuplicate {
 <!-- id: hm-intersection -->
 
 **Approach.**
-The method puts every value of `b` into a set, then reads `a` from left to right. A value of `a` joins the answer when the set of `b` holds it and the answer has not reported it yet. A second set, `reported`, enforces that each shared value appears once, and the left-to-right scan gives the order of first occurrence in `a`. The invariant is that after index `i`, the answer holds the shared values of `a[0..i]` once each, in order of first occurrence.
+The method puts every value of `b` into a set, then reads `a` from left to right. A value of `a` joins the answer when the set of `b` holds it and the answer has not reported it yet. A second set, `reported`, enforces that each shared value appears once, and the left-to-right scan gives the order of first occurrence in `a`. Invariant: once index `i` is processed, the answer holds each shared value of `a[0..i]` a single time, in order of first occurrence.
 
 **Complexity.**
 - **Time** is O(n + m) on average for arrays of lengths n and m, because each array is read once with expected constant-time set operations.

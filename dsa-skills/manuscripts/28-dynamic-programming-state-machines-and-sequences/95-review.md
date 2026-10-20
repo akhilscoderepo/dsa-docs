@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A report sells before it buys, a diff lists extra changes and a checker misreads a word. The questions below cover all six lessons and the closing lesson. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A report sells before it buys, a diff lists extra changes and a checker misreads a word. The questions below cover all six lessons and the closing lesson. Come to this page once the lessons are over and once more after a few days. A question describes one situation and does not give the lesson name.
 
 ### Recognition Questions
 

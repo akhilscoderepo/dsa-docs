@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Come back to this page after the lessons and again a few days later. Each question describes a situation and leaves out the lesson name. Choose an answer before you open the explanation.
+Come to this page when the lessons are done and again after a short wait. Each question describes a situation and leaves out the lesson name. Choose an answer before you open the explanation.
 
 ### Recognition Questions
 

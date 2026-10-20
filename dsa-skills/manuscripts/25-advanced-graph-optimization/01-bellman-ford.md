@@ -7,7 +7,7 @@
 
 A payment platform moves money between accounts through partner banks. Every transfer charges a fee, but some transfers pay a rebate, which is a negative fee. Account 0 must reach account 1. The direct transfer charges 4. The route through account 2 charges 6 for the first transfer and then pays a rebate of 5 for the second, so its net fee is only 1. A planner that trusts the first fee it sees overpays by 3.
 
-Treat the graph as directed. Each account is a vertex with a number from 0 to n - 1, and each transfer is an edge that carries a **weight**, the fee, which may be negative. The cost of a route is the sum of its weights. The task is to find the lowest total fee from one source account to every other account. The method also reports each account that no route reaches. The method reads the arrays it receives and never changes them.
+Treat the graph as directed. Each account is a vertex with a number from 0 to n - 1, and each transfer is an edge that carries a **weight**, the fee, which may be negative. A route costs the total of its weights. The task is to find the lowest total fee from one source account to every other account. The method also reports each account that no route reaches. The method reads the arrays it receives and never changes them.
 
 This lesson asks how a search stays correct when a transfer that comes later can lower a fee that already looked final.
 
@@ -196,7 +196,7 @@ A **false friend** is a well-known technique that seems to apply but returns wro
 
 **Prerequisites.** The exercise above.
 
-**Problem.** There are `n` cities numbered from 0. Each entry `[a, b, p]` of `flights` is a one-way flight from `a` to `b` with price `p`, which may be negative to model a credit. A route from `src` to `dst` is a sequence of flights in which each flight starts where the previous one ends. Its stops are the cities between the first and last flight. Return an `int[]` of length `k + 1`. Entry `j` is the lowest total price over routes from `src` to `dst` with at most `j` stops, or `Integer.MAX_VALUE` when no such route exists.
+**Problem.** The `n` cities are numbered from 0. Each entry `[a, b, p]` of `flights` is a one-way flight from `a` to `b` with price `p`, which may be negative to model a credit. A route from `src` to `dst` is a chain of flights, and each flight starts at the city where the previous flight ends. Its stops are the cities between the first and last flight. Return an `int[]` of length `k + 1`. Entry `j` is the lowest total price over routes from `src` to `dst` with at most `j` stops, or `Integer.MAX_VALUE` when no such route exists.
 
 **Constraints.** The limits are:
 - **Cities** satisfy `2 <= n <= 60`, and `src != dst` with both in `0..n-1`.

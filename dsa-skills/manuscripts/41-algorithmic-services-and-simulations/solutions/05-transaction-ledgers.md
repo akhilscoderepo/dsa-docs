@@ -10,7 +10,7 @@ The invariant is that every balance write sits after the last test of its call. 
 
 **Complexity.**
 
-- **Time** is O(1) per call, because each call does a fixed number of array reads and writes.
+- **Time** is O(1) per call, since a call does a fixed number of array reads and writes.
 - **Space** is O(n) for n accounts, because the array holds one balance per account.
 
 ```java run
@@ -413,7 +413,7 @@ public final class DuplicateActiveSolution {
 
 **Approach.** A hash map from product id to price is the catalog, and one integer counts the orders served so far. The bill call walks the lines and adds `price * amount` into a local `long`. An id missing from the catalog ends the call with -1 before the counter moves. After the loop the counter increases by one, and when it is a multiple of n the local total is replaced by the discounted total in integer arithmetic.
 
-The invariant is that the counter equals the number of calls that returned a bill, so a refused order never shifts the position of the discount. The counter is the only state a call writes, and the write sits after the last test.
+Invariant: the counter equals the number of calls that returned a bill, so a refused order cannot move the position of the discount. The counter is the only state a call writes, and the write sits after the last test.
 
 **Complexity.**
 

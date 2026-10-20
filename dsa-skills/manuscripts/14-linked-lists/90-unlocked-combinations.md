@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A snapshot that shares one link with the original breaks the first time someone edits the original. This chapter releases one pairing that its prerequisites allow, and it names one pairing that waits for the design chapters.
+A snapshot that shares one link with the original breaks the first time someone edits the original. One pairing opens here because its prerequisites are met, and one more pairing waits for the design chapters.
 
 ### Pairing Taught In This Chapter
 

@@ -7,7 +7,7 @@
 
 A notification service keeps at most 3 pending send requests in a fixed array. It refuses a request id that is already pending, so no user receives the same message twice. A reviewer writes a fast version that records the id in a hash set first and checks for a full array second. When the array is full, the call returns "full" but the id stays in the set. A slot frees up later, the caller retries the same id, and the service answers "duplicate" for an id that appears nowhere in the queue. The message is never sent.
 
-Each method reads correctly when viewed alone. The defect appears only in a sequence of calls, and it comes from the order of two statements. The question of this lesson is how to choose the fields of a bounded queue with an index, and the order of writes inside each public method, so that both structures describe the same elements after every call, rejected calls included.
+Each method reads correctly when viewed alone. The defect appears only in a sequence of calls, and it comes from the order of two statements. This lesson asks how to choose the fields of a bounded queue with an index, and the order of writes inside each public method, so that both structures describe the same elements after every call, rejected calls included.
 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute

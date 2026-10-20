@@ -229,7 +229,7 @@ The false friend is marking only the visible location. It looks like the ordinar
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** A square grid `grid` of size `n` by `n` holds 0 for a free cell and 1 for a blocked cell. A clear path starts at `(0,0)`, ends at `(n-1,n-1)`, and uses only free cells. Consecutive cells of the path differ by at most 1 in each coordinate, so a cell has up to eight neighbors. Return the number of cells on the shortest clear path, or -1 when no clear path exists.
+**Problem.** A square grid `grid` with `n` rows and `n` columns stores 0 for a free cell and 1 for a blocked cell. A clear path starts at `(0,0)`, ends at `(n-1,n-1)`, and uses only free cells. Consecutive cells of the path differ by at most 1 in each coordinate, so a cell has up to eight neighbors. Return the cell count of the shortest clear path, or -1 if there is no clear path.
 
 **Constraints.** The limits are:
 - **Size** satisfies `1 <= n <= 100`.

@@ -5,7 +5,7 @@ A payments system routes a refund through three accounts, and one transfer carri
 
 ### Prerequisites
 
-You should know adjacency lists and depth-first search from chapter 21. You should know directed graphs and union-find from chapter 23, and the heap loop for shortest paths from chapter 24. The `PriorityQueue` comes from chapter 17. Code samples assume `import java.util.*;` and a recent JDK.
+You should know adjacency lists and depth-first search from chapter 21. You should know directed graphs and union-find from chapter 23, and the heap loop for shortest paths from chapter 24. The `PriorityQueue` comes from chapter 17. Code samples include `import java.util.*;` and require a recent JDK.
 
 ### The Eight Lessons
 
@@ -26,7 +26,7 @@ Each lesson keeps one fact true while a loop runs.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that gives a wrong or slow answer on a realistic input. It then shows a first version and asks you to predict its result. The next parts name the rule, list the variables, follow two traces, show the code and say when the rule stops fitting. Four exercises close each lesson, and they climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+A lesson opens with a program that gives a wrong or slow answer on a realistic input. Then a first version appears, and you predict its result. The next parts give the rule and the variables, trace two cases, show the code and say when the rule stops fitting. Four exercises close each lesson, and they climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
 
 ### What You Can Do After This Chapter
 

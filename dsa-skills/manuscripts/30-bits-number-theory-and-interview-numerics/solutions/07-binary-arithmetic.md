@@ -58,7 +58,7 @@ Each round replaces `a` by `a ^ b` and `b` by `(a & b) << 1`. The sum `a + b` st
 **Complexity.**
 
 - **Time** is O(1) for an `int`, because the loop runs at most 32 rounds of three operators.
-- **Space** is O(1), because the method keeps two words and one counter.
+- **Space** is O(1), as two words and one counter are all it holds.
 
 ```java run
 import java.util.Random;
@@ -120,7 +120,7 @@ The shift `<< 1` discards a bit that leaves column 31, and the plus operator dis
 **Complexity.**
 
 - **Time** is O(1), because the loop runs at most 32 rounds for any `int` pair.
-- **Space** is O(1), because the method keeps two words and one temporary.
+- **Space** is O(1), as two words and one temporary are all it holds.
 
 ```java run
 import java.util.Random;

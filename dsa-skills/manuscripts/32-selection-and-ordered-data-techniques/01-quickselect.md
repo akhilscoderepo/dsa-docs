@@ -143,7 +143,7 @@ The loop ends because every round either returns or shrinks `hi - lo` by at leas
 
 #### Recognize The Pattern
 
-Use this method when the question asks for a single rank, or for the `k` smallest values in any order. Median, percentile, kth largest and the `k` nearest items all fit. The invariant to check before coding is that `a[lo..hi]` holds exactly the values that belong at sorted positions `lo` to `hi`. Every partition must keep that statement true, and the loop must rely on nothing else.
+Use this method when the question asks for a single rank, or for the `k` smallest values in any order. Median, percentile, kth largest and the `k` nearest items all fit. Before coding, check the invariant that `a[lo..hi]` contains exactly the values that belong at sorted positions `lo` to `hi`. Every partition must keep that statement true, and the loop must rely on nothing else.
 
 The method also changes the array. If the caller needs the original order, copy once before the loop. That single copy costs O(n) and is not a copy per round.
 
@@ -185,7 +185,7 @@ Write `lo + (hi - lo) / 2` and never `(lo + hi) / 2`, because the sum of two lar
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given an integer array `nums` and an integer `k`, return the `k`-th largest element in the sorted order, where `k = 1` asks for the maximum. Equal values count separately.
+**Problem.** For an integer `k` and an integer array `nums`, return the element that would sit at the `k`-th place from the top of the sorted order, where `k = 1` asks for the maximum. Equal values count separately.
 
 **Constraints.** The limits are:
 - **`n`** is the length of `nums`, an `int` with `1 <= n <= 10^5`.

@@ -5,7 +5,7 @@ A shipping tool counts the ways to split a load into crates of 2 or 3 units. It 
 
 ### Prerequisites
 
-You should know recursion and arrays from the early chapters, and two-dimensional arrays for the grid lessons. Chapter 25 ended with distance tables whose entries become final after ordered rounds, and this chapter builds on that habit. Code samples assume `import java.util.*;` and a recent JDK.
+You should know recursion and arrays from the early chapters, and two-dimensional arrays for the grid lessons. Chapter 25 ended with distance tables whose entries become final after ordered rounds, and this chapter builds on that habit. Every code sample starts from `import java.util.*;` and assumes a recent JDK.
 
 ### The Eight Lessons
 
@@ -26,7 +26,7 @@ Each lesson fixes one rule about the table that holds the answers.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that gives a wrong or slow answer on a realistic input. It then shows a first version and asks you to predict its result. The next parts name the rule, list the variables, follow two traces, show the code and say when the rule stops fitting. Four exercises close each lesson, and they climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+Each lesson opens with a program that returns a wrong answer or runs slowly on a realistic input. Next is a first version, and you guess its result. The parts after that name the rule, list the variables, follow two traces, show the code and say where the rule stops fitting. Four exercises end each lesson, and they run through Build, Vary, Boundary and Recognize. Open a hint only after a serious attempt.
 
 ### What You Can Do After This Chapter
 

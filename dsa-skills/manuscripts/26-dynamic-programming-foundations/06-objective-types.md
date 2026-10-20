@@ -9,7 +9,7 @@ A game level is a row of cells numbered from 0 to n. The character starts on cel
 
 A developer wrote a table that answers the first question. Each entry says whether the character can stand on that cell. The developer then copied the method for the second question and kept the same logical operator. The counts came out as 0 and 1, never anything else. Copying again for the third question produced a different bug, a wrong number for every level that cannot be finished.
 
-All three questions use the same cells and the same jumps. A **jump sequence** is the ordered list of cells that the character lands on, from cell 0 to cell n. This lesson asks which parts of the table method stay fixed across the questions and which parts must change. The method reads the arrays it receives and never changes them.
+All three questions use the same cells and the same jumps. A **jump sequence** is the ordered list of cells that the character lands on, from cell 0 to cell n. This lesson asks which parts of the table method stay fixed across the questions and which parts must change. The method only reads the arrays it receives.
 
 <!-- stage: naive -->
 ### Trying Every Jump Sequence
@@ -228,7 +228,7 @@ A **false friend** is a method that resembles the right one but answers a differ
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** A grid `grid` has `m` rows and `n` columns of non-negative integers. A path starts at the top-left cell and ends at the bottom-right cell. Each move goes one cell right or one cell down. The sum of a path is the sum of the values of all cells it visits, including both ends. Return the smallest sum over all paths.
+**Problem.** The grid `grid` holds non-negative integers in `m` rows and `n` columns. Every path begins at the top-left cell and finishes at the bottom-right cell. Each move goes one cell right or one cell down. The sum of a path is the sum of the values of all cells it visits, including both ends. Return the smallest sum over all paths.
 
 **Constraints.** The limits are:
 - **Grid** satisfies `1 <= m, n <= 200`.

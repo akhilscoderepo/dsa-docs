@@ -68,7 +68,7 @@ public final class DpLinrecClimbStairs {
 **Approach.**
 The method stores `dp[i]`, the lowest total price to stand on position `i`, for `i` from 0 to `cost.length`. Both starts are free, so `dp[0]` and `dp[1]` are 0. A climber reaches position `i` from `i - 1` after paying `cost[i - 1]`, or from `i - 2` after paying `cost[i - 2]`. The entry is the smaller of those two sums.
 
-The invariant is the same as in the counting version: both window entries are final before the loop uses them. The change is the combining operation, which is a minimum of two sums and not a sum of two counts. The method reads the array `cost` and never writes it, and the tests check that.
+This invariant matches the counting version: both window entries are final before the loop uses them. The change is the combining operation, which is a minimum of two sums and not a sum of two counts. The method reads the array `cost` and never writes it, and the tests check that.
 
 **Complexity.**
 - **Time** is O(n), because each of the n - 1 entries takes one comparison of two sums.

@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A search that skips a subset boundary, a pick that favours the last item, and a guess that is 3 percent too high all pass short tests. The questions below cover all eight lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+A search that skips a subset boundary, a pick that favours the last item, and a guess that is 3 percent too high all pass short tests. The questions below cover all eight lessons. Try them after the lessons and again some days later, and pick an answer before you read the explanation.
 
 ### Check Your Recall
 

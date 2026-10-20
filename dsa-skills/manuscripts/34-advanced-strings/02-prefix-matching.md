@@ -147,7 +147,7 @@ The empty-pattern guard matters, because the first comparison would otherwise re
 
 Use this technique when one fixed pattern is matched against text that may contain long partial matches, or when a problem asks about the prefixes of a string that are also suffixes. The statement often reads as the longest prefix that is also a suffix, the period of a string, or a search that must run in linear time.
 
-The invariant to state before coding is that `k` is the longest pattern prefix that is a suffix of the text read so far. Every fallback keeps that statement true, and every other move follows from it.
+Before coding, state the invariant that `k` is the length of the longest pattern prefix that is also a suffix of the text read so far. Every fallback keeps that statement true, and every other move follows from it.
 
 #### Two False Friends
 

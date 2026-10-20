@@ -22,7 +22,7 @@ Each lesson names one fact that every call must keep true.
 
 ### Reading Order
 
-Every lesson starts with a class that passes short tests and then fails on a longer call sequence. You predict the failure before the reasoning appears. Two traces follow the fields call by call, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a design that passes small tests and breaks the rule the lesson protects. A **transfer problem** is an interview prompt that applies the lesson to a new setting, with review notes before its solution. Solutions check each class against a brute-force **oracle**, a slow but obviously correct version, on random inputs. A LeetCode problem that appears twice carries a changed contract, and its text says what changed.
+Every lesson starts with a class that passes short tests and then fails on a longer call sequence. You predict the failure before the reasoning appears. Two traces follow the fields call by call. Java code and the limits of the idea come last. The four exercises go from a basic build to a variation, then an edge case, then a recognition problem. A **false friend** is a design that passes small tests and breaks the rule the lesson protects. A **transfer problem** is an interview prompt that applies the lesson to a new setting, with review notes before its solution. Solutions check each class against a brute-force **oracle**, a slow but obviously correct version, on random inputs. A LeetCode problem that appears a second time has a changed contract, and its text says what is different.
 
 ### What You Can Do After This Chapter
 

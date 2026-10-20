@@ -124,7 +124,7 @@ Every subarray of a steady window is steady, because its largest value is not hi
 **Complexity.**
 
 - **Time** is O(n), as the two deques receive every position once and the left pointer never steps back.
-- **Space** is O(n) in the worst case, which a steady sorted array reaches.
+- **Space** is O(n) at worst, and a steady sorted array reaches that bound.
 
 ```java run
 import java.util.*;

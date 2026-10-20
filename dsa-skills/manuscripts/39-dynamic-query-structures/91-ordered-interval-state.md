@@ -313,7 +313,7 @@ If every range is a single point and the questions are about rank or order stati
 
 **Prerequisites.** The sorted run arrays and the upper-bound search from this lesson, where the last group starting at or before a value sits just left of the returned index. This exercise is a variant of LeetCode 352 and changes its contract: runs also merge across a small gap of missing values.
 
-**Problem.** Design a class `GapSummary` with a constructor that receives an `int` called `gap`. The method `addNum(v)` records the integer `v` as seen, and recording a value twice has no further effect. The method `getIntervals()` groups the seen values in sorted order. Two neighbouring seen values `a < b` belong to the same group exactly when `b - a <= gap + 1`. The method returns one closed pair `[smallest, largest]` per group, sorted by smallest value. The pair covers the missing values inside the group without marking them as seen. Search the stored groups with a hand-written binary search, not with `TreeMap`.
+**Problem.** Design a class `GapSummary` whose constructor takes an `int` called `gap`. The method `addNum(v)` records the integer `v` as seen, and recording a value twice has no further effect. The method `getIntervals()` groups the seen values in sorted order. Two neighbouring seen values `a < b` belong to the same group exactly when `b - a <= gap + 1`. The method returns one closed pair `[smallest, largest]` per group, sorted by smallest value. The pair covers the missing values inside the group without marking them as seen. Search the stored groups with a hand-written binary search, not with `TreeMap`.
 
 **Constraints.** The limits are:
 - **`v`** is an `int` with `0 <= v <= 2^31 - 1`, and **`gap`** is an `int` with `0 <= gap <= 10^9`.

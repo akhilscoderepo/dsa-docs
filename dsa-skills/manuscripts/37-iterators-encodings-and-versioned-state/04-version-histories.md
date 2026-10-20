@@ -45,7 +45,7 @@ The naive class stores 100 000 times 50 000, which is 5 billion numbers, and abo
 <!-- stage: bottleneck -->
 ### Counting The Copied Cells
 
-The naive `snap` costs O(n) time and O(n) space for every call, where `n` is the array length. After `s` snapshots the memory is O(n * s). A workload with long arrays and frequent checkpoints exhausts memory long before it exhausts time.
+The naive `snap` needs O(n) time and O(n) space on every call, where `n` is the array length. After `s` snapshots the memory is O(n * s). A workload with long arrays and frequent checkpoints exhausts memory long before it exhausts time.
 
 The waste has a precise cause. A cell that did not change between two snapshots appears twice with the same value. The information in the history is only the list of changes, and the number of changes is the number of `set` calls, which is far smaller than `n * s`. A better class must store each change once and rebuild any past value from the changes. The next section shows how to store them so that a query finds the right change quickly.
 

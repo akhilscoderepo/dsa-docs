@@ -99,7 +99,7 @@ public final class Flatten2DVectorBuild {
 **Approach.**
 The new decision is the order of turns. The iterator keeps a queue of local cursors, and each cursor is a pair of a list index and the position of that list's next element. The constructor enqueues one cursor for each nonempty list, in list order. The method `next` removes the cursor at the front, reads its element, and enqueues the cursor again with the position plus one when the list has more elements. A finished list is not enqueued and takes no further turn. The queue order is therefore the order of the current round, followed by the lists that already took their turn in the next round.
 
-The invariant is that the queue holds exactly the lists with an unread element, each once, in turn order. `hasNext` is `!queue.isEmpty()`. The program checks the class against an oracle that runs rounds explicitly over copies of the lists.
+Invariant: the queue lists each source with an unread element once, in turn order. `hasNext` is `!queue.isEmpty()`. The program checks the class against an oracle that runs rounds explicitly over copies of the lists.
 
 **Complexity.**
 - **Time** is O(k) for the constructor with k lists, and O(1) per call afterward, because one dequeue and at most one enqueue run.

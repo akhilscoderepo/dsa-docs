@@ -74,7 +74,7 @@ The method flips the comparison, so it removes strictly larger values from the b
 
 **Complexity.**
 
-- **Time** is O(n), because each value is appended once and removed at most once.
+- **Time** is O(n), as each value is appended one time and removed at most one time.
 - **Space** is O(n), for the deque and for the answer array.
 
 ```java run
@@ -129,7 +129,7 @@ The two policies differ in one comparison. The keep policy removes strictly smal
 **Complexity.**
 
 - **Time** is O(n) for either policy, because each value is appended once and removed at most once.
-- **Space** is O(n) in the worst case, and the replace policy never stores more than the keep policy.
+- **Space** is O(n) at worst, and the replace policy stores no more items than the keep policy does.
 
 ```java run
 import java.util.*;

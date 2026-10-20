@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A leaderboard recomputes a range total on every request, a calendar scans every booking to find the busiest minute and a counter allocates an array for timestamps near two billion. The questions below cover the five lessons and the two closing lessons. Return to this page after the lessons and again after a few days. Each question describes a situation, so decide the answer before you open the explanation.
+A leaderboard recomputes a range total on every request, a calendar scans every booking to find the busiest minute and a counter allocates an array for timestamps near two billion. The questions below cover the five lessons and the two closing lessons. Go through this page when the lessons end, then again after a few days. Each question describes a situation, so settle your answer before the explanation opens.
 
 ### Recognition Questions
 
@@ -35,4 +35,4 @@ A leaderboard recomputes a range total on every request, a calendar scans every 
 
 ### Fixing A Wrong Answer
 
-Open the lesson whose topic the question covers, such as Fenwick Trees, Sweep Events or Compress Values Then Count Ranks, and reread its variables list and its applicability part. Then rerun its first trace by hand on a smaller input.
+Open the lesson whose topic the question covers, such as Fenwick Trees, Sweep Events or Compress Values Then Count Ranks, and reread its variables list and its applicability part. After that, redo its first trace by hand on a smaller input.

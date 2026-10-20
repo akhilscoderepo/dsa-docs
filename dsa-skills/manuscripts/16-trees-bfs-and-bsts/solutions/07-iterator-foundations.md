@@ -93,7 +93,7 @@ public final class LeftSpine {
 **Approach.**
 The method loads the left spine of the root, then repeats `j` times a pair of actions. The first action pops the top node, which holds the smallest key not yet returned. The second action pushes the left spine of the right child of the popped node. The keys of that right subtree come next in sorted order, and they are all smaller than the node that now lies below them on the stack. After the jth repetition the method reads the stack from the bottom to the top and returns the keys.
 
-The invariant is that the stack holds the nodes still waiting, and the top is the smallest key not yet returned. The pop and the loading of the right spine keep it true.
+The invariant is that the stack contains the nodes still waiting, and its top is the smallest key not returned so far. The pop and the loading of the right spine keep it true.
 
 **Complexity.**
 - **Time** is O(h + j), because each node is pushed once and popped once, and at most `h` nodes are pushed before the first pop.

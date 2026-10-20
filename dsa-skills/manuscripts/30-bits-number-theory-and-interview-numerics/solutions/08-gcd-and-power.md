@@ -11,7 +11,7 @@ The replacement keeps the set of common divisors unchanged. A common divisor of 
 **Complexity.**
 
 - **Time** is O(log min(a, b)), because the larger value at least halves every two replacements.
-- **Space** is O(1), because the loop keeps two values and one temporary.
+- **Space** is O(1), since the loop carries two values and one temporary.
 
 ```java run
 import java.math.BigInteger;
@@ -117,7 +117,7 @@ The invariant is that `result * base^e` equals `x^n`. When the lowest bit of `e`
 **Complexity.**
 
 - **Time** is O(log n), because the loop runs once per bit of `n`, which is at most 30 passes for `n <= 10^9`.
-- **Space** is O(1), because the loop keeps only `result`, `base` and `e`.
+- **Space** is O(1), since the loop carries only `result`, `base` and `e`.
 
 ```java run
 import java.math.BigInteger;
@@ -184,12 +184,12 @@ public final class IntegerPower {
 
 **Approach.** The method widens the exponent to `long` before it changes the sign.
 
-For an `int` exponent, `-Integer.MIN_VALUE` equals `Integer.MIN_VALUE`, so a loop that negates an `int` would keep a negative exponent and never run. Widening first gives the positive value 2^31 exactly. A negative exponent inverts the base once, and the loop then raises the inverse to the positive exponent. The exponent 0 skips the loop and returns 1.0 for every base, including 0.0. A zero base with a negative exponent inverts to infinity, and the loop keeps infinity, which matches Java division by zero. The invariant is the same as in the integer version: `result * base^e` equals the target power. The checks also confirm the `>>` and `>>>` facts from the lesson.
+For an `int` exponent, `-Integer.MIN_VALUE` equals `Integer.MIN_VALUE`, so a loop that negates an `int` would keep a negative exponent and never run. Widening first gives the positive value 2^31 exactly. A negative exponent inverts the base once, and the loop then raises the inverse to the positive exponent. The exponent 0 skips the loop and returns 1.0 for every base, including 0.0. A zero base with a negative exponent inverts to infinity, and the loop keeps infinity, which matches Java division by zero. This invariant matches the integer version: `result * base^e` equals the target power. The checks also confirm the `>>` and `>>>` facts from the lesson.
 
 **Complexity.**
 
 - **Time** is O(log |n|), because the loop runs once per bit of the widened exponent, at most 32 passes.
-- **Space** is O(1), because the loop keeps three values.
+- **Space** is O(1), since the loop carries three values.
 
 ```java run
 import java.util.Random;
@@ -272,7 +272,7 @@ For two positive numbers, `lcm(l, v)` equals `l / gcd(l, v) * v`. Dividing first
 **Complexity.**
 
 - **Time** is O(n log M), where M is the largest element, because each of the `n` elements costs one gcd of at most about 45 replacements.
-- **Space** is O(1), because the method keeps the running value and one gcd.
+- **Space** is O(1), as the running value and one gcd are the only state.
 
 ```java run
 import java.math.BigInteger;

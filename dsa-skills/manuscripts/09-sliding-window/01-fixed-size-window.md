@@ -63,7 +63,7 @@ To **slide** the window means to add one to both `left` and `right`. The method 
 
 The method keeps a small set of values, and each has one meaning at every step.
 
-- **nums** is the input array, and the method never changes it.
+- **nums** is the input array, which the method leaves unchanged.
 - **k** is the fixed window size, and it satisfies `1 <= k <= nums.length`.
 - **left** is the index of the first value inside the window.
 - **right** is the index of the last value inside the window.
@@ -144,7 +144,7 @@ Check the contract for `k` before the first loop. A value `k = 0` gives a wrong 
 
 **Prerequisites.** The running sum and the invariant of this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `k`, return an array `out` of length `nums.length - k + 1`. For each `i` from 0 to `nums.length - k`, `out[i]` is the sum of `nums[i..i + k - 1]`.
+**Problem.** Given an integer `k` and an integer array `nums`, produce an array `out` with `nums.length - k + 1` entries. For each `i` from 0 to `nums.length - k`, `out[i]` is the sum of `nums[i..i + k - 1]`.
 
 **Constraints.**
 - **Length** satisfies `1 <= nums.length <= 10^5`.
@@ -187,7 +187,7 @@ Check the contract for `k` before the first loop. A value `k = 0` gives a wrong 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** The input is an integer array `nums` and an integer `k`. Return the largest sum over all contiguous blocks of length exactly `k`. If `k` is not in the range `1` to `nums.length`, throw an `IllegalArgumentException`. The method must give the correct answer when `k == nums.length`, which has exactly one block.
+**Problem.** The inputs are `nums`, an integer array, and `k`, an integer. Return the largest sum over all contiguous blocks of length exactly `k`. If `k` is not in the range `1` to `nums.length`, throw an `IllegalArgumentException`. The method must give the correct answer when `k == nums.length`, which has exactly one block.
 
 **Constraints.**
 - **Length** satisfies `1 <= nums.length <= 10^5`.

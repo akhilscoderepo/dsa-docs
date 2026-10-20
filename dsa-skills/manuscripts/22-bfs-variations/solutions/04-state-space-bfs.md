@@ -7,7 +7,7 @@
 **Approach.**
 The method copies the code into a `char[]` and visits the wheels from left to right. For each wheel it writes the digit one higher, modulo 10, and records the new string. It then writes the digit one lower, which it computes as the digit plus 9 modulo 10 so that the remainder never goes negative, and records that string. After both turns it restores the original digit, so the next wheel starts from the unchanged code.
 
-The invariant is that at the start of each wheel iteration the array equals the input code. Each wheel contributes exactly two strings, and the two differ because 1 and 9 are different modulo 10. The result therefore holds `2 * w` strings, and no two are equal. The harness also asserts the Java fact that `%` on a negative int is negative, which is why the method uses `+ 9`.
+The invariant is that the array equals the input code whenever a wheel iteration starts. Each wheel contributes exactly two strings, and the two differ because 1 and 9 are different modulo 10. The result therefore holds `2 * w` strings, and no two are equal. The harness also asserts the Java fact that `%` on a negative int is negative, which is why the method uses `+ 9`.
 
 **Complexity.**
 - **Time** is O(w^2), because each of the `2w` results is a new string of length `w`.

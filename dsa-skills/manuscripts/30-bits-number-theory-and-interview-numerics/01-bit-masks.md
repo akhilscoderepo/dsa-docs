@@ -46,7 +46,7 @@ About 5 * 10^11 comparisons. There are about 500,000 pairs, and each pair needs 
 
 #### Count The Comparisons
 
-Let `n` be the number of words and `L` the length of the longest word. One pair costs O(L * L) comparisons. The program tests O(n * n) pairs, so the total is O(n * n * L * L). For `n = L = 1,000` the product is 10^12 when every ordered pair is tested. Testing each unordered pair once halves it to the 5 * 10^11 of the guess above.
+The word count is `n`, and `L` is the length of the longest word. One pair costs O(L * L) comparisons. The program tests O(n * n) pairs, so the total is O(n * n * L * L). For `n = L = 1,000` the product is 10^12 when every ordered pair is tested. Testing each unordered pair once halves it to the 5 * 10^11 of the guess above.
 
 #### Spot The Repeated Work
 

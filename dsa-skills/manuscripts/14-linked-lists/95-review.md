@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Come back to this page after the lessons and again a few days later. Each question describes a situation and leaves out the lesson name. Choose an answer before you open the explanation.
+Return to this page when the lessons end, and once more some days later. Each question gives a situation, and it omits the lesson name. Commit to a choice, and then open the explanation.
 
 ### Recognition Questions
 
@@ -51,4 +51,4 @@ Come back to this page after the lessons and again a few days later. Each questi
 
 ### Recall Exercises
 
-Close this page and answer from memory, then check against the lessons. Write the four statements of one reversal turn in order, and say which one protects the rest of the list. Explain in two sentences why a dummy node makes the removal of the first node follow the same rule as every other node. State what the slow and fast references hold when a list of 6 nodes ends the middle search, and say which loop test gives the first middle. Describe the four writes of one child-chain splice, and name the one write that is skipped when the parent is the last node.
+Shut the page, answer from memory and verify your answer in the lessons. Write the four statements of one reversal turn in order, and say which one protects the rest of the list. Explain in two sentences why a dummy node makes the removal of the first node follow the same rule as every other node. State what the slow and fast references hold when a list of 6 nodes ends the middle search, and say which loop test gives the first middle. Describe the four writes of one child-chain splice, and name the one write that is skipped when the parent is the last node.

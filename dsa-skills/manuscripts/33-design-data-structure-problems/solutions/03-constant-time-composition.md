@@ -6,7 +6,7 @@
 
 **Approach.**
 
-The map stores the node of every key, so `detach` finds the node in O(1) on average and never walks the list. The invariant is that the map holds exactly the keys reachable from the head, and that `next` and `prev` links agree with each other. Detaching a node rewrites the link of its previous neighbor, or the head when there is none. It then rewrites the link of its next neighbor, or the tail when there is none. The method returns the key of the next neighbor, which makes the rewritten link observable. The detached key leaves the map in the same call. Iterating over `nodeOf.keySet()` while detaching throws `ConcurrentModificationException`, so any loop over keys works on a copy.
+The map stores the node of every key, so `detach` finds the node in O(1) on average and never walks the list. The invariant is that the map contains the keys reachable from the head and no others, and that the `next` and `prev` links agree with each other. Detaching a node rewrites the link of its previous neighbor, or the head when there is none. It then rewrites the link of its next neighbor, or the tail when there is none. The method returns the key of the next neighbor, which makes the rewritten link observable. The detached key leaves the map in the same call. Iterating over `nodeOf.keySet()` while detaching throws `ConcurrentModificationException`, so any loop over keys works on a copy.
 
 **Complexity.**
 
@@ -245,7 +245,7 @@ public final class MapToArrayIndex {
 
 **Approach.**
 
-The invariant is that the map holds exactly one entry per stored key and each entry names the true position. A removal by swap with last moves the final key onto the freed slot. When the removed key is the final key, the move copies the key onto itself. The moved key and the removed key are then the same key, so the order of the two map updates decides the result. Repairing first and deleting second leaves the key out of the map, which is correct. Deleting first and repairing second writes the removed key back, and the map keeps an entry for a position that no longer exists. The solution below holds both orders in one class so the assertions can compare them. The faulty order passes every case where the removed key is not last, which is why a test must cover the last position directly.
+The invariant is that the map contains one entry per stored key, and each entry names the true position. A removal by swap with last moves the final key onto the freed slot. When the removed key is the final key, the move copies the key onto itself. The moved key and the removed key are then the same key, so the order of the two map updates decides the result. Repairing first and deleting second leaves the key out of the map, which is correct. Deleting first and repairing second writes the removed key back, and the map keeps an entry for a position that no longer exists. The solution below holds both orders in one class so the assertions can compare them. The faulty order passes every case where the removed key is not last, which is why a test must cover the last position directly.
 
 **Complexity.**
 

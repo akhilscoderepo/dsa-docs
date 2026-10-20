@@ -7,7 +7,7 @@
 
 A dashboard shows the number of requests per minute for the last 200,000 minutes. Operators ask for the total between two minutes many times a second. Late events also arrive, and each one changes the count of a single minute that already passed.
 
-A prefix-sum array answers each total with one subtraction, so the questions are cheap. The trouble starts when a count changes. Every prefix sum after the changed minute is now wrong, and the array must be repaired. The program needs both operations to stay fast at the same time, and the prefix-sum array makes only one of them fast. The question for this lesson is how a program keeps point changes and range totals cheap together.
+A prefix-sum array answers each total with one subtraction, so the questions are cheap. The trouble starts when a count changes. Every prefix sum after the changed minute is now wrong, and the array must be repaired. The program needs both operations to stay fast at the same time, and the prefix-sum array makes only one of them fast. This lesson asks how a program can keep both point changes and range totals cheap.
 
 <!-- stage: naive -->
 ### Rebuilding The Prefix Array After Each Change
@@ -142,7 +142,7 @@ The class has no separate build method, because a new tree holds all zeros and a
 
 Use this structure when point changes and prefix or range sums must both stay O(log n). The data must be a sequence of numbers where a sum of a range equals a difference of two prefix sums. That rule holds for sums, counts and bitwise exclusive-or, and it fails for minimum and maximum, which cannot be subtracted.
 
-The invariant to check before coding is that `tree[i]` equals the sum of the `i & -i` counts ending at `i`. Every change must keep it true, and every query must rely only on it.
+Before coding, check the invariant that `tree[i]` equals the sum of the `i & -i` counts that end at `i`. Every change must keep it true, and every query must rely only on it.
 
 #### Watch For The Nearest False Friend
 

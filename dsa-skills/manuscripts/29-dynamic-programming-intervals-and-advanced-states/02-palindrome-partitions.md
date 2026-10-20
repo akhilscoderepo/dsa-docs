@@ -107,7 +107,7 @@ Java fills a new `boolean` array with `false`, so entries that the loop never se
 
 #### Filling The Palindrome Table
 
-The first run uses `s = "aaba"` from the opening. The table has 4 rows and 4 columns, and the cells below list them row by row, so cell 0 to 3 is row 0, cell 4 to 7 is row 1, and so on. The pointer `cell` marks the entry in progress, and only the entries with `i <= j` are visited. The variable `ends` says whether the two end characters match, `inner` shows the entry for the inner interval, and `pal` is the value written.
+The first run uses `s = "aaba"` from the opening. The table has 4 rows and 4 columns, and the cells below list them row by row, so cell 0 to 3 is row 0, cell 4 to 7 is row 1, and so on. The pointer `cell` marks the entry being computed, and the loop visits only entries with `i <= j`. The variable `ends` says whether the two end characters match, `inner` shows the entry for the inner interval, and `pal` is the value written.
 
 Row 3 and row 2 hold single characters and the pair `ba`. Row 1 is the useful one. The pair `aa` has equal ends and an empty inner interval, so it is true. The substring `aba` has equal ends, and its inner interval is the single character `b`, which is true, so `aba` is true. Row 0 then finds that `aaba` has equal ends, but its inner interval `ab` is false, so the whole string is not a palindrome. The table holds 6 true entries.
 

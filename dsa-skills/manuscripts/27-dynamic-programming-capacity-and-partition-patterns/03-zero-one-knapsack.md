@@ -209,7 +209,7 @@ The first false friend is the upward loop, which passes any test where no item f
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** An array `nums` of positive integers is given. Decide whether the elements can be split into two groups with equal sums, where each element belongs to exactly one group. Return `true` if such a split exists and `false` otherwise.
+**Problem.** Take an array `nums` of positive integers. Decide whether the elements can be split into two groups with equal sums, where each element belongs to exactly one group. Return `true` if such a split exists and `false` otherwise.
 
 **Constraints.** The limits are:
 - **Length** satisfies `1 <= nums.length <= 200`.

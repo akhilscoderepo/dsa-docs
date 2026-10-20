@@ -7,7 +7,7 @@
 **Approach.**
 Each city is a vertex, and each 1 above the diagonal is an event that joins two cities. The method creates `parent` and `size` arrays, then visits every pair `(i, j)` with `i < j` and merges the two cities when the entry is 1. A merge happens only when the two representatives differ. Each merge lowers `count` by one and sets `largest` to the larger of its old value and the new size at the surviving root.
 
-The invariant is that `count` equals the number of distinct representatives and that `size[r]` is correct at every root `r`. The value `largest` starts at 1, because a table with one city holds one province of one city. The method reads only the upper triangle, because the table is symmetric. The diagonal never produces a merge, since `find(i) == find(i)`.
+The invariant has two parts: `count` equals the number of distinct representatives, and `size[r]` is correct at every root `r`. The value `largest` starts at 1, because a table with one city holds one province of one city. The method reads only the upper triangle, because the table is symmetric. The diagonal never produces a merge, since `find(i) == find(i)`.
 
 **Complexity.**
 - **Time** is O(n^2 * alpha(n)), because the method examines each of the n^2 / 2 pairs once and each merge test costs near-constant time.

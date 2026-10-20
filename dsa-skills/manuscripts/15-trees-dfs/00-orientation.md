@@ -5,7 +5,7 @@ A cleanup tool deletes a folder before the files inside it, and the system refus
 
 ### Prerequisites
 
-You should know loops, recursion at the level of a factorial method, and the cost words from Chapter 00. Chapter 04 introduced hash maps, which the rebuild lesson uses for lookups. Chapter 11 introduced stacks, which the lesson on walking without recursion uses as a `Deque`. Each lesson defines its own terms when they first matter. Two words recur at the end of each lesson. An invariant is a sentence that stays true after every step of a method. A false friend is a method or idea that looks right and gives a wrong answer in some case. Code samples assume `import java.util.*;` and a recent JDK, and a binary node is a small class with `val`, `left` and `right` fields.
+You should know loops, recursion at the level of a factorial method, and the cost words from Chapter 00. Chapter 04 introduced hash maps, which the rebuild lesson uses for lookups. Chapter 11 introduced stacks, which the lesson on walking without recursion uses as a `Deque`. Each lesson defines its own terms when they first matter. Two words recur at the end of each lesson. An invariant is a sentence that stays true after every step of a method. A false friend is a method or idea that looks right and gives a wrong answer in some case. Run the code samples with `import java.util.*;` on a recent JDK. A binary node is a small class with `val`, `left` and `right` fields.
 
 ### The Nine Lessons
 

@@ -7,7 +7,7 @@
 **Approach.**
 The window is the intersection of two bounds, so the queue needs two eviction conditions and the running sum needs one update rule. Each call first checks that the time did not move backward, then appends the new reading and adds its value to the `long` sum. The new reading has `time > time - span`, so the age test never removes it, and `maxCount >= 1` means the size test never removes it either. A loop then removes from the front while the queue holds more than `maxCount` readings or the oldest reading is at or before `time - span`, and each removal subtracts its value from the sum. The average is the sum divided by the queue size.
 
-The invariant is that the queue holds exactly the readings among the latest `maxCount` whose time is greater than `time - span`, and the sum equals their values. Both bounds remove from the front only, because readings arrive in time order, so the oldest reading is always the first candidate for either rule. The oracle recomputes the window from the full history on each call and compares the result exactly, since the sum and the count are the same integers.
+Invariant: the queue lists the readings among the latest `maxCount` with time above `time - span`, and the sum equals their values. Both bounds remove from the front only, because readings arrive in time order, so the oldest reading is always the first candidate for either rule. The oracle recomputes the window from the full history on each call and compares the result exactly, since the sum and the count are the same integers.
 
 **Complexity.**
 - **Time** is O(1) amortized per call, because each reading enters the queue once and leaves it once.

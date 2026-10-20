@@ -157,7 +157,7 @@ public final class FrontList {
 
 **Approach.**
 
-The state is a map from key to node and a doubly linked list with two sentinels, ordered from most recent at the front to least recent at the back. The invariant is that the map holds exactly the keys in the list, each once, and the list order is the order of last refresh. The operations `get` and an overwriting `put` both detach the node and reinsert it at the front, so they refresh. The operation `peek` reads the node's value and touches no link, so it does not refresh. That one difference is the changed contract, and it makes the order observable through `keysByRecency`.
+The state is a map from key to node and a doubly linked list with two sentinels, ordered from most recent at the front to least recent at the back. The invariant is that the map contains the keys of the list, each once, and the list order is the order of last refresh. The operations `get` and an overwriting `put` both detach the node and reinsert it at the front, so they refresh. The operation `peek` reads the node's value and touches no link, so it does not refresh. That one difference is the changed contract, and it makes the order observable through `keysByRecency`.
 
 A `put` of a new key first checks `index.size() == capacity`. If the cache is full, it detaches `tail.prev`, which is the least recent node, and removes that key from the map before inserting the new node. The eviction happens before the insert, so the map never holds more than `capacity` keys.
 

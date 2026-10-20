@@ -217,7 +217,7 @@ public final class Zigzag {
 **Approach.**
 The method returns the stored size of every level and ignores the values. A null root returns an empty list before any queue exists, because `ArrayDeque` rejects null. On a chain, every pass stores a size of 1, removes one node, queues its single child, and ends with an empty queue after the last node. The sum of the returned entries equals the node count, because every node is removed in exactly one pass.
 
-The invariant is the same as in the plain traversal: the stored size equals the number of nodes of the depth at the top of each pass.
+This invariant matches the plain traversal: the stored size equals the number of nodes at the depth that a pass starts with.
 
 **Complexity.**
 - **Time** is O(n), because each node is queued and removed once.

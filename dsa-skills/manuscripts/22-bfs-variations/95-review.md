@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A spread simulator ages every cell one minute per cell, and a maze solver forgets which keys it holds. Each failure matches a question below. Return to this page after the lessons, and again after a few days. Each question describes a situation and hides the lesson name.
+A spread simulator ages every cell one minute per cell, and a maze solver forgets which keys it holds. Each failure matches a question below. Check back here after the lessons, and a few days later check again. A question describes a situation, and the lesson that fits is not named.
 
 ### Recognition Questions
 

@@ -5,7 +5,7 @@ A distance labeler that runs one search per depot needs minutes on a city with f
 
 ### Prerequisites
 
-You should know the queue-based search of chapter 21, including marking a vertex when it enters the queue and the shortest-path argument for unweighted edges. Grids as graphs come from chapter 21 lesson 05, and hash sets and maps come from chapter 04. Code samples assume `import java.util.*;` and a recent JDK.
+You should know the queue-based search of chapter 21, including marking a vertex when it enters the queue and the shortest-path argument for unweighted edges. Grids as graphs come from chapter 21 lesson 05, and hash sets and maps come from chapter 04. Code samples import `java.util.*` and target a recent JDK.
 
 ### The Five Lessons
 
@@ -23,7 +23,7 @@ Each lesson changes one decision of the plain search.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that returns a wrong answer on a realistic input. It then shows the first version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises climb from a basic version to a pattern recognition problem, labeled Build, Vary, Boundary or Recognize. Read the hint only after a real attempt.
+A lesson opens with a program that returns a wrong answer on a realistic input. The first version follows, and you predict its result. Later parts name the rule, list the state, follow two traces, show the code and mark the place where the rule stops working. The exercises grow from a basic version to a pattern recognition problem under the labels Build, Vary, Boundary and Recognize. Read the hint only after a real attempt.
 
 ### What You Can Do After This Chapter
 

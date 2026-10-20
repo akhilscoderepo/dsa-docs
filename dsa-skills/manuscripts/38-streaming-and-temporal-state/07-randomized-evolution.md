@@ -52,7 +52,7 @@ reset() returns the shuffled order, because the constructor stores the same arra
 
 The loop makes `n` draws of `n` values each, so it has `n^n` equally likely draw sequences, and each sequence produces exactly one order. A fair shuffle needs every one of the `n!` orders to receive the same number of sequences. That needs `n!` to divide `n^n`. For every `n` of 3 or more it does not. The number `n - 1` is at least 2 and divides `n!`. It shares no prime factor with `n`, so it never divides `n^n`. The bias is therefore a property of the counting, not of the random number generator, and a better generator cannot repair it. For `n = 4` the 256 sequences give some orders 8 sequences and others 15, while a fair split would give each order 10.67.
 
-The enumeration design avoids the bias at a price. It builds `n!` orders, so it costs O(n * n!) time and O(n * n!) space. The swap loop costs only O(n) time and O(1) extra space, which is the budget a correct design should keep.
+The enumeration design avoids the bias at a price. It builds `n!` orders, so it costs O(n * n!) time and O(n * n!) space. The swap loop takes O(n) time, and its extra space is O(1), the budget that a correct design should keep.
 
 The second weak point is the shared array. The class holds one object under two names, so no later call can recover the input. A correct design needs two properties. The number of draw sequences must factor as `n * (n - 1) * ... * 1`, and the class must keep an array that no shuffle and no caller can touch.
 
@@ -82,7 +82,7 @@ The five names below cover the class fields and the loop locals.
 
 - **snapshot** is the private copy of the input array, written once in the constructor.
 - **work** is the working array. It always holds the same multiset of values as `snapshot`.
-- **pick** is the injected source of randomness. A call with bound `b` returns an integer from 0 to `b - 1`.
+- **pick** is the injected source of randomness. A call with the bound `b` returns an integer in the range 0 to `b - 1`.
 - **i** is the frontier, from 0 to `n - 1`. Positions below `i` are final.
 - **j** is the position chosen at step `i`. It equals `i + pick.applyAsInt(n - i)`, so it lies in `[i, n - 1]`.
 
@@ -150,8 +150,8 @@ In production code the caller passes a `java.util.Random` method reference, for 
 #### Cost
 
 - **shuffle** costs O(n) time for the loop and O(n) space for the returned copy.
-- **reset** costs O(n) time and O(n) space for the same reasons.
-- **Constructor** costs O(n) time and O(n) space for the two copies.
+- **reset** has the same O(n) time and O(n) space costs, for the same reasons.
+- **Constructor** has O(n) time and O(n) space costs because it builds the two copies.
 
 <!-- stage: applicability -->
 ### When Fair Shuffling Applies

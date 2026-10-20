@@ -106,7 +106,7 @@ The structure keeps these values, and the traces below use the same names.
 
 #### Events On Six Vertices
 
-The first trace reads six events on vertices 0 to 5. The cells are the vertex ids, and the pointers `u` and `v` mark the endpoints of the event under examination. The variable `closing` lists the positions of events whose endpoints already share a representative.
+The first trace reads six events on vertices 0 to 5. The cells are vertex ids, and the pointers `u` and `v` mark the two endpoints of the event being examined. The variable `closing` lists the positions of events whose endpoints already share a representative.
 
 The first two events create the groups {0, 1} and {2, 3}. The third event joins them into one group of four. The fourth event pairs 0 and 2, which share a representative by then, so it closes a cycle and changes nothing. The fifth event creates {4, 5}. The sixth event repeats that pair, so it is a closing edge as well. The count of groups ends at 2 and the largest group has 4 vertices.
 

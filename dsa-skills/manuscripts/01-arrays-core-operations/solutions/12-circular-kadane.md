@@ -94,7 +94,7 @@ public final class MaxCircular {
 **Complexity.**
 
 - **Time** is O(n), because one loop updates the scans and the total per index.
-- **Space** is O(1), because the method keeps five integers and no array.
+- **Space** is O(1), as five integers are the whole state and no array is built.
 
 ```java run
 import java.util.Random;
@@ -178,7 +178,7 @@ public final class CircularMinimum {
 **Complexity.**
 
 - **Time** is O(n), because the scans read each value once.
-- **Space** is O(1), because the method keeps a few integers and builds a two-entry result.
+- **Space** is O(1), as a few integers and the two-entry result are the whole state.
 
 ```java run
 import java.util.Random;

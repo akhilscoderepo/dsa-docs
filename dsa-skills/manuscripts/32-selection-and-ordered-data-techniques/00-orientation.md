@@ -22,7 +22,7 @@ Each lesson answers one question about order.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a realistic failure and a direct program that is too slow or wrong. You predict its cost before the explanation appears. Later parts say which value the method keeps between steps, list the variables, follow two traces, show the code and say when the idea stops fitting. Four exercises close each lesson, and each has a hint and a solution you can open after your own attempt.
+A lesson opens with a realistic failure and a direct program that is too slow or wrong. You predict its cost before the explanation appears. Later parts say which value the method carries between steps and list the variables. Two traces, the code and the limits of the idea close the lesson. Four exercises close each lesson, and each has a hint and a solution you can open after your own attempt.
 
 ### What You Can Do After This Chapter
 

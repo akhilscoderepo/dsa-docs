@@ -8,7 +8,7 @@
 
 **Complexity.**
 
-- **Time** is O(n log n) for the constructor sort and O(log n) per query, because each query runs two binary searches over `n` keys.
+- **Time** is O(n log n) for sorting in the constructor and O(log n) for each query. Each query runs two binary searches over `n` keys.
 - **Space** is O(n) for the key array, and each query allocates nothing.
 
 ```java run

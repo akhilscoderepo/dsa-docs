@@ -6,12 +6,12 @@
 
 **Approach.** The method scans the array once with a read index and keeps a write index at the next free position of the accepted prefix. Each value that differs from `val` is copied to the write index, and the write index then advances. A value equal to `val` is skipped.
 
-The invariant is that `nums[0..write-1]` holds the accepted values read so far, in order. The write index never exceeds the read index, so a copy never destroys an unread value. The return value is the write index. The harness compares the prefix against a list filter on 3,000 random arrays, and it checks that the array length stays unchanged.
+The invariant is that the prefix `nums[0..write-1]` contains the accepted values in input order. The write index never exceeds the read index, so a copy never destroys an unread value. The return value is the write index. The harness compares the prefix against a list filter on 3,000 random arrays, and it checks that the array length stays unchanged.
 
 **Complexity.**
 
-- **Time** is O(n), because each position is read once and written at most once.
-- **Space** is O(1), because the method stores only two indexes.
+- **Time** is O(n), since the loop reads each position once and writes it at most once.
+- **Space** is O(1), since only the two indexes need memory.
 
 ```java run
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ Non-zero values keep their relative order because the first pass is a stable com
 **Complexity.**
 
 - **Time** is O(n), because the compaction pass costs n reads and the fill pass costs at most n writes.
-- **Space** is O(1), because the method stores two indexes.
+- **Space** is O(1), because two index variables are all it keeps.
 
 ```java run
 import java.util.ArrayList;

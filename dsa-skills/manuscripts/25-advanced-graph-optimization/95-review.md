@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A refund price comes out wrong because one fee was a credit. A cable plan costs more than the cheapest plan. A support tool needs an hour to find the links that matter. Each failure matches a question below. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A refund price comes out wrong because one fee was a credit. A cable plan costs more than the cheapest plan. A support tool needs an hour to find the links that matter. Each failure has a matching question below. Open this page after the lessons and open it again after a few days. The lesson name stays out of each situation described in a question.
 
 ### Recognition Questions
 

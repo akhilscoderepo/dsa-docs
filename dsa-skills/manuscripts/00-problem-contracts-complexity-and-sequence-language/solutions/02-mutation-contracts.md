@@ -8,7 +8,7 @@
 
 - **read** visits every position once.
 - **write** marks the next free slot of the prefix.
-- **Invariant** is that `nums[0..write-1]` holds the kept values seen so far, in their original order.
+- **Invariant** is that the prefix `nums[0..write-1]` contains the kept values in the order they first appeared.
 - **Copy step** runs when `nums[read]` differs from the target, and it copies the value to `nums[write]` and advances `write`.
 - **k** equals `write` when the loop ends.
 - **Postcondition** follows from the invariant: `nums[0..k-1]` holds the kept values in order, and nothing else is promised.

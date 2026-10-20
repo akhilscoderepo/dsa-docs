@@ -10,7 +10,7 @@ The method runs the three steps for every position and reads the front once, aft
 
 **Complexity.**
 
-- **Time** is O(n), because the loop makes one append and at most one removal for each position.
+- **Time** is O(n), since each position costs one append and at most one removal.
 - **Space** is O(k), since the deque holds only positions from the current range.
 
 ```java run

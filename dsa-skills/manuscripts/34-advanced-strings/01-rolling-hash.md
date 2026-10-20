@@ -7,7 +7,7 @@
 
 A backup tool splits each file into fixed-size blocks and stores a block only once. To find duplicates quickly, it keeps a 32-bit checksum for every stored block and treats a new block with a known checksum as a copy. The design works for months. Then two different blocks produce the same checksum, the tool skips the second block, and a restore returns the wrong bytes without any error message. A 32-bit value has about 4.3 billion possibilities, yet random blocks start to repeat a value after roughly 77,000 of them, so the failure is certain at scale and not a rare accident.
 
-The same tension appears wherever software compares many pieces of equal length. A genome tool looks for 10-letter sequences that occur twice in a DNA string. A plagiarism checker looks for the longest passage shared by two halves of a document. Comparing every piece letter by letter is slow, and a short fingerprint is fast but can be wrong. The question of this lesson is how to compute a fingerprint for every window of a string almost for free, and how to keep the answer correct when two fingerprints agree by accident.
+The same tension appears wherever software compares many pieces of equal length. A genome tool looks for 10-letter sequences that occur twice in a DNA string. A plagiarism checker looks for the longest passage shared by two halves of a document. Comparing every piece letter by letter is slow, and a short fingerprint is fast but can be wrong. This lesson asks how to compute a fingerprint for every window of a string at almost no cost, and how to keep the answer correct when two fingerprints agree by accident.
 
 <!-- stage: naive -->
 ### Copying Every Window Into A Set
@@ -171,7 +171,7 @@ A hash needs equal-length windows, so a single comparison of two unrelated strin
 
 **Prerequisites.** The rolling update and the letter policy from this lesson.
 
-**Problem.** Let `s` be a string of lowercase letters `a` to `z` and let `k` be a window length. Map each letter to its code, `a` to 1 up to `z` to 26. The hash of a window `w` of length `k` is the sum over positions `j` from 0 to `k - 1` of `code(w[j]) * 27^(k-1-j)`, reduced modulo 1,000,000,007. Return the hash of the last window, the one that starts at index `s.length() - k`. Compute it by sliding from the first window, which means removing the outgoing letter and appending the incoming letter at each step.
+**Problem.** A string `s` of lowercase letters `a` to `z` and a window length `k` are given. Map each letter to its code, `a` to 1 up to `z` to 26. The hash of a window `w` of length `k` is the sum over positions `j` from 0 to `k - 1` of `code(w[j]) * 27^(k-1-j)`, reduced modulo 1,000,000,007. Return the hash of the last window, the one that starts at index `s.length() - k`. Compute it by sliding from the first window, which means removing the outgoing letter and appending the incoming letter at each step.
 
 **Constraints.** The limits are:
 - **Length** of `s` is between 1 and 100,000.
@@ -213,7 +213,7 @@ A hash needs equal-length windows, so a single comparison of two unrelated strin
 
 **Prerequisites.** The rolling update and the Java behavior of `%` for negative values.
 
-**Problem.** Let `s` be a string of lowercase letters with codes `a` to 1 up to `z` to 26, let `k` be a window length, use base 27 and modulus 101. Return the array of hashes of all windows of length `k`, from the leftmost to the rightmost, where the hash of a window `w` is the sum of `code(w[j]) * 27^(k-1-j)` for `j` from 0 to `k - 1`, reduced modulo 101. Compute each hash from the previous one by sliding. After the outgoing letter is removed, the intermediate value must be brought back into the range 0 to 100 before the multiplication.
+**Problem.** A string `s` of lowercase letters has the codes `a` to 1 up to `z` to 26. A window length `k` is given, and the hash uses base 27 and modulus 101. Return the array of hashes of all windows of length `k`, from the leftmost to the rightmost, where the hash of a window `w` is the sum of `code(w[j]) * 27^(k-1-j)` for `j` from 0 to `k - 1`, reduced modulo 101. Compute each hash from the previous one by sliding. After the outgoing letter is removed, the intermediate value must be brought back into the range 0 to 100 before the multiplication.
 
 **Constraints.** The limits are:
 - **Length** of `s` is between 0 and 1,000.
@@ -234,7 +234,7 @@ A hash needs equal-length windows, so a single comparison of two unrelated strin
 
 **Prerequisites.** The collision check and the fixed-window scan from this lesson.
 
-**Problem.** Let `s` be a string of lowercase letters. A duplicate substring is a substring that occurs at least twice in `s`, where the occurrences may overlap. Return a duplicate substring of maximum length. When several duplicate substrings share the maximum length, return any one of them. When no duplicate exists, return the empty string. The lesson on suffix structures later in this chapter solves this problem with a suffix array. Here the contract requires a binary search on the length with a rolling hash, and a verified comparison for every hash match.
+**Problem.** A string `s` of lowercase letters is given. A duplicate substring is a substring that occurs at least twice in `s`, where the occurrences may overlap. Return a duplicate substring of maximum length. When several duplicate substrings share the maximum length, return any one of them. When no duplicate exists, return the empty string. The lesson on suffix structures later in this chapter solves this problem with a suffix array. Here the contract requires a binary search on the length with a rolling hash, and a verified comparison for every hash match.
 
 **Constraints.** The limits are:
 - **Length** of `s` is between 0 and 30,000.

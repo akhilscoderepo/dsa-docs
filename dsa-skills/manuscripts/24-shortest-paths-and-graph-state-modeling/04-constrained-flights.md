@@ -207,7 +207,7 @@ The false friend is plain Dijkstra with one distance for each city. It is correc
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** The cities `0` to `n - 1`, the list `flights` and the start city `src` are as before, and `dst` is the target city. A route may have at most `k` stops, where a stop is an intermediate city, so it uses at most `k + 1` flights. Among the routes with the lowest cost, choose the one with the fewest flights. Return an `int[]` of length 2 that holds that cost and that number of flights, or `{-1, -1}` when no route exists. The empty route is a route when `src == dst`.
+**Problem.** The cities `0` to `n - 1`, the list `flights` and the start city `src` are as before, and `dst` is the target city. A route may have at most `k` stops, where a stop is an intermediate city, so it uses at most `k + 1` flights. Among the routes with the lowest cost, choose the one with the fewest flights. Return an `int[]` of length 2 with that cost and that flight count, or `{-1, -1}` if no route exists. The empty route is a route when `src == dst`.
 
 **Constraints.** The limits are:
 - **Cities** satisfy `1 <= n <= 100`.

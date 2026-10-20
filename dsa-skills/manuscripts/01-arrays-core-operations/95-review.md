@@ -55,4 +55,4 @@ Return to this page after the lessons and again after a few days. Each question 
 
 ### Recall Exercises
 
-Close this page and write each answer from memory, then check it against the lessons. State the invariant of an accumulator that counts matches, and say what it claims before the first element. Write the compaction loop with its read index and write index, and explain why the write index never passes the read index. Explain in two sentences why a count array needs a range check. Describe the update step that turns Kadane's algorithm into the product version, and name the case that forces the second variable.
+Close this page and write each answer from memory, then check it against the lessons. State the invariant of an accumulator that counts matches, and say what it claims before the first element. Write the compaction loop with both of its indexes and explain why the write index stays at or behind the read index. Explain in two sentences why a count array needs a range check. Describe the update step that turns Kadane's algorithm into the product version, and name the case that forces the second variable.

@@ -7,7 +7,7 @@
 
 A menu service caches a small binary tree of options as one line of text. The writer visits the tree in preorder and joins the values of the real nodes with commas. A tree with root 1 and only a left child 2 is stored as `1,2`. A second tree with root 1 and only a right child 2 is also stored as `1,2`. The reader attaches every value to the left side, so half of the menus come back with their options on the wrong side.
 
-Both programs pass their own tests, and the reader never fails with an error. It returns a wrong tree without any warning. The question of this lesson is how to write the encoder and the decoder from one description of the text. Each tree must have one text, and a damaged text must raise an error and never produce a different tree.
+Both programs pass their own tests, and the reader never fails with an error. It returns a wrong tree without any warning. This lesson asks how to write the encoder and the decoder from one description of the text. Each tree must have one text, and a damaged text must raise an error and never produce a different tree.
 
 <!-- stage: contributions -->
 ### What The Earlier Lessons Contribute
@@ -196,7 +196,7 @@ static Node parseLevels(String text) {
 
 #### Cost And Java Details
 
-- **Encoder** costs O(n) time and O(n) space for n nodes, because each node adds one value token and each missing child adds one marker.
+- **Encoder** takes O(n) time and O(n) space for n nodes, because every node adds one value token and every missing child adds one marker.
 - **Decoder** costs O(n) time, since the iterator hands out each token once and no step copies the remaining text.
 - **Recursion depth** equals the tree height, so a degenerate tree of 10^5 nodes needs an explicit stack in place of recursion.
 

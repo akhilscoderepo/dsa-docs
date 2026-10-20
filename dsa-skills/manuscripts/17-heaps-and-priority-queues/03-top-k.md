@@ -211,7 +211,7 @@ The size-`k` queue does not fit when `k` is close to `n`, because sorting costs 
 
 **Prerequisites.** The previous three exercises and the hash map counting from Chapter 04.
 
-**Problem.** Given an array `nums` and an integer `k`, return the `k` values that occur most often, in any order. The frequency of a value is the number of positions that hold it. The input guarantees that the set of `k` most frequent values is unique.
+**Problem.** Given an array `nums` and an integer `k`, find the `k` values with the highest counts and return them in any order. The frequency of a value is the number of positions that hold it. The input guarantees that the set of `k` most frequent values is unique.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.

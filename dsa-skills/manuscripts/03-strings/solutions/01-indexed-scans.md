@@ -121,7 +121,7 @@ public final class LastWord {
 <!-- id: st-first-delim -->
 
 **Approach.**
-The loop reads characters from index 0 and returns the index of the first colon at once. Returning inside the loop is correct, because no smaller index can match after the loop passed it. When the loop ends without a match, the method returns `-1`, the value the statement reserves for no colon. The invariant is that when the loop reaches index `i`, no index below `i` holds a colon.
+The loop reads characters from index 0 and returns the index of the first colon at once. Returning inside the loop is correct, because no smaller index can match after the loop passed it. When the loop ends without a match, the method returns `-1`, the value the statement reserves for no colon. The invariant is that every index below `i` is free of colons when the loop reaches index `i`.
 
 **Complexity.**
 - **Time** is O(n) in the worst case, which happens when no colon exists or the colon is last. A colon at index k stops the loop after k + 1 reads.

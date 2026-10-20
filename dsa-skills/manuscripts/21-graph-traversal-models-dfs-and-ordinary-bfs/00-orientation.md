@@ -5,7 +5,7 @@ A route planner reports that a city is unreachable, but a friend drives there ev
 
 ### Prerequisites
 
-You should know recursion, queues and hash maps. Chapter 15 taught depth-first search on trees, which lessons 02, 03, 04, 06 and 09 extend to graphs that can contain cycles. Chapter 16 taught breadth-first search by levels, which lessons 03, 05, 07 and 08 reuse. Chapter 19 taught recursion with undo, which lesson 06 needs. Chapter 04 taught `HashMap`, which lesson 02 uses for the identity map. Code samples assume `import java.util.*;` and a recent JDK.
+You should know recursion, queues and hash maps. Chapter 15 taught depth-first search on trees, which lessons 02, 03, 04, 06 and 09 extend to graphs that can contain cycles. Chapter 16 taught breadth-first search by levels, which lessons 03, 05, 07 and 08 reuse. Chapter 19 taught recursion with undo, which lesson 06 needs. Chapter 04 taught `HashMap`, which lesson 02 uses for the identity map. Code samples use the import `java.util.*` and need a recent JDK.
 
 ### The Nine Lessons
 
@@ -29,7 +29,7 @@ One lesson joins two ideas from this chapter.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that fails on a realistic input. It then shows the first version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises climb from a basic version to a pattern recognition problem, labeled Build, Vary, Boundary or Recognize. Read the hint only after a real attempt.
+A lesson opens with a program that fails on a realistic input. It then shows the first version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and point out where the rule breaks. The exercises rise from a basic version to a pattern recognition problem, and the labels are Build, Vary, Boundary and Recognize. Read the hint only after a real attempt.
 
 ### What You Can Do After This Chapter
 

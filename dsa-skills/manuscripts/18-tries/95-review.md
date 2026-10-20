@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Return to this page after the lessons, and again after a few days. Each question describes a situation without naming the lesson. Choose an answer before you open the explanation.
+Come back after the lessons, and once more a few days on. Each question describes a situation without naming the lesson. Choose your answer and only then open the explanation.
 
 ### Recognition Questions
 

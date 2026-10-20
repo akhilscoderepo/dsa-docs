@@ -6,11 +6,11 @@
 
 **Approach.** Split the range, count inside each half by recursion, then count the pairs between the halves while merging.
 
-Both halves are sorted when the merge starts. When the merge takes a right value `a[j]` while the left value `a[i]` is larger, the sorted left half guarantees that all `mid - i` unread left values are larger too. The merge adds that number at once. A left value that is less than or equal to the right value moves first, so equal values are never counted. The invariant is that `count` equals the number of pairs in the range whose right value is already written. The program works on a clone, so the caller's array stays unchanged. The midpoint uses `lo + (hi - lo) / 2`, because `(lo + hi) / 2` overflows an `int` for bounds near two billion.
+Both halves are sorted when the merge starts. When the merge takes a right value `a[j]` while the left value `a[i]` is larger, the sorted left half guarantees that all `mid - i` unread left values are larger too. The merge adds that number at once. A left value that is less than or equal to the right value moves first, so equal values are never counted. Invariant: `count` equals the number of pairs in the range whose right value has already been written. The program works on a clone, so the caller's array stays unchanged. The midpoint uses `lo + (hi - lo) / 2`, because `(lo + hi) / 2` overflows an `int` for bounds near two billion.
 
 **Complexity.**
 
-- **Time** is O(n log n), because the recursion has about log2(n) levels and each level merges n values in total.
+- **Time** is O(n log n), since the recursion has about log2(n) levels and every level merges n values in total.
 - **Space** is O(n), for the clone, the shared buffer and the recursion stack of depth O(log n).
 
 ```java run

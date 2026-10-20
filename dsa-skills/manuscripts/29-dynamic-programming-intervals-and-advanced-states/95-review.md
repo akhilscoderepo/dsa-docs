@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A greedy merge order overpays, a worker assignment misses the cheapest plan and a counter loops over every number up to a large bound. The questions below cover all seven lessons and the closing lesson. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A greedy merge order overpays, a worker assignment misses the cheapest plan and a counter loops over every number up to a large bound. The questions below cover all seven lessons and the closing lesson. Reread this page after the lessons and reread it after a few days. Each question portrays a situation and withholds the lesson name.
 
 ### Recognition Questions
 

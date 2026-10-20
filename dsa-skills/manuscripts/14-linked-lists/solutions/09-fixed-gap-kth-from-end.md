@@ -137,7 +137,7 @@ public final class KthPredecessor {
 **Approach.**
 The method opens the gap with a loop that tests the leading reference before each move. If the leading reference is `null` before `k` moves are done, the list has fewer than `k` nodes, and the method returns -1. After a successful advance, it moves both references and counts the trailing reference's hops. When the list has exactly `k` nodes, the leading reference is `null` right after the advance, the second loop makes no move, and the count is 0, the index of the head.
 
-The invariant is that the count equals the index of the trailing reference, and the gap is `k` after every second-phase move.
+Invariant: the count equals the index of the trailing reference, and every move of the second phase keeps the gap at `k`.
 
 **Complexity.**
 - **Time** is O(n), because the leading reference makes at most `n` hops.

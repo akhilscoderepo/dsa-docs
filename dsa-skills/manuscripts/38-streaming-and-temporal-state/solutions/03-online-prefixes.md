@@ -289,7 +289,7 @@ public final class OverflowContractBoundary {
 **Approach.**
 Subtraction cannot produce a span, because "the nearest earlier price above this one" has no inverse. The class keeps a stack of pairs, a price and the number of days it covers. The stack holds prices in strictly decreasing order from bottom to top, and the spans of its entries add up to the number of days so far. A new price starts with span 1. While the top entry has a price at most the new price, the class pops it and adds its span to the new span, because every day that top entry covered also has a price at most the new one. The class then pushes the new pair. The invariant is that the stack order stays strictly decreasing, so the entry below the new top is the nearest earlier price strictly above it.
 
-Each price is pushed once and popped at most once, so a sequence of `m` calls does O(m) work in total. The program replays both examples and compares with a backward scan on random price streams with many ties.
+Every price is pushed a single time and popped at most a single time, so `m` calls add up to O(m) work. The program replays both examples and compares with a backward scan on random price streams with many ties.
 
 **Complexity.**
 - **Time** is O(1) amortized per call, because the total number of pops over `m` calls is at most `m`.

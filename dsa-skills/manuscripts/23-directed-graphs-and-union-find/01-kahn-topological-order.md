@@ -103,7 +103,7 @@ The first graph has six vertices and the edges 0 to 2, 1 to 2, 2 to 3, 1 to 4 an
 
 #### A Graph That Contains A Cycle
 
-The second graph has five vertices and the edges 0 to 1, 1 to 2, 2 to 1, 2 to 3 and 4 to 3. Vertices 1 and 2 form a cycle. Only vertices 0 and 4 start with indegree 0. Removing them lowers the counters of vertices 1 and 3 by one each, and neither falls to 0. The queue is empty after two removals, and the final step compares `count` with `n`.
+The second graph has five vertices. Its edges run from 0 to 1, from 1 to 2, from 2 to 1, from 2 to 3 and from 4 to 3. Vertices 1 and 2 form a cycle. Only vertices 0 and 4 start with indegree 0. Removing them lowers the counters of vertices 1 and 3 by one each, and neither falls to 0. The queue is empty after two removals, and the final step compares `count` with `n`.
 
 ```trace
 {"cells": [0, 1, 2, 3, 4], "pointers": ["cur"], "steps": [{"at": {"cur": 0}, "vars": {"indeg": "0,1,1,2,0", "queue": "[4]", "order": "[0]"}, "note": "The loop removes vertex 0, lowers its followers' counters and queues those that reach 0."}, {"at": {"cur": 4}, "vars": {"indeg": "0,1,1,1,0", "queue": "[]", "order": "[0, 4]"}, "note": "The loop removes vertex 4, lowers its followers' counters and queues those that reach 0."}, {"at": {"cur": 4}, "vars": {"indeg": "0,1,1,1,0", "queue": "[]", "order": "[0, 4]"}, "note": "The queue is empty and count is 2 while n is 5, so a cycle blocks the other vertices and the method returns an empty array."}]}
@@ -165,7 +165,7 @@ The false friend is sorting by label, by degree or by any property of a single v
 
 **Prerequisites.** The adjacency and edge-list idea of this lesson.
 
-**Problem.** A directed graph has vertices `0` to `n - 1`, and each entry `[a, b]` of `edges` is one directed edge from `a` to `b`. The indegree of a vertex `v` is the number of entries of `edges` whose second value equals `v`. Return an `int[]` named `indegree` of length `n` where `indegree[v]` is the indegree of `v`.
+**Problem.** A directed graph has the vertices `0` to `n - 1`. Every entry `[a, b]` of `edges` is one directed edge from `a` to `b`. The indegree of a vertex `v` is the number of entries of `edges` whose second value equals `v`. Return an `int[]` named `indegree` of length `n` where `indegree[v]` is the indegree of `v`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 10^5`.
@@ -207,7 +207,7 @@ The false friend is sorting by label, by degree or by any property of a single v
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A directed graph on the vertices `0` to `n - 1` comes from `edges`, where `[a, b]` is an edge from `a` to `b`. Remove vertices in rounds. Round 1 removes every vertex whose indegree is 0. Each later round removes every vertex whose indegree is 0 after all earlier rounds. Return an `int[][]` named `rounds` where row `k` lists the vertices of round `k + 1` in ascending order. Vertices that no round removes appear in no row.
+**Problem.** The list `edges` defines a directed graph whose vertices are `0` to `n - 1`, where `[a, b]` means an edge from `a` to `b`. Remove vertices in rounds. Round 1 removes every vertex whose indegree is 0. Each later round removes every vertex whose indegree is 0 after all earlier rounds. Return an `int[][]` named `rounds` where row `k` lists the vertices of round `k + 1` in ascending order. Vertices that no round removes appear in no row.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 10^5`.

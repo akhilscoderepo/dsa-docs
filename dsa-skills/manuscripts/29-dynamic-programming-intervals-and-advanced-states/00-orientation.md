@@ -5,11 +5,11 @@ A build tool joins four chunk files by always merging the two smallest neighbour
 
 ### Prerequisites
 
-You should know the three previous dynamic programming chapters. They explained how to state in one sentence what a table entry means, how to seed the base entry, and how to read only entries that are already final. The previous chapter ended with a table indexed by the two ends of one string, and the first lessons here reuse it. The code uses arrays of `int`, `long` and `String`, and it assumes `import java.util.*;` in samples.
+You should know the three previous dynamic programming chapters. They showed how to state in one sentence what a table entry means, how to seed the base entry, and how to read only entries that are already final. The previous chapter ended with a table indexed by the two ends of one string, and the first lessons here reuse it. The code uses arrays of `int`, `long` and `String`, and it assumes `import java.util.*;` in samples.
 
 ### The Seven Lessons
 
-Each lesson fixes one question about what an entry remembers.
+Every lesson settles one question about what an entry remembers.
 
 - **Interval DP** stores the best value for every contiguous range and combines two shorter ranges around one split.
 - **Palindrome Partitions** builds a table that says whether each substring reads the same in both directions, then uses it to count the fewest pieces of a prefix.
@@ -25,7 +25,7 @@ Each lesson fixes one question about what an entry remembers.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a small program that returns a wrong or slow answer on a realistic input. It shows a first version and asks you to predict its output. Later parts name the rule, list the variables, follow two traces, show the code and say when the rule stops fitting. Four exercises close each lesson, and they climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+A lesson begins with a short program that gives a wrong or slow answer on a realistic input. The first version appears, and you predict its output. The later parts cover the rule, the variables, two traces and the code, and they end with where the rule stops fitting. Each lesson closes with four exercises, labeled Build, Vary, Boundary and Recognize in that order. Wait for a hint until you have attempted the exercise.
 
 ### What You Can Do After This Chapter
 

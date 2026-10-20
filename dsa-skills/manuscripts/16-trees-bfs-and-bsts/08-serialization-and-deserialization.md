@@ -212,7 +212,7 @@ The false friend is a text of values alone, as the ambiguity above shows. A sear
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Given the root of a binary tree whose values may be negative or have several digits, return its text form with comma separators and the marker `#`. The text must give back exactly the same tree when it is read by the decoder. The empty tree gives `#`.
+**Problem.** The root of a binary tree is given, and its values may be negative or have several digits. Return its text form with comma separators and the marker `#`. The text must give back exactly the same tree when it is read by the decoder. The empty tree gives `#`.
 
 **Constraints.** The limits are:
 - **Nodes** number between 0 and 10^4.

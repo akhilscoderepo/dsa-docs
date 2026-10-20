@@ -26,7 +26,7 @@ Each closing lesson adds a part that names what the earlier lessons contribute.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a realistic scenario that exposes a failure. A short direct program follows, and it is too slow or returns a wrong answer. You predict its cost before the explanation appears. Later parts name the stored quantity, list the variables, follow two traces, show the code and say when the idea stops fitting. Range conventions differ by lesson: the Fenwick tree takes zero-based positions and stores them one-based, the segment tree uses inclusive ranges, and lazy propagation uses half-open ranges. Four exercises close each lesson, and each exercise has a hint and a solution that you can open after your own attempt.
+A lesson opens with a realistic scenario that exposes a failure. A short direct program follows, and it is too slow or returns a wrong answer. You predict its cost before the explanation appears. The later parts name the stored quantity and list the variables, then follow two traces, show the code and state where the idea stops fitting. Range conventions differ by lesson: the Fenwick tree takes zero-based positions and stores them one-based, the segment tree uses inclusive ranges, and lazy propagation uses half-open ranges. Four exercises close each lesson, and each exercise has a hint and a solution that you can open after your own attempt.
 
 ### What You Can Do After This Chapter
 

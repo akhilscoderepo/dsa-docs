@@ -87,7 +87,7 @@ The method appends each item at the back and then checks the size. When the size
 
 **Complexity.**
 
-- **Time** is O(n) for a stream of n items, because each item is appended once and removed at most once.
+- **Time** is O(n) for a stream of n items, since every item is appended once and removed at most once.
 - **Space** is O(c), because the deque holds at most `c + 1` items.
 
 ```java run
@@ -192,7 +192,7 @@ public final class EmptyContract {
 
 **Approach.**
 
-The oldest candidate is the first one added, so it sits at the front. The newest candidate sits at the back. Reading the oldest is `peekFirst`, discarding it is `pollFirst`, reading the newest is `peekLast`, discarding it is `pollLast`, and storing a new item at the newest end is `addLast`. The invariant is that the front is the oldest end and the back is the newest end. The assertions run the five calls on a real deque and confirm that each call touches the end the plan names.
+The oldest candidate is the first one added, so it sits at the front. The newest candidate sits at the back. Reading the oldest is `peekFirst`, discarding it is `pollFirst`, reading the newest is `peekLast`, discarding it is `pollLast`, and storing a new item at the newest end is `addLast`. The invariant is that the front end holds the oldest item and the back end holds the newest. The assertions run the five calls on a real deque and confirm that each call touches the end the plan names.
 
 **Complexity.**
 

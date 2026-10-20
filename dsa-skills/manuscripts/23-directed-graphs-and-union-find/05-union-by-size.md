@@ -203,7 +203,7 @@ The false friend is a comparison of `size[a]` with `size[b]` for the original el
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Elements have the numbers `0` to `n - 1`. The list `ops` holds pairs `[a, b]`. A pair may repeat, may appear in reverse order, may close a cycle, and may have `a == b`. Merge the groups of `a` and `b` for each pair. Return an `int[]` of length 2 that holds the number of groups and the size of the largest group after all pairs.
+**Problem.** Elements have the numbers `0` to `n - 1`. The list `ops` holds pairs `[a, b]`. A pair may repeat, may appear in reverse order, may close a cycle, and may have `a == b`. Merge the groups of `a` and `b` for each pair. Return an `int[]` of length 2 with the group count and the size of the largest group once all pairs are processed.
 
 **Constraints.** The limits are:
 - **Elements** satisfy `1 <= n <= 1000`.

@@ -5,7 +5,7 @@
 <!-- id: sq-printer-queue -->
 
 **Approach.**
-The method keeps a clock `t` and a queue of arrived jobs. When the queue is empty and jobs remain, the clock jumps to the next arrival, because the printer is idle. Every job with `arrival <= t` then enters the queue in index order. The method removes the front job, advances the clock by its duration and records the finish time. The invariant is that the queue holds exactly the jobs that arrived by `t` and have not started, in arrival order.
+The method keeps a clock `t` and a queue of arrived jobs. When the queue is empty and jobs remain, the clock jumps to the next arrival, because the printer is idle. Every job with `arrival <= t` then enters the queue in index order. The method removes the front job, advances the clock by its duration and records the finish time. The invariant is that the queue contains the jobs that arrived by `t` and have not started, ordered by arrival.
 
 **Complexity.**
 - **Time** is O(n), because each job is added once and removed once.
@@ -77,7 +77,7 @@ public final class PrinterQueue {
 <!-- id: sq-round-robin-step -->
 
 **Approach.**
-The queue starts with every task id in index order. Each turn removes the front id, decrements its work and puts the id at the back only when work remains. A task that reaches zero is appended to the finish list. The invariant is that the queue holds exactly the unfinished tasks, in the order of their next turn. Total work is a decreasing measure, because every turn removes one unit, so the loop terminates.
+The queue starts with every task id in index order. Each turn removes the front id, decrements its work and puts the id at the back only when work remains. A task that reaches zero is appended to the finish list. The invariant is that the queue contains every unfinished task, ordered by next turn. Total work is a decreasing measure, because every turn removes one unit, so the loop terminates.
 
 **Complexity.**
 - **Time** is O(n + W), because each unit of work is one turn at amortized O(1) and W is the sum of work.

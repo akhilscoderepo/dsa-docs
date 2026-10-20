@@ -195,7 +195,7 @@ Index the 26-entry array with `ch - 'a'` and state that the input holds lowercas
 
 **Prerequisites.** Lesson 02 and the sort key of this lesson.
 
-**Problem.** Each balloon spans the half-open range `[start, end)` of integer coordinates. An arrow at an integer `x` bursts every balloon with `start <= x < end`. A balloon whose `end` equals the start of another does not share a coordinate with it. Return the smallest number of arrows that burst all balloons.
+**Problem.** Each balloon spans the half-open range `[start, end)` of integer coordinates. An arrow at an integer `x` bursts every balloon with `start <= x < end`. A balloon whose `end` equals the start of another does not share a coordinate with it. Return the fewest arrows that burst every balloon.
 
 **Constraints.** The limits are:
 - **Count** is `0 <= balloons.length <= 10^5`.

@@ -11,7 +11,7 @@ The expression `x & (x - 1)` copies every bit above the lowest set bit, because 
 **Complexity.**
 
 - **Time** is O(min(k, b)), where `b` is the number of set bits in `x`, because each round removes one bit and the loop ends when either runs out.
-- **Space** is O(1), because the loop keeps one integer.
+- **Space** is O(1), since the loop needs a single integer.
 
 ```java run
 import java.util.Random;
@@ -77,7 +77,7 @@ Each clear step removes one set bit, so the loop count equals the number of set 
 **Complexity.**
 
 - **Time** is O(b), where `b` is the number of set bits, because each round clears one bit.
-- **Space** is O(1), because the loop keeps two integers.
+- **Space** is O(1), since the loop needs two integers.
 
 ```java run
 import java.util.Random;

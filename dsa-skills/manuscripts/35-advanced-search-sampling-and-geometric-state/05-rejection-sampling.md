@@ -7,7 +7,7 @@
 
 A game drops a bonus item at a random spot inside a circular arena. The first version picks a random distance from the center and a random angle, and it places the item there. Players report that the bonus always seems to be near the middle of the arena. The designers plot 100000 drops and see a dense cluster in the center and a thin scatter near the wall. Each drop looks random, and the code uses a fair random number generator, yet the drops are not spread evenly over the floor.
 
-The arena is a region with an area, and "even" means that two patches of equal area receive the same number of drops. The question of this lesson is how to produce points that are even over a circle when the only tool is a generator of even numbers between 0 and 1. It also asks what a program can do when a region has no simple formula for its own points.
+The arena is a region with an area, and "even" means that two patches of equal area receive the same number of drops. This lesson asks how to produce points that are even over a circle when the only tool is a generator of even numbers between 0 and 1. It also asks what a program can do when a region has no simple formula for its own points.
 
 <!-- stage: naive -->
 ### Random Distance And Random Angle

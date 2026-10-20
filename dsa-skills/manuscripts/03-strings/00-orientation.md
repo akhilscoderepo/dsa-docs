@@ -21,7 +21,7 @@ Each lesson adds one habit for reading text, together with the invariant that ke
 
 ### How To Work Through Each Lesson
 
-Every part of a lesson carries a label, so you always see where you are. A lesson opens with a failing case, and a prediction prompt asks you to name the cause before the answer appears. A trace lets you step through the loop and watch its values change. Each lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles are Basic, Variation, Edge Cases and Pattern Recognition, in rising order of change. An exercise marked Author exercise was written for this course, and an exercise with a LeetCode number follows that problem with its own examples. Write your own attempt before you open a hint or a solution.
+A label on every part of a lesson tells you where you stand. A lesson opens with a failing case, and a prediction prompt asks you to name the cause before the answer appears. A trace lets you step through the loop and watch its values change. Each lesson closes with four exercises, and each has a hidden hint and a hidden solution. The exercise roles run from Basic through Variation and Edge Cases to Pattern Recognition, and each role changes more than the one before. An exercise marked Author exercise was written for this course, and an exercise with a LeetCode number follows that problem with its own examples. Write your own attempt before you open a hint or a solution.
 
 ### What You Can Do After This Chapter
 

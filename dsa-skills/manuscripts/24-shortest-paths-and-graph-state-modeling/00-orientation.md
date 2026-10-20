@@ -5,7 +5,7 @@ A delivery app quotes a route through three cities as the cheapest, yet a direct
 
 ### Prerequisites
 
-You should know adjacency lists and breadth-first search from chapter 21, and the `PriorityQueue` from chapter 17. The deque from chapter 13 is needed in the last two lessons. Code samples assume `import java.util.*;` and a recent JDK.
+You should know adjacency lists and breadth-first search from chapter 21, and the `PriorityQueue` from chapter 17. The deque from chapter 13 is needed in the last two lessons. Code samples carry the import `java.util.*` and expect a recent JDK.
 
 ### The Six Lessons
 
@@ -25,7 +25,7 @@ Each lesson adds one idea to a shortest-path search.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that returns a wrong or too slow answer on a realistic input. It then shows a first version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+A lesson opens with a program that returns a wrong or too slow answer on a realistic input. A first version comes next, and you predict what it returns. The rule, the state, two traces and the code come next, along with the place where the rule stops working. The exercises move through the roles Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
 
 ### What You Can Do After This Chapter
 

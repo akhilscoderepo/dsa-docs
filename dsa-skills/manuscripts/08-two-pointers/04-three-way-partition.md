@@ -195,7 +195,7 @@ The method needs a test that places each value into exactly one of three ordered
 
 **Prerequisites.** All exercises above and the second trace of this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `pivot`, rearrange `nums` in place so that values less than `pivot` come first, then values equal to `pivot`, then values greater than `pivot`. Return `{a, b}`, where `a` is the index of the first value equal to `pivot` and `b` is the index of the first value greater than `pivot`. When no value equals `pivot`, `a` equals `b`.
+**Problem.** Take an integer array `nums` and an integer `pivot`. Rearrange `nums` in place so that values less than `pivot` come first, then values equal to `pivot`, then values greater than `pivot`. Return `{a, b}`, where `a` is the index of the first value equal to `pivot` and `b` is the index of the first value greater than `pivot`. When no value equals `pivot`, `a` equals `b`.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^5`.

@@ -165,7 +165,7 @@ public final class CompleteTreeInserterBuild {
 <!-- id: it37-window-bst-iterator -->
 
 **Approach.**
-The class combines a stack of unfinished nodes with a ring buffer of size `k`. The stack gives the next larger value, as in a plain inorder iterator. The **left spine** of a node is that node followed by its left child, that child's left child, and so on down to a node with no left child. The call `next` pops a node, pushes the left spine of its right child, and returns the node value. The ring buffer records each produced value at slot `position % k`, where `position` counts the values produced so far. The integer `cur` is the absolute position of the value that the cursor sits on, and it is -1 before the first call.
+The class combines a stack of unfinished nodes with a ring buffer of size `k`. The stack gives the next larger value, as in a plain inorder iterator. The **left spine** of a node is that node followed by its left child, that child's left child, and so on down to a node with no left child. A call to `next` pops a node, pushes the left spine of that node's right child, and returns the popped value. The ring buffer records each produced value at slot `position % k`, where `position` counts the values produced so far. The integer `cur` is the absolute position of the value that the cursor sits on, and it is -1 before the first call.
 
 The state has four values:
 - **ring** holds the last `k` produced values, and slot `position % k` holds the value at that position.

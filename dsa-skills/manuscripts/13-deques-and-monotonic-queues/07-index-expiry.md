@@ -211,7 +211,7 @@ Do not use this pattern when the best earlier value depends on more than a dista
 
 **Prerequisites.** All earlier exercises in this lesson.
 
-**Problem.** An integer array `nums` and an integer `k` describe a walk that starts at position 0. From position `i` the walk may jump to any position from `i + 1` through `min(i + k, n - 1)`. The score of a walk is the sum of `nums` at every position it visits, including the first and the last. Return the largest score of a walk that ends at position `n - 1`.
+**Problem.** A walk begins at position 0 and is defined by `nums`, an integer array, and by the integer `k`. From position `i` the walk may jump to any position from `i + 1` through `min(i + k, n - 1)`. The score of a walk is the sum of `nums` at every position it visits, including the first and the last. Return the largest score of a walk that ends at position `n - 1`.
 
 **Constraints.** The limits are:
 - **Length** `n` is between 1 and 100,000.

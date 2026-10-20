@@ -25,7 +25,7 @@ Each lesson fixes one decision about a table that is indexed by a total or a cap
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a small program that returns a wrong or slow answer on a realistic input. It shows a first version and asks you to predict its output. Later parts name the rule, list the variables, follow two traces, show the code and say when the rule stops fitting. Four exercises close each lesson, and they climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+A lesson opens with a small program that returns a wrong or slow answer on a realistic input. A first version comes next, and you predict the output it prints. Later parts name the rule, list the variables, follow two traces, show the code and say when the rule stops fitting. Each lesson ends with four exercises that move through Build, Vary, Boundary and Recognize. Look at a hint only once you have really tried.
 
 ### What You Can Do After This Chapter
 

@@ -118,7 +118,7 @@ Records are immutable. A change builds a new record, so a record never changes w
 
 #### A Move And A Shipment
 
-The first trace receives stock in two aisles, moves an item and ships the rest of another. The pointer `call` marks the call that just ran. The variable `lowest` lists the records in set order, and `totals` lists the sum per aisle.
+The first trace receives stock in two aisles, moves an item and ships the rest of another. The pointer `call` marks the call that ran last. The variable `lowest` lists the records in set order, and `totals` lists the sum per aisle.
 
 ```trace
 {"cells":["receive(a,A1,5)","receive(b,A1,2)","receive(c,A2,4)","transfer(b,A2)","ship(b,2)"],"pointers":["call"],"steps":[{"at":{"call":0},"vars":{"lowest":"a:5","totals":"A1=5","result":"true"},"note":"Call 0: replace inserts the new record a with 5 units into A1."},{"at":{"call":1},"vars":{"lowest":"b:2 a:5","totals":"A1=7","result":"true"},"note":"Call 1: replace inserts the new record b with 2 units into A1."},{"at":{"call":2},"vars":{"lowest":"b:2 c:4 a:5","totals":"A1=7 A2=4","result":"true"},"note":"Call 2: replace inserts the new record c with 4 units into A2."},{"at":{"call":3},"vars":{"lowest":"b:2 c:4 a:5","totals":"A1=5 A2=6","result":"true"},"note":"Call 3: replace moves 2 units of b from A1 to A2 in the table, the set and the totals."},{"at":{"call":4},"vars":{"lowest":"c:4 a:5","totals":"A1=5 A2=4","result":"true"},"note":"Call 4: all 2 units leave, so replace removes b from every structure."}]}
@@ -290,7 +290,7 @@ The call `feed(user, k)` returns a `Feed` of tweet ids and a source count. The i
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This chapter states the contract below itself, and it can differ in detail from LeetCode. Design a class `RideDesk` on a line of integer positions. The call `addDriver(id, pos)` registers a free driver and returns `true`, or returns `false` if the id was used before. The call `goOffline(id)` retires a free driver for good and returns `true`, or returns `false` otherwise.
+**Problem.** The contract below is this chapter's own, so it may differ from LeetCode in detail. Design a class `RideDesk` on a line of integer positions. The call `addDriver(id, pos)` registers a free driver and returns `true`, or returns `false` if the id was used before. The call `goOffline(id)` retires a free driver for good and returns `true`, or returns `false` otherwise.
 
 The call `request(rider, pos, dest)` adds a waiting rider and returns `true`, or returns `false` if the id was used before. The call `cancel(rider)` ends a waiting rider and returns `true`, or returns `false` otherwise.
 

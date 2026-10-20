@@ -259,7 +259,7 @@ Skip the lists when queries are rare and writes are frequent, because the repair
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This chapter writes the contract below itself, and it can differ in detail from LeetCode. Design a class `Autocomplete`. The call `type(c)` appends the character `c` to the current text and returns up to 3 stored sentences that start with that text. The character `#` instead commits the current text as one use of that sentence, clears the text and returns an empty list. The call `retract(sentence)` removes one use of a stored sentence and returns `true`, or returns `false` if the sentence is not stored. Sentences rank by higher use count, then by more recent last use, then by smaller text.
+**Problem.** The contract below comes from this chapter, and details may differ from LeetCode. Design a class `Autocomplete`. The call `type(c)` appends the character `c` to the current text and returns up to 3 stored sentences that start with that text. The character `#` instead commits the current text as one use of that sentence, clears the text and returns an empty list. The call `retract(sentence)` removes one use of a stored sentence and returns `true`. If the sentence is not stored, it returns `false`. Sentences rank by higher use count, then by more recent last use, then by smaller text.
 
 **Constraints.** The limits are:
 - **Sentences** hold lowercase letters and spaces, with length 1 to 30, and `#` follows at least one character.

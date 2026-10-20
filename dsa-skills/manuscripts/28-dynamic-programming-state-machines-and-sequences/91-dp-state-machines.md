@@ -16,7 +16,7 @@ This lesson asks how a table over days can respect rules about what the account 
 
 #### What Dynamic Programming Supplies
 
-The foundations chapter gave every table entry a one-sentence meaning and a combine rule. Each entry reads smaller entries that are already final, so the loop order follows the dependencies. A day-indexed table answers how well the first `d` days can go. The final entry is the answer, and a base entry covers the empty prefix.
+In the foundations chapter every table entry received a one-sentence meaning and a combine rule. Each entry reads smaller entries that are already final, so the loop order follows the dependencies. A day-indexed table answers how well the first `d` days can go. The final entry is the answer, and a base entry covers the empty prefix.
 
 #### What State Modeling Supplies
 
@@ -41,7 +41,7 @@ static int risesOnly(int[] prices) {
 }
 ```
 
-The routine runs in O(n) time and uses O(n) memory for n prices. It is a correct answer when the account may trade freely, because it collects every upward step. The open question is what it returns when a sale blocks the next day's purchase.
+For n prices the routine needs O(n) time and O(n) memory. It is a correct answer when the account may trade freely, because it collects every upward step. The open question is what it returns when a sale blocks the next day's purchase.
 
 ```predict
 Run risesOnly on the prices [2, 6, 3, 7]. What does it return, and why can the settlement rule keep an account from earning that amount?

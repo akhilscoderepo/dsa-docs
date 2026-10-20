@@ -224,7 +224,7 @@ The first false friend is the cheapest-free-job rule, which passes whenever the 
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** An integer array `nums` and an integer `k` are given. Return `true` if the numbers can be split into `k` nonempty groups with the same sum, using every number exactly once. Return `false` otherwise.
+**Problem.** The inputs are the array `nums` of integers and the integer `k`. Return `true` if the numbers can be split into `k` nonempty groups with the same sum, using every number exactly once. Return `false` otherwise.
 
 **Constraints.** The limits are:
 - **Length** satisfies `1 <= k <= nums.length <= 16`.

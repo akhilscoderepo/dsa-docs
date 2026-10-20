@@ -200,7 +200,7 @@ A boolean flag inside the queued object looks like a complete answer. It is a fa
 
 **Prerequisites.** Hash maps and tree sets.
 
-**Problem.** Design a class `Tasks`. The call `add(id, priority)` creates a task in state `PENDING` and returns `true`, or returns `false` if the id was ever used. The call `cancel(id)` moves a `PENDING` task to `CANCELLED` and returns `true`, or returns `false` for any other case. The call `complete(id)` moves a `PENDING` task to `DONE` and returns `true`, or returns `false` for any other case. The call `next()` returns the id of the `PENDING` task with the highest priority, breaking ties by the smaller id, or returns -1 if none exists. It changes nothing. The call `state(id)` returns the state name, or `NONE` for an unknown id.
+**Problem.** Design a class `Tasks`. The call `add(id, priority)` creates a task in state `PENDING` and returns `true`. If the id was ever used, it returns `false`. The call `cancel(id)` moves a `PENDING` task to `CANCELLED` and returns `true`, or returns `false` for any other case. The call `complete(id)` moves a `PENDING` task to `DONE` and returns `true`, or returns `false` for any other case. The call `next()` returns the id of the `PENDING` task with the highest priority, breaking ties by the smaller id, or returns -1 if none exists. It changes nothing. The call `state(id)` returns the state name, or `NONE` for an unknown id.
 
 **Constraints.** The limits are:
 - **Ids** are integers from 1 to 10^5, and priorities are integers from 0 to 10^9.
@@ -242,7 +242,7 @@ A boolean flag inside the queued object looks like a complete answer. It is a fa
 
 **Prerequisites.** The two exercises above and priority queues.
 
-**Problem.** Design a class `Jobs` on a heap. The call `add(id, priority)` creates a `PENDING` job and returns `true`, or returns `false` if the id was ever used. The call `setPriority(id, priority)` changes the priority of a `PENDING` job and returns `true`, or returns `false` otherwise. The call `cancel(id)` returns `true` when the job is `PENDING` or already `CANCELLED`, and returns `false` when it is `DONE` or unknown. The call `complete(id)` returns `true` when the job is `PENDING` or already `DONE`, and returns `false` when it is `CANCELLED` or unknown. The call `take()` marks the highest priority `PENDING` job `DONE`, breaking ties by the smaller id, and returns its id, or returns -1 if none exists. The call `pending()` returns the number of `PENDING` jobs.
+**Problem.** Design a class `Jobs` on a heap. The call `add(id, priority)` creates a `PENDING` job and returns `true`. A reused id makes it return `false`. The call `setPriority(id, priority)` changes the priority of a `PENDING` job and returns `true`, or returns `false` otherwise. The call `cancel(id)` returns `true` when the job is `PENDING` or already `CANCELLED`, and returns `false` when it is `DONE` or unknown. The call `complete(id)` returns `true` when the job is `PENDING` or already `DONE`, and returns `false` when it is `CANCELLED` or unknown. The call `take()` marks the highest priority `PENDING` job `DONE`, breaking ties by the smaller id, and returns its id, or returns -1 if none exists. The call `pending()` returns the number of `PENDING` jobs.
 
 **Constraints.** The limits are:
 - **Ids** are integers from 1 to 10^5, and priorities are integers from 0 to 10^9.
@@ -263,7 +263,7 @@ A boolean flag inside the queued object looks like a complete answer. It is a fa
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This contract is written for the chapter, so the LeetCode statement may differ in detail. Design a class `Rides` with separate id spaces for riders and drivers. A rider is `WAITING`, `CANCELLED` or `MATCHED`. A driver is `AVAILABLE`, `OFFLINE` or `BUSY`.
+**Problem.** This contract was written for the chapter, so the LeetCode statement may differ in detail. Design a class `Rides` with separate id spaces for riders and drivers. A rider is `WAITING`, `CANCELLED` or `MATCHED`. A driver is `AVAILABLE`, `OFFLINE` or `BUSY`.
 
 The call `addRider(riderId)` adds a `WAITING` rider, and `addDriver(driverId)` adds an `AVAILABLE` driver. Each returns `false` if that id was ever used.
 

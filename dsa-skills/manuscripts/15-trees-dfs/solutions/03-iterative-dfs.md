@@ -263,7 +263,7 @@ public final class DeepSum {
 **Approach.**
 A node must be written after both sides, so the loop meets a node on top of the stack more than once. The method pushes the left spine of `cur`, then looks at the top node without removing it. Suppose the top node has a right child that differs from `last`. The right side has not been written, so `cur` moves to that child and the next round pushes its left spine. Otherwise both sides are done, so the method writes the top node, pops it, and stores it in `last`.
 
-The invariant is that the stack holds the ancestors of the current position, and `last` is the most recently written node. A parent is written right after its right child, or right after its left child when the right side is empty. The variable `last` separates these cases.
+The invariant is that the stack contains the ancestors of the current position, and `last` is the node written most recently. A parent is written right after its right child, or right after its left child when the right side is empty. The variable `last` separates these cases.
 
 **Complexity.**
 - **Time** is O(n), because each node is pushed once and popped once, and each node is peeked at most twice.

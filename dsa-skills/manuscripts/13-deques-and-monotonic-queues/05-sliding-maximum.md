@@ -203,7 +203,7 @@ Do not use the method for the second largest value, a median or a count. The deq
 
 **Prerequisites.** All earlier exercises in this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `k`, consider every range of `k` consecutive values, ordered by its first position. Return the array that holds the maximum value of each range, in the same order.
+**Problem.** Take an integer `k` and an integer array `nums`, and consider each range of `k` consecutive values, from the range that begins first. Return the array that holds the maximum value of each range, in the same order.
 
 **Constraints.** The limits are:
 - **Length** `n` is between 1 and 100,000.

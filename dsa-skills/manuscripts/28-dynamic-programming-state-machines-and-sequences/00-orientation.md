@@ -24,7 +24,7 @@ Each lesson fixes one question about what an entry remembers.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a small program that returns a wrong or slow answer on a realistic input. It shows a first version and asks you to predict its output. Later parts name the rule, list the variables, follow two traces, show the code and say when the rule stops fitting. Four exercises close each lesson, and they climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+A lesson starts with a small program whose answer is wrong or slow on a realistic input. You then see a first version and predict what it outputs. Later parts name the rule and the variables, follow two traces, show the code and say when the rule stops fitting. The four closing exercises of a lesson follow the order Build, Vary, Boundary and Recognize. A hint helps only after an honest attempt has failed.
 
 ### What You Can Do After This Chapter
 

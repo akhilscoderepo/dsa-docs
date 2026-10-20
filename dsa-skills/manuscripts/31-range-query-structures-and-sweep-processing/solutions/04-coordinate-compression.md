@@ -11,7 +11,7 @@ The invariant is that the table is strictly increasing. Under that condition, a 
 **Complexity.**
 
 - **Time** is O(n log n + q log m), because sorting costs O(n log n) and each of the `q` queries searches `m` distinct entries.
-- **Space** is O(n) for the sorted copy, plus O(q) for the answers.
+- **Space** is O(n) for the copy that is sorted plus O(q) for the answer array.
 
 ```java run
 import java.util.Arrays;
@@ -99,7 +99,7 @@ The invariant is that `ranks[i] - 1` equals the number of distinct values smalle
 
 **Complexity.**
 
-- **Time** is O(n log n), because sorting costs O(n log n) and each of the `n` lookups costs O(log m).
+- **Time** is O(n log n), since sorting costs O(n log n) and each of the `n` lookups costs O(log m).
 - **Space** is O(n), because the sorted copy and the rank array each hold up to `n` entries.
 
 ```java run

@@ -122,7 +122,7 @@ static int lowestClimbCost(int[] cost) {
 }
 ```
 
-The table in `lowestClimbCost` has `n + 1` entries, and its base cases `dp[0]` and `dp[1]` stay 0 because Java zero-fills a new array. Both loops run in O(n) time and use O(n) memory. For `countSequences`, the extra slot makes `ways[1]` legal when n is 0.
+The table in `lowestClimbCost` has `n + 1` entries, and its base cases `dp[0]` and `dp[1]` stay 0 because Java zero-fills a new array. Each loop takes O(n) time and O(n) memory. For `countSequences`, the extra slot makes `ways[1]` legal when n is 0.
 
 <!-- stage: applicability -->
 ### Recognizing A Fixed Window

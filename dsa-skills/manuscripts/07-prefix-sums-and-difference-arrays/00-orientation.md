@@ -28,7 +28,7 @@ One lesson joins the stored totals with the maps of Chapter 04. **Count And Meas
 
 ### How To Work Through Each Lesson
 
-Each lesson opens with a slow program and a short prediction that asks you to guess its cost before the answer appears. Two traces show the stored values as they change, and four exercises close the lesson. The exercises start from the basic case and end with a problem that you must recognize without a hint. Hints and solutions stay hidden until you open them, so make an attempt first. An exercise labeled Author exercise was written for this course. An exercise with a LeetCode number follows that problem, and its text states every rule that it changes.
+Each lesson opens with a slow program and a short prediction that asks you to guess its cost before the answer appears. Two traces show the stored values as they change, and four exercises close the lesson. The exercises start from the basic case and end with a problem that you must recognize without a hint. A hint or a solution stays closed until you open it, so attempt the exercise before that. The label Author exercise marks a problem that this course wrote. Exercises that carry a LeetCode number track that problem, and their text flags each changed rule.
 
 ### What You Can Do After This Chapter
 

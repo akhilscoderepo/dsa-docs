@@ -150,7 +150,7 @@ public final class ResolveOnShorterBar {
 <!-- id: ms-flush-increasing-heights -->
 
 **Approach.**
-A chart without a trailing zero can end while bars are still on the stack. A non-decreasing chart is the extreme case, because no bar is ever shorter than the one before it, and nothing pops during the scan. The loop therefore runs one step further, to `i = n`, and reads a virtual height of 0 there. That height is shorter than every positive bar, so the step pops everything that remains and computes its width against the end of the chart. Bars of height 0 stay on the stack and have area 0. The invariant is the same as in the previous solution.
+A chart without a trailing zero can end while bars are still on the stack. A non-decreasing chart is the extreme case, because no bar is ever shorter than the one before it, and nothing pops during the scan. The loop therefore runs one step further, to `i = n`, and reads a virtual height of 0 there. That height is shorter than every positive bar, so the step pops everything that remains and computes its width against the end of the chart. Bars of height 0 stay on the stack and have area 0. The invariant matches the one in the previous solution.
 
 **Complexity.**
 - **Time** is O(n), because each bar is stacked once and removed at most once.

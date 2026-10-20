@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A report that needs three numbers from one tree should not walk the tree three times. This chapter releases one pairing that its lessons already support, and it names one pairing that waits for the next chapter.
+A report that needs three numbers from one tree should not walk the tree three times. One pairing opens here because the lessons already support it, and one more pairing waits for the next chapter.
 
 ### Pairing Taught In This Chapter
 

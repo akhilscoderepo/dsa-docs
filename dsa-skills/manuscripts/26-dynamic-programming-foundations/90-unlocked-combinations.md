@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A developer writes a clean recursive function for the number of routes across a board, and it takes minutes on a board of modest size. Her teammate adds a store keyed by the wrong values, and the program returns wrong numbers quickly. Both programs use the same recursion, and only the cache key separates them. This chapter releases one pairing, where a pairing is a lesson that joins earlier topics into one decision, and it leaves one pairing for later.
+A developer writes a clean recursive function for the number of routes across a board, and it takes minutes on a board of modest size. Her teammate adds a store keyed by the wrong values, and the program returns wrong numbers quickly. Both programs use the same recursion, and only the cache key separates them. Here one pairing opens, and a pairing is a lesson that joins earlier topics into one decision. One more pairing is left for later.
 
 ### Pairing Taught In This Chapter
 

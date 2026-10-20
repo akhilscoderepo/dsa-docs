@@ -7,7 +7,7 @@
 
 A code-review tool offers a feature that flags the longest passage repeated inside one generated source file. The first version lists every tail of the file as its own `String` and sorts the list, so that tails with a shared beginning sit side by side. It works on a 2,000-character test file. On a real 100,000-character file the JVM stops with `OutOfMemoryError: Java heap space`.
 
-A suffix of a string `s` is the part from index `i` to the end, written `s[i..]`, and a string of length `n` has exactly `n` of them. The failed version copied all of them. Their total length is `n * (n + 1) / 2`, which is 5,000,050,000 characters for `n = 100,000`, about 5 GB of character data. The question for this lesson is how to put all suffixes of one text in order and read repeated substrings from that order without ever copying a suffix.
+A suffix of a string `s` is the part from index `i` to the end, written `s[i..]`, and a string of length `n` has exactly `n` of them. The failed version copied all of them. Their total length is `n * (n + 1) / 2`, which is 5,000,050,000 characters for `n = 100,000`, about 5 GB of character data. This lesson asks how to put all suffixes of one text in order and read repeated substrings from that order without ever copying a suffix.
 
 <!-- stage: naive -->
 ### Sorting Copied Suffixes

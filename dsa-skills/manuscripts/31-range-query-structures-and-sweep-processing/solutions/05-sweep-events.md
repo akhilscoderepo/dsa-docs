@@ -206,7 +206,7 @@ The pass keeps the running count and the largest value it reaches after any even
 
 **Complexity.**
 
-- **Time** is O(n log n), because the sort of 2n events dominates the linear scan.
+- **Time** is O(n log n), since sorting the 2n events costs more than the linear scan.
 - **Space** is O(n), because the event array holds two entries for each interval.
 
 ```java run

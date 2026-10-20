@@ -170,7 +170,7 @@ Then name the private method that owns each change to the fields. The test is si
 
 #### A False Friend And A Java Hazard
 
-A **false friend** is a technique that looks like the right fix and fails in a quiet way. The nearest one here is a `try` block with a `catch` that undoes the edits after a failure. The undo code is a second copy of the repair, and it must itself run without error. It also misses any field that a later change adds. Checking first is simpler than rolling back.
+A **false friend** is a technique that seems to be the right fix and then fails without any warning. The nearest one here is a `try` block with a `catch` that undoes the edits after a failure. The undo code is a second copy of the repair, and it must itself run without error. It also misses any field that a later change adds. Checking first is simpler than rolling back.
 
 The Java hazard is the exception thrown halfway through a mutation. Java does not restore fields when an exception leaves a method. Every assignment that ran before the throw stays in place, and an uncaught exception from the middle of a method leaves the object half updated.
 

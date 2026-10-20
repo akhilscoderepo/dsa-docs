@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A cache hands back an evicted entry, a random pick returns a removed value and an iterator repeats an element. The questions below cover the six lessons and the three closing lessons. Return to this page after the lessons and again after a few days. Each question describes a situation, so decide the answer before you open the explanation.
+A cache hands back an evicted entry, a random pick returns a removed value and an iterator repeats an element. The questions below cover the six lessons and the three closing lessons. Read this page when the lessons are done and read it again several days later. Each question describes a situation, so reach an answer before the explanation opens.
 
 ### Recognition Questions
 

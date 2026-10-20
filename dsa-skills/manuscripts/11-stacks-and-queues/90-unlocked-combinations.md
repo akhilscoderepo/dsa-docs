@@ -9,7 +9,7 @@ A stack and a reading step form the lesson Stack And Parsing State. The reading 
 
 ### One Stack Idea Comes Later
 
-A stack that drops entries by comparison is taught in a later chapter. That chapter uses it for next-larger-value and histogram problems, and this chapter assigns none of those problems.
+The chapter on monotonic stacks teaches the stack that drops entries by comparison. That chapter uses it for next-larger-value and histogram problems, and this chapter assigns none of those problems.
 
 ### What Later Chapters Reuse
 

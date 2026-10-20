@@ -22,7 +22,7 @@ Each lesson names one fact that stays true for the whole run.
 
 ### Reading Order
 
-Every lesson opens with a program that passes short tests and fails on larger inputs or on a statistical check. You predict the failure before the reasoning appears. Two traces follow the variables step by step, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a method that looks like the pattern but breaks its precondition. Solutions check each class against an **oracle**, a slow but obviously correct version, and count outcomes over every possible draw sequence where the sizes are small.
+Every lesson opens with a program that passes short tests and fails on larger inputs or on a statistical check. You predict the failure before the reasoning appears. Two traces follow the variables step by step, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a method that resembles the pattern but breaks its precondition. Solutions check each class against an **oracle**, a slow but obviously correct version, and count outcomes over every possible draw sequence where the sizes are small.
 
 ### What You Can Do After This Chapter
 

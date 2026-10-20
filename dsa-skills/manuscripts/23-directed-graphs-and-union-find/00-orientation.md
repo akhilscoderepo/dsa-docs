@@ -5,7 +5,7 @@ A build system reports that all packages can be built, yet one package waits on 
 
 ### Prerequisites
 
-You should know adjacency lists and the depth-first and breadth-first traversals of chapter 21, including a visited array and the queue. Sorting with a comparator comes from chapter 05, and heaps are not needed. Code samples assume `import java.util.*;` and a recent JDK.
+You should know adjacency lists and the depth-first and breadth-first traversals of chapter 21, including a visited array and the queue. Sorting with a comparator comes from chapter 05, and heaps are not needed. Code samples begin with `import java.util.*;` and need a recent JDK.
 
 ### The Seven Lessons
 
@@ -25,7 +25,7 @@ Each lesson adds one piece of state to a graph algorithm.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that fails on a realistic input. It then shows a first version and asks you to predict what that version does. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
+Each lesson opens with a program that gives a wrong answer on a realistic input. It then shows a first version and asks you to predict what that version does. After that come the rule, the state, two traces, the code and the point where the rule stops working. The exercises climb through Build, Vary, Boundary and Recognize. Read a hint only after a real attempt.
 
 ### What You Can Do After This Chapter
 

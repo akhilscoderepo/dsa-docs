@@ -116,7 +116,7 @@ public final class FloorCeilingCheck {
 
 **Approach.** A `TreeMap` from value to count keeps the values in order while the counts change.
 
-An add operation calls `merge`, which creates the entry or raises its count with one search. A remove operation looks up the count. When the count is 1, the program deletes the entry, and otherwise it stores the count minus one. The invariant is that every key in the map has a count of at least 1. Deleting at count 0 is necessary, because a key that stays with count 0 would still appear in iteration and in `firstKey`. The harness shows that effect with a `put(k, 0)`. Iterating the map yields the pairs in increasing key order with no extra sort.
+An add operation calls `merge`, which creates the entry or raises its count with one search. A remove operation looks up the count. When the count is 1, the program deletes the entry, and otherwise it stores the count minus one. The invariant is that each key in the map carries a count of at least 1. Deleting at count 0 is necessary, because a key that stays with count 0 would still appear in iteration and in `firstKey`. The harness shows that effect with a `put(k, 0)`. Iterating the map yields the pairs in increasing key order with no extra sort.
 
 **Complexity.**
 

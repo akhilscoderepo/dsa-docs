@@ -5,7 +5,7 @@
 <!-- id: ds-pool-tree-iterator -->
 
 **Approach.**
-The stack holds node indexes in an int array whose size is the pool length, since a path never has more nodes than the pool. The constructor walks from the root through `left` links and pushes every index on the way. The invariant is that the stack holds exactly the nodes on the path from the root to the next node to return that are not yet returned, with the next node on top. The operation `next()` pops the top, pushes the left spine of its right child to restore the invariant, and returns the popped value. The operation `hasNext()` tests `top > 0` and changes nothing. The operation `peekDepth()` returns `top`, which equals the number of unfinished ancestors plus the next node. An exhausted `next()` throws before it touches any field, so the state stays valid.
+The stack holds node indexes in an int array whose size is the pool length, since a path never has more nodes than the pool. The constructor walks from the root through `left` links and pushes every index on the way. Invariant: the stack lists the unreturned nodes on the path from the root down to the next node to return, and the next node is on top. The operation `next()` pops the top, pushes the left spine of the right child to restore the invariant, and returns the popped value. The operation `hasNext()` tests `top > 0` and changes nothing. The operation `peekDepth()` returns `top`, which equals the number of unfinished ancestors plus the next node. An exhausted `next()` throws before it touches any field, so the state stays valid.
 
 **Complexity.**
 - **Time** is O(1) amortized for `next()`, because each node is pushed once and popped once across a full traversal, and O(h) for a single call in the worst case.

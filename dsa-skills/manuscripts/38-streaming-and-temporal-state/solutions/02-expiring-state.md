@@ -114,7 +114,7 @@ public final class LoggerBuild {
 **Approach.**
 Every token has the same time to live and the clock never decreases. The expiry of a token is therefore its latest generate or renew time plus `timeToLive`, so tokens sorted by latest touch are also sorted by expiry. A `LinkedHashMap` keeps tokens in that order when a renewed or regenerated token is removed and put again at the back. The front of the map always holds the smallest expiry.
 
-Each public method first purges the front while the front expiry is at or below the current time. After the purge, every remaining token is live, so `countUnexpiredTokens` returns the map size. A renew then needs only to test membership, because an ended token was just removed. The invariant is that the map holds exactly the tokens with expiry above the latest clock reading, in non-decreasing expiry order. The oracle stores expiries in a `HashMap` and counts them with a full scan.
+Each public method first purges the front while the front expiry is at or below the current time. After the purge, every remaining token is live, so `countUnexpiredTokens` returns the map size. A renew then needs only to test membership, because an ended token was just removed. The invariant is that the map contains the tokens with expiry above the latest clock reading, in non-decreasing expiry order. The oracle stores expiries in a `HashMap` and counts them with a full scan.
 
 **Complexity.**
 - **Time** is O(1) amortized per call, because each token enters the map once per generate or renew and leaves the front at most once for each entry.

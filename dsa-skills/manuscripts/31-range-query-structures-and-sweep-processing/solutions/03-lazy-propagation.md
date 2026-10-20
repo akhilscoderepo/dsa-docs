@@ -153,7 +153,7 @@ The invariant is that the tag applied to the untouched positions gives the same 
 
 **Complexity.**
 
-- **Time** is O(m) for `m` operations, because each operation composes with the tag in constant time.
+- **Time** is O(m) for `m` operations, because composing an operation with the tag costs O(1).
 - **Space** is O(1), because the tag is one kind and one number.
 
 ```java run

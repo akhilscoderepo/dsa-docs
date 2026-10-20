@@ -184,7 +184,7 @@ After hits at seconds 4, 4 and 5, slot 1 holds tag 4 with 2 hits and slot 2 hold
 
 #### Cost
 
-- **CountWindow** costs O(1) time per call and O(k) space.
+- **CountWindow** takes O(1) time per call and O(k) space.
 - **TimeWindow** spends O(1) time per call when averaged over the stream, since every timestamp is removed once, and uses O(w) space, where `w` is the largest number of events inside one window.
 
 <!-- stage: applicability -->

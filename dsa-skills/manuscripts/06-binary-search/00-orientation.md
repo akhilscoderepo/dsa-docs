@@ -30,7 +30,7 @@ Two lessons join the search with earlier chapters, and each opens with a failure
 
 ### How To Work Through Each Lesson
 
-Each lesson starts from a case where the simple approach breaks, and a short prediction asks you to guess the cost or the cause before the answer appears. A step-through trace shows the interval ends as they change. Four exercises close each lesson, and they grow from the plain case to a pattern you must recognize. Hints and solutions stay hidden until you open them, so make an attempt first. An exercise labeled Author exercise was written for this course. An exercise with a LeetCode number follows that problem, and its text states every rule that it changes.
+Each lesson starts from a case where the simple approach breaks, and a short prediction asks you to guess the cost or the cause before the answer appears. A step-through trace shows the interval ends as they change. Four exercises close each lesson, and they grow from the plain case to a pattern you must recognize. Hints and solutions stay hidden until you open them, so make an attempt first. An exercise labeled Author exercise was written for this course. When an exercise carries a LeetCode number, it follows that problem and its text lists each rule that differs.
 
 ### What You Can Do After This Chapter
 

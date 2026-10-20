@@ -258,7 +258,7 @@ public final class NeighborPair {
 **Approach.**
 The method descends from the root by the key of `p` and records the last node larger than that key. When the node `p` has a right subtree, the descent reaches `p`, turns right, and then turns left at every node, because each node there is larger than the key. The last recorded node is then the leftmost node of the right subtree. When `p` has no right subtree, the descent ends below `p`, and the last recorded node is the nearest ancestor where the path turned left. A single loop covers both cases, and the answer is `null` when no node larger than the key was seen.
 
-The invariant is the same as in the key-based successor: the answer is the recorded node or lies below the current node. Distinct keys make comparison by value safe, because the node `p` is the only node that holds its key.
+This invariant matches the key-based successor: the answer is the recorded node or lies below the current node. Distinct keys make comparison by value safe, because the node `p` is the only node that holds its key.
 
 **Complexity.**
 - **Time** is O(h), because the descent crosses one level per step.

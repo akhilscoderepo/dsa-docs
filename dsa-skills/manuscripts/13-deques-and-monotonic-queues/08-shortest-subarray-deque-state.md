@@ -205,7 +205,7 @@ Do not use the method when the question asks for the longest run, because used-u
 
 **Prerequisites.** All earlier exercises in this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `k`, return the length of the shortest non-empty contiguous subarray whose sum is at least `k`. Return `-1` when no such subarray exists.
+**Problem.** Given the integer `k` and an integer array `nums`, find the shortest non-empty contiguous subarray whose sum reaches `k` or more, and return its length. Return `-1` when no such subarray exists.
 
 **Constraints.** The limits are:
 - **Length** is between 1 and 100,000.

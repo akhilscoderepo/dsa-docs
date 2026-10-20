@@ -282,7 +282,7 @@ public final class MstCutSafeChoice {
 <!-- id: ga-mst-multiple-trees -->
 
 **Approach.**
-The method sorts a copy of the edges by weight and walks through each group of equal weight. At the start of a group it finds every edge whose endpoints have different roots, and it counts them as candidates. It then adds the candidates to the union-find structure one by one, and it counts how many actually join two components. After the group it compares the two counts. When some candidate was rejected, that candidate closes a cycle with other edges of the same weight, so swapping them gives a second tree of equal total weight.
+The method orders a copy of the edges by weight and walks through each group of equal weight. At the start of a group it finds every edge whose endpoints have different roots, and it counts them as candidates. It then adds the candidates to the union-find structure one by one, and it counts how many actually join two components. After the group it compares the two counts. When some candidate was rejected, that candidate closes a cycle with other edges of the same weight, so swapping them gives a second tree of equal total weight.
 
 The invariant is that before each group the structure holds exactly the components of all lighter edges, and every minimum spanning tree contains a spanning forest of those components. Within a group the number of edges added is fixed, but the choice among candidates is free exactly when some candidate is rejected. Equal weights alone do not create a tie, because a group whose candidates all join separate components has only one choice. Self loops never become candidates, and parallel equal edges do.
 

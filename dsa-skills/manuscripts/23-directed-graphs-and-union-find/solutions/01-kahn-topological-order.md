@@ -73,7 +73,7 @@ public final class ComputeIndegrees {
 **Approach.**
 The method turns each entry `[a, b]` into an edge from `b` to `a` and computes the indegrees. It puts every course of indegree 0 into a queue. Each removal decrements the indegree of every follower, and a follower whose counter reaches 0 joins the queue. The method counts removals and returns whether the count equals `numCourses`.
 
-The invariant is that the queue holds exactly the unremoved courses whose remaining prerequisites are all removed. Removed courses form a prefix of some valid order, so a full count proves an order exists. If the queue empties earlier, each remaining course still waits for another remaining course. Then the remaining prerequisites contain a cycle, and no order exists. A self entry keeps its own counter above 0 forever.
+Invariant: the queue lists every unremoved course whose remaining prerequisites are all removed, and no other course. Removed courses form a prefix of some valid order, so a full count proves an order exists. If the queue empties earlier, each remaining course still waits for another remaining course. Then the remaining prerequisites contain a cycle, and no order exists. A self entry keeps its own counter above 0 forever.
 
 **Complexity.**
 - **Time** is O(V + E), because each course enters the queue once and the method decrements each entry once.

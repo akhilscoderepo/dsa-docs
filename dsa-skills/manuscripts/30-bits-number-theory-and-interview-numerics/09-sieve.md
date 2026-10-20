@@ -7,7 +7,7 @@
 
 A hash table library must pick a prime capacity. A test tool for it asks for every prime up to ten million, so that it can compare table sizes. A second tool must report how many primes lie below a bound, and a third must split many numbers into prime factors.
 
-All three tools share one upper bound. They ask about a whole range of numbers, and not about one number. A routine that tests a single number from scratch throws away everything it learned about the neighbours. The question for this lesson is how a program answers prime questions for all numbers up to `n` with work that is close to linear in `n`.
+All three tools share one upper bound. They ask about a whole range of numbers, and not about one number. A routine that tests a single number from scratch throws away everything it learned about the neighbours. This lesson asks how a program can answer prime questions for all numbers up to `n` with work close to linear in `n`.
 
 A **prime** is an integer greater than 1 whose only positive divisors are 1 and itself. A **composite** is an integer greater than 1 that has another divisor. The numbers 0 and 1 are neither.
 
@@ -187,7 +187,7 @@ Computing `p * p` in `int` wraps for `p` above 46,340. The wrapped product is ne
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Given an integer `n`, count the primes strictly smaller than `n`. This version differs from the original statement, because it also reports the largest of those primes. Return an `int[]` of length 2 with the count first and the largest prime second, and use -1 as the largest prime when the count is 0.
+**Problem.** Given an integer `n`, count the primes strictly smaller than `n`. This version differs from the original statement, because it also reports the largest of those primes. Return an `int[]` of length 2 that stores the count first and the largest prime second. The largest prime is -1 when the count is 0.
 
 **Constraints.** The limits are:
 - **`n`** is an `int` with `0 <= n <= 5,000,000`.

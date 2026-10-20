@@ -125,7 +125,7 @@ final class BoundsCheck {
 
 The limits are `long` because an `int` key can equal `Integer.MIN_VALUE` or `Integer.MAX_VALUE`, and an `int` sentinel would reject a legal key. A `long` limit is always outside the `int` range, so the first comparison never rejects a legal root.
 
-- **Time** is O(n), because each node is visited once and compared in constant time.
+- **Time** is O(n), since the scan visits each node once and compares it in constant time.
 - **Space** is O(h) for the recursion stack, where `h` is the tree height.
 
 <!-- stage: applicability -->
@@ -151,7 +151,7 @@ The false friend is the parent-child comparison, and it fails silently on deep v
 
 **Prerequisites.** The open interval of a child from this lesson.
 
-**Problem.** Given the root of a binary tree of at most three nodes, where only the root has children, return `true` if the tree is a strict binary search tree. The left child must lie in the open interval from negative infinity to the root key, and the right child must lie in the open interval from the root key to positive infinity.
+**Problem.** The root of a binary tree has at most three nodes, and only the root has children. Return `true` if the tree is a strict binary search tree. The left child must lie in the open interval from negative infinity to the root key, and the right child must lie in the open interval from the root key to positive infinity.
 
 **Constraints.** The limits are:
 - **Nodes** number between 1 and 3, and no node below a child exists.

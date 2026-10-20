@@ -7,7 +7,7 @@
 **Approach.**
 The method sorts the job numbers by release time and keeps a queue ordered by duration. Before each selection, it adds every job whose release time is at most the clock. When the queue is empty, the clock jumps to the next release time. The job at the root runs to completion, and its waiting time is the clock at its start minus its release time. Equal durations do not change the total. Two tied jobs occupy the same pair of start slots in either order, so the sum of start times stays the same.
 
-The invariant is that the queue holds exactly the jobs that have arrived and not run.
+The invariant is that the queue contains the jobs that have arrived and not run, and nothing else.
 
 **Complexity.**
 - **Time** is O(n log n), because the sort and the n queue insertions and removals each cost O(log n) per job.

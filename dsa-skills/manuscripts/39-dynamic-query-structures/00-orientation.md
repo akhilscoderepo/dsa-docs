@@ -9,7 +9,7 @@ You should know prefix sums, Fenwick and segment trees, ordered maps, intervals,
 
 ### What Each Lesson Protects
 
-Each lesson names one fact that every public call must leave true.
+Every lesson names a fact that all public calls must leave true.
 
 - **Mutable Range Queries** keeps every tree entry equal to the sum of the range it owns.
 - **Interval Unions** keeps stored ranges disjoint, ordered and written with one endpoint rule.
@@ -22,7 +22,7 @@ Each lesson names one fact that every public call must leave true.
 
 ### Reading Order
 
-Every lesson opens with a class that passes small tests and then fails on a realistic workload. You predict the failure before the reasoning appears. Two traces follow the state call by call, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a design that looks like the pattern but breaks its precondition. Solutions check each class against a slow, obviously correct **oracle** on random inputs. The two closing lessons, Ordered Interval State and Preprocessed Query APIs, add a contributions stage after the context. That stage names which earlier lesson supplies each technique before the combined design appears.
+Every lesson opens with a class that passes small tests and then fails on a realistic workload. Before any reasoning appears, you predict the failure. Two traces follow the state call by call. After that, the Java listing and the limits of the idea appear. The four exercises open with a basic build, go on to a variation and an edge case, and end with a problem you must recognize. A **false friend** is a design that imitates the pattern but breaks its precondition. Solutions check each class against a slow, obviously correct **oracle** on random inputs. The two closing lessons, Ordered Interval State and Preprocessed Query APIs, add a contributions stage after the context. That stage names which earlier lesson supplies each technique before the combined design appears.
 
 ### What You Can Do After This Chapter
 

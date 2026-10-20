@@ -7,7 +7,7 @@
 
 A monitoring job reports the 95th percentile of response times for each hour. It copies the hour's measurements into an array and selects the right value with quickselect, which avoids sorting the whole array. The job runs in milliseconds on live data. One night an engineer replays the logs after a backup step that stores them sorted by value, and the same job takes minutes on the same number of values. The code did not change, only the order of the input.
 
-A method whose speed depends on how the input is ordered is risky, because an attacker or an unlucky export can choose the order. The question of this lesson is how to select the k-th smallest value so that no input order can make the method slow, while the answer stays exactly correct.
+A method whose speed depends on how the input is ordered is risky, because an attacker or an unlucky export can choose the order. This lesson asks how to select the k-th smallest value so that no input order can make the method slow, while the answer stays exactly correct.
 
 <!-- stage: naive -->
 ### Always Split On The Last Element

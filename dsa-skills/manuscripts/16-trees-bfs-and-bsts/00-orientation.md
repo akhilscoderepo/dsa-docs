@@ -5,7 +5,7 @@ A chat app lists people by the floor they sit on, and the list mixes floors. A p
 
 ### Prerequisites
 
-You should know loops, recursion and the cost words from Chapter 00. Chapter 11 introduced queues and stacks, and the row loop and the stack walks of this chapter use both through `ArrayDeque`. Chapter 15 introduced the tree node with a left and a right reference and the three recursive walk orders. Each lesson defines its own terms the first time they matter. Code samples assume `import java.util.*;` and a recent JDK, and every tree node is a small class with a `val` field and two child references.
+You should know loops, recursion and the cost words from Chapter 00. Chapter 11 introduced queues and stacks, and the row loop and the stack walks of this chapter use both through `ArrayDeque`. Chapter 15 introduced the tree node with a left and a right reference and the three recursive walk orders. Each term gets its definition in the lesson where it first matters. To compile the code samples, add `import java.util.*;` and use a recent JDK. Every tree node is a small class with a `val` field and two child references.
 
 ### The Nine Lessons
 
@@ -30,7 +30,7 @@ Two lessons join ideas that the chapter has already taught.
 
 ### How To Work Through Each Lesson
 
-Each lesson begins with a program that fails or slows down on a real input, and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to a full interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize. Each exercise also lists a Changed decision, which names the one choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
+Each lesson starts from a program that fails or slows down on a real input. A plain version that works but costs too much follows. After that a prediction question asks for your answer before the explanation opens. The other parts give the rule, the state, a step-by-step trace, the code and the cases where the method fails. Exercises move from a basic version up to a full interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize. Each exercise also lists a Changed decision, the one choice that differs from the exercise before it. The tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
 
 ### What You Can Do After This Chapter
 

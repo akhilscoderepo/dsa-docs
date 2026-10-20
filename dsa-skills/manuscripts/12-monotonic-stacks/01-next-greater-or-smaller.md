@@ -169,7 +169,7 @@ A question about the k-th greater value, or about the next value within a fixed 
 
 **Prerequisites.** The stack loop in this lesson.
 
-**Problem.** Let `nums` be an array of non-negative integers. For each index `i`, find the smallest index `j` with `j > i` and `nums[j] > nums[i]`. Return an array `ans` where `ans[i]` equals `nums[j]` for that index, or `-1` when no such index exists.
+**Problem.** An array `nums` of non-negative integers is given. For each index `i`, find the smallest index `j` with `j > i` and `nums[j] > nums[i]`. Return an array `ans` where `ans[i]` equals `nums[j]` for that index, or `-1` when no such index exists.
 
 **Constraints.** The limits are:
 - **Length** is `1 <= nums.length <= 10^5`.
@@ -211,7 +211,7 @@ A question about the k-th greater value, or about the next value within a fixed 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Let `nums` be an array of integers. An index `i` is open when no index `j > i` has `nums[j] > nums[i]`. Return the number of open indices. Equal values never make an index closed.
+**Problem.** An integer array `nums` is given. An index `i` is open when no index `j > i` has `nums[j] > nums[i]`. Return the number of open indices. Equal values never make an index closed.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^5`, and an empty array returns `0`.

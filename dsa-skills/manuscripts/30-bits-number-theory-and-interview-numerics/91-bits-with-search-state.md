@@ -266,7 +266,7 @@ The expression `1 << i` is an `int`, and its shift count wraps modulo 32. Use `1
 
 **Prerequisites.** The membership mask and the contributions above.
 
-**Problem.** Given an array `nums` of distinct integers, return every subset. This version fixes the order that the original leaves open. Subset lists appear by increasing size. Among subsets of one size, they appear by increasing mask value, where bit `i` of the mask stands for `nums[i]`. Each subset lists its elements in increasing index order.
+**Problem.** For an array `nums` of distinct integers, return every subset. This version fixes the order that the original leaves open. Subset lists appear by increasing size. Among subsets of one size, they appear by increasing mask value, where bit `i` of the mask stands for `nums[i]`. Each subset lists its elements in increasing index order.
 
 **Constraints.** The limits are:
 - **`n`** is the length of `nums`, an `int` with `0 <= n <= 12`.

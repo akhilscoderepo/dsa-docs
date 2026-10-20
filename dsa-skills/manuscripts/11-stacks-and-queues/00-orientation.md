@@ -31,7 +31,7 @@ One lesson joins the stack lessons with the reading lessons.
 
 ### How To Work Through Each Lesson
 
-Each lesson starts with a program that fails on a real input and then shows a simple version that works but costs too much. A prediction question follows, and you answer it before the explanation appears. Two traces show the container after each step. Four exercises close the lesson, from a direct build to a problem you must recognize from its wording. Write the removal order you expect before you open a hint.
+Each lesson starts with a program that fails on a real input and then shows a simple version that works but costs too much. Next comes a prediction question, which you answer before the explanation shows. Two traces show the container after each step. Four exercises close the lesson, from a direct build to a problem you must recognize from its wording. Write the removal order you expect before you open a hint.
 
 ### What You Can Do After This Chapter
 

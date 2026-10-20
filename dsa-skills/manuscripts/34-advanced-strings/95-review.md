@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A chat filter misses a phrase split across two messages, a duplicate finder reports two different strings as equal, and a palindrome search takes minutes on a long line of identical letters. The questions below cover the five lessons and the closing lesson. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+A chat filter misses a phrase split across two messages, a duplicate finder reports two different strings as equal, and a palindrome search takes minutes on a long line of identical letters. The questions below cover the five lessons and the closing lesson. Try them once the lessons are done and again a few days later, and settle on an answer before you read the explanation.
 
 ### Recognition Questions
 

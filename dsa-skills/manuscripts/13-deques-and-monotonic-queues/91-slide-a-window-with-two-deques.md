@@ -12,7 +12,7 @@ The job needs a window that slides along the log and that knows its own largest 
 <!-- stage: contributions -->
 ### What Each Earlier Idea Adds
 
-Two earlier ideas combine in this lesson, and each supplies a different half. The sliding window lessons of Chapter 09 supply the moving boundaries. A window has a left end and a right end, the right end advances on every step, and the left end advances when a rule says the window is no longer acceptable. That chapter decides when the left end moves, and it relies on a quantity that a single running total can give.
+This lesson joins two earlier ideas, and each one covers a different half. The sliding window lessons of Chapter 09 supply the moving boundaries. A window has a left end and a right end, the right end advances on every step, and the left end advances when a rule says the window is no longer acceptable. That chapter decides when the left end moves, and it relies on a quantity that a single running total can give.
 
 The deque lessons of this chapter supply the extremes. A deque of positions with values in a fixed order reports the largest or the smallest value of the current window in constant time, and it forgets positions that left the window. Alone, the window has no cheap way to read its extremes, and alone, the deque has no rule for where the window starts. Together they answer the question that a running total cannot: how far apart are the largest and smallest values of the window right now?
 
@@ -204,7 +204,7 @@ Do not use the method when the window rule depends on a sum, a median or a count
 
 **Prerequisites.** The two-deque window from this lesson. This exercise reuses the range limit of LC 1438 and counts stretches instead of finding the longest one.
 
-**Problem.** Given an integer array `a` and a non-negative integer `limit`, count the non-empty contiguous subarrays whose largest value minus smallest value is at most `limit`. Subarrays at different positions count separately, even when their values are equal.
+**Problem.** Given an integer array `a` and a non-negative integer `limit`, count the non-empty contiguous subarrays whose largest value minus smallest value is at most `limit`. Subarrays at different positions are counted apart, even if their values match.
 
 **Constraints.** The limits are:
 - **Length** `n` is between 1 and 100,000.

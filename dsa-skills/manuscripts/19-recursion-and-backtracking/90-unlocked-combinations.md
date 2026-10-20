@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A word game that runs one board search for each dictionary word repeats every shared prefix, and a memory trick that is applied before its state is defined returns wrong answers. This chapter releases one pairing that its prerequisites allow, and it names one pairing that waits for a later chapter.
+A word game that runs one board search for each dictionary word repeats every shared prefix, and a memory trick that is applied before its state is defined returns wrong answers. This chapter opens one pairing that its prerequisites allow, and another pairing has to wait for a later chapter.
 
 ### Pairing Taught In This Chapter
 

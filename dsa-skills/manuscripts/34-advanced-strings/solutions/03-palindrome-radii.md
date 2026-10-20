@@ -101,7 +101,7 @@ public final class OddCenterRadii {
 <!-- id: as-unified-separators -->
 
 **Approach.**
-The code builds `t` with a `#` before, between and after the letters, so the length is `2n + 1` and letter `k` of `s` sits at index `2k + 1`. Every palindrome of `t` has odd length, and the gap between two letters is a separator index, so one expansion loop covers both parities. The invariant is the same as in the previous exercise, applied to `t`: before each comparison, `t[i - k .. i + k]` is a palindrome. The oracle ignores `t` entirely and computes, for every center of `s` (a letter or a gap), the longest palindrome directly in `s`, and the two results must agree at index `i` of `t`.
+The code builds `t` with a `#` before, between and after the letters, so the length is `2n + 1` and letter `k` of `s` sits at index `2k + 1`. Every palindrome of `t` has odd length, and the gap between two letters is a separator index, so one expansion loop covers both parities. This invariant matches the previous exercise, applied to `t`: before each comparison, `t[i - k .. i + k]` is a palindrome. The oracle ignores `t` entirely and computes, for every center of `s` (a letter or a gap), the longest palindrome directly in `s`, and the two results must agree at index `i` of `t`.
 
 **Complexity.**
 - **Time** is O(n^2) in the worst case, because each of the `2n + 1` centers can expand across the whole string.

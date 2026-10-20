@@ -186,7 +186,7 @@ public final class EqualExtreme {
 **Approach.**
 Every task is available at time 0, so the clock never changes which tasks are eligible. The next task is always the one with the smallest processing time and, for equal times, the smallest index. That is the same tuple rule as the Vary exercise, so the answer is the removal order of one queue ordered by the pair `(processing, index)`. The clock starts to matter when release times differ, and a later lesson of this chapter covers that case.
 
-The invariant is that the queue holds exactly the tasks that have not run yet.
+The invariant is that the queue contains the tasks that have not run yet and nothing else.
 
 **Complexity.**
 - **Time** is O(n log n), because each of the n offers and n polls costs O(log n).

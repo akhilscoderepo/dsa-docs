@@ -144,7 +144,7 @@ The call `count.get(key)` returns `null` for an absent key, and unboxing the res
 
 **Prerequisites.** The frequency map and the second pass over the original order from this lesson.
 
-**Problem.** Let `s` be a string. Return the smallest index `i` such that the character `s.charAt(i)` occurs exactly once in `s`. Return -1 when no character occurs exactly once.
+**Problem.** A string `s` is given. Return the smallest index `i` such that the character `s.charAt(i)` occurs exactly once in `s`. Return -1 when no character occurs exactly once.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= s.length() <= 10^5`; the empty string is legal.

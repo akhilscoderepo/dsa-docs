@@ -117,7 +117,7 @@ The `for` loop expands, the `while` loop restores validity, and the line after t
 
 #### Cost Of Both Loops
 
-The `for` loop runs `n` times. The `while` loop moves `left` forward, and `left` never exceeds `n`, so the `while` loop runs at most `n` times over the whole call. The time is O(n) and the extra memory is O(1).
+The `for` loop runs `n` times. The `while` loop moves `left` forward, and `left` never exceeds `n`, so the `while` loop runs at most `n` times over the whole call. The running time is O(n), and the extra memory stays at O(1).
 
 <!-- stage: applicability -->
 ### When The Pattern Applies

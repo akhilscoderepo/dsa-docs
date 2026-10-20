@@ -7,7 +7,7 @@
 
 A service stores the saved search tags of a user as one text line and sends the line to a second service. The sender joins the tags with commas, and the receiver splits the line at every comma. One user saved the two tags `c` and `c,c++`, and the second tag contains a comma on purpose. The receiver shows three tags, `c`, `c` and `c++`. The user never typed the third tag, and the original second tag is gone.
 
-The same failure appears for trees. A cache keeps a binary tree as its values in the order a traversal visits them, and two different trees produce the same line. Each side works correctly on its own, and the data still changes on the way. The question of this lesson is how to write a structured value as a flat string. A decoder must rebuild exactly the value that went in, in one pass over the string.
+The same failure appears for trees. A cache keeps a binary tree as its values in the order a traversal visits them, and two different trees produce the same line. Each side works correctly on its own, and the data still changes on the way. This lesson asks how to write a structured value as a flat string. A decoder must rebuild exactly the value that went in, in one pass over the string.
 
 <!-- stage: naive -->
 ### Join With A Delimiter And Split Back

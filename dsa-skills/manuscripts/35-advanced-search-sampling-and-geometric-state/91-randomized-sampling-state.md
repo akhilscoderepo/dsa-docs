@@ -59,7 +59,7 @@ Position 0 gives A. Positions 1, 2 and 3 give D, since B and C are skipped forwa
 <!-- stage: bottleneck -->
 ### Skipping Moves Chance To Neighbours
 
-The pick costs O(n) time and O(1) extra space. The cost is acceptable, and the fairness is not. A skipped item passes its whole share of probability to the next qualifying item after it. An item that follows a long run of non-qualifying items collects the shares of all of them. The chance of a qualifying item therefore depends on the length of the gap before it in the catalog, and the gap has nothing to do with the item's weight.
+A single pick scans the stored values once and keeps O(1) extra space, so it takes O(n) time. The cost is acceptable, and the fairness is not. A skipped item passes its whole share of probability to the next qualifying item after it. An item that follows a long run of non-qualifying items collects the shares of all of them. The chance of a qualifying item therefore depends on the length of the gap before it in the catalog, and the gap has nothing to do with the item's weight.
 
 The root cause is the denominator. A fair pick over `k` qualifying items with equal weights needs every item to get chance `1 / k`. A uniform draw over `n` catalog positions gives each position `1 / n`. The two numbers `k` and `n` differ, and no rule that moves probability between neighbours can repair them evenly.
 

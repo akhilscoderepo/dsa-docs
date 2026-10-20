@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Come back to this page after the lessons and again a few days later. Each question describes a situation and leaves out the lesson name. Choose an answer before you open the explanation.
+Look at this page after the lessons and look again within a week. A question describes a situation, and the lesson name is absent. Answer before the explanation opens.
 
 ### Recognition Questions
 
@@ -43,4 +43,4 @@ Come back to this page after the lessons and again a few days later. Each questi
 
 ### Recall Exercises
 
-Close this page and answer from memory, then check against the lessons. Write the three steps that run for each new position in a window maximum, in order, and say which end each step touches. State what the deque holds after the values 5, 3, 4, 4, 2, 6 under the maximum rule, and which position remains. Explain in two sentences why a start with a smaller prefix sum later in the array beats an earlier start with a larger one.
+Answer from memory with the lessons closed, then compare your answer with them. Write the three steps that run for each new position in a window maximum, in order, and say which end each step touches. State what the deque holds after the values 5, 3, 4, 4, 2, 6 under the maximum rule, and which position remains. Explain in two sentences why a start with a smaller prefix sum later in the array beats an earlier start with a larger one.

@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A route finder reports a cost that a cheaper road beats, and a flight search ignores its stop limit. Each failure matches a question below. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A route finder reports a cost that a cheaper road beats, and a flight search ignores its stop limit. A question below matches each failure. Read this page after the lessons and read it again after a few days. In each question the situation is described but the lesson is not named.
 
 ### Recognition Questions
 

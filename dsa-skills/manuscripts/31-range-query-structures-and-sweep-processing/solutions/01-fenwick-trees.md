@@ -11,7 +11,7 @@ Entry `tree[k]` covers the `k & -k` counts that end at `k`. Subtracting that low
 **Complexity.**
 
 - **Time** is O(log k), because every step clears the lowest set bit of the index and `k` has at most 17 set bits for `k <= 10^5`.
-- **Space** is O(1), because the loop keeps one index and one sum.
+- **Space** is O(1), since the loop carries one index and one sum.
 
 ```java run
 import java.util.Random;

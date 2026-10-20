@@ -32,7 +32,7 @@ static int twoStates(int[] prices) {
 }
 ```
 
-The method runs in O(n) time and O(1) memory for n days. The open question is whether the value `cash` can tell a purchase that follows a sale from a purchase that follows a quiet day.
+For n days the method needs O(n) time and O(1) memory. The open question is whether the value `cash` can tell a purchase that follows a sale from a purchase that follows a quiet day.
 
 ```predict
 Run twoStates on prices [2, 3, 4, 1, 3]. What does it return, and what is the largest profit when a purchase on the day after a sale is forbidden?

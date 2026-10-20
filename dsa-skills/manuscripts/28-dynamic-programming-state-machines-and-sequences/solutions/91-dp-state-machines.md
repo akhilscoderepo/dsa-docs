@@ -7,7 +7,7 @@
 **Approach.**
 The `free` label before day `j` is the cheapest price seen on days `0..j-1`, and the `hold` label keeps the day of that price next to it. Each day `j` first tests a sale against that held day and only then considers replacing the held day. The sale test uses a strict comparison, so the first day that reaches the largest profit wins, which is the smallest sale day. The held-day replacement uses a strict comparison too, so the earliest day among equal minimum prices stays, which is the smallest buy day.
 
-The invariant is that at the start of day `j`, the held day is the earliest day with the minimum price among earlier days, and the best trade so far is the first one with the largest positive profit. A profit of 0 never replaces the sentinel `{-1,-1}`.
+The invariant is that day `j` starts with the held day set to the earliest day of minimum price among earlier days, and the best trade so far is the first one with the largest positive profit. A profit of 0 never replaces the sentinel `{-1,-1}`.
 
 **Complexity.**
 - **Time** is O(n) for n prices, because each day makes one comparison against the held day.

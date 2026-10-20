@@ -118,7 +118,7 @@ For `addRange`, the window starts at the floor entry of `left` when that entry r
 
 **Complexity.**
 
-- **Time** is O(log n) plus the number of absorbed entries per call, which is amortized O(log n) because each entry is created once and deleted at most once.
+- **Time** is O(log n) plus the number of absorbed entries per call. The amortized cost is O(log n), since an entry is created once and can be deleted only once.
 - **Space** is O(n) for the entries, where `n` is the number of stored runs.
 
 ```java run

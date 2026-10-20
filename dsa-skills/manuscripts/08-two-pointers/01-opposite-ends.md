@@ -55,7 +55,7 @@ Suppose `s` is larger than the target. Every pair that uses `right` with some in
 
 #### Why The Scan Is Linear
 
-Each step moves one pointer by one position, and the pointers never move back. The interval holds at most `n` indexes, so the loop runs at most `n - 1` times. The method costs O(n) time and O(1) extra space.
+Each step moves one pointer by one position, and the pointers never move back. The interval holds at most `n` indexes, so the loop runs at most `n - 1` times. Two pointers sweep inward once. That costs O(n) time and keeps the extra space at O(1).
 
 <!-- names: interval, left pointer, right pointer, two pointers, elimination -->
 

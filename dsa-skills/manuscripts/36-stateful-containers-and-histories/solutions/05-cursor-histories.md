@@ -233,7 +233,7 @@ public final class BrowserHistoryAnchor {
 **Approach.**
 Each move computes the distance it can travel before it changes anything. Undo can travel at most `cursor` characters, and redo can travel at most `liveLength - cursor`. The moved distance is the smaller of `k` and that limit. Comparing `k` with the limit avoids the sum `cursor + k`, which wraps to a negative `int` when `k` is `Integer.MAX_VALUE` and the cursor is positive. The method then adds or subtracts the moved distance and returns it.
 
-The invariant is the same as in the Build exercise: `0 <= cursor <= liveLength`. A move touches only the cursor, so the stored characters and the live length keep their values, and a later append or redo behaves as after an exact request.
+This invariant matches the Build exercise: `0 <= cursor <= liveLength`. A move touches only the cursor, so the stored characters and the live length keep their values, and a later append or redo behaves as after an exact request.
 
 **Complexity.**
 - **Time** is O(1) per move and amortized O(1) per append.

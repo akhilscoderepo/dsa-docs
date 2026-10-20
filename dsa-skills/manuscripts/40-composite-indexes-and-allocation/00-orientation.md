@@ -24,7 +24,7 @@ Each lesson names a fact that every call must leave true.
 
 ### Reading Order
 
-Every lesson opens with a class that passes small tests and fails under a real workload. You predict the failure before the explanation. Two traces follow the state call by call, then Java code and the limits of the idea. Four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a design that looks like the pattern and breaks one of its conditions. The solutions check each class against a slow, obviously correct version on random calls. The two closing lessons add a section that names what each earlier lesson contributes.
+Every lesson opens with a class that passes small tests and fails under a real workload. You predict the failure before the explanation. Two traces follow the state call by call. The last parts show the Java code and the places where the idea fails. The four exercises run from a basic build, through a variation and an edge case, to a problem you must recognize. A **false friend** is a design that mimics the pattern and breaks one of its conditions. The solutions check each class against a slow, obviously correct version on random calls. The two closing lessons add a section that names what each earlier lesson contributes.
 
 ### What You Can Do After This Chapter
 

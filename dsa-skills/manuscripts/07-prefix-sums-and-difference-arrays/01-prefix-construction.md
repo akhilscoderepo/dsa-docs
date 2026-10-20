@@ -152,7 +152,7 @@ An `int` accumulator fails when the sum can pass 2,147,483,647, and it wraps wit
 
 **Prerequisites.** The first exercise and the second trace of this lesson.
 
-**Problem.** Given an integer array `nums`, return the smallest index `p` where the sum of the values left of `p` equals the sum of the values right of `p`. Return `-1` when no index qualifies. An empty side has sum 0.
+**Problem.** Take an integer array `nums` and return the smallest index `p` that splits the array into a left part and a right part of equal sum, without counting `nums[p]`. Return `-1` when no index qualifies. An empty side has sum 0.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^5`.

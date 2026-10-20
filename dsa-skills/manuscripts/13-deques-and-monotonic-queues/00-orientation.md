@@ -5,7 +5,7 @@ A level meter lags on a ten-minute recording because every new sample rescans th
 
 ### Prerequisites
 
-You should know arrays, loops, the cost words from Chapter 00, and the idea of a window that moves along an array from Chapter 09. Prefix sums from Chapter 07 appear in the last lesson. Chapter 11 introduced `ArrayDeque`, and Chapter 12 showed how to remove weaker values from one end of a stack. Each lesson defines its own terms the first time they matter. Code samples assume `import java.util.*;` and a recent JDK.
+You should know arrays, loops, the cost words from Chapter 00, and the idea of a window that moves along an array from Chapter 09. Prefix sums from Chapter 07 appear in the last lesson. Chapter 11 introduced `ArrayDeque`, and Chapter 12 showed how to remove weaker values from one end of a stack. A lesson defines its terms where they first appear. The code samples rely on `import java.util.*;` and a recent JDK.
 
 ### The Eight Lessons
 

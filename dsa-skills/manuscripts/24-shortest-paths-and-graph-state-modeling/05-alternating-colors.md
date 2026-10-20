@@ -159,7 +159,7 @@ static int[] alternatingDistances(int n, int[][] red, int[][] blue) {
 }
 ```
 
-Parallel edges and self loops need no special case, because every transition goes through the same check of `dist`. The method runs in O(V + E) time and uses O(V + E) memory. The method fills each row in a loop, because `Arrays.fill` cannot fill the `int` rows of a two-dimensional array with a number. Writing `Arrays.fill(dist, new int[] {-1, -1})` would make every row the same object, and one write would change all nodes. Distances stay far below the `int` limit, because a walk over `2n` pairs has fewer than `2n` edges.
+Parallel edges and self loops need no special case, because every transition goes through the same check of `dist`. The method needs O(V + E) time and O(V + E) memory. The method fills each row in a loop, because `Arrays.fill` cannot fill the `int` rows of a two-dimensional array with a number. Writing `Arrays.fill(dist, new int[] {-1, -1})` would make every row the same object, and one write would change all nodes. Distances stay far below the `int` limit, because a walk over `2n` pairs has fewer than `2n` edges.
 
 <!-- stage: applicability -->
 ### Recognizing Searches Over Node And Last Color

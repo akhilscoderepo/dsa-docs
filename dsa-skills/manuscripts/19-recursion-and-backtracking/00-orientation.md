@@ -5,7 +5,7 @@ A test that lists every ordering of four inputs prints the same list ten times. 
 
 ### Prerequisites
 
-You should know loops, arrays and the `ArrayList` and `HashSet` classes. Chapter 03 introduced strings, `substring` and character arithmetic, which the cutting lesson and the board lesson use. Chapter 02 introduced grids and the four neighbours of a cell, which the last lesson uses. Chapter 15 introduced recursion on trees, so a call that makes calls is not new, although this chapter calls a method on arguments that describe a smaller task. Chapter 18 introduced the prefix tree, which the last lesson needs. Code samples assume `import java.util.*;` and a recent JDK.
+You should know loops, arrays and the `ArrayList` and `HashSet` classes. Chapter 03 introduced strings, `substring` and character arithmetic, which the cutting lesson and the board lesson use. Chapter 02 introduced grids and the four neighbours of a cell, which the last lesson uses. Chapter 15 introduced recursion on trees, so a call that makes calls is not new, although this chapter calls a method on arguments that describe a smaller task. Chapter 18 introduced the prefix tree, which the last lesson needs. The code samples assume the line `import java.util.*;` and a recent JDK.
 
 ### The Ten Lessons
 
@@ -30,7 +30,7 @@ One lesson joins this chapter with the chapter on prefix trees.
 
 ### How To Work Through Each Lesson
 
-Every lesson begins with a program that fails or crawls on a real input. A plain version follows, and then a prediction question asks for a number before the answer opens. The next parts name the rule, list the state, trace a small run, show the Java code and describe where the rule stops helping. Each lesson ends with four exercises. A role in brackets labels each exercise. Build writes the new idea, Vary changes one decision, Boundary protects an edge case and Recognize applies the idea to a problem that does not name it. The line Changed decision states what differs from the exercise above it. The tag Author exercise marks a problem written for this chapter. Read the hint before you open a solution.
+Every lesson begins with a program that fails or runs far too long on a real input. A plain version follows, and then a prediction question asks for a number before the answer opens. The next parts name the rule, list the state, trace a small run, show the Java code and describe where the rule stops helping. Each lesson ends with four exercises. A role in brackets labels each exercise. Build writes the new idea, Vary changes one decision, Boundary protects an edge case and Recognize applies the idea to a problem that does not name it. The line Changed decision states what differs from the exercise above it. Author exercise is the tag for a problem written for this chapter. Read the hint before you open a solution.
 
 ### What You Can Do After This Chapter
 

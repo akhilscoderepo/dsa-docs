@@ -55,7 +55,7 @@ The scan performs this pairing without storing the removed elements. It keeps on
 
 #### Confirm The Survivor With A Second Count
 
-The scan guarantees only one direction. If a majority element exists, it is the candidate at the end. If no majority exists, the scan still ends with some candidate, and that value may occur only once. A **verification pass** counts the candidate in a second loop over the array and accepts it only when its count is greater than `n / 2`. The pass is required unless the problem promises that a majority element exists. Both loops together still take O(n) time and O(1) extra space.
+The scan guarantees only one direction. If a majority element exists, it is the candidate at the end. If no majority exists, the scan still ends with some candidate, and that value may occur only once. A **verification pass** counts the candidate in a second loop over the array and accepts it only when its count is greater than `n / 2`. The pass is required unless the problem promises that a majority element exists. Together the two loops take O(n) time and keep O(1) extra space.
 
 <!-- stage: variables -->
 ### Meaning Of The Two Running Variables

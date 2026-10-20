@@ -7,7 +7,7 @@
 
 A reporting service exports search results that live in pages. Each page is a list of rows, and some pages are empty because a filter removed every row. The export code needs one stream of rows, so a developer writes a wrapper that copies all pages into a single list when the export starts. On a test database the export finishes in a blink. On the production database the pages hold 40 million rows. The copy needs several gigabytes before the first row leaves the server. A client that wants only the first ten rows waits for the whole copy.
 
-A second failure appears in the same service. The page list can contain further lists inside it, to any depth, and the copy uses recursion. One deeply nested input ends the process with a stack overflow. The question of this lesson is how a class presents many sources, some empty and some nested, as one sequence without copying them.
+A second failure appears in the same service. The page list can contain further lists inside it, to any depth, and the copy uses recursion. One deeply nested input ends the process with a stack overflow. This lesson asks how a class can present many sources, some empty and some nested, as one sequence without copying them.
 
 <!-- stage: naive -->
 ### Copying Everything Into One List

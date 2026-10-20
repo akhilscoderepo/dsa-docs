@@ -5,7 +5,7 @@ A music player deletes the first song of a playlist, and the song stays. An undo
 
 ### Prerequisites
 
-You should know loops, arrays and the cost words from Chapter 00. Chapter 04 introduced hash maps, which the last lesson uses. Chapter 11 introduced stacks, which one exercise in the last core lesson uses. Each lesson defines its own terms the first time they matter. Code samples assume `import java.util.*;` and a recent JDK, and every list node is a small class with a `val` field and a `next` field.
+You should know loops, arrays and the cost words from Chapter 00. Chapter 04 introduced hash maps, which the last lesson uses. Chapter 11 introduced stacks, which one exercise in the last core lesson uses. The terms of a lesson are defined at their first use. The code samples need `import java.util.*;` and a recent JDK. Every list node is a small class with a `val` field and a `next` field.
 
 ### The Ten Lessons
 
@@ -30,7 +30,7 @@ One lesson joins the list lessons with the hash map lessons of Chapter 04.
 
 ### How To Work Through Each Lesson
 
-Each lesson begins with a program that fails or slows down on a real input and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to a full interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize, and the list of exercises names the role first. Each exercise also lists a Changed decision, which names the one choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
+A lesson begins with a program that fails or crawls on a real input. It then shows a plain version that works but costs too much. A prediction question comes next, and you settle on an answer before the explanation opens. Later parts give the rule, the state, a step-by-step trace, the code and a note on where the method does not apply. The exercises rise from a basic version to a complete interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize, and the list of exercises names the role first. Each exercise also lists a Changed decision, which names the one choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
 
 ### What You Can Do After This Chapter
 

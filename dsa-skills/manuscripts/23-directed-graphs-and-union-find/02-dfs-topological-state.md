@@ -83,7 +83,7 @@ The call stack itself holds the gray vertices, with the entry order from bottom 
 
 #### A Graph With A Cross Edge
 
-The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3 and 4 to 2. The search starts at vertex 0 and later at vertex 4, because that vertex is still white after the first call returns. Each cell holds a vertex id, and the pointer `cur` marks the vertex of the event. The variable `color` lists the states of vertices 0 to 4 as the letters W, G and B, and `post` lists the vertices that returned so far. Two steps matter most. At step 7 the search scans the edge from 2 to 3 and finds 3 black, so it skips the edge. At step 11 the edge from 4 to 2 meets a black vertex as well.
+Graph one has the edges from 0 to 1, from 0 to 2, from 1 to 3, from 2 to 3 and from 4 to 2. The search starts at vertex 0 and later at vertex 4, because that vertex is still white after the first call returns. Each cell holds a vertex id, and the pointer `cur` marks the vertex of the event. The variable `color` lists the states of vertices 0 to 4 as the letters W, G and B, and `post` lists the vertices that returned so far. Two steps matter most. At step 7 the search scans the edge from 2 to 3 and finds 3 black, so it skips the edge. At step 11 the edge from 4 to 2 meets a black vertex as well.
 
 ```trace
 {"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"color":"GWWWW","post":"empty"},"note":"The search enters vertex 0 and turns it gray."},{"at":{"cur":1},"vars":{"color":"GGWWW","post":"empty"},"note":"The search enters vertex 1 and turns it gray."},{"at":{"cur":3},"vars":{"color":"GGWGW","post":"empty"},"note":"The search enters vertex 3 and turns it gray."},{"at":{"cur":3},"vars":{"color":"GGWBW","post":"3"},"note":"All edges of vertex 3 are scanned, so it turns black and joins the postorder."},{"at":{"cur":1},"vars":{"color":"GBWBW","post":"3-1"},"note":"All edges of vertex 1 are scanned, so it turns black and joins the postorder."},{"at":{"cur":2},"vars":{"color":"GBGBW","post":"3-1"},"note":"The search enters vertex 2 and turns it gray."},{"at":{"cur":2},"vars":{"color":"GBGBW","post":"3-1"},"note":"The edge from 2 to 3 reaches a black vertex, so the search skips it."},{"at":{"cur":2},"vars":{"color":"GBBBW","post":"3-1-2"},"note":"All edges of vertex 2 are scanned, so it turns black and joins the postorder."},{"at":{"cur":0},"vars":{"color":"BBBBW","post":"3-1-2-0"},"note":"All edges of vertex 0 are scanned, so it turns black and joins the postorder."},{"at":{"cur":4},"vars":{"color":"BBBBG","post":"3-1-2-0"},"note":"The search enters vertex 4 and turns it gray."},{"at":{"cur":4},"vars":{"color":"BBBBG","post":"3-1-2-0"},"note":"The edge from 4 to 2 reaches a black vertex, so the search skips it."},{"at":{"cur":4},"vars":{"color":"BBBBB","post":"3-1-2-0-4"},"note":"All edges of vertex 4 are scanned, so it turns black and joins the postorder."}]}
@@ -91,7 +91,7 @@ The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3 and 4 to 2. The sea
 
 #### A Graph With A Real Cycle
 
-The second graph has the edges 0 to 1, 1 to 2, 2 to 3 and 3 to 1. The search enters 0, 1, 2 and 3 in a chain, so all four are gray. Vertex 3 then scans its edge to vertex 1 and finds a gray vertex. Vertex 0 is gray as well, but it does not lie on the cycle, and the method reports the edge from 3 to 1.
+Graph two has the edges from 0 to 1, then 1 to 2, then 2 to 3 and last 3 to 1. The search enters 0, 1, 2 and 3 in a chain, so all four are gray. Vertex 3 then scans its edge to vertex 1 and finds a gray vertex. Vertex 0 is gray as well, but it does not lie on the cycle, and the method reports the edge from 3 to 1.
 
 ```trace
 {"cells":[0,1,2,3],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"color":"GWWW","post":"empty"},"note":"The search enters vertex 0 and turns it gray."},{"at":{"cur":1},"vars":{"color":"GGWW","post":"empty"},"note":"The search enters vertex 1 and turns it gray."},{"at":{"cur":2},"vars":{"color":"GGGW","post":"empty"},"note":"The search enters vertex 2 and turns it gray."},{"at":{"cur":3},"vars":{"color":"GGGG","post":"empty"},"note":"The search enters vertex 3 and turns it gray."},{"at":{"cur":3},"vars":{"color":"GGGG","post":"empty"},"note":"The edge from 3 to 1 reaches a gray vertex, so it closes a cycle and the method reports the pair 3 and 1."}]}
@@ -175,7 +175,7 @@ The false friend is the single seen flag, or the rule from undirected graphs tha
 
 **Prerequisites.** The exercise above.
 
-**Problem.** A directed acyclic graph on the vertices `0` to `n - 1` is given by `edges`, where `[a, b]` is an edge from `a` to `b`. Run the depth-first search of the first exercise, starting new trees in ascending order and scanning neighbors in edge order. Append a vertex to a list when it turns black. Return the reverse of that list as an `int[]`.
+**Problem.** The entries of `edges` form a directed acyclic graph with vertices `0` to `n - 1`, where `[a, b]` means an edge from `a` to `b`. Run the depth-first search of the first exercise, starting new trees in ascending order and scanning neighbors in edge order. Append a vertex to a list when it turns black. Return the reverse of that list as an `int[]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
@@ -196,7 +196,7 @@ The false friend is the single seen flag, or the rule from undirected graphs tha
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A directed graph has `n` vertices numbered from 0, and `edges` lists its edges as pairs `[a, b]` that run from `a` to `b`. Run the depth-first search of the first exercise. Every time the search scans an entry of `edges` it looks at the state of the end vertex. Return an `int[]` of length 2 that holds the number of scans that find a black vertex and the number of scans that find a gray vertex. Scans that find a white vertex start a recursive call and count in neither entry.
+**Problem.** A directed graph has `n` vertices numbered from 0, and `edges` lists its edges as pairs `[a, b]` that run from `a` to `b`. Run the depth-first search of the first exercise. Every time the search scans an entry of `edges` it looks at the state of the end vertex. Return an `int[]` of length 2 with the count of scans that find a black vertex and the count of scans that find a gray vertex. Scans that find a white vertex start a recursive call and count in neither entry.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.

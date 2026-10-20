@@ -5,7 +5,7 @@ A support tool slows down with every ticket edit. A build farm starts a job befo
 
 ### Prerequisites
 
-You should know loops, arrays, the cost words from Chapter 00, and sorting with comparators from Chapter 05. Chapter 04 introduced hash maps, which two lessons use for counts and versions. Chapter 10 introduced intervals and the choice between a half-open and a closed interval, and the combination lesson builds on both. Chapter 14 introduced linked list nodes, which the merge exercise uses. Each lesson defines its own terms the first time they matter. Code samples assume `import java.util.*;` and a recent JDK.
+You should know loops, arrays, the cost words from Chapter 00, and sorting with comparators from Chapter 05. Chapter 04 introduced hash maps, which two lessons use for counts and versions. Chapter 10 introduced intervals and the choice between a half-open and a closed interval, and the combination lesson builds on both. Chapter 14 introduced linked list nodes, which the merge exercise uses. Terms are defined inside the lesson that first needs them. Code samples use `import java.util.*;` and a recent JDK.
 
 ### The Seven Lessons
 
@@ -27,7 +27,7 @@ One lesson joins this chapter with an earlier one.
 
 ### How To Work Through Each Lesson
 
-Each lesson begins with a program that fails or slows down on a real input, and then shows a plain version that works but costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a step-by-step trace, the code and a check of when the method does not apply. The exercises climb from a basic version to an interview problem. Each exercise has a role in brackets, either Build, Vary, Boundary or Recognize. Each exercise also lists a Changed decision, which names the main choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
+Every lesson opens with a program that fails or slows down on a real input. A plain version follows, and it works but costs too much. A prediction question asks you to name an answer before the explanation opens. The rest of the lesson covers the rule and the state, then a step-by-step trace and the code, and it ends by checking where the method stops applying. The exercises grow from a basic version into an interview problem. The bracket on each exercise shows its role, which is Build, Vary, Boundary or Recognize. Each exercise also lists a Changed decision, which names the main choice that differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Try the hint before you read a solution.
 
 ### What You Can Do After This Chapter
 

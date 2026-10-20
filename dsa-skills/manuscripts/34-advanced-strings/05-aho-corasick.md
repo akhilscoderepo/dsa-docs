@@ -7,7 +7,7 @@
 
 A moderation service checks each posted message against a blocklist. With 40 blocked words the check finishes instantly. Then the policy team imports a list of 20,000 entries, and the posting endpoint starts missing its latency budget. The code did not change. It still loops over the list and asks, for each entry, whether the message contains it. The work per message now grows with the size of the list, even when the message is a single short sentence.
 
-The same shape appears in log scanners that look for known error signatures, in intrusion detection that checks packets against attack strings, and in editors that highlight many keywords at once. In every case the text arrives once, while the patterns are many and fixed. The question for this lesson is how to read each character of the text one time and still find every occurrence of every pattern, including occurrences that overlap or sit inside one another.
+The same shape appears in log scanners that look for known error signatures, in intrusion detection that checks packets against attack strings, and in editors that highlight many keywords at once. In every case the text arrives once, while the patterns are many and fixed. This lesson asks how to read each character of the text one time and still find every occurrence of every pattern, including occurrences that overlap or sit inside one another.
 
 This lesson assumes you know the trie from chapter 18 and the level-order traversal with a queue from chapter 16. It adds one idea on top of them, a way to continue a match after a mismatch without rereading the text.
 
@@ -196,7 +196,7 @@ Two Java details matter. The expression `charAt(j) - 'a'` is an `int`, so it can
 
 #### Recognizing The Pattern
 
-Reach for this method when a fixed set of patterns must be matched against one text or one stream, and the answer needs every occurrence, a count per pattern, or a yes or no after each character. The signal in a statement is the word "stream" or "any of these words", together with patterns that may overlap or contain one another. The invariant to state before coding is that the current node is the longest suffix of the text read so far that is a prefix of some pattern.
+Reach for this method when a fixed set of patterns must be matched against one text or one stream, and the answer needs every occurrence, a count per pattern, or a yes or no after each character. The signal in a statement is the word "stream" or "any of these words", together with patterns that may overlap or contain one another. Before coding, state the invariant that the current node is the longest suffix of the text read so far that is also a prefix of some pattern.
 
 #### The Nearest False Friend
 

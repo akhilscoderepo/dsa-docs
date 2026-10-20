@@ -200,7 +200,7 @@ public final class RestoreShortestPath {
 **Approach.**
 The method answers the equal case before it builds any structure, because the minimum edge count from a vertex to itself is 0. For other targets it runs the search level by level. At the start of each round, `queue.size()` is the number of vertices of the current level, and the round expands exactly that many vertices. The counter `steps` increases by one after each round, so it equals the distance of the vertices discovered in the next round.
 
-The method returns `steps` as soon as it discovers the target. When the queue becomes empty without finding the target, the method returns -1, the failure value of the exercise. The invariant is that at the start of a round, the queue holds exactly the vertices at distance `steps` that are not expanded yet. The final value -1 is correct, because an empty queue means the whole component of the source was visited.
+The method returns `steps` as soon as it discovers the target. When the queue becomes empty without finding the target, the method returns -1, the failure value of the exercise. The invariant is that a round starts with a queue of exactly the vertices at distance `steps` that are not expanded yet. The final value -1 is correct, because an empty queue means the whole component of the source was visited.
 
 **Complexity.**
 - **Time** is O(V + E), because each vertex enters the queue once and each adjacency entry is read once.
@@ -289,7 +289,7 @@ public final class SourceTargetBoundary {
 **Approach.**
 The vertices are the free cells, and the neighbors of a cell are the up to eight cells around it that lie inside the grid and are free. No adjacency list is built, because the offsets `dr` and `dc` generate the neighbors on demand. The method returns -1 at once when either endpoint is blocked. It then runs the same queue search as the graph version, with each cell encoded as `row * n + col` in the queue.
 
-The array `length` stores the number of cells on the best path to each cell, so the start cell gets 1, and a neighbor gets `length[current] + 1` at its first discovery. A value of 0 in `length` means that the cell is not visited yet. The invariant is the same as in the lesson: cells leave the queue in nondecreasing length, so the first discovery is shortest. The length counts cells, which is one more than the number of edges.
+The array `length` stores the number of cells on the best path to each cell, so the start cell gets 1, and a neighbor gets `length[current] + 1` at its first discovery. A value of 0 in `length` means that the cell is not visited yet. This invariant matches the lesson: cells leave the queue in nondecreasing length, so the first discovery is shortest. The length counts cells, which is one more than the number of edges.
 
 **Complexity.**
 - **Time** is O(n^2), because each of the `n * n` cells enters the queue at most once and checks eight neighbors.

@@ -91,7 +91,7 @@ Each call carries one vertex and one entry vertex. All calls share the graph and
 
 #### A Graph Without A Cycle
 
-The first graph has the edges 0 to 1, 0 to 2 and 1 to 3. The cells are the vertex ids and the pointer `v` marks the vertex that reads a neighbor. The variable `neighbor` is the entry just read, and `parent` is the entry vertex of `v`. Each vertex reads its parent once and skips it. The search never meets a visited neighbor that is not a parent, so it ends without a report.
+The first graph has these edges: 0 to 1, 0 to 2 and 1 to 3. The cells are vertex ids, and the pointer `v` marks the vertex that is reading a neighbor. The variable `neighbor` is the entry just read, and `parent` is the entry vertex of `v`. Each vertex reads its parent once and skips it. The search never meets a visited neighbor that is not a parent, so it ends without a report.
 
 ```trace
 {"cells":[0,1,2,3],"pointers":["v"],"steps":[{"at":{"v":0},"vars":{"neighbor":1,"parent":-1},"note":"Vertex 0 reads neighbor 1, which is unvisited, so the search enters it with parent 0."},{"at":{"v":1},"vars":{"neighbor":0,"parent":0},"note":"Vertex 1 reads neighbor 0, which is its parent (0), so the search skips it."},{"at":{"v":1},"vars":{"neighbor":3,"parent":0},"note":"Vertex 1 reads neighbor 3, which is unvisited, so the search enters it with parent 1."},{"at":{"v":3},"vars":{"neighbor":1,"parent":1},"note":"Vertex 3 reads neighbor 1, which is its parent (1), so the search skips it."},{"at":{"v":0},"vars":{"neighbor":2,"parent":-1},"note":"Vertex 0 reads neighbor 2, which is unvisited, so the search enters it with parent 0."},{"at":{"v":2},"vars":{"neighbor":0,"parent":0},"note":"Vertex 2 reads neighbor 0, which is its parent (0), so the search skips it."}]}
@@ -155,7 +155,7 @@ The false friend is the directed method with three states: white, gray and black
 
 **Prerequisites.** The parent argument of this lesson.
 
-**Problem.** An undirected graph has vertices `0` to `n - 1`, and each edge `[a, b]` joins `a` and `b` in both directions. A cycle is a sequence of at least three distinct vertices in which consecutive vertices share an edge and the last vertex shares an edge with the first. Return `true` when the graph contains a cycle and `false` otherwise.
+**Problem.** The vertices `0` to `n - 1` form an undirected graph, and every edge `[a, b]` connects `a` with `b` in both directions. A cycle is a sequence of at least three distinct vertices in which consecutive vertices share an edge and the last vertex shares an edge with the first. Return `true` when the graph contains a cycle and `false` otherwise.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.
@@ -176,7 +176,7 @@ The false friend is the directed method with three states: white, gray and black
 
 **Prerequisites.** The exercise above.
 
-**Problem.** Input `n` and `edges` define an undirected graph on the vertices `0` to `n - 1`. A triangle is a set of three distinct vertices `a`, `b` and `c` such that all three pairs `a b`, `b c` and `a c` are edges. Return `true` when the graph contains a triangle. A back edge is an edge that the depth-first search does not use to discover a vertex.
+**Problem.** The integer `n` and the list `edges` define an undirected graph whose vertices are `0` to `n - 1`. A triangle is a set of three distinct vertices `a`, `b` and `c` such that all three pairs `a b`, `b c` and `a c` are edges. Return `true` when the graph contains a triangle. A back edge is an edge that the depth-first search does not use to discover a vertex.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 1000`.

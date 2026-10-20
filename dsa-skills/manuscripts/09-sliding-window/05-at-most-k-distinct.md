@@ -72,7 +72,7 @@ The method keeps the two indexes, a map and the best length.
 - **counts** is the count map from a value to its number of occurrences in the window.
 - **counts.size()** is the distinct count, and it is correct only after every key removal.
 - **k** is the limit of the distinct count, and it satisfies `k >= 0`.
-- **left** and **right** are the first and last indexes of the window, and `left` may equal `right + 1` when the window is empty.
+- **left** and **right** mark the first and last indexes of the window, and an empty window has `left` equal to `right + 1`.
 - **best** is the largest window length recorded after a shrink loop.
 
 <!-- stage: trace -->
@@ -153,7 +153,7 @@ Use `merge` for the entering value and `remove` when a count reaches 0. For a sm
 
 **Prerequisites.** The count map and the key removal of this lesson.
 
-**Problem.** Given an integer array `nums`, return the length of the longest contiguous block in which all values are equal. The method keeps the count map of the window, and the map holds one key after each step. When a different value enters and the map briefly holds two keys, the shrink loop removes the block's values until the count is 0.
+**Problem.** For an integer array `nums`, return the length of the longest contiguous block whose values are all equal. The method keeps the count map of the window, and the map holds one key after each step. When a different value enters and the map briefly holds two keys, the shrink loop removes the block's values until the count is 0.
 
 **Constraints.**
 - **Length** satisfies `0 <= nums.length <= 10^5`.

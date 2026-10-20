@@ -96,9 +96,9 @@ The code and the traces use the following quantities.
 
 - **a** is the working copy of the input, rearranged by every round.
 - **r** is the zero-based target rank in the sorted order.
-- **lo** and **hi** are the first and last index of the current range.
+- **lo** and **hi** mark the first and last index of the current range.
 - **pivot** is the value at the middle index of the range, `a[lo + (hi - lo) / 2]`.
-- **lt** and **gt** are the first and last index of the equal block after a round.
+- **lt** and **gt** mark the first and last index of the equal block after a round.
 - **below** and **equal** are the final outputs and equal `lt` and `gt - lt + 1` after the last round.
 
 In the traces, the variable `array` shows the contents of `a` after each round, and `move` states which side the search keeps.

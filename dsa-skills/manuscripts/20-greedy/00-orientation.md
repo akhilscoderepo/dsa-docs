@@ -5,7 +5,7 @@ A placement service puts a small job on its biggest server and then cannot place
 
 ### Prerequisites
 
-You should know arrays, sorting with a comparator and the two-pointer scan. Chapter 05 taught sorting with comparators, which every lesson uses to expose the next item. Chapter 08 taught pointers that move in one direction, which lesson 01 and lesson 03 reuse. Chapter 10 taught intervals, and lessons 02 and 04 build on the half-open model. Chapter 17 taught the heap, which lesson 05 uses to drop the longest retained task. Code samples assume `import java.util.*;` and a recent JDK.
+You should know arrays, sorting with a comparator and the two-pointer scan. Chapter 05 taught sorting with comparators, which every lesson uses to expose the next item. Chapter 08 taught pointers that move in one direction, which lesson 01 and lesson 03 reuse. Chapter 10 taught intervals, and lessons 02 and 04 build on the half-open model. Chapter 17 taught the heap, which lesson 05 uses to drop the longest retained task. All code samples assume `import java.util.*;` and a recent JDK.
 
 ### The Five Lessons
 
@@ -28,7 +28,7 @@ Four lessons join the greedy rule with a tool from an earlier chapter.
 
 ### How To Work Through Each Lesson
 
-A lesson opens with a program that fails on a realistic input, then shows the obvious version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises climb from a basic version to a pattern recognition problem. A bracketed role labels each exercise: Build, Vary, Boundary or Recognize. Read the hint only after a real attempt.
+A lesson opens with a program that fails on a realistic input, then shows the obvious version and asks you to predict its result. The next parts name the rule, list the state, follow two traces, show the code and mark where the rule stops working. The exercises progress from a basic version to a pattern recognition problem. A bracketed role labels each exercise: Build, Vary, Boundary or Recognize. Read the hint only after a real attempt.
 
 ### What You Can Do After This Chapter
 

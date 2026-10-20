@@ -257,7 +257,7 @@ The false friend is the breadth-first search with a visited flag. It finalizes a
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** There are `n` cities numbered from `0`. Each entry `[a, b, p]` of `flights` is a one-way flight from `a` to `b` with price `p`. A route from `src` to `dst` is a sequence of flights in which each flight starts where the previous one ends. Its stops are the cities between the first and the last flight, so a route of `m` flights has `m - 1` stops. Among routes with at most `k` stops, return an `int[]` of length 2 that holds the least total price and the number of stops of the cheapest route. A tie in price goes to the route with fewer stops. Return `{-1, -1}` when no route exists. This version returns the stop count in addition to the price.
+**Problem.** There are `n` cities numbered from `0`. Each entry `[a, b, p]` of `flights` is a one-way flight from `a` to `b` with price `p`. A route from `src` to `dst` is a sequence of flights in which each flight starts where the previous one ends. Its stops are the cities between the first and the last flight, so a route of `m` flights has `m - 1` stops. Among routes with at most `k` stops, return an `int[]` of length 2 with the least total price and the stop count of the cheapest route. A tie in price goes to the route with fewer stops. Return `{-1, -1}` when no route exists. This version returns the stop count in addition to the price.
 
 **Constraints.** The limits are:
 - **Cities** satisfy `1 <= n <= 60` and `src != dst`, with both in `0..n-1`.

@@ -221,7 +221,7 @@ A false friend of this design is the assumption that a cheap candidate is also a
 
 **Prerequisites.** Union-find, Kruskal's minimum spanning tree and binary lifting.
 
-**Problem.** Design a class `LimitedPaths`. Its constructor receives `n` vertices numbered `0` to `n - 1` and an undirected edge list, where each edge is `{u, v, weight}`. The method `query(p, q, limit)` returns `true` when some path from `p` to `q` uses only edges with weight strictly less than `limit`, and `false` otherwise. Parallel edges and self-loops may appear. The graph never changes. Queries arrive one at a time and are not known in advance, so sorting the queries by `limit` is not available. Contrast this with the offline task, where all queries are known and a union-find processes them in sorted order.
+**Problem.** Design a class `LimitedPaths`. The constructor receives the count `n` of vertices, which carry the numbers `0` to `n - 1`, and an undirected edge list whose entries are `{u, v, weight}`. The method `query(p, q, limit)` returns `true` when some path from `p` to `q` uses only edges with weight strictly less than `limit`, and `false` otherwise. Parallel edges and self-loops may appear. The graph never changes. Queries arrive one at a time and are not known in advance, so sorting the queries by `limit` is not available. Contrast this with the offline task, where all queries are known and a union-find processes them in sorted order.
 
 **Constraints.** The limits are:
 - **`n`** satisfies `2 <= n <= 10^4`, and the edge count satisfies `0 <= E <= 10^5`.

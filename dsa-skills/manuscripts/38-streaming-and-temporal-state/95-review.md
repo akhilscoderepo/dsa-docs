@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A window that disagrees with its spec at one instant, a heap root that was corrected away, and a shuffle that hands out its own array all pass short tests. The questions below cover all nine lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+A window that disagrees with its spec at one instant, a heap root that was corrected away, and a shuffle that hands out its own array all pass short tests. The questions below span all nine lessons. Try them after the lessons, try them again some days later, and choose an answer before you open the explanation.
 
 ### Check Your Recall
 

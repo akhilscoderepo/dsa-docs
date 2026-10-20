@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A prefix sum that ignores a correction, two touching ranges that stay split, and a division by a multiplier of zero all pass small tests. The eleven questions below cover all eight lessons. Try them after the lessons and again after a few days, and commit to an answer before opening the explanation.
+A prefix sum that ignores a correction, two touching ranges that stay split, and a division by a multiplier of zero all pass small tests. The eleven questions below span all eight lessons. Try them after the lessons and once more after a few days, and make up your mind before you open the explanation.
 
 ### Check Your Recall
 

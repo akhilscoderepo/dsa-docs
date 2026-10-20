@@ -90,7 +90,7 @@ The second loop is needed because the scan guarantees only one direction. A true
 
 **Complexity.**
 
-- **Time** is O(n), because the vote scan and the counting loop each read the array once.
+- **Time** is O(n), since the vote scan and the counting loop read the array once apiece.
 - **Space** is O(1), because the method stores `candidate`, `votes` and one counter.
 
 ```java run
@@ -164,7 +164,7 @@ For `[1, 2, 3]` the candidate 1 is cancelled by 2, and the zero votes let 3 take
 
 **Complexity.**
 
-- **Time** is O(n), because the scan and the count each read the array once.
+- **Time** is O(n), since the scan and the count both make a single pass over the array.
 - **Space** is O(1), because the method stores three integers and the fixed-size result.
 
 ```java run

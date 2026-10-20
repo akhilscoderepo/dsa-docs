@@ -7,7 +7,7 @@
 
 A booking service stores the start time of every reservation. A new request asks for a start time, and the service must find the reservation that begins just before it and the one that begins just after it. Those two neighbors decide whether the request overlaps. Requests arrive all day, and each accepted request adds a new start time to the data.
 
-A hash set answers "is this exact time stored?" in constant time, but it cannot answer "which stored time is the closest one below this value?". A hash set keeps no order, so that question forces a scan of every entry. A plain sorted array answers the nearest question quickly, yet it struggles when new entries keep arriving. The question for this lesson is how a program keeps keys in order, finds their neighbors quickly and still accepts new keys.
+A hash set answers "is this exact time stored?" in constant time, but it cannot answer "which stored time is the closest one below this value?". A hash set keeps no order, so that question forces a scan of every entry. A plain sorted array answers the nearest question quickly, yet it struggles when new entries keep arriving. This lesson asks how a program can keep keys in order, find their neighbors quickly and still accept new keys.
 
 <!-- stage: naive -->
 ### Keeping A Sorted List By Hand
@@ -43,7 +43,7 @@ About 2.5 billion moves. The list holds k elements before the k-th insertion, an
 
 #### Count The Moves
 
-One insertion into a list of size `k` moves about `k / 2` elements on average, so it costs O(k). Over `n` insertions the total is O(n^2). For `n = 100,000` that is about 2.5 * 10^9 element moves, which takes seconds. Removing a value has the same cost, because every later element shifts one slot left.
+One insertion into a list of size `k` moves about `k / 2` elements on average, so it costs O(k). Summed over `n` insertions, the cost is O(n^2) in total. For `n = 100,000` that is about 2.5 * 10^9 element moves, which takes seconds. Removing a value has the same cost, because every later element shifts one slot left.
 
 #### Compare The Other Extreme
 

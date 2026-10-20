@@ -326,7 +326,7 @@ public final class ZeroCostCycle {
 **Approach.**
 Each cell is a vertex with index `r * n + c`, and each of the four moves is an edge. The edge cost is 0 when the move direction equals the code of the start cell minus 1, and 1 otherwise. All costs are 0 or 1, so the deque search applies. The loop removes the front entry, skips it when it is superseded, and pushes each neighbor with a strictly smaller cost at the front for a free move and at the back for a paid move.
 
-The invariant is the same as in the graph version: the deque distances never decrease from front to back and span at most two values. The edge costs are computed on the fly, so no adjacency list is built. The answer is the stored distance of the last cell.
+This invariant matches the graph version: the deque distances never decrease from front to back and span at most two values. The edge costs are computed on the fly, so no adjacency list is built. The answer is the stored distance of the last cell.
 
 **Complexity.**
 - **Time** is O(m n), because each cell enters the deque at most twice and scans four moves each time.

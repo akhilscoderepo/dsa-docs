@@ -92,7 +92,7 @@ The search keeps one list, one array, one queue, two integers and one flag. The 
 
 #### A Graph With Two Equal Routes
 
-The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3, 3 to 4 and 5 to 6. The cells are the vertex ids, and the pointer `cur` is the vertex just removed from the queue. The variable `size` is the snapshot of the current pass, and `layers` is the counter after that removal, which changes only at the last removal of a pass. The first pass removes vertex 0 alone and appends 1 and 2. The second pass has size 2, and it removes 1 and 2 before the counter changes again. Vertices 5 and 6 never enter the queue, so they do not add time.
+The first graph has the edges 0 to 1, 0 to 2, 1 to 3, 2 to 3, 3 to 4 and 5 to 6. The cells hold vertex ids, and the pointer `cur` marks the vertex that was just removed from the queue. The variable `size` is the snapshot of the current pass, and `layers` is the counter after that removal, which changes only at the last removal of a pass. The first pass removes vertex 0 alone and appends 1 and 2. The second pass has size 2, and it removes 1 and 2 before the counter changes again. Vertices 5 and 6 never enter the queue, so they do not add time.
 
 ```trace
 {"cells":[0,1,2,3,4,5,6],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"size":1,"layers":1,"queue":"1-2"},"note":"The search takes vertex 0 from a pass of size 1 and appends 1 and 2. The pass appended vertices, so layers becomes 1."},{"at":{"cur":1},"vars":{"size":2,"layers":1,"queue":"2-3"},"note":"The search takes vertex 1 from a pass of size 2 and appends 3."},{"at":{"cur":2},"vars":{"size":2,"layers":2,"queue":"3"},"note":"The search takes vertex 2 from a pass of size 2 and finds no unvisited neighbor. The pass appended vertices, so layers becomes 2."},{"at":{"cur":3},"vars":{"size":1,"layers":3,"queue":"4"},"note":"The search takes vertex 3 from a pass of size 1 and appends 4. The pass appended vertices, so layers becomes 3."},{"at":{"cur":4},"vars":{"size":1,"layers":3,"queue":"empty"},"note":"The search takes vertex 4 from a pass of size 1 and finds no unvisited neighbor. The pass appended nothing, so layers keeps its value."}]}
@@ -161,7 +161,7 @@ The false friend is a counter that rises once per removed vertex. It looks like 
 
 **Prerequisites.** The layer snapshot of this lesson.
 
-**Problem.** An undirected graph has vertices `0` to `n - 1`, and each edge `[a, b]` joins `a` and `b` in both directions. Given a `source` vertex, return an `int[][]` named `layers`. The row `layers[k]` lists every vertex whose minimum number of edges from `source` equals `k`, in ascending order. The result has one row for each `k` from 0 up to the largest finite distance. Vertices that no path reaches appear in no row.
+**Problem.** Consider an undirected graph on vertices `0` to `n - 1`. Each edge `[a, b]` joins `a` and `b` in both directions. Given a `source` vertex, return an `int[][]` named `layers`. The row `layers[k]` lists every vertex whose minimum number of edges from `source` equals `k`, in ascending order. The result has one row for each `k` from 0 up to the largest finite distance. Vertices that no path reaches appear in no row.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 10^5`.

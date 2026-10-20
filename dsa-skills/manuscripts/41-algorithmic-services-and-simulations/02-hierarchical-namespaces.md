@@ -200,9 +200,9 @@ A flat map from full path to value is a false friend. It passes the creation tes
 
 **Prerequisites.** The file system exercise above and sorted maps.
 
-**Problem.** The rules below are this chapter's own wording and may differ in detail from LeetCode. Design a class `Fs` whose tree holds directories and files. A path is `/` for the root, or `/` followed by names with one `/` between neighbours.
+**Problem.** The rules below are worded by this chapter, and LeetCode may state them differently. Design a class `Fs` whose tree holds directories and files. A path is `/` for the root, or `/` followed by names with one `/` between neighbours.
 
-The call `mkdir(path)` creates the directory and every missing directory above it, and returns `true`. It returns `false` and changes nothing if the path or a directory above it is a file.
+The call `mkdir(path)` makes the directory together with every missing directory above it, then returns `true`. If the path or a directory above it is a file, the call gives back `false` and changes nothing.
 
 The call `addContentToFile(path, text)` appends the text to the file, creating the file and missing directories first. It returns `false` and changes nothing if the path is a directory, the root, or has a file above it.
 

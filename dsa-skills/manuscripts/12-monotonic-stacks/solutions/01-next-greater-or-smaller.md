@@ -144,7 +144,7 @@ public final class DailyTemperatures {
 <!-- id: ms-equal-values-stay-unresolved -->
 
 **Approach.**
-An index is open exactly when it is never popped, so the answer is the stack size after the last value. The pop condition must be strictly smaller. With a non-strict comparison, an equal later value would pop the earlier index and report it as closed, which contradicts the definition. The strict comparison also keeps equal values side by side on the stack, and the invariant that values never increase from bottom to top still holds. An empty array skips the loop and returns `0`.
+An index is open exactly when it is never popped, so the answer is the stack size after the last value. The pop condition must be strictly smaller. With a non-strict comparison, an equal later value would pop the earlier index and report it as closed, which contradicts the definition. The strict comparison also keeps equal values side by side on the stack, and the invariant that values never increase from bottom to top still holds. With an empty array the loop never runs and the method returns `0`.
 
 **Complexity.**
 - **Time** is O(n), because every index is stacked once and removed at most once.

@@ -36,7 +36,7 @@ final class NaiveMedian {
 }
 ```
 
-After the readings 12, 4 and 9 the call `lowerMedian()` returns 9, and after 20 it still returns 9. The answers are correct and the class looks finished.
+After the readings 12, 4 and 9 the call `lowerMedian()` returns 9, and after 20 it still returns 9. Every answer is correct, and the class seems finished.
 
 ```predict
 A program adds 100000 readings and calls lowerMedian() after each addition. Roughly how many comparisons does the sorting alone perform, and does the work per call stay the same as the list grows?

@@ -375,7 +375,7 @@ public final class SparseEmptyBucketsBoundary {
 <!-- id: st38-exam-scores-tracker -->
 
 **Approach.**
-The ledger keeps two parallel `long` arrays. The array `times` holds the result times, which strictly increase, so it is a sorted index. The array `prefix` has one more slot than `times`, and `prefix[i]` is the sum of the first `i` scores. A range `[from, to]` becomes the half-open range `[from, to + 1)` once, at the entry of `total`. Two binary searches give the position `l` of the first result at or after `from` and the position `r` of the first result at or after `to + 1`. The answer is `prefix[r] - prefix[l]`, which is the sum of the scores at the positions `l` through `r - 1`. A reversed range gives 0 by an explicit test.
+The ledger keeps two parallel `long` arrays. The array `times` holds the result times, which strictly increase, so it is a sorted index. The array `prefix` is one slot longer than `times`, and entry `prefix[i]` holds the total of the first `i` scores. A range `[from, to]` becomes the half-open range `[from, to + 1)` once, at the entry of `total`. Two binary searches give the position `l` of the first result at or after `from` and the position `r` of the first result at or after `to + 1`. The answer is `prefix[r] - prefix[l]`, which is the sum of the scores at the positions `l` through `r - 1`. A reversed range gives 0 by an explicit test.
 
 The invariant is that `prefix[i + 1] = prefix[i] + score_i` at all times, so any contiguous run sums by one subtraction. The sums use `long`, because three scores of 10^9 already exceed `Integer.MAX_VALUE`. The program asserts that fact and compares the class with a loop over all results on random data.
 

@@ -360,7 +360,7 @@ public final class RobotSolution {
 
 **Approach.** A flat boolean array of n^3 cells is the authoritative matrix. A count array holds the number of ones in each layer, and it is derived from the matrix. An ordered set holds one key for each layer, built from the count and the layer index, so the last key names the layer with the most ones and, among equal counts, the largest index.
 
-An update first reads the cell. If the value already matches the request, the call returns `false` and writes nothing. Otherwise it removes the layer's current key from the ordered set, changes the cell and the count, and inserts the new key. The remove must come first, because the key is derived from the count and a key that changes while it sits in the set breaks the ordering.
+An update first reads the cell. A call whose request matches the stored value returns `false` and writes nothing. Otherwise it removes the layer's current key from the ordered set, changes the cell and the count, and inserts the new key. The remove must come first, because the key is derived from the count and a key that changes while it sits in the set breaks the ordering.
 
 The invariant is that the ordered set holds exactly one key for each layer and that key matches the layer's current count.
 

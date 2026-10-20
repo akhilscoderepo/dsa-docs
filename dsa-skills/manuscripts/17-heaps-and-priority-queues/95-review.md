@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-Come back to this page after the lessons and again a few days later. Each question describes a situation and leaves out the lesson name. Choose an answer before you open the explanation.
+Come to this page after finishing the lessons, then once more later in the week. Each question states a situation, and the lesson name is missing. Choose an answer prior to opening the explanation.
 
 ### Recognition Questions
 

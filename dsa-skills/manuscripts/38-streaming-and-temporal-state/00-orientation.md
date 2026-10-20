@@ -9,7 +9,7 @@ You should know queues, sliding windows, prefix sums, heaps, ordered sets, hash 
 
 ### What Each Lesson Protects
 
-Each lesson names one fact that every call must keep true.
+One fact that every call must keep true is named in each lesson.
 
 - **Windowed Streams** keeps exactly the active window and its running total, so each call does constant amortized work.
 - **Expiring State** never shows a record past its deadline, even when cleanup is lazy.
@@ -23,7 +23,7 @@ Each lesson names one fact that every call must keep true.
 
 ### Reading Order
 
-Every lesson opens with a class that passes short tests but is slow, wrong or unsafe on longer ones. You predict the failure before the reasoning appears. Two traces follow the fields call by call, then Java code and the limits of the idea. The four exercises climb from a basic build to a variation, an edge case and a recognition problem. A **false friend** is a design that looks like the pattern but breaks its precondition. Solutions check each class against a brute-force **oracle**, a slow but obviously correct version, on random inputs.
+Every lesson opens with a class that passes short tests but is slow, wrong or unsafe on longer ones. The reasoning appears only after you predict the failure. Two traces follow the fields call by call. Next come the code in Java and a note on where the idea stops fitting. The four exercises start with a basic build, move to a variation and an edge case, and end with a recognition problem. A **false friend** is a design that looks like the pattern but breaks its precondition. Each solution compares its class with a brute-force **oracle**, a slow but obviously correct version, on random inputs.
 
 ### What You Can Do After This Chapter
 

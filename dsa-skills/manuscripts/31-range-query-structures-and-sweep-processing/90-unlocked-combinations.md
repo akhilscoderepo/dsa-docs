@@ -11,4 +11,4 @@ The lesson Compress Values Then Count Ranks joins coordinate compression with th
 
 ### Pairings That Wait For A Later Chapter
 
-Persistent trees keep every earlier version of a tree, and multidimensional range structures answer queries over several coordinates at once. Each needs an explicit rule for which version or which dimensions a query reads. A later chapter takes them, and this chapter assigns no problems to them.
+Persistent trees keep every earlier version of a tree, and multidimensional range structures answer queries over several coordinates at once. Each needs an explicit rule for which version or which dimensions a query reads. A later chapter takes them over, so this chapter assigns no problems to them.

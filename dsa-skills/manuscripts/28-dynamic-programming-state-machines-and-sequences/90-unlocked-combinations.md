@@ -1,7 +1,7 @@
 <!-- section: unlocked-combinations -->
 ## Unlocked Combinations
 
-A strategy simulator earns a profit on paper that no real account could reach, because it buys again on the day after a sale that the rules forbid. The fix lies in the table and not in the loop: each entry must say what the account holds. This chapter releases one pairing and leaves one for later, where a pairing is a lesson that joins earlier topics into one decision.
+A strategy simulator earns a profit on paper that no real account could reach, because it buys again on the day after a sale that the rules forbid. The fix lies in the table and not in the loop: each entry must say what the account holds. In this chapter, a pairing means a lesson that joins earlier topics into a single decision. One pairing opens in this chapter and one waits.
 
 ### Pairing Taught In This Chapter
 

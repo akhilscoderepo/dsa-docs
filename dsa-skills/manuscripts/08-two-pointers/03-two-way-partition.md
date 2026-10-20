@@ -50,7 +50,7 @@ A **partition** of an array puts every value of one category before every value 
 
 The scan looks at `nums[left]`. If it already belongs to the first category, the scan moves `left` forward by one. If `nums[right]` belongs to the second category, the scan moves `right` back by one. Otherwise `nums[left]` is in the wrong region and so is `nums[right]`. The scan performs one **swap**, which exchanges the two values. After the swap, both ends are in valid regions and both pointers move.
 
-Every step shrinks the unresolved range by at least one index. The loop runs at most `n` times and does at most `n / 2` swaps, so the cost is O(n) time and O(1) extra space.
+Every step shrinks the unresolved range by at least one index. The loop runs at most `n` times and makes at most `n / 2` swaps, so the cost is O(n) time with O(1) extra space.
 
 <!-- names: partition, unresolved range, swap -->
 
@@ -154,7 +154,7 @@ The method needs a test that puts each value into one of two categories without 
 
 **Prerequisites.** The one-direction form in the insight of this lesson.
 
-**Problem.** Given an integer array `nums` and an integer `pivot`, rearrange `nums` in place so that every value less than `pivot` comes before every value greater than or equal to `pivot`. Return `k`, the number of values less than `pivot`. The order inside each region is not specified.
+**Problem.** For an integer array `nums` and a value `pivot`, rearrange `nums` in place so that no value greater than or equal to `pivot` precedes a value less than `pivot`. Return `k`, the number of values less than `pivot`. The order inside each region is not specified.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 10^5`.

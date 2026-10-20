@@ -5,7 +5,7 @@
 <!-- id: ga-kr-sorted-safe-edges -->
 
 **Approach.**
-The method creates a `parent` array in which every vertex is its own root. It scans the edges in the given order. For each edge it finds the roots of both endpoints. Different roots mean the endpoints lie in different groups, so the method records `true` and links one root below the other. Equal roots mean the edge would close a cycle, so the method records `false` and changes nothing. A self-loop has the same vertex on both sides, so its roots are always equal and it is always skipped.
+The method creates a `parent` array in which every vertex is its own root. It scans the edges in the given order. For every edge it looks up the roots of both endpoints. Different roots mean the endpoints lie in different groups, so the method records `true` and links one root below the other. Equal roots mean the edge would close a cycle, so the method records `false` and changes nothing. A self-loop has the same vertex on both sides, so its roots are always equal and it is always skipped.
 
 The invariant is that the groups of `parent` equal the connected pieces of the accepted edges, so the accepted edges form a forest. A merge joins exactly two pieces, and a skip leaves the pieces alone. The input is already sorted, so the method does not sort and does not touch the array.
 
@@ -95,7 +95,7 @@ public final class KruskalSortedSafeEdges {
 <!-- id: ga-kr-stop-count -->
 
 **Approach.**
-The method sorts a copy of the edges by weight. `Arrays.sort` on an array of objects is stable, so equal weights keep their input order. It then runs the same group rule as before and counts every edge whose roots are equal. After each purchase it tests whether `n - 1` edges are accepted. It leaves the loop at that moment. Edges after the stop are never examined, so they never add to the count.
+The method orders a copy of the edges by weight. `Arrays.sort` on an array of objects is stable, so equal weights keep their input order. It then runs the same group rule as before and counts every edge whose roots are equal. After each purchase it tests whether `n - 1` edges are accepted. It leaves the loop at that moment. Edges after the stop are never examined, so they never add to the count.
 
 The invariant has two parts. The count `skipped` equals the number of examined edges that closed a cycle. The groups equal the connected pieces of the accepted edges. The stop is valid because a connected graph with `n - 1` accepted edges has one group, and every later edge would have equal roots. The exercise states that the graph is connected, so the loop always reaches `n - 1` purchases before the edges run out.
 
@@ -209,7 +209,7 @@ public final class KruskalStopCount {
 <!-- id: ga-kr-forest-tally -->
 
 **Approach.**
-The method sorts a copy of the edges, then scans all of them. It starts with `groups` equal to `n`. Each accepted edge merges two groups, so the method lowers `groups` by one and adds the weight to a `long` total. An edge with equal roots changes nothing. The scan has no early stop based on `n - 1`, because a disconnected graph never reaches that count. The scan ends with the last edge. The result pairs the final `groups` with the total.
+The method orders a copy of the edges and then scans all of them. It starts with `groups` equal to `n`. Each accepted edge merges two groups, so the method lowers `groups` by one and adds the weight to a `long` total. An edge with equal roots changes nothing. The scan has no early stop based on `n - 1`, because a disconnected graph never reaches that count. The scan ends with the last edge. The result pairs the final `groups` with the total.
 
 The invariant is that `groups` equals the number of connected pieces of the accepted edges, and `total` is the sum of their weights. Equal weights may appear in any order. Two lightest crossing edges of the same weight are both safe, so either choice keeps the total the same. The solution checks this by shuffling ties. The total uses `long` because two weights of 2000000000 already exceed `Integer.MAX_VALUE`, and the solution asserts that fact.
 

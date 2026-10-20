@@ -129,7 +129,7 @@ Use this method when a positive-valued item can be used any number of times, the
 
 #### Checking The Invariant
 
-An **invariant** is a statement that stays true before and after each loop step. Here it says that `dp[a]` is the fewest tokens for amount `a` for every amount the loop has passed. Test amount 0, which must return 0 even with no denominations. Test an amount below every denomination, which must return -1. Test one denomination that does not divide the amount.
+An **invariant** is a statement that holds before each loop step and after it. Here it says that `dp[a]` is the fewest tokens for amount `a` for every amount the loop has passed. Test amount 0, which must return 0 even with no denominations. Test an amount below every denomination, which must return -1. Test one denomination that does not divide the amount.
 
 #### Avoiding The False Friend
 

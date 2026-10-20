@@ -27,4 +27,4 @@ A dashboard sorts a million samples to read the median, a lookup scans every pri
 
 ### Fixing A Wrong Answer
 
-Open the lesson whose topic the question covers, such as Quickselect, Ordered Maps And Sets or Merge Counting, and reread its variables list and applicability part. Then rerun its first trace by hand on a smaller input.
+Open the lesson whose topic the question covers, such as Quickselect, Ordered Maps And Sets or Merge Counting, and reread its variables list and applicability part. Afterward, replay its first trace by hand on a smaller input.

@@ -47,7 +47,7 @@ It stores 1, which is wrong, because the route 0, 2, 3, 1 costs 0. The search re
 <!-- stage: bottleneck -->
 ### First Arrival Is Not The Cheapest Arrival
 
-The method runs in O(V + E) time, so speed is not the defect. The defect is the rule that the first arrival fixes the answer. In a search over edge counts, the first arrival uses the fewest edges, because the queue releases vertices in order of edge count. With costs, a vertex reached by one paid edge may also be reachable by many free edges, and the free route arrives later in queue order but with a smaller sum.
+The method needs O(V + E) time, so speed is not the defect. The defect is the rule that the first arrival fixes the answer. In a search over edge counts, the first arrival uses the fewest edges, because the queue releases vertices in order of edge count. With costs, a vertex reached by one paid edge may also be reachable by many free edges, and the free route arrives later in queue order but with a smaller sum.
 
 A repair exists from the previous lessons. A priority queue releases the smallest cost first, so the first arrival at the front of the queue is the cheapest. That repair costs O(E log V) time, because every accepted improvement is one heap insertion of O(log V). For a grid with a million cells, the extra factor is about twenty comparisons per insertion, and the structure needs a comparator and an object for each entry.
 
@@ -92,7 +92,7 @@ The sum `d + cost` involves only a finite `d`, because the search never scans ed
 
 #### A Free Route Beats A Direct Edge
 
-The first graph has the edges 0 to 1 with cost 1, 0 to 2 with cost 0, 2 to 3 with cost 0, 3 to 1 with cost 0 and 1 to 4 with cost 1. This is the graph of the earlier prediction plus the edge 1 to 4. Each cell holds a vertex id, and the pointer `cur` marks the vertex of the event. The variable `dist` lists the distances of vertices 0 to 4, with `inf` for unreached ones, and `deque` lists the entries as `vertex:distance` from front to back. At step 4 the free edge from 0 to 2 goes to the front, so vertex 2 is taken before vertex 1. At step 8 the free edge from 3 to 1 lowers `dist` of vertex 1 from 1 to 0 and puts a second entry for it at the front. At step 11 the old entry of vertex 1 reaches the front and is skipped.
+The first graph has these edges: 0 to 1 with cost 1, 0 to 2 with cost 0, 2 to 3 with cost 0, 3 to 1 with cost 0 and 1 to 4 with cost 1. This is the graph of the earlier prediction plus the edge 1 to 4. Each cell stores a vertex id, and the pointer `cur` points at the vertex of the current event. The variable `dist` lists the distances of vertices 0 to 4, with `inf` for unreached ones, and `deque` lists the entries as `vertex:distance` from front to back. At step 4 the free edge from 0 to 2 goes to the front, so vertex 2 is taken before vertex 1. At step 8 the free edge from 3 to 1 lowers `dist` of vertex 1 from 1 to 0 and puts a second entry for it at the front. At step 11 the old entry of vertex 1 reaches the front and is skipped.
 
 ```trace
 {"cells":[0,1,2,3,4],"pointers":["cur"],"steps":[{"at":{"cur":0},"vars":{"dist":"0 inf inf inf inf","deque":"0:0"},"note":"The deque holds the start vertex 0 with distance 0."},{"at":{"cur":0},"vars":{"dist":"0 inf inf inf inf","deque":"empty"},"note":"The search takes vertex 0 with distance 0 from the front and scans its edges."},{"at":{"cur":0},"vars":{"dist":"0 1 inf inf inf","deque":"1:1"},"note":"The edge from 0 to 1 costs 1 and gives distance 1, which is an improvement, so the search pushes vertex 1 at the back."},{"at":{"cur":0},"vars":{"dist":"0 1 0 inf inf","deque":"2:0 1:1"},"note":"The edge from 0 to 2 costs 0 and gives distance 0, which is an improvement, so the search pushes vertex 2 at the front."},{"at":{"cur":2},"vars":{"dist":"0 1 0 inf inf","deque":"1:1"},"note":"The search takes vertex 2 with distance 0 from the front and scans its edges."},{"at":{"cur":2},"vars":{"dist":"0 1 0 0 inf","deque":"3:0 1:1"},"note":"The edge from 2 to 3 costs 0 and gives distance 0, which is an improvement, so the search pushes vertex 3 at the front."},{"at":{"cur":3},"vars":{"dist":"0 1 0 0 inf","deque":"1:1"},"note":"The search takes vertex 3 with distance 0 from the front and scans its edges."},{"at":{"cur":3},"vars":{"dist":"0 0 0 0 inf","deque":"1:0 1:1"},"note":"The edge from 3 to 1 costs 0 and gives distance 0, which is an improvement, so the search pushes vertex 1 at the front."},{"at":{"cur":1},"vars":{"dist":"0 0 0 0 inf","deque":"1:1"},"note":"The search takes vertex 1 with distance 0 from the front and scans its edges."},{"at":{"cur":1},"vars":{"dist":"0 0 0 0 1","deque":"1:1 4:1"},"note":"The edge from 1 to 4 costs 1 and gives distance 1, which is an improvement, so the search pushes vertex 4 at the back."},{"at":{"cur":1},"vars":{"dist":"0 0 0 0 1","deque":"4:1"},"note":"The entry for vertex 1 carries distance 1, but the best known distance is 0, so the search skips it."},{"at":{"cur":4},"vars":{"dist":"0 0 0 0 1","deque":"empty"},"note":"The search takes vertex 4 with distance 1 from the front and scans its edges."}]}
@@ -140,7 +140,7 @@ static int[] zeroOneDist(int n, int[][] edges) {
 }
 ```
 
-The Java names matter here. On `ArrayDeque`, the method `push` adds at the front and `add` adds at the back, so a reader who mixes them swaps the two cases silently. The code spells out `addFirst` and `addLast` for that reason. The method runs in O(V + E) time, because each vertex enters the deque at most twice and each edge is scanned once per removal that is not skipped. It uses O(V + E) memory for the adjacency list and the deque.
+The Java names matter here. On `ArrayDeque`, the method `push` adds at the front and `add` adds at the back, so a reader who mixes them swaps the two cases silently. The code spells out `addFirst` and `addLast` for that reason. The method needs O(V + E) time, because each vertex enters the deque at most twice and each edge is scanned once per removal that is not skipped. It uses O(V + E) memory for the adjacency list and the deque.
 
 <!-- stage: applicability -->
 ### Recognizing Zero-One Cost Problems
@@ -165,7 +165,7 @@ The false friend is ordinary breadth-first search, which counts edges, and a vis
 
 **Prerequisites.** The deque search of this lesson.
 
-**Problem.** A directed graph has vertices `0` to `n - 1`, and `edges` lists entries `[a, b, w]`, each an edge from `a` to `b` with cost `w`, where `w` is 0 or 1. The search starts with the entry `(0, 0)` in a deque. It removes the front entry `(u, d)` and skips it when `d` exceeds the best known distance of `u`. Otherwise it records `u`, then scans the entries of `edges` that start at `u` in list order. For an entry with end `v` and cost `w`, it computes `d + w`. When that value is smaller than the best known distance of `v`, it stores the value and adds `(v, d + w)` at the front when `w` is 0 and at the back when `w` is 1. Return the recorded vertices in order as an `int[]`.
+**Problem.** Consider a directed graph whose vertices are `0` to `n - 1`. Each entry `[a, b, w]` of `edges` is an edge from `a` to `b` with cost `w`, where `w` is 0 or 1. The search starts with the entry `(0, 0)` in a deque. It removes the front entry `(u, d)` and skips it when `d` exceeds the best known distance of `u`. Otherwise it records `u`, then scans the entries of `edges` that start at `u` in list order. For an entry with end `v` and cost `w`, it computes `d + w`. When that value is smaller than the best known distance of `v`, it stores the value and adds `(v, d + w)` at the front when `w` is 0 and at the back when `w` is 1. Return the recorded vertices in order as an `int[]`.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
@@ -207,7 +207,7 @@ The false friend is ordinary breadth-first search, which counts edges, and a vis
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** A directed graph has vertices `0` to `n - 1`, and `edges` lists entries `[a, b, w]` with `w` equal to 0 or 1. Let `dist[v]` be the smallest sum of costs over all paths from vertex 0 to `v`. Return an `int[]` of length 2. Its first entry is the number of vertices with `dist[v] = 0`, and its second entry is `dist[n - 1]`, or `-1` when vertex `n - 1` is unreachable.
+**Problem.** The vertices `0` to `n - 1` form a directed graph whose edge entries `[a, b, w]` sit in `edges`, with `w` equal to 0 or 1. Let `dist[v]` be the smallest sum of costs over all paths from vertex 0 to `v`. Return an `int[]` of length 2. Its first entry is the number of vertices with `dist[v] = 0`, and its second entry is `dist[n - 1]`, or `-1` when vertex `n - 1` is unreachable.
 
 **Constraints.** The limits are:
 - **Vertices** satisfy `1 <= n <= 2000`.
@@ -228,7 +228,7 @@ The false friend is ordinary breadth-first search, which counts edges, and a vis
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** A grid `grid` has `m` rows and `n` columns. Each cell holds an arrow code: 1 points right, 2 points left, 3 points down and 4 points up. A move goes from a cell to the adjacent cell in any of the four directions inside the grid. A move in the direction of the arrow of its start cell costs 0, and a move in any other direction costs 1. Return the smallest total cost of a path from the cell `(0, 0)` to the cell `(m - 1, n - 1)`.
+**Problem.** The grid `grid` has `m` rows and `n` columns. Each cell holds an arrow code: 1 points right, 2 points left, 3 points down and 4 points up. A move goes from a cell to the adjacent cell in any of the four directions inside the grid. A move in the direction of the arrow of its start cell costs 0, and a move in any other direction costs 1. Return the smallest total cost of a path from the cell `(0, 0)` to the cell `(m - 1, n - 1)`.
 
 **Constraints.** The limits are:
 - **Size** satisfies `1 <= m, n <= 100`.

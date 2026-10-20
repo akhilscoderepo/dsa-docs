@@ -128,7 +128,7 @@ A comparator works only on object types, so `Arrays.sort(int[], comparator)` doe
 
 **Prerequisites.** The compare contract and `Integer.compare` from this lesson.
 
-**Problem.** Let `nums` be an array of integers. Return a new array that holds the values of `nums` in nondecreasing order. Any method is allowed, including a hand-written sort or a library sort. The input array keeps its original contents.
+**Problem.** An array `nums` of integers is given. Return a new array that holds the values of `nums` in nondecreasing order. Any method is allowed, including a hand-written sort or a library sort. The input array keeps its original contents.
 
 **Constraints.** The limits are:
 - **Length** satisfies `0 <= nums.length <= 5 * 10^4`; the empty array is legal.

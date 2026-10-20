@@ -178,7 +178,7 @@ The method needs a sorted array, because equal values must be adjacent. On an un
 
 **Prerequisites.** The false friend of this lesson.
 
-**Problem.** Given an integer array `nums`, return the number of distinct value triplets `a <= b <= c` with `a + b + c = 0`. The input may hold many equal values.
+**Problem.** For an integer array `nums`, count the distinct value triplets `a <= b <= c` with `a + b + c = 0`. The input may hold many equal values.
 
 **Constraints.** The limits are:
 - **Length** is `0 <= nums.length <= 3000`; the empty array is valid.

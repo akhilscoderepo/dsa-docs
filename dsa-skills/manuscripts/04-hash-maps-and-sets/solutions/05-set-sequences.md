@@ -79,7 +79,7 @@ public final class LongestRunStart {
 <!-- id: hm-shared-by-three -->
 
 **Approach.**
-The method puts the values of `b` and `c` into two sets. It then scans `a` from left to right. A value joins the answer when both sets hold it and a third set shows that the answer has not reported it. Each value of `a` costs at most three set operations, and the scan order of `a` gives the order of first occurrence. The invariant is that after index `i`, the answer holds the values of `a[0..i]` that occur in `b` and in `c`, once each.
+The method puts the values of `b` and `c` into two sets. It then scans `a` from left to right. A value joins the answer when both sets hold it and a third set shows that the answer has not reported it. Each value of `a` costs at most three set operations, and the scan order of `a` gives the order of first occurrence. Invariant: once index `i` is processed, the answer holds one copy of each value of `a[0..i]` that `b` and `c` both contain.
 
 **Complexity.**
 - **Time** is O(n + m + p) on average for array lengths n, m and p, because each array is read once with expected constant-time set operations.

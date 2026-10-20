@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A planner schedules a course before its prerequisite, and a cluster counter reports one group too many. Each failure matches a question below. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A planner schedules a course before its prerequisite, and a cluster counter reports one group too many. Each failure matches a question below. Make time for this page after the lessons and after a few more days. Every question presents a situation and holds back the lesson name.
 
 ### Recognition Questions
 

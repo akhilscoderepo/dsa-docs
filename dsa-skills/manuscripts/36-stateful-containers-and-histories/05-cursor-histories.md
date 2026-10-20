@@ -139,7 +139,7 @@ Stale references stay in memory until a later visit overwrites them, so a very l
 
 #### Recognizing The Pattern
 
-Use this design when a class supports moving through past states and a new write must discard part of the future. The statement usually says back, forward, undo or redo, and it says that a new action clears what lies ahead. The invariant to state before coding is that the stored elements and the cursor jointly define the visible state, with every slot at or above the live length unreadable.
+Use this design when a class supports moving through past states and a new write must discard part of the future. The statement usually says back, forward, undo or redo, and it says that a new action clears what lies ahead. Before coding, state the invariant that the stored elements and the cursor together define the visible state, and that every slot at or above the live length is unreadable.
 
 #### Two False Friends
 

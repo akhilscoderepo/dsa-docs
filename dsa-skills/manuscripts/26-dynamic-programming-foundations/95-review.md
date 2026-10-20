@@ -1,7 +1,7 @@
 <!-- section: review -->
 ## Review
 
-A count finishes for 12 and never finishes for 100. A memory-saving rewrite returns a wrong total. A grid count ignores the walls. Each failure matches a question below. Return to this page after the lessons and again after a few days. Each question describes a situation and hides the lesson name.
+A count finishes for 12 and never finishes for 100. A memory-saving rewrite returns a wrong total. A grid count ignores the walls. A question below fits each failure. Take a second look at this page after the lessons and a third look after a few days. Each question depicts a situation and omits the lesson name.
 
 ### Recognition Questions
 

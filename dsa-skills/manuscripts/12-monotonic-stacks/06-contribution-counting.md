@@ -154,7 +154,7 @@ static long sumOfMaximums(int[] nums) {
 }
 ```
 
-Both methods run in O(n) time and use O(n) extra space. With a modulus `M`, the line becomes `total = (total + (long) nums[i] % M * ((long) (i - left[i]) * (right[i] - i) % M)) % M`, which keeps every product below the `long` limit when `M` is near 10^9.
+Each of the two methods needs O(n) time and O(n) extra space. With a modulus `M`, the line becomes `total = (total + (long) nums[i] % M * ((long) (i - left[i]) * (right[i] - i) % M)) % M`, which keeps every product below the `long` limit when `M` is near 10^9.
 
 <!-- stage: applicability -->
 ### When A Sum Becomes A Count

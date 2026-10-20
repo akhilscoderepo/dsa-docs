@@ -5,7 +5,7 @@ A search box freezes while the user types, because the program rereads 200,000 p
 
 ### Prerequisites
 
-You should know loops, recursion on a tree and array indexing. Chapter 03 introduced strings and character positions, which every lesson uses. Chapter 04 introduced hash maps and sets, which serve as the baseline that each lesson compares against. Chapter 15 introduced tree nodes and recursive walks, and the wildcard lesson builds on both. The last lesson uses the bitwise exclusive or, and it defines the operation before it uses it. Code samples assume `import java.util.*;` and a recent JDK.
+You should know loops, recursion on a tree and array indexing. Chapter 03 introduced strings and character positions, which every lesson uses. Chapter 04 introduced hash maps and sets, which serve as the baseline that each lesson compares against. Chapter 15 introduced tree nodes and recursive walks, and the wildcard lesson builds on both. The last lesson uses the bitwise exclusive or, and it defines the operation before it uses it. Code samples start from `import java.util.*;` and run on a recent JDK.
 
 ### The Five Lessons
 
@@ -25,7 +25,7 @@ One lesson joins this chapter with the string chapter.
 
 ### How To Work Through Each Lesson
 
-A lesson starts from a program that slows down or fails on a real input, and then shows a plain version that costs too much. A prediction question follows, and you commit to an answer before the explanation opens. The remaining parts give the rule, the state, a trace, the code and a check of where the method stops fitting. The exercises climb from a basic version to a recognition problem. A role in brackets labels each exercise. Build implements the new idea, Vary changes one decision, Boundary tests an edge case and Recognize applies the idea to a problem that does not name it. The Changed decision line names what differs from the exercise before it, and the tag Author exercise marks a problem written for this chapter. Read the hint before you open a solution.
+A lesson starts from a program that slows down or fails on a real input. A plain version that costs too much follows it. A prediction question then asks you to choose an answer before the explanation opens. The remaining parts give the rule, the state, a trace, the code and the places where the method stops fitting. The exercises rise from a basic version to a recognition problem. A role in brackets labels each exercise. Build implements the new idea, Vary changes one decision, Boundary tests an edge case and Recognize applies the idea to a problem that does not name it. The Changed decision line says what differs from the exercise before it. A problem tagged Author exercise comes from this chapter itself. Read the hint before you open a solution.
 
 ### What You Can Do After This Chapter
 
