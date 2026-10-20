@@ -75,7 +75,7 @@ Store the words in a trie. Every **prefix node** stands for one prefix, the text
 
 Every prefix node keeps a **top list**: the words below it, at most three, in ranked order. A query walks one child per letter to the node of its prefix and returns a copy of that node's top list. The walk costs O(L), and the copy costs at most three entries.
 
-The ranking is the **rank test**: a word comes before another word when its count is higher, and the smaller word comes first when the counts are equal. The test reads the counts from the map that decides. The lists store only words, never counts, so a list cannot hold a stale count.
+The ranking is the **rank test**: a word comes before another word when its count is higher, and the smaller word comes first when the counts are equal. The test reads the counts from the authoritative map. The lists store only words, never counts, so a list cannot hold a stale count.
 
 #### Repairing On Every Record
 
@@ -90,7 +90,7 @@ Only the recorded word moved up. Every other word kept its count, so the other e
 
 The service stores one authoritative map and one derived trie.
 
-- **count** maps each recorded word to its number of records and is the structure that decides.
+- **count** maps each recorded word to its number of records and is the authoritative map.
 - **Node** holds 26 child links and one list of at most three words.
 - **K** is the list bound, fixed at 3.
 - **before** applies the rank test to two words and reads both counts from `count`.
@@ -124,7 +124,7 @@ The word `bd` arrives with a count of 1 and loses the tie to three smaller words
 <!-- stage: code -->
 ### The Word Ranker In Java
 
-The class keeps the map that decides, and each record repairs the lists on one path.
+The class keeps the authoritative map, and each record repairs the lists on one path.
 
 ```java
 final class WordRanker {
@@ -173,14 +173,14 @@ final class WordRanker {
 }
 ```
 
-A record call costs O(L * K), because it repairs L + 1 lists of at most K entries. A query costs O(L + K). The space is O(S * K), where S is the number of trie nodes.
+A record call costs O(L^2 * K), because it repairs L + 1 lists, and each repair compares up to K words of length L. A query costs O(L + K). The space is O(S * K), where S is the number of trie nodes.
 
 <!-- stage: applicability -->
 ### Keep Ranked Lists After Updates
 
 #### When A Short List Is Enough
 
-A short list per node stays exact only when every change moves a word up the ranking. Counts that only grow qualify. A stored index qualifies when a later word always replaces it with a larger one, as in the exercise on prefix and suffix filters. A word that falls out of a list cannot return unless it is recorded again, and a record call visits that list. The invariant is that each list equals the best K words below its prefix after every call.
+A short list per node stays exact only when every change moves a word up the ranking. Counts that only grow qualify. A stored index qualifies when a later word always replaces it with a larger one, as in the Boundary exercise below on prefix and suffix filters. A word that falls out of a list cannot return unless it is recorded again, and a record call visits that list. The invariant is that each list equals the best K words below its prefix after every call.
 
 #### False Friends And Limits
 
@@ -194,7 +194,7 @@ Skip the lists when queries are rare and writes are frequent, because the repair
 #### [Build] Prefix Maximum Under Overwrite (LeetCode 677)
 <!-- id: sv-rank-prefix-max -->
 
-**Prerequisites.** The trie walk and the repair from the record that decides.
+**Prerequisites.** The trie walk and the repair from the authoritative map.
 
 **Problem.** Design a class `PrefixMax`. The call `put(key, value)` stores `value` for `key` and replaces any earlier value of that key. The call `max(prefix)` returns the largest value among all stored keys that start with `prefix`, or -1 if no stored key starts with it.
 
@@ -202,15 +202,15 @@ Skip the lists when queries are rare and writes are frequent, because the repair
 - **Keys** and **prefixes** are lowercase strings of length 1 to 50.
 - **Values** are integers from 0 to 10^6, so -1 never collides with a stored value.
 - **Calls** number at most `5 * 10^4`.
-- **Overwrite** may lower a value.
+- **Overwrite** never lowers a value, so a new value is at least the old value of its key.
 
-**Example 1.** Input calls `put(apple,3)`, `put(app,5)`, `max(ap)`, `put(app,2)`, `max(ap)`, `max(b)`, output 5, then 3, then -1.
+**Example 1.** Input calls `put(apple,3)`, `put(app,5)`, `max(ap)`, `put(apple,9)`, `max(ap)`, `max(b)`, output 5, then 9, then -1.
 
-**Example 2.** Input calls `put(ab,4)`, `put(ab,9)`, `put(ab,1)`, `max(a)`, `put(ac,6)`, `max(a)`, `max(ab)`, output 1, then 6, then 1.
+**Example 2.** Input calls `put(ab,4)`, `put(ab,9)`, `max(a)`, `put(ac,6)`, `max(a)`, `max(ab)`, output 9, then 9, then 9.
 
-**Hint.** After an overwrite lowers the value of the key that held the maximum, which value is the maximum now?
+**Hint.** When an overwrite raises the value of a key, which nodes on its path can change their maximum?
 
-**Changed decision.** LeetCode sums the values below a prefix. This contract takes the maximum, so a lowered value cannot be repaired by a subtraction and each node keeps all values it covers.
+**Changed decision.** LeetCode sums the values below a prefix. This contract takes the maximum, and because an overwrite never lowers a value, each node on the path keeps one number and replaces it with the larger of the old and new number.
 
 #### [Vary] Count Near Words Within A Budget (LeetCode 676)
 <!-- id: sv-rank-near-words -->

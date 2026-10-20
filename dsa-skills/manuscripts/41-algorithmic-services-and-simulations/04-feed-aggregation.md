@@ -165,7 +165,7 @@ final class FeedService {
 }
 ```
 
-A query costs O((f + k) log f) for f eligible accounts, because f pushes and at most k pops each cost O(log f). The space is O(f) for the heap and the author list.
+A query first loops over the follow set of F accounts for the visibility check, which costs O(F). It then costs O((f + k) log f) for the f eligible accounts, because f pushes and at most k pops each cost O(log f). The total is O(F + (f + k) log f), and the space is O(f) for the heap and the author list.
 
 <!-- stage: applicability -->
 ### Queries That Return The Newest Few
@@ -176,7 +176,7 @@ The cue is a query that returns the newest or highest-ranked `k` items from seve
 
 #### Policies To State
 
-Write down the tie policy, such as the smaller source index first when two items have equal time. Write down what a user following themselves means, what a follow of a deleted account returns, and whether ids can be reused. A policy stated in the contract becomes an assertion in the tests. A policy left unstated becomes an argument later.
+Write down the tie policy, such as the smaller source index first when two items have equal time. Write down what a user following themselves means, what a follow of a deleted account returns, and whether ids can be reused. A policy left unstated becomes an argument later.
 
 #### False Friends
 
@@ -232,7 +232,13 @@ Sorting the union and cutting it at `k` looks like the same answer, and it is a 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Design a class `Network` of users with integer ids. Every id is a live user until `deleteUser(u)` marks it deleted, and a deleted id never becomes live again. The call `post(u, id)` stores a tweet and returns `true` when `u` is live. The call `follow(a, b)` returns `true` and adds the edge when `a` and `b` are different, both are live and the edge is new. The call `unfollow(a, b)` returns `true` and removes the edge when `a` is live and the edge exists, even if `b` is deleted. The call `deleteUser(u)` returns `true` when `u` was live. The call `feed(u, k)` returns up to `k` tweet ids, newest first, from `u` and from the live followees of `u`, and returns an empty list when `u` is deleted. The call `liveFollowees(u)` returns the number of live followees of `u`.
+**Problem.** Design a class `Network` of users with integer ids. Every id is a live user until `deleteUser(u)` marks it deleted, and a deleted id never becomes live again. Each boolean call returns `false` when its condition fails.
+
+The call `post(u, id)` stores a tweet and returns `true` when `u` is live. The call `follow(a, b)` adds the edge and returns `true` when `a` and `b` differ, both are live and the edge is new.
+
+The call `unfollow(a, b)` removes the edge and returns `true` when `a` is live and the edge exists, even if `b` is deleted. The call `deleteUser(u)` returns `true` when `u` was live.
+
+The call `feed(u, k)` returns up to `k` tweet ids, newest first, from `u` and from the live followees of `u`. It returns an empty list when `u` is deleted. The call `liveFollowees(u)` returns the number of live followees of `u`.
 
 **Constraints.** The limits are:
 - **Users** are integers from 1 to 10^5, and **tweet ids** are distinct integers.
@@ -267,6 +273,6 @@ The call `watch(id, start, end)` returns the characters at positions `start` thr
 
 **Example 2.** Input calls `upload("12")`, `watch(0,2,3)`, `like(0)`, `getLikesAndDislikes(0)`, `remove(5)`, `remove(0)`, `getViews(0)`, output 0, `"-1"`, then `[1,0]`, `false`, `true` and -1.
 
-**Hint.** Which structure returns the smallest freed id, and when does the counter for a new id advance?
+**Hint.** The map of stored videos is authoritative and the heap of freed ids is the index. Which structure returns the smallest freed id, and what must a reused id reset?
 
 **Changed decision.** The shared idea is authoritative state kept against an index that reuses ids. The map of stored videos is authoritative, and the heap of freed ids is the index that hands an id out again. A removed video must leave no counter behind, so a reused id starts every counter at zero.

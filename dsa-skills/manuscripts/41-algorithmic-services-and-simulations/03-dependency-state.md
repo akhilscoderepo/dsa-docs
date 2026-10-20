@@ -43,7 +43,7 @@ The call returns 7, because the sum was saved when c was set and nothing touched
 <!-- stage: bottleneck -->
 ### Stale Results Or Full Recomputation
 
-The design gives a wrong answer, so correctness is the first problem. Two quick repairs exist, and each has a cost. The first repair stores only the formulas and evaluates the whole chain on every read. A read costs O(n) for a chain of n formula cells only while no cell is referenced twice. Repeated references make the read revisit cells, such as a cell that sums the same neighbor twice, and the visits multiply along a long chain.
+The design gives a wrong answer, so correctness is the first problem. Two quick repairs exist, and each has a cost. The first repair stores only the formulas and evaluates the whole chain on every read. A read costs O(n) for n formula cells only while no cell is referenced twice. Take a diamond: cell `top` sums `left` and `right`, and both of those sum `base`. The read of `top` evaluates `base` twice. Stack k such diamonds in a row and the read evaluates the bottom cell 2^k times. The worst-case cost grows exponentially.
 
 The second repair recomputes every formula cell after each edit. An edit then costs O(n) even when it touches one cell that nothing reads. A sheet with thousands of formulas and mostly local edits wastes nearly all of that work.
 
@@ -73,7 +73,7 @@ The invariant is that every cached value equals its formula applied to the curre
 <!-- stage: variables -->
 ### State Kept For Each Cell
 
-The service lives in one object in memory. It has no files, no threads and no limit other than memory. The tests keep it under a few thousand cells. Four kinds of state describe each cell.
+The service lives in one object in memory. It has no files, no threads and no limit other than memory. The contract limits it to a few thousand cells. Four kinds of state describe each cell.
 
 - **Literal** is the number a user typed, and it is authoritative until the cell gets a formula.
 - **Formula** is the list of cells that the cell sums, with repeats, and it is authoritative for a formula cell.
@@ -249,7 +249,7 @@ A cache without dependents looks fast and returns stale values, so it is a false
 
 **Example 2.** Input `setFormula(x,[x])`, `setFormula(x,[y,y])`, `setLiteral(y,5)`, `get(x)`, `setFormula(y,[x])`, output `false`, `true`, 10 and `false`.
 
-**Hint.** Which cells does a search follow to find out whether the target is already a reader of the new references?
+**Hint.** Which cells does a search follow to find out whether any new reference already depends on the target?
 
 **Changed decision.** The call rejects a cycle by searching before any edge changes, so a rejected formula leaves the old formula, the cached values and the dependents untouched.
 
@@ -258,7 +258,7 @@ A cache without dependents looks fast and returns stale values, so it is a false
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** Design a class `Spreadsheet` built from `rows`, with columns `A` to `Z`. All cells start at 0. The call `setCell(cell, v)` stores the number. The call `resetCell(cell)` sets the cell to 0 and returns the value it held. The call `getValue(formula)` takes a string `=X+Y` where each of `X` and `Y` is a nonnegative integer or a cell name, and returns the sum of the current values. The formula is a question and the sheet does not store it.
+**Problem.** This is the chapter's own contract and may differ from LeetCode. Design a class `Spreadsheet` built from `rows`, with columns `A` to `Z`. All cells start at 0. The call `setCell(cell, v)` stores the number. The call `resetCell(cell)` sets the cell to 0 and returns the value it held. The call `getValue(formula)` takes a string `=X+Y` where each of `X` and `Y` is a nonnegative integer or a cell name, and returns the sum of the current values. The formula is a question and the sheet does not store it.
 
 **Constraints.** The limits are:
 - **Rows** are integers from 1 to 1000, and cell names such as `B17` are valid.

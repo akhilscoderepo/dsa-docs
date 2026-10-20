@@ -22,7 +22,7 @@ def t1():
     assert d=={"/a":1,"/a/b":2}
     return cells,st
 def norm(s):
-    if not s.startswith("/"): return None,"no leading separator"
+    if not s.startswith("/"): return None,"the string has no leading separator"
     parts=[x for x in s.split("/") if x]
     for x in parts:
         if x in (".",".."): return None,f"the name {x} is illegal"
@@ -42,5 +42,5 @@ def t2():
         st.append({"at":{"call":k},"vars":{"components":vs},"note":note})
     assert norm("//a///b/")[0]==["a","b"] and norm("/")[0]==[]
     return cells,st
-c,s=t1(); fill(CH,F,block(c,["call"],s),"@@TRACE1@@")
-c,s=t2(); fill(CH,F,block(c,["call"],s),"@@TRACE2@@")
+c,s=t1(); refill(CH,F,block(c,["call"],s),0)
+c,s=t2(); refill(CH,F,block(c,["call"],s),1)

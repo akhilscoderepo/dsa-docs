@@ -4,18 +4,16 @@
 #### Solution: [Build] Prefix Maximum Under Overwrite (LeetCode 677)
 <!-- id: sv-rank-prefix-max -->
 
-**Approach.** A hash map from key to value is the record that decides. A trie holds the derived view. Every node on a key's path keeps a tree map from value to the number of stored keys below the node that carry that value. The largest key of that tree map is the maximum for the prefix of the node.
+**Approach.** A trie holds one number per node, and the number is the largest value among the keys below that node. The contract says an overwrite never lowers a value, so a node never needs to forget an old value. Its number only grows.
 
-A put call reads the old value of the key from the record. It then walks the key's path. At each node it removes one copy of the old value, if there is one, and adds one copy of the new value. A maximum cannot be repaired by subtraction, because a lowered key may have held the maximum. The multiset answers that case, since the next largest value is already stored.
+A put call walks the key's path. At each node it replaces the number with the larger of the old number and the new value. A max call walks the prefix and returns the number of the node it reaches, or -1 for a missing node.
 
-A max call walks the prefix and returns the last key of the node's tree map, or -1 for a missing node.
-
-The invariant is that every node's multiset equals the multiset of the current values of the keys below it.
+The invariant is that every node's number equals the largest current value among the keys below it. A put raises one key, and every node on that key's path is exactly a node whose set of keys contains it, so the maximum of each of those nodes is repaired and no other node changes.
 
 **Complexity.**
 
-- **Time** is O(L log n) per put and O(L) per max, where L is the key length and n the number of keys. Each path node runs one or two tree map updates.
-- **Space** is O(n * L), because each key adds one multiset entry to each of its at most L nodes.
+- **Time** is O(L) per put and per max, where L is the key or prefix length, because each step does one array lookup and one comparison.
+- **Space** is O(total characters of the distinct keys), because each trie node stores one number.
 
 ```java run
 import java.util.*;
@@ -24,29 +22,25 @@ public final class PrefixMaxSolution {
     static final class PrefixMax {
         private static final class Node {
             final Node[] next = new Node[26];
-            final TreeMap<Integer, Integer> values = new TreeMap<>();
+            int best = -1;                              // -1 means no key below this node
         }
-        private final Map<String, Integer> valueOf = new HashMap<>();
         private final Node root = new Node();
 
         /**
-         * Stores a value and repairs the multiset of each node on the path.
-         * Time: O(L log n).
+         * Raises the maximum on every node of the key's path.
+         * Time: O(L).
          * Space: O(L) for new nodes.
-         * Invariant: each multiset counts the current values of the keys below its node.
+         * Invariant: each node holds the largest current value below it; values never fall.
          */
         void put(String key, int value) {
-            // The record returns the old value that each path node must forget.
-            Integer old = valueOf.put(key, value);
             Node cur = root;
             for (int i = 0; i < key.length(); i++) {
                 int c = key.charAt(i) - 'a';
                 // A missing child is created on the way down.
                 if (cur.next[c] == null) cur.next[c] = new Node();
                 cur = cur.next[c];
-                // One copy of the old value leaves the node; a count of zero deletes the entry.
-                if (old != null) cur.values.merge(old, -1, (a, b) -> a + b == 0 ? null : a + b);
-                cur.values.merge(value, 1, Integer::sum);
+                // The larger of the old maximum and the new value stays.
+                cur.best = Math.max(cur.best, value);
             }
         }
 
@@ -55,7 +49,7 @@ public final class PrefixMaxSolution {
             Node cur = root;
             // The walk stops early when a letter has no child.
             for (int i = 0; i < prefix.length() && cur != null; i++) cur = cur.next[prefix.charAt(i) - 'a'];
-            return cur == null || cur.values.isEmpty() ? -1 : cur.values.lastKey();
+            return cur == null ? -1 : cur.best;
         }
     }
 
@@ -64,14 +58,14 @@ public final class PrefixMaxSolution {
         PrefixMax a = new PrefixMax();
         a.put("apple", 3); a.put("app", 5);
         if (a.max("ap") != 5) throw new AssertionError("e1 first");
-        a.put("app", 2);
-        if (a.max("ap") != 3 || a.max("b") != -1) throw new AssertionError("e1 second");
+        a.put("apple", 9);
+        if (a.max("ap") != 9 || a.max("b") != -1) throw new AssertionError("e1 second");
         PrefixMax b = new PrefixMax();
-        b.put("ab", 4); b.put("ab", 9); b.put("ab", 1);
-        if (b.max("a") != 1) throw new AssertionError("e2 first");
+        b.put("ab", 4); b.put("ab", 9);
+        if (b.max("a") != 9) throw new AssertionError("e2 first");
         b.put("ac", 6);
-        if (b.max("a") != 6 || b.max("ab") != 1) throw new AssertionError("e2 second");
-        // Random calls checked against a scan of a plain map.
+        if (b.max("a") != 9 || b.max("ab") != 9) throw new AssertionError("e2 second");
+        // Random calls with non-decreasing overwrites, checked against a scan of a plain map.
         Random rnd = new Random(4101);
         String[] keys = {"a", "ab", "abc", "b", "ba", "bb", "abb"};
         String[] prefixes = {"a", "ab", "abc", "b", "ba", "bc", "c"};
@@ -81,7 +75,7 @@ public final class PrefixMaxSolution {
             for (int op = 0; op < 80; op++) {
                 if (rnd.nextBoolean()) {
                     String k = keys[rnd.nextInt(keys.length)];
-                    int v = rnd.nextInt(6);
+                    int v = ref.getOrDefault(k, 0) + rnd.nextInt(3);   // an overwrite never lowers the value
                     ref.put(k, v);
                     s.put(k, v);
                 } else {

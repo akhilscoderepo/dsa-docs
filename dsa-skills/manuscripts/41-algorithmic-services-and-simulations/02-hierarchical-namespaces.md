@@ -49,7 +49,7 @@ The call returns /a, /ab and /a/x, because each string starts with the character
 ```
 
 <!-- stage: bottleneck -->
-### Strings Do Not Know Their Parents
+### Find Children By Scanning Strings
 
 The listing call reads all n stored paths, so one call costs O(n) even when the directory has two children. A service with 10^5 paths and 10^5 list calls does 10^10 string comparisons. The prefix test is also wrong, which makes the cost the smaller problem.
 
@@ -200,7 +200,15 @@ A flat map from full path to value is a false friend. It passes the creation tes
 
 **Prerequisites.** The file system exercise above and sorted maps.
 
-**Problem.** The rules below are this chapter's own wording and may differ in detail from LeetCode. Design a class `Fs` whose tree holds directories and files. A path is `/` for the root, or `/` followed by names with one `/` between neighbours. The call `mkdir(path)` creates the directory and every missing directory above it, and it returns `true`. It returns `false` and changes nothing if the path or any directory above it is a file. The call `addContentToFile(path, text)` appends the text to the file at the path, creating the file and its missing directories first. It returns `false` and changes nothing if the path is a directory, the root, or has a file above it. The call `readContentFromFile(path)` returns the content of the file, or the empty string if the path is not a file. The call `ls(path)` returns the names of the children of a directory in lexicographic order. For a file it returns a list holding only the file's own name, and for a missing path it returns an empty list.
+**Problem.** The rules below are this chapter's own wording and may differ in detail from LeetCode. Design a class `Fs` whose tree holds directories and files. A path is `/` for the root, or `/` followed by names with one `/` between neighbours.
+
+The call `mkdir(path)` creates the directory and every missing directory above it, and returns `true`. It returns `false` and changes nothing if the path or a directory above it is a file.
+
+The call `addContentToFile(path, text)` appends the text to the file, creating the file and missing directories first. It returns `false` and changes nothing if the path is a directory, the root, or has a file above it.
+
+The call `readContentFromFile(path)` returns the content of the file, or the empty string if the path is not a file.
+
+The call `ls(path)` returns the names of the children of a directory in lexicographic order. For a file it returns a list holding only the file's own name. For a missing path it returns an empty list.
 
 **Constraints.** The limits are:
 - **Names** use lowercase letters and digits, with length from 1 to 10.

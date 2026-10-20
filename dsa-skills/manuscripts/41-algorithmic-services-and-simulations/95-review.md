@@ -18,7 +18,7 @@ A board scan that grows with the board, a trie that adds an overwritten value tw
 ```
 
 ```quiz
-{"id": "rq41-rev-feed", "q": "A feed returns the 10 newest posts from followed accounts. When must a muted account be removed from consideration?", "options": ["After the 10 posts are chosen.", "Before the heap receives its first entry.", "After sorting the output.", "Only when the account posts again."], "answer": 1, "explain": "A filter that runs after truncation can leave fewer than 10 posts although more eligible posts exist. Visibility comes first."}
+{"id": "rq41-rev-feed", "q": "A feed returns the 10 newest posts from followed accounts. When must a deleted account be removed from consideration?", "options": ["After the 10 posts are chosen.", "Before the heap receives its first entry.", "After sorting the output.", "Only when the account posts again."], "answer": 1, "explain": "A filter that runs after truncation can leave fewer than 10 posts although more eligible posts exist. Visibility comes first."}
 ```
 
 ```quiz

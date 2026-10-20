@@ -32,7 +32,7 @@ The lesson Track Status And Pick The Next Task supplied the rule that a lifecycl
 
 #### The Choice This Lesson Adds
 
-The new work is the single path that writes. Earlier lessons repaired indexes inside each method. Here every public call builds the old and the new version of a record and hands both to one method, and that method repairs every summary.
+The new work is the single path that writes. Earlier lessons repaired indexes inside each method. Here every public call builds the old and the new version of a record and hands both to one method, and that method repairs every summary. Undo and visibility changes come up in the exercises below.
 
 <!-- stage: naive -->
 ### Each Method Repairs What It Remembers
@@ -66,10 +66,9 @@ final class NaiveShelf {
 }
 ```
 
-After `receive("a", "A1", 5)` and `transfer("a", "A2")`, the total of A1 is still 5 and the total of A2 is 0.
 
 ```predict
-Which structure does transfer forget, and what does the aisle report show for a call to total("A1") and total("A2") after one transfer of five units?
+Which structure does transfer forget, and what do the totals in `aisleTotal` show for A1 and A2 after `receive("a", "A1", 5)` and one transfer of those five units to A2?
 
 The transfer forgets the map of aisle totals. A1 still reports 5 units, which are no longer there, and A2 reports 0 units, which it now holds. Each later move widens the gap, and nothing in the item table reveals it.
 ```
@@ -187,7 +186,7 @@ final class Shelf {
 }
 ```
 
-Each call runs a fixed number of hash and tree operations, so the time is O(log n). The space is O(n), because every item appears in the map and in the sorted set, and every aisle appears once.
+A known sku keeps its current aisle when it receives more stock, and only `transfer` moves an item. Each call runs a fixed number of hash and tree operations, so the time is O(log n). The space is O(n), because every item appears in the map and in the sorted set, and every aisle appears once.
 
 <!-- stage: applicability -->
 ### Spotting A Class With Many Views
@@ -233,7 +232,17 @@ Recomputing a summary from the record on demand is valid when queries are rare, 
 
 **Prerequisites.** The first exercise above and the rule that checks run before writes.
 
-**Problem.** Design a class `Metro` for stations named by lowercase strings. The call `checkIn(card, station, t)` opens a trip and returns `true`, and returns `false` if the card already has an open trip. The call `checkOut(card, station, t)` closes the open trip, records its duration `t - startTime` for the route from the check-in station to this station, and returns `true`. It returns `false`, and leaves the trip open, if the card has no open trip or if `t` is less than the check-in time. The call `cancel(card)` discards an open trip without recording a duration and returns `true`, or returns `false` if none is open. The call `average(start, end)` returns the mean duration of recorded trips on that route, or -1.0 if none. The call `slowest()` returns the route written `start>end` with the largest mean duration, with the smaller route string winning ties, or the empty string if no trip is recorded.
+**Problem.** Design a class `Metro` for stations named by lowercase strings, with cards that open and close trips.
+
+The call `checkIn(card, station, t)` opens a trip and returns `true`, or returns `false` if the card already has an open trip.
+
+The call `checkOut(card, station, t)` closes the open trip and records the duration `t - startTime` for the route from the check-in station to this station. It returns `true`. It returns `false` and leaves the trip open if the card has no open trip or `t` is less than the check-in time.
+
+The call `cancel(card)` discards an open trip without recording a duration and returns `true`, or returns `false` if none is open.
+
+The call `average(start, end)` returns the mean duration of recorded trips on that route, or -1.0 if none.
+
+The call `slowest()` returns the route written `start>end` with the largest mean duration, or the empty string if no trip is recorded. The smaller route string wins ties.
 
 **Constraints.** The limits are:
 - **Calls** number at most `10^5`, and times satisfy `0 <= t <= 10^6`.
@@ -254,9 +263,13 @@ Recomputing a summary from the record on demand is valid when queries are rare, 
 
 **Prerequisites.** The two exercises above.
 
-**Problem.** Design a class `FeedDesk`. The call `post(user, tweet)` publishes a tweet with a distinct id, and recency is the order of the post calls. The calls `follow(a, b)` and `unfollow(a, b)` change who a follows, and the calls `mute(viewer, author)` and `unmute(viewer, author)` change which followed authors the viewer hides. The call `delete(tweet)` hides a tweet for everyone and returns `true`, or returns `false` if it is unknown or already deleted.
+**Problem.** Design a class `FeedDesk` that serves tweet feeds. Recency is the order of the post calls.
 
-The call `feed(user, k)` returns a `Feed` of the tweet ids and a source count. The ids are the `k` newest tweets that the user can see, newest first. A tweet is visible if its author is the user, or if the user follows the author and has not muted the author, and the tweet is not deleted. The source count is the number of distinct authors among the returned ids.
+The call `post(user, tweet)` publishes a tweet with a distinct id. The calls `follow(a, b)` and `unfollow(a, b)` change who a follows.
+
+The calls `mute(viewer, author)` and `unmute(viewer, author)` change which followed authors the viewer hides. The call `delete(tweet)` hides a tweet for everyone and returns `true`, or returns `false` if it is unknown or already deleted.
+
+The call `feed(user, k)` returns a `Feed` of tweet ids and a source count. The ids are the `k` newest tweets that the user can see, newest first. A tweet is visible if its author is the user, or if the user follows the author and has not muted the author, and the tweet is not deleted. The source count is the number of distinct authors among the returned ids.
 
 **Constraints.** The limits are:
 - **Users** and **tweet ids** are integers, and tweet ids are distinct.

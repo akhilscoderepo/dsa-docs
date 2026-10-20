@@ -52,8 +52,8 @@ def t2():
             rc=",".join(done) or "none"; r="true"
             if o=="l": note=f"Call {k}: the literal {x} goes into {c}, and the sheet recomputes {rc if done else 'no formula cells'}."
             else: note=f"Call {k}: {c} gets the formula {'+'.join(x)}, and the sheet recomputes {rc}."
-        st.append({"at":{"call":k},"vars":{"values":vals(s),"dependents of a":deps(s,"a"),"result":r},"note":note})
+        st.append({"at":{"call":k},"vars":{"values":vals(s),"dependents of a":deps(s,"a"),**({} if o=="l" and done is not None else {"result":r})},"note":note})
     assert s.v=={"a":9,"b":6,"e":6}
     return cells,st
-c,x=t1(); fill(CH,F,block(c,["call"],x),"@@TRACE1@@")
-c,x=t2(); fill(CH,F,block(c,["call"],x),"@@TRACE2@@")
+c,x=t1(); refill(CH,F,block(c,["call"],x),0)
+c,x=t2(); refill(CH,F,block(c,["call"],x),1)

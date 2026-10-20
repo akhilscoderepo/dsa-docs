@@ -1,7 +1,7 @@
 <!-- section: orientation -->
 ## Orientation
 
-A tic-tac-toe class rereads the whole board after every move, and a test with a 3 by 3 board passes. A server then hosts a 1000 by 1000 board. Each move reads about four million cells, so 100 000 moves read about four hundred billion cells, and the class runs out of time. The moves are all legal and the answers are all right. The cost per call is the only defect.
+A tic-tac-toe class rereads the whole board after every move, and a test with a 3 by 3 board passes. A server then hosts a 1000 by 1000 board. Each move checks every one of the million cells four times, which is about four million reads, so 100 000 moves make about four hundred billion reads, and the class runs out of time. The moves are all legal and the answers are all right. The cost per call is the only defect.
 
 This chapter teaches small services whose public calls must stay fast and stay consistent. Each lesson names the authoritative state, the indexes derived from it, and the order in which one call may change them.
 

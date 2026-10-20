@@ -14,7 +14,7 @@ def mapsum():
             if old==0: note=f"Call {n}: the word is new, so the delta is {delta} and every node on the path to {k} gains {delta}."
             elif delta: note=f"Call {n}: the old value is {old}, so the delta is {delta} and every node on the path to {k} changes by {delta}."
             else: note=f"Call {n}: the old value is {old} and the new value is the same, so the delta is 0 and no node changes."
-            vars_={"sums":pre(node),"delta":str(delta),"result":str(old if old else -1)}
+            vars_={"sums":pre(node),"delta":str(delta)}
         else:
             r=node.get(k,0); vars_={"sums":pre(node),"delta":"-","result":str(r)}
             note=f"Call {n}: the walk reads the node for {k} and returns {r}."
@@ -46,5 +46,5 @@ def counts():
     assert view()=="empty"
     return cells,st
 
-c,s=mapsum(); fill(CH,F,block(c,["call"],s),"@@TRACE1@@")
-c,s=counts(); fill(CH,F,block(c,["call"],s),"@@TRACE2@@")
+c,s=mapsum(); refill(CH,F,block(c,["call"],s),0)
+c,s=counts(); refill(CH,F,block(c,["call"],s),1)

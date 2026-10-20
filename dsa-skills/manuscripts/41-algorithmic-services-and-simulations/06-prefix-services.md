@@ -65,7 +65,7 @@ An overwrite must not add the new value on top of the old one. The call needs th
 
 #### Branching And Ranking
 
-A search for words one letter away follows the query word and, at most once, leaves it to try every other child. A ranked search stores at each node only the words that pass through it. It reads the current counts from the authoritative map when it sorts, so a rank is never stale.
+A spelling checker needs to find stored words that differ from a typed word in exactly one letter. A search for words one letter away follows the query word and, at most once, leaves it to try every other child. A ranked search stores at each node only the words that pass through it. It reads the current counts from the authoritative map when it sorts, so a rank is never stale.
 
 The invariant is that every node holds the exact aggregate of the live words under its prefix, and every public call applies all its node changes or none.
 

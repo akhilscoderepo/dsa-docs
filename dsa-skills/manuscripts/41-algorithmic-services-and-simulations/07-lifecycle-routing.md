@@ -30,6 +30,11 @@ final class NaiveRunner {
         return true;
     }
 
+    boolean finish(int id) {
+        for (Job j : jobs) if (j.id == id && j.state.equals("PENDING")) { j.state = "DONE"; return true; }
+        return false;                                           // a cancel call would set CANCELLED the same way
+    }
+
     int next() {
         Job best = null;
         for (Job j : jobs) {                                    // visits finished and cancelled jobs too
@@ -216,7 +221,7 @@ A boolean flag inside the queued object looks like a complete answer. It is a fa
 
 **Prerequisites.** The task exercise above and tree sets.
 
-**Problem.** Design a class `Todo`. The call `addTask(user, due, tags)` creates a pending task for the user, where `tags` is an array of strings, and returns the task id. Ids start at 1 and increase by 1 across all users. Repeated tags in one call count once. The call `complete(user, taskId)` marks the task done and returns `true` when the task exists, belongs to that user and is pending, and otherwise returns `false`. The call `pending(user)` returns the user's pending task ids ordered by `due`, then by id. The call `pendingWithTag(user, tag)` returns the same order, limited to tasks that carry the tag. The call `doneWithTag(user, tag)` returns how many of the user's done tasks carry the tag.
+**Problem.** The rules below are the chapter's own, so LeetCode may state them differently. Design a class `Todo`. The call `addTask(user, due, tags)` creates a pending task for the user, where `tags` is an array of strings, and returns the task id. Ids start at 1 and increase by 1 across all users. Repeated tags in one call count once. The call `complete(user, taskId)` marks the task done and returns `true` when the task exists, belongs to that user and is pending, and otherwise returns `false`. The call `pending(user)` returns the user's pending task ids ordered by `due`, then by id. The call `pendingWithTag(user, tag)` returns the same order, limited to tasks that carry the tag. The call `doneWithTag(user, tag)` returns how many of the user's done tasks carry the tag.
 
 **Constraints.** The limits are:
 - **Users** are integers from 1 to 10^4, and `due` is an integer from 1 to 10^9.
@@ -258,11 +263,15 @@ A boolean flag inside the queued object looks like a complete answer. It is a fa
 
 **Prerequisites.** All three exercises above.
 
-**Problem.** This contract is written for the chapter, so the LeetCode statement may differ in detail. Design a class `Rides` with separate id spaces for riders and drivers. The call `addRider(riderId)` puts a rider in state `WAITING`, and `addDriver(driverId)` puts a driver in state `AVAILABLE`. Each returns `false` if that id was ever used.
+**Problem.** This contract is written for the chapter, so the LeetCode statement may differ in detail. Design a class `Rides` with separate id spaces for riders and drivers. A rider is `WAITING`, `CANCELLED` or `MATCHED`. A driver is `AVAILABLE`, `OFFLINE` or `BUSY`.
 
-The call `cancelRider(riderId)` moves a `WAITING` rider to `CANCELLED`. The call `removeDriver(driverId)` moves an `AVAILABLE` driver to `OFFLINE`. The call `finishTrip(driverId)` moves a `BUSY` driver back to `AVAILABLE`. Each of these three returns `true` when the move is legal and `false` otherwise.
+The call `addRider(riderId)` adds a `WAITING` rider, and `addDriver(driverId)` adds an `AVAILABLE` driver. Each returns `false` if that id was ever used.
 
-The call `match()` pairs the rider who has waited longest with the `AVAILABLE` driver of smallest id, marks the rider `MATCHED` and the driver `BUSY`, and returns `[driverId, riderId]`. If either side has nobody, it returns `[-1, -1]` and changes nothing. The calls `waiting()` and `available()` return the two live counts.
+The call `cancelRider(riderId)` moves a `WAITING` rider to `CANCELLED`. The call `removeDriver(driverId)` moves an `AVAILABLE` driver to `OFFLINE`. The call `finishTrip(driverId)` moves a `BUSY` driver to `AVAILABLE`. Each returns `true` when the move is legal and `false` otherwise.
+
+The call `match()` pairs the rider who has waited longest with the `AVAILABLE` driver of smallest id. It marks the rider `MATCHED` and the driver `BUSY`, and returns `[driverId, riderId]`. If either side has nobody, it returns `[-1, -1]` and changes nothing.
+
+The calls `waiting()` and `available()` return the two live counts.
 
 **Constraints.** The limits are:
 - **Ids** are integers from 1 to 10^5 in each id space.
@@ -276,4 +285,4 @@ The call `match()` pairs the rider who has waited longest with the `AVAILABLE` d
 
 **Hint.** Which side can remove an entry by key, and which side needs stale entries to be skipped?
 
-**Changed decision.** Both sides are checked for a live candidate before either status changes, so a match with no driver leaves the waiting rider in place. This contract uses a longest-waiting rider and a smallest-id driver, and it may differ from the LeetCode statement.
+**Changed decision.** Both sides are checked for a live candidate before either status changes, so a match with no driver leaves the waiting rider in place.
